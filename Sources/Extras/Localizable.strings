@@ -1,0 +1,52 @@
+/* 
+  Localizable.strings
+  sampleapp-completeswift
+
+  Created by Mukesh Thawani on 07/08/17.
+  Copyright © 2017 Applozic. All rights reserved.
+*/
+
+Back = "Back";
+ChatHere = "Type something...";
+DeleteSingleConversation = "Are you sure you want to remove the chat with";
+DeleteGroupConversation = "Are you sure you want to remove the group";
+ButtonCancel = "Cancel";
+CamNotAvaiable = "Unable to start your camera";
+PleaseAllowCamera = "Please change Settings to allow to access your camera";
+UnspecifiedLocation = "Unspecified Location";
+PhotoAlbumSuccessTitle = "Done";
+PhotoAlbumSuccess = "Photo saved";
+PhotoAlbumOk = "Ok";
+PhotoAlbumFailureTitle = "Error";
+PhotoAlbumFail = "Save failed";
+DownloadOriginalImageFail = "Fail to download the original image";
+IsTypingForRTL = "typing is ";
+ButtonDiscard = "Discard";
+
+// Storyboard
+LocationTitle = "Location";
+DoneButton = "Done";
+AddToGroupTitle = "Add to Group";
+InviteButton = "INVITE";
+CreateGroupTitle = "Create Group";
+EditGroupTitle = "Edit Group";
+SaveButtonTitle = "Save";
+InviteMessage = "Invite";
+DiscardChangeTitle = "Discard Change";
+DiscardChangeMessage = "If you go back now, your change will be discarded";
+Edit = "Edit";
+Camera = "Camera";
+CropImage = "Crop Image";
+ResetPhotoButton = "Reset Photo";
+SelectButton = "Select";
+SendPhoto = "Send Photo";
+PhotosTitle = "Photos";
+CameraNotAvailableMessage = "Camera is not Available !!!";
+CameraNotAvailableTitle = "OOPS !!!";
+ShareLocationTitle = "Share Location";
+Participants = "Participants";
+TypeGroupName = "Type group name";
+NewChatTitle = "New Chat";
+SearchPlaceholder = "Search";
+HoldToTalkMessage = "Hold to Talk / Tap to Type";
+RecordingMessage = "Recording...0:00";

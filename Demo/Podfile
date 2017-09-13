@@ -1,0 +1,8 @@
+project ‘ApplozicSwiftDemo.xcodeproj'
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '9.0'
+use_frameworks!
+
+target 'ApplozicSwiftDemo' do
+    pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
+end
