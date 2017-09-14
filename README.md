@@ -1,5 +1,18 @@
 # ApplozicSwift
 
+[![Version](https://img.shields.io/cocoapods/v/ApplozicSwift.svg?style=flat)](http://cocoapods.org/pods/ApplozicSwift)
+![iOS 8.0+](https://img.shields.io/badge/iOS-9.0%2B-blue.svg)
+![Xcode 8.2+](https://img.shields.io/badge/Xcode-8.2%2B-blue.svg)
+![Swift 3.0+](https://img.shields.io/badge/Swift-3.0%2B-orange.svg)
+[![License](https://img.shields.io/cocoapods/l/Material.svg?style=flat)](https://github.com/lkzhao/Material/blob/master/LICENSE?raw=true)
+
+UI kit for Applozic SDK, written completely in Swift.
+
+------------------------
+
+![Screenshot0][img0] &nbsp;&nbsp; ![Screenshot1][img1] &nbsp;&nbsp;
+
+![Screenshot2][img2] &nbsp;&nbsp;
 
 ## Sample Project
 
@@ -82,6 +95,11 @@ self.present(navVC, animated: false, completion: nil)
 
 ```
 
+## Requirements
+
+* iOS 9.0+
+* Xcode 8.2+
+* Swift 3.0+
 
 ## Contributing
 
@@ -91,3 +109,7 @@ We would love you for the contribution to ApplozicSwift, check the LICENSE file 
 ## License
 
 ApplozicSwift is released under a BSD 3-Clause. See [LICENSE](LICENSE) for more information.
+
+[img0]:https://raw.githubusercontent.com/Applozic/ApplozicSwift/master/Screenshots/screenshot0.png
+[img1]:https://raw.githubusercontent.com/Applozic/ApplozicSwift/master/Screenshots/screenshot1.png
+[img2]:https://raw.githubusercontent.com/Applozic/ApplozicSwift/master/Screenshots/screenshot2.png
