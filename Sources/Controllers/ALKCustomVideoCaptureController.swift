@@ -318,7 +318,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
                 return device as! AVCaptureDevice
             }
         }
-        return AVCaptureDevice()
+        return AVCaptureDevice(uniqueID: "")
     }
 
 
