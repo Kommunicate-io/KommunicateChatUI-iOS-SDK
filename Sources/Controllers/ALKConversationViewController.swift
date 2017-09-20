@@ -342,6 +342,11 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
         self.automaticallyAdjustsScrollViewInsets = false
 
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.never
+        }
+        tableView.estimatedRowHeight = 0
+
         tableView.register(ALKMyMessageCell.self)
         tableView.register(ALKFriendMessageCell.self)
         tableView.register(ALKMyPhotoPortalCell.self)

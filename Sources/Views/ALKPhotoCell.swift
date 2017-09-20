@@ -244,6 +244,12 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
 
     func updateView(for state: state) {
+        DispatchQueue.main.async {
+            self.updateView(state: state)
+        }
+    }
+
+    private func updateView(state: state) {
         switch state {
         case .upload(let filePath):
             currentState = .upload(filePath: filePath)
@@ -315,16 +321,6 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             downloadButton.isHidden = true
         }
     }
-
-//    func getImageFromDoc(named name: String) -> UIImage? {
-//        return nil
-//        do {
-//            let data = try Data(contentsOf: path)
-//            return UIImage(data: data)
-//        } catch {
-//            return nil
-//        }
-//    }
 
     func setImage(imageView: UIImageView, name: String) {
         DispatchQueue.global(qos: .background).async {
