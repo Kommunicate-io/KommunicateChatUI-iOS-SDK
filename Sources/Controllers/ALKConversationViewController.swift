@@ -647,9 +647,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func updateMessageAt(indexPath: IndexPath) {
         DispatchQueue.main.async {
-            self.tableView.beginUpdates()
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-            self.tableView.endUpdates()
         }
     }
 
@@ -668,6 +666,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func messageSent(at indexPath: IndexPath) {
         DispatchQueue.main.async {
+            NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)
+            guard indexPath.section >= self.tableView.numberOfSections else {
+                NSLog("rejected indexpath: %i and tableview and section %i", indexPath.section, self.tableView.numberOfSections)
+                return
+            }
             self.tableView.beginUpdates()
             self.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
             self.tableView.endUpdates()

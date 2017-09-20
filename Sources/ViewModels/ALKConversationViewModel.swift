@@ -444,11 +444,11 @@ final class ALKConversationViewModel: NSObject {
         self.delegate?.messageSent(at: indexPath)
         ALMessageService.sendMessages(alMessage, withCompletion: {
             message, error in
-            NSLog("Message sent: \(message), \(error)")
-            guard error == nil else { return }
+            NSLog("Message sent section: \(indexPath.section), \(alMessage.message)")
+            guard error == nil, indexPath.section < self.messageModels.count else { return }
             NSLog("No errors while sending the message")
             alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-            self.messageModels[self.messageModels.count-1] = alMessage.messageModel
+            self.messageModels[indexPath.section] = alMessage.messageModel
             self.delegate?.messageUpdated()
         })
     }
@@ -766,14 +766,14 @@ final class ALKConversationViewModel: NSObject {
         do {
             dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
         } catch {
-
+            return
         }
         dbMessage?.inProgress = 1
         dbMessage?.isUploadFailed = 0
         do {
             try alHandler?.managedObjectContext.save()
         } catch {
-
+            return
         }
         NSLog("content type: ", alMessage.fileMeta.contentType)
         NSLog("file path: ", alMessage.imageFilePath)
@@ -790,11 +790,12 @@ final class ALKConversationViewModel: NSObject {
                     try alHandler?.managedObjectContext.save()
                 } catch {
                     NSLog("Not saved due to error")
+                    return
                 }
 
                 self.send(alMessage: message!) {
                     updatedMessage in
-                    guard let mesg = updatedMessage else { return }
+                    guard let mesg = updatedMessage, indexPath.section < self.messageModels.count else { return }
                     DispatchQueue.main.async {
                         print("UI updated at section: ", indexPath.section, message?.isSent)
                         self.alMessages[indexPath.section] = mesg
