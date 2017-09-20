@@ -49,4 +49,4 @@ TypeGroupName = "Type group name";
 NewChatTitle = "New Chat";
 SearchPlaceholder = "Search";
 HoldToTalkMessage = "Hold to Talk / Tap to Type";
-RecordingMessage = "Recording...0:00";
+RecordingMessage = "Recording...00:00:00";
