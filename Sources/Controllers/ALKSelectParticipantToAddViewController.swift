@@ -57,8 +57,8 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
 
         setupUI()
 
-        if let textField = searchController.searchBar.textField {
-            guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft else { return }
+        if let textField = searchController.searchBar.textField,
+            UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             textField.textAlignment = .right
         }
 
@@ -186,7 +186,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
 
     // MARK: - IBAction
     @IBAction func invitePress(_ sender: Any) {
-        
+        btnInvite.isEnabled = false
         var selectedFriendList = [ALKFriendViewModel]()
         //get all friends selected into a list
         for fv in datasource.getDatasource(state: .full) {
