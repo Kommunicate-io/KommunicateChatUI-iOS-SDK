@@ -78,7 +78,7 @@ final class ALKSoundRecorderBtn: UIButton {
         setFont(font:Font.normal(size: 14))
         setTextColor(color:.white, forState: .normal)
         setTextColor(color:.white, forState: .highlighted)
-        let recordingMessage = NSLocalizedString("RecordingMessage", value: "Recording...0:00", comment: "")
+        let recordingMessage = NSLocalizedString("RecordingMessage", value: "Recording...00:00:00", comment: "")
         setTitle(recordingMessage, for: .normal)
         setTitle(recordingMessage, for: .highlighted)
     }
