@@ -218,7 +218,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
 
         let nib = UINib(nibName: "EmptyChatCell", bundle: Bundle.applozic)
         tableView.register(nib, forCellReuseIdentifier: "EmptyChatCell")
-
+        tableView.estimatedRowHeight = 0
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?) {
