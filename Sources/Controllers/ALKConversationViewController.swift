@@ -246,8 +246,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
     override public func viewDidAppear(_ animated: Bool) {
         NSLog("view loaded first time \(isFirstTime)")
         setupView()
-
-//        isFirstTime = false
     }
 
     override public func viewDidLoad() {
@@ -279,8 +277,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
         print("back tapped")
         self.viewModel.sendKeyboardDoneTyping()
         _ = navigationController?.popToRootViewController(animated: true)
-
-//        navigationController?.popViewController(animated: true)
     }
 
     func setupView() {
@@ -344,8 +340,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: tableView.bounds.size.width, height: 0.1))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: tableView.bounds.size.width, height: 8))
 
-        //        addStateOfConversation()
-
         self.automaticallyAdjustsScrollViewInsets = false
 
         tableView.register(ALKMyMessageCell.self)
@@ -371,11 +365,8 @@ public final class ALKConversationViewController: ALKBaseViewController {
         moreBar.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
         moreBar.isHidden = true
         moreBar.setHandleAction { [weak self] (actionType) in
-//            self?.view.makeToast(SystemMessage.ComingSoon.ExtraMenu, duration: 1.0, position: .center)
             self?.hideMoreBar()
         }
-
-//        moreBar.setPresenterVC(delegate: self)
     }
 
 
@@ -442,7 +433,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
                 let (message, indexPath) =  weakSelf.viewModel.send(photo: image)
                 guard let _ = message, let newIndexPath = indexPath else { return }
-                //            DispatchQueue.main.async {
                 weakSelf.tableView.beginUpdates()
                 weakSelf.tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
                 weakSelf.tableView.endUpdates()
