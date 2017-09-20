@@ -122,46 +122,6 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
     // MARK: - API Logic
     func fetchFriendList() {
 
-//        friendDataService?.fetch(complete: { [weak self] (identitys) in
-//            
-//            guard let weakSelf = self else {return}
-//            
-//            // Get all friends
-//            let friendViewModels = identitys.map(FriendViewModel.init)
-//            weakSelf.datasource.update(datasource: friendViewModels, state: .full)
-//            
-//            // Get existing friends in this group
-//            guard let friendsInGroup = weakSelf.friendsInGroup else {
-//                weakSelf.tblParticipants.reloadData()
-//                return
-//            }
-//            
-//            // Traverse through all friends
-//            for friendViewModel in friendViewModels {
-//
-//                // Select existing friend, and save them to previous friend list
-//                for person in friendsInGroup {
-//                    
-//                    guard friendViewModel.getFriendID() == person.getFriendID() else { continue }
-//                
-//                    friendViewModel.setIsSelected(select: true)
-//                   
-//                    // Keep track of existing friend
-//                    guard let id = person.friendUUID else { continue }
-//                    
-//                    weakSelf.existingFriendsInGroupStore.storeParticipantID(idString: id)
-//                }
-//                
-//                guard let friendUUID = friendViewModel.friendUUID else { continue }
-//                
-//                // Select newly selected friend before user click invite
-//                if weakSelf.newFriendsInGroupStore.contain(participantID: friendUUID) {
-//                    friendViewModel.setIsSelected(select: true)
-//                }
-//            }
-//            weakSelf.tblParticipants.reloadData()
-//        })
-
         getAllFriends {
             // Get existing friends in this group
             self.tblParticipants.reloadData()
