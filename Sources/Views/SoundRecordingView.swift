@@ -264,10 +264,11 @@ final class ALKSoundRecorderBtn: UIButton {
         //min
         let min = (counter / 60) % 60
         let sec = (counter % 60)
-        let minStr = String(min)
+        var minStr = String(min)
         var secStr = String(sec)
         if sec < 10 {secStr = "0\(secStr)"}
-        let recordingMessage = NSLocalizedString("RecordingMessage", value: "Recording...0:00", comment: "")
+        if min < 10 {minStr = "0\(minStr)"}
+        let recordingMessage = NSLocalizedString("RecordingMessage", value: "Recording...0:00:", comment: "")
         setTitle("\(recordingMessage)\(minStr):\(secStr)", for: .normal)
         setTitle("\(recordingMessage)\(minStr):\(secStr)", for: .highlighted)
     }
