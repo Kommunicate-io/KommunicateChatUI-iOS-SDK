@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Camera-->
         <scene sceneID="2DX-2n-Pdk">
@@ -19,7 +25,7 @@
                         <viewControllerLayoutGuide type="bottom" id="KEN-YE-PSa"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7Tr-pD-Cka">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0sR-12-CM9">
@@ -138,7 +144,7 @@
             <objects>
                 <navigationController storyboardIdentifier="CustomCameraNavigationController" id="1GD-nr-JWf" customClass="ALKBaseNavigationViewController" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="XoI-Ni-03l">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -158,7 +164,7 @@
                         <viewControllerLayoutGuide type="bottom" id="sxR-hS-pkZ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BiX-m0-OcR">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mJP-2B-M1h">
@@ -176,9 +182,6 @@
                                                 <state key="normal" title="Reset Photo">
                                                     <color key="titleColor" red="0.87843137250000003" green="0.035294117649999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
-                                                <connections>
-                                                    <action selector="resetImgPress:" destination="iTB-q3-GAc" eventType="touchUpInside" id="Utj-0k-na1"/>
-                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhN-uX-GMh">
                                                 <rect key="frame" x="180.5" y="0.0" width="150.5" height="30"/>
@@ -188,9 +191,6 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
                                                 <state key="normal" title="Select"/>
-                                                <connections>
-                                                    <action selector="saveImgPress:" destination="iTB-q3-GAc" eventType="touchUpInside" id="nDA-T0-G8Y"/>
-                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -234,11 +234,6 @@
                             <constraint firstItem="mJP-2B-M1h" firstAttribute="top" secondItem="Ifk-TB-ika" secondAttribute="bottom" id="dTv-U9-h4I"/>
                         </constraints>
                     </view>
-                    <connections>
-                        <outlet property="btnReset" destination="bd3-Ua-mWS" id="V6d-kz-fZb"/>
-                        <outlet property="btnSave" destination="LhN-uX-GMh" id="pfZ-nv-sNN"/>
-                        <outlet property="previewScroll" destination="7qw-wr-Qzj" id="U7H-J0-RBa"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y7v-WU-phd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -253,7 +248,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Dnq-L0-ql2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JZe-R1-hhH">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jjH-Ng-oKf">
