@@ -698,8 +698,10 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
 
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
         if viewModel.isGroupConversation() {
-            self.title = groupName
-            titleButton.setTitle(self.title, for: .normal)
+            if !groupName.isEmpty {
+                self.title = groupName
+                titleButton.setTitle(self.title, for: .normal)
+            }
             
             viewModel.updateGroup(groupName: groupName, groupImage: groupImgUrl, friendsAdded: friendsAdded)
 

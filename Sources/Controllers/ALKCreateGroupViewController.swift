@@ -79,7 +79,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     
     @IBAction func createGroupPress(_ sender: Any) {
 
-        guard let groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+        guard var groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             alert(msg: "Please fill out group name")
             return
         }
@@ -113,6 +113,10 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
                 })
                 }
             else {
+
+                if groupName == self.groupName {
+                    groupName = ""
+                }
                 groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: groupProfileImgUrl, friendsAdded:addedList)
             }
 
