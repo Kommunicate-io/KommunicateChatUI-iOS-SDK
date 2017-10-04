@@ -362,8 +362,6 @@ final class ALKConversationViewModel: NSObject {
 
     func updateGroup(groupName: String, groupImage: String, friendsAdded: [ALKFriendViewModel]) {
 
-        //TODO: Add api for adding multiple users.
-        // Right now is just updates group info.
 
         updateGroupInfo(groupName: groupName, groupImage: groupImage, completion: {
             success in
