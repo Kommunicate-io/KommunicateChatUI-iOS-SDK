@@ -107,9 +107,11 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
                 btnCreateGroup.isEnabled = false
                 downloadManager.upload(image: image, uploadURL: uploadUrl, completion: {
                     imageUrlData in
-                    self.activityIndicator.stopAnimating()
-                    self.activityIndicator.isHidden = true
-                    self.btnCreateGroup.isEnabled = true
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        self.btnCreateGroup.isEnabled = true
+                    }
                     guard let data = imageUrlData, let imageUrl = String(data: data, encoding: .utf8) else {
                         NSLog("GROUP PROFILE PICTURE UPDATE FAILED")
                         return
