@@ -52,6 +52,8 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     @IBOutlet fileprivate weak var imgGroupProfile: UIImageView!
     fileprivate var tempSelectedImg:UIImage!
     fileprivate var cropedImage: UIImage?
+
+    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
     var viewModel: ALKCreateGroupViewModel?
     
@@ -79,7 +81,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     
     @IBAction func createGroupPress(_ sender: Any) {
 
-        guard let groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+        guard var groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             alert(msg: "Please fill out group name")
             return
         }
@@ -100,9 +102,16 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
                     return
                 }
                 let downloadManager = ALKDownloadManager()
+                activityIndicator.isHidden = false
+                activityIndicator.startAnimating()
+                btnCreateGroup.isEnabled = false
                 downloadManager.upload(image: image, uploadURL: uploadUrl, completion: {
                     imageUrlData in
-
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        self.btnCreateGroup.isEnabled = true
+                    }
                     guard let data = imageUrlData, let imageUrl = String(data: data, encoding: .utf8) else {
                         NSLog("GROUP PROFILE PICTURE UPDATE FAILED")
                         return
@@ -113,6 +122,10 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
                 })
                 }
             else {
+
+                if groupName == self.groupName {
+                    groupName = ""
+                }
                 groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: groupProfileImgUrl, friendsAdded:addedList)
             }
 
@@ -124,6 +137,10 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             txtfGroupName.textAlignment = .right
         }
+        activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+        activityIndicator.color = UIColor.lightGray
+        view.addSubview(activityIndicator)
+        activityIndicator.isHidden = true
         txtfGroupName.layer.cornerRadius = 10
         txtfGroupName.layer.borderColor = UIColor.mainRed().cgColor
         txtfGroupName.layer.borderWidth = 1
@@ -185,7 +202,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
         if let vc = storyboard.instantiateViewController(withIdentifier: "CustomCameraNavigationController") as? ALKBaseNavigationViewController {
             guard let firstVC = vc.viewControllers.first else {return}
             let cameraView = firstVC as! ALKCustomCameraViewController
-            cameraView.setCustomCamDelegate(camMode: .CropOption, camDelegate: self)
+            cameraView.setCustomCamDelegate(camMode: .NoCropOption, camDelegate: self)
             self.present(vc, animated: false, completion: nil)
         }
     }

@@ -218,21 +218,20 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
     }
 
     private func getAddedFriend(allFriendsInGroup: [ALKFriendViewModel]) -> [ALKFriendViewModel] {
-//        var addedFriendList = [ALKFriendViewModel]()
-//        for friend in allFriendsInGroup {
-//            if !isInPreviousFriendGroup(fri: friend) {
-//                addedFriendList.append(friend)
-//            }
-//        }
-//        return addedFriendList
-        return [ALKFriendViewModel]()
+        var addedFriendList = [ALKFriendViewModel]()
+        for friend in allFriendsInGroup {
+            if !isInPreviousFriendGroup(fri: friend) {
+                addedFriendList.append(friend)
+            }
+        }
+        return addedFriendList
     }
     
     fileprivate func isInPreviousFriendGroup(fri: ALKFriendViewModel) -> Bool {
-//        guard let friendUUID = fri.friendUUID else { return false }
-//        
-//        return existingFriendsInGroupStore.contain(participantID: friendUUID)
-        return false
+        guard let friendUUID = fri.friendUUID, let friendsInGroup = self.friendsInGroup else { return false }
+        return friendsInGroup
+                    .filter { $0.friendUUID == friendUUID }
+                    .count > 0
     }
     
 }
