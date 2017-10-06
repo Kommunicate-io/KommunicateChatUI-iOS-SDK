@@ -232,7 +232,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
             title = name
         }
         title = title.isEmpty ? "No name":title
-        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: channelKey)
+        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: groupId)
         conversationViewController = ALKConversationViewController()
         conversationViewController?.title = title
         conversationViewController?.viewModel = convViewModel
