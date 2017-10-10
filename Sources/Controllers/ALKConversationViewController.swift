@@ -486,7 +486,17 @@ public final class ALKConversationViewController: ALKBaseViewController {
                     cameraView.delegate = self
                     UIViewController.topViewController()?.present(vc, animated: false, completion: nil)
                 }
-//            case .showLocation():
+            case .showLocation():
+                let defaults = UserDefaults()
+
+                let showGoogleMaps = defaults.bool(forKey: "showGoogleMaps")
+                if !showGoogleMaps {
+                    // Use Apple maps
+                    let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.MapView, bundle: Bundle.applozic)
+
+                    guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+                    self?.present(nav, animated: true, completion: {})
+                }
 //                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.shareLocation, bundle: Bundle.applozic)
 //
 //                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
