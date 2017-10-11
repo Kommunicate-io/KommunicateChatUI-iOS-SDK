@@ -43,7 +43,7 @@ protocol ALKMessageViewModel {
     var thumbnailURL: URL? { get }
     var imageURL: URL? { get }
     var filePath: String? { get set }
-//    var geocode: Geocode? { get }
+    var geocode: Geocode? { get }
     var voiceData: Data? { get set }
     var voiceTotalDuration: CGFloat { get set }
     var voiceCurrentDuration: CGFloat { get set }

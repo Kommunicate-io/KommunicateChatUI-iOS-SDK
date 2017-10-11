@@ -487,15 +487,15 @@ final class ALKConversationViewModel: NSObject {
 
     }
 
-//    func add(geocode: Geocode) -> (ALMessage?, IndexPath?) {
-//        let latlonString = ["lat": "\(geocode.location.latitude)", "lon": "\(geocode.location.longitude)"]
-//        guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
-//        let message = getLocationMessage(latLonString: jsonString)
-//        alMessageWrapper.addALMessage(toMessageArray: message)
-//        addToWrapper(message: message)
-//        let indexPath = IndexPath(row: 0, section: messageModels.count-1)
-//        return (message, indexPath)
-//    }
+    func add(geocode: Geocode) -> (ALMessage?, IndexPath?) {
+        let latlonString = ["lat": "\(geocode.location.latitude)", "lon": "\(geocode.location.longitude)"]
+        guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
+        let message = getLocationMessage(latLonString: jsonString)
+        alMessageWrapper.addALMessage(toMessageArray: message)
+        addToWrapper(message: message)
+        let indexPath = IndexPath(row: 0, section: messageModels.count-1)
+        return (message, indexPath)
+    }
 
     func sendGeocode(message: ALMessage, indexPath: IndexPath) {
         self.send(alMessage: message) {

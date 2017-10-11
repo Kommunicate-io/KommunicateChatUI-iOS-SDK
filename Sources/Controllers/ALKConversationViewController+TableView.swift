@@ -120,19 +120,18 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             }
         case .location:
-            print("")
-//            if message.isMyMessage {
-//                let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-//                cell.update(viewModel: message)
-//                cell.setDelegate(locDelegate: self)
-//                return cell
-//
-//            } else {
-//                let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-//                cell.update(viewModel: message)
-//                cell.setDelegate(locDelegate: self)
-//                return cell
-//            }
+            if message.isMyMessage {
+                let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                cell.setDelegate(locDelegate: self)
+                return cell
+
+            } else {
+                let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                cell.setDelegate(locDelegate: self)
+                return cell
+            }
         case .information:
             let cell: ALKInformationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.update(viewModel: message)

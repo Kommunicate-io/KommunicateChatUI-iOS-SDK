@@ -13,7 +13,7 @@ import Kingfisher
 import Applozic
 
 protocol ALKShareLocationViewControllerDelegate: class {
-//    func locationDidSelected(geocode: Geocode, image: UIImage)
+    func locationDidSelected(geocode: Geocode, image: UIImage)
 }
 
 

@@ -486,15 +486,13 @@ public final class ALKConversationViewController: ALKBaseViewController {
                     cameraView.delegate = self
                     UIViewController.topViewController()?.present(vc, animated: false, completion: nil)
                 }
-//            case .showLocation():
-//                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.shareLocation, bundle: Bundle.applozic)
-//
-//                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
-//
-//                guard let shareLocationVC = nav.viewControllers.first as? ALKShareLocationViewController else { return }
-//
-//                shareLocationVC.delegate = self
-//                self?.present(nav, animated: true, completion: {})
+            case .showLocation():
+                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.MapView, bundle: Bundle.applozic)
+
+                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+                guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
+                mapViewVC.delegate = self
+                self?.present(nav, animated: true, completion: {})
             default:
                 print("Not available")
             }
@@ -714,36 +712,34 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
     }
 }
 
-//extension ALKConversationViewController: ALKShareLocationViewControllerDelegate {
-//    func locationDidSelected(geocode: Geocode, image: UIImage) {
-//        let (message, indexPath) = viewModel.add(geocode: geocode)
-//        guard let newMessage = message, let newIndexPath = indexPath else {
-//            return
-//        }
-//        self.tableView.beginUpdates()
-//        self.tableView.insertSections(IndexSet(integer: (newIndexPath.section)), with: .automatic)
-//        self.tableView.endUpdates()
-//        self.tableView.scrollToBottom(animated: false)
-//        viewModel.sendGeocode(message: newMessage, indexPath: newIndexPath)
-//    }
-//}
+extension ALKConversationViewController: ALKShareLocationViewControllerDelegate {
+    func locationDidSelected(geocode: Geocode, image: UIImage) {
+        let (message, indexPath) = viewModel.add(geocode: geocode)
+        guard let newMessage = message, let newIndexPath = indexPath else {
+            return
+        }
+        self.tableView.beginUpdates()
+        self.tableView.insertSections(IndexSet(integer: (newIndexPath.section)), with: .automatic)
+        self.tableView.endUpdates()
+        
+        // Not scrolling down without the delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.tableView.scrollToBottom(animated: false)
+        }
+        viewModel.sendGeocode(message: newMessage, indexPath: newIndexPath)
+    }
+}
 
 
-//extension ALKConversationViewController: ALKLocationCellDelegate {
-//    func displayLocation(location: LocationPreviewViewModel) {
-//        let storyboard = UIStoryboard.name(storyboard: .previewLocation, bundle: Bundle.applozic)
-//
-//        guard let navigation = storyboard.instantiateInitialViewController() as? UINavigationController,let previewLocationVC = navigation.visibleViewController as? ALKPreviewLocationViewController else {return}
-//        previewLocationVC.setLocationViewModel(location: location)
-//
-//        if let _ = self.presentedViewController {
-//            return
-//        }else{
-//            self.present(navigation, animated: true, completion:nil)
-//        }
-//
-//    }
-//}
+extension ALKConversationViewController: ALKLocationCellDelegate {
+    func displayLocation(location: ALKLocationPreviewViewModel) {
+        let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
+        let locationString = String(format: "https://maps.google.com/maps?q=loc:%@", latLonString)
+        guard let locationUrl = URL(string: locationString) else { return }
+        UIApplication.shared.openURL(locationUrl)
+
+    }
+}
 
 extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellProtocol {
 

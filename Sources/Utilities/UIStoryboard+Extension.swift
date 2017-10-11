@@ -44,6 +44,7 @@ extension UIStoryboard {
         case video = "CustomVideoCapture"
         case picker = "CustomPicker"
         case mediaViewer = "MediaViewer"
+        case MapView = "MapView"
     }
     
     convenience init(storyboard: Storyboard, bundle: Bundle? = nil) {

@@ -264,7 +264,7 @@ final class ALKChatBar: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        locationButton.isHidden = true
+//        locationButton.isHidden = true
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }

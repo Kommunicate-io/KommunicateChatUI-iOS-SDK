@@ -32,7 +32,7 @@ class ALKMessageModel: ALKMessageViewModel {
     var thumbnailURL: URL?
     var imageURL: URL?
     var filePath: String?
-//    var geocode: Geocode?
+    var geocode: Geocode?
     var voiceTotalDuration: CGFloat = 0
     var voiceCurrentDuration: CGFloat = 0
     var voiceCurrentState: ALKVoiceCellState = .stop
