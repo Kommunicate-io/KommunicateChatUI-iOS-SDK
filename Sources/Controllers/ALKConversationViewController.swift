@@ -487,24 +487,12 @@ public final class ALKConversationViewController: ALKBaseViewController {
                     UIViewController.topViewController()?.present(vc, animated: false, completion: nil)
                 }
             case .showLocation():
-                let defaults = UserDefaults()
+                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.MapView, bundle: Bundle.applozic)
 
-                let showGoogleMaps = defaults.bool(forKey: "showGoogleMaps")
-                if !showGoogleMaps {
-                    // Use Apple maps
-                    let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.MapView, bundle: Bundle.applozic)
-
-                    guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
-                    self?.present(nav, animated: true, completion: {})
-                }
-//                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.shareLocation, bundle: Bundle.applozic)
-//
-//                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
-//
-//                guard let shareLocationVC = nav.viewControllers.first as? ALKShareLocationViewController else { return }
-//
-//                shareLocationVC.delegate = self
-//                self?.present(nav, animated: true, completion: {})
+                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+                guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
+                mapViewVC.delegate = self
+                self?.present(nav, animated: true, completion: {})
             default:
                 print("Not available")
             }
@@ -724,19 +712,20 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
     }
 }
 
-//extension ALKConversationViewController: ALKShareLocationViewControllerDelegate {
-//    func locationDidSelected(geocode: Geocode, image: UIImage) {
-//        let (message, indexPath) = viewModel.add(geocode: geocode)
-//        guard let newMessage = message, let newIndexPath = indexPath else {
-//            return
-//        }
-//        self.tableView.beginUpdates()
-//        self.tableView.insertSections(IndexSet(integer: (newIndexPath.section)), with: .automatic)
-//        self.tableView.endUpdates()
-//        self.tableView.scrollToBottom(animated: false)
-//        viewModel.sendGeocode(message: newMessage, indexPath: newIndexPath)
-//    }
-//}
+extension ALKConversationViewController: ALKShareLocationViewControllerDelegate {
+    func locationDidSelected(geocode: Geocode, image: UIImage) {
+        let (message, indexPath) = viewModel.add(geocode: geocode)
+        guard let newMessage = message, let newIndexPath = indexPath else {
+            return
+        }
+        self.tableView.beginUpdates()
+        self.tableView.insertSections(IndexSet(integer: (newIndexPath.section)), with: .automatic)
+        self.tableView.endUpdates()
+        
+        self.tableView.scrollToBottom(animated: false)
+        viewModel.sendGeocode(message: newMessage, indexPath: newIndexPath)
+    }
+}
 
 
 //extension ALKConversationViewController: ALKLocationCellDelegate {

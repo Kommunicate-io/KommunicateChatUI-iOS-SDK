@@ -63,7 +63,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="ki4-nW-qC9">
             <objects>
-                <navigationController id="WSq-8e-eNR" customClass="ALBaseNavigationViewController" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="WSq-8e-eNR" customClass="ALKBaseNavigationViewController" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wF1-Ya-Xf2">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

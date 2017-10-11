@@ -111,26 +111,28 @@ extension ALMessage {
         return filePath
     }
 
-//    var geocode: Geocode? {
-//        guard messageType == .location else {
-//            return nil
-//        }
-//        if let message = message {
-//            let jsonObject = try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!, options: .mutableContainers) as! [String: Any]
-//
-//            // Check if type is double or string
-//            if let lat = jsonObject["lat"] as? Double, let lon = jsonObject["lon"] {
-//                return Geocode(JSON: ["lat": lat, "lon": lon])
-//            } else {
-//                guard let latString = jsonObject["lat"] as? String,
-//                    let lonString = jsonObject["lon"] as? String,let lat = Double(latString), let lon = Double(lonString) else {
-//                        return nil
-//                }
-//                return Geocode(JSON: ["lat": lat, "lon": lon])
-//            }
-//        }
-//        return nil
-//    }
+    var geocode: Geocode? {
+        guard messageType == .location else {
+            return nil
+        }
+        if let message = message {
+            let jsonObject = try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!, options: .mutableContainers) as! [String: Any]
+
+            // Check if type is double or string
+            if let lat = jsonObject["lat"] as? Double, let lon = jsonObject["lon"] as? Double {
+                let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                return Geocode(coordinates: location)
+            } else {
+                guard let latString = jsonObject["lat"] as? String,
+                    let lonString = jsonObject["lon"] as? String,let lat = Double(latString), let lon = Double(lonString) else {
+                        return nil
+                }
+                let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                return Geocode(coordinates: location)
+            }
+        }
+        return nil
+    }
 
     var fileMetaInfo: ALFileMetaInfo? {
         return self.fileMeta ?? nil
@@ -161,7 +163,7 @@ extension ALMessage {
         messageModel.thumbnailURL = thumbnailURL
         messageModel.imageURL = imageUrl
         messageModel.filePath = filePath
-//        messageModel.geocode = geocode
+        messageModel.geocode = geocode
         messageModel.fileMetaInfo = fileMetaInfo
         return messageModel
     }

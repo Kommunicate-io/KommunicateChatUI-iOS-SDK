@@ -7,13 +7,17 @@
 
 import UIKit
 import MapKit
+import Applozic
+import Kingfisher
 
-class ALKMapViewController: UIViewController, CLLocationManagerDelegate {
+class ALKMapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
 
     var locationManager = CLLocationManager()
+    var region = MKCoordinateRegion()
     var isInitialized = false
+    weak var delegate: ALKShareLocationViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,12 +29,12 @@ class ALKMapViewController: UIViewController, CLLocationManagerDelegate {
 
     func determineCurrentLocation()
     {
-
 //        mapView.delegate = self
         mapView.showsUserLocation = true
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.requestLocation()
             locationManager.startUpdatingLocation()
@@ -42,9 +46,43 @@ class ALKMapViewController: UIViewController, CLLocationManagerDelegate {
     }
 
     @IBAction func sendLocationAction(_ sender: UIButton) {
-
+        region = mapView.region
+        let location = CLLocationCoordinate2D(latitude: region.center.latitude, longitude: region.center.longitude)
+        let geoCode = Geocode(coordinates: location)
+        self.delegate?.locationDidSelected(geocode: geoCode, image: UIImage())
+        self.dismiss(animated: true, completion: nil)
     }
 
+    private func createStaticMap(position: CLLocationCoordinate2D,
+                                 success: @escaping (UIImage) -> (),
+                                 failure: @escaping (Error?) -> ()) {
+        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else {
+            failure(nil)
+            return
+        }
+        var urlString: String? = "https://maps.googleapis.com/maps/api/staticmap?" +
+            "markers=color:red|size:mid|\(position.latitude),\(position.longitude)" +
+            "&zoom=15&size=237x102&maptype=roadmap&scale=2" +
+            "&key=\(apiKey)"
+
+        urlString = urlString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+
+        if let urlString = urlString, let url = URL(string: urlString) {
+
+            KingfisherManager.shared.retrieveImage(with: url, options: nil, progressBlock: nil) { (image: Image?, error: NSError?, cacheType: CacheType, url: URL?) in
+
+
+                guard let image = image else {
+                    failure(error)
+                    return
+                }
+                success(image)
+            }
+        }
+    }
+}
+
+extension ALKMapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard !isInitialized else { return }
         isInitialized = true
