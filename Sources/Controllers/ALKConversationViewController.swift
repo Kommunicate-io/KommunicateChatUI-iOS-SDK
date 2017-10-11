@@ -722,7 +722,10 @@ extension ALKConversationViewController: ALKShareLocationViewControllerDelegate 
         self.tableView.insertSections(IndexSet(integer: (newIndexPath.section)), with: .automatic)
         self.tableView.endUpdates()
         
-        self.tableView.scrollToBottom(animated: false)
+        // Not scrolling down without the delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.tableView.scrollToBottom(animated: false)
+        }
         viewModel.sendGeocode(message: newMessage, indexPath: newIndexPath)
     }
 }
