@@ -731,21 +731,15 @@ extension ALKConversationViewController: ALKShareLocationViewControllerDelegate 
 }
 
 
-//extension ALKConversationViewController: ALKLocationCellDelegate {
-//    func displayLocation(location: LocationPreviewViewModel) {
-//        let storyboard = UIStoryboard.name(storyboard: .previewLocation, bundle: Bundle.applozic)
-//
-//        guard let navigation = storyboard.instantiateInitialViewController() as? UINavigationController,let previewLocationVC = navigation.visibleViewController as? ALKPreviewLocationViewController else {return}
-//        previewLocationVC.setLocationViewModel(location: location)
-//
-//        if let _ = self.presentedViewController {
-//            return
-//        }else{
-//            self.present(navigation, animated: true, completion:nil)
-//        }
-//
-//    }
-//}
+extension ALKConversationViewController: ALKLocationCellDelegate {
+    func displayLocation(location: ALKLocationPreviewViewModel) {
+        let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
+        let locationString = String(format: "https://maps.google.com/maps?q=loc:%@", latLonString)
+        guard let locationUrl = URL(string: locationString) else { return }
+        UIApplication.shared.openURL(locationUrl)
+
+    }
+}
 
 extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellProtocol {
 

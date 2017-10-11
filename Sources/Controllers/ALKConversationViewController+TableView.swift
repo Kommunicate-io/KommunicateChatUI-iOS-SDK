@@ -123,13 +123,13 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
                 let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
-//                cell.setDelegate(locDelegate: self)
+                cell.setDelegate(locDelegate: self)
                 return cell
 
             } else {
                 let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
-//                cell.setDelegate(locDelegate: self)
+                cell.setDelegate(locDelegate: self)
                 return cell
             }
         case .information:
