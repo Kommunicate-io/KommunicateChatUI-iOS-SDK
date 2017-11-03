@@ -363,6 +363,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
     }
 }
 
+//MARK: ALMessagesDelegate
 extension ALKConversationListViewController: ALMessagesDelegate {
     public func getMessagesArray(_ messagesArray: NSMutableArray!) {
         print("message array: ", messagesArray.map { ($0 as! ALMessage).message})
