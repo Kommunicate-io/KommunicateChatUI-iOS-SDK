@@ -449,7 +449,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
                     notificationView.noDataConnectionNotificationView()
                     return
                 }
-                weakSelf.viewModel.uploadImage(cell: cell, indexPath: newIndexPath)
+                weakSelf.viewModel.uploadImage(view: cell, indexPath: newIndexPath)
 
                 button.isUserInteractionEnabled = true
                 button.isUserInteractionEnabled = true
@@ -943,7 +943,7 @@ extension ALKConversationViewController: UIImagePickerControllerDelegate, UINavi
                         notificationView.noDataConnectionNotificationView()
                         return
                     }
-                    self.viewModel.uploadVideo(indexPath: newIndexPath, cell: cell)
+                    self.viewModel.uploadVideo(view: cell, indexPath: newIndexPath)
                 }
             })
         }
@@ -972,7 +972,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     notificationView.noDataConnectionNotificationView()
                     return
                 }
-                viewModel.uploadImage(cell: cell, indexPath: newIndexPath)
+                viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
                 let path = videos[i - images.count]
                 let (_, indexPath) = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary)
@@ -986,7 +986,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     notificationView.noDataConnectionNotificationView()
                     return
                 }
-                self.viewModel.uploadVideo(indexPath: newIndexPath, cell: cell)
+                self.viewModel.uploadVideo(view: cell, indexPath: newIndexPath)
             }
 
         }

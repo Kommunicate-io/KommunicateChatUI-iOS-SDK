@@ -15,5 +15,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'Kingfisher', '~> 3.6.2'
   s.dependency 'MGSwipeTableCell', '~> 1.5.6'
-  s.dependency 'Applozic', '~> 4.2.0'
+  s.dependency 'Applozic', '~> 4.4.0'
 end

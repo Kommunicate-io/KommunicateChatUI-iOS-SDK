@@ -236,8 +236,8 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             notificationView.noDataConnectionNotificationView()
             return
         }
-        let downloadManager = ALKDownloadManager()
-        downloadManager.delegate = self
+        let downloadManager = ALKHTTPManager()
+//        downloadManager.downloadDelegate = self
         downloadManager.downloadVideo(message: viewModel)
 
     }
@@ -357,37 +357,37 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
 }
 
-extension ALKPhotoCell: ALKDownloadManagerDelegate {
-    func dataUpdated(countCompletion: Int64) {
-        NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
-        DispatchQueue.main.async {
-            self.updateView(for: .downloading)
-        }
-    }
-
-    func dataFinished(path: String) {
-        guard !path.isEmpty, let viewModel = self.viewModel else {
-            updateView(for: .download)
-            return
-        }
-        self.updateDbMessageWith(key: "key", value: viewModel.identifier, filePath: path)
-        DispatchQueue.main.async {
-            self.updateView(for: .downloaded(filePath: path))
-        }
-    }
-
-    func dataUploaded(responseDictionary: Any?) {
-        NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@ AND DICT: %@", viewModel?.filePath ?? "", responseDictionary.debugDescription)
-        if responseDictionary == nil {
-            DispatchQueue.main.async {
-                self.updateView(for: .upload(filePath: self.viewModel?.filePath ?? ""))
-            }
-        } else if let filePath = viewModel?.filePath {
-            DispatchQueue.main.async {
-                self.updateView(for: state.downloaded(filePath: filePath))
-            }
-        }
-        uploadCompleted?(responseDictionary)
-    }
-}
+//extension ALKPhotoCell: ALKDownloadManagerDelegate {
+//    func dataUpdated(countCompletion: Int64) {
+//        NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
+//        DispatchQueue.main.async {
+//            self.updateView(for: .downloading)
+//        }
+//    }
+//
+//    func dataFinished(path: String) {
+//        guard !path.isEmpty, let viewModel = self.viewModel else {
+//            updateView(for: .download)
+//            return
+//        }
+//        self.updateDbMessageWith(key: "key", value: viewModel.identifier, filePath: path)
+//        DispatchQueue.main.async {
+//            self.updateView(for: .downloaded(filePath: path))
+//        }
+//    }
+//
+//    func dataUploaded(responseDictionary: Any?) {
+//        NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@ AND DICT: %@", viewModel?.filePath ?? "", responseDictionary.debugDescription)
+//        if responseDictionary == nil {
+//            DispatchQueue.main.async {
+//                self.updateView(for: .upload(filePath: self.viewModel?.filePath ?? ""))
+//            }
+//        } else if let filePath = viewModel?.filePath {
+//            DispatchQueue.main.async {
+//                self.updateView(for: state.downloaded(filePath: filePath))
+//            }
+//        }
+//        uploadCompleted?(responseDictionary)
+//    }
+//}
 

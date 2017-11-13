@@ -223,8 +223,8 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
             notificationView.noDataConnectionNotificationView()
             return
         }
-        let downloadManager = ALKDownloadManager()
-        downloadManager.delegate = self
+        let downloadManager = ALKHTTPManager()
+        downloadManager.downloadDelegate = self
         downloadManager.downloadVideo(message: viewModel)
         
     }
@@ -321,24 +321,14 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 }
 
-extension ALKVideoCell: ALKDownloadManagerDelegate {
-    func dataUpdated(countCompletion: Int64) {
-        NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
-        let total = self.viewModel?.size ?? 0
-        let progress = self.convertToDegree(total: total, written: countCompletion)
-        self.updateView(for: .downloading(progress: progress, totalCount: total))
-    }
-    
-    func dataFinished(path: String) {
-        guard !path.isEmpty, let viewModel = self.viewModel else {
-            updateView(for: .download)
-            return
-        }
-        self.updateDbMessageWith(key: "key", value: viewModel.identifier, filePath: path)
-        updateView(for: .downloaded(filePath: path))
+extension ALKVideoCell: ALKHTTPManagerUploadDelegate {
+    func dataUploaded(task: ALKUploadTask) {
+        NSLog("Data uploaded: \(task.totalBytesUploaded) out of total: \(task.totalBytesExpectedToUpload)")
+        let progress = self.convertToDegree(total: task.totalBytesExpectedToUpload, written: task.totalBytesUploaded)
+        self.updateView(for: .downloading(progress: progress, totalCount: task.totalBytesExpectedToUpload))
     }
 
-    func dataUploaded(responseDictionary: Any?) {
+    func dataUploadingFinished(withResponseDictionary responseDictionary: Any?, task: ALKUploadTask) {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@ AND DICT: %@", viewModel?.filePath ?? "", responseDictionary.debugDescription)
         if responseDictionary == nil {
             updateView(for: .upload)
@@ -346,5 +336,23 @@ extension ALKVideoCell: ALKDownloadManagerDelegate {
             updateView(for: state.downloaded(filePath: filePath))
         }
         uploadCompleted?(responseDictionary)
+    }
+}
+
+extension ALKVideoCell: ALKHTTPManagerDownloadDelegate {
+    func dataDownloaded(countCompletion: Int64) {
+        NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
+        let total = self.viewModel?.size ?? 0
+        let progress = self.convertToDegree(total: total, written: countCompletion)
+        self.updateView(for: .downloading(progress: progress, totalCount: total))
+    }
+
+    func dataDownloadingFinished(path: String) {
+        guard !path.isEmpty, let viewModel = self.viewModel else {
+            updateView(for: .download)
+            return
+        }
+        self.updateDbMessageWith(key: "key", value: viewModel.identifier, filePath: path)
+        updateView(for: .downloaded(filePath: path))
     }
 }

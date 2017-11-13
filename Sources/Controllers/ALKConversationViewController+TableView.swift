@@ -56,7 +56,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                             notificationView.noDataConnectionNotificationView()
                             return
                         }
-                        self?.viewModel.uploadImage(cell: cell, indexPath: indexPath)
+                        self?.viewModel.uploadImage(view: cell, indexPath: indexPath)
                     }
                     return cell
 
@@ -148,7 +148,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         notificationView.noDataConnectionNotificationView()
                         return
                     }
-                    self?.viewModel.uploadVideo(indexPath: indexPath, cell: cell)
+                    self?.viewModel.uploadVideo(view: cell, indexPath: indexPath)
                 }
                 cell.uploadCompleted = {[weak self]
                     responseDict in
