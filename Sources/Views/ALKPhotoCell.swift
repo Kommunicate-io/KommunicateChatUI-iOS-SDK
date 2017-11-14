@@ -190,7 +190,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         downloadButton.addTarget(self, action: #selector(ALKPhotoCell.downloadButtonAction(_:)), for: .touchUpInside)
         contentView.addViewsForAutolayout(views: [photoView,bubbleView,actionButton,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
         contentView.bringSubview(toFront: photoView)
-//        contentView.bringSubview(toFront: actionButton)
+        contentView.bringSubview(toFront: downloadButton)
         contentView.bringSubview(toFront: uploadButton)
         contentView.bringSubview(toFront: activityIndicator)
 
@@ -275,7 +275,8 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             actionButton.isEnabled = false
             activityIndicator.isHidden = true
             uploadButton.isHidden = true
-            photoView.image = nil
+            let thumbnailUrl = viewModel?.thumbnailURL
+            photoView.kf.setImage(with: thumbnailUrl)
         case .downloading:
             uploadButton.isHidden = true
             activityIndicator.isHidden = false
@@ -284,9 +285,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             }
             downloadButton.isHidden = true
             actionButton.isEnabled = false
-            photoView.image = nil
         case .downloaded(let filePath):
-            photoView.image = nil
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating{
                 activityIndicator.startAnimating()
