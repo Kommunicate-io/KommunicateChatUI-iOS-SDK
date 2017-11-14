@@ -103,24 +103,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
         self.viewModel = viewModel
         activityIndicator.color = .black
-//        self.photoView.addSubview(uploadButton)
-//        self.photoView.addSubview(activityIndicator)
-//        self.photoView.image = UIImage()
-//        if let filePath = viewModel.filePath {
-//            let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//            url = docDir.appendingPathComponent(filePath)
-//        } else {
-//            if let imageURL = viewModel.imageURL {
-//                url = imageURL
-//            } else if let imageUrl = viewModel.thumbnailURL {
-//                url = imageUrl
-//            }
-//        }
-//        print("file url: ", url)
-//        photoView.kf.indicatorType = .activity
-//        photoView.kf.setImage(with: url)
-//        uploadButton.isHidden = true
-        print("Update ViewModel filePath:: %@", viewModel.filePath)
+        print("Update ViewModel filePath:: %@", viewModel.filePath ?? "")
         if viewModel.isMyMessage {
             if viewModel.isSent || viewModel.isAllRead || viewModel.isAllReceived {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
@@ -140,18 +123,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
                 updateView(for: state.download)
             }
         }
-
-//        let fileString = ByteCountFormatter.string(fromByteCount: viewModel.size, countStyle: .file)
-
         timeLabel.text   = viewModel.time
-        //                        fileSizeLabel.text = "Downloaded"
-        //        if !viewModel.isMyMessage {
-        //            if let originalMessagePart = viewModel.messagePart, originalMessagePart.data != nil {
-        //                fileSizeLabel.text = "Downloaded"
-        //            } else {
-        //                fileSizeLabel.text = "File size: \(fileString)"
-        //            }
-        //        }
 
     }
 
@@ -262,7 +234,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
-        case .uploading(let _):
+        case .uploading( _):
             uploadButton.isHidden = true
             actionButton.isEnabled = false
             activityIndicator.isHidden = false
@@ -381,39 +353,3 @@ extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
         }
     }
 }
-
-
-//extension ALKPhotoCell: ALKDownloadManagerDelegate {
-//    func dataUpdated(countCompletion: Int64) {
-//        NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
-//        DispatchQueue.main.async {
-//            self.updateView(for: .downloading)
-//        }
-//    }
-//
-//    func dataFinished(path: String) {
-//        guard !path.isEmpty, let viewModel = self.viewModel else {
-//            updateView(for: .download)
-//            return
-//        }
-//        self.updateDbMessageWith(key: "key", value: viewModel.identifier, filePath: path)
-//        DispatchQueue.main.async {
-//            self.updateView(for: .downloaded(filePath: path))
-//        }
-//    }
-//
-//    func dataUploaded(responseDictionary: Any?) {
-//        NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@ AND DICT: %@", viewModel?.filePath ?? "", responseDictionary.debugDescription)
-//        if responseDictionary == nil {
-//            DispatchQueue.main.async {
-//                self.updateView(for: .upload(filePath: self.viewModel?.filePath ?? ""))
-//            }
-//        } else if let filePath = viewModel?.filePath {
-//            DispatchQueue.main.async {
-//                self.updateView(for: state.downloaded(filePath: filePath))
-//            }
-//        }
-//        uploadCompleted?(responseDictionary)
-//    }
-//}
-

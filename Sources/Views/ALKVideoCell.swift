@@ -136,21 +136,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     func actionTapped(button: UIButton) {
         button.isEnabled = false
-
-//        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.previewImage, bundle: Bundle.applozic)
-//
-//        guard let imageUrl = url,
-//            let nav = storyboard.instantiateInitialViewController() as? UINavigationController,
-//            let vc = nav.viewControllers.first as? ALKPreviewImageViewController else {
-//
-//                button.isEnabled = true
-//                return
-//        }
-//
-//        vc.viewModel = ALKPreviewImageViewModel(imageUrl: imageUrl)
-//        UIViewController.topViewController()?.present(nav, animated: true, completion: {
-//            button.isEnabled = true
-//        })
     }
 
     override func setupStyle() {
@@ -183,11 +168,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
         bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
-        
-//        actionButton.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
-//        actionButton.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
-//        actionButton.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
-//        actionButton.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
 
         downloadButton.centerXAnchor.constraint(equalTo: photoView.centerXAnchor).isActive = true
         downloadButton.centerYAnchor.constraint(equalTo: photoView.centerYAnchor).isActive = true
@@ -269,7 +249,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
             photoView.image = getThumbnail(filePath: path)
-        case .downloading(let progress, var _):
+        case .downloading(let progress, _):
             // show progress bar
             print("downloading")
             uploadButton.isHidden = true
