@@ -7,9 +7,9 @@
 
 import Foundation
 
-class ALKUploadTask {
+public class ALKUploadTask {
     let url: URL?
-    let completed: Bool = false
+    public var completed: Bool = false
     internal var totalBytesUploaded: Int64 = 0
     internal var totalBytesExpectedToUpload: Int64 = 0
 
@@ -20,7 +20,7 @@ class ALKUploadTask {
     public var filePath: String?
     public var identifier: String?
 
-    init(url: URL, fileName: String) {
+    public init(url: URL, fileName: String) {
         self.url = url
         self.fileName = fileName
     }

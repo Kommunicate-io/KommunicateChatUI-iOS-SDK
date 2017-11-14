@@ -522,13 +522,19 @@ final class ALKConversationViewModel: NSObject {
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
             let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
-            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.identifier = alMessage.identifier
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
             downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                }
+            }
         })
     }
 
+    //FIXME: Remove indexpath from this call and add message id param. Currently there is an unneccessary dependency on the indexpath.
     func uploadAttachmentCompleted(responseDict: Any?, indexPath: IndexPath) {
         // populate metadata and send message
         guard alMessages.count > indexPath.section else { return }
@@ -848,6 +854,11 @@ final class ALKConversationViewModel: NSObject {
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
             downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                }
+            }
         })
     }
 

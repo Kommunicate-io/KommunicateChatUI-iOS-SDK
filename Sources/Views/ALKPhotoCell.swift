@@ -348,18 +348,17 @@ extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
         }
     }
 
-    func dataUploadingFinished(withResponseDictionary responseDictionary: Any?, task: ALKUploadTask) {
-        NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@ AND DICT: %@", viewModel?.filePath ?? "", responseDictionary.debugDescription)
-        if responseDictionary == nil {
-            DispatchQueue.main.async {
-                self.updateView(for: .upload(filePath: task.filePath ?? ""))
-            }
-        } else if task.filePath != nil {
+    func dataUploadingFinished(task: ALKUploadTask) {
+        NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
+        if task.uploadError == nil && task.completed == true && task.filePath != nil {
             DispatchQueue.main.async {
                 self.updateView(for: state.uploaded)
             }
+        } else {
+            DispatchQueue.main.async {
+                self.updateView(for: .upload(filePath: task.filePath ?? ""))
+            }
         }
-        uploadCompleted?(responseDictionary)
     }
 }
 

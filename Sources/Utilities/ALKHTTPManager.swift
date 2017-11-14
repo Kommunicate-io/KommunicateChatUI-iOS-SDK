@@ -11,7 +11,7 @@ import Applozic
 
 protocol ALKHTTPManagerUploadDelegate: class {
     func dataUploaded(task: ALKUploadTask)
-    func dataUploadingFinished(withResponseDictionary: Any?, task: ALKUploadTask)
+    func dataUploadingFinished(task: ALKUploadTask)
 }
 
 protocol ALKHTTPManagerDownloadDelegate: class {
@@ -23,6 +23,7 @@ class ALKHTTPManager: NSObject {
     static let shared = ALKHTTPManager()
     weak var downloadDelegate: ALKHTTPManagerDownloadDelegate?
     weak var uploadDelegate: ALKHTTPManagerUploadDelegate?
+    var uploadCompleted: ((_ responseDict: Any?, _ task: ALKUploadTask) ->())?
 
     var length: Int64 = 0
     var buffer:NSMutableData = NSMutableData()
@@ -231,14 +232,19 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
                 print("success == \(responseDictionary)")
 
                 DispatchQueue.main.async {
-                    self.uploadDelegate?.dataUploadingFinished(withResponseDictionary: responseDictionary, task: uploadTask)
+                    uploadTask.completed = true
+                    self.uploadCompleted?(responseDictionary, uploadTask)
+                    self.uploadDelegate?.dataUploadingFinished(task: uploadTask)
                 }
-            } catch {
+            } catch(let error) {
                 print(error)
                 let responseString = String(data: data, encoding: .utf8)
-                print("responseString = \(responseString)")
+                print("responseString = \(String(describing: responseString))")
                 DispatchQueue.main.async {
-                    self.uploadDelegate?.dataUploadingFinished(withResponseDictionary: nil, task: uploadTask)
+                    uploadTask.uploadError = error
+                    uploadTask.completed = true
+                    self.uploadCompleted?(nil, uploadTask)
+                    self.uploadDelegate?.dataUploadingFinished(task: uploadTask)
                 }
             }   
         }
