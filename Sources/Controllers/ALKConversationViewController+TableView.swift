@@ -58,11 +58,19 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         }
                         self?.viewModel.uploadImage(view: cell, indexPath: indexPath)
                     }
+                    cell.uploadCompleted = {[weak self]
+                        responseDict in
+                        self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                    }
                     return cell
 
                 } else {
                     let cell: ALKMyPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                     cell.update(viewModel: message)
+                    cell.uploadCompleted = {[weak self]
+                        responseDict in
+                        self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                    }
                     return cell
                 }
 
@@ -152,7 +160,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.uploadCompleted = {[weak self]
                     responseDict in
-                    self?.viewModel.uploadVideoCompleted(responseDict: responseDict, indexPath: indexPath)
+                    self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                 }
                 return cell
             } else {
@@ -160,10 +168,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message)
                 return cell
             }
-        default:
-            NSLog("Wrong choice")
         }
-        return UITableViewCell()
     }
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -529,7 +529,7 @@ final class ALKConversationViewModel: NSObject {
         })
     }
 
-    func uploadVideoCompleted(responseDict: Any?, indexPath: IndexPath) {
+    func uploadAttachmentCompleted(responseDict: Any?, indexPath: IndexPath) {
         // populate metadata and send message
         guard alMessages.count > indexPath.section else { return }
         let alMessage = alMessages[indexPath.section]
@@ -834,53 +834,21 @@ final class ALKConversationViewModel: NSObject {
         do {
             try alHandler?.managedObjectContext.save()
         } catch {
-
+            
         }
         NSLog("content type: ", alMessage.fileMeta.contentType)
         NSLog("file path: ", alMessage.imageFilePath)
-        //** Change callbacks to delegate
-//        cell.updateView(for: .uploading(filePath: alMessage.imageFilePath ?? ""))
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
             urlStr, error in
             guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
             let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
             task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
             task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
             downloadManager.uploadAttachment(task: task)
-
-            //FIXME: - Transfer the below fileMeta logic to the view controller and from there view (cell) can be updated using the identifier.
-
-            // Use uploadVideoCompleted method to send the message from VC or cell. Also change the name of uploadVideoCompleted to uploadAttachmentCompleted (a generic method which works for both). See video upload part.
-
-//            ALKHTTPManager.shared.uploadImage(message: alMessage, uploadURL: urlStr) {
-//                response in
-//                guard let fileInfo = response as? [String: Any], let fileMeta = fileInfo["fileMeta"] as? [String: Any] else {
-//                    cell.updateView(for: .upload(filePath: alMessage.imageFilePath ?? ""))
-//                    return
-//                }
-//                cell.updateView(for: .uploaded)
-//                let message = messageService.createMessageEntity(dbMessage)
-//                let _ = message?.fileMeta.populate(fileMeta)
-//                message?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-//                do {
-//                    try alHandler?.managedObjectContext.save()
-//                } catch {
-//                    NSLog("Not saved due to error")
-//                }
-
-//                self.send(alMessage: message!) {
-//                    updatedMessage in
-//                    guard let mesg = updatedMessage else { return }
-//                    DispatchQueue.main.async {
-//                        print("UI updated at section: ", indexPath.section, message?.isSent)
-//                        self.alMessages[indexPath.section] = mesg
-//                        self.messageModels[indexPath.section] = (mesg.messageModel)
-//                        self.delegate?.updateMessageAt(indexPath: indexPath)
-//                    }
-//            }
-            })
+        })
     }
 
 
@@ -909,7 +877,7 @@ final class ALKConversationViewModel: NSObject {
             message, error in
             let newMesg = alMessage
             NSLog("message is: ", newMesg.key)
-            NSLog("Message sent: \(message), \(error)")
+            NSLog("Message sent: \(String(describing: message)), \(String(describing: error))")
             if error == nil {
                 NSLog("No errors while sending the message")
                 completion(newMesg)
