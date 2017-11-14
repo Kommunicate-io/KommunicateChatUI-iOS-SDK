@@ -75,7 +75,6 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         case downloaded(filePath: String)
     }
 
-    var currentState: state? = nil
     var uploadTapped:((Bool) ->())?
     var uploadCompleted: ((_ responseDict: Any?) ->())?
 
@@ -131,12 +130,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
                 }
             } else {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
-                    if let state = currentState {
-                        updateView(for: currentState!)
-                    } else {
-                        updateView(for: .upload(filePath: filePath))
-                    }
-
+                    updateView(for: .upload(filePath: filePath))
                 }
             }
         } else {
@@ -253,16 +247,14 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
     private func updateView(state: state) {
         switch state {
         case .upload(let filePath):
-            currentState = .upload(filePath: filePath)
             actionButton.isEnabled = false
-            uploadButton.isHidden = false
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
             photoView.kf.setImage(with: path)
+            uploadButton.isHidden = false
         case .uploaded:
-            currentState = .uploaded
             if activityIndicator.isAnimating{
                 activityIndicator.stopAnimating()
             }
@@ -270,15 +262,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
-        case .uploading(let filePath):
-            if let state = currentState, case .uploading = state {
-                // empty
-            } else {
-                let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                let path = docDirPath.appendingPathComponent(filePath)
-                photoView.kf.setImage(with: path, options: [.forceRefresh])
-            }
-            currentState = .uploading(filePath: filePath)
+        case .uploading(let _):
             uploadButton.isHidden = true
             actionButton.isEnabled = false
             activityIndicator.isHidden = false
@@ -287,14 +271,12 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             }
             downloadButton.isHidden = true
         case .download:
-            currentState = .download
             downloadButton.isHidden = false
             actionButton.isEnabled = false
             activityIndicator.isHidden = true
             uploadButton.isHidden = true
             photoView.image = nil
         case .downloading:
-            currentState = .downloading
             uploadButton.isHidden = true
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating{
@@ -304,7 +286,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             actionButton.isEnabled = false
             photoView.image = nil
         case .downloaded(let filePath):
-            currentState = .downloaded(filePath: filePath)
+            photoView.image = nil
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating{
                 activityIndicator.startAnimating()
@@ -371,11 +353,11 @@ extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@ AND DICT: %@", viewModel?.filePath ?? "", responseDictionary.debugDescription)
         if responseDictionary == nil {
             DispatchQueue.main.async {
-                self.updateView(for: .upload(filePath: self.viewModel?.filePath ?? ""))
+                self.updateView(for: .upload(filePath: task.filePath ?? ""))
             }
-        } else if let filePath = task.filePath {
+        } else if task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: state.downloaded(filePath: filePath))
+                self.updateView(for: state.uploaded)
             }
         }
         uploadCompleted?(responseDictionary)
