@@ -47,6 +47,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 if message.ratio < 1 {
                     print("image messsage called")
                     let cell: ALKMyPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    // Set the value to nil so that previous image gets removed before reuse
+                    cell.photoView.image = nil
                     cell.update(viewModel: message)
                     cell.uploadTapped = {[weak self]
                         value in
