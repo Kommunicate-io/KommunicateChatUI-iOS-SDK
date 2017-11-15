@@ -203,9 +203,13 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             notificationView.noDataConnectionNotificationView()
             return
         }
-        let downloadManager = ALKHTTPManager()
-        downloadManager.downloadDelegate = self
-        downloadManager.downloadVideo(message: viewModel)
+        let httpManager = ALKHTTPManager()
+        httpManager.downloadDelegate = self
+        let urlString = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(), viewModel.fileMetaInfo?.blobKey ?? "")
+        let task = ALKDownloadTask(downloadUrl: urlString, fileName: viewModel.fileMetaInfo?.name)
+        task.identifier = viewModel.identifier
+        task.totalBytesExpectedToDownload = viewModel.size
+        httpManager.downloadAttachment(task: task)
 
     }
 
@@ -335,21 +339,21 @@ extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
 }
 
 extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
-    func dataDownloaded(countCompletion: Int64) {
-        NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
+    func dataDownloaded(task: ALKDownloadTask) {
+        NSLog("Image Bytes downloaded: %i", task.totalBytesDownloaded)
         DispatchQueue.main.async {
             self.updateView(for: .downloading)
         }
     }
 
-    func dataDownloadingFinished(path: String) {
-        guard !path.isEmpty, let viewModel = self.viewModel else {
+    func dataDownloadingFinished(task: ALKDownloadTask) {
+        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
             updateView(for: .download)
             return
         }
-        self.updateDbMessageWith(key: "key", value: viewModel.identifier, filePath: path)
+        self.updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         DispatchQueue.main.async {
-            self.updateView(for: .downloaded(filePath: path))
+            self.updateView(for: .downloaded(filePath: filePath))
         }
     }
 }
