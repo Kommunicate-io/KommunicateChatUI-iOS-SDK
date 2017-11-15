@@ -24,92 +24,18 @@ class ALKHTTPManager: NSObject {
     weak var downloadDelegate: ALKHTTPManagerDownloadDelegate?
     weak var uploadDelegate: ALKHTTPManagerUploadDelegate?
     var uploadCompleted: ((_ responseDict: Any?, _ task: ALKUploadTask) ->())?
+    var downloadCompleted: ((_ task: ALKDownloadTask) ->())?
 
     var length: Int64 = 0
     var buffer:NSMutableData = NSMutableData()
     var session:URLSession?
     var uploadTask: ALKUploadTask?
     var downloadTask: ALKDownloadTask?
+
     
-    func downloadAndSaveAudio(message: ALMessage, completion: @escaping (_ path: String?) ->()) {
-        let urlStr = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(),message.fileMeta.blobKey)
-        let componentsArray = message.fileMeta.name.components(separatedBy: ".")
-        let fileExtension = componentsArray.last
-        let filePath = String(format: "%@_local.%@", message.key, fileExtension!)
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let fileURL = documentsURL.appendingPathComponent(filePath)
-        guard NSData(contentsOfFile: fileURL.path) == nil else {
-            completion(filePath)
-            return
-        }
-        guard let url = URL(string: urlStr) else {
-            completion(nil)
-            return
-        }
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-
-            if error == nil, let _ = response?.url?.path, let data = data, let _ = self.save(data: data, to: fileURL){
-                completion(filePath)
-            } else {
-                print(error ?? "")
-                completion(nil)
-            }
-        }).resume()
-    }
-
-    func uploadImage(message: ALMessage, uploadURL: String, completion:@escaping (_ response: Any?)->()) {
-        let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        guard let imageFilePath = message.imageFilePath else { return }
-        let filePath = docDirPath.appendingPathComponent(imageFilePath)
-        
-        guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL, paramString: nil) as URLRequest? else { return }
-        if FileManager.default.fileExists(atPath: filePath.path) {
-            
-            let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
-            let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
-            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-            var body = Data()
-
-            _ = [String: String]()
-
-            let fileParamConstant = "files[]"
-            let imageData = NSData(contentsOfFile: filePath.path)
-            
-            if let data = imageData as Data? {
-                print("data present")
-                body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-                body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant,message.fileMeta.name).data(using: .utf8)!)
-                body.append(String(format: "Content-Type:%@\r\n\r\n", message.fileMeta.contentType).data(using: .utf8)!)
-                body.append(data)
-                body.append(String(format: "\r\n").data(using: .utf8)!)
-            }
-            
-            body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
-            request.httpBody = body
-            request.url = URL(string: uploadURL)
-            
-            let task = URLSession.shared.dataTask(with: request) {
-                data, response, error in
-                do {
-                    let responseDictionary = try JSONSerialization.jsonObject(with: data!)
-                    print("success == \(responseDictionary)")
-                    completion(responseDictionary)
-                } catch {
-                    print(error)
-                    
-                    let responseString = String(data: data!, encoding: .utf8)
-                    print("responseString = \(responseString)")
-                    completion(nil)
-                }
-            }
-            task.resume()
-        }
-    }
-
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?)->()) {
 
         guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.path, paramString: nil) as URLRequest? else { return }
-//        if FileManager.default.fileExists(atPath: filePath.path) {
 
         let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
         let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
@@ -219,6 +145,7 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
             DispatchQueue.main.async {
                 downloadTask.isDownloading = true
                 downloadTask.totalBytesDownloaded = Int64(self.buffer.length)
+                self.downloadCompleted?(downloadTask)
                 self.downloadDelegate?.dataDownloaded(task: downloadTask)
             }
         } else {
@@ -259,6 +186,7 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
                 downloadTask.completed = true
                 downloadTask.downloadError = error
                 downloadTask.isDownloading = false
+                self.downloadCompleted?(downloadTask)
                 self.downloadDelegate?.dataDownloadingFinished(task: downloadTask)
             }
             return
@@ -273,6 +201,7 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
             downloadTask.filePath = filePath
             downloadTask.completed = true
             downloadTask.isDownloading = false
+            self.downloadCompleted?(downloadTask)
             self.downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         }
     }

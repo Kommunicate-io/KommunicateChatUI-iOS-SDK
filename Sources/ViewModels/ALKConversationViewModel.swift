@@ -260,21 +260,29 @@ final class ALKConversationViewModel: NSObject {
     }
 
     func getAudioData(for indexPath: IndexPath, completion: @escaping (Data?)->()) {
-        if let alMessage = alMessages[indexPath.section] as? ALMessage {
-            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            ALKHTTPManager.shared.downloadAndSaveAudio(message: alMessage) {
-                path in
-                guard let path = path else {
-                    return
-                }
-                self.updateDbMessageWith(key: "key", value: alMessage.key, filePath: path)
-                alMessage.imageFilePath = path
-
-                if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(path)).path) as Data?     {
-                    completion(data)
-                } else {
-                    completion(nil)
-                }
+        guard indexPath.section < alMessages.count && ALDataNetworkConnection.checkDataNetworkAvailable() else {
+            let notificationView = ALNotificationView()
+            notificationView.noDataConnectionNotificationView()
+            return
+        }
+        let alMessage = alMessages[indexPath.section]
+        let httpManager = ALKHTTPManager()
+        let urlString = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(), alMessage.fileMetaInfo?.blobKey ?? "")
+        let task = ALKDownloadTask(downloadUrl: urlString, fileName: alMessage.fileMetaInfo?.name)
+        task.identifier = alMessage.identifier
+        task.totalBytesExpectedToDownload = alMessage.size
+        httpManager.downloadAttachment(task: task)
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        httpManager.downloadCompleted = {[weak self] task in
+            guard task.downloadError == nil else {
+                completion(nil)
+                return
+            }
+            if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(task.filePath ?? "")).path) as Data?     {
+                self?.updateDbMessageWith(key: "key", value: task.identifier ?? "", filePath: task.filePath ?? "")
+                completion(data)
+            } else {
+                completion(nil)
             }
         }
     }
@@ -793,32 +801,18 @@ final class ALKConversationViewModel: NSObject {
         NSLog("content type: ", alMessage.fileMeta.contentType)
         NSLog("file path: ", alMessage.imageFilePath)
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
-            url, error in
-            guard error == nil, let urlStr = url else { return }
-            ALKHTTPManager.shared.uploadImage(message: alMessage, uploadURL: urlStr) {
-                response in
-                guard let fileInfo = response as? [String: Any], let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
-                let message = messageService.createMessageEntity(dbMessage)
-                let _ = message?.fileMeta.populate(fileMeta)
-                message?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-                do {
-                    try alHandler?.managedObjectContext.save()
-                } catch {
-                    NSLog("Not saved due to error")
-                    return
+            urlStr, error in
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
+            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
+            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
+            let downloadManager = ALKHTTPManager()
+            downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                 }
-
-                self.send(alMessage: message!) {
-                    updatedMessage in
-                    guard let mesg = updatedMessage, indexPath.section < self.messageModels.count else { return }
-                    DispatchQueue.main.async {
-                        print("UI updated at section: ", indexPath.section, message?.isSent)
-                        self.alMessages[indexPath.section] = mesg
-                        self.messageModels[indexPath.section] = (mesg.messageModel)
-                        self.delegate?.updateMessageAt(indexPath: indexPath)
-                    }
-                }
-                
             }
         })
     }

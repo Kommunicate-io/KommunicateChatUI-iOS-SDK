@@ -334,7 +334,7 @@ extension ALKVideoCell: ALKHTTPManagerDownloadDelegate {
     }
 
     func dataDownloadingFinished(task: ALKDownloadTask) {
-        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let viewModel = self.viewModel else {
+        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
             updateView(for: .download)
             return
         }
