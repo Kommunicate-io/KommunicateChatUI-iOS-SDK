@@ -15,8 +15,8 @@ protocol ALKHTTPManagerUploadDelegate: class {
 }
 
 protocol ALKHTTPManagerDownloadDelegate: class {
-    func dataDownloaded(countCompletion: Int64)
-    func dataDownloadingFinished(path: String)
+    func dataDownloaded(task: ALKDownloadTask)
+    func dataDownloadingFinished(task: ALKDownloadTask)
 }
 
 class ALKHTTPManager: NSObject {
@@ -28,8 +28,8 @@ class ALKHTTPManager: NSObject {
     var length: Int64 = 0
     var buffer:NSMutableData = NSMutableData()
     var session:URLSession?
-    var messageModel: ALKMessageViewModel?
     var uploadTask: ALKUploadTask?
+    var downloadTask: ALKDownloadTask?
     
     func downloadAndSaveAudio(message: ALMessage, completion: @escaping (_ path: String?) ->()) {
         let urlStr = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(),message.fileMeta.blobKey)
@@ -142,22 +142,20 @@ class ALKHTTPManager: NSObject {
         task.resume()
     }
 
-    func downloadVideo(message: ALKMessageViewModel) ->() {
-        self.messageModel = message
-        guard let fileMeta = message.fileMetaInfo else { return }
-        let urlStr = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(),fileMeta.blobKey)
-
-        let componentsArray = fileMeta.name.components(separatedBy: ".")
+    func downloadAttachment(task: ALKDownloadTask) {
+        self.downloadTask = task
+        guard let urlString = task.urlString, let fileName = task.fileName, let identifier = task.identifier else { return }
+        let componentsArray = fileName.components(separatedBy: ".")
         let fileExtension = componentsArray.last
-        let filePath = String(format: "%@_local.%@", message.identifier, fileExtension!)
+        let filePath = String(format: "%@_local.%@", identifier, fileExtension!)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-        if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil {
-            downloadDelegate?.dataDownloadingFinished(path: filePath)
+        if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil, let downloadTask = self.downloadTask {
+            downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         } else {
             let configuration = URLSessionConfiguration.default
             session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
-            let dataTask = session?.dataTask(with: URLRequest(url: URL(string: urlStr)!))
+            let dataTask = session?.dataTask(with: URLRequest(url: URL(string: urlString)!))
             dataTask?.resume()
         }
     }
@@ -216,10 +214,12 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
 
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        if messageModel != nil {
+        if let downloadTask = downloadTask {
             buffer.append(data)
             DispatchQueue.main.async {
-                self.downloadDelegate?.dataDownloaded(countCompletion: Int64(self.buffer.length))
+                downloadTask.isDownloading = true
+                downloadTask.totalBytesDownloaded = Int64(self.buffer.length)
+                self.downloadDelegate?.dataDownloaded(task: downloadTask)
             }
         } else {
             guard let response = dataTask.response as? HTTPURLResponse, response.statusCode == 200 else {
@@ -251,26 +251,29 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if messageModel == nil {
 
-        }  else {
-
-            guard error == nil else {
-                DispatchQueue.main.async {
-                    self.downloadDelegate?.dataDownloadingFinished(path: "")
-                }
-                return
-            }
-            guard let fileMeta = messageModel?.fileMetaInfo else { return }
-            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let componentsArray = fileMeta.name.components(separatedBy: ".")
-            let fileExtension = componentsArray.last
-            let filePath = String(format: "%@_local.%@", (messageModel?.identifier)!, fileExtension!)
-            let path = documentsURL.appendingPathComponent(filePath).path
-            buffer.write(toFile: path, atomically: true)
+        guard let downloadTask = self.downloadTask, let fileName = downloadTask.fileName, let identifier = downloadTask.identifier else { return }
+        guard error == nil else {
             DispatchQueue.main.async {
-                self.downloadDelegate?.dataDownloadingFinished(path: filePath)
+                downloadTask.filePath = ""
+                downloadTask.completed = true
+                downloadTask.downloadError = error
+                downloadTask.isDownloading = false
+                self.downloadDelegate?.dataDownloadingFinished(task: downloadTask)
             }
+            return
+        }
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let componentsArray = fileName.components(separatedBy: ".")
+        let fileExtension = componentsArray.last
+        let filePath = String(format: "%@_local.%@", identifier, fileExtension!)
+        let path = documentsURL.appendingPathComponent(filePath).path
+        buffer.write(toFile: path, atomically: true)
+        DispatchQueue.main.async {
+            downloadTask.filePath = filePath
+            downloadTask.completed = true
+            downloadTask.isDownloading = false
+            self.downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         }
     }
 
