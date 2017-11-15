@@ -110,39 +110,6 @@ final class ALKConversationViewModel: NSObject {
         })
     }
 
-    func loadEarlierMessages() {
-        var time: NSNumber? = nil
-        if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1, let first = alMessages.first {
-            time = first.createdAtTime
-        }
-        let messageListRequest = MessageListRequest()
-        messageListRequest.userId = contactId
-        messageListRequest.channelKey = channelKey
-        messageListRequest.endTimeStamp = time
-        ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
-            messages, error, userDetail in
-            guard error == nil, let newMessages = messages as? [ALMessage] else {
-                self.delegate?.loadingFinished(error: error)
-                return
-            }
-            //                NSLog("messages loaded: ", messages)
-            for mesg in newMessages {
-                guard let msg = self.alMessages.first, let time = Double(msg.createdAtTime.stringValue) else { continue }
-                if let msgTime = Double(mesg.createdAtTime.stringValue), time <= msgTime {
-                    continue
-                }
-                self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
-                self.alMessages.insert(mesg, at: 0)
-                self.messageModels.insert(mesg.messageModel, at: 0)
-            }
-            let id = self.contactId ?? self.channelKey?.stringValue
-            if newMessages.count < 50 {
-                ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
-            }
-            self.delegate?.loadingFinished(error: nil)
-        })
-    }
-
     func isGroupConversation() -> Bool {
         guard let _ = channelKey else {
             return false
@@ -161,6 +128,7 @@ final class ALKConversationViewModel: NSObject {
         guard let message = alMessages.last else {
             return ""
         }
+        let messag = alMessages.first?.createdAt
         return message.groupName
     }
 
@@ -294,7 +262,7 @@ final class ALKConversationViewModel: NSObject {
     func getAudioData(for indexPath: IndexPath, completion: @escaping (Data?)->()) {
         if let alMessage = alMessages[indexPath.section] as? ALMessage {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            ALKDownloadManager.shared.downloadAndSaveAudio(message: alMessage) {
+            ALKHTTPManager.shared.downloadAndSaveAudio(message: alMessage) {
                 path in
                 guard let path = path else {
                     return
@@ -523,7 +491,7 @@ final class ALKConversationViewModel: NSObject {
         return (alMessage, IndexPath(row: 0, section: messageModels.count-1))
     }
 
-    func uploadVideo(indexPath: IndexPath, cell: ALKVideoCell) {
+    func uploadVideo(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
         
         let clientService = ALMessageClientService()
@@ -545,19 +513,29 @@ final class ALKConversationViewModel: NSObject {
         print("content type: ", alMessage.fileMeta.contentType)
         print("file path: ", alMessage.imageFilePath)
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
-            url, error in
-            guard error == nil, let urlStr = url else {
+            urlStr, error in
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else {
                 NSLog("error sending video %@", error.debugDescription)
                 return
             }
-            NSLog("URL TO UPLOAD VIDEO AT PATH %@ IS %@", alMessage.imageFilePath ?? "",  urlStr)
-            let downloadManager = ALKDownloadManager()
-            downloadManager.delegate = cell
-            downloadManager.uploadVideo(message: alMessage, databaseObj: (dbMessage?.fileMetaInfo)!, uploadURL: urlStr)
+            NSLog("URL TO UPLOAD VIDEO AT PATH %@ IS %@", alMessage.imageFilePath ?? "",  url.description)
+            let downloadManager = ALKHTTPManager()
+            downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
+            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
+            task.identifier = alMessage.identifier
+            task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
+            downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                }
+            }
         })
     }
 
-    func uploadVideoCompleted(responseDict: Any?, indexPath: IndexPath) {
+    //FIXME: Remove indexpath from this call and add message id param. Currently there is an unneccessary dependency on the indexpath.
+    func uploadAttachmentCompleted(responseDict: Any?, indexPath: IndexPath) {
         // populate metadata and send message
         guard alMessages.count > indexPath.section else { return }
         let alMessage = alMessages[indexPath.section]
@@ -658,6 +636,40 @@ final class ALKConversationViewModel: NSObject {
             self.loadMessagesFromDB()
         })
     }
+
+    private func loadEarlierMessages() {
+        var time: NSNumber? = nil
+        if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1, let first = alMessages.first {
+            time = first.createdAtTime
+        }
+        let messageListRequest = MessageListRequest()
+        messageListRequest.userId = contactId
+        messageListRequest.channelKey = channelKey
+        messageListRequest.endTimeStamp = time
+        ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
+            messages, error, userDetail in
+            guard error == nil, let newMessages = messages as? [ALMessage] else {
+                self.delegate?.loadingFinished(error: error)
+                return
+            }
+            //                NSLog("messages loaded: ", messages)
+            for mesg in newMessages {
+                guard let msg = self.alMessages.first, let time = Double(msg.createdAtTime.stringValue) else { continue }
+                if let msgTime = Double(mesg.createdAtTime.stringValue), time <= msgTime {
+                    continue
+                }
+                self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
+                self.alMessages.insert(mesg, at: 0)
+                self.messageModels.insert(mesg.messageModel, at: 0)
+            }
+            let id = self.contactId ?? self.channelKey?.stringValue
+            if newMessages.count < 50 {
+                ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+            }
+            self.delegate?.loadingFinished(error: nil)
+        })
+    }
+
 
     private func addMembersToGroup(users: [ALKFriendViewModel], completion: @escaping (Bool)->()) {
         guard let groupId = groupKey() else { return }
@@ -783,7 +795,7 @@ final class ALKConversationViewModel: NSObject {
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
             url, error in
             guard error == nil, let urlStr = url else { return }
-            ALKDownloadManager.shared.uploadImage(message: alMessage, uploadURL: urlStr) {
+            ALKHTTPManager.shared.uploadImage(message: alMessage, uploadURL: urlStr) {
                 response in
                 guard let fileInfo = response as? [String: Any], let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
                 let message = messageService.createMessageEntity(dbMessage)
@@ -811,7 +823,7 @@ final class ALKConversationViewModel: NSObject {
         })
     }
 
-    func uploadImage(cell: ALKMyPhotoPortalCell, indexPath: IndexPath)  {
+    func uploadImage(view: UIView, indexPath: IndexPath)  {
 
         let alMessage = alMessages[indexPath.section]
         let clientService = ALMessageClientService()
@@ -828,41 +840,24 @@ final class ALKConversationViewModel: NSObject {
         do {
             try alHandler?.managedObjectContext.save()
         } catch {
-
+            
         }
         NSLog("content type: ", alMessage.fileMeta.contentType)
         NSLog("file path: ", alMessage.imageFilePath)
-        cell.updateView(for: .uploading(filePath: alMessage.imageFilePath ?? ""))
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
-            url, error in
-            guard error == nil, let urlStr = url else { return }
-            ALKDownloadManager.shared.uploadImage(message: alMessage, uploadURL: urlStr) {
-                response in
-                guard let fileInfo = response as? [String: Any], let fileMeta = fileInfo["fileMeta"] as? [String: Any] else {
-                    cell.updateView(for: .upload(filePath: alMessage.imageFilePath ?? ""))
-                    return
+            urlStr, error in
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
+            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
+            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
+            let downloadManager = ALKHTTPManager()
+            downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
+            downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                 }
-                cell.updateView(for: .uploaded)
-                let message = messageService.createMessageEntity(dbMessage)
-                let _ = message?.fileMeta.populate(fileMeta)
-                message?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-                do {
-                    try alHandler?.managedObjectContext.save()
-                } catch {
-                    NSLog("Not saved due to error")
-                }
-
-                self.send(alMessage: message!) {
-                    updatedMessage in
-                    guard let mesg = updatedMessage else { return }
-                    DispatchQueue.main.async {
-                        print("UI updated at section: ", indexPath.section, message?.isSent)
-                        self.alMessages[indexPath.section] = mesg
-                        self.messageModels[indexPath.section] = (mesg.messageModel)
-                        self.delegate?.updateMessageAt(indexPath: indexPath)
-                    }
-                }
-
             }
         })
     }
@@ -893,7 +888,7 @@ final class ALKConversationViewModel: NSObject {
             message, error in
             let newMesg = alMessage
             NSLog("message is: ", newMesg.key)
-            NSLog("Message sent: \(message), \(error)")
+            NSLog("Message sent: \(String(describing: message)), \(String(describing: error))")
             if error == nil {
                 NSLog("No errors while sending the message")
                 completion(newMesg)

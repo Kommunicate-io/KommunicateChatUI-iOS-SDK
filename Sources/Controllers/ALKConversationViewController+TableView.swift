@@ -47,6 +47,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 if message.ratio < 1 {
                     print("image messsage called")
                     let cell: ALKMyPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    // Set the value to nil so that previous image gets removed before reuse
+                    cell.photoView.image = nil
                     cell.update(viewModel: message)
                     cell.uploadTapped = {[weak self]
                         value in
@@ -56,13 +58,21 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                             notificationView.noDataConnectionNotificationView()
                             return
                         }
-                        self?.viewModel.uploadImage(cell: cell, indexPath: indexPath)
+                        self?.viewModel.uploadImage(view: cell, indexPath: indexPath)
+                    }
+                    cell.uploadCompleted = {[weak self]
+                        responseDict in
+                        self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                     }
                     return cell
 
                 } else {
                     let cell: ALKMyPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                     cell.update(viewModel: message)
+                    cell.uploadCompleted = {[weak self]
+                        responseDict in
+                        self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                    }
                     return cell
                 }
 
@@ -148,11 +158,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         notificationView.noDataConnectionNotificationView()
                         return
                     }
-                    self?.viewModel.uploadVideo(indexPath: indexPath, cell: cell)
+                    self?.viewModel.uploadVideo(view: cell, indexPath: indexPath)
                 }
                 cell.uploadCompleted = {[weak self]
                     responseDict in
-                    self?.viewModel.uploadVideoCompleted(responseDict: responseDict, indexPath: indexPath)
+                    self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                 }
                 return cell
             } else {
@@ -160,10 +170,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message)
                 return cell
             }
-        default:
-            NSLog("Wrong choice")
         }
-        return UITableViewCell()
     }
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

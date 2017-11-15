@@ -101,7 +101,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
                     NSLog("NO URL TO UPLOAD GROUP PROFILE IMAGE")
                     return
                 }
-                let downloadManager = ALKDownloadManager()
+                let downloadManager = ALKHTTPManager()
                 activityIndicator.isHidden = false
                 activityIndicator.startAnimating()
                 btnCreateGroup.isEnabled = false
