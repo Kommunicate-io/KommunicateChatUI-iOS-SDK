@@ -146,8 +146,9 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         viewModel = ALKConversationListViewModel()
         viewModel.delegate = self
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
-        activityIndicator.color = UIColor.lightGray
-        tableView.addSubview(activityIndicator)
+        activityIndicator.color = UIColor.gray
+        view.addSubview(activityIndicator)
+        self.view.bringSubview(toFront: activityIndicator)
         viewModel.prepareController(dbService: dbService)
         self.edgesForExtendedLayout = []
     }
@@ -363,12 +364,23 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
     }
 }
 
+extension ALKConversationListViewController: UIScrollViewDelegate {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let  height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
+        if distanceFromBottom < height {
+            viewModel.fetchMoreMessages(dbService: dbService)
+        }
+    }
+}
+
 //MARK: ALMessagesDelegate
 extension ALKConversationListViewController: ALMessagesDelegate {
     public func getMessagesArray(_ messagesArray: NSMutableArray!) {
         print("message array: ", messagesArray.map { ($0 as! ALMessage).message})
         print("message read: ", messagesArray.map { ($0 as! ALMessage).totalNumberOfUnreadMessages})
-//        activityIndicator.stopAnimating()
 
         guard let messages = messagesArray as? [Any] else {
             return
@@ -384,13 +396,18 @@ extension ALKConversationListViewController: ALMessagesDelegate {
 extension ALKConversationListViewController: ALKConversationListViewModelDelegate {
 
     func startedLoading() {
-
-        activityIndicator.startAnimating()
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+            self.tableView.isUserInteractionEnabled = false
+        }
     }
 
     func listUpdated() {
-        tableView.reloadData()
-        activityIndicator.stopAnimating()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.activityIndicator.stopAnimating()
+            self.tableView.isUserInteractionEnabled = true
+        }
     }
 
     func rowUpdatedAt(position: Int) {
