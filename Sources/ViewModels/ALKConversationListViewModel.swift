@@ -165,10 +165,7 @@ final class ALKConversationListViewModel: NSObject {
     fileprivate var allMessages = [Any]()
 
     func prepareController(dbService: ALMessageDBService) {
-
-        DispatchQueue.main.async {
-            self.delegate?.startedLoading()
-        }
+        self.delegate?.startedLoading()
         dbService.getMessages(nil)
     }
 
@@ -192,7 +189,6 @@ final class ALKConversationListViewModel: NSObject {
         guard let alMessage = allMessages[indexPath.row] as? ALMessage else {
             return nil
         }
-
         return alMessage
     }
 
@@ -270,5 +266,14 @@ final class ALKConversationListViewModel: NSObject {
         if isChatOpen {
             viewController?.sync(message: message)
         }
+    }
+
+    func fetchMoreMessages(dbService: ALMessageDBService) {
+        guard !ALUserDefaultsHandler.getFlagForAllConversationFetched() else { return }
+        delegate?.startedLoading()
+        dbService.fetchConversationfromServer(completion: {
+            _ in
+            NSLog("List updated")
+        })
     }
 }

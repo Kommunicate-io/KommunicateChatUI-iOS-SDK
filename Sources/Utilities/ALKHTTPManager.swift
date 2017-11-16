@@ -32,7 +32,7 @@ class ALKHTTPManager: NSObject {
     var uploadTask: ALKUploadTask?
     var downloadTask: ALKDownloadTask?
 
-    
+
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?)->()) {
 
         guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.path, paramString: nil) as URLRequest? else { return }
@@ -137,7 +137,6 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
         completionHandler(URLSession.ResponseDisposition.allow)
     }
-
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         if let downloadTask = downloadTask {
