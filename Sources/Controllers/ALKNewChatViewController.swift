@@ -167,6 +167,9 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ALKNewChatViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        // Update only when the search is not active
+        guard searchBar.text?.isEmpty! else { return }
+
         let  height = scrollView.frame.size.height
         let contentYoffset = scrollView.contentOffset.y
         let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
