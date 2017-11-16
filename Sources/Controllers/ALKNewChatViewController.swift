@@ -26,6 +26,8 @@ final class ALKNewChatViewController: ALKBaseViewController {
     fileprivate lazy var searchBar: UISearchBar = {
         return UISearchBar.createAXSearchBar(placeholder: NSLocalizedString("SearchPlaceholder", value: "Search", comment: ""))
     }()
+
+    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
     //MARK: - Life cycle
     
@@ -42,8 +44,8 @@ final class ALKNewChatViewController: ALKBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         searchBar.delegate = self
+        ALUserDefaultsHandler.setContactServerCallIsDone(false)
         if let textField = searchBar.textField {
             guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft else { return }
             textField.textAlignment = .right
@@ -53,12 +55,19 @@ final class ALKNewChatViewController: ALKBaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.edgesForExtendedLayout = []
-        viewModel.getAllFriends {
+        activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+        activityIndicator.color = UIColor.gray
+        view.addSubview(activityIndicator)
+        self.view.bringSubview(toFront: activityIndicator)
+        activityIndicator.startAnimating()
+        viewModel.getAllFriends(completion: {
+            self.searchBar.text = nil
             self.tableView.reloadData()
-        }
+            self.activityIndicator.stopAnimating()
+        })
     }
     
-    //MARK: -
+    //MARK: - Private
     
     private func setupView() {
 
@@ -123,7 +132,6 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
                 vc.addContactMode = .newChat
                 navigationController?.pushViewController(vc, animated: true)
             }
-//
             return
         }
 
@@ -154,7 +162,30 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return (section == 0) ? 44 : 0
     }
+
 }
+
+extension ALKNewChatViewController: UIScrollViewDelegate {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        // Update only when the search is not active
+        guard (searchBar.text?.isEmpty)! else { return }
+
+        let  height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
+        if distanceFromBottom < height {
+            activityIndicator.startAnimating()
+            viewModel.getAllFriends(completion: {
+                self.searchBar.text = nil
+                self.tableView.reloadData()
+                ALUserDefaultsHandler.setContactServerCallIsDone(true)
+                self.activityIndicator.stopAnimating()
+            })
+        }
+    }
+}
+
 
 
 //MARK: - UISearchBarDelegate
@@ -171,8 +202,6 @@ extension ALKNewChatViewController: UISearchBarDelegate {
 extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
     
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
-        //TODO
-//        let users = friendsSelected.flatMap({$0.friendLayerUserID})
 
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
 
@@ -201,35 +230,6 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             self.navigationController?.pushViewController(conversationVC, animated: true)
             self.tableView.isUserInteractionEnabled = true
         })
-
-//        if let conversation = ALKConversationListViewModel().createConversation(users: users) {
-//            
-//            conversation.setValue(groupName, forMetadataAtKeyPath: "group_name")
-//            conversation.setValue(groupImgUrl, forMetadataAtKeyPath: "group_profile_url")
-//            
-//            let cache = RowHeighCache(identity: conversation.identifier.absoluteString)
-//            let viewModel = ALKConversationViewModel(conversation: conversation, cache: cache)
-//            
-//            let hud = MBProgressHUD.showAdded(to: self.tableView, animated: true)
-//            
-//            viewModel.fetch(complete: { [weak self] (_) in
-//                
-//                hud.hide(animated: true)
-//                
-//                guard let strongSelf = self else {return}
-//                
-//                let conversationVC = ALKConversationViewController(viewModel: viewModel)
-//                conversationVC.title = groupName
-//                
-//                strongSelf.navigationController?.pushViewController(conversationVC, animated: true)
-//                strongSelf.tableView.isUserInteractionEnabled = true
-//            })
-//            
-//            do {
-//                try viewModel.send(createdConversation: conversation)
-//            } catch {
-//            }
-//        }
     }
 
 }

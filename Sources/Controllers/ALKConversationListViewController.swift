@@ -342,16 +342,13 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 
         let view = tableView.dequeueReusableCell(withIdentifier: "EmptyChatCell")?.contentView
-
         if let tap = view?.gestureRecognizers?.first {
             view?.removeGestureRecognizer(tap)
         }
-
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(compose))
         tap.numberOfTapsRequired = 1
 
         view?.addGestureRecognizer(tap)
-
         return view
     }
 
