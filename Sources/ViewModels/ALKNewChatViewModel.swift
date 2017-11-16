@@ -33,6 +33,20 @@ final class ALKNewChatViewModel {
     }
     
     func getAllFriends(completion: @escaping () -> ()) {
+
+        let userService = ALUserService()
+        if ALApplozicSettings.getFilterContactsStatus() {
+            userService.getListOfRegisteredUsers(completion: {error in
+                self.bufferFriendList = self.fetchContactsFromDB() ?? []
+                completion()
+            })
+        } else {
+            self.bufferFriendList = self.fetchContactsFromDB() ?? []
+            completion()
+        }
+    }
+
+    func fetchContactsFromDB() -> [ALKContactProtocol]?{
         let dbHandler = ALDBHandler.sharedInstance()
 
         let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
@@ -44,6 +58,8 @@ final class ALKNewChatViewModel {
         }
 
         fetchReq.predicate = predicate
+
+        var contactList = [ALKContactProtocol]()
         do {
             let list = try dbHandler?.managedObjectContext.fetch(fetchReq)
             if let db = list {
@@ -57,15 +73,16 @@ final class ALKNewChatViewModel {
                     contact.email = dbContact.email
                     contact.localImageResourceName = dbContact.localImageResourceName
                     contact.contactType = dbContact.contactType
-                    self.bufferFriendList.append(contact)
+                    contactList.append(contact)
                 }
-                completion()
+                return contactList
             }
 
-        } catch(let _) {
-
-            completion()
+        } catch( let error) {
+            NSLog(error.localizedDescription)
+            return nil
         }
+        return nil
     }
     
     func numberOfSection() -> Int {
