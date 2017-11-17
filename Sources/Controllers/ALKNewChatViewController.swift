@@ -60,7 +60,7 @@ final class ALKNewChatViewController: ALKBaseViewController {
         view.addSubview(activityIndicator)
         self.view.bringSubview(toFront: activityIndicator)
         activityIndicator.startAnimating()
-        viewModel.getAllFriends(completion: {
+        viewModel.getContacts(completion: {
             self.searchBar.text = nil
             self.tableView.reloadData()
             self.activityIndicator.stopAnimating()
@@ -176,7 +176,7 @@ extension ALKNewChatViewController: UIScrollViewDelegate {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
         if distanceFromBottom < height {
             activityIndicator.startAnimating()
-            viewModel.getAllFriends(completion: {
+            viewModel.getContacts(completion: {
                 self.searchBar.text = nil
                 self.tableView.reloadData()
                 ALUserDefaultsHandler.setContactServerCallIsDone(true)

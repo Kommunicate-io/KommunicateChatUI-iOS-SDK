@@ -17,13 +17,15 @@ final class ALKNewChatViewModel {
             self.friendList = bufferFriendList
         }
     }
-    
-//    let friendDataService: FriendDataService
+
+    var applozicSettings: ALApplozicSettings.Type = ALApplozicSettings.self
+
+    //MARK: - Intialization
 
     init() {
-
     }
-    
+
+    //MARK: Internal
     func filter(keyword: String) {
         if keyword.isEmpty {
             self.friendList = self.bufferFriendList
@@ -32,10 +34,9 @@ final class ALKNewChatViewModel {
         }
     }
     
-    func getAllFriends(completion: @escaping () -> ()) {
-
-        let userService = ALUserService()
-        if ALApplozicSettings.getFilterContactsStatus() {
+    func getContacts(userService: ALUserService = ALUserService(),completion:@escaping () ->()) {
+        applozicSettings.getFilterContactsStatus()
+        if applozicSettings.getFilterContactsStatus() {
             userService.getListOfRegisteredUsers(completion: {error in
                 self.bufferFriendList = self.fetchContactsFromDB() ?? []
                 completion()

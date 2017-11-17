@@ -6,3 +6,7 @@ use_frameworks!
 target 'ApplozicSwiftDemo' do
     pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
 end
+
+target 'ApplozicSwiftDemoTests' do
+    pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
+end
