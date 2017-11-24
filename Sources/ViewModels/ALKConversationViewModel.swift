@@ -9,7 +9,7 @@
 import Foundation
 import Applozic
 
-protocol ALKConversationViewModelDelegate: class {
+public protocol ALKConversationViewModelDelegate: class {
     func loadingStarted()
     func loadingFinished(error: Error?)
     func messageUpdated()
@@ -19,12 +19,12 @@ protocol ALKConversationViewModelDelegate: class {
     func updateDisplay(name: String)
 }
 
-final class ALKConversationViewModel: NSObject {
+final public class ALKConversationViewModel: NSObject {
 
     var contactId: String?
     var channelKey: NSNumber?
 
-    weak var delegate: ALKConversationViewModelDelegate?
+    weak public var delegate: ALKConversationViewModelDelegate?
     let maxWidth = UIScreen.main.bounds.width
 
     var isGroup: Bool {
@@ -42,7 +42,7 @@ final class ALKConversationViewModel: NSObject {
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
 
-    init(contactId: String?, channelKey: NSNumber?) {
+    public init(contactId: String?, channelKey: NSNumber?) {
         self.contactId = contactId
         self.channelKey = channelKey
     }

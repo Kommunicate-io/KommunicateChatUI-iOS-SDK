@@ -158,7 +158,7 @@ protocol ALKConversationListViewModelDelegate: class {
 }
 
 
-final class ALKConversationListViewModel: NSObject {
+final public class ALKConversationListViewModel: NSObject {
 
     weak var delegate: ALKConversationListViewModelDelegate?
 

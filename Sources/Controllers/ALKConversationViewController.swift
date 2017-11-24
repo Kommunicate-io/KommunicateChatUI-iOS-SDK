@@ -13,7 +13,7 @@ import Applozic
 
 public final class ALKConversationViewController: ALKBaseViewController {
 
-    var viewModel: ALKConversationViewModel!
+    public var viewModel: ALKConversationViewModel!
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
@@ -619,11 +619,11 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
-    func loadingStarted() {
+    public func loadingStarted() {
         activityIndicator.startAnimating()
     }
 
-    func loadingFinished(error: Error?) {
+    public func loadingFinished(error: Error?) {
         activityIndicator.stopAnimating()
         tableView.reloadData()
         print("loading finished")
@@ -636,20 +636,20 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         viewModel.markConversationRead()
     }
 
-    func messageUpdated() {
+    public func messageUpdated() {
         if activityIndicator.isAnimating {
             activityIndicator.stopAnimating()
         }
         tableView.reloadData()
     }
 
-    func updateMessageAt(indexPath: IndexPath) {
+    public func updateMessageAt(indexPath: IndexPath) {
         DispatchQueue.main.async {
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
         }
     }
 
-    func newMessagesAdded() {
+    public func newMessagesAdded() {
         tableView.reloadData()
         if tableView.isCellVisible(section: viewModel.messageModels.count-2, row: 0) {
             tableView.scrollToBottom()
@@ -662,7 +662,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         viewModel.markConversationRead()
     }
 
-    func messageSent(at indexPath: IndexPath) {
+    public func messageSent(at indexPath: IndexPath) {
         DispatchQueue.main.async {
             NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)
             guard indexPath.section >= self.tableView.numberOfSections else {
@@ -676,7 +676,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    func updateDisplay(name: String) {
+    public func updateDisplay(name: String) {
         self.title = name
         titleButton.setTitle(name, for: .normal)
     }
