@@ -49,17 +49,14 @@ final class ALKNewChatViewModel {
 
     func fetchContactsFromDB() -> [ALKContactProtocol]?{
         let dbHandler = ALDBHandler.sharedInstance()
-
         let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
-
         var predicate = NSPredicate()
         fetchReq.returnsDistinctResults = true
+
         if !ALUserDefaultsHandler.getLoginUserConatactVisibility() {
-            predicate = NSPredicate(format: "userId!=%@ AND deletedAtTime == nil", ALUserDefaultsHandler.getUserId())
+            predicate = NSPredicate(format: "userId!=%@ AND deletedAtTime == nil", ALUserDefaultsHandler.getUserId() ?? "")
         }
-
         fetchReq.predicate = predicate
-
         var contactList = [ALKContactProtocol]()
         do {
             let list = try dbHandler?.managedObjectContext.fetch(fetchReq)
@@ -78,7 +75,6 @@ final class ALKNewChatViewModel {
                 }
                 return contactList
             }
-
         } catch( let error) {
             NSLog(error.localizedDescription)
             return nil
