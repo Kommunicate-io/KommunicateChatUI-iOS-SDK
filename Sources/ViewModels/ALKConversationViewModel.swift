@@ -287,6 +287,21 @@ final public class ALKConversationViewModel: NSObject {
         }
     }
 
+    func downloadAttachment(message: ALKMessageViewModel, view: UIView){
+        guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
+            let notificationView = ALNotificationView()
+            notificationView.noDataConnectionNotificationView()
+            return
+        }
+        let httpManager = ALKHTTPManager()
+        httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
+        let urlString = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(), message.fileMetaInfo?.blobKey ?? "")
+        let task = ALKDownloadTask(downloadUrl: urlString, fileName: message.fileMetaInfo?.name)
+        task.identifier = message.identifier
+        task.totalBytesExpectedToDownload = message.size
+        httpManager.downloadAttachment(task: task)
+    }
+
     /// Received from notification
     func addMessagesToList(_ messageList: [Any]) {
         guard let messages = messageList as? [ALMessage] else { return }

@@ -64,6 +64,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         responseDict in
                         self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                     }
+                    cell.downloadTapped = {[weak self]
+                        value in
+                        guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
+                        self?.viewModel.downloadAttachment(message: message, view: cell)
+                    }
                     return cell
 
                 } else {
@@ -81,6 +86,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                     let cell: ALKFriendPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                     cell.update(viewModel: message)
+                    cell.downloadTapped = {[weak self]
+                        value in
+                        guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
+                        self?.viewModel.downloadAttachment(message: message, view: cell)
+                    }
                     return cell
 
                 } else {
@@ -164,10 +174,21 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     responseDict in
                     self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
                 }
+                cell.downloadTapped = {[weak self]
+                    value in
+                    guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
+                    self?.viewModel.downloadAttachment(message: message, view: cell)
+
+                }
                 return cell
             } else {
                 let cell: ALKFriendVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
+                cell.downloadTapped = {[weak self]
+                    value in
+                    guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
+                    self?.viewModel.downloadAttachment(message: message, view: cell)
+                }
                 return cell
             }
         }

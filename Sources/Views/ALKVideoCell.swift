@@ -88,6 +88,8 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
     var uploadTapped:((Bool) ->())?
     var uploadCompleted: ((_ responseDict: Any?) ->())?
 
+    var downloadTapped:((Bool) ->())?
+
     class func topPadding() -> CGFloat {
         return 12
     }
@@ -198,18 +200,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
-        guard ALDataNetworkConnection.checkDataNetworkAvailable(), let viewModel = self.viewModel else {
-            let notificationView = ALNotificationView()
-            notificationView.noDataConnectionNotificationView()
-            return
-        }
-        let httpManager = ALKHTTPManager()
-        httpManager.downloadDelegate = self
-        let urlString = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(), viewModel.fileMetaInfo?.blobKey ?? "")
-        let task = ALKDownloadTask(downloadUrl: urlString, fileName: viewModel.fileMetaInfo?.name)
-        task.identifier = viewModel.identifier
-        task.totalBytesExpectedToDownload = viewModel.size
-        httpManager.downloadAttachment(task: task)
+        downloadTapped?(true)
     }
 
     @objc private func playButtonAction(_ selector: UIButton) {
