@@ -267,7 +267,7 @@ final public class ALKConversationViewModel: NSObject {
         }
         let alMessage = alMessages[indexPath.section]
         let httpManager = ALKHTTPManager()
-        let urlString = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(), alMessage.fileMetaInfo?.blobKey ?? "")
+        let urlString = (alMessage.imageUrl != nil) ? alMessage.imageUrl!.absoluteString:""
         let task = ALKDownloadTask(downloadUrl: urlString, fileName: alMessage.fileMetaInfo?.name)
         task.identifier = alMessage.identifier
         task.totalBytesExpectedToDownload = alMessage.size
@@ -295,7 +295,7 @@ final public class ALKConversationViewModel: NSObject {
         }
         let httpManager = ALKHTTPManager()
         httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
-        let urlString = String(format: "%@/rest/ws/aws/file/%@",ALUserDefaultsHandler.getFILEURL(), message.fileMetaInfo?.blobKey ?? "")
+        let urlString = (message.imageURL != nil) ? message.imageURL!.absoluteString:""
         let task = ALKDownloadTask(downloadUrl: urlString, fileName: message.fileMetaInfo?.name)
         task.identifier = message.identifier
         task.totalBytesExpectedToDownload = message.size
