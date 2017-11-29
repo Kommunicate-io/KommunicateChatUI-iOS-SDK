@@ -80,6 +80,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         bv.isUserInteractionEnabled = false
         return bv
     }()
+
+    var downloadTapped:((Bool)->())?
     
     class func topPadding() -> CGFloat {
         return 12
@@ -122,9 +124,17 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
     
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
-//        print("viewModel path: ", viewModel.filePath)
-//        print("viewModel state: ", viewModel.voiceCurrentState)
-        //pause case
+
+        /// Auto-Download
+        if viewModel.filePath == nil {
+            downloadTapped?(true)
+        } else if let filePath = viewModel.filePath {
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) as Data? {
+                updateViewForDownloadedState(data: data)
+            }
+        }
+
         if viewModel.voiceCurrentState == .pause && viewModel.voiceCurrentDuration > 0{
             actionButton.isSelected = false
             playTimeLabel.text = getTimeString(secLeft:viewModel.voiceCurrentDuration)
@@ -173,11 +183,10 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
     
     override func setupViews() {
         super.setupViews()
-        
+
         actionButton.setImage(UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil), for: .normal)
         actionButton.setImage(UIImage(named: "icon_pause", in: Bundle.applozic, compatibleWith: nil), for: .selected)
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(ALKVoiceCell.soundPlayerAction))
-//        soundPlayerView.addGestureRecognizer(recognizer)
+
 
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
         clearButton.addTarget(self, action: #selector(ALKVoiceCell.soundPlayerAction), for: .touchUpInside)
@@ -227,6 +236,18 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         actionButton.removeTarget(self, action: #selector(actionTapped), for: .touchUpInside)
     }
 
+    func updateViewForDownloadedState(data: Data) {
+        do {
+            let player = try AVAudioPlayer(data: data, fileTypeHint: AVFileTypeWAVE)
+            viewModel?.voiceData = data
+            viewModel?.voiceTotalDuration = CGFloat(player.duration)
+            playTimeLabel.text = getTimeString(secLeft:viewModel!.voiceTotalDuration)
+        }
+        catch(let error) {
+            print(error)
+        }
+    }
+
     @objc private func soundPlayerAction() {
         guard isMessageSent() else { return }
         showMediaViewer()
@@ -254,5 +275,37 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         UIViewController.topViewController()?.present(nav!, animated: true, completion: {
         })
     }
+
+    fileprivate func updateDbMessageWith(key: String, value: String, filePath: String) {
+        let messageService = ALMessageDBService()
+        let alHandler = ALDBHandler.sharedInstance()
+        let dbMessage: DB_Message = messageService.getMessageByKey(key, value: value) as! DB_Message
+        dbMessage.filePath = filePath
+        do {
+            try alHandler?.managedObjectContext.save()
+        } catch {
+            NSLog("Not saved due to error")
+        }
+    }
+
     
+}
+
+extension ALKVoiceCell: ALKHTTPManagerDownloadDelegate {
+    func dataDownloaded(task: ALKDownloadTask) {
+        
+    }
+
+    func dataDownloadingFinished(task: ALKDownloadTask) {
+
+        // update viewmodel's data field and time and then call update
+        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
+            return
+        }
+        self.updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(task.filePath ?? "")).path) as Data? {
+            updateViewForDownloadedState(data: data)
+        }
+    }
 }

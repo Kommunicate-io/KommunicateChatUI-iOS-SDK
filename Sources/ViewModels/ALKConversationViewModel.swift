@@ -259,34 +259,6 @@ final public class ALKConversationViewModel: NSObject {
         loadEarlierMessages()
     }
 
-    func getAudioData(for indexPath: IndexPath, completion: @escaping (Data?)->()) {
-        guard indexPath.section < alMessages.count && ALDataNetworkConnection.checkDataNetworkAvailable() else {
-            let notificationView = ALNotificationView()
-            notificationView.noDataConnectionNotificationView()
-            return
-        }
-        let alMessage = alMessages[indexPath.section]
-        let httpManager = ALKHTTPManager()
-        let urlString = (alMessage.imageUrl != nil) ? alMessage.imageUrl!.absoluteString:""
-        let task = ALKDownloadTask(downloadUrl: urlString, fileName: alMessage.fileMetaInfo?.name)
-        task.identifier = alMessage.identifier
-        task.totalBytesExpectedToDownload = alMessage.size
-        httpManager.downloadAttachment(task: task)
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        httpManager.downloadCompleted = {[weak self] task in
-            guard task.downloadError == nil else {
-                completion(nil)
-                return
-            }
-            if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(task.filePath ?? "")).path) as Data?     {
-                self?.updateDbMessageWith(key: "key", value: task.identifier ?? "", filePath: task.filePath ?? "")
-                completion(data)
-            } else {
-                completion(nil)
-            }
-        }
-    }
-
     func downloadAttachment(message: ALKMessageViewModel, view: UIView){
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()

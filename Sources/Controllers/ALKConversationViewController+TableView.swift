@@ -103,38 +103,20 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             print("voice cell loaded with url", message.filePath as Any)
             print("current voice state: ", message.voiceCurrentState, "row", indexPath.row, message.voiceTotalDuration, message.voiceData as Any)
             print("voice identifier: ", message.identifier, "and row: ", indexPath.row)
-            if message.voiceData ==  nil {
-                let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                if let path = message.filePath, let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(path)).path) as Data? {
-                    self.viewModel.updateMessageModelAt(indexPath: indexPath, data: data)
-                } else {
-                    viewModel.getAudioData(for: indexPath) { data in
-                        guard let voiceData = data else { return }
-                        self.viewModel.updateMessageModelAt(indexPath: indexPath, data: voiceData)
-                    }
-                }
-            }
-
-            if message.voiceTotalDuration == 0 {
-                if let data = message.voiceData {
-                    let voice = data as NSData
-                    do {
-                        let player = try AVAudioPlayer(data: voice as Data, fileTypeHint: AVFileTypeWAVE)
-                        message.voiceTotalDuration = CGFloat(player.duration)
-                    } catch let _ as NSError {
-                    }
-                }
-            }
 
             if message.isMyMessage {
                 let cell: ALKMyVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                //                cell.backgroundColor = UIColor.white
                 cell.update(viewModel: message)
                 cell.setCellDelegate(delegate: self)
+                cell.downloadTapped = {[weak self] value in
+                    self?.viewModel.downloadAttachment(message: message, view: cell)
+                }
                 return cell
             } else {
                 let cell: ALKFriendVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                //                cell.backgroundColor = UIColor.white
+                cell.downloadTapped = {[weak self] value in
+                    self?.viewModel.downloadAttachment(message: message, view: cell)
+                }
                 cell.update(viewModel: message)
                 cell.setCellDelegate(delegate: self)
                 return cell
