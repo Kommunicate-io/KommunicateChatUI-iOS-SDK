@@ -136,4 +136,18 @@ class ALChatManager: NSObject {
         ALApplozicSettings.setFilterContactsStatus(true)
     }
 
+    func launchChatWith(contactId: String, viewController: UIViewController) {
+        let alContactDbService = ALContactDBService()
+        var title = ""
+        if let alContact = alContactDbService.loadContact(byKey: "userId", value: contactId), let name = alContact.getDisplayName() {
+            title = name
+        }
+        title = title.isEmpty ? "No name":title
+        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil)
+        let conversationViewController = ALKConversationViewController()
+        conversationViewController.title = title
+        conversationViewController.viewModel = convViewModel
+        viewController.navigationController?.pushViewController(conversationViewController, animated: false)
+    }
+
 }
