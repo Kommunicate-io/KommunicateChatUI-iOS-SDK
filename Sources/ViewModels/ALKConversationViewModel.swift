@@ -21,8 +21,11 @@ public protocol ALKConversationViewModelDelegate: class {
 
 final public class ALKConversationViewModel: NSObject {
 
-    var contactId: String?
-    var channelKey: NSNumber?
+    public var contactId: String?
+    public var channelKey: NSNumber?
+
+    // For topic based chat
+    public var conversationProxy: ALConversationProxy?
 
     weak public var delegate: ALKConversationViewModelDelegate?
     let maxWidth = UIScreen.main.bounds.width
@@ -36,18 +39,27 @@ final public class ALKConversationViewModel: NSObject {
     var individualLaunch = false
     var isFirstTime = true
 
+    var isContextBasedChat: Bool {
+//        return (conversationProxy != nil)
+        return true
+    }
+
     var alMessageWrapper = ALMessageArrayWrapper()
     var messageModels: [ALKMessageModel] = []
     private var alMessages: [ALMessage] = []
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
 
-    public init(contactId: String?, channelKey: NSNumber?) {
+    public init(contactId: String?,
+                channelKey: NSNumber?,
+                conversationProxy: ALConversationProxy? = nil)
+    {
         self.contactId = contactId
         self.channelKey = channelKey
+        self.conversationProxy = conversationProxy
     }
 
-    func prepareController() {
+    public func prepareController() {
         let id = channelKey?.stringValue ?? contactId
         if ALUserDefaultsHandler.isServerCallDone(forMSGList: id) {
             delegate?.loadingStarted()
@@ -110,7 +122,7 @@ final public class ALKConversationViewModel: NSObject {
         })
     }
 
-    func isGroupConversation() -> Bool {
+    public func isGroupConversation() -> Bool {
         guard let _ = channelKey else {
             return false
         }
@@ -164,6 +176,7 @@ final public class ALKConversationViewModel: NSObject {
 
     func numberOfRows(section: Int) -> Int {
         return 1
+        
     }
 
     func messageForRow(indexPath: IndexPath) -> ALKMessageViewModel? {
@@ -257,6 +270,21 @@ final public class ALKConversationViewModel: NSObject {
             return
         }
         loadEarlierMessages()
+    }
+
+    func getContextTitleData() -> ALKContextTitleDataType? {
+        guard isContextBasedChat else {
+            return nil
+        }
+        let alTopicDetail = ALTopicDetail()
+        alTopicDetail.title     = "Mac Book Pro"
+        alTopicDetail.subtitle  = "13' Retina"
+        alTopicDetail.link      = "https://raw.githubusercontent.com/AppLozic/Applozic-iOS-SDK/master/macbookpro.jpg"
+        alTopicDetail.key1      = "Product ID"
+        alTopicDetail.value1    = "mac-pro-r-13"
+        alTopicDetail.key2      = "Price"
+        alTopicDetail.value2    = "Rs.1,04,999.00"
+        return alTopicDetail
     }
 
     func downloadAttachment(message: ALKMessageViewModel, view: UIView){

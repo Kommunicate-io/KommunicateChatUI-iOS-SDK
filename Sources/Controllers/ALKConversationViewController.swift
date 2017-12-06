@@ -56,6 +56,12 @@ public final class ALKConversationViewController: ALKBaseViewController {
         return button
     }()
 
+    let contextTitleView: ALKContextTitleView = {
+        let contextView = ALKContextTitleView(frame: CGRect.zero)
+        contextView.backgroundColor = UIColor.blue
+        return contextView
+    }()
+
     required public init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -284,9 +290,18 @@ public final class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
-        view.addViewsForAutolayout(views: [tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
+        view.addViewsForAutolayout(views: [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
 
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        contextTitleView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
+        var contextViewHeight = 100.0
+        if !viewModel.isContextBasedChat {
+            contextViewHeight = 0
+        }
+        contextTitleView.heightAnchor.constraint(equalToConstant: CGFloat(contextViewHeight)).isActive = true
+
+        tableView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
@@ -310,10 +325,17 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
         leftMoreBarConstraint = moreBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 56)
         leftMoreBarConstraint?.isActive = true
+
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
+        guard viewModel.isContextBasedChat else { return }
+        prepareContextView()
+    }
 
+    func prepareContextView(){
+        guard let topicDetail = viewModel.getContextTitleData() else {return }
+        contextTitleView.configureWith(value: topicDetail)
     }
 
     private func setupNavigation() {

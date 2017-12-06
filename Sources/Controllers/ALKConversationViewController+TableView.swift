@@ -176,52 +176,56 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         }
     }
 
+
+
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return viewModel.heightForRow(indexPath: indexPath, cellFrame: self.view.frame)
     }
 
 
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let heightForHeaderInSection: CGFloat = 40.0
+//    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        let heightForHeaderInSection: CGFloat = 100.0
+//
+////        guard let message1 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
+////            return 0.0
+////        }
+////        let date1 = message1.date
+////        //        if section == 0 {
+////        //            return (message1.type == .createGroup ? 0.0 : heightForHeaderInSection)
+////        //        }
+////
+////        if section == 0 {
+////            return heightForHeaderInSection
+////        }
+////
+////        guard let message2 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section - 1)) else {
+////            return 0.0
+////        }
+////        let date2 = message2.date
+////
+////        switch Calendar.current.compare(date1, to: date2, toGranularity: .day) {
+////        case .orderedDescending:
+////            return heightForHeaderInSection
+////
+////        default:
+////            //            return (message2.type == .createGroup ? heightForHeaderInSection : 0.0)
+////            return 0.0
+////        }
+//        return heightForHeaderInSection
+//    }
 
-        guard let message1 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
-            return 0.0
-        }
-        let date1 = message1.date
-        //        if section == 0 {
-        //            return (message1.type == .createGroup ? 0.0 : heightForHeaderInSection)
-        //        }
-
-        if section == 0 {
-            return heightForHeaderInSection
-        }
-
-        guard let message2 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section - 1)) else {
-            return 0.0
-        }
-        let date2 = message2.date
-
-        switch Calendar.current.compare(date1, to: date2, toGranularity: .day) {
-        case .orderedDescending:
-            return heightForHeaderInSection
-
-        default:
-            //            return (message2.type == .createGroup ? heightForHeaderInSection : 0.0)
-            return 0.0
-        }
-    }
-
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
-            return nil
-        }
-        _ = message.date
-
-//        let dateView = DateSectionHeaderView.instanceFromNib()
-//        dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
-
-        return nil
-    }
+//    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+////        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
+////            return nil
+////        }
+////        _ = message.date
+//
+////        let dateView = DateSectionHeaderView.instanceFromNib()
+////        dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
+//
+////        return nil
+//
+//    }
 
     //MARK: Paging
 
@@ -256,4 +260,36 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             unreadScrollButton.isHidden = true
         }
     }
+}
+
+extension ALTopicDetail: ALKContextTitleDataType {
+    public var titleText: String {
+        return title ?? ""
+    }
+
+    public var subtitleText: String {
+        return description
+    }
+
+    public var imageURL: URL? {
+        guard let urlStr = link, let url = URL(string: urlStr) else {
+            return nil
+        }
+        return url
+    }
+
+    public var infoLabel1Text: String? {
+        guard let key = key1, let value = value1 else {
+            return nil
+        }
+        return "\(key): \(value)"
+    }
+
+    public var infoLabel2Text: String? {
+        guard let key = key2, let value = value2 else {
+            return nil
+        }
+        return "\(key): \(value)"
+    }
+
 }
