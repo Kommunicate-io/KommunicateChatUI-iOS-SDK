@@ -222,7 +222,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         tableView.estimatedRowHeight = 0
     }
 
-    func launchChat(contactId: String?, groupId: NSNumber?) {
+    func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
         let alChannelService = ALChannelService()
         let alContactDbService = ALContactDBService()
         var title = ""
@@ -234,6 +234,10 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         }
         title = title.isEmpty ? "No name":title
         let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: groupId)
+        let convService = ALConversationService()
+        if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
+            convViewModel.conversationProxy = convProxy
+        }
         conversationViewController = ALKConversationViewController()
         conversationViewController?.title = title
         conversationViewController?.viewModel = convViewModel
@@ -309,6 +313,10 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
         if searchActive {
             guard let chat = searchFilteredChat[indexPath.row] as? ALMessage else {return}
             let convViewModel = ALKConversationViewModel(contactId: chat.contactId, channelKey: chat.channelKey)
+            let convService = ALConversationService()
+            if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
+                convViewModel.conversationProxy = convProxy
+            }
             conversationViewController = ALKConversationViewController()
             conversationViewController?.title = chat.isGroupChat ? chat.groupName:chat.name
             conversationViewController?.viewModel = convViewModel
@@ -320,6 +328,10 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
         } else {
             guard let chat = viewModel.chatForRow(indexPath: indexPath) else { return }
             let convViewModel = ALKConversationViewModel(contactId: chat.contactId, channelKey: chat.channelKey)
+            let convService = ALConversationService()
+            if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
+                convViewModel.conversationProxy = convProxy
+            }
             conversationViewController = ALKConversationViewController()
             conversationViewController?.title = chat.isGroupChat ? chat.groupName:chat.name
             conversationViewController?.viewModel = convViewModel
@@ -443,7 +455,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler({
                 response in
-                self.launchChat(contactId: message.contactId, groupId: message.groupId)
+                self.launchChat(contactId: message.contactId, groupId: message.groupId, conversationId: message.conversationId)
             })
         }
 

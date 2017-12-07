@@ -24,6 +24,7 @@ protocol ALKChatViewModelProtocol {
     var isGroupChat: Bool { get }
     var contactId: String? { get }
     var channelKey: NSNumber? { get }
+    var conversationId: NSNumber! {get set}
     var createdAt: String? { get }
 }
 

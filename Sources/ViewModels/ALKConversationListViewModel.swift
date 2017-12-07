@@ -147,7 +147,8 @@ extension ALMessage: ALKChatViewModelProtocol {
         let isToday = ALUtilityClass.isToday(date)
         return getCreatedAtTime(isToday)
     }
-
+    
+    
 }
 
 protocol ALKConversationListViewModelDelegate: class {

@@ -28,6 +28,11 @@ final public class ALKConversationViewModel: NSObject {
     public var conversationProxy: ALConversationProxy?
 
     weak public var delegate: ALKConversationViewModelDelegate?
+
+    private var conversationId: NSNumber? {
+        return conversationProxy?.id
+    }
+
     let maxWidth = UIScreen.main.bounds.width
 
     var isGroup: Bool {
@@ -40,8 +45,7 @@ final public class ALKConversationViewModel: NSObject {
     var isFirstTime = true
 
     var isContextBasedChat: Bool {
-//        return (conversationProxy != nil)
-        return true
+        return (conversationProxy != nil)
     }
 
     var alMessageWrapper = ALMessageArrayWrapper()
@@ -78,6 +82,7 @@ final public class ALKConversationViewModel: NSObject {
         let messageListRequest = MessageListRequest()
         messageListRequest.userId = contactId
         messageListRequest.channelKey = channelKey
+        messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
         ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, userDetail in
@@ -88,18 +93,22 @@ final public class ALKConversationViewModel: NSObject {
             NSLog("messages loaded: ", messages)
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
-            let models = self.alMessages.map { ($0 as! ALMessage).messageModel }
+            let models = self.alMessages.map { $0.messageModel }
             self.messageModels = models
-            let id = self.contactId ?? self.channelKey?.stringValue
             if self.messageModels.count < 50 {
-                ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+                let id = self.contactId ?? self.channelKey?.stringValue
+                if let convId = self.conversationId {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: convId.stringValue)
+                } else {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+                }
             }
             self.delegate?.loadingFinished(error: nil)
         })
     }
 
     func loadMessagesFromDB(isFirstTime: Bool = true) {
-        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: nil, start: 0, withCompletion: {
+        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, withCompletion: {
             messages in
             guard let messages = messages else {
                 self.delegate?.loadingFinished(error: nil)
@@ -110,9 +119,13 @@ final public class ALKConversationViewModel: NSObject {
             self.alMessageWrapper.addObject(toMessageArray: messages)
             let models = messages.map { ($0 as! ALMessage).messageModel }
             self.messageModels = models
-            let id = self.contactId ?? self.channelKey?.stringValue
             if self.messageModels.count < 50 {
-                ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+                let id = self.contactId ?? self.channelKey?.stringValue
+                if let convId = self.conversationId {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: convId.stringValue)
+                } else {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+                }
             }
             if isFirstTime {
                 self.delegate?.loadingFinished(error: nil)
@@ -265,7 +278,10 @@ final public class ALKConversationViewModel: NSObject {
     }
 
     func nextPage() {
-        let id = self.contactId ?? self.channelKey?.stringValue
+        var id = self.contactId ?? self.channelKey?.stringValue
+        if let convId = conversationId {
+            id = convId.stringValue
+        }
         guard ALUserDefaultsHandler.isShowLoadEarlierOption(id) && ALUserDefaultsHandler.isServerCallDone(forMSGList: id) else {
             return
         }
@@ -430,7 +446,7 @@ final public class ALKConversationViewModel: NSObject {
         alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
         alMessage.key = UUID().uuidString
         alMessage.source = Int16(SOURCE_IOS)
-        alMessage.conversationId = messageModel?.conversationId
+        alMessage.conversationId = conversationId
         alMessage.groupId = channelKey
 
         addToWrapper(message: alMessage)
@@ -624,6 +640,7 @@ final public class ALKConversationViewModel: NSObject {
     }
 
     func sync(message: ALMessage) {
+        guard message.conversationId != conversationId else { return }
         if let groupId = message.groupId, groupId != self.channelKey {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler({
@@ -730,7 +747,6 @@ final public class ALKConversationViewModel: NSObject {
     }
 
     private func getMessageToPost() -> ALMessage {
-        let messageModel = messageModels.first
         let alMessage = ALMessage()
         alMessage.to = contactId
         alMessage.contactIds = contactId
@@ -746,7 +762,7 @@ final public class ALKConversationViewModel: NSObject {
         alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
         alMessage.key = UUID().uuidString
         alMessage.source = Int16(SOURCE_IOS)
-        alMessage.conversationId = messageModel?.conversationId
+        alMessage.conversationId = conversationId
         alMessage.groupId = channelKey
         return  alMessage
     }
