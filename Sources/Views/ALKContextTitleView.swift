@@ -10,6 +10,7 @@ import Kingfisher
 
 public protocol ALKContextTitleViewType {
     func configureWith(value: ALKContextTitleDataType)
+    func setupUI()
 }
 
 open class ALKContextTitleView: UIView, ALKContextTitleViewType {
@@ -87,22 +88,22 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
         contextImageView.widthAnchor.constraint(equalTo: contextImageView.heightAnchor).isActive = true
         contextImageView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
 
-        titleLabel.leadingAnchor.constraint(equalTo: contextImageView.trailingAnchor).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: contextImageView.trailingAnchor, constant: 10).isActive = true
         titleLabel.topAnchor.constraint(equalTo: contextImageView.topAnchor).isActive = true
         titleLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25).isActive = true
         titleLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
 
-        subtitleLabel.leadingAnchor.constraint(equalTo: contextImageView.trailingAnchor).isActive = true
+        subtitleLabel.leadingAnchor.constraint(equalTo: contextImageView.trailingAnchor, constant: 10).isActive = true
         subtitleLabel.bottomAnchor.constraint(equalTo: contextImageView.bottomAnchor).isActive = true
         subtitleLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25).isActive = true
         subtitleLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
 
-        topRightInfoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        topRightInfoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 10).isActive = true
         topRightInfoLabel.topAnchor.constraint(equalTo: contextImageView.topAnchor).isActive = true
         topRightInfoLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.45).isActive = true
         topRightInfoLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
 
-        bottomRightInfoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        bottomRightInfoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 10).isActive = true
         bottomRightInfoLabel.bottomAnchor.constraint(equalTo: contextImageView.bottomAnchor).isActive = true
         bottomRightInfoLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.45).isActive = true
         bottomRightInfoLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
