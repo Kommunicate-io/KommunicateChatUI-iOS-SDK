@@ -17,22 +17,41 @@ public protocol ALKContextTitleDataType {
 
 public protocol ALKContextTitleViewModelType {
     var contextViewData: ALKContextTitleDataType {get set}
-
-    func getTitleImageURL() -> URL?
+    var getTitleImageURL: URL? {get}
+    var getTitleText: String? {get}
+    var getSubtitleText: String? {get}
+    var getFirstKeyValuePairText: String? {get}
+    var getSecondKeyValuePairText: String? {get}
 }
 
-public class ALKContextTitleViewModel: ALKContextTitleViewModelType {
+open class ALKContextTitleViewModel: ALKContextTitleViewModelType {
 
     public var contextViewData: ALKContextTitleDataType
 
-    public init(data: ALKContextTitleDataType) {
-        self.contextViewData = data
-    }
-
-    public func getTitleImageURL() -> URL? {
+    public var getTitleImageURL: URL? {
         guard let imageURL = contextViewData.imageURL else {
             return nil
         }
         return imageURL
+    }
+
+    public var getTitleText: String? {
+        return contextViewData.titleText
+    }
+
+    public var getSubtitleText: String? {
+        return contextViewData.subtitleText
+    }
+
+    public var getFirstKeyValuePairText: String? {
+        return contextViewData.infoLabel1Text
+    }
+
+    public var getSecondKeyValuePairText: String? {
+        return contextViewData.infoLabel2Text
+    }
+
+    public init(data: ALKContextTitleDataType) {
+        self.contextViewData = data
     }
 }

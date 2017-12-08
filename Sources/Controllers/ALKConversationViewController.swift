@@ -11,7 +11,7 @@ import AVKit
 import AVFoundation
 import Applozic
 
-public final class ALKConversationViewController: ALKBaseViewController {
+open class ALKConversationViewController: ALKBaseViewController {
 
     public var viewModel: ALKConversationViewModel!
     private var isFirstTime = true
@@ -56,9 +56,9 @@ public final class ALKConversationViewController: ALKBaseViewController {
         return button
     }()
 
-    let contextTitleView: ALKContextTitleView = {
+    open var contextTitleView: ALKContextTitleView = {
         let contextView = ALKContextTitleView(frame: CGRect.zero)
-        contextView.backgroundColor = UIColor.blue
+        contextView.backgroundColor = UIColor.orange
         return contextView
     }()
 
@@ -210,7 +210,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
@@ -249,17 +249,17 @@ public final class ALKConversationViewController: ALKBaseViewController {
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         NSLog("view loaded first time \(isFirstTime)")
         setupView()
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         ALUserDefaultsHandler.setDebugLogsRequire(true)
     }
 
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if self.isFirstTime && tableView.isCellVisible(section: 0, row: 0) {
             self.tableView.scrollToBottomByOfset(animated: false)
@@ -267,7 +267,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
         }
     }
 
-    override public func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording()
@@ -294,8 +294,8 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        contextTitleView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
-        var contextViewHeight = 100.0
+        contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        var contextViewHeight = 100.0   
         if !viewModel.isContextBasedChat {
             contextViewHeight = 0
         }

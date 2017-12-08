@@ -11,7 +11,7 @@ import UIKit
 import ContactsUI
 import Applozic
 
-public final class ALKConversationListViewController: ALKBaseViewController {
+open class ALKConversationListViewController: ALKBaseViewController {
     
     var viewModel: ALKConversationListViewModel!
 
@@ -19,12 +19,13 @@ public final class ALKConversationListViewController: ALKBaseViewController {
     var contactId: String?
     var channelKey: NSNumber?
 
+    public var conversationViewController = ALKConversationViewController()
+
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate var searchActive : Bool = false
     fileprivate var searchFilteredChat:[Any] = []
     fileprivate var alMqttConversationService: ALMQTTConversationService!
-    fileprivate var conversationViewController: ALKConversationViewController?
     fileprivate var dbService: ALMessageDBService!
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
@@ -43,6 +44,8 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         bar.autocapitalizationType = .sentences
         return bar
     }()
+
+
 
     required public init() {
         super.init(nibName: nil, bundle: nil)
@@ -129,7 +132,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
     }
 
     override func removeObserver() {
-        if let alMqtt = alMqttConversationService {
+        if (alMqttConversationService) != nil {
             alMqttConversationService.unsubscribeToConversation()
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "pushNotification"), object: nil)
@@ -139,7 +142,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         dbService = ALMessageDBService()
         dbService.delegate = self
@@ -153,18 +156,17 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         self.edgesForExtendedLayout = []
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         searchBar.delegate = self
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         alMqttConversationService.mqttConversationDelegate = self
         alMqttConversationService.subscribeToConversation()
-        conversationViewController = ALKConversationViewController()
-        conversationViewController?.viewModel = ALKConversationViewModel(contactId: nil, channelKey: nil)
+        conversationViewController.viewModel = ALKConversationViewModel(contactId: nil, channelKey: nil)
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         print("contact id: ", contactId as Any)
         if contactId != nil || channelKey != nil {
             print("contact id present")
@@ -174,7 +176,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         }
     }
 
-    override public func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         if let text = searchBar.text, !text.isEmpty {
             searchBar.text = ""
         }
@@ -238,10 +240,9 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
         }
-        conversationViewController = ALKConversationViewController()
-        conversationViewController?.title = title
-        conversationViewController?.viewModel = convViewModel
-        self.navigationController?.pushViewController(conversationViewController!, animated: false)
+        conversationViewController.title = title
+        conversationViewController.viewModel = convViewModel
+        self.navigationController?.pushViewController(conversationViewController, animated: false)
     }
 
     func compose() {
@@ -250,7 +251,8 @@ public final class ALKConversationListViewController: ALKBaseViewController {
     }
 
     func sync(message: ALMessage) {
-        if let viewController = conversationViewController, viewController.viewModel.contactId == message.contactId,viewController.viewModel.channelKey == message.groupId {
+        let viewController = conversationViewController
+        if viewController.viewModel.contactId == message.contactId,viewController.viewModel.channelKey == message.groupId {
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
@@ -317,14 +319,9 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
             }
-            conversationViewController = ALKConversationViewController()
-            conversationViewController?.title = chat.isGroupChat ? chat.groupName:chat.name
-            conversationViewController?.viewModel = convViewModel
-            guard let vc = conversationViewController else {
-                NSLog("view controller is empty")
-                return
-            }
-            self.navigationController?.pushViewController(vc, animated: false)
+            conversationViewController.title = chat.isGroupChat ? chat.groupName:chat.name
+            conversationViewController.viewModel = convViewModel
+            self.navigationController?.pushViewController(conversationViewController, animated: false)
         } else {
             guard let chat = viewModel.chatForRow(indexPath: indexPath) else { return }
             let convViewModel = ALKConversationViewModel(contactId: chat.contactId, channelKey: chat.channelKey)
@@ -332,14 +329,9 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
             }
-            conversationViewController = ALKConversationViewController()
-            conversationViewController?.title = chat.isGroupChat ? chat.groupName:chat.name
-            conversationViewController?.viewModel = convViewModel
-            guard let vc = conversationViewController else {
-                NSLog("view controller is empty")
-                return
-            }
-            self.navigationController?.pushViewController(vc, animated: false)
+            conversationViewController.title = chat.isGroupChat ? chat.groupName:chat.name
+            conversationViewController.viewModel = convViewModel
+            self.navigationController?.pushViewController(conversationViewController, animated: false)
         }
     }
 
@@ -446,7 +438,8 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     public func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call: ", alMessage.message)
         guard let message = alMessage else { return }
-        if let viewController = conversationViewController,let vm = viewController.viewModel, (vm.contactId != nil || vm.channelKey != nil), let visibleController = self.navigationController?.visibleViewController, visibleController.isKind(of: ALKConversationViewController.self) {
+        let viewController = conversationViewController
+        if let vm = viewController.viewModel, (vm.contactId != nil || vm.channelKey != nil), let visibleController = self.navigationController?.visibleViewController, visibleController.isKind(of: ALKConversationViewController.self) {
 
                 viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
@@ -475,7 +468,8 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
     public func updateTypingStatus(_ applicationKey: String!, userId: String!, status: Bool) {
         print("Typing status is", status)
-        guard let viewController = conversationViewController,let vm = viewController.viewModel else { return
+        let viewController = conversationViewController
+        guard let vm = viewController.viewModel else { return
         }
         guard (vm.contactId != nil && vm.contactId == userId) || vm.channelKey != nil else {
             return

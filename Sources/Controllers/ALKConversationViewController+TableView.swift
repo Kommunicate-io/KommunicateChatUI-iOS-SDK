@@ -268,7 +268,7 @@ extension ALTopicDetail: ALKContextTitleDataType {
     }
 
     public var subtitleText: String {
-        return description
+        return subtitle
     }
 
     public var imageURL: URL? {

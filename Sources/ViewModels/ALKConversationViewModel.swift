@@ -289,17 +289,9 @@ final public class ALKConversationViewModel: NSObject {
     }
 
     func getContextTitleData() -> ALKContextTitleDataType? {
-        guard isContextBasedChat else {
+        guard isContextBasedChat, let proxy = conversationProxy, let alTopicDetail = proxy.getTopicDetail() else {
             return nil
         }
-        let alTopicDetail = ALTopicDetail()
-        alTopicDetail.title     = "Mac Book Pro"
-        alTopicDetail.subtitle  = "13' Retina"
-        alTopicDetail.link      = "https://raw.githubusercontent.com/AppLozic/Applozic-iOS-SDK/master/macbookpro.jpg"
-        alTopicDetail.key1      = "Product ID"
-        alTopicDetail.value1    = "mac-pro-r-13"
-        alTopicDetail.key2      = "Price"
-        alTopicDetail.value2    = "Rs.1,04,999.00"
         return alTopicDetail
     }
 
