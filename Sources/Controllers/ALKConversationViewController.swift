@@ -14,9 +14,9 @@ import Applozic
 open class ALKConversationViewController: ALKBaseViewController {
 
     public var viewModel: ALKConversationViewModel! {
-        willSet(val) {
+        willSet(updatedVM) {
             guard viewModel != nil else {return}
-            if val.contactId == viewModel.contactId && val.channelKey == viewModel.channelKey {
+            if updatedVM.contactId == viewModel.contactId && updatedVM.channelKey == viewModel.channelKey && updatedVM.conversationProxy == viewModel.conversationProxy{
                 self.isFirstTime = false
             } else {
                 self.isFirstTime = true
