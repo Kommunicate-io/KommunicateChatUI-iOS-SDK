@@ -165,8 +165,6 @@ open class ALKConversationListViewController: ALKBaseViewController {
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         alMqttConversationService.mqttConversationDelegate = self
         alMqttConversationService.subscribeToConversation()
-
-//        conversationViewController.viewModel = ALKConversationViewModel(contactId: nil, channelKey: nil)
     }
 
     override open func viewDidAppear(_ animated: Bool) {
