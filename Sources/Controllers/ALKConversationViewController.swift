@@ -13,7 +13,16 @@ import Applozic
 
 open class ALKConversationViewController: ALKBaseViewController {
 
-    public var viewModel: ALKConversationViewModel!
+    public var viewModel: ALKConversationViewModel! {
+        willSet(val) {
+            guard viewModel != nil else {return}
+            if val.contactId == viewModel.contactId && val.channelKey == viewModel.channelKey {
+                self.isFirstTime = false
+            } else {
+                self.isFirstTime = true
+            }
+        }
+    }
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
@@ -27,6 +36,11 @@ open class ALKConversationViewController: ALKBaseViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     fileprivate var keyboardSize: CGRect?
+    fileprivate var contextViewHeight = 100.0
+
+    enum ConstraintIdentifier: String {
+        case contextTitleView = "contextTitleView"
+    }
 
     let tableView : UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
@@ -242,21 +256,20 @@ open class ALKConversationViewController: ALKBaseViewController {
         viewModel.prepareController()
         if self.isFirstTime {
             self.setupNavigation()
+            setupView()
         } else {
             tableView.reloadData()
         }
+
         subscribingChannel()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
     override open func viewDidAppear(_ animated: Bool) {
-        NSLog("view loaded first time \(isFirstTime)")
-        setupView()
     }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        ALUserDefaultsHandler.setDebugLogsRequire(true)
     }
 
     override open func viewDidLayoutSubviews() {
@@ -295,11 +308,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-        var contextViewHeight = 100.0   
-        if !viewModel.isContextBasedChat {
-            contextViewHeight = 0
-        }
-        contextTitleView.heightAnchor.constraint(equalToConstant: CGFloat(contextViewHeight)).isActive = true
+        contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView.rawValue).isActive = true
 
         tableView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -336,6 +345,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     func prepareContextView(){
         guard let topicDetail = viewModel.getContextTitleData() else {return }
         contextTitleView.configureWith(value: topicDetail)
+        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
     }
 
     private func setupNavigation() {
