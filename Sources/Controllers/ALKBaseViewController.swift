@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class ALKBaseViewController: UIViewController {
+open class ALKBaseViewController: UIViewController {
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -16,7 +16,7 @@ public class ALKBaseViewController: UIViewController {
         self.addObserver()
     }
     
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barTintColor = UIColor.navigationOceanBlue()
         self.navigationController?.navigationBar.tintColor = UIColor.navigationTextOceanBlue()

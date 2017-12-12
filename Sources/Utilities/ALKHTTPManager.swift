@@ -80,6 +80,7 @@ class ALKHTTPManager: NSObject {
             downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         } else {
             let configuration = URLSessionConfiguration.default
+            guard !urlString.isEmpty else { return }
             session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
             let dataTask = session?.dataTask(with: URLRequest(url: URL(string: urlString)!))
             dataTask?.resume()

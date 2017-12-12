@@ -11,9 +11,18 @@ import AVKit
 import AVFoundation
 import Applozic
 
-public final class ALKConversationViewController: ALKBaseViewController {
+open class ALKConversationViewController: ALKBaseViewController {
 
-    public var viewModel: ALKConversationViewModel!
+    public var viewModel: ALKConversationViewModel! {
+        willSet(updatedVM) {
+            guard viewModel != nil else {return}
+            if updatedVM.contactId == viewModel.contactId && updatedVM.channelKey == viewModel.channelKey && updatedVM.conversationProxy == viewModel.conversationProxy{
+                self.isFirstTime = false
+            } else {
+                self.isFirstTime = true
+            }
+        }
+    }
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
@@ -27,6 +36,11 @@ public final class ALKConversationViewController: ALKBaseViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     fileprivate var keyboardSize: CGRect?
+    fileprivate var contextViewHeight = 100.0
+
+    enum ConstraintIdentifier: String {
+        case contextTitleView = "contextTitleView"
+    }
 
     let tableView : UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
@@ -54,6 +68,12 @@ public final class ALKConversationViewController: ALKBaseViewController {
         button.setImage(image, for: .normal)
         button.layer.cornerRadius = 15
         return button
+    }()
+
+    open var contextTitleView: ALKContextTitleView = {
+        let contextView = ALKContextTitleView(frame: CGRect.zero)
+        contextView.backgroundColor = UIColor.orange
+        return contextView
     }()
 
     required public init() {
@@ -204,7 +224,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
@@ -236,24 +256,23 @@ public final class ALKConversationViewController: ALKBaseViewController {
         viewModel.prepareController()
         if self.isFirstTime {
             self.setupNavigation()
+            setupView()
         } else {
             tableView.reloadData()
         }
+
         subscribingChannel()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
-        NSLog("view loaded first time \(isFirstTime)")
-        setupView()
+    override open func viewDidAppear(_ animated: Bool) {
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
-        ALUserDefaultsHandler.setDebugLogsRequire(true)
     }
 
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if self.isFirstTime && tableView.isCellVisible(section: 0, row: 0) {
             self.tableView.scrollToBottomByOfset(animated: false)
@@ -261,7 +280,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
         }
     }
 
-    override public func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording()
@@ -284,9 +303,14 @@ public final class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
-        view.addViewsForAutolayout(views: [tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
+        view.addViewsForAutolayout(views: [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
 
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView.rawValue).isActive = true
+
+        tableView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
@@ -310,10 +334,18 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
         leftMoreBarConstraint = moreBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 56)
         leftMoreBarConstraint?.isActive = true
+
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
+        guard viewModel.isContextBasedChat else { return }
+        prepareContextView()
+    }
 
+    func prepareContextView(){
+        guard let topicDetail = viewModel.getContextTitleData() else {return }
+        contextTitleView.configureWith(value: topicDetail)
+        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
     }
 
     private func setupNavigation() {

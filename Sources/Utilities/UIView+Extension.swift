@@ -24,4 +24,8 @@ extension UIView {
         bottomBorderView.backgroundColor = color
         addSubview(bottomBorderView)
     }
+
+    func constraint(withIdentifier:String) -> NSLayoutConstraint? {
+        return self.constraints.filter{ $0.identifier == withIdentifier }.first
+    }
 }
