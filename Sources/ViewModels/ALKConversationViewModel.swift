@@ -53,6 +53,7 @@ public class ALKConversationViewModel: NSObject {
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
 
+    //MARK: - Initializer
     public init(contactId: String?,
                 channelKey: NSNumber?,
                 conversationProxy: ALConversationProxy? = nil)
@@ -62,6 +63,7 @@ public class ALKConversationViewModel: NSObject {
         self.conversationProxy = conversationProxy
     }
 
+    //MARK: - Public methods
     public func prepareController() {
         let id = channelKey?.stringValue ?? contactId
         if ALUserDefaultsHandler.isServerCallDone(forMSGList: id) {
@@ -79,6 +81,8 @@ public class ALKConversationViewModel: NSObject {
         }
         return true
     }
+
+    //MARK: - Internal Methods
 
     func loadMessages() {
         var time: NSNumber? = nil
@@ -668,6 +672,139 @@ public class ALKConversationViewModel: NSObject {
         })
     }
 
+    func uploadAudio(alMessage: ALMessage, indexPath: IndexPath) {
+        let clientService = ALMessageClientService()
+        let messageService = ALMessageDBService()
+        let alHandler = ALDBHandler.sharedInstance()
+        var dbMessage: DB_Message?
+        do {
+            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
+        } catch {
+            return
+        }
+        dbMessage?.inProgress = 1
+        dbMessage?.isUploadFailed = 0
+        do {
+            try alHandler?.managedObjectContext.save()
+        } catch {
+            return
+        }
+        NSLog("content type: ", alMessage.fileMeta.contentType)
+        NSLog("file path: ", alMessage.imageFilePath)
+        clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
+            urlStr, error in
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
+            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
+            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
+            let downloadManager = ALKHTTPManager()
+            downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                }
+            }
+        })
+    }
+
+    func uploadImage(view: UIView, indexPath: IndexPath)  {
+
+        let alMessage = alMessages[indexPath.section]
+        let clientService = ALMessageClientService()
+        let messageService = ALMessageDBService()
+        let alHandler = ALDBHandler.sharedInstance()
+        var dbMessage: DB_Message?
+        do {
+            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
+        } catch {
+
+        }
+        dbMessage?.inProgress = 1
+        dbMessage?.isUploadFailed = 0
+        do {
+            try alHandler?.managedObjectContext.save()
+        } catch {
+
+        }
+        NSLog("content type: ", alMessage.fileMeta.contentType)
+        NSLog("file path: ", alMessage.imageFilePath)
+        clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
+            urlStr, error in
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
+            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
+            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
+            let downloadManager = ALKHTTPManager()
+            downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
+            downloadManager.uploadAttachment(task: task)
+            downloadManager.uploadCompleted = {[weak self] responseDict, task in
+                if task.uploadError == nil && task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                }
+            }
+        })
+    }
+
+    func encodeVideo(videoURL: URL, completion:@escaping (_ path: String?)->())  {
+
+        guard let videoURL = URL(string: "file://\(videoURL.path)") else { return }
+
+
+        let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        let myDocumentPath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent(String(format: "VID-%f.MOV", Date().timeIntervalSince1970*1000))
+        do {
+            let data = try Data(contentsOf: videoURL)
+            try data.write(to: myDocumentPath)
+        } catch (let error) {
+            NSLog("error: \(error)")
+        }
+
+        let documentsDirectory2 = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let fileName = String(format: "VID-%f.mp4", Date().timeIntervalSince1970*1000)
+        let filePath = documentsDirectory2.appendingPathComponent(fileName)
+        deleteFile(filePath: filePath)
+
+        let avAsset = AVURLAsset(url: myDocumentPath)
+
+        let startDate = NSDate()
+
+        //Create Export session
+        let exportSession = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetPassthrough)
+
+        exportSession!.outputURL = filePath
+        exportSession!.outputFileType = AVFileTypeMPEG4
+        exportSession!.shouldOptimizeForNetworkUse = true
+        let start = CMTimeMakeWithSeconds(0.0, 0)
+        let range = CMTimeRangeMake(start, avAsset.duration)
+        exportSession?.timeRange = range
+
+        exportSession!.exportAsynchronously(completionHandler: {() -> Void in
+            switch exportSession!.status {
+            case .failed:
+                print("%@",exportSession?.error as Any)
+                completion(nil)
+            case .cancelled:
+                print("Export canceled")
+                completion(nil)
+            case .completed:
+                //Video conversion finished
+                let endDate = NSDate()
+
+                let time = endDate.timeIntervalSince(startDate as Date)
+                print(time)
+                print("Successful!")
+                print(exportSession?.outputURL as Any)
+                completion(exportSession?.outputURL?.path)
+            default:
+                break
+            }
+        })
+    }
+
+    // MARK: - Private Methods
+
     private func loadEarlierMessages() {
         var time: NSNumber? = nil
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1, let first = alMessages.first {
@@ -803,82 +940,6 @@ public class ALKConversationViewModel: NSObject {
         return alMessage
     }
 
-    func uploadAudio(alMessage: ALMessage, indexPath: IndexPath) {
-        let clientService = ALMessageClientService()
-        let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
-        var dbMessage: DB_Message?
-        do {
-            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
-        } catch {
-            return
-        }
-        dbMessage?.inProgress = 1
-        dbMessage?.isUploadFailed = 0
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            return
-        }
-        NSLog("content type: ", alMessage.fileMeta.contentType)
-        NSLog("file path: ", alMessage.imageFilePath)
-        clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
-            urlStr, error in
-            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
-            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
-            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
-            task.contentType = alMessage.fileMeta.contentType
-            task.filePath = alMessage.imageFilePath
-            let downloadManager = ALKHTTPManager()
-            downloadManager.uploadAttachment(task: task)
-            downloadManager.uploadCompleted = {[weak self] responseDict, task in
-                if task.uploadError == nil && task.completed {
-                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
-                }
-            }
-        })
-    }
-
-    func uploadImage(view: UIView, indexPath: IndexPath)  {
-
-        let alMessage = alMessages[indexPath.section]
-        let clientService = ALMessageClientService()
-        let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
-        var dbMessage: DB_Message?
-        do {
-            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
-        } catch {
-
-        }
-        dbMessage?.inProgress = 1
-        dbMessage?.isUploadFailed = 0
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            
-        }
-        NSLog("content type: ", alMessage.fileMeta.contentType)
-        NSLog("file path: ", alMessage.imageFilePath)
-        clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
-            urlStr, error in
-            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr)   else { return }
-            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
-            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
-            task.contentType = alMessage.fileMeta.contentType
-            task.filePath = alMessage.imageFilePath
-            let downloadManager = ALKHTTPManager()
-            downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
-            downloadManager.uploadAttachment(task: task)
-            downloadManager.uploadCompleted = {[weak self] responseDict, task in
-                if task.uploadError == nil && task.completed {
-                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
-                }
-            }
-        })
-    }
-
-
     private func createJson(dict: [String: String]) -> String? {
         var jsonData: Data? = nil
         do {
@@ -924,64 +985,8 @@ public class ALKConversationViewModel: NSObject {
             delegate?.messageUpdated()
         }
     }
-
-    func encodeVideo(videoURL: URL, completion:@escaping (_ path: String?)->())  {
-
-        guard let videoURL = URL(string: "file://\(videoURL.path)") else { return }
-
-
-        let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let myDocumentPath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent(String(format: "VID-%f.MOV", Date().timeIntervalSince1970*1000))
-        do {
-            let data = try Data(contentsOf: videoURL)
-            try data.write(to: myDocumentPath)
-        } catch (let error) {
-            NSLog("error: \(error)")
-        }
-
-        let documentsDirectory2 = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let fileName = String(format: "VID-%f.mp4", Date().timeIntervalSince1970*1000)
-        let filePath = documentsDirectory2.appendingPathComponent(fileName)
-        deleteFile(filePath: filePath)
-
-        let avAsset = AVURLAsset(url: myDocumentPath)
-
-        let startDate = NSDate()
-
-        //Create Export session
-        let exportSession = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetPassthrough)
-
-        exportSession!.outputURL = filePath
-        exportSession!.outputFileType = AVFileTypeMPEG4
-        exportSession!.shouldOptimizeForNetworkUse = true
-        let start = CMTimeMakeWithSeconds(0.0, 0)
-        let range = CMTimeRangeMake(start, avAsset.duration)
-        exportSession?.timeRange = range
-
-        exportSession!.exportAsynchronously(completionHandler: {() -> Void in
-            switch exportSession!.status {
-            case .failed:
-                print("%@",exportSession?.error as Any)
-                completion(nil)
-            case .cancelled:
-                print("Export canceled")
-                completion(nil)
-            case .completed:
-                //Video conversion finished
-                let endDate = NSDate()
-
-                let time = endDate.timeIntervalSince(startDate as Date)
-                print(time)
-                print("Successful!")
-                print(exportSession?.outputURL as Any)
-                completion(exportSession?.outputURL?.path)
-            default:
-                break
-            }
-        })
-    }
     
-    func deleteFile(filePath:URL) {
+    private func deleteFile(filePath:URL) {
         guard FileManager.default.fileExists(atPath: filePath.path) else {
             return
         }
