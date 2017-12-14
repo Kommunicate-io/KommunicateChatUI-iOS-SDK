@@ -19,7 +19,7 @@ public protocol ALKConversationViewModelDelegate: class {
     func updateDisplay(name: String)
 }
 
-final public class ALKConversationViewModel: NSObject {
+public class ALKConversationViewModel: NSObject {
 
     public var contactId: String?
     public var channelKey: NSNumber?
@@ -28,28 +28,27 @@ final public class ALKConversationViewModel: NSObject {
     public var conversationProxy: ALConversationProxy?
 
     weak public var delegate: ALKConversationViewModelDelegate?
-
-    private var conversationId: NSNumber? {
-        return conversationProxy?.id
-    }
-
-    let maxWidth = UIScreen.main.bounds.width
-
-    var isGroup: Bool {
+    public var isGroup: Bool {
         guard let _ = channelKey else {
             return false
         }
         return true
     }
-    var individualLaunch = false
-    var isFirstTime = true
+    public var individualLaunch = false
+    public var isFirstTime = true
 
-    var isContextBasedChat: Bool {
+    public var isContextBasedChat: Bool {
         return (conversationProxy != nil)
     }
+    public var messageModels: [ALKMessageModel] = []
 
-    var alMessageWrapper = ALMessageArrayWrapper()
-    var messageModels: [ALKMessageModel] = []
+    private var conversationId: NSNumber? {
+        return conversationProxy?.id
+    }
+
+    private let maxWidth = UIScreen.main.bounds.width
+    private var alMessageWrapper = ALMessageArrayWrapper()
+
     private var alMessages: [ALMessage] = []
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
@@ -72,6 +71,13 @@ final public class ALKConversationViewModel: NSObject {
             delegate?.loadingStarted()
             loadMessages()
         }
+    }
+
+    public func isGroupConversation() -> Bool {
+        guard let _ = channelKey else {
+            return false
+        }
+        return true
     }
 
     func loadMessages() {
@@ -133,13 +139,6 @@ final public class ALKConversationViewModel: NSObject {
                 self.delegate?.messageUpdated()
             }
         })
-    }
-
-    public func isGroupConversation() -> Bool {
-        guard let _ = channelKey else {
-            return false
-        }
-        return true
     }
 
     func groupProfileImgUrl() -> String {

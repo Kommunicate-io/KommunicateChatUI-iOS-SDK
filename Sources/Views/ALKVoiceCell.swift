@@ -18,7 +18,7 @@ protocol ALKVoiceCellProtocol: class {
     func playAudioPress(identifier: String)
 }
 
-enum ALKVoiceCellState {
+public enum ALKVoiceCellState {
     case playing
     case stop
     case pause

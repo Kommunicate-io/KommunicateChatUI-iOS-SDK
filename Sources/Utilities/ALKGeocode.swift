@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-final class Geocode: CustomStringConvertible {
+public final class Geocode: CustomStringConvertible {
     static let defaultFormattedAddress = ""
 
     var displayName: String         = defaultFormattedAddress
@@ -20,12 +20,12 @@ final class Geocode: CustomStringConvertible {
 
     
 
-    required init(coordinates: CLLocationCoordinate2D) {
+    required public init(coordinates: CLLocationCoordinate2D) {
         location.latitude = coordinates.latitude
         location.longitude  = coordinates.longitude
     }
 
-    var description: String {
+    public var description: String {
         return "Geocode: \n displayName: \(displayName), \n formatted address: \(formattedAddress), \n placeIdentifier: \(placeIdentifier),  \n location: \(location)"
     }
 }
