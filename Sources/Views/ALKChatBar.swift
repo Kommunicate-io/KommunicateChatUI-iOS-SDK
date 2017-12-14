@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 
 
-final class ALKChatBar: UIView {
+open class ALKChatBar: UIView {
     
-    enum ButtonMode {
+    public enum ButtonMode {
         case send
         case media
     }
     
-    enum ActionType {
+    public enum ActionType {
         case sendText(UIButton,String)
         case chatBarTextBeginEdit()
         case chatBarTextChange(UIButton)
@@ -32,20 +32,19 @@ final class ALKChatBar: UIView {
         case more(UIButton)
     }
     
-    var action: ((ActionType) -> ())?
+    public var action: ((ActionType) -> ())?
     
-    let soundRec: ALKSoundRecorderBtn = {
+    open let soundRec: ALKSoundRecorderBtn = {
         let bt = ALKSoundRecorderBtn.init(frame: CGRect.init())
         bt.layer.masksToBounds = true
         return bt
     }()
     
-    let textView: ALKChatBarTextView = {
+    open let textView: ALKChatBarTextView = {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
         let tv = ALKChatBarTextView()
         tv.setBackgroundColor(color: .none)
-//        tv.clipsToBounds = true
         tv.scrollsToTop = false
         tv.autocapitalizationType = .sentences
         tv.accessibilityIdentifier = "chatTextView"
@@ -53,25 +52,23 @@ final class ALKChatBar: UIView {
         return tv
     }()
     
-    fileprivate let frameView: UIImageView = {
+    open let frameView: UIImageView = {
         
         let view = UIImageView()
         view.backgroundColor = .clear
         view.contentMode = .scaleToFill
-//        view.image = UIImage.init(named: "text_frame", in: Bundle.applozic, compatibleWith: nil)
         view.isUserInteractionEnabled = false
         return view
     }()
     
-    fileprivate let grayView: UIView = {
-        
+    open let grayView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.white
         view.isUserInteractionEnabled = false
         return view
     }()
     
-    fileprivate let placeHolder: UITextView = {
+    open let placeHolder: UITextView = {
         
         let view = UITextView()
         view.setFont(font: .normal(size: 14))
@@ -84,17 +81,16 @@ final class ALKChatBar: UIView {
         return view
     }()
     
-    fileprivate let micButton: UIButton = {
+    open let micButton: UIButton = {
         
         let bt = UIButton(type: .custom)
         var image = UIImage(named: "mic", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         bt.setImage(image, for: .normal)
-//        bt.setImage(UIImage(named:"icon_mic_active"), for: .selected)
         return bt
     }()
     
-    fileprivate let photoButton: UIButton = {
+    open let photoButton: UIButton = {
         
         let bt = UIButton(type: .custom)
         var image = UIImage(named: "photo", in: Bundle.applozic, compatibleWith: nil)
@@ -103,7 +99,7 @@ final class ALKChatBar: UIView {
         return bt
     }()
 
-    fileprivate let galleryButton: UIButton = {
+    open let galleryButton: UIButton = {
         let button = UIButton(type: .custom)
         var image = UIImage(named: "gallery", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
@@ -111,7 +107,7 @@ final class ALKChatBar: UIView {
         return button
     }()
     
-    fileprivate let plusButton: UIButton = {
+    open let plusButton: UIButton = {
         
         let bt = UIButton(type: .custom)
         var image = UIImage(named: "icon_more_menu", in: Bundle.applozic, compatibleWith: nil)
@@ -120,32 +116,28 @@ final class ALKChatBar: UIView {
         return bt
     }()
 
-    fileprivate let locationButton: UIButton = {
+    open let locationButton: UIButton = {
 
         let bt = UIButton(type: .custom)
-//        bt.tintColor = .mainRed()
         var image = UIImage(named: "location_new", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         bt.setImage(image, for: .normal)
         return bt
     }()
 
-    fileprivate let chatButton: UIButton = {
+    open let chatButton: UIButton = {
         let button = UIButton(type: .custom)
         var image = UIImage(named: "showKeyboard", in: Bundle.applozic, compatibleWith: nil)
-//        image = image?.imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
         return button
     }()
 
-    fileprivate let lineImageView: UIImageView = {
+    open let lineImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "line", in: Bundle.applozic, compatibleWith: nil))
-//        imageView.contentMode = .scaleToFill
         return imageView
     }()
 
-    fileprivate let sendButton: UIButton = {
-        
+    open let sendButton: UIButton = {
         let bt = UIButton(type: .custom)
         var image = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
@@ -155,21 +147,21 @@ final class ALKChatBar: UIView {
         return bt
     }()
     
-    private var lineView: UIView = {
+    open var lineView: UIView = {
         let view = UIView()
         let layer = view.layer
-        view.backgroundColor = UIColor(colorLiteralRed: 217.0/255.0, green: 217.0/255.0, blue: 217.0/255.0, alpha: 1.0)
+        view.backgroundColor = UIColor(red: 217.0/255.0, green: 217.0/255.0, blue: 217.0/255.0, alpha: 1.0)
         return view
     }()
 
-    private var bottomGrayView: UIView = {
+    open var bottomGrayView: UIView = {
         let view = UIView()
         view.setBackgroundColor(color: .grayEF)
         view.isUserInteractionEnabled = false
         return view
     }()
 
-    private var videoButton: UIButton = {
+    open var videoButton: UIButton = {
         let button = UIButton(type: .custom)
         var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
@@ -177,20 +169,19 @@ final class ALKChatBar: UIView {
 
         return button
     }()
-    
+
+    private enum ConstraintIdentifier: String {
+        case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
+    }
     
     func tapped(button: UIButton) {
-        
         switch button {
         case sendButton:
-            
             let text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
             if text.lengthOfBytes(using: .utf8) > 0 {
                 action?(.sendText(button,text))
             }
-            
             break
-            
         case plusButton:
             action?(.more(button))
             break
@@ -255,16 +246,14 @@ final class ALKChatBar: UIView {
         comingSoonDelegate = delegate
     }
     
-    func clear() {
-        
+    open func clear() {
         textView.text = ""
         clearTextInTextView()
         toggleKeyboardType(textView: textView)
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
-//        locationButton.isHidden = true
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }
@@ -301,12 +290,12 @@ final class ALKChatBar: UIView {
 
     private var isNeedInitText = true
     
-    override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         
         if isNeedInitText {
             
-            guard let identifier = chatIdentifier else {
+            guard chatIdentifier != nil else {
                 return
             }
 
@@ -408,79 +397,51 @@ final class ALKChatBar: UIView {
         grayView.bottomAnchor.constraint(equalTo: frameView.bottomAnchor, constant: 0).isActive = true
         grayView.leftAnchor.constraint(equalTo: frameView.leftAnchor, constant: 0).isActive = true
         grayView.rightAnchor.constraint(equalTo: frameView.rightAnchor, constant: 0).isActive = true
-//        bottomGrayView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 5).isActive = true
+
         bottomGrayView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
         bottomGrayView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        bottomGrayView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue).isActive = true
         bottomGrayView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bottomGrayView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
     
         bringSubview(toFront: frameView)
         
-        changeButtonStateTo(mode: textView.text.isEmpty ? ButtonMode.media : ButtonMode.send)
-        
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    fileprivate func changeButtonStateTo(mode: ButtonMode){
-        
-        if mode == .media {
-            
-//            self.textViewTrailingWithSend?.isActive = false
-//            self.textViewTrailingWithMic?.isActive = true
 
-//            self.micButton.isUserInteractionEnabled = true
-//            self.plusButton.isUserInteractionEnabled = true
-//            self.sendButton.isUserInteractionEnabled = false
-//            
-//            self.layoutIfNeeded()
-//            
-//            self.micButton.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-//            self.plusButton.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-//            self.sendButton.transform = CGAffineTransform.init(scaleX: 0, y: 0)
+    public func hideMediaView() {
+        bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 0
+        galleryButton.isHidden = true
+        locationButton.isHidden = true
+        micButton.isHidden = true
+        photoButton.isHidden = true
+        chatButton.isHidden = true
+        videoButton.isHidden = true
+    }
 
-//            self.micButton.alpha = 1
-//            self.plusButton.alpha = 1
-//            self.sendButton.alpha = 1
-
-            
-        } else {
-            
-//            self.textViewTrailingWithMic?.isActive = false
-//            self.textViewTrailingWithSend?.isActive = true
-
-//            self.micButton.isUserInteractionEnabled = false
-//            self.plusButton.isUserInteractionEnabled = false
-//            self.sendButton.isUserInteractionEnabled = true
-//            
-//            self.layoutIfNeeded()
-//            
-//            self.micButton.transform = CGAffineTransform.init(scaleX: 0, y: 0)
-//            self.plusButton.transform = CGAffineTransform.init(scaleX: 0, y: 0)
-//            self.sendButton.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-//            
-//            self.micButton.alpha = 1
-//            self.plusButton.alpha = 1
-//            self.sendButton.alpha = 1
-
-        }
+    public func showMediaView() {
+        bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 45
+        galleryButton.isHidden = false
+        locationButton.isHidden = false
+        micButton.isHidden = false
+        photoButton.isHidden = false
+        chatButton.isHidden = false
+        videoButton.isHidden = false
     }
     
 }
 
 extension ALKChatBar: UITextViewDelegate {
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
         guard var text = textView.text as NSString? else {
             return true
         }
         
         text = text.replacingCharacters(in: range, with: string) as NSString
-        
-        changeButtonStateTo(mode: text == "" ? ButtonMode.media : ButtonMode.send)
         
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
@@ -506,7 +467,7 @@ extension ALKChatBar: UITextViewDelegate {
         return true
     }
     
-    func textViewDidChange(_ textView: UITextView) {
+    public func textViewDidChange(_ textView: UITextView) {
         self.placeHolder.isHidden = !textView.text.isEmpty
         self.placeHolder.alpha = textView.text.isEmpty ? 1.0 : 0.0
         
@@ -524,11 +485,11 @@ extension ALKChatBar: UITextViewDelegate {
         action?(.chatBarTextChange(photoButton))
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
+    public func textViewDidBeginEditing(_ textView: UITextView) {
         action?(.chatBarTextBeginEdit())
     }
     
-    func textViewDidEndEditing(_ textView: UITextView) {
+    public func textViewDidEndEditing(_ textView: UITextView) {
         
         if textView.text.isEmpty {
             
@@ -565,7 +526,6 @@ extension ALKChatBar: UITextViewDelegate {
         }
         textView.inputView = nil
         textView.reloadInputViews()
-        changeButtonStateTo(mode: textView.text.isEmpty ? ButtonMode.media : ButtonMode.send)
     }
 }
 
@@ -582,22 +542,22 @@ extension ALKChatBar: ALKSoundRecorderProtocol {
         soundRec.cancelAudioRecord()
     }
     
-    func startRecordingAudio() {
+    public func startRecordingAudio() {
         action?(.startVoiceRecord())
     }
     
-    func finishRecordingAudio(soundData: NSData) {
+    public func finishRecordingAudio(soundData: NSData) {
         textView.resignFirstResponder()
         action?(.sendVoice(soundData))
     }
     
-    func cancelRecordingAudio() {
+    public func cancelRecordingAudio() {
         soundRec.isHidden = true
         micButton.isSelected = false
         textView.becomeFirstResponder()
     }
     
-    func permissionNotGrant() {
+    public func permissionNotGrant() {
         action?(.noVoiceRecordPermission())
     }
 }

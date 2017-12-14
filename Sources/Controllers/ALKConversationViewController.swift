@@ -308,6 +308,22 @@ open class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
+
+        setupConstraints()
+        prepareTable()
+        prepareMoreBar()
+        prepareChatBar()
+        guard viewModel.isContextBasedChat else { return }
+        prepareContextView()
+    }
+
+    func prepareContextView(){
+        guard let topicDetail = viewModel.getContextTitleData() else {return }
+        contextTitleView.configureWith(value: topicDetail)
+        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
+    }
+
+    private func setupConstraints() {
         view.addViewsForAutolayout(views: [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -339,18 +355,6 @@ open class ALKConversationViewController: ALKBaseViewController {
 
         leftMoreBarConstraint = moreBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 56)
         leftMoreBarConstraint?.isActive = true
-
-        prepareTable()
-        prepareMoreBar()
-        prepareChatBar()
-        guard viewModel.isContextBasedChat else { return }
-        prepareContextView()
-    }
-
-    func prepareContextView(){
-        guard let topicDetail = viewModel.getContextTitleData() else {return }
-        contextTitleView.configureWith(value: topicDetail)
-        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
     }
 
     private func setupNavigation() {
@@ -413,6 +417,11 @@ open class ALKConversationViewController: ALKBaseViewController {
 
 
     private func prepareChatBar() {
+        if viewModel.isOpenGroup {
+            hideMediaOptions()
+        }else {
+            showMediaOptions()
+        }
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: self.view)
         chatBar.action = { [weak self] (action) in
@@ -650,6 +659,14 @@ open class ALKConversationViewController: ALKBaseViewController {
     func unreadScrollDownAction(_ sender: UIButton) {
         tableView.scrollToBottom()
         unreadScrollButton.isHidden = true
+    }
+
+    fileprivate func hideMediaOptions() {
+        chatBar.hideMediaView()
+    }
+
+    fileprivate func showMediaOptions() {
+        chatBar.showMediaView()
     }
     
 }
@@ -903,7 +920,6 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             subscribeChannelToMqtt()
         }
     }
-
 
     public func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call1 ", messageArray)
