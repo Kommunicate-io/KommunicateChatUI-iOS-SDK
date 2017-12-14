@@ -21,6 +21,7 @@ public protocol ALKConversationViewModelDelegate: class {
 
 public class ALKConversationViewModel: NSObject {
 
+    //MARK: - Inputs
     public var contactId: String?
     public var channelKey: NSNumber?
 
@@ -28,19 +29,33 @@ public class ALKConversationViewModel: NSObject {
     public var conversationProxy: ALConversationProxy?
 
     weak public var delegate: ALKConversationViewModelDelegate?
+
+    public var individualLaunch = false
+
+
+
+    //MARK: - Outputs
+    public var isFirstTime = true
+
     public var isGroup: Bool {
         guard let _ = channelKey else {
             return false
         }
         return true
     }
-    public var individualLaunch = false
-    public var isFirstTime = true
-
     public var isContextBasedChat: Bool {
         return (conversationProxy != nil)
     }
     public var messageModels: [ALKMessageModel] = []
+
+    public var isOpenGroup: Bool {
+        let alChannelService = ALChannelService()
+        guard let channelKey = channelKey,
+            let alchannel = alChannelService.getChannelByKey(channelKey) else {
+            return false
+        }
+        return alchannel.type == 6
+    }
 
     private var conversationId: NSNumber? {
         return conversationProxy?.id

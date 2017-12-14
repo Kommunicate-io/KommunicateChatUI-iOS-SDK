@@ -28,7 +28,12 @@ open class ALKConversationViewController: ALKBaseViewController {
     private var leftMoreBarConstraint: NSLayoutConstraint?
     private var typingNoticeViewHeighConstaint: NSLayoutConstraint?
     private var isJustSent: Bool = false
-    let audioPlayer = ALKAudioPlayer()
+
+    //MQTT connection retry
+    fileprivate var mqttRetryCount = 0
+    fileprivate var maxMqttRetryCount = 3
+
+    fileprivate let audioPlayer = ALKAudioPlayer()
 
     fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
     fileprivate let typingNoticeView = TypingNotice()
@@ -261,7 +266,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             tableView.reloadData()
         }
 
-        subscribingChannel()
+        subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
@@ -623,7 +628,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         viewModel.updateStatusReportForConversation(contactId: id, status: status)
     }
 
-    private func subscribingChannel() {
+    fileprivate func subscribeChannelToMqtt() {
         let channelService = ALChannelService()
         if viewModel.isGroup, let groupId = viewModel.channelKey, !channelService.isChannelLeft(groupId) && !ALChannelService.isChannelDeleted(groupId) {
             self.alMqttConversationService.subscribe(toChannelConversation: groupId)
@@ -894,7 +899,9 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
 extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func mqttDidConnected() {
-        print("MQTT did connected")
+        if viewModel.isOpenGroup &&  mqttRetryCount < maxMqttRetryCount {
+            subscribeChannelToMqtt()
+        }
     }
 
 
