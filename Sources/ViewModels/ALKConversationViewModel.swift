@@ -81,6 +81,14 @@ public class ALKConversationViewModel: NSObject {
     //MARK: - Public methods
     public func prepareController() {
         let id = channelKey?.stringValue ?? contactId
+
+        // Load messages from server in case of open group
+        guard !isOpenGroup else {
+            delegate?.loadingStarted()
+            loadMessages()
+            return
+        }
+
         if ALUserDefaultsHandler.isServerCallDone(forMSGList: id) {
             delegate?.loadingStarted()
             loadMessagesFromDB()
