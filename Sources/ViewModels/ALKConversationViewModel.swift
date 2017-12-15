@@ -85,7 +85,7 @@ open class ALKConversationViewModel: NSObject {
         // Load messages from server in case of open group
         guard !isOpenGroup else {
             delegate?.loadingStarted()
-            loadMessages()
+            loadOpenGroupMessages()
             return
         }
 
@@ -234,6 +234,10 @@ open class ALKConversationViewModel: NSObject {
     }
 
     open func nextPage() {
+        guard !isOpenGroup else {
+            loadOpenGroupMessages()
+            return
+        }
         var id = self.contactId ?? self.channelKey?.stringValue
         if let convId = conversationId {
             id = convId.stringValue
@@ -609,6 +613,10 @@ open class ALKConversationViewModel: NSObject {
             return
         }
         delegate?.loadingStarted()
+        guard !isOpenGroup else {
+            loadOpenGroupMessages()
+            return
+        }
         ALMessageService.getLatestMessage(forUser: ALUserDefaultsHandler.getDeviceKeyString(), withCompletion: {
             messageList, error in
             self.delegate?.loadingFinished(error: error)
@@ -811,6 +819,23 @@ open class ALKConversationViewModel: NSObject {
         })
     }
 
+    open func loadOpenGroupMessages() {
+        var time: NSNumber? = nil
+        if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
+            time = (messageList.firstObject as! ALMessage).createdAtTime
+        }
+        NSLog("Last time: \(String(describing: time))")
+        fetchOpenGroupMessages(time: time, contactId: contactId, channelKey: channelKey, completion: {
+            messageList in
+
+            guard let messages = messageList else {
+                self.delegate?.loadingFinished(error: nil)
+                return
+            }
+            self.addMessagesToList(messages)
+            self.delegate?.loadingFinished(error: nil)
+        })
+    }
 
     // MARK: - Private Methods
 
@@ -858,6 +883,43 @@ open class ALKConversationViewModel: NSObject {
                 ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
             }
             self.delegate?.loadingFinished(error: nil)
+        })
+    }
+
+    private func fetchOpenGroupMessages(time: NSNumber?, contactId: String?, channelKey: NSNumber?, completion:@escaping ([ALMessage]?)->()) {
+        let messageListRequest = MessageListRequest()
+        messageListRequest.userId = contactId
+        messageListRequest.channelKey = channelKey
+        messageListRequest.endTimeStamp = time
+        let messageClientService = ALMessageClientService()
+        messageClientService.getMessageList(forUser: messageListRequest, withCompletion: {
+            messages, error, userDetailsList in
+
+            let contactDbService = ALContactDBService()
+            contactDbService.addUserDetails(userDetailsList)
+            guard let alMessages = messages as? [ALMessage] else {
+                completion(nil)
+                return
+            }
+            let contactService = ALContactService()
+            var contactsNotPresent = [String]()
+            for message in alMessages {
+                let contactId = message.to ?? ""
+                if !contactService.isContactExist(contactId) {
+                    contactsNotPresent.append(contactId)
+                }
+            }
+
+            if !contactsNotPresent.isEmpty {
+                let userService = ALUserService()
+                userService.fetchAndupdateUserDetails(contactsNotPresent as? NSMutableArray, withCompletion: { (userDetails, error) in
+                    contactDbService.addUserDetails(userDetails)
+                    completion(alMessages)
+                })
+            } else {
+                completion(alMessages)
+            }
+
         })
     }
 
