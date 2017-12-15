@@ -19,36 +19,36 @@ public protocol ALKConversationViewModelDelegate: class {
     func updateDisplay(name: String)
 }
 
-public class ALKConversationViewModel: NSObject {
+open class ALKConversationViewModel: NSObject {
 
     //MARK: - Inputs
-    public var contactId: String?
-    public var channelKey: NSNumber?
+    open var contactId: String?
+    open var channelKey: NSNumber?
 
     // For topic based chat
-    public var conversationProxy: ALConversationProxy?
+    open var conversationProxy: ALConversationProxy?
 
     weak public var delegate: ALKConversationViewModelDelegate?
 
-    public var individualLaunch = false
+    open var individualLaunch = false
 
 
 
     //MARK: - Outputs
-    public var isFirstTime = true
+    open var isFirstTime = true
 
-    public var isGroup: Bool {
+    open var isGroup: Bool {
         guard let _ = channelKey else {
             return false
         }
         return true
     }
-    public var isContextBasedChat: Bool {
+    open var isContextBasedChat: Bool {
         return (conversationProxy != nil)
     }
-    public var messageModels: [ALKMessageModel] = []
+    open var messageModels: [ALKMessageModel] = []
 
-    public var isOpenGroup: Bool {
+    open var isOpenGroup: Bool {
         let alChannelService = ALChannelService()
         guard let channelKey = channelKey,
             let alchannel = alChannelService.getChannelByKey(channelKey) else {
@@ -98,99 +98,29 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    public func isGroupConversation() -> Bool {
-        guard let _ = channelKey else {
-            return false
-        }
-        return true
-    }
-
-    //MARK: - Internal Methods
-
-    func loadMessages() {
-        var time: NSNumber? = nil
-        if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
-            time = (messageList.firstObject as! ALMessage).createdAtTime
-        }
-        let messageListRequest = MessageListRequest()
-        messageListRequest.userId = contactId
-        messageListRequest.channelKey = channelKey
-        messageListRequest.conversationId = conversationId
-        messageListRequest.endTimeStamp = time
-        ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
-            messages, error, userDetail in
-            guard error == nil, let messages = messages else {
-                self.delegate?.loadingFinished(error: error)
-                return
-            }
-            NSLog("messages loaded: ", messages)
-            self.alMessages = messages.reversed() as! [ALMessage]
-            self.alMessageWrapper.addObject(toMessageArray: messages)
-            let models = self.alMessages.map { $0.messageModel }
-            self.messageModels = models
-            if self.messageModels.count < 50 {
-                let id = self.contactId ?? self.channelKey?.stringValue
-                if let convId = self.conversationId {
-                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: convId.stringValue)
-                } else {
-                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
-                }
-            }
-            self.delegate?.loadingFinished(error: nil)
-        })
-    }
-
-    func loadMessagesFromDB(isFirstTime: Bool = true) {
-        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, withCompletion: {
-            messages in
-            guard let messages = messages else {
-                self.delegate?.loadingFinished(error: nil)
-                return
-            }
-            NSLog("messages loaded: %@", messages)
-            self.alMessages = messages as! [ALMessage]
-            self.alMessageWrapper.addObject(toMessageArray: messages)
-            let models = messages.map { ($0 as! ALMessage).messageModel }
-            self.messageModels = models
-            if self.messageModels.count < 50 {
-                let id = self.contactId ?? self.channelKey?.stringValue
-                if let convId = self.conversationId {
-                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: convId.stringValue)
-                } else {
-                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
-                }
-            }
-            if isFirstTime {
-                self.delegate?.loadingFinished(error: nil)
-            } else {
-                self.delegate?.messageUpdated()
-            }
-        })
-    }
-
-    func groupProfileImgUrl() -> String {
+    open func groupProfileImgUrl() -> String {
         guard let message = alMessages.last, let imageUrl = message.avatarGroupImageUrl else {
             return ""
         }
         return imageUrl
     }
 
-    func groupName() -> String {
+    open func groupName() -> String {
         guard let message = alMessages.last else {
             return ""
         }
-        let messag = alMessages.first?.createdAt
+        _ = alMessages.first?.createdAt
         return message.groupName
     }
 
-    func groupKey() -> NSNumber? {
+    open func groupKey() -> NSNumber? {
         guard let message = alMessages.last else {
             return nil
         }
         return message.groupId
     }
 
-    func friends() -> [ALKFriendViewModel] {
+    open func friends() -> [ALKFriendViewModel] {
         let alChannelService = ALChannelService()
 
         // TODO:  This is a workaround as other method uses closure.
@@ -209,26 +139,26 @@ public class ALKConversationViewModel: NSObject {
         return models
     }
 
-    func numberOfSections() -> Int {
+    open func numberOfSections() -> Int {
         return messageModels.count
     }
 
-    func numberOfRows(section: Int) -> Int {
+    open func numberOfRows(section: Int) -> Int {
         return 1
         
     }
 
-    func messageForRow(indexPath: IndexPath) -> ALKMessageViewModel? {
+    open func messageForRow(indexPath: IndexPath) -> ALKMessageViewModel? {
         guard indexPath.section < messageModels.count else { return nil }
         return messageModels[indexPath.section]
     }
 
-    func messageForRow(identifier: String) -> ALKMessageViewModel? {
+    open func messageForRow(identifier: String) -> ALKMessageViewModel? {
         guard let messageModel = messageModels.filter({$0.identifier == identifier}).first else {return nil}
         return messageModel
     }
 
-    func heightForRow(indexPath: IndexPath, cellFrame: CGRect) -> CGFloat {
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         switch messageModel.messageType {
         case .text, .html:
@@ -303,7 +233,7 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func nextPage() {
+    open func nextPage() {
         var id = self.contactId ?? self.channelKey?.stringValue
         if let convId = conversationId {
             id = convId.stringValue
@@ -314,14 +244,14 @@ public class ALKConversationViewModel: NSObject {
         loadEarlierMessages()
     }
 
-    func getContextTitleData() -> ALKContextTitleDataType? {
+    open func getContextTitleData() -> ALKContextTitleDataType? {
         guard isContextBasedChat, let proxy = conversationProxy, let alTopicDetail = proxy.getTopicDetail() else {
             return nil
         }
         return alTopicDetail
     }
 
-    func downloadAttachment(message: ALKMessageViewModel, view: UIView){
+    open func downloadAttachment(message: ALKMessageViewModel, view: UIView){
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()
             notificationView.noDataConnectionNotificationView()
@@ -337,7 +267,7 @@ public class ALKConversationViewModel: NSObject {
     }
 
     /// Received from notification
-    func addMessagesToList(_ messageList: [Any]) {
+    open func addMessagesToList(_ messageList: [Any]) {
         guard let messages = messageList as? [ALMessage] else { return }
 
         var filteredArray = [ALMessage]()
@@ -351,12 +281,8 @@ public class ALKConversationViewModel: NSObject {
             sortedArray = filteredArray.sorted { Int($0.createdAtTime) < Int($1.createdAtTime) }
         }
         guard !sortedArray.isEmpty else { return }
-        //        for msg in sortedArray {
-        //            if !alMessageWrapper.getUpdatedMessageArray().contains(msg) {
-        //                print("not present")
-        //            }
-        //        }
-        sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
+
+        _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
         self.alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
@@ -364,8 +290,7 @@ public class ALKConversationViewModel: NSObject {
         delegate?.newMessagesAdded()
     }
 
-    func markConversationRead() {
-        //        print("almessage unread: ", (alMessages.firstObject as! ALMessage ).totalNumberOfUnreadMessages)
+    open func markConversationRead() {
         if let channelKey = channelKey {
             print("mark read1")
             ALChannelService.markConversation(asRead: channelKey, withCompletion: {
@@ -385,7 +310,7 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func updateGroup(groupName: String, groupImage: String, friendsAdded: [ALKFriendViewModel]) {
+    open func updateGroup(groupName: String, groupImage: String, friendsAdded: [ALKFriendViewModel]) {
         if !groupName.isEmpty {
             updateGroupInfo(groupName: groupName, groupImage: groupImage, completion: {
                 success in
@@ -404,7 +329,7 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func updateDeliveryReport(messageKey: String, status: Int32) {
+    open func updateDeliveryReport(messageKey: String, status: Int32) {
         let mesgArray = alMessages
         guard !mesgArray.isEmpty else { return }
         let filteredList = mesgArray.filter { ($0.key != nil) ? $0.key == messageKey:false }
@@ -417,7 +342,7 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func updateStatusReportForConversation(contactId: String, status: Int32) {
+    open func updateStatusReportForConversation(contactId: String, status: Int32) {
         guard let id = self.contactId, id == contactId else { return }
         guard let mesgArray = self.alMessages as? [ALMessage], !mesgArray.isEmpty else { return }
         for index in 0..<mesgArray.count {
@@ -433,7 +358,7 @@ public class ALKConversationViewModel: NSObject {
         delegate?.messageUpdated()
     }
 
-    func updateSendStatus(message: ALMessage) {
+    open func updateSendStatus(message: ALMessage) {
         let filteredList = alMessages.filter { $0 == message }
         if let alMessage = filteredList.first, let index = alMessages.index(of: alMessage) {
             alMessage.sentToServer = true
@@ -447,8 +372,7 @@ public class ALKConversationViewModel: NSObject {
     }
 
 
-    func send(message: String) {
-        let messageModel = messageModels.first
+    open func send(message: String, isOpenGroup: Bool = false) {
         let alMessage = ALMessage()
         alMessage.to = contactId
         alMessage.contactIds = contactId
@@ -470,21 +394,33 @@ public class ALKConversationViewModel: NSObject {
         addToWrapper(message: alMessage)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
         self.delegate?.messageSent(at: indexPath)
-        ALMessageService.sendMessages(alMessage, withCompletion: {
-            message, error in
-            NSLog("Message sent section: \(indexPath.section), \(alMessage.message)")
-            guard error == nil, indexPath.section < self.messageModels.count else { return }
-            NSLog("No errors while sending the message")
-            alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-            self.messageModels[indexPath.section] = alMessage.messageModel
-            self.delegate?.messageUpdated()
-        })
+        if isOpenGroup {
+            let messageClientService = ALMessageClientService()
+            messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: {responseJson, error in
+                guard error == nil, indexPath.section < self.messageModels.count else { return }
+                NSLog("No errors sending while sending the message in open group")
+                alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
+                self.messageModels[indexPath.section] = alMessage.messageModel
+                self.delegate?.messageUpdated()
+                return
+            })
+        } else {
+            ALMessageService.sendMessages(alMessage, withCompletion: {
+                message, error in
+                NSLog("Message sent section: \(indexPath.section), \(alMessage.message)")
+                guard error == nil, indexPath.section < self.messageModels.count else { return }
+                NSLog("No errors while sending the message")
+                alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
+                self.messageModels[indexPath.section] = alMessage.messageModel
+                self.delegate?.messageUpdated()
+            })
+        }
     }
 
-    func send(photo: UIImage) -> (ALMessage?, IndexPath?) {
+    open func send(photo: UIImage) -> (ALMessage?, IndexPath?) {
         print("image is:  ", photo)
         let filePath = ALImagePickerHandler.saveImage(toDocDirectory: photo)
-        print("filepath:: ", filePath)
+        print("filepath:: \(String(describing: filePath))")
         guard let path = filePath, let url = URL(string: path) else { return (nil, nil) }
         guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(ALMESSAGE_CONTENT_ATTACHMENT)) else {
             return (nil, nil)
@@ -495,7 +431,7 @@ public class ALKConversationViewModel: NSObject {
 
     }
 
-    func send(voiceMessage: Data) {
+    open func send(voiceMessage: Data) {
         print("voice data received: ", voiceMessage.count)
         let fileName = String(format: "AUD-%f.m4a", Date().timeIntervalSince1970*1000)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -512,7 +448,7 @@ public class ALKConversationViewModel: NSObject {
 
     }
 
-    func add(geocode: Geocode) -> (ALMessage?, IndexPath?) {
+    open func add(geocode: Geocode) -> (ALMessage?, IndexPath?) {
         let latlonString = ["lat": "\(geocode.location.latitude)", "lon": "\(geocode.location.longitude)"]
         guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
         let message = getLocationMessage(latLonString: jsonString)
@@ -522,7 +458,7 @@ public class ALKConversationViewModel: NSObject {
         return (message, indexPath)
     }
 
-    func sendGeocode(message: ALMessage, indexPath: IndexPath) {
+    open func sendGeocode(message: ALMessage, indexPath: IndexPath) {
         self.send(alMessage: message) {
             updatedMessage in
             guard let mesg = updatedMessage else { return }
@@ -536,7 +472,7 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func sendVideo(atPath path: String, sourceType: UIImagePickerControllerSourceType) -> (ALMessage?, IndexPath?){
+    open func sendVideo(atPath path: String, sourceType: UIImagePickerControllerSourceType) -> (ALMessage?, IndexPath?){
         guard let url = URL(string: path) else { return (nil, nil) }
         var contentType = ALMESSAGE_CONTENT_ATTACHMENT
         if sourceType == .camera {
@@ -548,7 +484,7 @@ public class ALKConversationViewModel: NSObject {
         return (alMessage, IndexPath(row: 0, section: messageModels.count-1))
     }
 
-    func uploadVideo(view: UIView, indexPath: IndexPath) {
+    open func uploadVideo(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
         
         let clientService = ALMessageClientService()
@@ -592,7 +528,7 @@ public class ALKConversationViewModel: NSObject {
     }
 
     //FIXME: Remove indexpath from this call and add message id param. Currently there is an unneccessary dependency on the indexpath.
-    func uploadAttachmentCompleted(responseDict: Any?, indexPath: IndexPath) {
+    open func uploadAttachmentCompleted(responseDict: Any?, indexPath: IndexPath) {
         // populate metadata and send message
         guard alMessages.count > indexPath.section else { return }
         let alMessage = alMessages[indexPath.section]
@@ -627,37 +563,23 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func updateMessageModelAt(indexPath: IndexPath, data: Data) {
+    open func updateMessageModelAt(indexPath: IndexPath, data: Data) {
         var message = messageForRow(indexPath: indexPath)
         message?.voiceData = data
         messageModels[indexPath.section] = message as! ALKMessageModel
         delegate?.updateMessageAt(indexPath: indexPath)
     }
 
-    func sendKeyboardBeginTyping() {
+    open func sendKeyboardBeginTyping() {
 
         self.mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: self.contactId, andChannelKey: channelKey, typing: true)
     }
 
-    func sendKeyboardDoneTyping() {
+    open func sendKeyboardDoneTyping() {
         self.mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: self.contactId, andChannelKey: channelKey, typing: false)
     }
 
-    private func updateGroupInfo(groupName: String, groupImage: String, completion:@escaping (Bool)->()) {
-        guard let groupId = groupKey() else { return }
-        let alchanneService = ALChannelService()
-        alchanneService.updateChannel(groupId, andNewName: groupName, andImageURL: groupImage, orClientChannelKey: nil, isUpdatingMetaData: false, metadata: nil, orChildKeys: nil, orChannelUsers: nil, withCompletion: {
-            errorReceived in
-            if let error = errorReceived {
-                print("error received while updating group info: ", error)
-                completion(false)
-            } else {
-                completion(true)
-            }
-        })
-    }
-
-    func sync(message: ALMessage) {
+    open func sync(message: ALMessage) {
         guard message.conversationId != conversationId else { return }
         if let groupId = message.groupId, groupId != self.channelKey {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
@@ -682,7 +604,7 @@ public class ALKConversationViewModel: NSObject {
         }
     }
 
-    func refresh() {
+    open func refresh() {
         if let key = channelKey, ALChannelService.isChannelDeleted(key) {
             return
         }
@@ -695,7 +617,7 @@ public class ALKConversationViewModel: NSObject {
         })
     }
 
-    func uploadAudio(alMessage: ALMessage, indexPath: IndexPath) {
+    open func uploadAudio(alMessage: ALMessage, indexPath: IndexPath) {
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
@@ -731,7 +653,7 @@ public class ALKConversationViewModel: NSObject {
         })
     }
 
-    func uploadImage(view: UIView, indexPath: IndexPath)  {
+    open func uploadImage(view: UIView, indexPath: IndexPath)  {
 
         let alMessage = alMessages[indexPath.section]
         let clientService = ALMessageClientService()
@@ -770,7 +692,7 @@ public class ALKConversationViewModel: NSObject {
         })
     }
 
-    func encodeVideo(videoURL: URL, completion:@escaping (_ path: String?)->())  {
+    open func encodeVideo(videoURL: URL, completion:@escaping (_ path: String?)->())  {
 
         guard let videoURL = URL(string: "file://\(videoURL.path)") else { return }
 
@@ -826,7 +748,85 @@ public class ALKConversationViewModel: NSObject {
         })
     }
 
+    //MARK: - Internal Methods
+
+    func loadMessages() {
+        var time: NSNumber? = nil
+        if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
+            time = (messageList.firstObject as! ALMessage).createdAtTime
+        }
+        let messageListRequest = MessageListRequest()
+        messageListRequest.userId = contactId
+        messageListRequest.channelKey = channelKey
+        messageListRequest.conversationId = conversationId
+        messageListRequest.endTimeStamp = time
+        ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
+            messages, error, userDetail in
+            guard error == nil, let messages = messages else {
+                self.delegate?.loadingFinished(error: error)
+                return
+            }
+            NSLog("messages loaded: ", messages)
+            self.alMessages = messages.reversed() as! [ALMessage]
+            self.alMessageWrapper.addObject(toMessageArray: messages)
+            let models = self.alMessages.map { $0.messageModel }
+            self.messageModels = models
+            if self.messageModels.count < 50 {
+                let id = self.contactId ?? self.channelKey?.stringValue
+                if let convId = self.conversationId {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: convId.stringValue)
+                } else {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+                }
+            }
+            self.delegate?.loadingFinished(error: nil)
+        })
+    }
+
+    func loadMessagesFromDB(isFirstTime: Bool = true) {
+        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, withCompletion: {
+            messages in
+            guard let messages = messages else {
+                self.delegate?.loadingFinished(error: nil)
+                return
+            }
+            NSLog("messages loaded: %@", messages)
+            self.alMessages = messages as! [ALMessage]
+            self.alMessageWrapper.addObject(toMessageArray: messages)
+            let models = messages.map { ($0 as! ALMessage).messageModel }
+            self.messageModels = models
+            if self.messageModels.count < 50 {
+                let id = self.contactId ?? self.channelKey?.stringValue
+                if let convId = self.conversationId {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: convId.stringValue)
+                } else {
+                    ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: id)
+                }
+            }
+            if isFirstTime {
+                self.delegate?.loadingFinished(error: nil)
+            } else {
+                self.delegate?.messageUpdated()
+            }
+        })
+    }
+
+
     // MARK: - Private Methods
+
+    private func updateGroupInfo(groupName: String, groupImage: String, completion:@escaping (Bool)->()) {
+        guard let groupId = groupKey() else { return }
+        let alchanneService = ALChannelService()
+        alchanneService.updateChannel(groupId, andNewName: groupName, andImageURL: groupImage, orClientChannelKey: nil, isUpdatingMetaData: false, metadata: nil, orChildKeys: nil, orChannelUsers: nil, withCompletion: {
+            errorReceived in
+            if let error = errorReceived {
+                print("error received while updating group info: ", error)
+                completion(false)
+            } else {
+                completion(true)
+            }
+        })
+    }
 
     private func loadEarlierMessages() {
         var time: NSNumber? = nil

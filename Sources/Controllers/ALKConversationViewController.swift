@@ -251,7 +251,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             alMqttConversationService.subscribeToConversation()
         }
 
-        if self.viewModel.isGroupConversation() == true {
+        if self.viewModel.isGroup == true {
             self.setTypingNotiDisplayName(displayName: "Somebody")
         } else {
             self.setTypingNotiDisplayName(displayName: self.title ?? "")
@@ -460,7 +460,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
                 NSLog("Sent: ", message)
 
-                weakSelf.viewModel.send(message: message)
+                weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup)
                 button.isUserInteractionEnabled = true
             case .chatBarTextChange(_):
 
@@ -608,7 +608,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     @objc private func showParticipantListChat() {
-        if viewModel.isGroupConversation() {
+        if viewModel.isGroup {
             let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
             if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
 
@@ -687,6 +687,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 self.viewModel.isFirstTime = false
             }
         }
+        guard !viewModel.isOpenGroup else {return}
         viewModel.markConversationRead()
     }
 
@@ -710,7 +711,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         } else {
             unreadScrollButton.isHidden = false
         }
-        guard self.isViewLoaded && self.view.window != nil else {
+        guard self.isViewLoaded && self.view.window != nil && !viewModel.isOpenGroup else {
             return
         }
         viewModel.markConversationRead()
@@ -749,7 +750,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
 
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
-        if viewModel.isGroupConversation() {
+        if viewModel.isGroup {
             if !groupName.isEmpty {
                 self.title = groupName
                 titleButton.setTitle(self.title, for: .normal)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ALKContactProtocol {
+public protocol ALKContactProtocol {
     
     var friendUUID: String? { get }
     var friendMood: String? { get }
@@ -16,7 +16,7 @@ protocol ALKContactProtocol {
     var friendDisplayImgURL: URL? { get }
 }
 
-class ALKFriendViewModel
+open class ALKFriendViewModel
 {
     var friendUUID:String?
     var friendProfileName:String?
