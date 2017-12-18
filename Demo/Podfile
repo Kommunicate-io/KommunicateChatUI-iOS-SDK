@@ -4,6 +4,9 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'ApplozicSwiftDemo' do
+    #TODO: Remove this line once the new version of Applozic is released
+    pod 'Applozic', :git => 'https://github.com/AppLozic/Applozic-Chat-iOS-Framework'
+    
     pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
 end
 

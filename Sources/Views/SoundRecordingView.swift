@@ -10,14 +10,14 @@ import Foundation
 
 import AVFoundation
 
-protocol ALKSoundRecorderProtocol: class {
+public protocol ALKSoundRecorderProtocol: class {
     func finishRecordingAudio(soundData:NSData)
     func startRecordingAudio()
     func cancelRecordingAudio()
     func permissionNotGrant()
 }
 
-final class ALKSoundRecorderBtn: UIButton {
+open class ALKSoundRecorderBtn: UIButton {
     
     private var isTimerStart:Bool = false
     private var timer = Timer()
@@ -45,7 +45,7 @@ final class ALKSoundRecorderBtn: UIButton {
         setupRecordingSession()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -276,7 +276,7 @@ final class ALKSoundRecorderBtn: UIButton {
 
 extension ALKSoundRecorderBtn: AVAudioRecorderDelegate
 {
-    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+    public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if !flag {
             stopAudioRecord()
         }

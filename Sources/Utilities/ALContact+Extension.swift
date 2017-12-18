@@ -10,18 +10,18 @@ import Foundation
 import Applozic
 
 extension ALContact: ALKContactProtocol {
-    var friendUUID: String? {
+    public var friendUUID: String? {
         return self.userId
     }
 
-    var friendDisplayImgURL: URL? {
+    public var friendDisplayImgURL: URL? {
         guard let imageUrl = self.contactImageUrl, let url = URL(string: imageUrl) else {
         return nil
         }
         return url
     }
 
-    var friendProfileName: String? {
+    public var friendProfileName: String? {
         if let name = getDisplayName(), !name.isEmpty {
             return name
         } else {
@@ -29,7 +29,7 @@ extension ALContact: ALKContactProtocol {
         }
     }
 
-    var friendMood: String? {
+    public var friendMood: String? {
         return nil
     }
 }

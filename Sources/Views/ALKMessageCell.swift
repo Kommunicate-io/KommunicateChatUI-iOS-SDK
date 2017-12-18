@@ -12,7 +12,7 @@ import Kingfisher
 import Applozic
 
 // MARK: - MessageType
-enum ALKMessageType {
+public enum ALKMessageType {
     case text
     case photo
     case voice
@@ -23,7 +23,7 @@ enum ALKMessageType {
 }
 
 // MARK: - MessageViewModel
-protocol ALKMessageViewModel {
+public protocol ALKMessageViewModel {
     var message: String? { get }
     var isMyMessage: Bool { get }
     var messageType: ALKMessageType { get }

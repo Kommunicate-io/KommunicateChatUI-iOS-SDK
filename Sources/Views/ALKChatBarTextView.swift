@@ -8,11 +8,11 @@
 
 import UIKit
 
-class ALKChatBarTextView: UITextView {
+open class ALKChatBarTextView: UITextView {
     
     weak var overrideNextResponder: UIResponder?
     
-    override var next: UIResponder? {
+    override open var next: UIResponder? {
         get {
             if let overrideNextResponder = self.overrideNextResponder {
                 return overrideNextResponder
@@ -23,7 +23,7 @@ class ALKChatBarTextView: UITextView {
         
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if let _ = self.overrideNextResponder {
             return false
         }

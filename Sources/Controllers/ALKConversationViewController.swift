@@ -1,4 +1,4 @@
-//
+
 //  ConversationViewController.swift
 //  
 //
@@ -28,7 +28,12 @@ open class ALKConversationViewController: ALKBaseViewController {
     private var leftMoreBarConstraint: NSLayoutConstraint?
     private var typingNoticeViewHeighConstaint: NSLayoutConstraint?
     private var isJustSent: Bool = false
-    let audioPlayer = ALKAudioPlayer()
+
+    //MQTT connection retry
+    fileprivate var mqttRetryCount = 0
+    fileprivate var maxMqttRetryCount = 3
+
+    fileprivate let audioPlayer = ALKAudioPlayer()
 
     fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
     fileprivate let typingNoticeView = TypingNotice()
@@ -235,10 +240,10 @@ open class ALKConversationViewController: ALKBaseViewController {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         addRefreshButton()
-        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, !listVC.isViewLoaded {
-            viewModel.individualLaunch = true
-        } else {
+        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded  {
             viewModel.individualLaunch = false
+        } else {
+            viewModel.individualLaunch = true
         }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         if viewModel.individualLaunch {
@@ -246,7 +251,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             alMqttConversationService.subscribeToConversation()
         }
 
-        if self.viewModel.isGroupConversation() == true {
+        if self.viewModel.isGroup == true {
             self.setTypingNotiDisplayName(displayName: "Somebody")
         } else {
             self.setTypingNotiDisplayName(displayName: self.title ?? "")
@@ -260,8 +265,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         } else {
             tableView.reloadData()
         }
-
-        subscribingChannel()
+        subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
@@ -303,6 +307,22 @@ open class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
+
+        setupConstraints()
+        prepareTable()
+        prepareMoreBar()
+        prepareChatBar()
+        guard viewModel.isContextBasedChat else { return }
+        prepareContextView()
+    }
+
+    func prepareContextView(){
+        guard let topicDetail = viewModel.getContextTitleData() else {return }
+        contextTitleView.configureWith(value: topicDetail)
+        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
+    }
+
+    private func setupConstraints() {
         view.addViewsForAutolayout(views: [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -334,18 +354,6 @@ open class ALKConversationViewController: ALKBaseViewController {
 
         leftMoreBarConstraint = moreBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 56)
         leftMoreBarConstraint?.isActive = true
-
-        prepareTable()
-        prepareMoreBar()
-        prepareChatBar()
-        guard viewModel.isContextBasedChat else { return }
-        prepareContextView()
-    }
-
-    func prepareContextView(){
-        guard let topicDetail = viewModel.getContextTitleData() else {return }
-        contextTitleView.configureWith(value: topicDetail)
-        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
     }
 
     private func setupNavigation() {
@@ -408,6 +416,11 @@ open class ALKConversationViewController: ALKBaseViewController {
 
 
     private func prepareChatBar() {
+        if viewModel.isOpenGroup {
+            hideMediaOptions()
+        }else {
+            showMediaOptions()
+        }
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: self.view)
         chatBar.action = { [weak self] (action) in
@@ -446,7 +459,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
                 NSLog("Sent: ", message)
 
-                weakSelf.viewModel.send(message: message)
+                weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup)
                 button.isUserInteractionEnabled = true
             case .chatBarTextChange(_):
 
@@ -594,7 +607,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     @objc private func showParticipantListChat() {
-        if viewModel.isGroupConversation() {
+        if viewModel.isGroup {
             let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
             if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
 
@@ -623,10 +636,14 @@ open class ALKConversationViewController: ALKBaseViewController {
         viewModel.updateStatusReportForConversation(contactId: id, status: status)
     }
 
-    private func subscribingChannel() {
+    fileprivate func subscribeChannelToMqtt() {
         let channelService = ALChannelService()
         if viewModel.isGroup, let groupId = viewModel.channelKey, !channelService.isChannelLeft(groupId) && !ALChannelService.isChannelDeleted(groupId) {
-            self.alMqttConversationService.subscribe(toChannelConversation: groupId)
+            if !viewModel.isOpenGroup {
+                self.alMqttConversationService.subscribe(toChannelConversation: groupId)
+            } else {
+                self.alMqttConversationService.subscribe(toOpenChannel: groupId)
+            }
         } else if !viewModel.isGroup {
             self.alMqttConversationService.subscribe(toChannelConversation: nil)
         }
@@ -637,14 +654,26 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     private func unsubscribingChannel() {
-        self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
-        self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        if !viewModel.isOpenGroup {
+            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
+            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        } else {
+            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
+        }
     }
 
 
     func unreadScrollDownAction(_ sender: UIButton) {
         tableView.scrollToBottom()
         unreadScrollButton.isHidden = true
+    }
+
+    fileprivate func hideMediaOptions() {
+        chatBar.hideMediaView()
+    }
+
+    fileprivate func showMediaOptions() {
+        chatBar.showMediaView()
     }
     
 }
@@ -665,6 +694,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 self.viewModel.isFirstTime = false
             }
         }
+        guard !viewModel.isOpenGroup else {return}
         viewModel.markConversationRead()
     }
 
@@ -688,7 +718,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         } else {
             unreadScrollButton.isHidden = false
         }
-        guard self.isViewLoaded && self.view.window != nil else {
+        guard self.isViewLoaded && self.view.window != nil && !viewModel.isOpenGroup else {
             return
         }
         viewModel.markConversationRead()
@@ -727,7 +757,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
 
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
-        if viewModel.isGroupConversation() {
+        if viewModel.isGroup {
             if !groupName.isEmpty {
                 self.title = groupName
                 titleButton.setTitle(self.title, for: .normal)
@@ -894,9 +924,10 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
 extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func mqttDidConnected() {
-        print("MQTT did connected")
+        if viewModel.individualLaunch {
+            subscribeChannelToMqtt()
+        }
     }
-
 
     public func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call1 ", messageArray)
@@ -927,6 +958,9 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     }
 
     public func mqttConnectionClosed() {
+        if viewModel.isOpenGroup &&  mqttRetryCount < maxMqttRetryCount {
+            subscribeChannelToMqtt()
+        }
         NSLog("MQTT connection closed")
     }
 
