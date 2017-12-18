@@ -1,4 +1,4 @@
-//
+
 //  ConversationViewController.swift
 //  
 //
@@ -240,10 +240,10 @@ open class ALKConversationViewController: ALKBaseViewController {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         addRefreshButton()
-        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, !listVC.isViewLoaded {
-            viewModel.individualLaunch = true
-        } else {
+        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded  {
             viewModel.individualLaunch = false
+        } else {
+            viewModel.individualLaunch = true
         }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         if viewModel.individualLaunch {
@@ -265,7 +265,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         } else {
             tableView.reloadData()
         }
-
         subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
@@ -640,7 +639,11 @@ open class ALKConversationViewController: ALKBaseViewController {
     fileprivate func subscribeChannelToMqtt() {
         let channelService = ALChannelService()
         if viewModel.isGroup, let groupId = viewModel.channelKey, !channelService.isChannelLeft(groupId) && !ALChannelService.isChannelDeleted(groupId) {
-            self.alMqttConversationService.subscribe(toChannelConversation: groupId)
+            if !viewModel.isOpenGroup {
+                self.alMqttConversationService.subscribe(toChannelConversation: groupId)
+            } else {
+                self.alMqttConversationService.subscribe(toOpenGroup: groupId)
+            }
         } else if !viewModel.isGroup {
             self.alMqttConversationService.subscribe(toChannelConversation: nil)
         }
@@ -651,8 +654,12 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     private func unsubscribingChannel() {
-        self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
-        self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        if !viewModel.isOpenGroup {
+            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
+            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        } else {
+            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
+        }
     }
 
 
@@ -917,7 +924,7 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
 extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func mqttDidConnected() {
-        if viewModel.isOpenGroup &&  mqttRetryCount < maxMqttRetryCount {
+        if viewModel.individualLaunch {
             subscribeChannelToMqtt()
         }
     }
@@ -951,6 +958,9 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     }
 
     public func mqttConnectionClosed() {
+        if viewModel.isOpenGroup &&  mqttRetryCount < maxMqttRetryCount {
+            subscribeChannelToMqtt()
+        }
         NSLog("MQTT connection closed")
     }
 

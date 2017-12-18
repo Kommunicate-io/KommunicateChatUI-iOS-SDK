@@ -584,6 +584,10 @@ open class ALKConversationViewModel: NSObject {
     }
 
     open func sync(message: ALMessage) {
+        guard !isOpenGroup else {
+            syncOpenGroup(message: message)
+            return
+        }
         guard message.conversationId != conversationId else { return }
         if let groupId = message.groupId, groupId != self.channelKey {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
@@ -606,6 +610,16 @@ open class ALKConversationViewModel: NSObject {
                 self.prepareController()
             })
         }
+    }
+
+    func syncOpenGroup(message: ALMessage) {
+        guard let groupId = message.groupId,
+            groupId == self.channelKey,
+            !message.isMyMessage,
+            message.deviceKey != ALUserDefaultsHandler.getDeviceKeyString() else {
+            return
+        }
+        addMessagesToList([message])
     }
 
     open func refresh() {
