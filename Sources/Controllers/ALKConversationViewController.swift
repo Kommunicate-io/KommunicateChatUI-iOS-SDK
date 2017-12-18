@@ -642,7 +642,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             if !viewModel.isOpenGroup {
                 self.alMqttConversationService.subscribe(toChannelConversation: groupId)
             } else {
-                self.alMqttConversationService.subscribe(toOpenGroup: groupId)
+                self.alMqttConversationService.subscribe(toOpenChannel: groupId)
             }
         } else if !viewModel.isGroup {
             self.alMqttConversationService.subscribe(toChannelConversation: nil)
