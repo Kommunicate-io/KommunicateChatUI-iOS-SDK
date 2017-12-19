@@ -70,11 +70,14 @@ $ git submodule add https://github.com/MortimerGoro/MGSwipeTableCell.git
 
 ## Usage
 
-1. Add [ALChatManager]() file
+#### ChatManager
 
-2. Register/login:
+Add the [ALChatManager](https://github.com/AppLozic/ApplozicSwift/blob/master/Demo/ApplozicSwiftDemo/ALChatManager.swift) file in your project. It contains the convenient methods required to handle the chat like registration, opening chat list etc.
+
+#### Registration
 
 ```swift
+// Use the same API for login
 let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
 alChatManager.registerUser(alUser, completion: {response, error in
       if error == nil {
@@ -86,14 +89,28 @@ alChatManager.registerUser(alUser, completion: {response, error in
 })
 ```
 
-3. Launch chat:
+#### Launch chat list
 
 ```swift
-let conversationVC = ALKConversationListViewController()
-let navVC = ALKBaseNavigationViewController(rootViewController: conversationVC)
-self.present(navVC, animated: false, completion: nil)
-
+let alChatManager = ALChatManager(applicationKey: <Application key>)
+alChatManager.launchChatList(from: self)
 ```
+
+#### Launch Group
+
+```swift
+let alChatManager = ALChatManager(applicationKey: <Application key>)
+alChatManager.launchGroupWith(clientGroupId: <groupId>, from: self)
+```
+
+
+#### Launch Individual Chat
+
+```swift
+let alChatManager = ALChatManager(applicationKey: <Application key>)
+alChatManager.launchChatWith(contactId: <userId>, from: self)
+```
+
 
 ## Requirements
 
