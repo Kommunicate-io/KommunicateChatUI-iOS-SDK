@@ -713,7 +713,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     public func newMessagesAdded() {
         tableView.reloadData()
-        if tableView.isCellVisible(section: viewModel.messageModels.count-2, row: 0) {
+        if tableView.isCellVisible(section: viewModel.messageModels.count-1, row: 0) {
             tableView.scrollToBottom()
         } else {
             unreadScrollButton.isHidden = false
