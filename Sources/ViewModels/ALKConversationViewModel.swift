@@ -926,7 +926,7 @@ open class ALKConversationViewModel: NSObject {
 
             if !contactsNotPresent.isEmpty {
                 let userService = ALUserService()
-                userService.fetchAndupdateUserDetails(contactsNotPresent as? NSMutableArray, withCompletion: { (userDetails, error) in
+                userService.fetchAndupdateUserDetails(NSMutableArray(array: contactsNotPresent), withCompletion: { (userDetails, error) in
                     contactDbService.addUserDetails(userDetails)
                     completion(alMessages)
                 })
