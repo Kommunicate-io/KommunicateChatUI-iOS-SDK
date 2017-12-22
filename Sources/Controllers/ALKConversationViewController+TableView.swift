@@ -180,6 +180,36 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         return viewModel.heightForRow(indexPath: indexPath, cellFrame: self.view.frame)
     }
 
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let heightForHeaderInSection: CGFloat = 40.0
+        guard let message1 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
+            return 0.0
+        }
+
+        guard let message2 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section - 1)) else {
+            return 0.0
+        }
+        let date1 = message1.date
+        let date2 = message2.date
+        switch Calendar.current.compare(date1, to: date2, toGranularity: .day) {
+        case .orderedDescending:
+            return heightForHeaderInSection
+
+        default:
+            return 0.0
+        }
+    }
+
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
+            return nil
+        }
+        let date = message.date
+        let dateView = ALKDateSectionHeaderView.instanceFromNib()
+        dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
+        return dateView
+    }
+
     //MARK: Paging
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
