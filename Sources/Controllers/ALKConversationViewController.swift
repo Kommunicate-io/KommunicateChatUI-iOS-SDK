@@ -23,6 +23,10 @@ open class ALKConversationViewController: ALKBaseViewController {
             }
         }
     }
+
+    /// Enables group detail button on navigation bar
+    public var isGroupDetailActionEnabled = false
+
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
@@ -360,6 +364,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
         titleButton.setTitle(self.title, for: .normal)
         titleButton.addTarget(self, action: #selector(showParticipantListChat), for: .touchUpInside)
+        titleButton.isEnabled = isGroupDetailActionEnabled
         self.navigationItem.titleView = titleButton
     }
 
