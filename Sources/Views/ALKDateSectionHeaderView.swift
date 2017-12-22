@@ -21,11 +21,10 @@ class ALKDateSectionHeaderView: UIView {
     
     // MARK: - Lifecycle
     class func instanceFromNib() -> ALKDateSectionHeaderView {
-//        guard let view = UINib(nibName: DateSectionHeaderView.nibName, bundle: nil).instantiate(withOwner: nil, options: nil).first as? DateSectionHeaderView else {
-//            fatalError("\(DateSectionHeaderView.nibName) don't existing")
-//        }
-
-        return UIView() as! ALKDateSectionHeaderView
+        guard let view = UINib(nibName: ALKDateSectionHeaderView.nibName, bundle: Bundle.applozic).instantiate(withOwner: nil, options: nil).first as? ALKDateSectionHeaderView else {
+            fatalError("\(ALKDateSectionHeaderView.nibName) don't existing")
+        }
+        return view
     }
     
     // MARK: - Methods of class

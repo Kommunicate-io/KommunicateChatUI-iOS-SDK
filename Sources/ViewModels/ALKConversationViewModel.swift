@@ -149,7 +149,7 @@ open class ALKConversationViewModel: NSObject {
     }
 
     open func messageForRow(indexPath: IndexPath) -> ALKMessageViewModel? {
-        guard indexPath.section < messageModels.count else { return nil }
+        guard indexPath.section < messageModels.count && indexPath.section >= 0 else { return nil }
         return messageModels[indexPath.section]
     }
 
