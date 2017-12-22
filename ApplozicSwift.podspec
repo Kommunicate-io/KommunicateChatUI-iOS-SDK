@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '9.0'
 
-  s.dependency 'Kingfisher', '~> 3.6.2'
+  s.dependency 'Kingfisher', '~> 3.13.1'
   s.dependency 'MGSwipeTableCell', '~> 1.5.6'
-  s.dependency 'Applozic', '~> 4.5.0'
+  s.dependency 'Applozic', '~> 4.6.0'
 end
