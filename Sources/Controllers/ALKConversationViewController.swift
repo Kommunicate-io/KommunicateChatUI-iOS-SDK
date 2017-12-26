@@ -25,7 +25,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     /// Enables group detail button on navigation bar
-    public var isGroupDetailActionEnabled = false
+    public var isGroupDetailActionEnabled = true
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
