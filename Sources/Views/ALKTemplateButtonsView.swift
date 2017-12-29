@@ -27,6 +27,8 @@ open class ALKTemplateButtonsView: UIView {
         return cv
     }()
 
+    open var buttonSelected:((ALKTemplateButtonModel?)->())?
+
     public init(frame: CGRect, viewModel: ALKTemplateButtonsViewModel) {
         super.init(frame: frame)
         self.viewModel = viewModel
@@ -48,7 +50,7 @@ open class ALKTemplateButtonsView: UIView {
         collectionView.delegate = self
 
         // Register cells
-        collectionView.register(ALKTemplateButtonsCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(ALKTemplateButtonsCell.self)
 
         // Set constaints
         addViewsForAutolayout(views: [collectionView])
@@ -61,23 +63,28 @@ open class ALKTemplateButtonsView: UIView {
 
 }
 
-extension ALKTemplateButtonsView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ALKTemplateButtonsView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return viewModel.getNumberOfItemsIn(section: section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? ALKTemplateButtonsCell else {return UICollectionViewCell()}
-        cell.backgroundColor = UIColor.brown
+        let cell: ALKTemplateButtonsCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+        cell.update(text: viewModel.getTextForItemAt(row: indexPath.row) ?? "")
         return cell
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        buttonSelected?(viewModel.getTemplateForItemAt(row: indexPath.row))
     }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return viewModel.getSizeForItemAt(row: indexPath.row)
+    }
+
 }

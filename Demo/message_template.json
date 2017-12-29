@@ -1,0 +1,16 @@
+{
+  "templates": [
+    {
+      "identifier": "abcd",
+      "text": "Text lksj dl aklsj lkajsd askj lask akdas?"
+    },
+    {
+      "identifier": "abcde",
+      "text": "New text laskd?"
+    },
+    {
+        "identifier": "abcdef",
+        "text": "New text laskd?"
+    }
+  ]
+}

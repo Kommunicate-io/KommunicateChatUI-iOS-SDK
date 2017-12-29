@@ -249,10 +249,42 @@ open class ALKConversationViewModel: NSObject {
     }
 
     open func getContextTitleData() -> ALKContextTitleDataType? {
-        guard isContextBasedChat, let proxy = conversationProxy, let alTopicDetail = proxy.getTopicDetail() else {
-            return nil
+        guard isContextBasedChat, let proxy = conversationProxy,
+            let alTopicDetail = proxy.getTopicDetail()
+            else {
+                return nil
         }
         return alTopicDetail
+    }
+
+    open func getMessageTemplates() -> [ALKTemplateButtonModel]? {
+        // Get the json from the root folder, parse it and map it.
+        let bundle = Bundle.main
+        guard let jsonPath = bundle.path(forResource: "message_template", ofType: "json")
+            else {
+                return nil
+        }
+        do {
+            let fileUrl = URL(fileURLWithPath: jsonPath)
+            let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
+            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+            if let json = jsonResult as? Dictionary<String, Any>,
+                let templates = json["templates"] as? Array<Any> {
+                NSLog("Template json: ",json.description )
+                var templateModels: [ALKTemplateButtonModel] = []
+                for element in templates {
+                    if let template = element as? [String: Any],
+                        let model = ALKTemplateButtonModel(json: template) {
+                        templateModels.append(model)
+                    }
+                }
+                return templateModels
+            }
+        } catch let error {
+            NSLog("Error while fetching template json: \(error.localizedDescription)")
+            return nil
+        }
+        return nil
     }
 
     open func downloadAttachment(message: ALKMessageViewModel, view: UIView){

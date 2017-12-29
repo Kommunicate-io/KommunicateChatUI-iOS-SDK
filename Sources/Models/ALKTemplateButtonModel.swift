@@ -23,6 +23,8 @@ public class ALKTemplateButtonModel: NSObject {
     var onlyShowWhenLastMessageIsImage: Bool = false
     var onlyShowWhenLastMessageIsVideo: Bool = false
 
+    var sendMessageOnSelection: Bool = true
+
     public init(identifier: String, text: String) {
         self.identifier = identifier
         self.text = text

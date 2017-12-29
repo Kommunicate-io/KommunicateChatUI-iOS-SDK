@@ -10,16 +10,46 @@ import Applozic
 
 open class ALKTemplateButtonsViewModel: NSObject {
 
+    open var messageTemplates: [ALKTemplateButtonModel]
 
-    //TODO: Create a model where we can parse and map the objects present in json to real object.
-    // We should not use string based API
+    public var leftRightPadding: CGFloat = 10.0
+    public var height: CGFloat = 40.0
 
-    public init(json: Dictionary<String, String>) {
-        // Use json to get the data to display and settings like when to display.
+    public var textFont = Font.normal(size: 16.0).font()
 
+    public init(messageTemplates: [ALKTemplateButtonModel]) {
+        self.messageTemplates = messageTemplates
+    }
+
+    open func getNumberOfItemsIn(section: Int) -> Int {
+        return messageTemplates.count
+    }
+
+    open func getTextForItemAt(row: Int) -> String? {
+        guard row >= 0 && row < messageTemplates.count else {
+            return nil
+        }
+        return messageTemplates[row].text
+    }
+
+    open func getSizeForItemAt(row: Int) -> CGSize {
+        guard row >= 0 && row < messageTemplates.count else {
+            return CGSize(width: 0, height: 0)
+        }
+        let size = (messageTemplates[row].text as NSString).size(attributes: [NSFontAttributeName: textFont])
+        let newSize = CGSize(width: size.width+leftRightPadding, height: height)
+        return newSize
+    }
+
+    open func getTemplateForItemAt(row: Int) -> ALKTemplateButtonModel? {
+        guard row >= 0 && row < messageTemplates.count else {
+            return nil
+        }
+        return messageTemplates[row]
     }
 
     open func updateLast(message: ALMessage) {
         // Use last message to check the message type and to see if it's receiver's or sender's message
     }
+
 }
