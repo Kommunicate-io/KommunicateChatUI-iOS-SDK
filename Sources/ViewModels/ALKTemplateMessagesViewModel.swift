@@ -1,5 +1,5 @@
 //
-//  ALKTemplateButtonsViewModel.swift
+//  ALKTemplateMessagesViewModel.swift
 //  ApplozicSwift
 //
 //  Created by Mukesh Thawani on 27/12/17.
@@ -8,16 +8,16 @@
 import Foundation
 import Applozic
 
-open class ALKTemplateButtonsViewModel: NSObject {
+open class ALKTemplateMessagesViewModel: NSObject {
 
-    open var messageTemplates: [ALKTemplateButtonModel]
+    open var messageTemplates: [ALKTemplateMessageModel]
 
     public var leftRightPadding: CGFloat = 10.0
     public var height: CGFloat = 40.0
 
     public var textFont = Font.normal(size: 16.0).font()
 
-    public init(messageTemplates: [ALKTemplateButtonModel]) {
+    public init(messageTemplates: [ALKTemplateMessageModel]) {
         self.messageTemplates = messageTemplates
     }
 
@@ -41,7 +41,7 @@ open class ALKTemplateButtonsViewModel: NSObject {
         return newSize
     }
 
-    open func getTemplateForItemAt(row: Int) -> ALKTemplateButtonModel? {
+    open func getTemplateForItemAt(row: Int) -> ALKTemplateMessageModel? {
         guard row >= 0 && row < messageTemplates.count else {
             return nil
         }

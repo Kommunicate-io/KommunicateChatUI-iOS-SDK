@@ -1,5 +1,5 @@
 //
-//  ALKTemplateButtonsCell.swift
+//  ALKTemplateMessageCell.swift
 //  ApplozicSwift
 //
 //  Created by Mukesh Thawani on 27/12/17.
@@ -7,12 +7,13 @@
 
 import UIKit
 
-open class ALKTemplateButtonsCell: UICollectionViewCell {
+open class ALKTemplateMessageCell: UICollectionViewCell {
 
     open let textLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.textColor = UIColor.black
-        label.backgroundColor = UIColor.gray
+        label.layer.borderWidth = 1
+        label.layer.borderColor = UIColor.gray.cgColor
         label.contentMode = .center
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 10.0

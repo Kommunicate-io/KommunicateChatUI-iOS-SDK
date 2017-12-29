@@ -1,5 +1,5 @@
 //
-//  ALKTemplateButtonsView.swift
+//  ALKTemplateMessagesView.swift
 //  ApplozicSwift
 //
 //  Created by Mukesh Thawani on 27/12/17.
@@ -9,14 +9,15 @@ import UIKit
 
 
 /*
- It's responsible to display template buttons.
- Currently only textual buttons are present.
- It gives the callback outside
+ It's responsible to display the template message buttons.
+ Currently only textual messages are supported.
+ A callback is sent, when any message is selected.
  */
-open class ALKTemplateButtonsView: UIView {
+open class ALKTemplateMessagesView: UIView {
 
-
-    open var viewModel: ALKTemplateButtonsViewModel!
+    // MARK: Public properties
+    
+    open var viewModel: ALKTemplateMessagesViewModel!
 
     open let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -27,9 +28,12 @@ open class ALKTemplateButtonsView: UIView {
         return cv
     }()
 
-    open var buttonSelected:((ALKTemplateButtonModel?)->())?
+    /// Closure to be executed when a template message is selected
+    open var messageSelected:((ALKTemplateMessageModel)->())?
 
-    public init(frame: CGRect, viewModel: ALKTemplateButtonsViewModel) {
+    //MARK: Intialization
+
+    public init(frame: CGRect, viewModel: ALKTemplateMessagesViewModel) {
         super.init(frame: frame)
         self.viewModel = viewModel
         setupViews()
@@ -38,6 +42,8 @@ open class ALKTemplateButtonsView: UIView {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    //MARK: Private methods
 
     private func setupViews() {
         setupCollectionView()
@@ -50,7 +56,7 @@ open class ALKTemplateButtonsView: UIView {
         collectionView.delegate = self
 
         // Register cells
-        collectionView.register(ALKTemplateButtonsCell.self)
+        collectionView.register(ALKTemplateMessageCell.self)
 
         // Set constaints
         addViewsForAutolayout(views: [collectionView])
@@ -63,7 +69,7 @@ open class ALKTemplateButtonsView: UIView {
 
 }
 
-extension ALKTemplateButtonsView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension ALKTemplateMessagesView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -74,13 +80,19 @@ extension ALKTemplateButtonsView: UICollectionViewDelegate, UICollectionViewData
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: ALKTemplateButtonsCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+        let cell: ALKTemplateMessageCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
         cell.update(text: viewModel.getTextForItemAt(row: indexPath.row) ?? "")
         return cell
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        buttonSelected?(viewModel.getTemplateForItemAt(row: indexPath.row))
+        guard let selectedTemplate = viewModel.getTemplateForItemAt(row: indexPath.row) else {return}
+        messageSelected?(selectedTemplate)
+
+        //Send a notification (can be used outside the framework)
+        let notificationCenter = NotificationCenter()
+        notificationCenter.post(name: NSNotification.Name(rawValue: "TemplateMessageSelected"), object: selectedTemplate)
+
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

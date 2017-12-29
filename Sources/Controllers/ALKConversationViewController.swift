@@ -85,7 +85,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         return contextView
     }()
 
-    open var templateView: ALKTemplateButtonsView?
+    open var templateView: ALKTemplateMessagesView?
 
     required public init() {
         super.init(nibName: nil, bundle: nil)
@@ -266,10 +266,10 @@ open class ALKConversationViewController: ALKBaseViewController {
         viewModel.delegate = self
         viewModel.prepareController()
         if let templates = viewModel.getMessageTemplates(){
-            templateView = ALKTemplateButtonsView(frame: CGRect.zero, viewModel: ALKTemplateButtonsViewModel(messageTemplates: templates))
+            templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
-        templateView?.buttonSelected = { [weak self] model in
-            // viewModel.templateSelected(model)
+        templateView?.messageSelected = { [weak self] template in
+            self?.viewModel.selected(template: template)
         }
         if self.isFirstTime {
             self.setupNavigation()

@@ -257,7 +257,7 @@ open class ALKConversationViewModel: NSObject {
         return alTopicDetail
     }
 
-    open func getMessageTemplates() -> [ALKTemplateButtonModel]? {
+    open func getMessageTemplates() -> [ALKTemplateMessageModel]? {
         // Get the json from the root folder, parse it and map it.
         let bundle = Bundle.main
         guard let jsonPath = bundle.path(forResource: "message_template", ofType: "json")
@@ -271,10 +271,10 @@ open class ALKConversationViewModel: NSObject {
             if let json = jsonResult as? Dictionary<String, Any>,
                 let templates = json["templates"] as? Array<Any> {
                 NSLog("Template json: ",json.description )
-                var templateModels: [ALKTemplateButtonModel] = []
+                var templateModels: [ALKTemplateMessageModel] = []
                 for element in templates {
                     if let template = element as? [String: Any],
-                        let model = ALKTemplateButtonModel(json: template) {
+                        let model = ALKTemplateMessageModel(json: template) {
                         templateModels.append(model)
                     }
                 }
@@ -380,7 +380,8 @@ open class ALKConversationViewModel: NSObject {
 
     open func updateStatusReportForConversation(contactId: String, status: Int32) {
         guard let id = self.contactId, id == contactId else { return }
-        guard let mesgArray = self.alMessages as? [ALMessage], !mesgArray.isEmpty else { return }
+        let mesgArray = self.alMessages
+        guard !mesgArray.isEmpty else { return }
         for index in 0..<mesgArray.count {
             let mesg = mesgArray[index]
             if mesg.status != nil && mesg.status != NSNumber(value: status) && mesg.sentToServer == true {
@@ -800,6 +801,16 @@ open class ALKConversationViewModel: NSObject {
                 break
             }
         })
+    }
+
+    open func selected(template: ALKTemplateMessageModel) {
+        // Send message if property is set
+        guard template.sendMessageOnSelection else {return}
+        var text = template.text
+        if let messageToSend = template.messageToSend {
+            text = messageToSend
+        }
+        send(message: text)
     }
 
     //MARK: - Internal Methods
