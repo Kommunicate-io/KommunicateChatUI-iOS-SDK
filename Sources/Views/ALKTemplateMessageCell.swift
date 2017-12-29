@@ -12,19 +12,13 @@ open class ALKTemplateMessageCell: UICollectionViewCell {
     open let textLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.textColor = UIColor.black
-        label.layer.borderWidth = 1
-        label.layer.borderColor = UIColor.gray.cgColor
         label.contentMode = .center
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 10.0
         label.numberOfLines = 1
         label.font = Font.normal(size: 16.0).font()
         return label
     }()
 
     public let leftPadding: CGFloat = 5.0
-    public let rightPadding: CGFloat = -5.0
-    
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,11 +31,15 @@ open class ALKTemplateMessageCell: UICollectionViewCell {
 
     func setupUI() {
 
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 10.0
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.gray.cgColor
         self.backgroundColor = UIColor.clear
         self.addViewsForAutolayout(views: [textLabel])
 
         textLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leftPadding).isActive = true
         textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         textLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }

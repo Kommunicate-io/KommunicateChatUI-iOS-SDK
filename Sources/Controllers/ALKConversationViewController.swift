@@ -347,10 +347,10 @@ open class ALKConversationViewController: ALKBaseViewController {
         contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView.rawValue).isActive = true
 
-        templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
-        templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        templateView?.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-        templateView?.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
+        templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
+        templateView?.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -10.0).isActive = true
+        templateView?.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         tableView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
