@@ -85,6 +85,8 @@ open class ALKConversationViewController: ALKBaseViewController {
         return contextView
     }()
 
+    open var templateView: ALKTemplateMessagesView?
+
     required public init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -260,9 +262,15 @@ open class ALKConversationViewController: ALKBaseViewController {
         } else {
             self.setTypingNotiDisplayName(displayName: self.title ?? "")
         }
-
+        
         viewModel.delegate = self
         viewModel.prepareController()
+        if let templates = viewModel.getMessageTemplates(){
+            templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
+        }
+        templateView?.messageSelected = { [weak self] template in
+            self?.viewModel.selected(template: template)
+        }
         if self.isFirstTime {
             self.setupNavigation()
             setupView()
@@ -311,7 +319,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
-
         setupConstraints()
         prepareTable()
         prepareMoreBar()
@@ -327,17 +334,28 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     private func setupConstraints() {
-        view.addViewsForAutolayout(views: [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton])
+
+        var allViews = [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton]
+        if let templateView = templateView {
+            allViews.append(templateView)
+        }
+        view.addViewsForAutolayout(views: allViews)
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView.rawValue).isActive = true
 
+        templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
+        templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
+        templateView?.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -10.0).isActive = true
+        templateView?.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
         tableView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: (templateView != nil) ? templateView!.topAnchor:typingNoticeView.topAnchor).isActive = true
+
 
         typingNoticeViewHeighConstaint = typingNoticeView.heightAnchor.constraint(equalToConstant: 0)
         typingNoticeViewHeighConstaint?.isActive = true

@@ -1,0 +1,16 @@
+{
+  "templates": [
+    {
+      "identifier": "first",
+      "text": "Hey there!"
+    },
+    {
+      "identifier": "second",
+      "text": "How are you?"
+    },
+    {
+      "identifier": "third",
+      "text": "How can I help you?"
+    }
+  ]
+}

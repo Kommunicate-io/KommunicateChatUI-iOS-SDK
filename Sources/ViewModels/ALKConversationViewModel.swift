@@ -249,10 +249,42 @@ open class ALKConversationViewModel: NSObject {
     }
 
     open func getContextTitleData() -> ALKContextTitleDataType? {
-        guard isContextBasedChat, let proxy = conversationProxy, let alTopicDetail = proxy.getTopicDetail() else {
-            return nil
+        guard isContextBasedChat, let proxy = conversationProxy,
+            let alTopicDetail = proxy.getTopicDetail()
+            else {
+                return nil
         }
         return alTopicDetail
+    }
+
+    open func getMessageTemplates() -> [ALKTemplateMessageModel]? {
+        // Get the json from the root folder, parse it and map it.
+        let bundle = Bundle.main
+        guard let jsonPath = bundle.path(forResource: "message_template", ofType: "json")
+            else {
+                return nil
+        }
+        do {
+            let fileUrl = URL(fileURLWithPath: jsonPath)
+            let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
+            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+            if let json = jsonResult as? Dictionary<String, Any>,
+                let templates = json["templates"] as? Array<Any> {
+                NSLog("Template json: ",json.description )
+                var templateModels: [ALKTemplateMessageModel] = []
+                for element in templates {
+                    if let template = element as? [String: Any],
+                        let model = ALKTemplateMessageModel(json: template) {
+                        templateModels.append(model)
+                    }
+                }
+                return templateModels
+            }
+        } catch let error {
+            NSLog("Error while fetching template json: \(error.localizedDescription)")
+            return nil
+        }
+        return nil
     }
 
     open func downloadAttachment(message: ALKMessageViewModel, view: UIView){
@@ -348,7 +380,8 @@ open class ALKConversationViewModel: NSObject {
 
     open func updateStatusReportForConversation(contactId: String, status: Int32) {
         guard let id = self.contactId, id == contactId else { return }
-        guard let mesgArray = self.alMessages as? [ALMessage], !mesgArray.isEmpty else { return }
+        let mesgArray = self.alMessages
+        guard !mesgArray.isEmpty else { return }
         for index in 0..<mesgArray.count {
             let mesg = mesgArray[index]
             if mesg.status != nil && mesg.status != NSNumber(value: status) && mesg.sentToServer == true {
@@ -768,6 +801,17 @@ open class ALKConversationViewModel: NSObject {
                 break
             }
         })
+    }
+
+    /// One of the template message was selected.
+    open func selected(template: ALKTemplateMessageModel) {
+        // Send message if property is set
+        guard template.sendMessageOnSelection else {return}
+        var text = template.text
+        if let messageToSend = template.messageToSend {
+            text = messageToSend
+        }
+        send(message: text)
     }
 
     //MARK: - Internal Methods
