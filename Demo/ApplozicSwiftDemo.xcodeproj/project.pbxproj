@@ -19,7 +19,6 @@
 		8B36D0EF1F3DC5E900FEFFD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EE1F3DC5E900FEFFD2 /* Assets.xcassets */; };
 		8B36D0F21F3DC5E900FEFFD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0F01F3DC5E900FEFFD2 /* LaunchScreen.storyboard */; };
 		8B36D1081F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D1071F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift */; };
-		8B8F6A2E1FFB58E200AD02E1 /* message_template.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F6A2D1FFB58E200AD02E1 /* message_template.json */; };
 		8BEF11AC1F618669000336AF /* ALChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEF11AB1F618669000336AF /* ALChatManager.swift */; };
 		8BEF11AE1F619367000336AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEF11AD1F619367000336AF /* LoginViewController.swift */; };
 		8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */; };
@@ -85,7 +84,6 @@
 		8B36D1071F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplozicSwiftDemoUITests.swift; sourceTree = "<group>"; };
 		8B36D1091F3DC5EA00FEFFD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B4836FA1F6976830067FC5E /* ApplozicSwiftDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApplozicSwiftDemo.entitlements; sourceTree = "<group>"; };
-		8B8F6A2D1FFB58E200AD02E1 /* message_template.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = message_template.json; sourceTree = "<group>"; };
 		8BEF11AB1F618669000336AF /* ALChatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALChatManager.swift; sourceTree = "<group>"; };
 		8BEF11AD1F619367000336AF /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKNewChatViewModelTests.swift; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 		8B36D0DB1F3DC5E900FEFFD2 = {
 			isa = PBXGroup;
 			children = (
-				8B8F6A2D1FFB58E200AD02E1 /* message_template.json */,
 				8B36D0E61F3DC5E900FEFFD2 /* ApplozicSwiftDemo */,
 				8B36D0FB1F3DC5EA00FEFFD2 /* ApplozicSwiftDemoTests */,
 				8B36D1061F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests */,
@@ -367,7 +364,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B36D0F21F3DC5E900FEFFD2 /* LaunchScreen.storyboard in Resources */,
-				8B8F6A2E1FFB58E200AD02E1 /* message_template.json in Resources */,
 				8B36D0EF1F3DC5E900FEFFD2 /* Assets.xcassets in Resources */,
 				8B36D0ED1F3DC5E900FEFFD2 /* Main.storyboard in Resources */,
 			);
