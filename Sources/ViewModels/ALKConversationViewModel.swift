@@ -803,6 +803,7 @@ open class ALKConversationViewModel: NSObject {
         })
     }
 
+    /// One of the template message was selected.
     open func selected(template: ALKTemplateMessageModel) {
         // Send message if property is set
         guard template.sendMessageOnSelection else {return}

@@ -319,7 +319,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
-
         setupConstraints()
         prepareTable()
         prepareMoreBar()
