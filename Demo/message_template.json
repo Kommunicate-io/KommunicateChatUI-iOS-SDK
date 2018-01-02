@@ -1,16 +1,16 @@
 {
   "templates": [
     {
-      "identifier": "abcd",
-      "text": "Text lksj dl aklsj lkajsd askj lask akdas?"
+      "identifier": "first",
+      "text": "Hey there!"
     },
     {
-      "identifier": "abcde",
-      "text": "New text laskd?"
+      "identifier": "second",
+      "text": "How are you?"
     },
     {
-        "identifier": "abcdef",
-        "text": "New text laskd?"
+      "identifier": "third",
+      "text": "How can I help you?"
     }
   ]
 }
