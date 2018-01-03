@@ -55,7 +55,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.separatorStyle   = .none
         tv.allowsSelection  = false
-        tv.backgroundColor  = UIColor.white
+        tv.backgroundColor  = UIColor.clear
         tv.clipsToBounds    = true
         tv.keyboardDismissMode = UIScrollViewKeyboardDismissMode.onDrag
         return tv
@@ -77,6 +77,12 @@ open class ALKConversationViewController: ALKBaseViewController {
         button.setImage(image, for: .normal)
         button.layer.cornerRadius = 15
         return button
+    }()
+
+    open var backgroundView: UIView = {
+        let view = UIView(frame: CGRect.zero)
+        view.backgroundColor = UIColor.white
+        return view
     }()
 
     open var contextTitleView: ALKContextTitleView = {
@@ -240,7 +246,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
-        view.backgroundColor = UIColor.white
         self.edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
         activityIndicator.color = UIColor.lightGray
@@ -335,11 +340,16 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     private func setupConstraints() {
 
-        var allViews = [contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton]
+        var allViews = [backgroundView, contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton]
         if let templateView = templateView {
             allViews.append(templateView)
         }
         view.addViewsForAutolayout(views: allViews)
+
+        backgroundView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true

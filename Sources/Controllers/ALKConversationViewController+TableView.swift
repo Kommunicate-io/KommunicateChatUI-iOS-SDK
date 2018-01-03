@@ -217,6 +217,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         let date = message.date
 
         let dateView = ALKDateSectionHeaderView.instanceFromNib()
+        dateView.backgroundColor = UIColor.clear
 
         // Set date text
         dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
