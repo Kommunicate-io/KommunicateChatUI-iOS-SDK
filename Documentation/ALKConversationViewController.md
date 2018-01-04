@@ -63,3 +63,5 @@ override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 }
 ```
+
+![simulator screen shot background image](https://user-images.githubusercontent.com/5956714/34553702-fdb1ef82-f14e-11e7-991d-88b7e1612662.png)
