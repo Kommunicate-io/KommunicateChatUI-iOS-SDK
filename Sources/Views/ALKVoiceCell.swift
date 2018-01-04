@@ -39,7 +39,6 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         let view = UIImageView()
         view.backgroundColor = .clear
         view.contentMode = .scaleToFill
-        view.image = UIImage.init(named: "text_frame", in: Bundle.applozic, compatibleWith: nil)
         view.isUserInteractionEnabled = false
         return view
     }()
