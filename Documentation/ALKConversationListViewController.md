@@ -7,7 +7,7 @@ This article will guide you how to subclass the `ALKConversationListViewControll
 You can subclass it like this:
 
 ```swift
-class ConversationVC: ALKConversationViewController {
+class ConversationVC: ALKConversationListViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
