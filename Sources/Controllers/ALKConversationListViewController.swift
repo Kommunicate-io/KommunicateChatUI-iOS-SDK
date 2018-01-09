@@ -289,18 +289,18 @@ open class ALKConversationListViewController: ALKBaseViewController {
 }
 
 extension ALKConversationListViewController: UITableViewDelegate, UITableViewDataSource {
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.numberOfSection()
     }
 
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchActive {
             return searchFilteredChat.count
         }
         return viewModel.numberOfRowsInSection(section: section)
     }
 
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         
         guard let chat = (searchActive ? searchFilteredChat[indexPath.row] as? ALMessage : viewModel.chatForRow(indexPath: indexPath)) else {
@@ -313,7 +313,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
         return cell
     }
 
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if searchActive {
             guard let chat = searchFilteredChat[indexPath.row] as? ALMessage else {return}
@@ -342,15 +342,15 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
         }
     }
 
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return searchBar
     }
 
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
 
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 
         let view = tableView.dequeueReusableCell(withIdentifier: "EmptyChatCell")?.contentView
         if let tap = view?.gestureRecognizers?.first {
@@ -363,17 +363,17 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
         return view
     }
 
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return viewModel.numberOfRowsInSection(section: 0) == 0 ? 325 : 0
     }
 
-    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 }
 
 extension ALKConversationListViewController: UIScrollViewDelegate {
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let  height = scrollView.frame.size.height
         let contentYoffset = scrollView.contentOffset.y
         let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
@@ -403,14 +403,14 @@ extension ALKConversationListViewController: ALMessagesDelegate {
 
 extension ALKConversationListViewController: ALKConversationListViewModelDelegate {
 
-    func startedLoading() {
+    open func startedLoading() {
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
             self.tableView.isUserInteractionEnabled = false
         }
     }
 
-    func listUpdated() {
+    open func listUpdated() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.activityIndicator.stopAnimating()
@@ -418,18 +418,18 @@ extension ALKConversationListViewController: ALKConversationListViewModelDelegat
         }
     }
 
-    func rowUpdatedAt(position: Int) {
+    open func rowUpdatedAt(position: Int) {
         tableView.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
     }
 }
 
 extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
-    public func mqttDidConnected() {
+    open func mqttDidConnected() {
         print("MQTT did connected")
     }
 
-    public func updateUserDetail(_ userId: String!) {
+    open func updateUserDetail(_ userId: String!) {
         guard let userId = userId else { return }
         print("update user detail")
 
@@ -442,7 +442,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 
 
-    public func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
+    open func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call: ", alMessage.message)
         guard let message = alMessage else { return }
         let viewController = conversationViewController
@@ -465,15 +465,15 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         
         }
 
-    public func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
+    open func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
         viewModel.updateDeliveryReport(convVC: conversationViewController, messageKey: messageKey, contactId: contactId, status: status)
     }
 
-    public func updateStatus(forContact contactId: String!, withStatus status: Int32) {
+    open func updateStatus(forContact contactId: String!, withStatus status: Int32) {
         viewModel.updateStatusReport(convVC: conversationViewController, forContact: contactId, status: status)
     }
 
-    public func updateTypingStatus(_ applicationKey: String!, userId: String!, status: Bool) {
+    open func updateTypingStatus(_ applicationKey: String!, userId: String!, status: Bool) {
         print("Typing status is", status)
 
         guard let viewController = conversationViewController, let vm = viewController.viewModel else { return
@@ -486,16 +486,16 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
     }
 
-    public func reloadData(forUserBlockNotification userId: String!, andBlockFlag flag: Bool) {
+    open func reloadData(forUserBlockNotification userId: String!, andBlockFlag flag: Bool) {
         print("reload data")
     }
 
-    public func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
+    open func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
         print("Last seen updated")
         viewModel.updateStatusFor(userDetail: alUserDetail)
     }
     
-    public func mqttConnectionClosed() {
+    open func mqttConnectionClosed() {
         NSLog("MQTT connection closed")
     }
 }
