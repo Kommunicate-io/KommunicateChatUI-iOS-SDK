@@ -39,6 +39,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
+                cell.avatarTapped = {[weak self] _ in
+                    guard let currentModel = cell.viewModel else {return}
+                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                }
                 return cell
             }
         case .photo:
@@ -53,21 +57,15 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     cell.uploadTapped = {[weak self]
                         value in
                         // upload
-                        guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
-                            let notificationView = ALNotificationView()
-                            notificationView.noDataConnectionNotificationView()
-                            return
-                        }
-                        self?.viewModel.uploadImage(view: cell, indexPath: indexPath)
+                        self?.attachmentViewDidTapUpload(view: cell, indexPath: indexPath)
                     }
                     cell.uploadCompleted = {[weak self]
                         responseDict in
-                        self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                        self?.attachmentUploadDidCompleteWith(response: responseDict, indexPath: indexPath)
                     }
                     cell.downloadTapped = {[weak self]
                         value in
-                        guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
-                        self?.viewModel.downloadAttachment(message: message, view: cell)
+                        self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                     }
                     return cell
 
@@ -76,7 +74,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     cell.update(viewModel: message)
                     cell.uploadCompleted = {[weak self]
                         responseDict in
-                        self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                        self?.attachmentUploadDidCompleteWith(response: responseDict, indexPath: indexPath)
                     }
                     return cell
                 }
@@ -88,8 +86,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     cell.update(viewModel: message)
                     cell.downloadTapped = {[weak self]
                         value in
-                        guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
-                        self?.viewModel.downloadAttachment(message: message, view: cell)
+                        self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                     }
                     return cell
 
@@ -109,13 +106,13 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message)
                 cell.setCellDelegate(delegate: self)
                 cell.downloadTapped = {[weak self] value in
-                    self?.viewModel.downloadAttachment(message: message, view: cell)
+                    self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
                 return cell
             } else {
                 let cell: ALKFriendVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.downloadTapped = {[weak self] value in
-                    self?.viewModel.downloadAttachment(message: message, view: cell)
+                    self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
                 cell.update(viewModel: message)
                 cell.setCellDelegate(delegate: self)
@@ -145,22 +142,15 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.uploadTapped = {[weak self]
                     value in
                     // upload
-                    guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
-                        let notificationView = ALNotificationView()
-                        notificationView.noDataConnectionNotificationView()
-                        return
-                    }
-                    self?.viewModel.uploadVideo(view: cell, indexPath: indexPath)
+                    self?.attachmentViewDidTapUpload(view: cell, indexPath: indexPath)
                 }
                 cell.uploadCompleted = {[weak self]
                     responseDict in
-                    self?.viewModel.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                    self?.attachmentUploadDidCompleteWith(response: responseDict, indexPath: indexPath)
                 }
                 cell.downloadTapped = {[weak self]
                     value in
-                    guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
-                    self?.viewModel.downloadAttachment(message: message, view: cell)
-
+                    self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
                 return cell
             } else {
@@ -168,8 +158,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message)
                 cell.downloadTapped = {[weak self]
                     value in
-                    guard let message = self?.viewModel.messageForRow(indexPath: indexPath) else { return }
-                    self?.viewModel.downloadAttachment(message: message, view: cell)
+                    self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
                 return cell
             }

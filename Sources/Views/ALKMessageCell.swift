@@ -49,6 +49,7 @@ public protocol ALKMessageViewModel {
     var voiceCurrentDuration: CGFloat { get set }
     var voiceCurrentState: ALKVoiceCellState { get set }
     var fileMetaInfo: ALFileMetaInfo? { get }
+    var receiverId: String? { get }
 }
 
 // MARK: - ALKFriendMessageCell
@@ -61,6 +62,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
         let layer = imv.layer
         layer.cornerRadius = 18.5
         layer.masksToBounds = true
+        imv.isUserInteractionEnabled = true
         return imv
     }()
 
@@ -73,6 +75,9 @@ final class ALKFriendMessageCell: ALKMessageCell {
 
     override func setupViews() {
         super.setupViews()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
+        avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
 
@@ -167,6 +172,10 @@ final class ALKFriendMessageCell: ALKMessageCell {
         let minimumHeigh: CGFloat = 55.0
         let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width)
         return totalRowHeigh < minimumHeigh ? minimumHeigh : totalRowHeigh
+    }
+
+    @objc private func avatarTappedAction() {
+        avatarTapped?()
     }
 }
 

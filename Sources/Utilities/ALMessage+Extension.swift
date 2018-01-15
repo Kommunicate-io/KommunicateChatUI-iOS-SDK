@@ -165,6 +165,7 @@ extension ALMessage {
         messageModel.filePath = filePath
         messageModel.geocode = geocode
         messageModel.fileMetaInfo = fileMetaInfo
+        messageModel.receiverId = to
         return messageModel
     }
 }
