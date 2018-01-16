@@ -39,6 +39,7 @@ public class ALKMessageModel: ALKMessageViewModel {
     public var voiceData: Data?
     public var fileMetaInfo: ALFileMetaInfo?
     public var receiverId: String?
+    public var isReplyMessage: Bool = false
 }
 
 extension ALKMessageModel: Equatable {

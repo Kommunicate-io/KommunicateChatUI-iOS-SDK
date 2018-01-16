@@ -166,6 +166,7 @@ extension ALMessage {
         messageModel.geocode = geocode
         messageModel.fileMetaInfo = fileMetaInfo
         messageModel.receiverId = to
+        messageModel.isReplyMessage = isAReplyMessage()
         return messageModel
     }
 }

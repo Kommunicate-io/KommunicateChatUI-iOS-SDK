@@ -50,6 +50,7 @@ public protocol ALKMessageViewModel {
     var voiceCurrentState: ALKVoiceCellState { get set }
     var fileMetaInfo: ALFileMetaInfo? { get }
     var receiverId: String? { get }
+    var isReplyMessage: Bool { get }
 }
 
 // MARK: - ALKFriendMessageCell

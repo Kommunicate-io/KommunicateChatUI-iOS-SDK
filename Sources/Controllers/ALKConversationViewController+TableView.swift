@@ -26,6 +26,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             return UITableViewCell()
         }
         print("Cell updated at row: ", indexPath.row, "and type is: ", message.messageType)
+
         switch message.messageType {
         case .text, .html:
             if message.isMyMessage {
