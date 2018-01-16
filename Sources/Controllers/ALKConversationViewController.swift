@@ -706,17 +706,17 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     func attachmentViewDidTapDownload(view: UIView, indexPath: IndexPath) {
+        guard let message = viewModel.messageForRow(indexPath: indexPath) else { return }
+        viewModel.downloadAttachment(message: message, view: view)
+    }
+
+    func attachmentViewDidTapUpload(view: UIView, indexPath: IndexPath) {
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()
             notificationView.noDataConnectionNotificationView()
             return
         }
         viewModel.uploadImage(view: view, indexPath: indexPath)
-    }
-
-    func attachmentViewDidTapUpload(view: UIView, indexPath: IndexPath) {
-        guard let message = viewModel.messageForRow(indexPath: indexPath) else { return }
-        viewModel.downloadAttachment(message: message, view: view)
     }
 
     func attachmentUploadDidCompleteWith(response: Any?, indexPath: IndexPath) {
