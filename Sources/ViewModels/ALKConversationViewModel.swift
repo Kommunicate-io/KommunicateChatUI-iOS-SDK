@@ -408,7 +408,6 @@ open class ALKConversationViewModel: NSObject {
 
     }
 
-
     open func send(message: String, isOpenGroup: Bool = false) {
         let alMessage = ALMessage()
         alMessage.to = contactId

@@ -15,6 +15,8 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
     lazy var longPressGesture: UILongPressGestureRecognizer = {
         return UILongPressGestureRecognizer(target: self, action: #selector(showMenuController(withLongPress:)))
     }()
+
+    var avatarTapped:(() -> ())?
     
     func update(chatBar: ALKChatBar) {
         self.chatBar = chatBar

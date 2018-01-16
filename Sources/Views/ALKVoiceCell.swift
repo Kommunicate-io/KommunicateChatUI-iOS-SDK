@@ -286,8 +286,6 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
             NSLog("Not saved due to error")
         }
     }
-
-    
 }
 
 extension ALKVoiceCell: ALKHTTPManagerDownloadDelegate {

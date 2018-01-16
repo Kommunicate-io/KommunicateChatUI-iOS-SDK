@@ -27,6 +27,10 @@ open class ALKConversationViewController: ALKBaseViewController {
     /// Enables group detail button on navigation bar
     public var isGroupDetailActionEnabled = true
 
+    /// If enabled then opens the individual chat on
+    /// click of avatar (Only for group chat)
+    public var isProfileTapActionEnabled = true
+
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
@@ -701,6 +705,39 @@ open class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
     }
 
+    func attachmentViewDidTapDownload(view: UIView, indexPath: IndexPath) {
+        guard let message = viewModel.messageForRow(indexPath: indexPath) else { return }
+        viewModel.downloadAttachment(message: message, view: view)
+    }
+
+    func attachmentViewDidTapUpload(view: UIView, indexPath: IndexPath) {
+        guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
+            let notificationView = ALNotificationView()
+            notificationView.noDataConnectionNotificationView()
+            return
+        }
+        viewModel.uploadImage(view: view, indexPath: indexPath)
+    }
+
+    func attachmentUploadDidCompleteWith(response: Any?, indexPath: IndexPath) {
+        viewModel.uploadAttachmentCompleted(responseDict: response, indexPath: indexPath)
+    }
+
+    func messageAvatarViewDidTap(messageVM: ALKMessageViewModel, indexPath: IndexPath) {
+        // Open chat thread
+        guard viewModel.isGroup && isProfileTapActionEnabled else {return}
+
+        // Get the user id of that user
+        guard let receiverId = messageVM.receiverId else {return}
+
+        let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil)
+        let conversationVC = ALKConversationViewController()
+        conversationVC.viewModel = vm
+        conversationVC.title = messageVM.displayName
+
+        navigationController?.pushViewController(conversationVC, animated: true)
+    }
+
     fileprivate func hideMediaOptions() {
         chatBar.hideMediaView()
     }
@@ -708,6 +745,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     fileprivate func showMediaOptions() {
         chatBar.showMediaView()
     }
+
     
 }
 

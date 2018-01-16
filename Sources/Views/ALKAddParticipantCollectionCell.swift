@@ -11,6 +11,7 @@ import UIKit
 import Kingfisher
 protocol ALKAddParticipantProtocol: class {
     func addParticipantAtIndex(atIndex:IndexPath)
+    func profileTappedAt(index: IndexPath)
 }
 
 final class ALKAddParticipantCollectionCell: UICollectionViewCell {
@@ -32,6 +33,10 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
     //MARK: - SetupUI
     func setupUI()
     {
+        imgView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileTapped))
+        imgView.addGestureRecognizer(tapGesture)
+
         //set profile pic into circle
         imgView.layer.cornerRadius = 0.5 * imgView.frame.size.width
         //imgView.layer.borderColor = UIColor.white.cgColor
@@ -85,6 +90,10 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
     //MARK: - UI Control
     @IBAction func addParticipantPress(_ sender: Any) {
         delegate?.addParticipantAtIndex(atIndex: self.indexPath!)
+    }
+
+    func profileTapped() {
+        delegate?.profileTappedAt(index: self.indexPath!)
     }
     
 }

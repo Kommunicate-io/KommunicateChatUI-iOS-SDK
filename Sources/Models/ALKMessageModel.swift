@@ -38,6 +38,7 @@ public class ALKMessageModel: ALKMessageViewModel {
     public var voiceCurrentState: ALKVoiceCellState = .stop
     public var voiceData: Data?
     public var fileMetaInfo: ALFileMetaInfo?
+    public var receiverId: String?
 }
 
 extension ALKMessageModel: Equatable {

@@ -19,6 +19,7 @@ class ALKFriendVideoCell: ALKVideoCell {
         layer.cornerRadius = 18.5
         layer.backgroundColor = UIColor.lightGray.cgColor
         layer.masksToBounds = true
+        imv.isUserInteractionEnabled = true
         return imv
     }()
 
@@ -42,6 +43,9 @@ class ALKFriendVideoCell: ALKVideoCell {
 
     override func setupViews() {
         super.setupViews()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
+        avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
 
@@ -76,19 +80,9 @@ class ALKFriendVideoCell: ALKVideoCell {
         super.update(viewModel: viewModel)
 
         nameLabel.text = viewModel.displayName
+    }
 
-//        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-//
-//        if let url = viewModel.avatarURL {
-//
-//            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-//            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
-//        } else {
-//
-//            self.avatarImageView.image = placeHolder
-//        }
-
-
-
+    @objc private func avatarTappedAction() {
+        avatarTapped?()
     }
 }

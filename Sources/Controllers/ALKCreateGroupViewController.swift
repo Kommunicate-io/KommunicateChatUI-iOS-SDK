@@ -332,6 +332,19 @@ extension ALKCreateGroupViewController:ALKAddParticipantProtocol
             //do nothing yet
         }
     }
+
+    func profileTappedAt(index: IndexPath) {
+        guard addContactMode == .existingChat,
+            index.row < groupList.count else {return}
+        let user = groupList[index.row]
+        let viewModel = ALKConversationViewModel(contactId: user.friendUUID, channelKey: nil)
+
+        let conversationVC = ALKConversationViewController()
+        conversationVC.viewModel = viewModel
+        conversationVC.title = user.friendProfileName
+        self.navigationController?.pushViewController(conversationVC, animated: true)
+
+    }
 }
 
 
