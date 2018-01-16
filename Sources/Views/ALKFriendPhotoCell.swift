@@ -20,6 +20,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         layer.cornerRadius = 18.5
         layer.backgroundColor = UIColor.lightGray.cgColor
         layer.masksToBounds = true
+        imv.isUserInteractionEnabled = true
         return imv
     }()
     
@@ -43,7 +44,10 @@ class ALKFriendPhotoCell: ALKPhotoCell {
     
     override func setupViews() {
         super.setupViews()
-        
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
+        avatarImageView.addGestureRecognizer(tapGesture)
+
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
         
         bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
@@ -88,8 +92,9 @@ class ALKFriendPhotoCell: ALKPhotoCell {
             
             self.avatarImageView.image = placeHolder
         }
-        
-        
-        
+    }
+
+    @objc private func avatarTappedAction() {
+        avatarTapped?()
     }
 }

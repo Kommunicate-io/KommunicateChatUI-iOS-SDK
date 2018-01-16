@@ -20,6 +20,7 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         layer.cornerRadius = 18.5
         layer.backgroundColor = UIColor.lightGray.cgColor
         layer.masksToBounds = true
+        imv.isUserInteractionEnabled = true
         return imv
     }()
     
@@ -49,6 +50,9 @@ class ALKFriendVoiceCell: ALKVoiceCell {
     
     override func setupViews() {
         super.setupViews()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
+        avatarImageView.addGestureRecognizer(tapGesture)
         
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
         
@@ -94,6 +98,10 @@ class ALKFriendVoiceCell: ALKVoiceCell {
     
     override class func bottomPadding() -> CGFloat {
         return 6
+    }
+
+    @objc private func avatarTappedAction() {
+        avatarTapped?()
     }
 }
 
