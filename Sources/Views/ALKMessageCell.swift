@@ -12,14 +12,14 @@ import Kingfisher
 import Applozic
 
 // MARK: - MessageType
-public enum ALKMessageType {
-    case text
-    case photo
-    case voice
-    case location
-    case information
-    case video
-    case html
+public enum ALKMessageType: String {
+    case text = "Text"
+    case photo = "Photo"
+    case voice = "Audio"
+    case location = "Location"
+    case information = "Information"
+    case video = "Video"
+    case html = "HTML"
 }
 
 // MARK: - MessageViewModel
@@ -74,18 +74,32 @@ final class ALKFriendMessageCell: ALKMessageCell {
         return label
     }()
 
+    struct Padding {
+        let nameLabelLeftPadding: CGFloat = 0.0
+        let nameLabelRightPadding: CGFloat = 0.0
+        let nameLabelTopPadding: CGFloat = 10.0
+        let replyViewHeight: CGFloat = 80.0
+    }
+
+    var replyMessageHeightIdentifier = "ReplyMessageHeight"
+
     override func setupViews() {
         super.setupViews()
 
+        let padding = Padding()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
 
+        contentView.bringSubview(toFront: replyView)
+        contentView.bringSubview(toFront: replyNameLabel)
+        contentView.bringSubview(toFront: replyMessageLabel)
+
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -57).isActive = true
-        nameLabel.bottomAnchor.constraint(equalTo: messageView.topAnchor, constant: -10).isActive = true
+//        nameLabel.bottomAnchor.constraint(equalTo: bubbleView.topAnchor, constant: -10).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
 
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18).isActive = true
@@ -98,18 +112,50 @@ final class ALKFriendMessageCell: ALKMessageCell {
         avatarImageView.heightAnchor.constraint(equalToConstant: 37).isActive = true
         avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
 
+        replyNameLabel.leadingAnchor.constraint(equalTo: replyView.leadingAnchor, constant: 5).isActive = true
+        replyNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant:padding.nameLabelTopPadding).isActive = true
 
+        //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
+        // will be equal to leading anchor of the imageview.
+
+        replyNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
+
+        replyNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+        replyMessageLabel.leadingAnchor.constraint(equalTo: replyView.leadingAnchor, constant: 5).isActive = true
+
+        replyMessageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant:40).isActive = true
+
+        //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
+        // will be equal to leading anchor of the imageview.
+        replyMessageLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
+
+        replyMessageLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+
+        messageView.topAnchor.constraint(equalTo: replyMessageLabel.bottomAnchor, constant: 10).isActive = true
         messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
 
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKFriendMessageCell.bottomPadding()).isActive = true
 
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 10).isActive = true
 
-        bubbleView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: -4).isActive = true
+        bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 4).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
+
+        bubbleView.trailingAnchor.constraint(equalTo: replyNameLabel.trailingAnchor, constant: 10).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: replyMessageLabel.trailingAnchor, constant: 10).isActive = true
+
+        replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
+        replyView.heightAnchor.constraintEqualToAnchor(constant: 80, identifier: replyMessageHeightIdentifier).isActive = true
+        replyView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 10).isActive = true
+
+        replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -5).isActive = true
+
+
 
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         let image = UIImage.init(named: "chat_bubble_grey", in: Bundle.applozic, compatibleWith: nil)
@@ -191,22 +237,65 @@ final class ALKMyMessageCell: ALKMessageCell {
         return sv
     }()
 
+    struct Padding {
+        let nameLabelLeftPadding: CGFloat = 0.0
+        let nameLabelRightPadding: CGFloat = 0.0
+        let nameLabelTopPadding: CGFloat = 10.0
+        let replyViewHeight: CGFloat = 80.0
+    }
+
+    var replyMessageHeightIdentifier = "ReplyMessageHeight"
+
     override func setupViews() {
         super.setupViews()
 
         contentView.addViewsForAutolayout(views: [stateView])
 
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: ALKMessageCell.topPadding()).isActive = true
-        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()).isActive = true
+        contentView.bringSubview(toFront: replyView)
+        contentView.bringSubview(toFront: replyNameLabel)
+        contentView.bringSubview(toFront: replyMessageLabel)
+
+        let padding = Padding()
+
+        replyNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: padding.nameLabelLeftPadding).isActive = true
+        replyNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:padding.nameLabelTopPadding).isActive = true
+
+        //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
+        // will be equal to leading anchor of the imageview.
+        replyNameLabel.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: -10).isActive = true
+
+        replyNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+        replyMessageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: padding.nameLabelLeftPadding).isActive = true
+
+        replyMessageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:40).isActive = true
+
+        //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
+        // will be equal to leading anchor of the imageview.
+        replyMessageLabel.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: -10).isActive = true
+
+        replyMessageLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+
+        messageView.topAnchor.constraint(equalTo: replyMessageLabel.bottomAnchor, constant: ALKMessageCell.topPadding()).isActive = true
+        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()+30).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1*ALKMessageCell.leftPadding()).isActive = true
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKMyMessageCell.bottomPadding()).isActive = true
 
-        bubbleView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: -4).isActive = true
+        bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 4).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -5).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -10).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: replyMessageLabel.leadingAnchor, constant: -10).isActive = true
 
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 10).isActive = true
+
+        replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
+        replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: replyMessageHeightIdentifier).isActive = true
+        replyView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 5).isActive = true
+
+        replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -10).isActive = true
 
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
@@ -219,6 +308,10 @@ final class ALKMyMessageCell: ALKMessageCell {
 
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
+
+        if viewModel.isReplyMessage {
+            replyView.constraint(withIdentifier: replyMessageHeightIdentifier)?.constant = Padding().replyViewHeight
+        }
 
         if viewModel.isAllRead {
             stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
@@ -275,6 +368,28 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         return bv
     }()
 
+    fileprivate var replyView: UIView = {
+        let view = UIView(frame: CGRect.zero)
+        view.backgroundColor = UIColor.red
+        return view
+    }()
+
+    fileprivate var replyNameLabel: UILabel = {
+        let label = UILabel(frame: CGRect.zero)
+        label.numberOfLines = 1
+//        label.sizeToFit()
+        label.text = "Hello"
+        return label
+    }()
+
+    fileprivate var replyMessageLabel: UILabel = {
+        let label = UILabel(frame: CGRect.zero)
+        label.numberOfLines = 1
+//        label.sizeToFit()
+        label.text = "Hey there I am present!"
+        return label
+    }()
+
     override func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
 
@@ -305,7 +420,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     override func setupViews() {
         super.setupViews()
 
-        contentView.addViewsForAutolayout(views: [messageView,bubbleView,timeLabel])
+        contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,timeLabel])
         contentView.bringSubview(toFront: messageView)
     }
 
@@ -371,6 +486,9 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             }
             messageHeigh = ceil(size.height) + 15 // due to textview's bottom pading
 
+            if viewModel.isReplyMessage {
+                messageHeigh += 90
+            }
         }
 
         return topPadding()+messageHeigh+bottomPadding()
@@ -378,5 +496,15 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
     func menuCopy(_ sender: Any) {
         UIPasteboard.general.string = self.viewModel?.message ?? ""
+    }
+
+    func getMessageText() -> String? {
+        guard let viewModel = viewModel, viewModel.isReplyMessage else {return nil}
+        switch viewModel.messageType {
+        case .text, .html:
+            return viewModel.message
+        default:
+            return viewModel.messageType.rawValue
+        }
     }
 }

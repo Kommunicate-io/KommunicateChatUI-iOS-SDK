@@ -738,6 +738,10 @@ open class ALKConversationViewController: ALKBaseViewController {
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 
+    func getReplyCellFor(_ indexPath: IndexPath) {
+        
+    }
+
     fileprivate func hideMediaOptions() {
         chatBar.hideMediaView()
     }

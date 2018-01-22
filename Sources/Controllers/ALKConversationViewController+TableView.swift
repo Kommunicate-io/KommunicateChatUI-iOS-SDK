@@ -27,6 +27,26 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         }
         print("Cell updated at row: ", indexPath.row, "and type is: ", message.messageType)
 
+        guard !message.isReplyMessage else {
+            // Get reply cell and return
+            if message.isMyMessage {
+
+                let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                cell.update(chatBar: self.chatBar)
+                return cell
+
+            } else {
+                let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                cell.update(chatBar: self.chatBar)
+                cell.avatarTapped = {[weak self] _ in
+                    guard let currentModel = cell.viewModel else {return}
+                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                }
+                return cell
+            }
+        }
         switch message.messageType {
         case .text, .html:
             if message.isMyMessage {
