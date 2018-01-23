@@ -81,7 +81,11 @@ final class ALKFriendMessageCell: ALKMessageCell {
         let replyViewHeight: CGFloat = 80.0
     }
 
-    var replyMessageHeightIdentifier = "ReplyMessageHeight"
+    enum ConstraintIdentifier: String {
+        case replyViewHeightIdentifier = "ReplyViewHeight"
+        case replyNameHeightIdentifier = "ReplyNameHeight"
+        case replyMessageHeightIdentifier = "ReplyMessageHeight"
+    }
 
     override func setupViews() {
         super.setupViews()
@@ -91,10 +95,6 @@ final class ALKFriendMessageCell: ALKMessageCell {
         avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
-
-        contentView.bringSubview(toFront: replyView)
-        contentView.bringSubview(toFront: replyNameLabel)
-        contentView.bringSubview(toFront: replyMessageLabel)
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
@@ -120,7 +120,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
 
         replyNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
 
-        replyNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        replyNameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue).isActive = true
 
         replyMessageLabel.leadingAnchor.constraint(equalTo: replyView.leadingAnchor, constant: 5).isActive = true
 
@@ -130,10 +130,10 @@ final class ALKFriendMessageCell: ALKMessageCell {
         // will be equal to leading anchor of the imageview.
         replyMessageLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
 
-        replyMessageLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        replyMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue).isActive = true
 
 
-        messageView.topAnchor.constraint(equalTo: replyMessageLabel.bottomAnchor, constant: 10).isActive = true
+        messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: 0).isActive = true
         messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
 
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKFriendMessageCell.bottomPadding()).isActive = true
@@ -150,12 +150,10 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.trailingAnchor.constraint(equalTo: replyMessageLabel.trailingAnchor, constant: 10).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
-        replyView.heightAnchor.constraintEqualToAnchor(constant: 80, identifier: replyMessageHeightIdentifier).isActive = true
+        replyView.heightAnchor.constraintEqualToAnchor(constant: 80, identifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue).isActive = true
         replyView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 10).isActive = true
 
         replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -5).isActive = true
-
-
 
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         let image = UIImage.init(named: "chat_bubble_grey", in: Bundle.applozic, compatibleWith: nil)
@@ -172,6 +170,15 @@ final class ALKFriendMessageCell: ALKMessageCell {
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
         
+        if viewModel.isReplyMessage {
+            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding().replyViewHeight
+            replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 30
+            replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 30
+        } else {
+            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = 0
+            replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 0
+            replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
+        }
 
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
 
@@ -244,16 +251,16 @@ final class ALKMyMessageCell: ALKMessageCell {
         let replyViewHeight: CGFloat = 80.0
     }
 
-    var replyMessageHeightIdentifier = "ReplyMessageHeight"
+    enum ConstraintIdentifier: String {
+        case replyViewHeightIdentifier = "ReplyViewHeight"
+        case replyNameHeightIdentifier = "ReplyNameHeight"
+        case replyMessageHeightIdentifier = "ReplyMessageHeight"
+    }
 
     override func setupViews() {
         super.setupViews()
 
         contentView.addViewsForAutolayout(views: [stateView])
-
-        contentView.bringSubview(toFront: replyView)
-        contentView.bringSubview(toFront: replyNameLabel)
-        contentView.bringSubview(toFront: replyMessageLabel)
 
         let padding = Padding()
 
@@ -264,7 +271,7 @@ final class ALKMyMessageCell: ALKMessageCell {
         // will be equal to leading anchor of the imageview.
         replyNameLabel.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: -10).isActive = true
 
-        replyNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        replyNameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue).isActive = true
 
         replyMessageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: padding.nameLabelLeftPadding).isActive = true
 
@@ -274,10 +281,10 @@ final class ALKMyMessageCell: ALKMessageCell {
         // will be equal to leading anchor of the imageview.
         replyMessageLabel.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: -10).isActive = true
 
-        replyMessageLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        replyMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue).isActive = true
 
 
-        messageView.topAnchor.constraint(equalTo: replyMessageLabel.bottomAnchor, constant: ALKMessageCell.topPadding()).isActive = true
+        messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: ALKMessageCell.topPadding()).isActive = true
         messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()+30).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1*ALKMessageCell.leftPadding()).isActive = true
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKMyMessageCell.bottomPadding()).isActive = true
@@ -292,7 +299,7 @@ final class ALKMyMessageCell: ALKMessageCell {
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 10).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
-        replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: replyMessageHeightIdentifier).isActive = true
+        replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue).isActive = true
         replyView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 5).isActive = true
 
         replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -10).isActive = true
@@ -310,7 +317,13 @@ final class ALKMyMessageCell: ALKMessageCell {
         super.update(viewModel: viewModel)
 
         if viewModel.isReplyMessage {
-            replyView.constraint(withIdentifier: replyMessageHeightIdentifier)?.constant = Padding().replyViewHeight
+            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding().replyViewHeight
+            replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 30
+            replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 30
+        } else {
+            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = 0
+            replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 0
+            replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
         }
 
         if viewModel.isAllRead {
@@ -340,15 +353,15 @@ final class ALKMyMessageCell: ALKMessageCell {
     }
 }
 
-class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol{
+class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
-    fileprivate lazy var messageView: UITextView = {
-        let textView = UITextView.init(frame: .zero)
+    fileprivate lazy var messageView: MenuLabel = {
+        let textView = MenuLabel.init(frame: .zero)
         textView.isUserInteractionEnabled = true
-        textView.isEditable = false
+//        textView.isEditable = false
         textView.sizeToFit()
-        textView.isScrollEnabled = false
-        textView.dataDetectorTypes = .all
+//        textView.isScrollEnabled = false
+//        textView.dataDetectorTypes = .all
         return textView
     }()
 
@@ -370,28 +383,32 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
     fileprivate var replyView: UIView = {
         let view = UIView(frame: CGRect.zero)
-        view.backgroundColor = UIColor.red
+        view.backgroundColor = UIColor.darkGray
         return view
     }()
 
     fileprivate var replyNameLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 1
-//        label.sizeToFit()
-        label.text = "Hello"
         return label
     }()
 
     fileprivate var replyMessageLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 1
-//        label.sizeToFit()
-        label.text = "Hey there I am present!"
         return label
     }()
 
     override func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
+
+        if viewModel.isReplyMessage {
+            replyNameLabel.text = "Name"
+            replyMessageLabel.text = "Message text"
+        } else {
+            replyNameLabel.text = ""
+            replyMessageLabel.text = ""
+        }
 
         self.messageView.attributedText = nil
         self.messageView.text = nil
@@ -419,6 +436,11 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
     override func setupViews() {
         super.setupViews()
+
+        // Remove default longPressGesture and add a
+        // custom one
+//        removeDefaultLongPressGestureFrom(messageView)
+//        messageView.addGestureRecognizer(longPressGesture)
 
         contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,timeLabel])
         contentView.bringSubview(toFront: messageView)
@@ -498,7 +520,11 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         UIPasteboard.general.string = self.viewModel?.message ?? ""
     }
 
-    func getMessageText() -> String? {
+    func menuReply(_ sender: Any) {
+        menuAction?(.reply)
+    }
+
+    private func getMessageText() -> String? {
         guard let viewModel = viewModel, viewModel.isReplyMessage else {return nil}
         switch viewModel.messageType {
         case .text, .html:
@@ -507,4 +533,130 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             return viewModel.messageType.rawValue
         }
     }
+
+    private func removeDefaultLongPressGestureFrom(_ textView: UITextView) {
+            if let gestures = textView.gestureRecognizers {
+                for ges in gestures {
+                    if ges.isKind(of: UILongPressGestureRecognizer.self) {
+                        ges.isEnabled = false
+
+                    }
+                    else if ges.isKind(of: UITapGestureRecognizer.self) {
+                        (ges as? UITapGestureRecognizer)?.numberOfTapsRequired = 1
+                    }
+                }
+            }
+    }
+}
+
+class MenuLabel: ALHyperLabel {
+
+
+//    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
+
+//        if gestureRecognizer.isKind(of: UILongPressGestureRecognizer.self) {
+//            gestureRecognizer.isEnabled = false
+//        }
+//        return super.addGestureRecognizer(gestureRecognizer)
+//    }
+
+    
+
+//    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if gestureRecognizer.isKind(of: UITapGestureRecognizer.self) {
+//            if (gestureRecognizer as? UITapGestureRecognizer)?.numberOfTapsRequired == 2 {
+//                return false
+//            }
+//        }
+//        return true
+//    }
+
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+
+    // MARK: - Init
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+
+    private func commonInit() {
+        isUserInteractionEnabled = true
+//        selectedRange = NSRange(location: 0, length: 0)
+
+//        if let gestures = self.gestureRecognizers {
+//            for ges in gestures {
+//                if ges.isKind(of: UILongPressGestureRecognizer.self) {
+//                    ges.isEnabled = false
+//
+//                }
+//                else if ges.isKind(of: UITapGestureRecognizer.self) {
+//                    if (ges as? UITapGestureRecognizer)?.numberOfTapsRequired == 2 {
+//                        ges.isEnabled = false
+//                    }
+//                }
+//            }
+//        }
+        addGestureRecognizer(
+            UILongPressGestureRecognizer(
+                target: self,
+                action: #selector(handleLongPressed(_:))
+            )
+        )
+    }
+
+    // MARK: - Actions
+
+    internal func handleLongPressed(_ gesture: UILongPressGestureRecognizer) {
+        guard let gestureView = gesture.view, let superView = gestureView.superview else {
+            return
+        }
+
+        let menuController = UIMenuController.shared
+
+        guard !menuController.isMenuVisible, gestureView.canBecomeFirstResponder else {
+            return
+        }
+
+        gestureView.becomeFirstResponder()
+
+        menuController.menuItems = [
+            UIMenuItem(
+                title: "Custom Item",
+                action: #selector(handleCustomAction(_:))
+            ),
+            UIMenuItem(
+                title: "Copy",
+                action: #selector(handleCopyAction(_:))
+            )
+        ]
+
+        menuController.setTargetRect(gestureView.frame, in: superView)
+        menuController.setMenuVisible(true, animated: true)
+    }
+
+    internal func handleCustomAction(_ controller: UIMenuController) {
+        print("Custom action!")
+    }
+
+    internal func handleCopyAction(_ controller: UIMenuController) {
+        UIPasteboard.general.string = "aa" ?? ""
+    }
+
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+//        if gestureRecognizer.isKind(of: UITapGestureRecognizer.self) {
+//            if (gestureRecognizer as? UITapGestureRecognizer)?.numberOfTapsRequired == 2 {
+//                return false
+//            }
+//        }
+//        return true
+//    }
+
 }

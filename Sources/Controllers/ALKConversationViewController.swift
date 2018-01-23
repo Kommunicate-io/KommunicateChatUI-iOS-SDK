@@ -592,39 +592,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         view.endEditing(true)
     }
 
-    private func showMoreBar() {
-
-        self.moreBar.isHidden = false
-        self.leftMoreBarConstraint?.constant = 0
-
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
-            self?.view.layoutIfNeeded()
-            }, completion: { [weak self] (finished) in
-
-                guard let strongSelf = self else {return}
-
-                strongSelf.view.bringSubview(toFront: strongSelf.moreBar)
-                strongSelf.view.sendSubview(toBack: strongSelf.tableView)
-        })
-
-    }
-
-    private func hideMoreBar() {
-
-        if self.leftMoreBarConstraint?.constant == 0 {
-
-            self.leftMoreBarConstraint?.constant = 56
-
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
-                self?.view.layoutIfNeeded()
-                }, completion: { [weak self] (finished) in
-                    self?.moreBar.isHidden = true
-            })
-
-        }
-
-    }
-
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
@@ -641,22 +608,6 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     func sync(message: ALMessage) {
         viewModel.sync(message: message)
-    }
-
-    @objc private func showParticipantListChat() {
-        if viewModel.isGroup {
-            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
-            if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
-
-                if viewModel.groupProfileImgUrl().isEmpty {
-                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:nil, groupSelected: viewModel.friends(), delegate: self)
-                } else {
-                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:viewModel.groupProfileImgUrl(), groupSelected: viewModel.friends(), delegate: self)
-                }
-                vc.addContactMode = .existingChat
-                navigationController?.pushViewController(vc, animated: true)
-            }
-        }
     }
 
     func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
@@ -688,15 +639,6 @@ open class ALKConversationViewController: ALKBaseViewController {
             self.alMqttConversationService.unSubscribe(toChannelConversation: nil)
         }
 
-    }
-
-    private func unsubscribingChannel() {
-        if !viewModel.isOpenGroup {
-            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
-            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
-        } else {
-            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
-        }
     }
 
 
@@ -738,8 +680,12 @@ open class ALKConversationViewController: ALKBaseViewController {
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 
-    func getReplyCellFor(_ indexPath: IndexPath) {
-        
+    func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
+                          viewModel: ALKMessageViewModel) {
+        switch action {
+        case .reply:
+            print("Reply selected")
+        }
     }
 
     fileprivate func hideMediaOptions() {
@@ -750,7 +696,63 @@ open class ALKConversationViewController: ALKBaseViewController {
         chatBar.showMediaView()
     }
 
-    
+    private func showMoreBar() {
+
+        self.moreBar.isHidden = false
+        self.leftMoreBarConstraint?.constant = 0
+
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
+            self?.view.layoutIfNeeded()
+            }, completion: { [weak self] (finished) in
+
+                guard let strongSelf = self else {return}
+
+                strongSelf.view.bringSubview(toFront: strongSelf.moreBar)
+                strongSelf.view.sendSubview(toBack: strongSelf.tableView)
+        })
+
+    }
+
+    private func hideMoreBar() {
+
+        if self.leftMoreBarConstraint?.constant == 0 {
+
+            self.leftMoreBarConstraint?.constant = 56
+
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
+                self?.view.layoutIfNeeded()
+                }, completion: { [weak self] (finished) in
+                    self?.moreBar.isHidden = true
+            })
+
+        }
+
+    }
+
+    private func unsubscribingChannel() {
+        if !viewModel.isOpenGroup {
+            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
+            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        } else {
+            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
+        }
+    }
+
+    @objc private func showParticipantListChat() {
+        if viewModel.isGroup {
+            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
+
+                if viewModel.groupProfileImgUrl().isEmpty {
+                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:nil, groupSelected: viewModel.friends(), delegate: self)
+                } else {
+                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:viewModel.groupProfileImgUrl(), groupSelected: viewModel.friends(), delegate: self)
+                }
+                vc.addContactMode = .existingChat
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+    }
 }
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {

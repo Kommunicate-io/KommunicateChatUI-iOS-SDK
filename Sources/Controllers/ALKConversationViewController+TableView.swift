@@ -54,6 +54,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, viewModel: message) }
                 return cell
 
             } else {
@@ -64,6 +66,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, viewModel: message) }
                 return cell
             }
         case .photo:

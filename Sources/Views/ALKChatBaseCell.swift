@@ -17,7 +17,17 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
     }()
 
     var avatarTapped:(() -> ())?
-    
+
+    /// Actions available on menu where callbacks
+    /// needs to be send are defined here.
+    enum MenuActionType {
+        case reply
+    }
+
+    /// It will be invoked when one of the actions
+    /// is selected.
+    var menuAction: ((MenuActionType) -> ())?
+
     func update(chatBar: ALKChatBar) {
         self.chatBar = chatBar
     }
@@ -44,25 +54,57 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
             } else {
                 self.canBecomeFirstResponder
             }
-            
+
+//            self.contentView.becomeFirstResponder()
+
             let sharedMenuController: UIMenuController = UIMenuController.shared
             var menus: [UIMenuItem] = []
-            
-            if let menuItem = self as? ALKCopyMenuItemProtocol {
-                let menu = UIMenuItem(title: menuItem.title, action: menuItem.selector)
-                menus.append(menu)
+
+            if let copyMenu = getCopyMenuItem(copyItem: self) {
+                menus.append(copyMenu)
             }
-            
+            if let replyMenu = getReplyMenuItem(replyItem: self) {
+                menus.append(replyMenu)
+            }
+//
             if let view = sender.view {
                 let point = sender.location(in: view)
                 let rect = CGRect.init(x: point.x, y: point.y, width: 1.0, height: 1.0)
-                
+
                 sharedMenuController.setTargetRect(rect, in: view)
             }
-            
+
             sharedMenuController.menuItems = menus
             sharedMenuController.setMenuVisible(true, animated: true)
+
+//            guard !menuController.isMenuVisible, (sender.view?.canBecomeFirstResponder)! else {
+//                return
+//            }
+
+//            sender.view?.becomeFirstResponder()
+
+//            menuController.menuItems = [
+//                UIMenuItem(
+//                    title: "Custom Item",
+//                    action: #selector(handleCustomAction(_:))
+//                ),
+//                UIMenuItem(
+//                    title: "Copy",
+//                    action: #selector(handleCopyAction(_:))
+//                )
+//            ]
+
+//            menuController.setTargetRect(contentView.frame, in: sender.view!)
+//            menuController.setMenuVisible(true, animated: true)
         }
+    }
+
+    internal func handleCustomAction(_ controller: UIMenuController) {
+        print("Custom action!")
+    }
+
+    internal func handleCopyAction(_ controller: UIMenuController) {
+        UIPasteboard.general.string = "aa" ?? ""
     }
     
     override var canBecomeFirstResponder: Bool {
@@ -77,9 +119,25 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
             return false
         }
     }
+
+    private func getCopyMenuItem(copyItem: Any) -> UIMenuItem? {
+        guard let copyMenuItem = copyItem as? ALKCopyMenuItemProtocol else {
+            return nil
+        }
+        let copyMenu = UIMenuItem(title: copyMenuItem.title, action: copyMenuItem.selector)
+        return copyMenu
+    }
+
+    private func getReplyMenuItem(replyItem: Any) -> UIMenuItem? {
+        guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else{
+            return nil
+        }
+        let replyMenu = UIMenuItem(title: replyMenuItem.title, action: replyMenuItem.selector)
+        return replyMenu
+    }
 }
 
-// MARK: - CopyMenuItemProtocol
+// MARK: - ALKCopyMenuItemProtocol
 @objc protocol ALKCopyMenuItemProtocol {
     func menuCopy(_ sender: Any)
 }
@@ -90,5 +148,21 @@ extension ALKCopyMenuItemProtocol {
     }
     var selector: Selector {
         return #selector(menuCopy(_:))
+    }
+}
+
+// MARK: - ALKReplyMenuItemProtocol
+
+@objc protocol ALKReplyMenuItemProtocol {
+    func menuReply(_ sender: Any)
+}
+
+extension ALKReplyMenuItemProtocol {
+    var title: String {
+        return "Reply"
+    }
+
+    var selector: Selector {
+        return #selector(menuReply(_:))
     }
 }
