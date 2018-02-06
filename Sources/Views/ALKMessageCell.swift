@@ -355,8 +355,8 @@ final class ALKMyMessageCell: ALKMessageCell {
 
 class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
-    fileprivate lazy var messageView: MenuLabel = {
-        let textView = MenuLabel.init(frame: .zero)
+    fileprivate lazy var messageView: ALHyperLabel = {
+        let textView = ALHyperLabel.init(frame: .zero)
         textView.isUserInteractionEnabled = true
 //        textView.isEditable = false
         textView.sizeToFit()
@@ -440,7 +440,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         // Remove default longPressGesture and add a
         // custom one
 //        removeDefaultLongPressGestureFrom(messageView)
-//        messageView.addGestureRecognizer(longPressGesture)
+        messageView.addGestureRecognizer(longPressGesture)
 
         contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,timeLabel])
         contentView.bringSubview(toFront: messageView)
@@ -549,114 +549,10 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     }
 }
 
-class MenuLabel: ALHyperLabel {
+extension ALHyperLabel {
 
-
-//    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
-
-//        if gestureRecognizer.isKind(of: UILongPressGestureRecognizer.self) {
-//            gestureRecognizer.isEnabled = false
-//        }
-//        return super.addGestureRecognizer(gestureRecognizer)
-//    }
-
-    
-
-//    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if gestureRecognizer.isKind(of: UITapGestureRecognizer.self) {
-//            if (gestureRecognizer as? UITapGestureRecognizer)?.numberOfTapsRequired == 2 {
-//                return false
-//            }
-//        }
-//        return true
-//    }
-
-    override var canBecomeFirstResponder: Bool {
+    // To highlight when long pressed
+    override open var canBecomeFirstResponder: Bool {
         return true
     }
-
-    // MARK: - Init
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-
-    private func commonInit() {
-        isUserInteractionEnabled = true
-//        selectedRange = NSRange(location: 0, length: 0)
-
-//        if let gestures = self.gestureRecognizers {
-//            for ges in gestures {
-//                if ges.isKind(of: UILongPressGestureRecognizer.self) {
-//                    ges.isEnabled = false
-//
-//                }
-//                else if ges.isKind(of: UITapGestureRecognizer.self) {
-//                    if (ges as? UITapGestureRecognizer)?.numberOfTapsRequired == 2 {
-//                        ges.isEnabled = false
-//                    }
-//                }
-//            }
-//        }
-        addGestureRecognizer(
-            UILongPressGestureRecognizer(
-                target: self,
-                action: #selector(handleLongPressed(_:))
-            )
-        )
-    }
-
-    // MARK: - Actions
-
-    internal func handleLongPressed(_ gesture: UILongPressGestureRecognizer) {
-        guard let gestureView = gesture.view, let superView = gestureView.superview else {
-            return
-        }
-
-        let menuController = UIMenuController.shared
-
-        guard !menuController.isMenuVisible, gestureView.canBecomeFirstResponder else {
-            return
-        }
-
-        gestureView.becomeFirstResponder()
-
-        menuController.menuItems = [
-            UIMenuItem(
-                title: "Custom Item",
-                action: #selector(handleCustomAction(_:))
-            ),
-            UIMenuItem(
-                title: "Copy",
-                action: #selector(handleCopyAction(_:))
-            )
-        ]
-
-        menuController.setTargetRect(gestureView.frame, in: superView)
-        menuController.setMenuVisible(true, animated: true)
-    }
-
-    internal func handleCustomAction(_ controller: UIMenuController) {
-        print("Custom action!")
-    }
-
-    internal func handleCopyAction(_ controller: UIMenuController) {
-        UIPasteboard.general.string = "aa" ?? ""
-    }
-
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-//        if gestureRecognizer.isKind(of: UITapGestureRecognizer.self) {
-//            if (gestureRecognizer as? UITapGestureRecognizer)?.numberOfTapsRequired == 2 {
-//                return false
-//            }
-//        }
-//        return true
-//    }
-
 }

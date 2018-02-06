@@ -52,12 +52,21 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
             if let chatBar = self.chatBar, chatBar.textView.isFirstResponder {
                 chatBar.textView.overrideNextResponder = self.contentView
             } else {
-                self.canBecomeFirstResponder
+                let _ = self.canBecomeFirstResponder
             }
 
-//            self.contentView.becomeFirstResponder()
+            guard let gestureView = sender.view, let superView = sender.view?.superview else {
+                return
+            }
 
-            let sharedMenuController: UIMenuController = UIMenuController.shared
+            let menuController = UIMenuController.shared
+
+            guard !menuController.isMenuVisible, gestureView.canBecomeFirstResponder else {
+                return
+            }
+
+            gestureView.becomeFirstResponder()
+
             var menus: [UIMenuItem] = []
 
             if let copyMenu = getCopyMenuItem(copyItem: self) {
@@ -66,45 +75,11 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
             if let replyMenu = getReplyMenuItem(replyItem: self) {
                 menus.append(replyMenu)
             }
-//
-            if let view = sender.view {
-                let point = sender.location(in: view)
-                let rect = CGRect.init(x: point.x, y: point.y, width: 1.0, height: 1.0)
 
-                sharedMenuController.setTargetRect(rect, in: view)
-            }
-
-            sharedMenuController.menuItems = menus
-            sharedMenuController.setMenuVisible(true, animated: true)
-
-//            guard !menuController.isMenuVisible, (sender.view?.canBecomeFirstResponder)! else {
-//                return
-//            }
-
-//            sender.view?.becomeFirstResponder()
-
-//            menuController.menuItems = [
-//                UIMenuItem(
-//                    title: "Custom Item",
-//                    action: #selector(handleCustomAction(_:))
-//                ),
-//                UIMenuItem(
-//                    title: "Copy",
-//                    action: #selector(handleCopyAction(_:))
-//                )
-//            ]
-
-//            menuController.setTargetRect(contentView.frame, in: sender.view!)
-//            menuController.setMenuVisible(true, animated: true)
+            menuController.menuItems = menus
+            menuController.setTargetRect(gestureView.frame, in: superView)
+            menuController.setMenuVisible(true, animated: true)
         }
-    }
-
-    internal func handleCustomAction(_ controller: UIMenuController) {
-        print("Custom action!")
-    }
-
-    internal func handleCopyAction(_ controller: UIMenuController) {
-        UIPasteboard.general.string = "aa" ?? ""
     }
     
     override var canBecomeFirstResponder: Bool {
@@ -114,6 +89,8 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         switch self {
         case let menuItem as ALKCopyMenuItemProtocol where action == menuItem.selector:
+            return true
+        case let menuItem as ALKReplyMenuItemProtocol where action == menuItem.selector:
             return true
         default:
             return false
