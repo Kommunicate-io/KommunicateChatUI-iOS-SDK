@@ -68,6 +68,9 @@ open class ALKConversationViewModel: NSObject {
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
 
+    /// Message on which reply was tapped.
+    private var selectedMessageForReply: ALKMessageViewModel?
+
     //MARK: - Initializer
     public init(contactId: String?,
                 channelKey: NSNumber?,
@@ -426,6 +429,12 @@ open class ALKConversationViewModel: NSObject {
         alMessage.source = Int16(SOURCE_IOS)
         alMessage.conversationId = conversationId
         alMessage.groupId = channelKey
+
+        if let replyMessage = getSelectedMessageToReply() {
+            let metaData = NSMutableDictionary()
+            metaData[AL_MESSAGE_REPLY_KEY] = replyMessage.identifier
+            alMessage.metadata = metaData
+        }
 
         addToWrapper(message: alMessage)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
@@ -811,6 +820,14 @@ open class ALKConversationViewModel: NSObject {
             text = messageToSend
         }
         send(message: text)
+    }
+
+    open func setSelectedMessageToReply(_ message: ALKMessageViewModel) {
+        selectedMessageForReply = message
+    }
+
+    open func getSelectedMessageToReply() -> ALKMessageViewModel? {
+        return selectedMessageForReply
     }
 
     //MARK: - Internal Methods

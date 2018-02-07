@@ -681,10 +681,12 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
-                          viewModel: ALKMessageViewModel) {
+                          message: ALKMessageViewModel) {
         switch action {
         case .reply:
             print("Reply selected")
+            viewModel.setSelectedMessageToReply(message)
+            // After this message reply UI above the chat bar
         }
     }
 

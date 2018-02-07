@@ -55,7 +55,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.menuAction = {[weak self] action in
-                    self?.menuItemSelected(action: action, viewModel: message) }
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
 
             } else {
@@ -67,7 +67,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
                 cell.menuAction = {[weak self] action in
-                    self?.menuItemSelected(action: action, viewModel: message) }
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
         case .photo:
