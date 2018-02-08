@@ -437,11 +437,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     override func setupViews() {
         super.setupViews()
 
-        // Remove default longPressGesture and add a
-        // custom one
-//        removeDefaultLongPressGestureFrom(messageView)
         messageView.addGestureRecognizer(longPressGesture)
-
         contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,timeLabel])
         contentView.bringSubview(toFront: messageView)
     }

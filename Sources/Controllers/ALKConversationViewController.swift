@@ -49,10 +49,20 @@ open class ALKConversationViewController: ALKBaseViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     fileprivate var keyboardSize: CGRect?
-    fileprivate var contextViewHeight = 100.0
 
-    enum ConstraintIdentifier: String {
-        case contextTitleView = "contextTitleView"
+    fileprivate enum ConstraintIdentifier {
+        static let contextTitleView = "contextTitleView"
+        static let replyMessageViewHeight = "replyMessageViewHeight"
+    }
+
+    fileprivate enum Padding {
+
+        enum ContextView {
+            static let height: CGFloat = 100.0
+        }
+        enum ReplyMessageView {
+            static let height: CGFloat = 70.0
+        }
     }
 
     let tableView : UITableView = {
@@ -96,6 +106,12 @@ open class ALKConversationViewController: ALKBaseViewController {
     }()
 
     open var templateView: ALKTemplateMessagesView?
+
+    open var replyMessageView: ALKReplyMessageView = {
+        let view = ALKReplyMessageView(frame: CGRect.zero)
+        view.backgroundColor = UIColor.red
+        return view
+    }()
 
     required public init() {
         super.init(nibName: nil, bundle: nil)
@@ -332,6 +348,9 @@ open class ALKConversationViewController: ALKBaseViewController {
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
+        replyMessageView.closeButtonTapped = {[weak self] _ in
+            self?.hideReplyMessageView()
+        }
         guard viewModel.isContextBasedChat else { return }
         prepareContextView()
     }
@@ -339,12 +358,14 @@ open class ALKConversationViewController: ALKBaseViewController {
     func prepareContextView(){
         guard let topicDetail = viewModel.getContextTitleData() else {return }
         contextTitleView.configureWith(value: topicDetail)
-        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
+        contextTitleView.constraint(
+            withIdentifier: ConstraintIdentifier.contextTitleView)?
+            .constant = Padding.ContextView.height
     }
 
     private func setupConstraints() {
 
-        var allViews = [backgroundView, contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton]
+        var allViews = [backgroundView, contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton, replyMessageView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -358,7 +379,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-        contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView.rawValue).isActive = true
+        contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView).isActive = true
 
         templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
         templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
@@ -376,17 +397,30 @@ open class ALKConversationViewController: ALKBaseViewController {
 
         typingNoticeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         typingNoticeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
-        typingNoticeView.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
+        typingNoticeView.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor).isActive = true
 
         chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomConstraint?.isActive = true
 
+
+        replyMessageView.leadingAnchor.constraint(
+            equalTo: view.leadingAnchor).isActive = true
+        replyMessageView.trailingAnchor.constraint(
+            equalTo: view.trailingAnchor).isActive = true
+        replyMessageView.heightAnchor.constraintEqualToAnchor(
+            constant: 0,
+            identifier: ConstraintIdentifier.replyMessageViewHeight)
+            .isActive = true
+        replyMessageView.bottomAnchor.constraint(
+            equalTo: chatBar.topAnchor,
+            constant: 0).isActive = true
+
         unreadScrollButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         unreadScrollButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         unreadScrollButton.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -10).isActive = true
-        unreadScrollButton.bottomAnchor.constraint(equalTo: chatBar.topAnchor, constant: -10).isActive = true
+        unreadScrollButton.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor, constant: -10).isActive = true
 
         leftMoreBarConstraint = moreBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 56)
         leftMoreBarConstraint?.isActive = true
@@ -686,8 +720,21 @@ open class ALKConversationViewController: ALKBaseViewController {
         case .reply:
             print("Reply selected")
             viewModel.setSelectedMessageToReply(message)
-            // After this message reply UI above the chat bar
+            replyMessageView.update(message: message)
+            showReplyMessageView()
         }
+    }
+
+    func showReplyMessageView() {
+        replyMessageView.constraint(
+            withIdentifier: ConstraintIdentifier.replyMessageViewHeight)?
+            .constant = Padding.ReplyMessageView.height
+    }
+
+    func hideReplyMessageView() {
+        replyMessageView.constraint(
+            withIdentifier: ConstraintIdentifier.replyMessageViewHeight)?
+            .constant = 0
     }
 
     fileprivate func hideMediaOptions() {
@@ -829,6 +876,12 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func refreshButtonAction(_ selector: UIBarButtonItem) {
         viewModel.refresh()
+    }
+
+    public func willSendMessage() {
+        // Clear reply message and the view
+        viewModel.clearSelectedMessageToReply()
+        hideReplyMessageView()
     }
 
 }
