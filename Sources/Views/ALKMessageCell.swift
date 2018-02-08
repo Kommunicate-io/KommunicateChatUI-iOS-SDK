@@ -399,12 +399,15 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         return label
     }()
 
+    var selfNameText = "You"
+
     override func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
 
         if viewModel.isReplyMessage {
-            replyNameLabel.text = "Name"
-            replyMessageLabel.text = "Message text"
+            replyNameLabel.text = viewModel.isMyMessage ?
+                selfNameText:viewModel.displayName
+            replyMessageLabel.text = viewModel.message
         } else {
             replyNameLabel.text = ""
             replyMessageLabel.text = ""

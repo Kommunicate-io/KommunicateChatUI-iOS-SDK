@@ -16,7 +16,6 @@ open class ALKReplyMessageView: UIView {
         let label = UILabel(frame: CGRect.zero)
         label.text = "Name"
         label.numberOfLines = 1
-        label.backgroundColor = UIColor.black
         return label
     }()
 
@@ -24,17 +23,17 @@ open class ALKReplyMessageView: UIView {
         let label = UILabel(frame: CGRect.zero)
         label.text = "The message"
         label.numberOfLines = 1
-        label.backgroundColor = UIColor.black
         return label
     }()
 
     open let closeButton: UIButton = {
         let button = UIButton(frame: CGRect.zero)
-        let closeImage = UIImage(named: "close")
+        let closeImage = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
         button.setImage(closeImage, for: .normal)
-        button.backgroundColor = UIColor.green
         return button
     }()
+
+    open var selfNameText = "You"
 
     public var closeButtonTapped: ((Bool)->())?
 
@@ -68,7 +67,7 @@ open class ALKReplyMessageView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setUpConstraints()
+        setUpViews()
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -77,16 +76,16 @@ open class ALKReplyMessageView: UIView {
 
     open func update(message: ALKMessageViewModel) {
         self.message = message
-        nameLabel.text = "Name"
-        messageLabel.text = "Message Text"
+        nameLabel.text = message.isMyMessage ?
+            selfNameText:message.displayName
+        messageLabel.text = message.message
     }
 
     //MARK: - Internal methods
 
     private func setUpViews() {
-
         setUpConstraints()
-        closeButton.target(forAction: #selector(closeButtonTapped(_:)), withSender: self)
+        closeButton.addTarget(self, action: #selector(closeButtonTapped(_:)), for: .touchUpInside)
     }
 
     private func setUpConstraints() {

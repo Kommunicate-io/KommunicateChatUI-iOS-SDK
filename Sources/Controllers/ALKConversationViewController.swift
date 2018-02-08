@@ -109,7 +109,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     open var replyMessageView: ALKReplyMessageView = {
         let view = ALKReplyMessageView(frame: CGRect.zero)
-        view.backgroundColor = UIColor.red
+        view.backgroundColor = UIColor.gray
         return view
     }()
 
