@@ -11,48 +11,6 @@ import UIKit
 import Kingfisher
 import Applozic
 
-// MARK: - MessageType
-public enum ALKMessageType: String {
-    case text = "Text"
-    case photo = "Photo"
-    case voice = "Audio"
-    case location = "Location"
-    case information = "Information"
-    case video = "Video"
-    case html = "HTML"
-}
-
-// MARK: - MessageViewModel
-public protocol ALKMessageViewModel {
-    var message: String? { get }
-    var isMyMessage: Bool { get }
-    var messageType: ALKMessageType { get }
-    var identifier: String { get }
-    var date: Date { get }
-    var time: String? { get }
-    var avatarURL: URL? { get }
-    var displayName: String? { get }
-    var contactId: String? { get }
-    var channelKey: NSNumber? { get }
-    var conversationId: NSNumber? { get }
-    var isSent: Bool { get }
-    var isAllReceived: Bool { get }
-    var isAllRead: Bool { get }
-    var ratio: CGFloat { get }
-    var size: Int64 { get }
-    var thumbnailURL: URL? { get }
-    var imageURL: URL? { get }
-    var filePath: String? { get set }
-    var geocode: Geocode? { get }
-    var voiceData: Data? { get set }
-    var voiceTotalDuration: CGFloat { get set }
-    var voiceCurrentDuration: CGFloat { get set }
-    var voiceCurrentState: ALKVoiceCellState { get set }
-    var fileMetaInfo: ALFileMetaInfo? { get }
-    var receiverId: String? { get }
-    var isReplyMessage: Bool { get }
-}
-
 // MARK: - ALKFriendMessageCell
 final class ALKFriendMessageCell: ALKMessageCell {
 
@@ -405,9 +363,14 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         self.viewModel = viewModel
 
         if viewModel.isReplyMessage {
-            replyNameLabel.text = viewModel.isMyMessage ?
-                selfNameText:viewModel.displayName
-            replyMessageLabel.text = viewModel.message
+            guard
+                let metadata = viewModel.metadata,
+                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
+                let actualMessage = getMessageFor(key: replyId)
+                else {return}
+            replyNameLabel.text = actualMessage.isMyMessage ?
+                selfNameText:actualMessage.displayName
+            replyMessageLabel.text = actualMessage.message
         } else {
             replyNameLabel.text = ""
             replyMessageLabel.text = ""
@@ -545,6 +508,11 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
                     }
                 }
             }
+    }
+
+    private func getMessageFor(key: String) -> ALKMessageViewModel? {
+        let messageService = ALMessageService()
+        return messageService.getALMessage(byKey: key)?.messageModel
     }
 }
 

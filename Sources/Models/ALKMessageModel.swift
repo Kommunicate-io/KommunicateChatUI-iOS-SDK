@@ -11,6 +11,49 @@ import Applozic
 
 let MessageProgressKey = "Message.ProgressKey"
 
+// MARK: - MessageType
+public enum ALKMessageType: String {
+    case text = "Text"
+    case photo = "Photo"
+    case voice = "Audio"
+    case location = "Location"
+    case information = "Information"
+    case video = "Video"
+    case html = "HTML"
+}
+
+// MARK: - MessageViewModel
+public protocol ALKMessageViewModel {
+    var message: String? { get }
+    var isMyMessage: Bool { get }
+    var messageType: ALKMessageType { get }
+    var identifier: String { get }
+    var date: Date { get }
+    var time: String? { get }
+    var avatarURL: URL? { get }
+    var displayName: String? { get }
+    var contactId: String? { get }
+    var channelKey: NSNumber? { get }
+    var conversationId: NSNumber? { get }
+    var isSent: Bool { get }
+    var isAllReceived: Bool { get }
+    var isAllRead: Bool { get }
+    var ratio: CGFloat { get }
+    var size: Int64 { get }
+    var thumbnailURL: URL? { get }
+    var imageURL: URL? { get }
+    var filePath: String? { get set }
+    var geocode: Geocode? { get }
+    var voiceData: Data? { get set }
+    var voiceTotalDuration: CGFloat { get set }
+    var voiceCurrentDuration: CGFloat { get set }
+    var voiceCurrentState: ALKVoiceCellState { get set }
+    var fileMetaInfo: ALFileMetaInfo? { get }
+    var receiverId: String? { get }
+    var isReplyMessage: Bool { get }
+    var metadata: Dictionary<String, Any>? { get }
+}
+
 public class ALKMessageModel: ALKMessageViewModel {
 
     public var message: String? = ""
@@ -40,6 +83,7 @@ public class ALKMessageModel: ALKMessageViewModel {
     public var fileMetaInfo: ALFileMetaInfo?
     public var receiverId: String?
     public var isReplyMessage: Bool = false
+    public var metadata: Dictionary<String, Any>?
 }
 
 extension ALKMessageModel: Equatable {
