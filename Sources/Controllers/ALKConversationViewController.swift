@@ -374,7 +374,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         backgroundView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        backgroundView.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
