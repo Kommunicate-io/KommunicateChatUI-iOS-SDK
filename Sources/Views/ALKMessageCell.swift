@@ -314,13 +314,10 @@ final class ALKMyMessageCell: ALKMessageCell {
 class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
     fileprivate lazy var messageView: ALHyperLabel = {
-        let textView = ALHyperLabel.init(frame: .zero)
-        textView.isUserInteractionEnabled = true
-//        textView.isEditable = false
-        textView.sizeToFit()
-//        textView.isScrollEnabled = false
-//        textView.dataDetectorTypes = .all
-        return textView
+        let label = ALHyperLabel.init(frame: .zero)
+        label.isUserInteractionEnabled = true
+        label.numberOfLines = 0
+        return label
     }()
 
     fileprivate var timeLabel: UILabel = {
