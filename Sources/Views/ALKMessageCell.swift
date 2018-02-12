@@ -367,7 +367,8 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
                 else {return}
             replyNameLabel.text = actualMessage.isMyMessage ?
                 selfNameText:actualMessage.displayName
-            replyMessageLabel.text = actualMessage.message
+            replyMessageLabel.text =
+                getMessageTextFrom(viewModel: actualMessage)
         } else {
             replyNameLabel.text = ""
             replyMessageLabel.text = ""
@@ -483,8 +484,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         menuAction?(.reply)
     }
 
-    private func getMessageText() -> String? {
-        guard let viewModel = viewModel, viewModel.isReplyMessage else {return nil}
+    private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {
         switch viewModel.messageType {
         case .text, .html:
             return viewModel.message

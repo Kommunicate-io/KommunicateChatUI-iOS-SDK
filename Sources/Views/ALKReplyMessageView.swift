@@ -78,7 +78,7 @@ open class ALKReplyMessageView: UIView {
         self.message = message
         nameLabel.text = message.isMyMessage ?
             selfNameText:message.displayName
-        messageLabel.text = message.message
+        messageLabel.text = getMessageText()
     }
 
     //MARK: - Internal methods
@@ -141,6 +141,16 @@ open class ALKReplyMessageView: UIView {
 
     @objc private func closeButtonTapped(_ sender: UIButton) {
         closeButtonTapped?(true)
+    }
+
+    private func getMessageText() -> String? {
+        guard let message = message else {return nil}
+        switch message.messageType {
+        case .text, .html:
+            return message.message
+        default:
+            return message.messageType.rawValue
+        }
     }
 
 }
