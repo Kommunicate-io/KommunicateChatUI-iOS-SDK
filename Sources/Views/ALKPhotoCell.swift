@@ -12,7 +12,8 @@ import Kingfisher
 import Applozic
 
 // MARK: - ALKPhotoCell
-class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
+class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
+                    ALKReplyMenuItemProtocol {
 
     var photoView: UIImageView = {
         let mv = UIImageView()
@@ -45,6 +46,14 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         bv.layer.cornerRadius = 12
         bv.isUserInteractionEnabled = false
         return bv
+    }()
+
+    private var frontView: ALKTappableView = {
+        let view = ALKTappableView()
+        view.alpha = 1.0
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = true
+        return view
     }()
 
     fileprivate var downloadButton: UIButton = {
@@ -159,15 +168,22 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func setupViews() {
         super.setupViews()
+        frontView.addGestureRecognizer(longPressGesture)
         uploadButton.isHidden = true
         uploadButton.addTarget(self, action: #selector(ALKPhotoCell.uploadButtonAction(_:)), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
         downloadButton.addTarget(self, action: #selector(ALKPhotoCell.downloadButtonAction(_:)), for: .touchUpInside)
-        contentView.addViewsForAutolayout(views: [photoView,bubbleView,actionButton,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
+        contentView.addViewsForAutolayout(views: [frontView ,photoView,bubbleView,actionButton,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
         contentView.bringSubview(toFront: photoView)
+        contentView.bringSubview(toFront: frontView)
         contentView.bringSubview(toFront: downloadButton)
         contentView.bringSubview(toFront: uploadButton)
         contentView.bringSubview(toFront: activityIndicator)
+
+        frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0.0).isActive = true
+        frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0.0).isActive = true
+        frontView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 0.0).isActive = true
+        frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0.0).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
@@ -305,6 +321,9 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
     }
 
+    func menuReply(_ sender: Any) {
+        menuAction?(.reply)
+    }
 }
 
 extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
