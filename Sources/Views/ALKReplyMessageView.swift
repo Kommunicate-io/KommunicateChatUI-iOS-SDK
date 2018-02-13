@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Applozic
 
 /* Reply message view to be used in the
  bottom (above chat bar) when replying
@@ -94,7 +95,7 @@ open class ALKReplyMessageView: UIView {
         nameLabel.text = message.isMyMessage ?
             selfNameText:message.displayName
         messageLabel.text = getMessageText()
-        let imageURL = getImageURL(for: message)
+        let imageURL = getURLForPreviewImage(message: message)
         setImageFrom(url: imageURL, to: previewImageView)
     }
 
@@ -189,6 +190,17 @@ open class ALKReplyMessageView: UIView {
         imageView.kf.setImage(with: url)
     }
 
+    private func getURLForPreviewImage(message: ALKMessageViewModel) -> URL? {
+        switch message.messageType {
+        case .photo:
+            return getImageURL(for: message)
+        case .location:
+            return getMapImageURL(for: message)
+        default:
+            return nil
+        }
+    }
+
     private func getImageURL(for message: ALKMessageViewModel) -> URL? {
         guard message.messageType == .photo else {return nil}
         if let filePath = message.filePath {
@@ -199,5 +211,19 @@ open class ALKReplyMessageView: UIView {
             return thumnailURL
         }
         return nil
+    }
+
+    private func getMapImageURL(for message: ALKMessageViewModel) -> URL?  {
+        guard message.messageType == .location else {return nil}
+        guard let lat = message.geocode?.location.latitude,
+            let lon = message.geocode?.location.longitude
+            else { return nil }
+
+        let latLonArgument = String(format: "%f,%f", lat, lon)
+        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey()
+            else { return nil }
+        let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
+        return URL(string: urlString)
+
     }
 }
