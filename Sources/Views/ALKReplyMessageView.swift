@@ -33,6 +33,12 @@ open class ALKReplyMessageView: UIView {
         return button
     }()
 
+    open let previewImageView: UIImageView = {
+        let imageView = UIImageView(frame: CGRect.zero)
+        imageView.backgroundColor = .clear
+        return imageView
+    }()
+
     open var selfNameText = "You"
 
     public var closeButtonTapped: ((Bool)->())?
@@ -51,7 +57,7 @@ open class ALKReplyMessageView: UIView {
         enum MessageLabel {
             static let height: CGFloat = 30.0
             static let left: CGFloat = 10.0
-            static let right: CGFloat = -10.0
+            static let right: CGFloat = -5.0
             static let top: CGFloat = 5.0
             static let bottom: CGFloat = -5.0
         }
@@ -63,6 +69,15 @@ open class ALKReplyMessageView: UIView {
             static let top: CGFloat = 5.0
             static let bottom: CGFloat = -5.0
         }
+
+        enum PreviewImageView {
+            static let height: CGFloat = 50.0
+            static let width: CGFloat = 80.0
+            static let right: CGFloat = -10.0
+            static let top: CGFloat = 5.0
+            static let bottom: CGFloat = -5.0
+        }
+
     }
 
     override init(frame: CGRect) {
@@ -79,6 +94,8 @@ open class ALKReplyMessageView: UIView {
         nameLabel.text = message.isMyMessage ?
             selfNameText:message.displayName
         messageLabel.text = getMessageText()
+        let imageURL = getImageURL(for: message)
+        setImageFrom(url: imageURL, to: previewImageView)
     }
 
     //MARK: - Internal methods
@@ -89,7 +106,7 @@ open class ALKReplyMessageView: UIView {
     }
 
     private func setUpConstraints() {
-        self.addViewsForAutolayout(views: [nameLabel, messageLabel, closeButton])
+        self.addViewsForAutolayout(views: [nameLabel, messageLabel, closeButton, previewImageView])
 
         let view = self
 
@@ -100,7 +117,7 @@ open class ALKReplyMessageView: UIView {
             equalTo: view.leadingAnchor,
             constant: Padding.NameLabel.left).isActive = true
         nameLabel.trailingAnchor.constraint(
-            equalTo: closeButton.leadingAnchor,
+            equalTo: previewImageView.leadingAnchor,
             constant: Padding.NameLabel.right).isActive = true
         nameLabel.topAnchor.constraint(
             equalTo: view.topAnchor,
@@ -113,7 +130,7 @@ open class ALKReplyMessageView: UIView {
             equalTo: view.leadingAnchor,
             constant: Padding.MessageLabel.left).isActive = true
         messageLabel.trailingAnchor.constraint(
-            equalTo: view.trailingAnchor,
+            equalTo: previewImageView.leadingAnchor,
             constant: Padding.MessageLabel.right).isActive = true
         messageLabel.topAnchor.constraint(
             equalTo: nameLabel.bottomAnchor,
@@ -137,6 +154,21 @@ open class ALKReplyMessageView: UIView {
             equalTo: messageLabel.topAnchor,
             constant: Padding.CloseButton.bottom).isActive = true
 
+        previewImageView.heightAnchor.constraint(
+            lessThanOrEqualToConstant: Padding.PreviewImageView.height)
+            .isActive = true
+        previewImageView.widthAnchor.constraint(
+            equalToConstant: Padding.PreviewImageView.width).isActive = true
+        previewImageView.trailingAnchor.constraint(
+            equalTo: closeButton.leadingAnchor,
+            constant: Padding.PreviewImageView.right).isActive = true
+        previewImageView.topAnchor.constraint(
+            equalTo: nameLabel.topAnchor,
+            constant: Padding.PreviewImageView.top).isActive = true
+        previewImageView.bottomAnchor.constraint(
+            equalTo: messageLabel.bottomAnchor,
+            constant: 0).isActive = true
+
     }
 
     @objc private func closeButtonTapped(_ sender: UIButton) {
@@ -153,4 +185,19 @@ open class ALKReplyMessageView: UIView {
         }
     }
 
+    private func setImageFrom(url: URL?, to imageView: UIImageView) {
+        imageView.kf.setImage(with: url)
+    }
+
+    private func getImageURL(for message: ALKMessageViewModel) -> URL? {
+        guard message.messageType == .photo else {return nil}
+        if let filePath = message.filePath {
+            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = docDirPath.appendingPathComponent(filePath)
+            return path
+        } else if let thumnailURL = message.thumbnailURL {
+            return thumnailURL
+        }
+        return nil
+    }
 }
