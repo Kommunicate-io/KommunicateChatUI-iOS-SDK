@@ -32,23 +32,37 @@ final class ALKFriendMessageCell: ALKMessageCell {
         return label
     }()
 
-    struct Padding {
-        let nameLabelLeftPadding: CGFloat = 0.0
-        let nameLabelRightPadding: CGFloat = 0.0
-        let nameLabelTopPadding: CGFloat = 10.0
-        let replyViewHeight: CGFloat = 80.0
+    enum Padding {
+        enum ReplyNameLabel {
+            static let left: CGFloat = 0.0
+            static let right: CGFloat = 0.0
+            static let top: CGFloat = 10.0
+        }
+
+        enum ReplyView {
+            static let height: CGFloat = 80.0
+        }
+
+        enum PreviewImageView {
+            static let height: CGFloat = 50.0
+            static let width: CGFloat = 70.0
+            static let right: CGFloat = -57.0
+            static let top: CGFloat = 10.0
+            static let bottom: CGFloat = -5.0
+        }
     }
 
     enum ConstraintIdentifier: String {
         case replyViewHeightIdentifier = "ReplyViewHeight"
         case replyNameHeightIdentifier = "ReplyNameHeight"
         case replyMessageHeightIdentifier = "ReplyMessageHeight"
+        case replyPreviewImageHeightIdentifier = "ReplyPreviewImageHeight"
+        case replyPreviewImageWidthIdentifier = "ReplyPreviewImageWidth"
     }
 
     override func setupViews() {
         super.setupViews()
 
-        let padding = Padding()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
@@ -57,7 +71,6 @@ final class ALKFriendMessageCell: ALKMessageCell {
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -57).isActive = true
-//        nameLabel.bottomAnchor.constraint(equalTo: bubbleView.topAnchor, constant: -10).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
 
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18).isActive = true
@@ -71,12 +84,12 @@ final class ALKFriendMessageCell: ALKMessageCell {
         avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
 
         replyNameLabel.leadingAnchor.constraint(equalTo: replyView.leadingAnchor, constant: 5).isActive = true
-        replyNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant:padding.nameLabelTopPadding).isActive = true
+        replyNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant:Padding.ReplyNameLabel.top).isActive = true
 
         //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
         // will be equal to leading anchor of the imageview.
 
-        replyNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
+        replyNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: previewImageView.leadingAnchor, constant: -10).isActive = true
 
         replyNameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue).isActive = true
 
@@ -86,10 +99,30 @@ final class ALKFriendMessageCell: ALKMessageCell {
 
         //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
         // will be equal to leading anchor of the imageview.
-        replyMessageLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
+        replyMessageLabel.trailingAnchor.constraint(lessThanOrEqualTo: previewImageView.leadingAnchor, constant: -10).isActive = true
 
         replyMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue).isActive = true
 
+        previewImageView.heightAnchor.constraintEqualToAnchor(
+            constant: 0,
+            identifier: ConstraintIdentifier.replyMessageHeightIdentifier
+                .rawValue)
+            .isActive = true
+        previewImageView.widthAnchor.constraintEqualToAnchor(
+            constant: 0,
+            identifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier
+                .rawValue)
+            .isActive = true
+
+        previewImageView.trailingAnchor.constraint(
+            lessThanOrEqualTo: contentView.trailingAnchor,
+            constant: Padding.PreviewImageView.right).isActive = true
+        previewImageView.topAnchor.constraint(
+            equalTo: replyView.topAnchor,
+            constant: Padding.PreviewImageView.top).isActive = true
+        previewImageView.bottomAnchor.constraint(
+            equalTo: replyMessageLabel.bottomAnchor,
+            constant: 0).isActive = true
 
         messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: 0).isActive = true
         messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
@@ -104,8 +137,9 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
 
-        bubbleView.trailingAnchor.constraint(equalTo: replyNameLabel.trailingAnchor, constant: 10).isActive = true
-        bubbleView.trailingAnchor.constraint(equalTo: replyMessageLabel.trailingAnchor, constant: 10).isActive = true
+//        bubbleView.trailingAnchor.constraint(equalTo: replyNameLabel.trailingAnchor, constant: 10).isActive = true
+//        bubbleView.trailingAnchor.constraint(equalTo: replyMessageLabel.trailingAnchor, constant: 10).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: 10).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
         replyView.heightAnchor.constraintEqualToAnchor(constant: 80, identifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue).isActive = true
@@ -129,13 +163,26 @@ final class ALKFriendMessageCell: ALKMessageCell {
         super.update(viewModel: viewModel)
         
         if viewModel.isReplyMessage {
-            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding().replyViewHeight
+            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding.ReplyView.height
             replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 30
             replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 30
+            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = Padding.PreviewImageView.height
+            guard
+                let metadata = viewModel.metadata,
+                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
+                let actualMessage = getMessageFor(key: replyId)
+                else {return}
+            if actualMessage.messageType == .text || actualMessage.messageType == .html {
+                previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = 0
+            } else {
+                previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = Padding.PreviewImageView.width
+            }
         } else {
             replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = 0
             replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 0
             replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
+            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
+            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = 0
         }
 
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
@@ -202,17 +249,33 @@ final class ALKMyMessageCell: ALKMessageCell {
         return sv
     }()
 
-    struct Padding {
-        let nameLabelLeftPadding: CGFloat = 0.0
-        let nameLabelRightPadding: CGFloat = 0.0
-        let nameLabelTopPadding: CGFloat = 10.0
-        let replyViewHeight: CGFloat = 80.0
+    enum Padding {
+        enum ReplyNameLabel {
+            static let left: CGFloat = 0.0
+            static let right: CGFloat = 0.0
+            static let top: CGFloat = 10.0
+        }
+
+        enum ReplyView {
+            static let height: CGFloat = 80.0
+        }
+
+        enum PreviewImageView {
+            static let height: CGFloat = 50.0
+            static let width: CGFloat = 70.0
+            static let right: CGFloat = -10.0
+            static let top: CGFloat = 5.0
+            static let bottom: CGFloat = -5.0
+        }
     }
+
 
     enum ConstraintIdentifier: String {
         case replyViewHeightIdentifier = "ReplyViewHeight"
         case replyNameHeightIdentifier = "ReplyNameHeight"
         case replyMessageHeightIdentifier = "ReplyMessageHeight"
+        case replyPreviewImageHeightIdentifier = "ReplyPreviewImageHeight"
+        case replyPreviewImageWidthIdentifier = "ReplyPreviewImageWidth"
     }
 
     override func setupViews() {
@@ -220,27 +283,33 @@ final class ALKMyMessageCell: ALKMessageCell {
 
         contentView.addViewsForAutolayout(views: [stateView])
 
-        let padding = Padding()
 
-        replyNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: padding.nameLabelLeftPadding).isActive = true
-        replyNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:padding.nameLabelTopPadding).isActive = true
+        replyNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: Padding.ReplyNameLabel.left).isActive = true
+        replyNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:Padding.ReplyNameLabel.top).isActive = true
 
-        //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
-        // will be equal to leading anchor of the imageview.
-        replyNameLabel.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: -10).isActive = true
+        replyNameLabel.trailingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: -10).isActive = true
 
         replyNameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue).isActive = true
 
-        replyMessageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: padding.nameLabelLeftPadding).isActive = true
+        replyMessageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: Padding.ReplyNameLabel.left).isActive = true
 
         replyMessageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:40).isActive = true
 
-        //TODO:  Once reply image view is added then replyNameLabel's trailing anchor
-        // will be equal to leading anchor of the imageview.
-        replyMessageLabel.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: -10).isActive = true
+        replyMessageLabel.trailingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: -10).isActive = true
 
         replyMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue).isActive = true
 
+        previewImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyPreviewImageHeightIdentifier.rawValue).isActive = true
+        previewImageView.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue).isActive = true
+        previewImageView.trailingAnchor.constraint(
+            equalTo: replyView.trailingAnchor,
+            constant: Padding.PreviewImageView.right).isActive = true
+        previewImageView.topAnchor.constraint(
+            equalTo: replyNameLabel.topAnchor,
+            constant: Padding.PreviewImageView.top).isActive = true
+        previewImageView.bottomAnchor.constraint(
+            equalTo: replyMessageLabel.bottomAnchor,
+            constant: 0).isActive = true
 
         messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: ALKMessageCell.topPadding()).isActive = true
         messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()+30).isActive = true
@@ -275,13 +344,27 @@ final class ALKMyMessageCell: ALKMessageCell {
         super.update(viewModel: viewModel)
 
         if viewModel.isReplyMessage {
-            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding().replyViewHeight
+            
+            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding.ReplyView.height
             replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 30
             replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 30
+            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = Padding.PreviewImageView.height
+            guard
+                let metadata = viewModel.metadata,
+                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
+                let actualMessage = getMessageFor(key: replyId)
+                else {return}
+            if actualMessage.messageType == .text || actualMessage.messageType == .html {
+                previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = 0
+            } else {
+                previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = Padding.PreviewImageView.width
+            }
         } else {
             replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = 0
             replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 0
             replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
+            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
+            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = 0
         }
 
         if viewModel.isAllRead {
@@ -308,6 +391,10 @@ final class ALKMyMessageCell: ALKMessageCell {
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
         self.bubbleView.image = UIImage.init(named: "chat_bubble_red", in: Bundle.applozic, compatibleWith: nil)
+    }
+
+    fileprivate func setPreviewImageWidthToZero() {
+        previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
     }
 }
 
@@ -354,6 +441,12 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         return label
     }()
 
+    fileprivate let previewImageView: UIImageView = {
+        let imageView = UIImageView(frame: CGRect.zero)
+        imageView.backgroundColor = .clear
+        return imageView
+    }()
+
     var selfNameText = "You"
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -369,9 +462,15 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
                 selfNameText:actualMessage.displayName
             replyMessageLabel.text =
                 getMessageTextFrom(viewModel: actualMessage)
+            if let imageURL = getURLForPreviewImage(message: actualMessage) {
+                setImageFrom(url: imageURL, to: previewImageView)
+            } else {
+                previewImageView.image = placeholderForPreviewImage(message: actualMessage)
+            }
         } else {
             replyNameLabel.text = ""
             replyMessageLabel.text = ""
+            previewImageView.image = nil
         }
 
         self.messageView.attributedText = nil
@@ -402,7 +501,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         super.setupViews()
 
         messageView.addGestureRecognizer(longPressGesture)
-        contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,timeLabel])
+        contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,previewImageView,timeLabel])
         contentView.bringSubview(toFront: messageView)
     }
 
@@ -484,6 +583,11 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         menuAction?(.reply)
     }
 
+    func getMessageFor(key: String) -> ALKMessageViewModel? {
+        let messageService = ALMessageService()
+        return messageService.getALMessage(byKey: key)?.messageModel
+    }
+
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {
         switch viewModel.messageType {
         case .text, .html:
@@ -507,9 +611,75 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             }
     }
 
-    private func getMessageFor(key: String) -> ALKMessageViewModel? {
-        let messageService = ALMessageService()
-        return messageService.getALMessage(byKey: key)?.messageModel
+    private func setImageFrom(url: URL?, to imageView: UIImageView) {
+        imageView.kf.setImage(with: url)
+    }
+
+    private func getURLForPreviewImage(message: ALKMessageViewModel) -> URL? {
+        switch message.messageType {
+        case .photo, .video:
+            return getImageURL(for: message)
+        case .location:
+            return getMapImageURL(for: message)
+        default:
+            return nil
+        }
+    }
+
+    private func getImageURL(for message: ALKMessageViewModel) -> URL? {
+        guard message.messageType == .photo else {return nil}
+        if let filePath = message.filePath {
+            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = docDirPath.appendingPathComponent(filePath)
+            return path
+        } else if let thumnailURL = message.thumbnailURL {
+            return thumnailURL
+        }
+        return nil
+    }
+
+    private func getMapImageURL(for message: ALKMessageViewModel) -> URL?  {
+        guard message.messageType == .location else {return nil}
+        guard let lat = message.geocode?.location.latitude,
+            let lon = message.geocode?.location.longitude
+            else { return nil }
+
+        let latLonArgument = String(format: "%f,%f", lat, lon)
+        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey()
+            else { return nil }
+        let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
+        return URL(string: urlString)
+
+    }
+
+    private func placeholderForPreviewImage(message: ALKMessageViewModel) -> UIImage? {
+        switch message.messageType {
+        case .video:
+            if let filepath = message.filePath {
+                let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let path = docDirPath.appendingPathComponent(filepath)
+                return getThumbnail(filePath: path)
+            }
+            return UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        case .location:
+            return UIImage(named: "map_no_data", in: Bundle.applozic, compatibleWith: nil)
+        default:
+            return nil
+        }
+    }
+
+    private func getThumbnail(filePath: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: filePath , options: nil)
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            imgGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+            return UIImage(cgImage: cgImage)
+
+        } catch let error {
+            print("*** Error generating thumbnail: \(error.localizedDescription)")
+            return nil
+        }
     }
 }
 
