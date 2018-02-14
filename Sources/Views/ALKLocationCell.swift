@@ -14,7 +14,8 @@ protocol ALKLocationCellDelegate: class {
     func displayLocation(location:ALKLocationPreviewViewModel)
 }
 
-class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel> {
+class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
+                        ALKReplyMenuItemProtocol {
     weak var delegate:ALKLocationCellDelegate?
 
     // MARK: - Declare Variables or Types
@@ -33,8 +34,8 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel> {
         return view
     }()
 
-    private var frontView: UIView = {
-        let view = UIView()
+    private var frontView: ALKTappableView = {
+        let view = ALKTappableView()
         view.alpha = 1.0
         view.backgroundColor = .clear
         view.isUserInteractionEnabled = true
@@ -166,5 +167,16 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel> {
         return ALKLocationPreviewViewModel(geocode:loc)
     }
 
+    func menuReply(_ sender: Any) {
+        menuAction?(.reply)
+    }
+
 }
 
+class ALKTappableView: UIView {
+
+    // To highlight when long pressed
+    override open var canBecomeFirstResponder: Bool {
+        return true
+    }
+}

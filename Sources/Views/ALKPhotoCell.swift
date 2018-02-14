@@ -12,7 +12,8 @@ import Kingfisher
 import Applozic
 
 // MARK: - ALKPhotoCell
-class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
+class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
+                    ALKReplyMenuItemProtocol {
 
     var photoView: UIImageView = {
         let mv = UIImageView()
@@ -33,18 +34,20 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         return lb
     }()
 
-    fileprivate var actionButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = .clear
-        return button
-    }()
-
     var bubbleView: UIView = {
         let bv = UIView()
         bv.backgroundColor = .gray
         bv.layer.cornerRadius = 12
         bv.isUserInteractionEnabled = false
         return bv
+    }()
+
+    private var frontView: ALKTappableView = {
+        let view = ALKTappableView()
+        view.alpha = 1.0
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = true
+        return view
     }()
 
     fileprivate var downloadButton: UIButton = {
@@ -159,25 +162,30 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func setupViews() {
         super.setupViews()
+        frontView.addGestureRecognizer(longPressGesture)
         uploadButton.isHidden = true
         uploadButton.addTarget(self, action: #selector(ALKPhotoCell.uploadButtonAction(_:)), for: .touchUpInside)
-        actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(actionTapped))
+        singleTap.numberOfTapsRequired = 1
+        frontView.addGestureRecognizer(singleTap)
+
         downloadButton.addTarget(self, action: #selector(ALKPhotoCell.downloadButtonAction(_:)), for: .touchUpInside)
-        contentView.addViewsForAutolayout(views: [photoView,bubbleView,actionButton,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
+        contentView.addViewsForAutolayout(views: [frontView ,photoView,bubbleView,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
         contentView.bringSubview(toFront: photoView)
+        contentView.bringSubview(toFront: frontView)
         contentView.bringSubview(toFront: downloadButton)
         contentView.bringSubview(toFront: uploadButton)
         contentView.bringSubview(toFront: activityIndicator)
+
+        frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor).isActive = true
+        frontView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
-
-        actionButton.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
-        actionButton.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
-        actionButton.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
-        actionButton.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
         
         fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         activityIndicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -195,16 +203,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         downloadButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
 
     }
-    
-    deinit {
-        actionButton.removeTarget(self, action: #selector(actionTapped), for: .touchUpInside)
-    }
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
         downloadTapped?(true)
-
     }
-
 
     func updateView(for state: state) {
         DispatchQueue.main.async {
@@ -215,7 +217,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
     private func updateView(state: state) {
         switch state {
         case .upload(let filePath):
-            actionButton.isEnabled = false
+            frontView.isUserInteractionEnabled = false
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -226,13 +228,13 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             if activityIndicator.isAnimating{
                 activityIndicator.stopAnimating()
             }
-            actionButton.isEnabled = true
+            frontView.isUserInteractionEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
         case .uploading( _):
             uploadButton.isHidden = true
-            actionButton.isEnabled = false
+            frontView.isUserInteractionEnabled = false
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating{
                 activityIndicator.startAnimating()
@@ -240,7 +242,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             downloadButton.isHidden = true
         case .download:
             downloadButton.isHidden = false
-            actionButton.isEnabled = false
+            frontView.isUserInteractionEnabled = false
             activityIndicator.isHidden = true
             uploadButton.isHidden = true
             let thumbnailUrl = viewModel?.thumbnailURL
@@ -252,7 +254,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
-            actionButton.isEnabled = false
+            frontView.isUserInteractionEnabled = false
         case .downloaded(let filePath):
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating{
@@ -265,7 +267,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
             photoView.kf.setImage(with: path)
-            actionButton.isEnabled = true
+            frontView.isUserInteractionEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
@@ -305,6 +307,9 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
     }
 
+    func menuReply(_ sender: Any) {
+        menuAction?(.reply)
+    }
 }
 
 extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {

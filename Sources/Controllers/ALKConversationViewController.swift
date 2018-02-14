@@ -49,10 +49,20 @@ open class ALKConversationViewController: ALKBaseViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     fileprivate var keyboardSize: CGRect?
-    fileprivate var contextViewHeight = 100.0
 
-    enum ConstraintIdentifier: String {
-        case contextTitleView = "contextTitleView"
+    fileprivate enum ConstraintIdentifier {
+        static let contextTitleView = "contextTitleView"
+        static let replyMessageViewHeight = "replyMessageViewHeight"
+    }
+
+    fileprivate enum Padding {
+
+        enum ContextView {
+            static let height: CGFloat = 100.0
+        }
+        enum ReplyMessageView {
+            static let height: CGFloat = 70.0
+        }
     }
 
     let tableView : UITableView = {
@@ -96,6 +106,12 @@ open class ALKConversationViewController: ALKBaseViewController {
     }()
 
     open var templateView: ALKTemplateMessagesView?
+
+    open var replyMessageView: ALKReplyMessageView = {
+        let view = ALKReplyMessageView(frame: CGRect.zero)
+        view.backgroundColor = UIColor.gray
+        return view
+    }()
 
     required public init() {
         super.init(nibName: nil, bundle: nil)
@@ -332,6 +348,9 @@ open class ALKConversationViewController: ALKBaseViewController {
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
+        replyMessageView.closeButtonTapped = {[weak self] _ in
+            self?.hideReplyMessageView()
+        }
         guard viewModel.isContextBasedChat else { return }
         prepareContextView()
     }
@@ -339,12 +358,14 @@ open class ALKConversationViewController: ALKBaseViewController {
     func prepareContextView(){
         guard let topicDetail = viewModel.getContextTitleData() else {return }
         contextTitleView.configureWith(value: topicDetail)
-        contextTitleView.constraint(withIdentifier: ConstraintIdentifier.contextTitleView.rawValue)?.constant = CGFloat(contextViewHeight)
+        contextTitleView.constraint(
+            withIdentifier: ConstraintIdentifier.contextTitleView)?
+            .constant = Padding.ContextView.height
     }
 
     private func setupConstraints() {
 
-        var allViews = [backgroundView, contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton]
+        var allViews = [backgroundView, contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton, replyMessageView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -353,12 +374,12 @@ open class ALKConversationViewController: ALKBaseViewController {
         backgroundView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        backgroundView.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
 
         contextTitleView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contextTitleView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         contextTitleView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-        contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView.rawValue).isActive = true
+        contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView).isActive = true
 
         templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
         templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
@@ -376,17 +397,30 @@ open class ALKConversationViewController: ALKBaseViewController {
 
         typingNoticeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         typingNoticeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
-        typingNoticeView.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
+        typingNoticeView.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor).isActive = true
 
         chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomConstraint?.isActive = true
 
+
+        replyMessageView.leadingAnchor.constraint(
+            equalTo: view.leadingAnchor).isActive = true
+        replyMessageView.trailingAnchor.constraint(
+            equalTo: view.trailingAnchor).isActive = true
+        replyMessageView.heightAnchor.constraintEqualToAnchor(
+            constant: 0,
+            identifier: ConstraintIdentifier.replyMessageViewHeight)
+            .isActive = true
+        replyMessageView.bottomAnchor.constraint(
+            equalTo: chatBar.topAnchor,
+            constant: 0).isActive = true
+
         unreadScrollButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         unreadScrollButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         unreadScrollButton.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -10).isActive = true
-        unreadScrollButton.bottomAnchor.constraint(equalTo: chatBar.topAnchor, constant: -10).isActive = true
+        unreadScrollButton.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor, constant: -10).isActive = true
 
         leftMoreBarConstraint = moreBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 56)
         leftMoreBarConstraint?.isActive = true
@@ -592,39 +626,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         view.endEditing(true)
     }
 
-    private func showMoreBar() {
-
-        self.moreBar.isHidden = false
-        self.leftMoreBarConstraint?.constant = 0
-
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
-            self?.view.layoutIfNeeded()
-            }, completion: { [weak self] (finished) in
-
-                guard let strongSelf = self else {return}
-
-                strongSelf.view.bringSubview(toFront: strongSelf.moreBar)
-                strongSelf.view.sendSubview(toBack: strongSelf.tableView)
-        })
-
-    }
-
-    private func hideMoreBar() {
-
-        if self.leftMoreBarConstraint?.constant == 0 {
-
-            self.leftMoreBarConstraint?.constant = 56
-
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
-                self?.view.layoutIfNeeded()
-                }, completion: { [weak self] (finished) in
-                    self?.moreBar.isHidden = true
-            })
-
-        }
-
-    }
-
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
@@ -641,22 +642,6 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     func sync(message: ALMessage) {
         viewModel.sync(message: message)
-    }
-
-    @objc private func showParticipantListChat() {
-        if viewModel.isGroup {
-            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
-            if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
-
-                if viewModel.groupProfileImgUrl().isEmpty {
-                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:nil, groupSelected: viewModel.friends(), delegate: self)
-                } else {
-                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:viewModel.groupProfileImgUrl(), groupSelected: viewModel.friends(), delegate: self)
-                }
-                vc.addContactMode = .existingChat
-                navigationController?.pushViewController(vc, animated: true)
-            }
-        }
     }
 
     func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
@@ -688,15 +673,6 @@ open class ALKConversationViewController: ALKBaseViewController {
             self.alMqttConversationService.unSubscribe(toChannelConversation: nil)
         }
 
-    }
-
-    private func unsubscribingChannel() {
-        if !viewModel.isOpenGroup {
-            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
-            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
-        } else {
-            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
-        }
     }
 
 
@@ -738,6 +714,42 @@ open class ALKConversationViewController: ALKBaseViewController {
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 
+    func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
+                          message: ALKMessageViewModel) {
+        switch action {
+        case .reply:
+            print("Reply selected")
+            viewModel.setSelectedMessageToReply(message)
+            replyMessageView.update(message: message)
+            showReplyMessageView()
+        }
+    }
+
+    func showReplyMessageView() {
+        replyMessageView.constraint(
+            withIdentifier: ConstraintIdentifier.replyMessageViewHeight)?
+            .constant = Padding.ReplyMessageView.height
+    }
+
+    func hideReplyMessageView() {
+        replyMessageView.constraint(
+            withIdentifier: ConstraintIdentifier.replyMessageViewHeight)?
+            .constant = 0
+    }
+
+    func scrollTo(message: ALKMessageViewModel) {
+        let messageService = ALMessageService()
+        guard
+            let metadata = message.metadata,
+            let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String
+            else {return}
+        let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
+        guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
+            else {return}
+        tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+
+    }
+
     fileprivate func hideMediaOptions() {
         chatBar.hideMediaView()
     }
@@ -746,7 +758,63 @@ open class ALKConversationViewController: ALKBaseViewController {
         chatBar.showMediaView()
     }
 
-    
+    private func showMoreBar() {
+
+        self.moreBar.isHidden = false
+        self.leftMoreBarConstraint?.constant = 0
+
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
+            self?.view.layoutIfNeeded()
+            }, completion: { [weak self] (finished) in
+
+                guard let strongSelf = self else {return}
+
+                strongSelf.view.bringSubview(toFront: strongSelf.moreBar)
+                strongSelf.view.sendSubview(toBack: strongSelf.tableView)
+        })
+
+    }
+
+    private func hideMoreBar() {
+
+        if self.leftMoreBarConstraint?.constant == 0 {
+
+            self.leftMoreBarConstraint?.constant = 56
+
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: { [weak self] () in
+                self?.view.layoutIfNeeded()
+                }, completion: { [weak self] (finished) in
+                    self?.moreBar.isHidden = true
+            })
+
+        }
+
+    }
+
+    private func unsubscribingChannel() {
+        if !viewModel.isOpenGroup {
+            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
+            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        } else {
+            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
+        }
+    }
+
+    @objc private func showParticipantListChat() {
+        if viewModel.isGroup {
+            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
+
+                if viewModel.groupProfileImgUrl().isEmpty {
+                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:nil, groupSelected: viewModel.friends(), delegate: self)
+                } else {
+                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:viewModel.groupProfileImgUrl(), groupSelected: viewModel.friends(), delegate: self)
+                }
+                vc.addContactMode = .existingChat
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+    }
 }
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
@@ -821,6 +889,12 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func refreshButtonAction(_ selector: UIBarButtonItem) {
         viewModel.refresh()
+    }
+
+    public func willSendMessage() {
+        // Clear reply message and the view
+        viewModel.clearSelectedMessageToReply()
+        hideReplyMessageView()
     }
 
 }

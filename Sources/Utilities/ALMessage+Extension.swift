@@ -14,6 +14,146 @@ let myMessage = "5"
 
 let imageBaseUrl = ALUserDefaultsHandler.getFILEURL() + "/rest/ws/aws/file/"
 
+extension ALMessage: ALKChatViewModelProtocol {
+
+    private var alContact: ALContact? {
+        let alContactDbService = ALContactDBService()
+        guard let alContact = alContactDbService.loadContact(byKey: "userId", value: self.to) else {
+            return nil
+        }
+        return alContact
+    }
+
+    private var alChannel: ALChannel? {
+        let alChannelService = ALChannelService()
+
+        // TODO:  This is a workaround as other method uses closure.
+        // Later replace this with:
+        // alChannelService.getChannelInformation(, orClientChannelKey: , withCompletion: )
+        guard let alChannel = alChannelService.getChannelByKey(self.groupId) else {
+            return nil
+        }
+        return alChannel
+    }
+
+    var avatar: URL? {
+        guard let alContact = alContact, let url = alContact.contactImageUrl else {
+            return nil
+        }
+        return URL(string: url)
+    }
+
+    var avatarImage: UIImage? {
+        return isGroupChat ? UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil) : nil
+    }
+
+    var avatarGroupImageUrl: String? {
+
+        guard let alChannel = alChannel, let avatar = alChannel.channelImageURL else {
+            return nil
+        }
+        return avatar
+    }
+
+    var name: String {
+        guard let alContact = alContact, let id = alContact.userId  else {
+            return "No Name"
+        }
+        guard let displayName = alContact.getDisplayName(), !displayName.isEmpty else { return id }
+
+        return displayName
+    }
+
+    var groupName: String {
+        if isGroupChat {
+            guard let alChannel = alChannel, let name = alChannel.name else {
+                return ""
+            }
+            return name
+        }
+        return ""
+    }
+
+    var theLastMessage: String? {
+        switch messageType {
+        case .text:
+            return message
+        case .photo:
+            return "Photo"
+        case .location:
+            return "Location"
+        case .voice:
+            return "Audio"
+        case .information:
+            return "Update"
+        case .video:
+            return "Video"
+        case .html:
+            return "Text"
+        }
+    }
+
+    var hasUnreadMessages: Bool {
+        if isGroupChat {
+            guard let alChannel = alChannel, let unreadCount = alChannel.unreadCount else {
+                return false
+            }
+            return unreadCount.boolValue
+        } else {
+            guard let alContact = alContact, let unreadCount = alContact.unreadCount else {
+                return false
+            }
+            return unreadCount.boolValue
+        }
+    }
+
+    var identifier: String {
+        guard let key = self.key else {
+            return ""
+        }
+        return key
+    }
+
+    var friendIdentifier: String? {
+        return nil
+    }
+
+    var totalNumberOfUnreadMessages: UInt {
+        if isGroupChat {
+            guard let alChannel = alChannel, let unreadCount = alChannel.unreadCount else {
+                return 0
+            }
+            return UInt(unreadCount)
+        } else {
+            guard let alContact = alContact, let unreadCount = alContact.unreadCount else {
+                return 0
+            }
+            return UInt(unreadCount)
+        }
+
+    }
+
+    var isGroupChat: Bool {
+        guard let _ = self.groupId else {
+            return false
+        }
+        return true
+    }
+
+    var contactId: String? {
+        return self.contactIds
+    }
+
+    var channelKey: NSNumber? {
+        return self.groupId
+    }
+
+    var createdAt: String? {
+        let isToday = ALUtilityClass.isToday(date)
+        return getCreatedAtTime(isToday)
+    }
+}
+
 extension ALMessage {
 
     var isMyMessage: Bool {
@@ -166,6 +306,8 @@ extension ALMessage {
         messageModel.geocode = geocode
         messageModel.fileMetaInfo = fileMetaInfo
         messageModel.receiverId = to
+        messageModel.isReplyMessage = isAReplyMessage()
+        messageModel.metadata = metadata as? Dictionary<String, Any>
         return messageModel
     }
 }

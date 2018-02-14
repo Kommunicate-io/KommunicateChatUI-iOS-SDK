@@ -26,13 +26,19 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             return UITableViewCell()
         }
         print("Cell updated at row: ", indexPath.row, "and type is: ", message.messageType)
-        switch message.messageType {
-        case .text, .html:
+
+        guard !message.isReplyMessage else {
+            // Get reply cell and return
             if message.isMyMessage {
 
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
+                cell.replyViewAction = {[weak self] _ in
+                    self?.scrollTo(message: message)
+                }
                 return cell
 
             } else {
@@ -43,6 +49,35 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
+                cell.replyViewAction = {[weak self] _ in
+                    self?.scrollTo(message: message)
+                }
+                return cell
+            }
+        }
+        switch message.messageType {
+        case .text, .html:
+            if message.isMyMessage {
+
+                let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                cell.update(chatBar: self.chatBar)
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
+                return cell
+
+            } else {
+                let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                cell.update(chatBar: self.chatBar)
+                cell.avatarTapped = {[weak self] _ in
+                    guard let currentModel = cell.viewModel else {return}
+                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
         case .photo:
@@ -67,6 +102,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         value in
                         self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                     }
+                    cell.menuAction = {[weak self] action in
+                        self?.menuItemSelected(action: action, message: message) }
                     return cell
 
                 } else {
@@ -92,6 +129,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         guard let currentModel = cell.viewModel else {return}
                         self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                     }
+                    cell.menuAction = {[weak self] action in
+                        self?.menuItemSelected(action: action, message: message) }
                     return cell
 
                 } else {
@@ -112,6 +151,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.downloadTapped = {[weak self] value in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             } else {
                 let cell: ALKFriendVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -124,6 +165,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
         case .location:
@@ -131,6 +174,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
 
             } else {
@@ -141,6 +186,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
         case .information:
@@ -164,6 +211,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     value in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             } else {
                 let cell: ALKFriendVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -176,6 +225,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
         }

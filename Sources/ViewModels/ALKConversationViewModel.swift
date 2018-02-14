@@ -17,6 +17,7 @@ public protocol ALKConversationViewModelDelegate: class {
     func newMessagesAdded()
     func messageSent(at: IndexPath)
     func updateDisplay(name: String)
+    func willSendMessage()
 }
 
 open class ALKConversationViewModel: NSObject {
@@ -67,6 +68,9 @@ open class ALKConversationViewModel: NSObject {
     private var alMessages: [ALMessage] = []
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
+
+    /// Message on which reply was tapped.
+    private var selectedMessageForReply: ALKMessageViewModel?
 
     //MARK: - Initializer
     public init(contactId: String?,
@@ -409,23 +413,8 @@ open class ALKConversationViewModel: NSObject {
     }
 
     open func send(message: String, isOpenGroup: Bool = false) {
-        let alMessage = ALMessage()
-        alMessage.to = contactId
-        alMessage.contactIds = contactId
+        let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
-        alMessage.type = "5"
-        let date = Date().timeIntervalSince1970*1000
-        alMessage.createdAtTime = NSNumber(value: date)
-        alMessage.sendToDevice = false
-        alMessage.deviceKey = ALUserDefaultsHandler.getDeviceKeyString()
-        alMessage.shared = false
-        alMessage.fileMeta = nil
-        alMessage.storeOnDevice = false
-        alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
-        alMessage.key = UUID().uuidString
-        alMessage.source = Int16(SOURCE_IOS)
-        alMessage.conversationId = conversationId
-        alMessage.groupId = channelKey
 
         addToWrapper(message: alMessage)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
@@ -434,7 +423,7 @@ open class ALKConversationViewModel: NSObject {
             let messageClientService = ALMessageClientService()
             messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: {responseJson, error in
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
-                NSLog("No errors sending while sending the message in open group")
+                NSLog("No errors while sending the message in open group")
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.messageUpdated()
@@ -813,6 +802,24 @@ open class ALKConversationViewModel: NSObject {
         send(message: text)
     }
 
+    open func setSelectedMessageToReply(_ message: ALKMessageViewModel) {
+        selectedMessageForReply = message
+    }
+
+    open func getSelectedMessageToReply() -> ALKMessageViewModel? {
+        return selectedMessageForReply
+    }
+
+    open func clearSelectedMessageToReply() {
+        selectedMessageForReply = nil
+    }
+
+    open func getIndexpathFor(message: ALKMessageModel) -> IndexPath? {
+        guard let index = messageModels.index(of: message)
+            else {return nil}
+        return IndexPath(row: 0, section: index)
+    }
+
     //MARK: - Internal Methods
 
     func loadMessages() {
@@ -1016,8 +1023,12 @@ open class ALKConversationViewModel: NSObject {
         self.messageModels.append(message.messageModel)
     }
 
-    private func getMessageToPost() -> ALMessage {
-        let alMessage = ALMessage()
+    private func getMessageToPost(isTextMessage: Bool = false) -> ALMessage {
+        var alMessage = ALMessage()
+        // If it's a text message then set the reply id
+        if isTextMessage{ alMessage = setReplyId(message: alMessage) }
+
+        delegate?.willSendMessage()
         alMessage.to = contactId
         alMessage.contactIds = contactId
         alMessage.message = ""
@@ -1132,11 +1143,19 @@ open class ALKConversationViewModel: NSObject {
         guard FileManager.default.fileExists(atPath: filePath.path) else {
             return
         }
-        
         do {
             try FileManager.default.removeItem(atPath: filePath.path)
         }catch{
             fatalError("Unable to delete file: \(error) : \(#function).")
         }
+    }
+
+    private func setReplyId(message: ALMessage) -> ALMessage {
+        if let replyMessage = getSelectedMessageToReply() {
+            let metaData = NSMutableDictionary()
+            metaData[AL_MESSAGE_REPLY_KEY] = replyMessage.identifier
+            message.metadata = metaData
+        }
+        return message
     }
 }
