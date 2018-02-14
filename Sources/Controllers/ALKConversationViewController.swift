@@ -737,6 +737,19 @@ open class ALKConversationViewController: ALKBaseViewController {
             .constant = 0
     }
 
+    func scrollTo(message: ALKMessageViewModel) {
+        let messageService = ALMessageService()
+        guard
+            let metadata = message.metadata,
+            let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String
+            else {return}
+        let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
+        guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
+            else {return}
+        tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+
+    }
+
     fileprivate func hideMediaOptions() {
         chatBar.hideMediaView()
     }

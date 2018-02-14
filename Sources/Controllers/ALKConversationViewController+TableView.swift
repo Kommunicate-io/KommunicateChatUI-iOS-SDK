@@ -36,6 +36,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(chatBar: self.chatBar)
                 cell.menuAction = {[weak self] action in
                     self?.menuItemSelected(action: action, message: message) }
+                cell.replyViewAction = {[weak self] _ in
+                    self?.scrollTo(message: message)
+                }
                 return cell
 
             } else {
@@ -48,6 +51,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.menuAction = {[weak self] action in
                     self?.menuItemSelected(action: action, message: message) }
+                cell.replyViewAction = {[weak self] _ in
+                    self?.scrollTo(message: message)
+                }
                 return cell
             }
         }

@@ -814,6 +814,12 @@ open class ALKConversationViewModel: NSObject {
         selectedMessageForReply = nil
     }
 
+    open func getIndexpathFor(message: ALKMessageModel) -> IndexPath? {
+        guard let index = messageModels.index(of: message)
+            else {return nil}
+        return IndexPath(row: 0, section: index)
+    }
+
     //MARK: - Internal Methods
 
     func loadMessages() {

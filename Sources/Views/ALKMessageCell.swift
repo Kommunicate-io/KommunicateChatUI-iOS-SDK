@@ -426,6 +426,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     fileprivate var replyView: UIView = {
         let view = UIView(frame: CGRect.zero)
         view.backgroundColor = UIColor.darkGray
+        view.isUserInteractionEnabled = true
         return view
     }()
 
@@ -448,6 +449,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     }()
 
     var selfNameText = "You"
+    var replyViewAction: (()->())? = nil
 
     override func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
@@ -503,6 +505,9 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         messageView.addGestureRecognizer(longPressGesture)
         contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,previewImageView,timeLabel])
         contentView.bringSubview(toFront: messageView)
+
+        let replyTapGesture = UITapGestureRecognizer(target: self, action: #selector(replyViewTapped))
+        replyView.addGestureRecognizer(replyTapGesture)
     }
 
     override func setupStyle() {
@@ -586,6 +591,10 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     func getMessageFor(key: String) -> ALKMessageViewModel? {
         let messageService = ALMessageService()
         return messageService.getALMessage(byKey: key)?.messageModel
+    }
+
+    func replyViewTapped() {
+        replyViewAction?()
     }
 
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {
