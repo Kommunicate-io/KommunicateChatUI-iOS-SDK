@@ -145,6 +145,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.downloadTapped = {[weak self] value in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             } else {
                 let cell: ALKFriendVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -157,6 +159,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
         case .location:

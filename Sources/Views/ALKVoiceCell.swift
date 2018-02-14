@@ -24,7 +24,8 @@ public enum ALKVoiceCellState {
     case pause
 }
 
-class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
+class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
+                    ALKReplyMenuItemProtocol {
     
     var soundPlayerView: UIView = {
         let mv = UIView()
@@ -35,11 +36,10 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         return mv
     }()
     
-    fileprivate let frameView: UIImageView = {
-        let view = UIImageView()
+    fileprivate let frameView: ALKTappableView = {
+        let view = ALKTappableView()
         view.backgroundColor = .clear
-        view.contentMode = .scaleToFill
-        view.isUserInteractionEnabled = false
+        view.isUserInteractionEnabled = true
         return view
     }()
     
@@ -186,7 +186,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         actionButton.setImage(UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil), for: .normal)
         actionButton.setImage(UIImage(named: "icon_pause", in: Bundle.applozic, compatibleWith: nil), for: .selected)
 
-
+        frameView.addGestureRecognizer(longPressGesture)
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
         clearButton.addTarget(self, action: #selector(ALKVoiceCell.soundPlayerAction), for: .touchUpInside)
 
@@ -202,7 +202,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         bubbleView.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor).isActive = true
-        
+
         progressBar.topAnchor.constraint(equalTo: soundPlayerView.topAnchor).isActive = true
         progressBar.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
         progressBar.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
@@ -285,6 +285,10 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel> {
         } catch {
             NSLog("Not saved due to error")
         }
+    }
+
+    func menuReply(_ sender: Any) {
+        menuAction?(.reply)
     }
 }
 
