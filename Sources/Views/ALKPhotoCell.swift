@@ -180,10 +180,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         contentView.bringSubview(toFront: uploadButton)
         contentView.bringSubview(toFront: activityIndicator)
 
-        frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0.0).isActive = true
-        frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0.0).isActive = true
-        frontView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 0.0).isActive = true
-        frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0.0).isActive = true
+        frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor).isActive = true
+        frontView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true

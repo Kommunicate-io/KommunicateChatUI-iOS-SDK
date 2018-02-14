@@ -95,8 +95,12 @@ open class ALKReplyMessageView: UIView {
         nameLabel.text = message.isMyMessage ?
             selfNameText:message.displayName
         messageLabel.text = getMessageText()
-        let imageURL = getURLForPreviewImage(message: message)
-        setImageFrom(url: imageURL, to: previewImageView)
+
+        if let imageURL = getURLForPreviewImage(message: message) {
+            setImageFrom(url: imageURL, to: previewImageView)
+        } else {
+            previewImageView.image = placeholderForPreviewImage(message: message)
+        }
     }
 
     //MARK: - Internal methods
@@ -192,7 +196,7 @@ open class ALKReplyMessageView: UIView {
 
     private func getURLForPreviewImage(message: ALKMessageViewModel) -> URL? {
         switch message.messageType {
-        case .photo:
+        case .photo, .video:
             return getImageURL(for: message)
         case .location:
             return getMapImageURL(for: message)
@@ -225,5 +229,35 @@ open class ALKReplyMessageView: UIView {
         let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
         return URL(string: urlString)
 
+    }
+
+    private func placeholderForPreviewImage(message: ALKMessageViewModel) -> UIImage? {
+        switch message.messageType {
+        case .video:
+            if let filepath = message.filePath {
+                let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let path = docDirPath.appendingPathComponent(filepath)
+                return getThumbnail(filePath: path)
+            }
+            return UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        case .location:
+            return UIImage(named: "map_no_data", in: Bundle.applozic, compatibleWith: nil)
+        default:
+            return nil
+        }
+    }
+
+    private func getThumbnail(filePath: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: filePath , options: nil)
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            imgGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+            return UIImage(cgImage: cgImage)
+
+        } catch let error {
+            print("*** Error generating thumbnail: \(error.localizedDescription)")
+            return nil
+        }
     }
 }

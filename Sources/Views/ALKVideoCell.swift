@@ -10,7 +10,8 @@ import UIKit
 import Applozic
 import AVKit
 
-class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
+class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
+                    ALKReplyMenuItemProtocol {
 
     enum state {
         case download
@@ -80,6 +81,14 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
         let view = KDCircularProgress(frame: .zero)
         view.startAngle = -90
         view.clockwise = true
+        return view
+    }()
+
+    private var frontView: ALKTappableView = {
+        let view = ALKTappableView()
+        view.alpha = 1.0
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = true
         return view
     }()
 
@@ -153,18 +162,25 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
         progressView.isHidden = true
         uploadButton.isHidden = true
 
+        frontView.addGestureRecognizer(longPressGesture)
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
         downloadButton.addTarget(self, action: #selector(ALKVideoCell.downloadButtonAction(_:)), for: UIControlEvents.touchUpInside)
         uploadButton.addTarget(self, action: #selector(ALKVideoCell.uploadButtonAction(_:)), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(ALKVideoCell.playButtonAction(_:)), for: .touchUpInside)
 
-        contentView.addViewsForAutolayout(views: [photoView,bubbleView, timeLabel,fileSizeLabel, downloadButton, playButton, progressView, uploadButton])
+        contentView.addViewsForAutolayout(views: [frontView, photoView,bubbleView, timeLabel,fileSizeLabel, downloadButton, playButton, progressView, uploadButton])
         contentView.bringSubview(toFront: photoView)
+        contentView.bringSubview(toFront: frontView)
         contentView.bringSubview(toFront: actionButton)
         contentView.bringSubview(toFront: downloadButton)
         contentView.bringSubview(toFront: playButton)
         contentView.bringSubview(toFront: progressView)
         contentView.bringSubview(toFront: uploadButton)
+
+        frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor).isActive = true
+        frontView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
@@ -196,6 +212,10 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     deinit {
         actionButton.removeTarget(self, action: #selector(actionTapped), for: .touchUpInside)
+    }
+
+    func menuReply(_ sender: Any) {
+        menuAction?(.reply)
     }
 
 
