@@ -249,10 +249,14 @@ final class ALKMyMessageCell: ALKMessageCell {
         return sv
     }()
 
+    var replyNameTrailingConstraint: NSLayoutConstraint?
+    var replyMessageTrailingConstraint: NSLayoutConstraint?
+    var previewMessageTrailingConstraint: NSLayoutConstraint?
+
     enum Padding {
         enum ReplyNameLabel {
             static let left: CGFloat = 0.0
-            static let right: CGFloat = 0.0
+            static let right: CGFloat = -10.0
             static let top: CGFloat = 10.0
         }
 
@@ -270,12 +274,18 @@ final class ALKMyMessageCell: ALKMessageCell {
     }
 
 
-    enum ConstraintIdentifier: String {
-        case replyViewHeightIdentifier = "ReplyViewHeight"
-        case replyNameHeightIdentifier = "ReplyNameHeight"
-        case replyMessageHeightIdentifier = "ReplyMessageHeight"
-        case replyPreviewImageHeightIdentifier = "ReplyPreviewImageHeight"
-        case replyPreviewImageWidthIdentifier = "ReplyPreviewImageWidth"
+    enum ConstraintIdentifier {
+        enum ReplyNameLabel {
+            static let height = "ReplyNameHeight"
+        }
+        enum ReplyMessageLabel {
+            static let height = "ReplyMessageHeight"
+        }
+        enum PreviewImage {
+            static let height = "ReplyPreviewImageHeight"
+            static let width = "ReplyPreviewImageWidth"
+        }
+        static let replyViewHeightIdentifier = "ReplyViewHeight"
     }
 
     override func setupViews() {
@@ -283,24 +293,30 @@ final class ALKMyMessageCell: ALKMessageCell {
 
         contentView.addViewsForAutolayout(views: [stateView])
 
-
         replyNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: Padding.ReplyNameLabel.left).isActive = true
         replyNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:Padding.ReplyNameLabel.top).isActive = true
 
-        replyNameLabel.trailingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: -10).isActive = true
+        replyNameTrailingConstraint =
+            replyNameLabel.trailingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: 0)
+        replyNameTrailingConstraint?.isActive = true
 
-        replyNameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue).isActive = true
+        replyNameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.ReplyNameLabel.height).isActive = true
 
         replyMessageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: Padding.ReplyNameLabel.left).isActive = true
 
         replyMessageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant:40).isActive = true
 
-        replyMessageLabel.trailingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: -10).isActive = true
+        replyMessageTrailingConstraint =
+            replyMessageLabel.trailingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: 0)
+        replyMessageTrailingConstraint?.isActive = true
+        replyMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.ReplyMessageLabel.height).isActive = true
 
-        replyMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue).isActive = true
+        previewImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.PreviewImage.height).isActive = true
+        previewImageView.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.PreviewImage.width).isActive = true
+        previewMessageTrailingConstraint =
+            previewImageView.trailingAnchor.constraint(equalTo: replyView.trailingAnchor, constant: 0)
+        previewMessageTrailingConstraint?.isActive = true
 
-        previewImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyPreviewImageHeightIdentifier.rawValue).isActive = true
-        previewImageView.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue).isActive = true
         previewImageView.trailingAnchor.constraint(
             equalTo: replyView.trailingAnchor,
             constant: Padding.PreviewImageView.right).isActive = true
@@ -326,7 +342,7 @@ final class ALKMyMessageCell: ALKMessageCell {
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 10).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
-        replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue).isActive = true
+        replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyViewHeightIdentifier).isActive = true
         replyView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 5).isActive = true
 
         replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -10).isActive = true
@@ -344,27 +360,19 @@ final class ALKMyMessageCell: ALKMessageCell {
         super.update(viewModel: viewModel)
 
         if viewModel.isReplyMessage {
-            
-            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = Padding.ReplyView.height
-            replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 30
-            replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 30
-            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = Padding.PreviewImageView.height
+            showReplyView()
             guard
                 let metadata = viewModel.metadata,
                 let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
                 let actualMessage = getMessageFor(key: replyId)
                 else {return}
             if actualMessage.messageType == .text || actualMessage.messageType == .html {
-                previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = 0
+                previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = 0
             } else {
-                previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = Padding.PreviewImageView.width
+                previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = Padding.PreviewImageView.width
             }
         } else {
-            replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue)?.constant = 0
-            replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.replyNameHeightIdentifier.rawValue)?.constant = 0
-            replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
-            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
-            previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyPreviewImageWidthIdentifier.rawValue)?.constant = 0
+            hideReplyView()
         }
 
         if viewModel.isAllRead {
@@ -394,7 +402,28 @@ final class ALKMyMessageCell: ALKMessageCell {
     }
 
     fileprivate func setPreviewImageWidthToZero() {
-        previewImageView.constraint(withIdentifier: ConstraintIdentifier.replyMessageHeightIdentifier.rawValue)?.constant = 0
+        previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = 0
+    }
+
+    fileprivate func showReplyView() {
+        replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier)?.constant = Padding.ReplyView.height
+        replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.ReplyNameLabel.height)?.constant = 30
+        replyNameTrailingConstraint?.constant = Padding.ReplyNameLabel.right
+        replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.ReplyMessageLabel.height)?.constant = 30
+        replyMessageTrailingConstraint?.constant = Padding.ReplyNameLabel.right
+        previewMessageTrailingConstraint?.constant = Padding.PreviewImageView.right
+        previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.height)?.constant = Padding.PreviewImageView.height
+    }
+
+    fileprivate func hideReplyView() {
+        replyView.constraint(withIdentifier: ConstraintIdentifier.replyViewHeightIdentifier)?.constant = 0
+        replyNameLabel.constraint(withIdentifier: ConstraintIdentifier.ReplyNameLabel.height)?.constant = 0
+        replyNameTrailingConstraint?.constant = 0
+        replyMessageLabel.constraint(withIdentifier: ConstraintIdentifier.ReplyMessageLabel.height)?.constant = 0
+        replyMessageTrailingConstraint?.constant = 0
+        previewMessageTrailingConstraint?.constant = 0
+        previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.height)?.constant = 0
+        previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = 0
     }
 }
 
