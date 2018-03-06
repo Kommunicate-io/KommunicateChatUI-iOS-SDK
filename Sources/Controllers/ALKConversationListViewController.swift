@@ -303,7 +303,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         
-        guard let chat = (searchActive ? searchFilteredChat[indexPath.row] as? ALMessage : viewModel.chatForRow(indexPath: indexPath)) else {
+        guard let chat = (searchActive ? searchFilteredChat[indexPath.row] as? ALMessage : viewModel.chatForRow(indexPath: indexPath)) as? ALMessage else {
             return UITableViewCell()
         }
         let cell: ALKChatCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
