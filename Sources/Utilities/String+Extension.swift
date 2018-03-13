@@ -41,15 +41,15 @@ extension String {
 extension String {
     func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName: font], context: nil)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
         
         return boundingBox.height
     }
     
     func evaluateStringWidth (textToEvaluate: String,fontSize:CGFloat) -> CGFloat{
         let font = UIFont.systemFont(ofSize: fontSize)
-        let attributes = NSDictionary(object: font, forKey:NSFontAttributeName as NSCopying)
-        let sizeOfText = textToEvaluate.size(attributes: (attributes as! [String : AnyObject]))
+        let attributes = NSDictionary(object: font, forKey:NSAttributedStringKey.font as NSCopying)
+        let sizeOfText = textToEvaluate.size(withAttributes: (attributes as! [NSAttributedStringKey : Any] as [NSAttributedStringKey : Any]))
         return sizeOfText.width
     }
 }

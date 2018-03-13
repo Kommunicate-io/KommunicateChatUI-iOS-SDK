@@ -187,10 +187,10 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
         style.lineBreakMode = .byWordWrapping
         
         guard let font      = UIFont(name: "HelveticaNeue-Italic", size: 14) else { return }
-        let attr:[String:Any] = [
-            NSFontAttributeName:font,
-            NSParagraphStyleAttributeName:style,
-            NSForegroundColorAttributeName: UIColor.placeholderGray()
+        let attr:[NSAttributedStringKey:Any] = [
+            NSAttributedStringKey.font:font,
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.paragraphStyle.rawValue):style,
+            NSAttributedStringKey.foregroundColor: UIColor.placeholderGray()
         ]
         let typeGroupNameMsg = NSLocalizedString("TypeGroupName", value: "Type group name", comment: "")
             textField.attributedPlaceholder  = NSAttributedString(string: typeGroupNameMsg, attributes: attr)

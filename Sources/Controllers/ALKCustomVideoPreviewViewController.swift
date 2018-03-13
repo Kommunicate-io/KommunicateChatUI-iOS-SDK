@@ -81,7 +81,7 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController {
         player.actionAtItemEnd = .none
         let videoLayer = AVPlayerLayer(player: player)
         videoLayer.frame = self.customVideoView.bounds
-        videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         self.customVideoView.layer.addSublayer(videoLayer)
 
     }

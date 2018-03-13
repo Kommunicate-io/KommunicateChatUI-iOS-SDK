@@ -114,7 +114,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
         updateConstraintsForSize(size: view.bounds.size)
     }
     
-    func doubleTapped(tap: UITapGestureRecognizer) {
+    @objc func doubleTapped(tap: UITapGestureRecognizer) {
         
         UIView.animate(withDuration: 0.5, animations: {
             
@@ -139,14 +139,14 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
  
     }
     
-    func singleTapped(tap: UITapGestureRecognizer) {
+    @objc func singleTapped(tap: UITapGestureRecognizer) {
         
         if scrollView.minimumZoomScale == scrollView.zoomScale {
             dissmiss()
         }
     }
     
-    func dissmiss() {
+    @objc func dissmiss() {
         dismiss(animated: true, completion: nil)
     }
     

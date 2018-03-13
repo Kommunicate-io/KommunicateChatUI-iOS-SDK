@@ -762,7 +762,7 @@ open class ALKConversationViewModel: NSObject {
         let exportSession = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetPassthrough)
 
         exportSession!.outputURL = filePath
-        exportSession!.outputFileType = AVFileTypeMPEG4
+        exportSession!.outputFileType = AVFileType.mp4
         exportSession!.shouldOptimizeForNetworkUse = true
         let start = CMTimeMakeWithSeconds(0.0, 0)
         let range = CMTimeRangeMake(start, avAsset.duration)

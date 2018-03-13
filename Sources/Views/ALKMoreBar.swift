@@ -91,7 +91,7 @@ final class ALKMoreBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func tapped(button: UIButton) {
+    @objc func tapped(button: UIButton) {
         
         if button == locationButton {
             

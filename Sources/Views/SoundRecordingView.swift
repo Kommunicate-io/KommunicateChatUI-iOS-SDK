@@ -138,7 +138,7 @@ open class ALKSoundRecorderBtn: UIButton {
         return isAllow
     }
     
-    func startAudioRecordGesture(sender : UIGestureRecognizer){
+    @objc func startAudioRecordGesture(sender : UIGestureRecognizer){
         let point = sender.location(in: self)
         let width = self.frame.size.width
         let height = self.frame.size.height

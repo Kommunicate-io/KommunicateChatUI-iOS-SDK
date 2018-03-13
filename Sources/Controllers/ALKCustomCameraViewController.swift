@@ -73,7 +73,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
         super.viewDidAppear(animated)
         
         //ask for permission
-        let authStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
         case .denied:
             // ask for permissions
@@ -150,22 +150,20 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
     {
         //stop previous capture session
         captureSession.stopRunning()
-        guard let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession) else {
-            return
-        }
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.removeFromSuperlayer()
         self.previewLayer?.removeFromSuperlayer()
         
         // Do any additional setup after loading the view.
-        captureSession.sessionPreset = AVCaptureSessionPresetHigh
+        captureSession.sessionPreset = AVCaptureSession.Preset.high
         
         if let devices = AVCaptureDevice.devices() as? [AVCaptureDevice] {
             for device in devices {
                 // Make sure this particular device supports video
-                if (device.hasMediaType(AVMediaTypeVideo)) {
+                if (device.hasMediaType(AVMediaType.video)) {
                     if(camera == .Back)
                     {
-                        if(device.position == AVCaptureDevicePosition.back) {
+                        if(device.position == AVCaptureDevice.Position.back) {
                             captureDevice = device
                             if captureDevice != nil {
                                 checkCameraPermission()
@@ -174,7 +172,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
                     }
                     else
                     {
-                        if(device.position == AVCaptureDevicePosition.front) {
+                        if(device.position == AVCaptureDevice.Position.front) {
                             captureDevice = device
                             if captureDevice != nil {
                                 checkCameraPermission()
@@ -222,7 +220,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
     
     private func checkCameraPermission()
     {
-        let authStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
         case .authorized:
             btnSwitchCam.isHidden = false
@@ -256,7 +254,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
             present(alertController, animated: true, completion: nil)
         case .notDetermined:
             // ask for permissions
-            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: { [weak self] (isGrant) in
+            AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { [weak self] (isGrant) in
                 guard let weakSelf = self else{return}
                 if isGrant {
                     DispatchQueue.main.async {
@@ -276,8 +274,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
     private func beginSession() {
         
         do {
-            try captureDeviceInput = AVCaptureDeviceInput(device: captureDevice)
-            captureSession.addInput(captureDeviceInput)
+            try captureDeviceInput = AVCaptureDeviceInput(device: captureDevice!)
+            captureSession.addInput(captureDeviceInput!)
             stillImageOutput.outputSettings = [AVVideoCodecKey:AVVideoCodecJPEG]
             
             if captureSession.canAddOutput(stillImageOutput) {
@@ -287,10 +285,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
         catch {
         }
         
-        guard let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession) else {
-//            
-            return
-        }
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         
         //orientation of video
         let statusBarOrientation    = UIApplication.shared.statusBarOrientation
@@ -299,8 +294,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
             initialVideoOrientation = AVCaptureVideoOrientation(rawValue: statusBarOrientation.rawValue)!
         }
         
-        previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-        previewLayer.connection.videoOrientation = initialVideoOrientation
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        previewLayer.connection?.videoOrientation = initialVideoOrientation
         self.previewLayer = previewLayer
         //add camera view
         self.previewView.layer.addSublayer(previewLayer)
@@ -313,7 +308,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
             
             isUserControlEnable = false
             
-            if let videoConnection = stillImageOutput.connection(withMediaType: AVMediaTypeVideo) {
+            if let videoConnection = stillImageOutput.connection(with: AVMediaType.video) {
                 
                 if videoConnection.isVideoOrientationSupported,
                     let orientation = AVCaptureVideoOrientation(orientation: UIDevice.current.orientation) {
@@ -321,7 +316,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
                 }
                 
                 stillImageOutput.captureStillImageAsynchronously(from: videoConnection, completionHandler: { (CMSampleBuffer, Error) in
-                    if let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(CMSampleBuffer) {
+                    if let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(CMSampleBuffer!) {
                         
                         if let cameraImage = UIImage(data: imageData) {
                             self.selectedImage = cameraImage
@@ -360,19 +355,19 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
             
             if let devices = AVCaptureDevice.devices() as? [AVCaptureDevice] {
                 for device in devices {
-                    if (device.hasMediaType(AVMediaTypeVideo)) {
+                    if (device.hasMediaType(AVMediaType.video)) {
                         
-                        let currentCameraInput: AVCaptureInput = captureSession.inputs[0] as! AVCaptureInput
+                        let currentCameraInput: AVCaptureInput = captureSession.inputs[0] 
                         captureSession.removeInput(currentCameraInput)
                         
                         let newCamera: AVCaptureDevice?
                         if(camera == .Front){
-                            newCamera = self.cameraWithPosition(position: AVCaptureDevicePosition.front)
+                            newCamera = self.cameraWithPosition(position: AVCaptureDevice.Position.front)
                         } else {
-                            newCamera = self.cameraWithPosition(position: AVCaptureDevicePosition.back)
+                            newCamera = self.cameraWithPosition(position: AVCaptureDevice.Position.back)
                         }
                         do {
-                            try captureSession.addInput(AVCaptureDeviceInput(device: newCamera))
+                            try captureSession.addInput(AVCaptureDeviceInput(device: newCamera!))
                             stillImageOutput.outputSettings = [AVVideoCodecKey:AVVideoCodecJPEG]
                             if captureSession.canAddOutput(stillImageOutput) {
                                 captureSession.addOutput(stillImageOutput)
@@ -390,14 +385,14 @@ final class ALKCustomCameraViewController: ALKBaseViewController {
         }
     }
     
-    private func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice {
+    private func cameraWithPosition(position: AVCaptureDevice.Position) -> AVCaptureDevice {
         let devices = AVCaptureDevice.devices()
-        for device in devices! {
+        for device in devices {
             if((device as AnyObject).position == position){
-                return device as! AVCaptureDevice
+                return device 
             }
         }
-        return AVCaptureDevice(uniqueID: "")
+        return AVCaptureDevice(uniqueID: "")!
     }
     
     

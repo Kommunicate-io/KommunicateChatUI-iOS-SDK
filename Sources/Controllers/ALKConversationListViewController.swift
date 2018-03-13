@@ -248,7 +248,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
         self.navigationController?.pushViewController(viewController, animated: false)
     }
 
-    func compose() {
+    @objc func compose() {
         let newChatVC = ALKNewChatViewController(viewModel: ALKNewChatViewModel())
         navigationController?.pushViewController(newChatVC, animated: true)
     }
@@ -279,7 +279,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
         view.endEditing(true)
     }
 
-    func customBackAction() {
+    @objc func customBackAction() {
         guard let nav = self.navigationController else { return }
         let dd = nav.popViewController(animated: true)
         if dd == nil {

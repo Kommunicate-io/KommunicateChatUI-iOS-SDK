@@ -28,7 +28,7 @@ open class ALKBaseViewController: UIViewController {
         }
     }
     
-    func backTapped() {
+    @objc func backTapped() {
         _ = self.navigationController?.popViewController(animated: true)
     }
     

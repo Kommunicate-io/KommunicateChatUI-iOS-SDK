@@ -519,7 +519,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             style.minimumLineHeight = 17
             style.maximumLineHeight = 17
 
-            let attributes: [String : Any] = [NSParagraphStyleAttributeName: style]
+            let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.paragraphStyle: style]
             guard let htmlText = message.data.attributedString else { return }
             let mutableText = NSMutableAttributedString(attributedString: htmlText)
             mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
@@ -585,15 +585,15 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             style.minimumLineHeight = 17
             style.maximumLineHeight = 17
 
-            let attributes: [String : Any] = [NSFontAttributeName: font,
-                                              NSForegroundColorAttributeName: color,
-                                              NSParagraphStyleAttributeName: style
+            let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.font: font,
+                                              NSAttributedStringKey.foregroundColor: color,
+                                              NSAttributedStringKey.paragraphStyle: style
             ]
             var size = CGRect()
             if viewModel.messageType == .html {
                 guard let htmlText = message.data.attributedString else { return 30}
                 let mutableText = NSMutableAttributedString(attributedString: htmlText)
-                let attributes: [String : Any] = [NSParagraphStyleAttributeName: style]
+                let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.paragraphStyle: style]
                 mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
                 size = mutableText.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin], context: nil)
             } else {
@@ -622,7 +622,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         return messageService.getALMessage(byKey: key)?.messageModel
     }
 
-    func replyViewTapped() {
+    @objc func replyViewTapped() {
         replyViewAction?()
     }
 

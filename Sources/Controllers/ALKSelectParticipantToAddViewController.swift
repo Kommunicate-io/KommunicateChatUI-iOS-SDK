@@ -175,7 +175,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
         view.addGestureRecognizer(tapToDismiss!)
     }
     
-    func dismissSearchKeyboard() {
+    @objc func dismissSearchKeyboard() {
         if let text = searchController.searchBar.text, text.isEmpty == true {
             searchController.isActive = false
         }

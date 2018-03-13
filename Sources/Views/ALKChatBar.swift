@@ -48,7 +48,7 @@ open class ALKChatBar: UIView {
         tv.scrollsToTop = false
         tv.autocapitalizationType = .sentences
         tv.accessibilityIdentifier = "chatTextView"
-        tv.typingAttributes = [NSParagraphStyleAttributeName: style, NSFontAttributeName: UIFont.font(.normal(size: 16.0))]
+        tv.typingAttributes = [NSAttributedStringKey.paragraphStyle.rawValue: style, NSAttributedStringKey.font.rawValue: UIFont.font(.normal(size: 16.0))]
         return tv
     }()
     
@@ -174,7 +174,7 @@ open class ALKChatBar: UIView {
         case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
     }
     
-    func tapped(button: UIButton) {
+    @objc func tapped(button: UIButton) {
         switch button {
         case sendButton:
             let text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -446,7 +446,7 @@ extension ALKChatBar: UITextViewDelegate {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
         let font = textView.font ?? UIFont.font(.normal(size: 14.0))
-        let attributes = [NSParagraphStyleAttributeName: style, NSFontAttributeName: font]
+        let attributes = [NSAttributedStringKey.paragraphStyle: style, NSAttributedStringKey.font: font]
         let tv = UITextView(frame: textView.frame)
         tv.attributedText = NSAttributedString(string: text as String, attributes:attributes)
         

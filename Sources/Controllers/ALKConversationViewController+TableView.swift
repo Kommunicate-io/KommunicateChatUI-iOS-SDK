@@ -36,7 +36,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(chatBar: self.chatBar)
                 cell.menuAction = {[weak self] action in
                     self?.menuItemSelected(action: action, message: message) }
-                cell.replyViewAction = {[weak self] _ in
+                cell.replyViewAction = {[weak self] in
                     self?.scrollTo(message: message)
                 }
                 return cell
@@ -45,13 +45,13 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
-                cell.avatarTapped = {[weak self] _ in
+                cell.avatarTapped = {[weak self] in
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
                 cell.menuAction = {[weak self] action in
                     self?.menuItemSelected(action: action, message: message) }
-                cell.replyViewAction = {[weak self] _ in
+                cell.replyViewAction = {[weak self] in
                     self?.scrollTo(message: message)
                 }
                 return cell
@@ -72,7 +72,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
-                cell.avatarTapped = {[weak self] _ in
+                cell.avatarTapped = {[weak self] in
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
@@ -125,7 +125,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                         value in
                         self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                     }
-                    cell.avatarTapped = {[weak self] _ in
+                    cell.avatarTapped = {[weak self] in
                         guard let currentModel = cell.viewModel else {return}
                         self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                     }
@@ -161,7 +161,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.update(viewModel: message)
                 cell.setCellDelegate(delegate: self)
-                cell.avatarTapped = {[weak self] _ in
+                cell.avatarTapped = {[weak self] in
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
@@ -182,7 +182,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
-                cell.avatarTapped = {[weak self] _ in
+                cell.avatarTapped = {[weak self] in
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }
@@ -221,7 +221,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     value in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
-                cell.avatarTapped = {[weak self] _ in
+                cell.avatarTapped = {[weak self] in
                     guard let currentModel = cell.viewModel else {return}
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
                 }

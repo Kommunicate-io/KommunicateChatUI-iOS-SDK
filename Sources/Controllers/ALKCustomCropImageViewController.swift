@@ -162,7 +162,7 @@ extension ALKCustomCropImageViewController:UINavigationControllerDelegate ,UIScr
         previewScroll.contentInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
     }
     
-    func handleDoubleTap(recognizer: UITapGestureRecognizer) {
+    @objc func handleDoubleTap(recognizer: UITapGestureRecognizer) {
         if (previewScroll.zoomScale > previewScroll.minimumZoomScale) {
             previewScroll.setZoomScale(previewScroll.minimumZoomScale, animated: true)
         } else {

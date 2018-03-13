@@ -145,7 +145,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
         delegate = locDelegate
     }
 
-    func handleTap(withTapGesture gesture: UITapGestureRecognizer) {
+    @objc func handleTap(withTapGesture gesture: UITapGestureRecognizer) {
         if let geocode = viewModel?.geocode ,gesture.state == .ended {
             tempLocation = geocode
             openMap(withLocation: geocode, completion: nil)

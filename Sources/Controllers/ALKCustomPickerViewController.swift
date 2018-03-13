@@ -149,7 +149,7 @@ class ALKCustomPickerViewController: ALKBaseViewController {
             }
 
             exportSession!.outputURL = fileurl
-            exportSession!.outputFileType = AVFileTypeMPEG4 //file type encode goes here, you can change it for other types
+            exportSession!.outputFileType = AVFileType.mp4 //file type encode goes here, you can change it for other types
 
             print("GOT EXPORT SESSION")
             exportSession!.exportAsynchronously() {
