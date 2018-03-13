@@ -49,7 +49,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
         setupNavigation()
         let outputs = captureSession.outputs
         if let output = outputs.first {
-                    captureSession.removeOutput(output)
+            captureSession.removeOutput(output)
         }
     }
 
