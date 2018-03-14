@@ -53,7 +53,7 @@ final class ALKInformationCell: UITableViewCell {
             
             let rect = (nomalizedMessage as NSString).boundingRect(with: CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude),
                                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                                   attributes: [NSFontAttributeName:UIFont.font(.bold(size: 12))],
+                                                                   attributes: [NSAttributedStringKey.font:UIFont.font(.bold(size: 12))],
                                                                    context: nil)
             messageHeigh = rect.height + 17
             

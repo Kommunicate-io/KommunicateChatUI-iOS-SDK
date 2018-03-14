@@ -145,7 +145,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     }
 
-    func actionTapped(button: UIButton) {
+    @objc func actionTapped(button: UIButton) {
         button.isEnabled = false
     }
 

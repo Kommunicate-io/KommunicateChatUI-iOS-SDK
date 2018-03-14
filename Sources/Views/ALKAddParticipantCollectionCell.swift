@@ -92,7 +92,7 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
         delegate?.addParticipantAtIndex(atIndex: self.indexPath!)
     }
 
-    func profileTapped() {
+    @objc func profileTapped() {
         delegate?.profileTappedAt(index: self.indexPath!)
     }
     

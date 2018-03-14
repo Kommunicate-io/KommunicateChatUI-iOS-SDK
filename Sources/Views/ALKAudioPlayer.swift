@@ -138,7 +138,7 @@ final class ALKAudioPlayer {
         //setup player
         do {
             audioData = data
-            audioPlayer = try AVAudioPlayer(data: data as Data, fileTypeHint: AVFileTypeWAVE)
+            audioPlayer = try AVAudioPlayer(data: data as Data, fileTypeHint: AVFileType.wav.rawValue)
             audioPlayer?.prepareToPlay()
             audioPlayer.volume = 1.0
             audiDelegate = delegate

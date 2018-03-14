@@ -133,7 +133,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     }
 
-    func actionTapped(button: UIButton) {
+    @objc func actionTapped(button: UIButton) {
         let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mediaViewer, bundle: Bundle.applozic)
 
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController

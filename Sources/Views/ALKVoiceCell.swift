@@ -169,7 +169,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         voiceDelegate = delegate
     }
     
-    func actionTapped() {
+    @objc func actionTapped() {
         guard let identifier = viewModel?.identifier else {return}
         voiceDelegate?.playAudioPress(identifier: identifier)
     }
@@ -237,7 +237,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
     func updateViewForDownloadedState(data: Data) {
         do {
-            let player = try AVAudioPlayer(data: data, fileTypeHint: AVFileTypeWAVE)
+            let player = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.wav.rawValue)
             viewModel?.voiceData = data
             viewModel?.voiceTotalDuration = CGFloat(player.duration)
             playTimeLabel.text = getTimeString(secLeft:viewModel!.voiceTotalDuration)

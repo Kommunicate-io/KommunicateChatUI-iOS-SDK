@@ -576,7 +576,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
             case .startVideoRecord():
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: {
+                    AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {
                         granted in
                         DispatchQueue.main.async {
                             if granted {
@@ -621,7 +621,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         typingNoticeView.setDisplayName(displayName: displayName)
     }
 
-    func tableTapped(gesture: UITapGestureRecognizer) {
+    @objc func tableTapped(gesture: UITapGestureRecognizer) {
         hideMoreBar()
         view.endEditing(true)
     }
@@ -676,7 +676,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
 
-    func unreadScrollDownAction(_ sender: UIButton) {
+    @objc func unreadScrollDownAction(_ sender: UIButton) {
         tableView.scrollToBottom()
         unreadScrollButton.isHidden = true
     }
@@ -887,7 +887,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         self.navigationItem.rightBarButtonItem = refreshButton
     }
 
-    func refreshButtonAction(_ selector: UIBarButtonItem) {
+    @objc func refreshButtonAction(_ selector: UIBarButtonItem) {
         viewModel.refresh()
     }
 
