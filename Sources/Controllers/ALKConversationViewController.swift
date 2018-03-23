@@ -979,7 +979,8 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
                     lastMessage.voiceCurrentState = .pause
                     lastMessage.voiceCurrentDuration = weakSelf.audioPlayer.secLeft
                 } else {
-                    lastMessage.voiceCurrentDuration = lastMessage.voiceTotalDuration
+                    let lastMessageCopy = lastMessage
+                    lastMessage.voiceCurrentDuration = lastMessageCopy.voiceTotalDuration
                     lastMessage.voiceCurrentState = .stop
                 }
                 weakSelf.audioPlayer.pauseAudio()
@@ -997,7 +998,8 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
                 NSLog("reset time to total duration")
                 //reset time to total duration
                 if currentVoice.voiceCurrentState  == .stop || currentVoice.voiceCurrentDuration < 1 {
-                    currentVoice.voiceCurrentDuration = currentVoice.voiceTotalDuration
+                    let currentVoiceCopy = currentVoice
+                    currentVoice.voiceCurrentDuration = currentVoiceCopy.voiceTotalDuration
                 }
 
                 if let data = currentVoice.voiceData {
