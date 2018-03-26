@@ -1076,8 +1076,11 @@ open class ALKConversationViewModel: NSObject {
         let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as String?
         alMessage.fileMeta.contentType = mimetype
 
-        let imageSize = NSData(contentsOfFile: filePath.path)
-        alMessage.fileMeta.size = String(format: "%lu", (imageSize?.length)!)
+        guard let imageData = NSData(contentsOfFile: filePath.path) else {
+            // Empty image.
+            return nil
+        }
+        alMessage.fileMeta.size = String(format: "%lu", imageData.length)
         alMessageWrapper.addALMessage(toMessageArray: alMessage)
 
         let dbHandler = ALDBHandler.sharedInstance()
