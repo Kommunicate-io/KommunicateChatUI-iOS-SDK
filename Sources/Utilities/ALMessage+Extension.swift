@@ -157,7 +157,7 @@ extension ALMessage: ALKChatViewModelProtocol {
 extension ALMessage {
 
     var isMyMessage: Bool {
-        return self.type == myMessage
+        return (type != nil) ? (type == myMessage):false
     }
 
     var messageType: ALKMessageType {
