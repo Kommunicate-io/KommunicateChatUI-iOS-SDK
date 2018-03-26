@@ -1073,8 +1073,8 @@ open class ALKConversationViewModel: NSObject {
         }
         let pathExtension = filePath.pathExtension
         let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue()
-        let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as! String
-        alMessage.fileMeta.contentType = String(describing: mimetype)
+        let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as String?
+        alMessage.fileMeta.contentType = mimetype
 
         let imageSize = NSData(contentsOfFile: filePath.path)
         alMessage.fileMeta.size = String(format: "%lu", (imageSize?.length)!)
