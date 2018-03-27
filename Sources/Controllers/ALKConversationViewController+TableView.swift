@@ -229,6 +229,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
+        case .genericCard:
+            return UITableViewCell()
         }
     }
 

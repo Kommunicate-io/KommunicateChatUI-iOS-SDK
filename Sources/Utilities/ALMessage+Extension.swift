@@ -90,6 +90,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Video"
         case .html:
             return "Text"
+        case .genericCard:
+            return message
         }
     }
 
@@ -161,24 +163,21 @@ extension ALMessage {
     }
 
     var messageType: ALKMessageType {
-        if contentType == Int16(ALMESSAGE_CONTENT_DEFAULT) {
-            return .text
-        } else if contentType == Int16(ALMESSAGE_CONTENT_LOCATION) {
+
+        switch Int32(contentType) {
+        case ALMESSAGE_CONTENT_DEFAULT:
+            guard isGenericCard() else {return .text}
+            return .genericCard
+        case ALMESSAGE_CONTENT_LOCATION:
             return .location
-        } else if contentType == Int16(ALMESSAGE_CHANNEL_NOTIFICATION) {
+        case ALMESSAGE_CHANNEL_NOTIFICATION:
             return .information
-        } else if contentType == Int16(ALMESSAGE_CONTENT_TEXT_HTML) {
+        case ALMESSAGE_CONTENT_TEXT_HTML:
             return .html
-        } else if let fileMeta = fileMeta {
-            if fileMeta.contentType.hasPrefix("image") {
-                return .photo
-            } else if fileMeta.contentType.hasPrefix("audio") {
-                return .voice
-            } else if fileMeta.contentType.hasPrefix("video") {
-                return .video
-            }
+        default:
+            guard let attachmentType = getAttachmentType() else {return .text}
+            return attachmentType
         }
-        return .text
     }
 
     var date: Date {
@@ -276,6 +275,27 @@ extension ALMessage {
 
     var fileMetaInfo: ALFileMetaInfo? {
         return self.fileMeta ?? nil
+    }
+
+    private func isGenericCard() -> Bool {
+        guard let metadata = metadata,
+            let templateId = metadata["templateId"] as? String else {
+                return false
+        }
+        return templateId == "2"
+    }
+
+    private func getAttachmentType() -> ALKMessageType? {
+        guard let fileMeta = fileMeta else {return nil}
+        if fileMeta.contentType.hasPrefix("image") {
+            return .photo
+        } else if fileMeta.contentType.hasPrefix("audio") {
+            return .voice
+        } else if fileMeta.contentType.hasPrefix("video") {
+            return .video
+        } else {
+            return nil
+        }
     }
 
 }

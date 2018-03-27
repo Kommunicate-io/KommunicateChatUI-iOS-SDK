@@ -19,6 +19,9 @@
 		8B36D0EF1F3DC5E900FEFFD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EE1F3DC5E900FEFFD2 /* Assets.xcassets */; };
 		8B36D0F21F3DC5E900FEFFD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0F01F3DC5E900FEFFD2 /* LaunchScreen.storyboard */; };
 		8B36D1081F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D1071F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift */; };
+		8B523B432067E1DE001B5989 /* ALMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B523B422067E1DE001B5989 /* ALMessageTests.swift */; };
+		8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */; };
+		8BC08E632069086300259AEF /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BC08E622069086300259AEF /* testImage.png */; };
 		8BEF11AC1F618669000336AF /* ALChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEF11AB1F618669000336AF /* ALChatManager.swift */; };
 		8BEF11AE1F619367000336AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEF11AD1F619367000336AF /* LoginViewController.swift */; };
 		8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */; };
@@ -84,6 +87,9 @@
 		8B36D1071F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplozicSwiftDemoUITests.swift; sourceTree = "<group>"; };
 		8B36D1091F3DC5EA00FEFFD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B4836FA1F6976830067FC5E /* ApplozicSwiftDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApplozicSwiftDemo.entitlements; sourceTree = "<group>"; };
+		8B523B422067E1DE001B5989 /* ALMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALMessageTests.swift; sourceTree = "<group>"; };
+		8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewModelTests.swift; sourceTree = "<group>"; };
+		8BC08E622069086300259AEF /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		8BEF11AB1F618669000336AF /* ALChatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALChatManager.swift; sourceTree = "<group>"; };
 		8BEF11AD1F619367000336AF /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKNewChatViewModelTests.swift; sourceTree = "<group>"; };
@@ -176,6 +182,7 @@
 		8B36D0FB1F3DC5EA00FEFFD2 /* ApplozicSwiftDemoTests */ = {
 			isa = PBXGroup;
 			children = (
+				8BC08E61206907A500259AEF /* Resources */,
 				8BF8D8611FBEBCA700804824 /* Tests */,
 				8BF8D85C1FBEAFC100804824 /* Mocks */,
 				8B36D0FE1F3DC5EA00FEFFD2 /* Info.plist */,
@@ -192,6 +199,14 @@
 			path = ApplozicSwiftDemoUITests;
 			sourceTree = "<group>";
 		};
+		8BC08E61206907A500259AEF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8BC08E622069086300259AEF /* testImage.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		8BF8D85C1FBEAFC100804824 /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +220,8 @@
 			isa = PBXGroup;
 			children = (
 				8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */,
+				8B523B422067E1DE001B5989 /* ALMessageTests.swift */,
+				8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -373,6 +390,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BC08E632069086300259AEF /* testImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,8 +557,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
+				8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */,
 				8BF8D85E1FBEAFDD00804824 /* ALApplozicSettingsMock.swift in Sources */,
 				8BF8D8601FBEB20200804824 /* ALUserServiceMock.swift in Sources */,
+				8B523B432067E1DE001B5989 /* ALMessageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
