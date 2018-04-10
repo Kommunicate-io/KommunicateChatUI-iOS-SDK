@@ -231,6 +231,8 @@ open class ALKConversationViewModel: NSObject {
                 height = ALKFriendVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
             return height
+        case .genericCard:
+            return ALKGenericCardCell.rowHeight()
         default:
             print("Not available")
             return 0

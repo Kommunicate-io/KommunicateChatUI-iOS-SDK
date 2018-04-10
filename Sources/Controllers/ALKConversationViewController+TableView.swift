@@ -231,6 +231,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         case .genericCard:
             let cell: ALKCollectionTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.collectionViewType = ALKGenericCardCollectionView.self
             cell.register(cell: ALKGenericCardCell.self)
             return cell
         }
@@ -370,6 +371,7 @@ extension ALTopicDetail: ALKContextTitleDataType {
 extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
         return 2
     }
 

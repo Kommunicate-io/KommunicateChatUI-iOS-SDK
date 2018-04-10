@@ -7,24 +7,30 @@
 
 import UIKit
 
-class ALKIndexedCollectionView: UICollectionView {
+open class ALKIndexedCollectionView: UICollectionView {
 
-    var indexPath: IndexPath!
+    open var indexPath: IndexPath!
+    open var viewModel: ALKMessageViewModel?
 
-    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+    override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    open func setMessage(viewModel: ALKMessageViewModel) {
+        self.viewModel = viewModel
     }
 }
 
 let collectionViewCellIdentifier: NSString = "CollectionViewCell"
 
-class ALKCollectionTableViewCell: UITableViewCell {
+open class ALKCollectionTableViewCell: ALKChatBaseCell<ALKMessageViewModel> {
 
-    var collectionView: ALKIndexedCollectionView!
+    open var collectionView: ALKIndexedCollectionView!
+    open var collectionViewType: ALKIndexedCollectionView.Type = ALKIndexedCollectionView.self
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -34,8 +40,7 @@ class ALKCollectionTableViewCell: UITableViewCell {
         layout.minimumLineSpacing = 5
         layout.itemSize = CGSize(width: 91, height: 91)
         layout.scrollDirection = .horizontal
-
-        collectionView = ALKIndexedCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView = ALKIndexedCollectionView.init(frame: frame, collectionViewLayout: layout)
         collectionView.backgroundColor = .lightGray
         collectionView.showsHorizontalScrollIndicator = false
 
@@ -43,24 +48,24 @@ class ALKCollectionTableViewCell: UITableViewCell {
         layoutMargins = UIEdgeInsetsMake(10, 0, 10, 0)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         let frame = self.contentView.bounds
         collectionView.frame = CGRect(x: 0, y: 0.5, width: frame.size.width, height: frame.size.height - 1)
     }
 
-    func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, index: NSInteger) {
+    open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, index: NSInteger) {
         collectionView.dataSource = delegate
         collectionView.delegate = delegate
         collectionView.tag = index
         collectionView.reloadData()
     }
 
-    func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, indexPath: IndexPath) {
+    open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, indexPath: IndexPath) {
         collectionView.dataSource = delegate
         collectionView.delegate = delegate
         collectionView.indexPath = indexPath
@@ -68,7 +73,13 @@ class ALKCollectionTableViewCell: UITableViewCell {
         collectionView.reloadData()
     }
 
-    func register(cell: UICollectionViewCell.Type) {
+    open func register(cell: UICollectionViewCell.Type) {
         collectionView.register(cell, forCellWithReuseIdentifier: cell.reuseIdentifier)
+    }
+
+    override open func update(viewModel: ALKMessageViewModel) {
+        self.viewModel = viewModel
+        collectionView.setMessage(viewModel: viewModel)
+        collectionView.reloadData()
     }
 }

@@ -7,6 +7,25 @@
 
 import UIKit
 
+open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
+
+    open var cardTemplate: ALKGenericCardTemplate?
+
+    override open func setMessage(viewModel: ALKMessageViewModel) {
+        super.setMessage(viewModel: viewModel)
+        // set card template
+
+        guard
+            let metadata = viewModel.metadata,
+            let payload = metadata["payload"] as? String
+            else { return}
+        do {
+            cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+        } catch(let error) {
+            print("\(error)")
+        }
+    }
+}
 
 open class ALKGenericCardCell: UICollectionViewCell {
 
