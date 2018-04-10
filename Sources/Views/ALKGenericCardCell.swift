@@ -8,7 +8,7 @@
 import UIKit
 
 
-open class ALKGenericCardCell: UITableViewCell {
+open class ALKGenericCardCell: UICollectionViewCell {
 
     open let coverImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
@@ -90,8 +90,9 @@ open class ALKGenericCardCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
         setUpButtons()
         setUpViews()
     }
@@ -118,7 +119,7 @@ open class ALKGenericCardCell: UITableViewCell {
     
     private func setUpViews() {
 
-        let view = self
+        let view = contentView
 
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(subtitleLabel)

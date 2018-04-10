@@ -230,7 +230,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             }
         case .genericCard:
-            return UITableViewCell()
+            let cell: ALKCollectionTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.register(cell: ALKGenericCardCell.self)
+            return cell
         }
     }
 
@@ -282,6 +284,17 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         return dateView
     }
 
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? ALKCollectionTableViewCell else {
+            return
+        }
+        cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, index: (indexPath as NSIndexPath).row)
+        let index = cell.collectionView.tag
+        let value = contentOffsetDictionary[index]
+        let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
+        cell.collectionView.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: false)
+    }
+
     //MARK: Paging
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -313,6 +326,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.isCellVisible(section: viewModel.messageModels.count-2, row: 0) {
             unreadScrollButton.isHidden = true
+        }
+        if (scrollView is UICollectionView) {
+            let horizontalOffset = scrollView.contentOffset.x
+            let collectionView = scrollView as! UICollectionView
+            contentOffsetDictionary[collectionView.tag] = horizontalOffset as AnyObject
         }
     }
 }
@@ -347,4 +365,20 @@ extension ALTopicDetail: ALKContextTitleDataType {
         return "\(key): \(value)"
     }
 
+}
+
+extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 2
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: ALKGenericCardCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+        return cell
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.view.frame.width-50, height: 350)
+    }
 }
