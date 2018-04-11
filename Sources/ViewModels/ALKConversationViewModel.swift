@@ -232,10 +232,7 @@ open class ALKConversationViewModel: NSObject {
             }
             return height
         case .genericCard:
-            return ALKGenericCardCell.rowHeight()
-        default:
-            print("Not available")
-            return 0
+            return ALKGenericCardCollectionView.rowHeightFor(message: messageModel)
         }
     }
 

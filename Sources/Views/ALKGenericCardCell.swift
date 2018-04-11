@@ -25,6 +25,31 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
             print("\(error)")
         }
     }
+
+    override open class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
+        guard let template = getCardTemplate(message: message),
+            !template.cards.isEmpty,
+            let card = template.cards.first
+            else {
+                return 0
+        }
+        return ALKGenericCardCell.rowHeightFor(card: card)
+    }
+
+    private class func getCardTemplate(message: ALKMessageViewModel) -> ALKGenericCardTemplate? {
+        guard
+            let metadata = message.metadata,
+            let payload = metadata["payload"] as? String
+            else { return nil}
+        do {
+            let cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+            return cardTemplate
+        } catch(let error) {
+            print("\(error)")
+            return nil
+        }
+    }
+
 }
 
 open class ALKGenericCardCell: UICollectionViewCell {
@@ -109,7 +134,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
         super.awakeFromNib()
     }
 
-
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setUpButtons()
@@ -120,11 +144,20 @@ open class ALKGenericCardCell: UICollectionViewCell {
         super.init(coder: aDecoder)
     }
 
-    static public func rowHeight() -> CGFloat {
+    open class func rowHeightFor(card: ALKGenericCard) -> CGFloat {
+        let buttonHeight = 30
+        let baseHeight = 250
+        let totalButtonHeight = (card.buttons != nil) ? buttonHeight*(card.buttons?.count)!:0
+        return CGFloat(baseHeight + totalButtonHeight)
+    }
 
-        // Update height based on number of buttons
-        // present and if image is set.
-        return 350
+    open func update(card: ALKGenericCard) {
+        self.titleLabel.text = card.title
+        self.subtitleLabel.text = card.subtitle
+        self.descriptionLabel.text = card.description
+        guard let buttons = card.buttons, !buttons.isEmpty else {return}
+        updateViewFor(buttons)
+
     }
 
     private func setUpButtons() {
@@ -168,7 +201,12 @@ open class ALKGenericCardCell: UICollectionViewCell {
         mainBackgroundView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
         mainBackgroundView.topAnchor.constraint(equalTo: coverImageView.topAnchor).isActive = true
         mainBackgroundView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor).isActive = true
+    }
 
-
+    private func updateViewFor(_ buttons: [ALKGenericCard.Button]) {
+        // Hide extra buttons
+        actionButtons.enumerated().forEach {
+            if $0 >= buttons.count {$1.isHidden = true}
+        }
     }
 }
