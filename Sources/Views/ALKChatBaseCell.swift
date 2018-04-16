@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ALKChatBaseCell<T>: ALKBaseCell<T> {
+open class ALKChatBaseCell<T>: ALKBaseCell<T> {
     
     fileprivate weak var chatBar: ALKChatBar?
     
@@ -82,11 +82,11 @@ class ALKChatBaseCell<T>: ALKBaseCell<T> {
         }
     }
     
-    override var canBecomeFirstResponder: Bool {
+    override open var canBecomeFirstResponder: Bool {
         return true
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         switch self {
         case let menuItem as ALKCopyMenuItemProtocol where action == menuItem.selector:
             return true

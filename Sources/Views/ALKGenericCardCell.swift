@@ -62,22 +62,28 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "First label"
+        label.text = ""
         label.numberOfLines = 1
+        label.font = Font.bold(size: 17.0).font()
+        label.textColor = UIColor.black
         return label
     }()
 
     open let subtitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Subtitle"
+        label.text = ""
         label.numberOfLines = 1
+        label.font = Font.bold(size: 15.0).font()
+        label.textColor = UIColor.gray
         return label
     }()
 
-    open let descriptionLabel: UILabel = {
-        let label = UILabel()
+    open let descriptionLabel: VerticalAlignLabel = {
+        let label = VerticalAlignLabel()
         label.text = "DescriptionLabel"
         label.numberOfLines = 3
+        label.font = Font.normal(size: 16.0).font()
+        label.textColor = UIColor.gray
         return label
     }()
     
@@ -94,6 +100,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
+        stackView.spacing = 3.0
         return stackView
     }()
 
@@ -107,7 +114,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
     
     open let mainBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.gray
+        view.layer.cornerRadius = 5
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 1
         return view
     }()
 
@@ -118,9 +127,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
             static var right: CGFloat = -5.0
         }
         enum mainStackView {
-            static var bottom: CGFloat = -10.0
-            static var left: CGFloat = 5.0
-            static var right: CGFloat = -5.0
+            static var bottom: CGFloat = -20.0
+            static var left: CGFloat = 0
+            static var right: CGFloat = 0
         }
     }
 
@@ -147,8 +156,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open class func rowHeightFor(card: ALKGenericCard) -> CGFloat {
         let buttonHeight = 30
         let baseHeight = 250
+        let padding = 10
         let totalButtonHeight = (card.buttons != nil) ? buttonHeight*(card.buttons?.count)!:0
-        return CGFloat(baseHeight + totalButtonHeight)
+        return CGFloat(baseHeight + totalButtonHeight + padding)
     }
 
     open func update(card: ALKGenericCard) {
@@ -164,13 +174,21 @@ open class ALKGenericCardCell: UICollectionViewCell {
         actionButtons = (1...3).map {
             _ in
             let button = UIButton()
-            button.setTitle("title", for: .normal)
+            button.setTitleColor(.gray, for: .normal)
+            button.setFont(font: Font.bold(size: 16.0))
+            button.setTitle("Button", for: .normal)
+            button.layer.borderWidth = 1.0
+            button.layer.borderColor = UIColor.gray.cgColor
             return button
         }
     }
     
     private func setUpViews() {
+        setupConstraints()
+        backgroundColor = .clear
+    }
 
+    private func setupConstraints() {
         let view = contentView
 
         titleStackView.addArrangedSubview(titleLabel)
@@ -191,6 +209,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
         coverImageView.heightAnchor.constraint(equalToConstant: coverImageViewHeight).isActive = true
 
         titleStackView.heightAnchor.constraint(equalToConstant: titleLabelStackViewHeight).isActive = true
+        titleStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
+        titleStackView.trailingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: -10).isActive = true
+        descriptionLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
+        descriptionLabel.trailingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: -10).isActive = true
+
         descriptionLabel.heightAnchor.constraint(equalToConstant: descriptionLabelHeight).isActive = true
         mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true
         mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
@@ -201,6 +224,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         mainBackgroundView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
         mainBackgroundView.topAnchor.constraint(equalTo: coverImageView.topAnchor).isActive = true
         mainBackgroundView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor).isActive = true
+        buttonStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
     }
 
     private func updateViewFor(_ buttons: [ALKGenericCard.Button]) {
@@ -208,5 +232,48 @@ open class ALKGenericCardCell: UICollectionViewCell {
         actionButtons.enumerated().forEach {
             if $0 >= buttons.count {$1.isHidden = true}
         }
+    }
+}
+
+public class VerticalAlignLabel: UILabel {
+    enum VerticalAlignment {
+        case top
+        case middle
+        case bottom
+    }
+
+    var verticalAlignment : VerticalAlignment = .top {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+
+    override public func textRect(forBounds bounds: CGRect, limitedToNumberOfLines: Int) -> CGRect {
+        let rect = super.textRect(forBounds: bounds, limitedToNumberOfLines: limitedToNumberOfLines)
+
+        if UIView.userInterfaceLayoutDirection(for: .unspecified) == .rightToLeft {
+            switch verticalAlignment {
+            case .top:
+                return CGRect(x: self.bounds.size.width - rect.size.width, y: bounds.origin.y, width: rect.size.width, height: rect.size.height)
+            case .middle:
+                return CGRect(x: self.bounds.size.width - rect.size.width, y: bounds.origin.y + (bounds.size.height - rect.size.height) / 2, width: rect.size.width, height: rect.size.height)
+            case .bottom:
+                return CGRect(x: self.bounds.size.width - rect.size.width, y: bounds.origin.y + (bounds.size.height - rect.size.height), width: rect.size.width, height: rect.size.height)
+            }
+        } else {
+            switch verticalAlignment {
+            case .top:
+                return CGRect(x: bounds.origin.x, y: bounds.origin.y, width: rect.size.width, height: rect.size.height)
+            case .middle:
+                return CGRect(x: bounds.origin.x, y: bounds.origin.y + (bounds.size.height - rect.size.height) / 2, width: rect.size.width, height: rect.size.height)
+            case .bottom:
+                return CGRect(x: bounds.origin.x, y: bounds.origin.y + (bounds.size.height - rect.size.height), width: rect.size.width, height: rect.size.height)
+            }
+        }
+    }
+
+    override public func drawText(in rect: CGRect) {
+        let r = self.textRect(forBounds: rect, limitedToNumberOfLines: self.numberOfLines)
+        super.drawText(in: r)
     }
 }

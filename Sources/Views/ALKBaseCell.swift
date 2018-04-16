@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ALKBaseCell<T>: UITableViewCell {
+open class ALKBaseCell<T>: UITableViewCell {
     
     var viewModel: T?
     
@@ -19,7 +19,7 @@ class ALKBaseCell<T>: UITableViewCell {
         setupStyle()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

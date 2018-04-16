@@ -49,7 +49,7 @@ open class ALKCollectionTableViewCell: ALKChatBaseCell<ALKMessageViewModel> {
     override open func layoutSubviews() {
         super.layoutSubviews()
         let frame = self.contentView.bounds
-        collectionView.frame = CGRect(x: 0, y: 0.5, width: frame.size.width, height: frame.size.height - 1)
+        collectionView.frame = CGRect(x: 0, y: 5.0, width: frame.size.width, height: frame.size.height - 5.0)
     }
 
     override open func update(viewModel: ALKMessageViewModel) {
@@ -90,14 +90,15 @@ open class ALKCollectionTableViewCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     private func setupCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 4, left: 5, bottom: 4, right: 5)
-        layout.minimumLineSpacing = 5
+        layout.sectionInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 5)
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
         layout.itemSize = CGSize(width: 91, height: 91)
         layout.scrollDirection = .horizontal
         collectionView = collectionViewType.init(frame: frame, collectionViewLayout: layout)
-        collectionView.backgroundColor = .lightGray
         collectionView.showsHorizontalScrollIndicator = false
-
+        collectionView.backgroundColor = .clear
+        let _ = contentView.subviews.map { $0.removeFromSuperview()}
         contentView.addSubview(self.collectionView)
         layoutMargins = UIEdgeInsetsMake(10, 0, 10, 0)
     }
