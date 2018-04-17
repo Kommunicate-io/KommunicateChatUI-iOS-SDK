@@ -23,7 +23,6 @@ class ALKNewChatViewModelTests: XCTestCase {
         settingsMock.filterContactStatus = false
         newChatVM.applozicSettings = settingsMock
         newChatVM.getContacts(userService: userServiceMock, completion: {
-            error in
             XCTAssertFalse(userServiceMock.getListOfUsersMethodCalled)
         })
     }
@@ -36,7 +35,6 @@ class ALKNewChatViewModelTests: XCTestCase {
         settingsMock.filterContactStatus = true
         newChatVM.applozicSettings = settingsMock
         newChatVM.getContacts(userService: userServiceMock, completion: {
-            error in
             XCTAssertTrue(userServiceMock.getListOfUsersMethodCalled)
         })
     }
