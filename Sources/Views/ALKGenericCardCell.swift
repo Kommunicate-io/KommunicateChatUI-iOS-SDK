@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
 
@@ -56,7 +57,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open let coverImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
-        imageView.image = UIImage(named: "icon_mic", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         return imageView
     }()
 
@@ -125,6 +126,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
             static var top: CGFloat = 5.0
             static var left: CGFloat = 5.0
             static var right: CGFloat = -5.0
+            static var height: CGFloat = 80.0
         }
         enum mainStackView {
             static var bottom: CGFloat = -20.0
@@ -135,7 +137,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open var descriptionLabelHeight: CGFloat = 80.0
     open var titleLabelStackViewHeight: CGFloat = 50.0
-    open var coverImageViewHeight: CGFloat = 80.0
 
     open var actionButtons = [UIButton]()
 
@@ -155,10 +156,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open class func rowHeightFor(card: ALKGenericCard) -> CGFloat {
         let buttonHeight = 30
-        let baseHeight = 250
-        let padding = 10
-        let totalButtonHeight = (card.buttons != nil) ? buttonHeight*(card.buttons?.count)!:0
-        return CGFloat(baseHeight + totalButtonHeight + padding)
+        let baseHeight:CGFloat = 170
+        let padding:CGFloat = 10
+        let coverImageHeight = (card.imageUrl != nil) ? Padding.CoverImageView.height:0
+        let totalButtonHeight:CGFloat = (card.buttons != nil) ? CGFloat(buttonHeight*(card.buttons?.count)!):0
+        return baseHeight + coverImageHeight + totalButtonHeight + padding
     }
 
     open func update(card: ALKGenericCard) {
@@ -167,6 +169,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
         self.descriptionLabel.text = card.description
         guard let buttons = card.buttons, !buttons.isEmpty else {return}
         updateViewFor(buttons)
+        guard let url = card.imageUrl else {
+            coverImageView.isHidden = true
+            return
+        }
+        self.coverImageView.kf.setImage(with: url)
 
     }
 
@@ -206,7 +213,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         coverImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Padding.CoverImageView.top).isActive = true
         coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.CoverImageView.left).isActive = true
         coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
-        coverImageView.heightAnchor.constraint(equalToConstant: coverImageViewHeight).isActive = true
+        coverImageView.heightAnchor.constraint(equalToConstant: Padding.CoverImageView.height).isActive = true
 
         titleStackView.heightAnchor.constraint(equalToConstant: titleLabelStackViewHeight).isActive = true
         titleStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
