@@ -35,7 +35,6 @@ let collectionViewCellIdentifier: NSString = "CollectionViewCell"
 open class ALKCollectionTableViewCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     open var collectionView: ALKIndexedCollectionView!
-    open var collectionViewType: ALKIndexedCollectionView.Type = ALKIndexedCollectionView.self
 
     override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -95,7 +94,7 @@ open class ALKCollectionTableViewCell: ALKChatBaseCell<ALKMessageViewModel> {
         layout.minimumInteritemSpacing = 10
         layout.itemSize = CGSize(width: 91, height: 91)
         layout.scrollDirection = .horizontal
-        collectionView = collectionViewType.init(frame: frame, collectionViewLayout: layout)
+        collectionView = ALKIndexedCollectionView(frame: frame, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
         let _ = contentView.subviews.map { $0.removeFromSuperview()}

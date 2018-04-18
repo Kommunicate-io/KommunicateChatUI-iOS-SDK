@@ -231,10 +231,20 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         case .genericCard:
             let cell: ALKCollectionTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-            cell.collectionViewType = ALKGenericCardCollectionView.self
-            cell.updateCollectionView()
+
             cell.register(cell: ALKGenericCardCell.self)
             cell.update(viewModel: message)
+            guard viewModel.richMessages[indexPath.section] == nil else {return cell}
+            guard
+                let metadata = message.metadata,
+                let payload = metadata["payload"] as? String
+                else { return cell}
+            do {
+                let cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+                viewModel.richMessages[indexPath.section] = cardTemplate
+            } catch(let error) {
+                print("\(error)")
+            }
             return cell
         }
     }
@@ -291,7 +301,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let cell = cell as? ALKCollectionTableViewCell else {
             return
         }
-        cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, index: (indexPath as NSIndexPath).row)
+        cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
         let index = cell.collectionView.tag
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
@@ -373,16 +383,15 @@ extension ALTopicDetail: ALKContextTitleDataType {
 extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let collectionView = collectionView as? ALKGenericCardCollectionView,
-            let template = collectionView.cardTemplate
+        guard let collectionView = collectionView as? ALKIndexedCollectionView,
+        let template = viewModel.richMessages[collectionView.tag]
         else {return 0}
-
         return template.cards.count
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let collectionView = collectionView as? ALKGenericCardCollectionView,
-            let template = collectionView.cardTemplate,
+        guard let collectionView = collectionView as? ALKIndexedCollectionView,
+            let template = viewModel.richMessages[collectionView.tag],
             template.cards.count > indexPath.row else {
                 return UICollectionViewCell()
         }

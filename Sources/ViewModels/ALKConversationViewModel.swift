@@ -49,6 +49,8 @@ open class ALKConversationViewModel: NSObject {
     }
     open var messageModels: [ALKMessageModel] = []
 
+    open var richMessages: [Int:ALKGenericCardTemplate] = [:]
+
     open var isOpenGroup: Bool {
         let alChannelService = ALChannelService()
         guard let channelKey = channelKey,
