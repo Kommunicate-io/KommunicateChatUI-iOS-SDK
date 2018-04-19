@@ -396,7 +396,19 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
                 return UICollectionViewCell()
         }
         let cell: ALKGenericCardCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-        cell.update(card: template.cards[indexPath.row])
+        let card = template.cards[indexPath.row]
+        cell.update(card: card)
+        cell.buttonSelected = {[weak self] tag, title in
+            print("\(title, tag) button selected in generic card")
+            guard let strongSelf = self else {return}
+            var infoDict = [String: Any]()
+            infoDict["buttonName"] = title
+            infoDict["buttonIndex"] = tag
+            infoDict["card"] = card
+            infoDict["template"] = template
+            infoDict["userId"] = strongSelf.viewModel.contactId
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
+        }
         return cell
     }
 

@@ -139,8 +139,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var titleLabelStackViewHeight: CGFloat = 50.0
 
     open var actionButtons = [UIButton]()
-
     open var card: ALKGenericCard!
+    open var buttonSelected: ((_ index: Int, _ name: String)->())?
 
     override open func awakeFromNib() {
         super.awakeFromNib()
@@ -181,22 +181,18 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     @objc func buttonSelected(_ action: UIButton) {
-        print("\(String(describing: action.currentTitle)) selected")
-        var infoDict = [String: Any]()
-        infoDict["buttonName"] = action.currentTitle
-        infoDict["card"] = card
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
+        self.buttonSelected?(action.tag, action.currentTitle ?? "")
     }
 
     private func setUpButtons() {
         actionButtons = (1...3).map {
-            _ in
             let button = UIButton()
             button.setTitleColor(.gray, for: .normal)
             button.setFont(font: Font.bold(size: 16.0))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.layer.borderWidth = 1.0
+            button.tag = $0
             button.layer.borderColor = UIColor.gray.cgColor
             return button
         }
