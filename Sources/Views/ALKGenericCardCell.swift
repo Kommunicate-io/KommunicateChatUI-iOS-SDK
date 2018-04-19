@@ -140,6 +140,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open var actionButtons = [UIButton]()
 
+    open var card: ALKGenericCard!
+
     override open func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -164,6 +166,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     open func update(card: ALKGenericCard) {
+        self.card = card
         self.titleLabel.text = card.title
         self.subtitleLabel.text = card.subtitle
         self.descriptionLabel.text = card.description
@@ -177,6 +180,14 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     }
 
+    @objc func buttonSelected(_ action: UIButton) {
+        print("\(String(describing: action.currentTitle)) selected")
+        var infoDict = [String: Any]()
+        infoDict["buttonName"] = action.currentTitle
+        infoDict["card"] = card
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
+    }
+
     private func setUpButtons() {
         actionButtons = (1...3).map {
             _ in
@@ -184,6 +195,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
             button.setTitleColor(.gray, for: .normal)
             button.setFont(font: Font.bold(size: 16.0))
             button.setTitle("Button", for: .normal)
+            button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.layer.borderWidth = 1.0
             button.layer.borderColor = UIColor.gray.cgColor
             return button
@@ -238,6 +250,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         // Hide extra buttons
         actionButtons.enumerated().forEach {
             if $0 >= buttons.count {$1.isHidden = true}
+            else {$1.setTitle(buttons[$0].title, for: .normal)}
         }
     }
 }
