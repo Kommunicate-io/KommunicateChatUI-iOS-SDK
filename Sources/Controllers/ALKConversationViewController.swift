@@ -477,6 +477,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         tableView.register(ALKMyVideoCell.self)
         tableView.register(ALKFriendVideoCell.self)
         tableView.register(ALKCollectionTableViewCell.self)
+        tableView.register(ALKGenericListCell.self)
     }
 
 

@@ -234,17 +234,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             cell.register(cell: ALKGenericCardCell.self)
             cell.update(viewModel: message)
-            guard viewModel.richMessages[indexPath.section] == nil else {return cell}
-            guard
-                let metadata = message.metadata,
-                let payload = metadata["payload"] as? String
-                else { return cell}
-            do {
-                let cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
-                viewModel.richMessages[indexPath.section] = cardTemplate
-            } catch(let error) {
-                print("\(error)")
-            }
+            return cell
+        case .genericList:
+            let cell: ALKGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            guard let template = viewModel.genericTemplateFor(message: message) as? ALKGenericListTemplate else { return UITableViewCell() }
+            cell.update(template: template)
             return cell
         }
     }
@@ -384,14 +378,16 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let collectionView = collectionView as? ALKIndexedCollectionView,
-        let template = viewModel.richMessages[collectionView.tag]
+            let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
+            let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate
         else {return 0}
         return template.cards.count
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let collectionView = collectionView as? ALKIndexedCollectionView,
-            let template = viewModel.richMessages[collectionView.tag],
+            let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
+            let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate,
             template.cards.count > indexPath.row else {
                 return UICollectionViewCell()
         }

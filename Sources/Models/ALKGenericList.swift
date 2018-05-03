@@ -8,8 +8,6 @@
 import Foundation
 
 public struct ALKGenericListTemplate: Codable {
-    public let templateId: Int
-    public struct Payload: Codable {
         public let headerImage: String
         public let headerText: String
         public struct Element: Codable {
@@ -27,6 +25,4 @@ public struct ALKGenericListTemplate: Codable {
             public let id: String?
         }
         public let buttons: [Button]
-    }
-    public let payload: Payload
 }

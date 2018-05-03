@@ -92,6 +92,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Text"
         case .genericCard:
             return message
+        case .genericList:
+            return message
         }
     }
 
@@ -166,8 +168,9 @@ extension ALMessage {
 
         switch Int32(contentType) {
         case ALMESSAGE_CONTENT_DEFAULT:
-            guard isGenericCard() else {return .text}
-            return .genericCard
+            let isGenericCardType = isGenericCard()
+            guard isGenericCardType || isGenericList() else {return .text}
+            return isGenericCardType ? .genericCard:.genericList
         case ALMESSAGE_CONTENT_LOCATION:
             return .location
         case ALMESSAGE_CHANNEL_NOTIFICATION:
@@ -277,14 +280,6 @@ extension ALMessage {
         return self.fileMeta ?? nil
     }
 
-    private func isGenericCard() -> Bool {
-        guard let metadata = metadata,
-            let templateId = metadata["templateId"] as? String else {
-                return false
-        }
-        return templateId == "2"
-    }
-
     private func getAttachmentType() -> ALKMessageType? {
         guard let fileMeta = fileMeta else {return nil}
         if fileMeta.contentType.hasPrefix("image") {
@@ -296,6 +291,22 @@ extension ALMessage {
         } else {
             return nil
         }
+    }
+
+    private func isGenericCard() -> Bool {
+        guard let metadata = metadata,
+            let templateId = metadata["templateId"] as? String else {
+                return false
+        }
+        return templateId == "2"
+    }
+
+    private func isGenericList() -> Bool {
+        guard let metadata = metadata,
+            let templateId = metadata["templateId"] as? String else {
+                return false
+        }
+        return templateId == "3"
     }
 
 }
