@@ -142,7 +142,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             $0.heightAnchor.constraint(equalToConstant: 30).isActive = true
         }
         mainStackView.addArrangedSubview(buttonStackView)
-        view.addViewsForAutolayout(views: [mainStackView, mainBackgroundView])
+        view.addViewsForAutolayout(views: [mainBackgroundView, mainStackView])
 
         mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true
         mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true

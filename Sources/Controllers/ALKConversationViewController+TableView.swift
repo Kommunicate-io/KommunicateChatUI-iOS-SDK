@@ -239,6 +239,15 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             let cell: ALKGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             guard let template = viewModel.genericTemplateFor(message: message) as? ALKGenericListTemplate else { return UITableViewCell() }
             cell.update(template: template)
+            cell.buttonSelected = {[unowned self] tag, title in
+                print("\(title, tag) button selected in generic card")
+                var infoDict = [String: Any]()
+                infoDict["buttonName"] = title
+                infoDict["buttonIndex"] = tag
+                infoDict["template"] = template
+                infoDict["userId"] = self.viewModel.contactId
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
+            }
             return cell
         }
     }
