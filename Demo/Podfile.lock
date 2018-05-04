@@ -3,9 +3,9 @@ PODS:
     - SDWebImage (~> 4.2.2)
   - ApplozicSwift (0.9.0):
     - Applozic (~> 5.4.0)
-    - Kingfisher (~> 4.6.3)
+    - Kingfisher (~> 4.7.0)
     - MGSwipeTableCell (~> 1.5.6)
-  - Kingfisher (4.6.4)
+  - Kingfisher (4.7.0)
   - MGSwipeTableCell (1.5.6)
   - SDWebImage (4.2.3):
     - SDWebImage/Core (= 4.2.3)
@@ -20,8 +20,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Applozic: 1801ed66028fb1afef7afe161a29458027ea8b75
-  ApplozicSwift: 72917425d4920da3c321f8f3386319b1c7d1bd59
-  Kingfisher: 68498a706e46c2a050b0c9572f100e5db407f6e0
+  ApplozicSwift: 769108c59d59d151d0d96993e0e3871c331eb306
+  Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   MGSwipeTableCell: 616700eb0ffd1c611ba909066cb7fd739790a0a7
   SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
 
