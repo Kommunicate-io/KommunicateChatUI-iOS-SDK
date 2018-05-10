@@ -49,6 +49,8 @@ open class ALKConversationViewModel: NSObject {
     }
     open var messageModels: [ALKMessageModel] = []
 
+    open var richMessages: [String: Any] = [:]
+
     open var isOpenGroup: Bool {
         let alChannelService = ALChannelService()
         guard let channelKey = channelKey,
@@ -231,9 +233,11 @@ open class ALKConversationViewModel: NSObject {
                 height = ALKFriendVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
             return height
-        default:
-            print("Not available")
-            return 0
+        case .genericCard:
+            return ALKGenericCardCollectionView.rowHeightFor(message: messageModel)
+        case .genericList:
+            guard let template = genericTemplateFor(message: messageModel) as? ALKGenericListTemplate else {return 0}
+            return ALKGenericListCell.rowHeightFor(template: template)
         }
     }
 
@@ -820,6 +824,18 @@ open class ALKConversationViewModel: NSObject {
         return IndexPath(row: 0, section: index)
     }
 
+    open func genericTemplateFor(message: ALKMessageViewModel) -> Any? {
+
+        guard richMessages[message.identifier] == nil else {
+            return richMessages[message.identifier]
+        }
+        if message.messageType == .genericCard {
+            return getGenericCardTemplateFor(message: message)
+        } else {
+            return getGenericListTemplateFor(message: message)
+        }
+    }
+
     //MARK: - Internal Methods
 
     func loadMessages() {
@@ -1073,11 +1089,14 @@ open class ALKConversationViewModel: NSObject {
         }
         let pathExtension = filePath.pathExtension
         let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue()
-        let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as! String
-        alMessage.fileMeta.contentType = String(describing: mimetype)
+        let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as String?
+        alMessage.fileMeta.contentType = mimetype
 
-        let imageSize = NSData(contentsOfFile: filePath.path)
-        alMessage.fileMeta.size = String(format: "%lu", (imageSize?.length)!)
+        guard let imageData = NSData(contentsOfFile: filePath.path) else {
+            // Empty image.
+            return nil
+        }
+        alMessage.fileMeta.size = String(format: "%lu", imageData.length)
         alMessageWrapper.addALMessage(toMessageArray: alMessage)
 
         let dbHandler = ALDBHandler.sharedInstance()
@@ -1157,5 +1176,35 @@ open class ALKConversationViewModel: NSObject {
             message.metadata = metaData
         }
         return message
+    }
+
+    private func getGenericCardTemplateFor(message: ALKMessageViewModel) -> ALKGenericCardTemplate? {
+        guard
+            let metadata = message.metadata,
+            let payload = metadata["payload"] as? String
+            else { return nil}
+        do {
+            let cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+            richMessages[message.identifier] = cardTemplate
+            return cardTemplate
+        } catch(let error) {
+            print("\(error)")
+            return nil
+        }
+    }
+
+    private func getGenericListTemplateFor(message: ALKMessageViewModel) -> ALKGenericListTemplate? {
+        guard
+            let metadata = message.metadata,
+            let payload = metadata["payload"] as? String
+            else { return nil}
+        do {
+            let cardTemplate = try JSONDecoder().decode(ALKGenericListTemplate.self, from: payload.data)
+            richMessages[message.identifier] = cardTemplate
+            return cardTemplate
+        } catch(let error) {
+            print("\(error)")
+            return nil
+        }
     }
 }

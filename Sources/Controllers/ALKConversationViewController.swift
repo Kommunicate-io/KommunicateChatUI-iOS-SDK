@@ -113,6 +113,8 @@ open class ALKConversationViewController: ALKBaseViewController {
         return view
     }()
 
+    var contentOffsetDictionary: Dictionary<AnyHashable,AnyObject>!
+
     required public init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -302,6 +304,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         } else {
             tableView.reloadData()
         }
+        contentOffsetDictionary = Dictionary<NSObject,AnyObject>()
         subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
@@ -473,6 +476,8 @@ open class ALKConversationViewController: ALKBaseViewController {
         tableView.register(ALKFriendLocationCell.self)
         tableView.register(ALKMyVideoCell.self)
         tableView.register(ALKFriendVideoCell.self)
+        tableView.register(ALKCollectionTableViewCell.self)
+        tableView.register(ALKGenericListCell.self)
     }
 
 

@@ -229,6 +229,26 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
+        case .genericCard:
+            let cell: ALKCollectionTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+
+            cell.register(cell: ALKGenericCardCell.self)
+            cell.update(viewModel: message)
+            return cell
+        case .genericList:
+            let cell: ALKGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            guard let template = viewModel.genericTemplateFor(message: message) as? ALKGenericListTemplate else { return UITableViewCell() }
+            cell.update(template: template)
+            cell.buttonSelected = {[unowned self] tag, title in
+                print("\(title, tag) button selected in generic card")
+                var infoDict = [String: Any]()
+                infoDict["buttonName"] = title
+                infoDict["buttonIndex"] = tag
+                infoDict["template"] = template
+                infoDict["userId"] = self.viewModel.contactId
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
+            }
+            return cell
         }
     }
 
@@ -280,6 +300,17 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         return dateView
     }
 
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? ALKCollectionTableViewCell else {
+            return
+        }
+        cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
+        let index = cell.collectionView.tag
+        let value = contentOffsetDictionary[index]
+        let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
+        cell.collectionView.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: false)
+    }
+
     //MARK: Paging
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -311,6 +342,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.isCellVisible(section: viewModel.messageModels.count-2, row: 0) {
             unreadScrollButton.isHidden = true
+        }
+        if (scrollView is UICollectionView) {
+            let horizontalOffset = scrollView.contentOffset.x
+            let collectionView = scrollView as! UICollectionView
+            contentOffsetDictionary[collectionView.tag] = horizontalOffset as AnyObject
         }
     }
 }
@@ -345,4 +381,44 @@ extension ALTopicDetail: ALKContextTitleDataType {
         return "\(key): \(value)"
     }
 
+}
+
+extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let collectionView = collectionView as? ALKIndexedCollectionView,
+            let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
+            let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate
+        else {return 0}
+        return template.cards.count
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let collectionView = collectionView as? ALKIndexedCollectionView,
+            let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
+            let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate,
+            template.cards.count > indexPath.row else {
+                return UICollectionViewCell()
+        }
+        let cell: ALKGenericCardCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+        let card = template.cards[indexPath.row]
+        cell.update(card: card)
+        cell.buttonSelected = {[weak self] tag, title in
+            print("\(title, tag) button selected in generic card")
+            guard let strongSelf = self else {return}
+            var infoDict = [String: Any]()
+            infoDict["buttonName"] = title
+            infoDict["buttonIndex"] = tag
+            infoDict["card"] = card
+            infoDict["template"] = template
+            infoDict["userId"] = strongSelf.viewModel.contactId
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
+        }
+        return cell
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        return CGSize(width: self.view.frame.width-50, height: 350)
+    }
 }
