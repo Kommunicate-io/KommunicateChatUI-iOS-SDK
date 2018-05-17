@@ -44,7 +44,7 @@ open class ALKChatBar: UIView {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
         let tv = ALKChatBarTextView()
-        tv.setBackgroundColor(color: .none)
+        tv.setBackgroundColor(UIColor.color(.none))
         tv.scrollsToTop = false
         tv.autocapitalizationType = .sentences
         tv.accessibilityIdentifier = "chatTextView"
@@ -71,13 +71,13 @@ open class ALKChatBar: UIView {
     open let placeHolder: UITextView = {
         
         let view = UITextView()
-        view.setFont(font: .normal(size: 14))
-        view.setTextColor(color: .gray9B)
+        view.setFont(.normal(size: 14))
+        view.setTextColor(.color(Color.Text.gray9B))
         view.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
         view.isUserInteractionEnabled = false
         view.isScrollEnabled = false
         view.scrollsToTop = false
-        view.setBackgroundColor(color: .none)
+        view.setBackgroundColor(.color(.none))
         return view
     }()
     
@@ -156,7 +156,7 @@ open class ALKChatBar: UIView {
 
     open var bottomGrayView: UIView = {
         let view = UIView()
-        view.setBackgroundColor(color: .grayEF)
+        view.setBackgroundColor(.background(.grayEF))
         view.isUserInteractionEnabled = false
         return view
     }()

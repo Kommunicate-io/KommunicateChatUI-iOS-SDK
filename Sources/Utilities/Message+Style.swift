@@ -7,25 +7,25 @@
 //
 
 import Foundation
-enum ALKMessageStyle {
-    
-    static let displayName = Style(
+public enum ALKMessageStyle {
+
+    public static var displayName = Style(
         font: .normal(size: 14),
-        color: .gray9B
+        text: .text(.gray9B)
     )
-    
-    static let message = Style(
+
+    public static let message = Style(
         font: .normal(size: 14),
-        color: .black00
+        text: .text(.black00)
     )
-    
-    static let playTime = Style(
+
+    public static let playTime = Style(
         font: .normal(size: 16),
-        color: .black00
+        text: .text(.black00)
     )
-    
-    static let time = Style(
+
+    public static let time = Style(
         font: .italic(size: 12),
-        color: .grayCC
+        text: .text(.grayCC)
     )
 }

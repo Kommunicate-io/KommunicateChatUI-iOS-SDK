@@ -14,11 +14,11 @@ final class ALKInformationCell: UITableViewCell {
     
     fileprivate var messageView: UITextView = {
         let tv = UITextView()
-        tv.setFont(font: .bold(size: 12.0))
+        tv.setFont(.bold(size: 12.0))
         tv.isEditable = false
         tv.backgroundColor = .clear
         tv.isSelectable = false
-        tv.setTextColor(color: .gray9B)
+        tv.setTextColor(.color(Color.Background.gray9B))
         tv.isScrollEnabled = false
         tv.isUserInteractionEnabled = false
         tv.textAlignment = .center

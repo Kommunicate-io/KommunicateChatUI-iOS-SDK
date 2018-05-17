@@ -160,7 +160,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
     override func setupStyle() {
         super.setupStyle()
 
-        nameLabel.setStyle(style: ALKMessageStyle.displayName)
+        nameLabel.setStyle(ALKMessageStyle.displayName)
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -549,8 +549,8 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     override func setupStyle() {
         super.setupStyle()
 
-        timeLabel.setStyle(style: ALKMessageStyle.time)
-        messageView.setStyle(style: ALKMessageStyle.message)
+        timeLabel.setStyle(ALKMessageStyle.time)
+        messageView.setStyle(ALKMessageStyle.message)
 
     }
 
@@ -581,8 +581,8 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             let widthNoPadding = width - leftPadding() - rightPadding()
             let maxSize = CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude)
 
-            let font = Font.normal(size: 14).font()
-            let color = UIColor.color(ALKMessageStyle.message.color)
+            let font = ALKMessageStyle.message.font.font()
+            let color = ALKMessageStyle.message.text
 
             let style = NSMutableParagraphStyle.init()
             style.lineBreakMode = .byWordWrapping

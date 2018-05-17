@@ -72,8 +72,8 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     private var addressLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.setFont(font: .normal(size: 14.0))
-        label.setBackgroundColor(color: .none)
+        label.setFont(.normal(size: 14.0))
+        label.setBackgroundColor(.color(Color.Background.none))
         return label
     }()
 
@@ -110,7 +110,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     override func setupStyle() {
         super.setupStyle()
-        timeLabel.setStyle(style: ALKMessageStyle.time)
+        timeLabel.setStyle(ALKMessageStyle.time)
     }
 
     override func update(viewModel: ALKMessageViewModel) {

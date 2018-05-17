@@ -156,8 +156,8 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     override func setupStyle() {
         super.setupStyle()
 
-        timeLabel.setStyle(style: ALKMessageStyle.time)
-        fileSizeLabel.setStyle(style: ALKMessageStyle.time)
+        timeLabel.setStyle(ALKMessageStyle.time)
+        fileSizeLabel.setStyle(ALKMessageStyle.time)
     }
 
     override func setupViews() {

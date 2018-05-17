@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-enum Font {
+public enum Font {
     
     case ultraLight(size: CGFloat)
     case ultraLightItalic(size: CGFloat)
@@ -85,10 +85,10 @@ enum Font {
     }
 }
 
-enum Color {
+public enum Color {
     
     
-    enum Text: Int64 {
+    public enum Text: Int64 {
         
         case white  = 0xFFFFFFFF
         case main = 0xFFE00909
@@ -103,7 +103,7 @@ enum Color {
         case grayD4 = 0xC3CDD4
     }
     
-    enum Background: Int64 {
+    public enum Background: Int64 {
         
         case none   = 0x00FFFFFF
         case white  = 0xFFFFFFFF
@@ -120,7 +120,7 @@ enum Color {
         case grayF1 = 0xFFF1F1F1
     }
     
-    enum Border: Int64 {
+    public enum Border: Int64 {
         
         case main = 0xFFE00909
         case redC0  = 0xFFF7C0C0
@@ -137,22 +137,22 @@ enum Color {
     }
 }
 
-struct Style {
+public struct Style {
     
-    let font: Font
-    let color: Color.Text
-    let background: Color.Background
+    public let font: Font
+    public let text: UIColor
+    public let background: UIColor
     
-    init(font: Font, color: Color.Text, background: Color.Background) {
+    public init(font: Font, text: UIColor, background: UIColor) {
         self.font = font
-        self.color = color
+        self.text = text
         self.background = background
     }
     
-    init(font: Font, color: Color.Text) {
+    public init(font: Font, text: UIColor) {
         self.font = font
-        self.color = color
-        self.background = .none
+        self.text = text
+        self.background = .color(.none)
     }
     
 }

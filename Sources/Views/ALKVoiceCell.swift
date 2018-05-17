@@ -176,8 +176,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
     
     override func setupStyle() {
         super.setupStyle()
-        timeLabel.setStyle(style: ALKMessageStyle.time)
-        playTimeLabel.setStyle(style: ALKMessageStyle.playTime)
+        timeLabel.setStyle(ALKMessageStyle.time)
+        playTimeLabel.setStyle(ALKMessageStyle.playTime)
     }
     
     override func setupViews() {

@@ -66,7 +66,7 @@ open class ALKSoundRecorderBtn: UIButton {
     private func displayDefaultText() {
         isTimerStart = false
         backgroundColor = UIColor.background(.grayEF)
-        setTextColor(color:.main, forState: .normal)
+        setTextColor(color: UIColor.text(Color.Text.main), forState: .normal)
         setFont(font:Font.normal(size: 14))
         let holdToTalkMessage = NSLocalizedString("HoldToTalkMessage", value: "Hold to Talk / Tap to Type", comment: "")
         setTitle(holdToTalkMessage, for: .normal)

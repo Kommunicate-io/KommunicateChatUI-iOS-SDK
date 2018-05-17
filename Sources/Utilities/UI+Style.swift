@@ -11,87 +11,87 @@ import UIKit
 
 extension UIView {
     
-    func setBackgroundColor(color: Color.Background) {
-        self.backgroundColor = .background(color)
+    func setBackgroundColor(_ color: UIColor) {
+        self.backgroundColor = color
     }
     
-    func setTinColor(color: Color.Background) {
-        self.tintColor = .background(color)
+    func setTintColor(_ color: UIColor) {
+        self.tintColor = color
     }
 }
 
 extension UINavigationBar {
     
-    func setBarTinColor(color: Color.Background) {
-        self.barTintColor = .background(color)
+    func setBarTinColor(_ color: UIColor) {
+        self.barTintColor = color
     }
 }
 
 extension UITableView {
     
-    func setSeparatorColor(color: Color.Border) {
-        self.separatorColor = .border(color)
+    func setSeparatorColor(_ color: UIColor) {
+        self.separatorColor = color
     }
 }
 
 extension CALayer {
     
-    func setBorderColor(color: Color.Border) {
-        self.borderColor = UIColor.border(color).cgColor
+    func setBorderColor(_ color: UIColor) {
+        self.borderColor = color.cgColor
     }
     
-    func setBackgroundColor(color: Color.Background) {
-        self.backgroundColor = UIColor.background(color).cgColor
+    func setBackgroundColor(_ color: UIColor) {
+        self.backgroundColor = color.cgColor
     }
 }
 
 extension UILabel {
     
-    func setStyle(style: Style) {
-        setFont(font: style.font)
-        setTextColor(color: style.color)
-        setBackgroundColor(color: style.background)
+    func setStyle(_ style: Style) {
+        setFont(style.font)
+        setTextColor(style.text)
+        setBackgroundColor(style.background)
     }
     
-    func setTextColor(color: Color.Text) {
-        self.textColor = .color(color)
+    func setTextColor(_ color: UIColor) {
+        self.textColor = color
     }
     
-    func setFont(font: Font) {
+    func setFont(_ font: Font) {
         self.font = .font(font)
     }
 }
 
 extension UITextView {
     
-    func setStyle(style: Style) {
-        setFont(font: style.font)
-        setTextColor(color: style.color)
-        setBackgroundColor(color: style.background)
+    func setStyle(_ style: Style) {
+        setFont(style.font)
+        setTextColor(style.text)
+        setBackgroundColor(style.background)
     }
     
-    func setTextColor(color: Color.Text) {
-        self.textColor = .color(color)
+    func setTextColor(_ color: UIColor) {
+        self.textColor = color
     }
     
-    func setFont(font: Font) {
+    func setFont(_ font: Font) {
         self.font = .font(font)
     }
 }
 
 extension UITextField {
     
-    func setStyle(style: Style) {
-        setFont(font: style.font)
-        setTextColor(color: style.color)
-        setBackgroundColor(color: style.background)
+    func setStyle(_ style: Style) {
+        setFont(style.font)
+        setTextColor(style.text)
+        setBackgroundColor(style.background)
     }
     
-    func setTextColor(color: Color.Text) {
-        self.textColor = .color(color)
+    func setTextColor(_ color: UIColor) {
+        self.textColor = color
     }
     
-    func setFont(font: Font) {
+    func setFont(_ font: Font) {
         self.font = .font(font)
     }
 }
@@ -100,12 +100,12 @@ extension UIButton {
     
     func setStyle(style: Style, forState state: UIControlState) {
         setFont(font: style.font)
-        setTextColor(color: style.color, forState: state)
-        setBackgroundColor(color: style.background)
+        setTextColor(color: style.text, forState: state)
+        setBackgroundColor(style.background)
     }
     
-    func setTextColor(color: Color.Text, forState state: UIControlState) {
-        setTitleColor(.color(color), for: state)
+    func setTextColor(color: UIColor, forState state: UIControlState) {
+        setTitleColor(color, for: state)
     }
     
     func setFont(font: Font) {
