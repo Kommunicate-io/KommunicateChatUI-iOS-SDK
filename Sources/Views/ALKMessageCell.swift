@@ -50,6 +50,10 @@ final class ALKFriendMessageCell: ALKMessageCell {
             static let top: CGFloat = 10.0
             static let bottom: CGFloat = -5.0
         }
+
+        enum MessageView {
+            static let top: CGFloat = 4
+        }
     }
 
     enum ConstraintIdentifier: String {
@@ -124,7 +128,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
             equalTo: replyMessageLabel.bottomAnchor,
             constant: 0).isActive = true
 
-        messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: 0).isActive = true
+        messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
 
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKFriendMessageCell.bottomPadding()).isActive = true
@@ -132,7 +136,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 10).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 4).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
@@ -208,7 +212,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
     }
 
     override class func topPadding() -> CGFloat {
-        return 32//6+16+10
+        return 32 //6+16+10
     }
 
     override class func bottomPadding() -> CGFloat {
@@ -271,6 +275,9 @@ final class ALKMyMessageCell: ALKMessageCell {
             static let top: CGFloat = 5.0
             static let bottom: CGFloat = -5.0
         }
+        enum MessageView {
+            static let top: CGFloat = 4
+        }
     }
 
 
@@ -327,13 +334,13 @@ final class ALKMyMessageCell: ALKMessageCell {
             equalTo: replyMessageLabel.bottomAnchor,
             constant: 0).isActive = true
 
-        messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: ALKMessageCell.topPadding()).isActive = true
+        messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()+30).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1*ALKMessageCell.leftPadding()).isActive = true
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKMyMessageCell.bottomPadding()).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 4).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -5).isActive = true
         bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -10).isActive = true
