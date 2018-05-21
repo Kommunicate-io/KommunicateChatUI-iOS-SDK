@@ -188,7 +188,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         actionButtons = (1...3).map {
             let button = UIButton()
             button.setTitleColor(.gray, for: .normal)
-            button.setFont(font: Font.bold(size: 16.0))
+            button.setFont(font: UIFont.font(.bold(size: 16.0)))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.layer.borderWidth = 1.0

@@ -57,8 +57,8 @@ extension UILabel {
         self.textColor = color
     }
     
-    func setFont(_ font: Font) {
-        self.font = .font(font)
+    func setFont(_ font: UIFont) {
+        self.font = font
     }
 }
 
@@ -74,8 +74,8 @@ extension UITextView {
         self.textColor = color
     }
     
-    func setFont(_ font: Font) {
-        self.font = .font(font)
+    func setFont(_ font: UIFont) {
+        self.font = font
     }
 }
 
@@ -91,8 +91,8 @@ extension UITextField {
         self.textColor = color
     }
     
-    func setFont(_ font: Font) {
-        self.font = .font(font)
+    func setFont(_ font: UIFont) {
+        self.font = font
     }
 }
 
@@ -108,8 +108,8 @@ extension UIButton {
         setTitleColor(color, for: state)
     }
     
-    func setFont(font: Font) {
-        titleLabel?.font = .font(font)
+    func setFont(font: UIFont) {
+        titleLabel?.font = font
     }
     
 }

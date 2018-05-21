@@ -581,7 +581,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             let widthNoPadding = width - leftPadding() - rightPadding()
             let maxSize = CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude)
 
-            let font = ALKMessageStyle.message.font.font()
+            let font = ALKMessageStyle.message.font
             let color = ALKMessageStyle.message.text
 
             let style = NSMutableParagraphStyle.init()

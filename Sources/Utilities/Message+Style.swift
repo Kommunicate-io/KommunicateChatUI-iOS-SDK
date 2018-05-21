@@ -10,22 +10,22 @@ import Foundation
 public enum ALKMessageStyle {
 
     public static var displayName = Style(
-        font: .normal(size: 14),
+        font: UIFont.font(.normal(size: 14)),
         text: .text(.gray9B)
     )
 
-    public static let message = Style(
-        font: .normal(size: 14),
+    public static var message = Style(
+        font: UIFont.font(.normal(size: 14)),
         text: .text(.black00)
     )
 
-    public static let playTime = Style(
-        font: .normal(size: 16),
+    public static var playTime = Style(
+        font: UIFont.font(.normal(size: 16)),
         text: .text(.black00)
     )
 
-    public static let time = Style(
-        font: .italic(size: 12),
+    public static var time = Style(
+        font: UIFont.font(.italic(size: 12)),
         text: .text(.grayCC)
     )
 }

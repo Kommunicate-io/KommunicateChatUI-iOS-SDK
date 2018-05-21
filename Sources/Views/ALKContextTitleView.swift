@@ -25,7 +25,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
     public let titleLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 0
-        label.setFont(Font.normal(size: 14))
+        label.setFont(UIFont.font(.normal(size: 14)))
         label.textColor = UIColor.white
         return label
     }()
@@ -33,7 +33,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
     public let subtitleLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 0
-        label.setFont(Font.normal(size: 14))
+        label.setFont(UIFont.font(.normal(size: 14)))
         label.textColor = UIColor.white
         return label
     }()
@@ -41,7 +41,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
     public let topRightInfoLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 0
-        label.setFont(Font.normal(size: 14))
+        label.setFont(UIFont.font(.normal(size: 14)))
         label.contentMode = .right
         label.textColor = UIColor.white
         return label
@@ -50,7 +50,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
     public let bottomRightInfoLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 0
-        label.setFont(Font.normal(size: 14))
+        label.setFont(UIFont.font(.normal(size: 14)))
         label.contentMode = .right
         label.textColor = UIColor.white
         return label

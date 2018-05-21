@@ -107,7 +107,7 @@ final class ALKChatCell: MGSwipeTableCell {
         label.text = "0"
         label.textAlignment = .center
         label.setTextColor(.white)
-        label.setFont(.normal(size: 9.0))
+        label.setFont(UIFont.font(.normal(size: 9.0)))
 
         return label
     }()

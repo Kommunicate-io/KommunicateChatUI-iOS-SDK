@@ -71,7 +71,7 @@ open class ALKChatBar: UIView {
     open let placeHolder: UITextView = {
         
         let view = UITextView()
-        view.setFont(.normal(size: 14))
+        view.setFont(UIFont.font(.normal(size: 14)))
         view.setTextColor(.color(Color.Text.gray9B))
         view.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
         view.isUserInteractionEnabled = false

@@ -72,7 +72,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     private var addressLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.setFont(.normal(size: 14.0))
+        label.setFont(UIFont.font(.normal(size: 14.0)))
         label.setBackgroundColor(.color(Color.Background.none))
         return label
     }()

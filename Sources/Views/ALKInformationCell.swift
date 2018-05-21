@@ -14,7 +14,7 @@ final class ALKInformationCell: UITableViewCell {
     
     fileprivate var messageView: UITextView = {
         let tv = UITextView()
-        tv.setFont(.bold(size: 12.0))
+        tv.setFont(UIFont.font(.bold(size: 12.0)))
         tv.isEditable = false
         tv.backgroundColor = .clear
         tv.isSelectable = false
