@@ -592,19 +592,21 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             style.minimumLineHeight = 17
             style.maximumLineHeight = 17
 
-            let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.font: font,
-                                              NSAttributedStringKey.foregroundColor: color,
-                                              NSAttributedStringKey.paragraphStyle: style
-            ]
-            var size = CGRect()
+            let attributes: [NSAttributedStringKey: Any] = [
+                NSAttributedStringKey.font: font,
+                NSAttributedStringKey.foregroundColor: color]
+
+            var size = CGSize()
             if viewModel.messageType == .html {
                 guard let htmlText = message.data.attributedString else { return 30}
                 let mutableText = NSMutableAttributedString(attributedString: htmlText)
                 let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.paragraphStyle: style]
                 mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
-                size = mutableText.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin], context: nil)
+                size = mutableText.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin], context: nil).size
             } else {
-                size = message.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin],attributes: attributes, context: nil)
+                let attrbString = NSAttributedString(string: message,attributes: attributes)
+                let framesetter = CTFramesetterCreateWithAttributedString(attrbString)
+                size =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0,length: 0), nil, maxSize, nil)
             }
             messageHeigh = ceil(size.height) + 15 // due to textview's bottom pading
 
