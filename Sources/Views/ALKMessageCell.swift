@@ -141,8 +141,6 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
 
-//        bubbleView.trailingAnchor.constraint(equalTo: replyNameLabel.trailingAnchor, constant: 10).isActive = true
-//        bubbleView.trailingAnchor.constraint(equalTo: replyMessageLabel.trailingAnchor, constant: 10).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: 10).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
@@ -161,6 +159,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        bubbleView.tintColor = ALKMessageStyle.receivedBubbleColor
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -551,7 +550,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
         timeLabel.setStyle(ALKMessageStyle.time)
         messageView.setStyle(ALKMessageStyle.message)
-
+        bubbleView.tintColor = ALKMessageStyle.sentBubbleColor
     }
 
     class func leftPadding() -> CGFloat {

@@ -28,4 +28,7 @@ public enum ALKMessageStyle {
         font: UIFont.font(.italic(size: 12)),
         text: .text(.grayCC)
     )
+
+    public static var sentBubbleColor = UIColor(netHex: 0xF1F0F0)
+    public static var receivedBubbleColor = UIColor(netHex: 0xF1F0F0)
 }
