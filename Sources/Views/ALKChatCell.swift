@@ -98,7 +98,7 @@ final class ALKChatCell: MGSwipeTableCell {
     // MARK: BadgeNumber
     private lazy var badgeNumberView: UIView = {
         let view = UIView(frame: .zero)
-        view.setBackgroundColor(color: .main)
+        view.setBackgroundColor(.background(.main))
         return view
     }()
 
@@ -106,8 +106,8 @@ final class ALKChatCell: MGSwipeTableCell {
         let label = UILabel(frame: .zero)
         label.text = "0"
         label.textAlignment = .center
-        label.setTextColor(color: .white)
-        label.setFont(font: .normal(size: 9.0))
+        label.setTextColor(.white)
+        label.setFont(UIFont.font(.normal(size: 9.0)))
 
         return label
     }()
@@ -156,7 +156,7 @@ final class ALKChatCell: MGSwipeTableCell {
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
 
-        guard let viewModel = viewModel else {
+        guard let _ = viewModel else {
             return
         }
 
@@ -166,12 +166,13 @@ final class ALKChatCell: MGSwipeTableCell {
         contentView.backgroundColor = backgroundColor
 
         // set backgroundColor of badgeNumber
-        badgeNumberView.setBackgroundColor(color: .main)
+        badgeNumberView.setBackgroundColor(.background(.main))
     }
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        guard let viewModel = viewModel else {
+        guard let _ = viewModel else {
             return
         }
 
@@ -182,7 +183,7 @@ final class ALKChatCell: MGSwipeTableCell {
         contentView.backgroundColor = backgroundColor
 
         // set backgroundColor of badgeNumber
-        badgeNumberView.setBackgroundColor(color: .main)
+        badgeNumberView.setBackgroundColor(.background(.main))
     }
 
     var viewModel: ALKChatViewModelProtocol?

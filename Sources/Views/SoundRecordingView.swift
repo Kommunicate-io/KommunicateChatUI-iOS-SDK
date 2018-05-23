@@ -66,8 +66,8 @@ open class ALKSoundRecorderBtn: UIButton {
     private func displayDefaultText() {
         isTimerStart = false
         backgroundColor = UIColor.background(.grayEF)
-        setTextColor(color:.main, forState: .normal)
-        setFont(font:Font.normal(size: 14))
+        setTextColor(color: UIColor.text(Color.Text.main), forState: .normal)
+        setFont(font:UIFont.font(.normal(size: 14)))
         let holdToTalkMessage = NSLocalizedString("HoldToTalkMessage", value: "Hold to Talk / Tap to Type", comment: "")
         setTitle(holdToTalkMessage, for: .normal)
         setTitle(holdToTalkMessage, for: .highlighted)
@@ -75,7 +75,7 @@ open class ALKSoundRecorderBtn: UIButton {
     
     private func displayDefaultRecordingText() {
         backgroundColor = UIColor.mainRed()
-        setFont(font:Font.normal(size: 14))
+        setFont(font:UIFont.font(.normal(size: 14)))
         setTextColor(color:.white, forState: .normal)
         setTextColor(color:.white, forState: .highlighted)
         let recordingMessage = NSLocalizedString("RecordingMessage", value: "Recording...00:00:00", comment: "")
@@ -130,8 +130,6 @@ open class ALKSoundRecorderBtn: UIButton {
         case AVAudioSessionRecordPermission.granted:
             // mic access ok...
             isAllow = true
-            break;
-        default:
             break;
         }
         

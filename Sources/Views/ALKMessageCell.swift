@@ -141,8 +141,6 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
 
-//        bubbleView.trailingAnchor.constraint(equalTo: replyNameLabel.trailingAnchor, constant: 10).isActive = true
-//        bubbleView.trailingAnchor.constraint(equalTo: replyMessageLabel.trailingAnchor, constant: 10).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: 10).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
@@ -160,7 +158,8 @@ final class ALKFriendMessageCell: ALKMessageCell {
     override func setupStyle() {
         super.setupStyle()
 
-        nameLabel.setStyle(style: ALKMessageStyle.displayName)
+        nameLabel.setStyle(ALKMessageStyle.displayName)
+        bubbleView.tintColor = ALKMessageStyle.receivedBubbleColor
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -335,7 +334,7 @@ final class ALKMyMessageCell: ALKMessageCell {
             constant: 0).isActive = true
 
         messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: Padding.MessageView.top).isActive = true
-        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()+30).isActive = true
+        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ALKMessageCell.rightPadding()).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1*ALKMessageCell.leftPadding()).isActive = true
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKMyMessageCell.bottomPadding()).isActive = true
 
@@ -549,9 +548,9 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     override func setupStyle() {
         super.setupStyle()
 
-        timeLabel.setStyle(style: ALKMessageStyle.time)
-        messageView.setStyle(style: ALKMessageStyle.message)
-
+        timeLabel.setStyle(ALKMessageStyle.time)
+        messageView.setStyle(ALKMessageStyle.message)
+        bubbleView.tintColor = ALKMessageStyle.sentBubbleColor
     }
 
     class func leftPadding() -> CGFloat {
@@ -559,7 +558,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     }
 
     class func rightPadding() -> CGFloat {
-        return 65
+        return 95
     }
 
     class func topPadding() -> CGFloat {
@@ -581,8 +580,8 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             let widthNoPadding = width - leftPadding() - rightPadding()
             let maxSize = CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude)
 
-            let font = Font.normal(size: 14).font()
-            let color = UIColor.color(ALKMessageStyle.message.color)
+            let font = ALKMessageStyle.message.font
+            let color = ALKMessageStyle.message.text
 
             let style = NSMutableParagraphStyle.init()
             style.lineBreakMode = .byWordWrapping
@@ -592,19 +591,21 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             style.minimumLineHeight = 17
             style.maximumLineHeight = 17
 
-            let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.font: font,
-                                              NSAttributedStringKey.foregroundColor: color,
-                                              NSAttributedStringKey.paragraphStyle: style
-            ]
-            var size = CGRect()
+            let attributes: [NSAttributedStringKey: Any] = [
+                NSAttributedStringKey.font: font,
+                NSAttributedStringKey.foregroundColor: color]
+
+            var size = CGSize()
             if viewModel.messageType == .html {
                 guard let htmlText = message.data.attributedString else { return 30}
                 let mutableText = NSMutableAttributedString(attributedString: htmlText)
                 let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.paragraphStyle: style]
                 mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
-                size = mutableText.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin], context: nil)
+                size = mutableText.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin], context: nil).size
             } else {
-                size = message.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin],attributes: attributes, context: nil)
+                let attrbString = NSAttributedString(string: message,attributes: attributes)
+                let framesetter = CTFramesetterCreateWithAttributedString(attrbString)
+                size =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0,length: 0), nil, maxSize, nil)
             }
             messageHeigh = ceil(size.height) + 15 // due to textview's bottom pading
 

@@ -45,7 +45,7 @@ class ALKFriendVoiceCell: ALKVoiceCell {
     override func setupStyle() {
         super.setupStyle()
         
-        nameLabel.setStyle(style: ALKMessageStyle.displayName)
+        nameLabel.setStyle(ALKMessageStyle.displayName)
     }
     
     override func setupViews() {

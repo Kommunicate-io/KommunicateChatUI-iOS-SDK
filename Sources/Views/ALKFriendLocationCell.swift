@@ -36,7 +36,7 @@ final class ALKFriendLocationCell: ALKLocationCell {
     override func setupViews() {
         super.setupViews()
         
-        bubbleView.backgroundColor = UIColor.background(.grayF2)
+        bubbleView.backgroundColor = .background(.grayF2)
         
         // add view to contenview and setup constraint
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
@@ -62,7 +62,7 @@ final class ALKFriendLocationCell: ALKLocationCell {
     
     override func setupStyle() {
         super.setupStyle()
-        nameLabel.setStyle(style: ALKMessageStyle.displayName)
+        nameLabel.setStyle(ALKMessageStyle.displayName)
     }
     
     override func update(viewModel: ALKMessageViewModel) {

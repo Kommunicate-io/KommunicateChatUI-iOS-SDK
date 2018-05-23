@@ -45,7 +45,7 @@ class ALKFriendCell: MGSwipeTableCell {
         self.indexPath = IndexPath
         
         //configure left buttons
-        let btnDelete = MGSwipeButton(title: "", icon: UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil), backgroundColor: UIColor.background(.main), callback: {
+        let btnDelete = MGSwipeButton(title: "", icon: UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil), backgroundColor: .background(.main), callback: {
             (sender: MGSwipeTableCell!) -> Bool in
             self.delegateFriendCell.deleteFriend(atIndex: self.indexPath)
             return true
