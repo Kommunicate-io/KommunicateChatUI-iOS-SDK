@@ -286,6 +286,17 @@ open class ALKConversationListViewController: ALKBaseViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+
+    override func showAccountSuspensionView() {
+        let accountVC = ALKAccountSuspensionController()
+        self.present(accountVC, animated: false, completion: nil)
+        accountVC.closePressed = {[weak self] in
+            let popVC = self?.navigationController?.popViewController(animated: true)
+            if popVC == nil {
+                self?.navigationController?.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
 }
 
 extension ALKConversationListViewController: UITableViewDelegate, UITableViewDataSource {

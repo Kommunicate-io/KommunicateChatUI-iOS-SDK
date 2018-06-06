@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Applozic
 
 open class ALKBaseViewController: UIViewController {
     
@@ -26,6 +27,11 @@ open class ALKBaseViewController: UIViewController {
             backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
             self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: backImage, style: .plain, target: self , action: #selector(backTapped))
         }
+    }
+
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        checkPricingPackage()
     }
     
     @objc func backTapped() {
@@ -51,5 +57,12 @@ open class ALKBaseViewController: UIViewController {
         removeObserver()
         NSLog("💩 \(#function) ❌❌ \(self)‼️‼️‼️‼️")
     }
-    
+
+    func checkPricingPackage() {
+        if ALUser().isChatSuspended() {
+            showAccountSuspensionView()
+        }
+    }
+
+    func showAccountSuspensionView() {}
 }

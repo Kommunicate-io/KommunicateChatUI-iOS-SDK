@@ -342,6 +342,14 @@ open class ALKConversationViewController: ALKBaseViewController {
         _ = navigationController?.popToRootViewController(animated: true)
     }
 
+    override func showAccountSuspensionView() {
+        let accountVC = ALKAccountSuspensionController()
+        self.present(accountVC, animated: false, completion: nil)
+        accountVC.closePressed = {[weak self] in
+            _ = self?.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+
     func setupView() {
 
         unreadScrollButton.isHidden = true
