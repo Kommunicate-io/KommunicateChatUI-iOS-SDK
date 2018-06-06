@@ -505,6 +505,8 @@ open class ALKConversationViewController: ALKBaseViewController {
         }else {
             showMediaOptions()
         }
+        chatBar.poweredByMessageLabel.text = "We are powered by Applozic.com"
+        if viewModel.showPoweredByMessage() {chatBar.showPoweredByMessage()}
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: self.view)
         chatBar.action = { [weak self] (action) in
