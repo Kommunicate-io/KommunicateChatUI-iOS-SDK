@@ -13,10 +13,10 @@ class ALKAccountSuspensionController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
-        guard
-            let accountView = Bundle.applozic.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?
-                .first as? UIView else { return }
+        view.backgroundColor = UIColor(netHex: 0xfafafa)
+        guard let accountView = Bundle.applozic.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?.first as? UIView else {
+            return
+        }
         accountView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height-50)
         view.addSubview(accountView)
         view.addSubview(closeButtonOf(frame: CGRect(x: 20, y: 20, width: 30, height: 30)))
