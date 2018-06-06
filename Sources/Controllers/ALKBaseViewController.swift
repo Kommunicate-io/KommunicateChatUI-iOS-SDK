@@ -59,7 +59,7 @@ open class ALKBaseViewController: UIViewController {
     }
 
     func checkPricingPackage() {
-        if ALUser().isChatSuspended() {
+        if ALApplicationInfo().isChatSuspended() {
             showAccountSuspensionView()
         }
     }
