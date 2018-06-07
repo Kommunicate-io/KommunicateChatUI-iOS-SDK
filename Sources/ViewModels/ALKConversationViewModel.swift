@@ -836,6 +836,10 @@ open class ALKConversationViewModel: NSObject {
         }
     }
 
+    open func showPoweredByMessage() -> Bool {
+        return ALApplicationInfo().showPoweredByMessage()
+    }
+
     //MARK: - Internal Methods
 
     func loadMessages() {

@@ -342,6 +342,14 @@ open class ALKConversationViewController: ALKBaseViewController {
         _ = navigationController?.popToRootViewController(animated: true)
     }
 
+    override func showAccountSuspensionView() {
+        let accountVC = ALKAccountSuspensionController()
+        self.present(accountVC, animated: false, completion: nil)
+        accountVC.closePressed = {[weak self] in
+            _ = self?.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+
     func setupView() {
 
         unreadScrollButton.isHidden = true
@@ -497,6 +505,8 @@ open class ALKConversationViewController: ALKBaseViewController {
         }else {
             showMediaOptions()
         }
+        chatBar.poweredByMessageLabel.text = "We are powered by Applozic.com"
+        if viewModel.showPoweredByMessage() {chatBar.showPoweredByMessage()}
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: self.view)
         chatBar.action = { [weak self] (action) in

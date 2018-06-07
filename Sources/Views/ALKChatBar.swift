@@ -33,6 +33,16 @@ open class ALKChatBar: UIView {
     }
     
     public var action: ((ActionType) -> ())?
+
+    open let poweredByMessageLabel: UILabel = {
+        let label = UILabel(frame: CGRect.zero)
+        label.backgroundColor = UIColor.darkGray
+        label.numberOfLines = 1
+        label.textAlignment = NSTextAlignment.center
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
     
     open let soundRec: ALKSoundRecorderBtn = {
         let bt = ALKSoundRecorderBtn.init(frame: CGRect.init())
@@ -172,6 +182,7 @@ open class ALKChatBar: UIView {
 
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
+        case poweredByMessageHeight = "poweredByMessageHeight"
     }
     
     @objc func tapped(button: UIButton) {
@@ -313,7 +324,7 @@ open class ALKChatBar: UIView {
     
     private func setupConstraints() {
         plusButton.isHidden = true
-        addViewsForAutolayout(views: [bottomGrayView, micButton, plusButton, photoButton, grayView,  textView, sendButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec])
+        addViewsForAutolayout(views: [bottomGrayView, micButton, plusButton, photoButton, grayView,  textView, sendButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -367,9 +378,14 @@ open class ALKChatBar: UIView {
         sendButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         sendButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
         
-        textView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        textView.topAnchor.constraint(equalTo: poweredByMessageLabel.bottomAnchor, constant: 0).isActive = true
         textView.bottomAnchor.constraint(equalTo: bottomGrayView.topAnchor, constant: 0).isActive = true
         textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3).isActive = true
+        poweredByMessageLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        poweredByMessageLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        poweredByMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.poweredByMessageHeight.rawValue).isActive = true
+        poweredByMessageLabel.bottomAnchor.constraint(equalTo: textView.topAnchor).isActive = true
+        poweredByMessageLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
         
 //        textViewTrailingWithMic = textView.trailingAnchor.constraint(equalTo: micButton.leadingAnchor, constant: -8).isActive
         textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor).isActive = true
@@ -403,9 +419,8 @@ open class ALKChatBar: UIView {
         bottomGrayView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue).isActive = true
         bottomGrayView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bottomGrayView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-    
+
         bringSubview(toFront: frameView)
-        
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -430,6 +445,10 @@ open class ALKChatBar: UIView {
         photoButton.isHidden = false
         chatButton.isHidden = false
         videoButton.isHidden = false
+    }
+
+    public func showPoweredByMessage() {
+        poweredByMessageLabel.constraint(withIdentifier: ConstraintIdentifier.poweredByMessageHeight.rawValue)?.constant = 20
     }
     
 }
