@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import Applozic
 
 open class ALKChatBar: UIView {
     
@@ -34,8 +34,8 @@ open class ALKChatBar: UIView {
     
     public var action: ((ActionType) -> ())?
 
-    open let poweredByMessageLabel: UILabel = {
-        let label = UILabel(frame: CGRect.zero)
+    open let poweredByMessageLabel: ALHyperLabel = {
+        let label = ALHyperLabel(frame: CGRect.zero)
         label.backgroundColor = UIColor.darkGray
         label.numberOfLines = 1
         label.textAlignment = NSTextAlignment.center
