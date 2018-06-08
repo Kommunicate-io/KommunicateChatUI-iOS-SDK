@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 import Applozic
+import SafariServices
 
 open class ALKConversationViewController: ALKBaseViewController {
 
@@ -505,7 +506,14 @@ open class ALKConversationViewController: ALKBaseViewController {
         }else {
             showMediaOptions()
         }
-        chatBar.poweredByMessageLabel.text = "We are powered by Applozic.com"
+        chatBar.poweredByMessageLabel.attributedText =
+            NSAttributedString(string: "Powered by Applozic")
+        chatBar.poweredByMessageLabel.setLinkForSubstring("Applozic", withLinkHandler: {
+            label, substring in
+            guard let _ = substring else {return}
+            let svc = SFSafariViewController(url: URL(string:"https://Applozic.com")!)
+            self.present(svc, animated: true, completion: nil)
+        })
         if viewModel.showPoweredByMessage() {chatBar.showPoweredByMessage()}
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: self.view)
