@@ -39,6 +39,10 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController {
         self.title = "Send Video"
     }
 
+    required public init(configuration: ALKConfiguration) {
+        super.init(configuration: configuration)
+    }
+
     override func loadView() {
         super.loadView()
     }

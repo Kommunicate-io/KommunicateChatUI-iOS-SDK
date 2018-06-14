@@ -36,8 +36,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func launchChatList(_ sender: Any) {
-        
-        let conversationVC = ALKConversationListViewController()
+        let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
         let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
         self.present(nav, animated: false, completion: nil)
     }

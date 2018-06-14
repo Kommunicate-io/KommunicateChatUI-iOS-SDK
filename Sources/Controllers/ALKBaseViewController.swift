@@ -9,7 +9,14 @@
 import UIKit
 import Applozic
 
-open class ALKBaseViewController: UIViewController {
+open class ALKBaseViewController: UIViewController, ALKConfigurable {
+
+    var configuration: ALKConfiguration!
+
+    required public init(configuration: ALKConfiguration) {
+        self.configuration = configuration
+        super.init(nibName: nil, bundle: nil)
+    }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

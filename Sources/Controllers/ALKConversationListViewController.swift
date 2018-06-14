@@ -46,15 +46,13 @@ open class ALKConversationListViewController: ALKBaseViewController {
         bar.autocapitalizationType = .sentences
         return bar
     }()
-
-
-
-    required public init() {
-        super.init(nibName: nil, bundle: nil)
-    }
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    required public init(configuration: ALKConfiguration) {
+        super.init(configuration: configuration)
     }
 
     override func addObserver() {
@@ -241,7 +239,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
         if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
         }
-        let viewController = conversationViewControllerType.init()
+        let viewController = conversationViewControllerType.init(configuration: configuration)
         viewController.title = title
         viewController.viewModel = convViewModel
         conversationViewController = viewController
@@ -249,7 +247,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
     }
 
     @objc func compose() {
-        let newChatVC = ALKNewChatViewController(viewModel: ALKNewChatViewModel())
+        let newChatVC = ALKNewChatViewController(configuration: configuration, viewModel: ALKNewChatViewModel())
         navigationController?.pushViewController(newChatVC, animated: true)
     }
 
@@ -333,7 +331,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
             }
-            let viewController = conversationViewControllerType.init()
+            let viewController = conversationViewControllerType.init(configuration: configuration)
             viewController.title = chat.isGroupChat ? chat.groupName:chat.name
             viewController.viewModel = convViewModel
             conversationViewController = viewController
@@ -345,7 +343,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
             }
-            let viewController = conversationViewControllerType.init()
+            let viewController = conversationViewControllerType.init(configuration: configuration)
             viewController.title = chat.isGroupChat ? chat.groupName:chat.name
             viewController.viewModel = convViewModel
             conversationViewController = viewController

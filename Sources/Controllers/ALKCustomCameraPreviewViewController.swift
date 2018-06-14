@@ -34,7 +34,11 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController {
         super.init(coder: aDecoder)
         self.title = NSLocalizedString("SendPhoto", value: "Send Photo", comment: "")
     }
-    
+
+    required public init(configuration: ALKConfiguration) {
+        super.init(configuration: configuration)
+    }
+
     override func loadView() {
         super.loadView()
         self.validateEnvironment()

@@ -137,13 +137,13 @@ class ALChatManager: NSObject {
         ALUserDefaultsHandler.setDebugLogsRequire(true)
     }
 
-    func launchChatList(from viewController: UIViewController) {
-        let conversationVC = ALKConversationListViewController()
+    func launchChatList(from viewController: UIViewController, with configuration: ALKConfiguration) {
+        let conversationVC = ALKConversationListViewController(configuration: configuration)
         let navVC = ALKBaseNavigationViewController(rootViewController: conversationVC)
         viewController.present(navVC, animated: false, completion: nil)
     }
 
-    func launchChatWith(contactId: String, from viewController: UIViewController) {
+    func launchChatWith(contactId: String, from viewController: UIViewController, configuration: ALKConfiguration) {
         let alContactDbService = ALContactDBService()
         var title = ""
         if let alContact = alContactDbService.loadContact(byKey: "userId", value: contactId), let name = alContact.getDisplayName() {
@@ -151,18 +151,18 @@ class ALChatManager: NSObject {
         }
         title = title.isEmpty ? "No name":title
         let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil)
-        let conversationViewController = ALKConversationViewController()
+        let conversationViewController = ALKConversationViewController(configuration: configuration)
         conversationViewController.title = title
         conversationViewController.viewModel = convViewModel
         viewController.navigationController?.pushViewController(conversationViewController, animated: false)
     }
 
-    func launchGroupWith(clientGroupId: String, from viewController: UIViewController) {
+    func launchGroupWith(clientGroupId: String, from viewController: UIViewController, configuration: ALKConfiguration) {
         let alChannelService = ALChannelService()
         alChannelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) { (channel) in
             guard let channel = channel, let key = channel.key else {return}
             let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key)
-            let conversationViewController = ALKConversationViewController()
+            let conversationViewController = ALKConversationViewController(configuration: configuration)
             conversationViewController.title = channel.name
             conversationViewController.viewModel = convViewModel
             viewController.navigationController?.pushViewController(conversationViewController, animated: false)

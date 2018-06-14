@@ -11,7 +11,7 @@ import Applozic
 
 final class ALKNewChatViewController: ALKBaseViewController {
 
-    fileprivate var viewModel: ALKNewChatViewModel
+    fileprivate var viewModel: ALKNewChatViewModel!
     
     fileprivate let tableView : UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
@@ -31,17 +31,20 @@ final class ALKNewChatViewController: ALKBaseViewController {
     
     //MARK: - Life cycle
     
-    required init(viewModel: ALKNewChatViewModel) {
+    convenience init(configuration: ALKConfiguration, viewModel: ALKNewChatViewModel) {
+        self.init(configuration: configuration)
         self.viewModel = viewModel
-        
-        super.init(nibName: nil, bundle: nil)
         setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    required public init(configuration: ALKConfiguration) {
+        super.init(configuration: configuration)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
@@ -145,7 +148,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
         let viewModel = ALKConversationViewModel(contactId: friendViewModel.friendUUID, channelKey: nil)
 
-        let conversationVC = ALKConversationViewController()
+        let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
         conversationVC.title = friendViewModel.friendProfileName
             
@@ -224,7 +227,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTable"), object: list)
 
             let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key)
-            let conversationVC = ALKConversationViewController()
+            let conversationVC = ALKConversationViewController(configuration: self.configuration)
             conversationVC.viewModel = viewModel
             conversationVC.title = groupName
             self.navigationController?.pushViewController(conversationVC, animated: true)
