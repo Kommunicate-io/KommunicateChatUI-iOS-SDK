@@ -11,7 +11,7 @@ import Applozic
 
 open class ALKBaseViewController: UIViewController, ALKConfigurable {
 
-    var configuration: ALKConfiguration!
+    public var configuration: ALKConfiguration!
 
     required public init(configuration: ALKConfiguration) {
         self.configuration = configuration
