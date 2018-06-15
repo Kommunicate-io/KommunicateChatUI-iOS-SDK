@@ -15,14 +15,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    static let config: ALKConfiguration = {
+        var config = ALKConfiguration()
+        // Change config based on requirement like:
+        // config.isTapOnNavigationBarEnabled = false
+
+        return config
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         BuddyBuildSDK.setup()
-        
 
         registerForNotification()
     
-        ALKPushNotificationHandler.shared.dataConnectionNotificationHandler()
+        ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(AppDelegate.config)
         let alApplocalNotificationHnadler : ALAppLocalNotifications =  ALAppLocalNotifications.appLocalNotificationHandler()
         alApplocalNotificationHnadler.dataConnectionNotificationHandler()
 

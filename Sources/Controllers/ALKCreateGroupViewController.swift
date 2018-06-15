@@ -339,7 +339,7 @@ extension ALKCreateGroupViewController:ALKAddParticipantProtocol
         let user = groupList[index.row]
         let viewModel = ALKConversationViewModel(contactId: user.friendUUID, channelKey: nil)
 
-        let conversationVC = ALKConversationViewController()
+        let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
         conversationVC.title = user.friendProfileName
         self.navigationController?.pushViewController(conversationVC, animated: true)

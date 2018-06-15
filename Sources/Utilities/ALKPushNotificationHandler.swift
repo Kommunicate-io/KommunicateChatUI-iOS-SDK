@@ -16,6 +16,7 @@ public class ALKPushNotificationHandler {
     var contactId: String?
     var groupId: NSNumber?
     var title: String = ""
+    var configuration: ALKConfiguration!
 
 
     private var alContact: ALContact? {
@@ -39,7 +40,9 @@ public class ALKPushNotificationHandler {
     }
 
 
-    public func dataConnectionNotificationHandler() {
+    public func dataConnectionNotificationHandlerWith(_ configuration: ALKConfiguration) {
+
+        self.configuration = configuration
 
         // No need to add removeObserver() as it is present in pushAssist.
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "showNotificationAndLaunchChat"), object: nil, queue: nil, using: {[weak self] notification in
@@ -83,7 +86,7 @@ public class ALKPushNotificationHandler {
     func launchIndividualChatWith(userId: String?, groupId: NSNumber?) {
         NSLog("Called via notification and user id is: ", userId ?? "Not Present")
 
-        let messagesVC = ALKConversationListViewController()
+        let messagesVC = ALKConversationListViewController(configuration: configuration)
         messagesVC.contactId = userId
         messagesVC.channelKey = groupId
         let rootVC =  UIApplication.shared.keyWindow?.rootViewController?.presentedViewController

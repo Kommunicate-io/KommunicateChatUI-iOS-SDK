@@ -25,12 +25,11 @@ open class ALKConversationViewController: ALKBaseViewController {
         }
     }
 
-    /// Enables group detail button on navigation bar
-    public var isGroupDetailActionEnabled = true
+    /// See configuration.
+    private var isGroupDetailActionEnabled = true
 
-    /// If enabled then opens the individual chat on
-    /// click of avatar (Only for group chat)
-    public var isProfileTapActionEnabled = true
+    /// See configuration.
+    private var isProfileTapActionEnabled = true
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
@@ -116,8 +115,9 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     var contentOffsetDictionary: Dictionary<AnyHashable,AnyObject>!
 
-    required public init() {
-        super.init(nibName: nil, bundle: nil)
+    required public init(configuration: ALKConfiguration) {
+        super.init(configuration: configuration)
+        configurePropertiesWith(configuration: configuration)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -730,7 +730,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         guard let receiverId = messageVM.receiverId else {return}
 
         let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil)
-        let conversationVC = ALKConversationViewController()
+        let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = vm
         conversationVC.title = messageVM.displayName
 
@@ -837,6 +837,11 @@ open class ALKConversationViewController: ALKBaseViewController {
                 navigationController?.pushViewController(vc, animated: true)
             }
         }
+    }
+
+    private func configurePropertiesWith(configuration: ALKConfiguration) {
+        self.isGroupDetailActionEnabled = configuration.isTapOnNavigationBarEnabled
+        self.isProfileTapActionEnabled = configuration.isProfileTapActionEnabled
     }
 }
 
