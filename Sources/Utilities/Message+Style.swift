@@ -29,6 +29,21 @@ public enum ALKMessageStyle {
         text: .text(.grayCC)
     )
 
-    public static var sentBubbleColor = UIColor(netHex: 0xF1F0F0)
-    public static var receivedBubbleColor = UIColor(netHex: 0xF1F0F0)
+    public enum BubbleStyle {
+        case edge
+        case round
+    }
+
+    public struct Bubble {
+        public var color: UIColor
+        public var style: BubbleStyle
+
+        public init(color: UIColor, style: BubbleStyle) {
+            self.color = color
+            self.style = style
+        }
+    }
+
+    public static var sentBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge)
+    public static var receivedBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge)
 }

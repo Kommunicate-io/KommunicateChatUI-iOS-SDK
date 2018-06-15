@@ -32,7 +32,7 @@ public enum Font {
     case condensedBlack(size: CGFloat)
     case condensedBold(size: CGFloat)
     
-    func font() -> UIFont {
+    public func font() -> UIFont {
         
         var option: String = ""
         var fontSize: CGFloat = 0
@@ -158,37 +158,37 @@ public struct Style {
 }
 
 extension UIFont {
-    static func font(_ font: Font) -> UIFont {
+    public static func font(_ font: Font) -> UIFont {
         return font.font()
     }
 }
 
 extension UIColor {
     
-    static func text(_ color: Color.Text) -> UIColor {
+    public static func text(_ color: Color.Text) -> UIColor {
         return .hex8(color.rawValue)
     }
     
-    static func background(_ color: Color.Background) -> UIColor {
+    public static func background(_ color: Color.Background) -> UIColor {
         
         return .hex8(color.rawValue)
     }
     
-    static func border(_ color: Color.Border) -> UIColor {
+    public static func border(_ color: Color.Border) -> UIColor {
         
         return .hex8(color.rawValue)
     }
     
-    static func color(_ color: Color.Text) -> UIColor {
+    public static func color(_ color: Color.Text) -> UIColor {
         return .hex8(color.rawValue)
     }
     
-    static func color(_ color: Color.Background) -> UIColor {
+    public static func color(_ color: Color.Background) -> UIColor {
         
         return .hex8(color.rawValue)
     }
     
-    static func color(_ color: Color.Border) -> UIColor {
+    public static func color(_ color: Color.Border) -> UIColor {
         
         return .hex8(color.rawValue)
     }

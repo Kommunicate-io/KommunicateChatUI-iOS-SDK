@@ -159,7 +159,8 @@ final class ALKFriendMessageCell: ALKMessageCell {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        bubbleView.tintColor = ALKMessageStyle.receivedBubbleColor
+        bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style)
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -550,7 +551,8 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
         timeLabel.setStyle(ALKMessageStyle.time)
         messageView.setStyle(ALKMessageStyle.message)
-        bubbleView.tintColor = ALKMessageStyle.sentBubbleColor
+        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style)
     }
 
     class func leftPadding() -> CGFloat {
@@ -632,6 +634,21 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
     @objc func replyViewTapped() {
         replyViewAction?()
+    }
+
+    func bubbleViewImage(for style: ALKMessageStyle.BubbleStyle, isReceiverSide: Bool = false) -> UIImage? {
+
+        func getImage(style: ALKMessageStyle.BubbleStyle) -> UIImage? {
+            switch style {
+            case .edge:
+                return UIImage.init(named: "chat_bubble_red", in: Bundle.applozic, compatibleWith: nil)
+            case .round:
+                return UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
+            }
+        }
+        let image = getImage(style: style)
+        if isReceiverSide {image?.flipsForRightToLeftLayoutDirection}
+        return image
     }
 
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {
