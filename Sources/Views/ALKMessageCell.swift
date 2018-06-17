@@ -150,17 +150,14 @@ final class ALKFriendMessageCell: ALKMessageCell {
         replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -5).isActive = true
 
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
-        let image = UIImage.init(named: "chat_bubble_grey", in: Bundle.applozic, compatibleWith: nil)
-        bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
-        bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
     }
 
     override func setupStyle() {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style, isReceiverSide: true)
         bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
-        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style)
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -363,6 +360,12 @@ final class ALKMyMessageCell: ALKMessageCell {
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
 
+    override func setupStyle() {
+        super.setupStyle()
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style)
+        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
+    }
+
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
@@ -551,8 +554,6 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
         timeLabel.setStyle(ALKMessageStyle.time)
         messageView.setStyle(ALKMessageStyle.message)
-        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style)
     }
 
     class func leftPadding() -> CGFloat {
@@ -641,14 +642,24 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
         func getImage(style: ALKMessageStyle.BubbleStyle) -> UIImage? {
             switch style {
             case .edge:
-                return UIImage.init(named: "chat_bubble_red", in: Bundle.applozic, compatibleWith: nil)
+                var imageTitle = "chat_bubble_red"
+
+                // We can rotate the above image but loading the required
+                // image would be faster and we already have both the images.
+                if isReceiverSide {imageTitle = "chat_bubble_grey"}
+                return UIImage.init(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
             case .round:
                 return UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
             }
         }
-        let image = getImage(style: style)
-        if isReceiverSide {image?.flipsForRightToLeftLayoutDirection}
-        return image
+        guard let bubbleImage = getImage(style: style) else {return nil}
+
+        // This API is from the Kingfisher so instead of directly using
+        // imageFlippedForRightToLeftLayoutDirection() we are using this as it handles
+        // platform availability and future updates for us.
+        let modifier = FlipsForRightToLeftLayoutDirectionImageModifier()
+        return modifier.modify(bubbleImage)
+
     }
 
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {
