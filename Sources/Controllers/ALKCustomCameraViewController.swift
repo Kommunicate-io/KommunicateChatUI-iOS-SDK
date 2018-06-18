@@ -189,7 +189,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         let title = NSLocalizedString("Camera", value: "Camera", comment: "")
         self.navigationItem.title = title
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.tintColor = UIColor.black
         guard let navVC = self.navigationController else { return }
         navVC.navigationBar.shadowImage = UIImage()
         navVC.navigationBar.isTranslucent = true
