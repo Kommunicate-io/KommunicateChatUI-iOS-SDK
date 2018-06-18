@@ -75,7 +75,7 @@ open class ALKConversationViewModel: NSObject {
     private var selectedMessageForReply: ALKMessageViewModel?
 
     //MARK: - Initializer
-    public init(contactId: String?,
+    public required init(contactId: String?,
                 channelKey: NSNumber?,
                 conversationProxy: ALConversationProxy? = nil)
     {

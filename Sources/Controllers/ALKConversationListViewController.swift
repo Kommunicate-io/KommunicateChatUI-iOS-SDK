@@ -20,6 +20,9 @@ open class ALKConversationListViewController: ALKBaseViewController {
     var channelKey: NSNumber?
 
     public var conversationViewControllerType = ALKConversationViewController.self
+    public var dbServiceType = ALMessageDBService.self
+    public var viewModelType = ALKConversationListViewModel.self
+    public var conversationViewModelType = ALKConversationViewModel.self
 
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate let searchController = UISearchController(searchResultsController: nil)
@@ -31,7 +34,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
 
     fileprivate var conversationViewController: ALKConversationViewController?
 
-    fileprivate let tableView : UITableView = {
+    let tableView : UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
         tv.estimatedRowHeight = 75
         tv.rowHeight = 75
@@ -144,9 +147,9 @@ open class ALKConversationListViewController: ALKBaseViewController {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        dbService = ALMessageDBService()
+        dbService = dbServiceType.init()
         dbService.delegate = self
-        viewModel = ALKConversationListViewModel()
+        viewModel = viewModelType.init()
         viewModel.delegate = self
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
         activityIndicator.color = UIColor.gray
@@ -234,7 +237,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
             title = name
         }
         title = title.isEmpty ? "No name":title
-        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: groupId)
+        let convViewModel = conversationViewModelType.init(contactId: contactId, channelKey: groupId)
         let convService = ALConversationService()
         if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
@@ -327,7 +330,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
 
         if searchActive {
             guard let chat = searchFilteredChat[indexPath.row] as? ALMessage else {return}
-            let convViewModel = ALKConversationViewModel(contactId: chat.contactId, channelKey: chat.channelKey)
+            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey)
             let convService = ALConversationService()
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
@@ -339,7 +342,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             self.navigationController?.pushViewController(viewController, animated: false)
         } else {
             guard let chat = viewModel.chatForRow(indexPath: indexPath) else { return }
-            let convViewModel = ALKConversationViewModel(contactId: chat.contactId, channelKey: chat.channelKey)
+            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey)
             let convService = ALConversationService()
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy

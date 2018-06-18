@@ -12,14 +12,17 @@
 		146FC441BE00A406AB5AECD0 /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 084DD25F4E6E25CFBBA2EA78 /* BuddyBuildSDK.framework */; };
 		19BB518C9B7B907025C26B4D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1309D324746FFC327EC8AF /* QuartzCore.framework */; };
 		1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A1D05B99581079D018089B /* CoreTelephony.framework */; };
+		1B7AFD3F65CB66B9F41AA786 /* Pods_ApplozicSwiftDemoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 601967EBAFF309040531A42E /* Pods_ApplozicSwiftDemoUITests.framework */; };
 		220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA26913248851F7DE250BCB9 /* CoreText.framework */; };
-		8B07253F2101C9B600FF3801 /* ALKConversationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B07253E2101C9B600FF3801 /* ALKConversationViewControllerTests.swift */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
 		8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */; };
 		8B36D0ED1F3DC5E900FEFFD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EB1F3DC5E900FEFFD2 /* Main.storyboard */; };
 		8B36D0EF1F3DC5E900FEFFD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EE1F3DC5E900FEFFD2 /* Assets.xcassets */; };
 		8B36D0F21F3DC5E900FEFFD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0F01F3DC5E900FEFFD2 /* LaunchScreen.storyboard */; };
 		8B36D1081F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D1071F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift */; };
+		8B4E9FFC215A31B2001FD5F3 /* ALMessageDBServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E9FFB215A31B2001FD5F3 /* ALMessageDBServiceMock.swift */; };
+		8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1E967220D679EC00A4EB34 /* ALKConversationViewControllerListSnapShotTests.swift */; };
+		8B4E9FFF215BC804001FD5F3 /* ALKConversationViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E9FFE215BC804001FD5F3 /* ALKConversationViewModelMock.swift */; };
 		8B523B432067E1DE001B5989 /* ALMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B523B422067E1DE001B5989 /* ALMessageTests.swift */; };
 		8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA6FAE22089F18700BB1F6F /* ALKGenericListTests.swift */; };
 		8BA84180206A5A40004DD252 /* ALKGenericCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */; };
@@ -71,13 +74,16 @@
 		075A1290A49420D62EC8C4F3 /* Pods-ApplozicSwiftDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		07E325DA866C383971E4AC1F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		084DD25F4E6E25CFBBA2EA78 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
+		256392E6156B402790C17A59 /* Pods-ApplozicSwiftDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemoUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemoUITests/Pods-ApplozicSwiftDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3063FEBE8909243F69F4E935 /* Pods-ApplozicSwiftDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests.release.xcconfig"; sourceTree = "<group>"; };
+		4C29013AA46D45CDFD5F738B /* Pods-ApplozicSwiftDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemoUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemoUITests/Pods-ApplozicSwiftDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		52ED4FD6D53E2CE8781D3C10 /* Pods-ApplozicSwiftDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5F504D2CB3F5D0E6D22C39A8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		601967EBAFF309040531A42E /* Pods_ApplozicSwiftDemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplozicSwiftDemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		81A1D05B99581079D018089B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		86A37E05674B69C4F3494874 /* Pods_ApplozicSwiftDemoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplozicSwiftDemoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8B07253E2101C9B600FF3801 /* ALKConversationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerTests.swift; sourceTree = "<group>"; };
+		8B1E967220D679EC00A4EB34 /* ALKConversationViewControllerListSnapShotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerListSnapShotTests.swift; sourceTree = "<group>"; };
 		8B36D0E41F3DC5E900FEFFD2 /* ApplozicSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApplozicSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +97,8 @@
 		8B36D1071F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplozicSwiftDemoUITests.swift; sourceTree = "<group>"; };
 		8B36D1091F3DC5EA00FEFFD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B4836FA1F6976830067FC5E /* ApplozicSwiftDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ApplozicSwiftDemo.entitlements; sourceTree = "<group>"; };
+		8B4E9FFB215A31B2001FD5F3 /* ALMessageDBServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALMessageDBServiceMock.swift; sourceTree = "<group>"; };
+		8B4E9FFE215BC804001FD5F3 /* ALKConversationViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewModelMock.swift; sourceTree = "<group>"; };
 		8B523B422067E1DE001B5989 /* ALMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALMessageTests.swift; sourceTree = "<group>"; };
 		8BA6FAE22089F18700BB1F6F /* ALKGenericListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKGenericListTests.swift; sourceTree = "<group>"; };
 		8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKGenericCardTests.swift; sourceTree = "<group>"; };
@@ -140,6 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B7AFD3F65CB66B9F41AA786 /* Pods_ApplozicSwiftDemoUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +227,8 @@
 			children = (
 				8BF8D85D1FBEAFDD00804824 /* ALApplozicSettingsMock.swift */,
 				8BF8D85F1FBEB20200804824 /* ALUserServiceMock.swift */,
+				8B4E9FFB215A31B2001FD5F3 /* ALMessageDBServiceMock.swift */,
+				8B4E9FFE215BC804001FD5F3 /* ALKConversationViewModelMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -229,8 +240,8 @@
 				8B523B422067E1DE001B5989 /* ALMessageTests.swift */,
 				8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */,
 				8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */,
+				8B1E967220D679EC00A4EB34 /* ALKConversationViewControllerListSnapShotTests.swift */,
 				8BA6FAE22089F18700BB1F6F /* ALKGenericListTests.swift */,
-				8B07253E2101C9B600FF3801 /* ALKConversationViewControllerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -249,6 +260,7 @@
 				07E325DA866C383971E4AC1F /* CoreMedia.framework */,
 				7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */,
 				86A37E05674B69C4F3494874 /* Pods_ApplozicSwiftDemoTests.framework */,
+				601967EBAFF309040531A42E /* Pods_ApplozicSwiftDemoUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -260,6 +272,8 @@
 				52ED4FD6D53E2CE8781D3C10 /* Pods-ApplozicSwiftDemo.release.xcconfig */,
 				AB1CA9D6336F2AE2597DCEDE /* Pods-ApplozicSwiftDemoTests.debug.xcconfig */,
 				3063FEBE8909243F69F4E935 /* Pods-ApplozicSwiftDemoTests.release.xcconfig */,
+				256392E6156B402790C17A59 /* Pods-ApplozicSwiftDemoUITests.debug.xcconfig */,
+				4C29013AA46D45CDFD5F738B /* Pods-ApplozicSwiftDemoUITests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -311,9 +325,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8B36D1121F3DC5EA00FEFFD2 /* Build configuration list for PBXNativeTarget "ApplozicSwiftDemoUITests" */;
 			buildPhases = (
+				B452D85A65FC00ACB32584EC /* [CP] Check Pods Manifest.lock */,
 				8B36D0FF1F3DC5EA00FEFFD2 /* Sources */,
 				8B36D1001F3DC5EA00FEFFD2 /* Frameworks */,
 				8B36D1011F3DC5EA00FEFFD2 /* Resources */,
+				A5EC6528C1120985C4417459 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -485,8 +501,46 @@
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MGSwipeTableCell/MGSwipeTableCell.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble-Snapshots/Nimble_Snapshots.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
+				"${BUILT_PRODUCTS_DIR}/iOSSnapshotTestCase/FBSnapshotTestCase.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Applozic.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ApplozicSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MGSwipeTableCell.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble_Snapshots.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A5EC6528C1120985C4417459 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoUITests/Pods-ApplozicSwiftDemoUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Applozic/Applozic.framework",
+				"${BUILT_PRODUCTS_DIR}/ApplozicSwift/ApplozicSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/MGSwipeTableCell/MGSwipeTableCell.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Applozic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ApplozicSwift.framework",
@@ -496,7 +550,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoUITests/Pods-ApplozicSwiftDemoUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B452D85A65FC00ACB32584EC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ApplozicSwiftDemoUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -517,9 +593,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B07253F2101C9B600FF3801 /* ALKConversationViewControllerTests.swift in Sources */,
 				8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */,
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
+				8B4E9FFF215BC804001FD5F3 /* ALKConversationViewModelMock.swift in Sources */,
+				8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */,
+				8B4E9FFC215A31B2001FD5F3 /* ALMessageDBServiceMock.swift in Sources */,
 				8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */,
 				8BF8D85E1FBEAFDD00804824 /* ALApplozicSettingsMock.swift in Sources */,
 				8BF8D8601FBEB20200804824 /* ALUserServiceMock.swift in Sources */,
@@ -753,6 +831,7 @@
 		};
 		8B36D1131F3DC5EA00FEFFD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 256392E6156B402790C17A59 /* Pods-ApplozicSwiftDemoUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = C25JNDCBM4;
@@ -767,6 +846,7 @@
 		};
 		8B36D1141F3DC5EA00FEFFD2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C29013AA46D45CDFD5F738B /* Pods-ApplozicSwiftDemoUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = C25JNDCBM4;
