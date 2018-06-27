@@ -56,6 +56,8 @@ final class ALKFriendMessageCell: ALKMessageCell {
         }
     }
 
+    private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
+
     enum ConstraintIdentifier: String {
         case replyViewHeightIdentifier = "ReplyViewHeight"
         case replyNameHeightIdentifier = "ReplyNameHeight"
@@ -138,10 +140,11 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
 
-        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
-        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: widthPadding).isActive = true
 
-        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: 10).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: widthPadding).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
         replyView.heightAnchor.constraintEqualToAnchor(constant: 80, identifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue).isActive = true
@@ -229,9 +232,15 @@ final class ALKFriendMessageCell: ALKMessageCell {
 
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
 
-        let minimumHeigh: CGFloat = 55.0
-        let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width)
-        return totalRowHeigh < minimumHeigh ? minimumHeigh : totalRowHeigh
+        // TODO: need to find a better way to calculate the
+        // minimum height based on font set and other params.
+        // Maybe create a sample viewModel and pass a couple of words
+        // as a message.
+        let minimumHeigh: CGFloat = 80.0
+
+        // 2x because padding is for both the sides.
+        let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width-CGFloat(2*ALKMessageStyle.receivedBubble.widthPadding))
+        return totalRowHeigh < minimumHeigh ? 55 : totalRowHeigh
     }
 
     @objc private func avatarTappedAction() {
@@ -240,7 +249,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
 }
 
 
-// MARK: - ALKFriendMessageCell
+// MARK: - ALKMyMessageCell
 final class ALKMyMessageCell: ALKMessageCell {
 
     fileprivate var stateView: UIImageView = {
@@ -253,6 +262,8 @@ final class ALKMyMessageCell: ALKMessageCell {
     var replyNameTrailingConstraint: NSLayoutConstraint?
     var replyMessageTrailingConstraint: NSLayoutConstraint?
     var previewMessageTrailingConstraint: NSLayoutConstraint?
+
+    private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
 
     enum Padding {
         enum ReplyNameLabel {
@@ -338,12 +349,11 @@ final class ALKMyMessageCell: ALKMessageCell {
 
         bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -widthPadding).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: replyMessageLabel.leadingAnchor, constant: -widthPadding).isActive = true
 
-        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -5).isActive = true
-        bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -10).isActive = true
-        bubbleView.leadingAnchor.constraint(equalTo: replyMessageLabel.leadingAnchor, constant: -10).isActive = true
-
-        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 10).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
         replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyViewHeightIdentifier).isActive = true
@@ -409,6 +419,21 @@ final class ALKMyMessageCell: ALKMessageCell {
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
         self.bubbleView.image = UIImage.init(named: "chat_bubble_red", in: Bundle.applozic, compatibleWith: nil)
+    }
+
+    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+
+        // TODO: need to find a better way to calculate the
+        // minimum height based on font set and other params.
+        // Maybe create a sample viewModel and pass a couple of words
+        // as a message.
+        let minimumHeight: CGFloat = 65.0
+
+        // 2x because padding is for both the sides.
+        let totalRowHeight = super.rowHeigh(
+            viewModel: viewModel,
+            width: width-CGFloat(2*ALKMessageStyle.sentBubble.widthPadding))
+        return totalRowHeight < minimumHeight ? 40 : totalRowHeight
     }
 
     fileprivate func setPreviewImageWidthToZero() {
@@ -554,6 +579,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
         timeLabel.setStyle(ALKMessageStyle.time)
         messageView.setStyle(ALKMessageStyle.message)
+
     }
 
     class func leftPadding() -> CGFloat {
@@ -610,7 +636,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
                 let framesetter = CTFramesetterCreateWithAttributedString(attrbString)
                 size =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0,length: 0), nil, maxSize, nil)
             }
-            messageHeigh = ceil(size.height) + 15 // due to textview's bottom pading
+            messageHeigh = ceil(size.height) + 10 // due to textview's bottom pading
 
             if viewModel.isReplyMessage {
                 messageHeigh += 90

@@ -37,10 +37,12 @@ public enum ALKMessageStyle {
     public struct Bubble {
         public var color: UIColor
         public var style: BubbleStyle
+        public var widthPadding: Float
 
-        public init(color: UIColor, style: BubbleStyle) {
+        public init(color: UIColor, style: BubbleStyle, widthPadding: Float = 5.0) {
             self.color = color
             self.style = style
+            self.widthPadding = widthPadding
         }
     }
 
