@@ -140,7 +140,11 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
 
-        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
+        var bubbleViewLeftPadding = widthPadding
+
+        // Due to the extra edge on the left side
+        if ALKMessageStyle.receivedBubble.style == .edge {bubbleViewLeftPadding += 5}
+        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -bubbleViewLeftPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: widthPadding).isActive = true
 
@@ -353,7 +357,11 @@ final class ALKMyMessageCell: ALKMessageCell {
         bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -widthPadding).isActive = true
         bubbleView.leadingAnchor.constraint(equalTo: replyMessageLabel.leadingAnchor, constant: -widthPadding).isActive = true
 
-        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
+        var bubbleViewRightPadding = widthPadding
+
+        // Due to the extra edge on the right side
+        if ALKMessageStyle.receivedBubble.style == .edge {bubbleViewRightPadding += 5}
+        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: bubbleViewRightPadding).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
         replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyViewHeightIdentifier).isActive = true

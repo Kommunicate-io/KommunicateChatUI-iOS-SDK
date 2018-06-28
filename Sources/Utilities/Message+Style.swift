@@ -35,14 +35,21 @@ public enum ALKMessageStyle {
     }
 
     public struct Bubble {
-        public var color: UIColor
-        public var style: BubbleStyle
-        public var widthPadding: Float
 
-        public init(color: UIColor, style: BubbleStyle, widthPadding: Float = 5.0) {
+        /// Message bubble's background color.
+        public var color: UIColor
+
+        /// BubbleStyle of the message bubble.
+        public var style: BubbleStyle
+
+        /// Width padding which will be used for message view's
+        /// right and left padding.
+        public let widthPadding: Float
+
+        public init(color: UIColor, style: BubbleStyle) {
             self.color = color
             self.style = style
-            self.widthPadding = widthPadding
+            self.widthPadding = self.style == .edge ? 5.0:10.0
         }
     }
 
