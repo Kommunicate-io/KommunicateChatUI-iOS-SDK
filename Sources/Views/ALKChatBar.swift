@@ -176,7 +176,6 @@ open class ALKChatBar: UIView {
         var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
-
         return button
     }()
 

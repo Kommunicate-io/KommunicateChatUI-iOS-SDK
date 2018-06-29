@@ -356,6 +356,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
+        backgroundView.backgroundColor = configuration.backgroundColor
         setupConstraints()
         prepareTable()
         prepareMoreBar()
@@ -501,6 +502,12 @@ open class ALKConversationViewController: ALKBaseViewController {
 
 
     private func prepareChatBar() {
+        // Update ChatBar's top view which contains send button and the text view.
+        chatBar.grayView.backgroundColor = configuration.backgroundColor
+
+        // Update background view's color which contains all the attachment options.
+        chatBar.bottomGrayView.backgroundColor = configuration.chatBarAttachmentViewBackgroundColor
+
         if viewModel.isOpenGroup {
             hideMediaOptions()
         }else {
