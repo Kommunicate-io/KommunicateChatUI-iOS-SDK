@@ -98,14 +98,14 @@ alChatManager.registerUser(alUser, completion: {response, error in
 #### Launch chat list
 
 ```swift
-let alChatManager = ALChatManager(applicationKey: <Application key>)
+let alChatManager = ALChatManager(applicationKey: <Application key>, with: ALKConfiguration())
 alChatManager.launchChatList(from: self)
 ```
 
 #### Launch Group
 
 ```swift
-let alChatManager = ALChatManager(applicationKey: <Application key>)
+let alChatManager = ALChatManager(applicationKey: <Application key>, configuration: ALKConfiguration())
 alChatManager.launchGroupWith(clientGroupId: <groupId>, from: self)
 ```
 
@@ -113,7 +113,7 @@ alChatManager.launchGroupWith(clientGroupId: <groupId>, from: self)
 #### Launch Individual Chat
 
 ```swift
-let alChatManager = ALChatManager(applicationKey: <Application key>)
+let alChatManager = ALChatManager(applicationKey: <Application key>, configuration: ALKConfiguration())
 alChatManager.launchChatWith(contactId: <userId>, from: self)
 ```
 
