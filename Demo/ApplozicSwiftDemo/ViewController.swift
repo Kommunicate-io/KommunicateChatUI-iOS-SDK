@@ -18,7 +18,13 @@ class ViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-
+        ALKMessageStyle.message = Style(font: Font.medium(size: 16).font(), text: UIColor.white, background: UIColor.clear)
+        ALKMessageStyle.sentBubble = ALKMessageStyle.Bubble.init(
+            color: UIColor(netHex:0x5c5aa7),
+            style: .edge)
+        ALKMessageStyle.receivedBubble = ALKMessageStyle.Bubble.init(
+            color: UIColor(netHex:0x5c5aa7),
+            style: .edge)
     }
 
     override func didReceiveMemoryWarning() {
