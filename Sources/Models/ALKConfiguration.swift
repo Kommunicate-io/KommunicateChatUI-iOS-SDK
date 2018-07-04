@@ -39,5 +39,8 @@ public struct ALKConfiguration {
     /// all the attachment and other options.
     public var chatBarAttachmentViewBackgroundColor = UIColor.background(.grayEF)
 
+    /// If true then all the media options in Chat bar will be hidden.
+    public var hideAllOptionsInChatBar = false
+
     public init() { }
 }

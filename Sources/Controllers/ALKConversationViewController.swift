@@ -511,8 +511,10 @@ open class ALKConversationViewController: ALKBaseViewController {
         if viewModel.isOpenGroup {
             hideMediaOptions()
         }else {
-            showMediaOptions()
+            if configuration.hideAllOptionsInChatBar {hideMediaOptions()}
+            else {showMediaOptions()}
         }
+
         chatBar.poweredByMessageLabel.attributedText =
             NSAttributedString(string: "Powered by Applozic")
         chatBar.poweredByMessageLabel.setLinkForSubstring("Applozic", withLinkHandler: {
