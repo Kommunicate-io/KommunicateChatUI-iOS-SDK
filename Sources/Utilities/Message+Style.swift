@@ -29,6 +29,30 @@ public enum ALKMessageStyle {
         text: .text(.grayCC)
     )
 
-    public static var sentBubbleColor = UIColor(netHex: 0xF1F0F0)
-    public static var receivedBubbleColor = UIColor(netHex: 0xF1F0F0)
+    public enum BubbleStyle {
+        case edge
+        case round
+    }
+
+    public struct Bubble {
+
+        /// Message bubble's background color.
+        public var color: UIColor
+
+        /// BubbleStyle of the message bubble.
+        public var style: BubbleStyle
+
+        /// Width padding which will be used for message view's
+        /// right and left padding.
+        public let widthPadding: Float
+
+        public init(color: UIColor, style: BubbleStyle) {
+            self.color = color
+            self.style = style
+            self.widthPadding = self.style == .edge ? 5.0:10.0
+        }
+    }
+
+    public static var sentBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge)
+    public static var receivedBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge)
 }

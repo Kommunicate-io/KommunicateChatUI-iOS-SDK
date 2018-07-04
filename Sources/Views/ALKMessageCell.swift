@@ -56,6 +56,8 @@ final class ALKFriendMessageCell: ALKMessageCell {
         }
     }
 
+    private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
+
     enum ConstraintIdentifier: String {
         case replyViewHeightIdentifier = "ReplyViewHeight"
         case replyNameHeightIdentifier = "ReplyNameHeight"
@@ -138,10 +140,15 @@ final class ALKFriendMessageCell: ALKMessageCell {
         bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
 
-        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -13).isActive = true
-        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 5).isActive = true
+        var bubbleViewLeftPadding = widthPadding
 
-        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: 10).isActive = true
+        // Due to the extra edge on the left side
+        if ALKMessageStyle.receivedBubble.style == .edge {bubbleViewLeftPadding += 5}
+        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -bubbleViewLeftPadding).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: widthPadding).isActive = true
+
+        bubbleView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor, constant: widthPadding).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
         replyView.heightAnchor.constraintEqualToAnchor(constant: 80, identifier: ConstraintIdentifier.replyViewHeightIdentifier.rawValue).isActive = true
@@ -150,16 +157,14 @@ final class ALKFriendMessageCell: ALKMessageCell {
         replyView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -5).isActive = true
 
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
-        let image = UIImage.init(named: "chat_bubble_grey", in: Bundle.applozic, compatibleWith: nil)
-        bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
-        bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
     }
 
     override func setupStyle() {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        bubbleView.tintColor = ALKMessageStyle.receivedBubbleColor
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style, isReceiverSide: true)
+        bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -231,9 +236,15 @@ final class ALKFriendMessageCell: ALKMessageCell {
 
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
 
-        let minimumHeigh: CGFloat = 55.0
-        let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width)
-        return totalRowHeigh < minimumHeigh ? minimumHeigh : totalRowHeigh
+        // TODO: need to find a better way to calculate the
+        // minimum height based on font set and other params.
+        // Maybe create a sample viewModel and pass a couple of words
+        // as a message.
+        let minimumHeigh: CGFloat = 80.0
+
+        // 2x because padding is for both the sides.
+        let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width-CGFloat(2*ALKMessageStyle.receivedBubble.widthPadding))
+        return totalRowHeigh < minimumHeigh ? 55 : totalRowHeigh
     }
 
     @objc private func avatarTappedAction() {
@@ -242,7 +253,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
 }
 
 
-// MARK: - ALKFriendMessageCell
+// MARK: - ALKMyMessageCell
 final class ALKMyMessageCell: ALKMessageCell {
 
     fileprivate var stateView: UIImageView = {
@@ -255,6 +266,8 @@ final class ALKMyMessageCell: ALKMessageCell {
     var replyNameTrailingConstraint: NSLayoutConstraint?
     var replyMessageTrailingConstraint: NSLayoutConstraint?
     var previewMessageTrailingConstraint: NSLayoutConstraint?
+
+    private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
 
     enum Padding {
         enum ReplyNameLabel {
@@ -340,12 +353,15 @@ final class ALKMyMessageCell: ALKMessageCell {
 
         bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -widthPadding).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: replyMessageLabel.leadingAnchor, constant: -widthPadding).isActive = true
 
-        bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -5).isActive = true
-        bubbleView.leadingAnchor.constraint(equalTo: replyNameLabel.leadingAnchor, constant: -10).isActive = true
-        bubbleView.leadingAnchor.constraint(equalTo: replyMessageLabel.leadingAnchor, constant: -10).isActive = true
+        var bubbleViewRightPadding = widthPadding
 
-        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: 10).isActive = true
+        // Due to the extra edge on the right side
+        if ALKMessageStyle.receivedBubble.style == .edge {bubbleViewRightPadding += 5}
+        bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: bubbleViewRightPadding).isActive = true
 
         replyView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
         replyView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.replyViewHeightIdentifier).isActive = true
@@ -360,6 +376,12 @@ final class ALKMyMessageCell: ALKMessageCell {
 
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
+    }
+
+    override func setupStyle() {
+        super.setupStyle()
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style)
+        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -405,6 +427,21 @@ final class ALKMyMessageCell: ALKMessageCell {
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
         self.bubbleView.image = UIImage.init(named: "chat_bubble_red", in: Bundle.applozic, compatibleWith: nil)
+    }
+
+    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+
+        // TODO: need to find a better way to calculate the
+        // minimum height based on font set and other params.
+        // Maybe create a sample viewModel and pass a couple of words
+        // as a message.
+        let minimumHeight: CGFloat = 65.0
+
+        // 2x because padding is for both the sides.
+        let totalRowHeight = super.rowHeigh(
+            viewModel: viewModel,
+            width: width-CGFloat(2*ALKMessageStyle.sentBubble.widthPadding))
+        return totalRowHeight < minimumHeight ? 40 : totalRowHeight
     }
 
     fileprivate func setPreviewImageWidthToZero() {
@@ -550,7 +587,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
         timeLabel.setStyle(ALKMessageStyle.time)
         messageView.setStyle(ALKMessageStyle.message)
-        bubbleView.tintColor = ALKMessageStyle.sentBubbleColor
+
     }
 
     class func leftPadding() -> CGFloat {
@@ -607,7 +644,7 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
                 let framesetter = CTFramesetterCreateWithAttributedString(attrbString)
                 size =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0,length: 0), nil, maxSize, nil)
             }
-            messageHeigh = ceil(size.height) + 15 // due to textview's bottom pading
+            messageHeigh = ceil(size.height) + 10 // due to textview's bottom pading
 
             if viewModel.isReplyMessage {
                 messageHeigh += 90
@@ -632,6 +669,31 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
     @objc func replyViewTapped() {
         replyViewAction?()
+    }
+
+    func bubbleViewImage(for style: ALKMessageStyle.BubbleStyle, isReceiverSide: Bool = false) -> UIImage? {
+
+        func getImage(style: ALKMessageStyle.BubbleStyle) -> UIImage? {
+            switch style {
+            case .edge:
+                var imageTitle = "chat_bubble_red"
+
+                // We can rotate the above image but loading the required
+                // image would be faster and we already have both the images.
+                if isReceiverSide {imageTitle = "chat_bubble_grey"}
+                return UIImage.init(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
+            case .round:
+                return UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
+            }
+        }
+        guard let bubbleImage = getImage(style: style) else {return nil}
+
+        // This API is from the Kingfisher so instead of directly using
+        // imageFlippedForRightToLeftLayoutDirection() we are using this as it handles
+        // platform availability and future updates for us.
+        let modifier = FlipsForRightToLeftLayoutDirectionImageModifier()
+        return modifier.modify(bubbleImage)
+
     }
 
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {

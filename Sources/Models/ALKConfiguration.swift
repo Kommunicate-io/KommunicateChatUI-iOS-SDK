@@ -19,5 +19,25 @@ public struct ALKConfiguration {
     /// - NOTE: You will see the previous messages(if there are any).
     public var isProfileTapActionEnabled = true
 
+    /// The background color of the ALKConversationViewController.
+    public var backgroundColor = UIColor(netHex: 0xf9f9f9)
+
+    /// Hides the bottom line in the navigation bar.
+    /// It will be hidden in all the ViewControllers where
+    /// navigation bar is visible. Default value is true.
+    public var hideNavigationBarBottomLine = true
+
+    /// Navigation bar's background color. It will be used in all the
+    /// ViewControllers where navigation bar is visible.
+    public var navigationBarBackgroundColor = UIColor.navigationOceanBlue()
+
+    /// Navigation bar's tint color. It will be used in all the
+    /// ViewControllers where navigation bar is visible.
+    public var navigationBarItemColor = UIColor.navigationTextOceanBlue()
+
+    /// ChatBar's bottom view color. This is the view which contains
+    /// all the attachment and other options.
+    public var chatBarAttachmentViewBackgroundColor = UIColor.background(.grayEF)
+
     public init() { }
 }

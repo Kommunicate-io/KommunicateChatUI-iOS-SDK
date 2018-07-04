@@ -21,7 +21,6 @@ open class ALKChatBar: UIView {
         case sendText(UIButton,String)
         case chatBarTextBeginEdit()
         case chatBarTextChange(UIButton)
-        case sendPhoto(UIButton,UIImage)
         case sendVoice(NSData)
         case startVideoRecord()
         case startVoiceRecord()
@@ -30,6 +29,7 @@ open class ALKChatBar: UIView {
         case noVoiceRecordPermission()
         case mic(UIButton)
         case more(UIButton)
+        case cameraButtonClicked(UIButton)
     }
     
     public var action: ((ActionType) -> ())?
@@ -176,7 +176,6 @@ open class ALKChatBar: UIView {
         var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
-
         return button
     }()
 
@@ -196,16 +195,8 @@ open class ALKChatBar: UIView {
         case plusButton:
             action?(.more(button))
             break
-            
         case photoButton:
-            
-            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.camera, bundle: Bundle.applozic)
-            if let vc = storyboard.instantiateViewController(withIdentifier: "CustomCameraNavigationController") as? ALKBaseNavigationViewController {
-                guard let firstVC = vc.viewControllers.first else {return}
-                let cameraView = firstVC as! ALKCustomCameraViewController
-                cameraView.setCustomCamDelegate(camMode: .NoCropOption, camDelegate: self)
-                UIViewController.topViewController()?.present(vc, animated: false, completion: nil)
-            }
+            action?(.cameraButtonClicked(button))
             break
             
         case micButton:
@@ -545,13 +536,6 @@ extension ALKChatBar: UITextViewDelegate {
         }
         textView.inputView = nil
         textView.reloadInputViews()
-    }
-}
-
-extension ALKChatBar: ALKCustomCameraProtocol {
-    
-    func customCameraDidTakePicture(cropedImage: UIImage) {
-        action?(.sendPhoto(photoButton, cropedImage))
     }
 }
 

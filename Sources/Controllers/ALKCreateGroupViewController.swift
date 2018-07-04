@@ -197,14 +197,10 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     }
     
     @IBAction private func selectGroupImgPress(_ sender: Any) {
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.camera, bundle: Bundle.applozic)
-        
-        if let vc = storyboard.instantiateViewController(withIdentifier: "CustomCameraNavigationController") as? ALKBaseNavigationViewController {
-            guard let firstVC = vc.viewControllers.first else {return}
-            let cameraView = firstVC as! ALKCustomCameraViewController
-            cameraView.setCustomCamDelegate(camMode: .NoCropOption, camDelegate: self)
+        guard
+            let vc = ALKCustomCameraViewController.makeInstanceWith(delegate: self, and: configuration)
+            else {return}
             self.present(vc, animated: false, completion: nil)
-        }
     }
 
     private func getPictureFilename() -> String {
