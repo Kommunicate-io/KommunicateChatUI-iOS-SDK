@@ -111,6 +111,17 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
     }
 
+    static func makeInstanceWith(delegate: ALKCustomCameraProtocol, and configuration: ALKConfiguration) -> ALKBaseNavigationViewController? {
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.camera, bundle: Bundle.applozic)
+        guard
+            let vc = storyboard.instantiateViewController(withIdentifier: "CustomCameraNavigationController")
+                as? ALKBaseNavigationViewController,
+            let cameraVC = vc.viewControllers.first as? ALKCustomCameraViewController else { return nil }
+        cameraVC.setCustomCamDelegate(camMode: .NoCropOption, camDelegate: delegate)
+        cameraVC.configuration = configuration
+        return vc
+    }
+
     func capturePhoto() {
 
         if #available(iOS 10.0, *) {
@@ -530,9 +541,11 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         }
 
         if let cropView = destination as? ALKCustomCropImageViewController {
+            cropView.configuration = configuration
             cropView.setSelectedImage(pickImage: self.selectedImage, camDelegate: customCamDelegate)
 
         } else if let customCameraPreviewVC = destination as? ALKCustomCameraPreviewViewController {
+            customCameraPreviewVC.configuration = configuration
             customCameraPreviewVC.setSelectedImage(pickImage: self.selectedImage, camDelegate: customCamDelegate)
         }
     }

@@ -47,6 +47,17 @@ class ALKCustomPickerViewController: ALKBaseViewController {
 
     }
 
+    static func makeInstanceWith(delegate: ALKCustomPickerDelegate, and configuration: ALKConfiguration) -> ALKBaseNavigationViewController? {
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.picker, bundle: Bundle.applozic)
+        guard
+            let vc = storyboard.instantiateViewController(withIdentifier: "CustomPickerNavigationViewController")
+                as? ALKBaseNavigationViewController,
+            let cameraVC = vc.viewControllers.first as? ALKCustomPickerViewController else { return nil }
+        cameraVC.delegate = delegate
+        cameraVC.configuration = configuration
+        return vc
+    }
+
     //MARK: - UI control
     private func setupNavigation() {
         self.navigationController?.title = title

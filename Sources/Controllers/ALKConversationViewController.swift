@@ -35,7 +35,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
     private var typingNoticeViewHeighConstaint: NSLayoutConstraint?
-    private var isJustSent: Bool = false
+    var isJustSent: Bool = false
 
     //MQTT connection retry
     fileprivate var mqttRetryCount = 0
@@ -578,28 +578,6 @@ open class ALKConversationViewController: ALKBaseViewController {
                         weakSelf.tableView.scrollToBottomByOfset(animated: false)
                     }
                 })
-            case .sendPhoto(let button, let image):
-                print("Image call done")
-                weakSelf.isJustSent = true
-
-                let (message, indexPath) =  weakSelf.viewModel.send(photo: image)
-                guard let _ = message, let newIndexPath = indexPath else { return }
-                weakSelf.tableView.beginUpdates()
-                weakSelf.tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
-                weakSelf.tableView.endUpdates()
-                weakSelf.tableView.scrollToBottom(animated: false)
-
-                guard let cell = weakSelf.tableView.cellForRow(at: newIndexPath) as? ALKMyPhotoPortalCell else { return }
-                guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
-                    let notificationView = ALNotificationView()
-                    notificationView.noDataConnectionNotificationView()
-                    return
-                }
-                weakSelf.viewModel.uploadImage(view: cell, indexPath: newIndexPath)
-
-                button.isUserInteractionEnabled = true
-                button.isUserInteractionEnabled = true
-
             case .sendVoice(let voice):
                 weakSelf.viewModel.send(voiceMessage: voice as Data)
                 break;
@@ -625,13 +603,11 @@ open class ALKConversationViewController: ALKBaseViewController {
                     ALUtilityClass.showAlertMessage(NSLocalizedString("CameraNotAvailableMessage", value: "Camera is not Available !!!", comment: ""), andTitle: NSLocalizedString("CameraNotAvailableTitle", value: "OOPS !!!", comment: ""))
                 }
             case .showImagePicker():
-                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.picker, bundle: Bundle.applozic)
-                if let vc = storyboard.instantiateViewController(withIdentifier: "CustomPickerNavigationViewController") as? ALKBaseNavigationViewController {
-                    guard let firstVC = vc.viewControllers.first else {return}
-                    let cameraView = firstVC as! ALKCustomPickerViewController
-                    cameraView.delegate = self
-                    UIViewController.topViewController()?.present(vc, animated: false, completion: nil)
+                guard let vc = ALKCustomPickerViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
+                    else {
+                        return
                 }
+                weakSelf.present(vc, animated: false, completion: nil)
             case .showLocation():
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.MapView, bundle: Bundle.applozic)
 
@@ -639,6 +615,14 @@ open class ALKConversationViewController: ALKBaseViewController {
                 guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
                 mapViewVC.delegate = self
                 self?.present(nav, animated: true, completion: {})
+            case .cameraButtonClicked(let button):
+                guard let vc = ALKCustomCameraViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
+                else {
+                    button.isUserInteractionEnabled = true
+                    return
+                }
+                weakSelf.present(vc, animated: false, completion: nil)
+                button.isUserInteractionEnabled = true
             default:
                 print("Not available")
             }
