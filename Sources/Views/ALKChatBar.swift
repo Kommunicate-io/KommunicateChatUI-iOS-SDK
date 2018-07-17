@@ -313,8 +313,12 @@ open class ALKChatBar: UIView {
     fileprivate var textViewTrailingWithSend: NSLayoutConstraint?
     fileprivate var textViewTrailingWithMic: NSLayoutConstraint?
     
-    private func setupConstraints() {
+    private func setupConstraints(
+        maxLength: CGFloat = max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)) {
         plusButton.isHidden = true
+
+        var buttonSpacing: CGFloat = 30
+        if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
         addViewsForAutolayout(views: [bottomGrayView, micButton, plusButton, photoButton, grayView,  textView, sendButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -327,12 +331,12 @@ open class ALKChatBar: UIView {
         chatButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         chatButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12).isActive = true
         
-        photoButton.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 30).isActive = true
+        photoButton.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: buttonSpacing).isActive = true
         photoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         photoButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         photoButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
         
-        micButton.leadingAnchor.constraint(equalTo: galleryButton.trailingAnchor, constant: 30).isActive = true
+        micButton.leadingAnchor.constraint(equalTo: galleryButton.trailingAnchor, constant: buttonSpacing).isActive = true
         micButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         micButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
         micButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
@@ -343,18 +347,17 @@ open class ALKChatBar: UIView {
         plusButton.widthAnchor.constraint(equalToConstant: 38).isActive = true
         plusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
 
-        videoButton.leadingAnchor.constraint(equalTo: micButton.trailingAnchor, constant: 30).isActive = true
+        videoButton.leadingAnchor.constraint(equalTo: micButton.trailingAnchor, constant: buttonSpacing).isActive = true
         videoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         videoButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-//        videoButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
         videoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
-        galleryButton.leadingAnchor.constraint(equalTo: photoButton.trailingAnchor, constant: 30).isActive = true
+        galleryButton.leadingAnchor.constraint(equalTo: photoButton.trailingAnchor, constant: buttonSpacing).isActive = true
         galleryButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         galleryButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         galleryButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
-        locationButton.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: 30).isActive = true
+        locationButton.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: buttonSpacing).isActive = true
         locationButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
@@ -377,8 +380,7 @@ open class ALKChatBar: UIView {
         poweredByMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.poweredByMessageHeight.rawValue).isActive = true
         poweredByMessageLabel.bottomAnchor.constraint(equalTo: textView.topAnchor).isActive = true
         poweredByMessageLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        
-//        textViewTrailingWithMic = textView.trailingAnchor.constraint(equalTo: micButton.leadingAnchor, constant: -8).isActive
+
         textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor).isActive = true
         
         textViewHeighConstrain = textView.heightAnchor.constraint(equalToConstant: textViewHeigh)
