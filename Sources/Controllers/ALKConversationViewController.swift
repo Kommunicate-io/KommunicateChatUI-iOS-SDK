@@ -826,6 +826,7 @@ open class ALKConversationViewController: ALKBaseViewController {
                 } else {
                     vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:viewModel.groupProfileImgUrl(), groupSelected: viewModel.friends(), delegate: self)
                 }
+                vc.configuration = configuration
                 vc.addContactMode = .existingChat
                 navigationController?.pushViewController(vc, animated: true)
             }
