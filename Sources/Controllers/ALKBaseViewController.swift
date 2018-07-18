@@ -16,6 +16,7 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     required public init(configuration: ALKConfiguration) {
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
+        self.addObserver()
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
