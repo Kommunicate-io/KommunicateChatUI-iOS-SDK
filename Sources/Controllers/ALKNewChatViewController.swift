@@ -133,6 +133,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
             if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
                 vc.setCurrentGroupSelected(groupName: "", groupProfileImg: nil, groupSelected: [ALKFriendViewModel](), delegate: self)
                 vc.addContactMode = .newChat
+                vc.configuration = configuration
                 navigationController?.pushViewController(vc, animated: true)
             }
             return
