@@ -13,6 +13,7 @@
 		19BB518C9B7B907025C26B4D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1309D324746FFC327EC8AF /* QuartzCore.framework */; };
 		1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A1D05B99581079D018089B /* CoreTelephony.framework */; };
 		220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA26913248851F7DE250BCB9 /* CoreText.framework */; };
+		8B07253F2101C9B600FF3801 /* ALKConversationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B07253E2101C9B600FF3801 /* ALKConversationViewControllerTests.swift */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
 		8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */; };
 		8B36D0ED1F3DC5E900FEFFD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EB1F3DC5E900FEFFD2 /* Main.storyboard */; };
@@ -76,6 +77,7 @@
 		7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		81A1D05B99581079D018089B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		86A37E05674B69C4F3494874 /* Pods_ApplozicSwiftDemoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplozicSwiftDemoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B07253E2101C9B600FF3801 /* ALKConversationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerTests.swift; sourceTree = "<group>"; };
 		8B36D0E41F3DC5E900FEFFD2 /* ApplozicSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApplozicSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */,
 				8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */,
 				8BA6FAE22089F18700BB1F6F /* ALKGenericListTests.swift */,
+				8B07253E2101C9B600FF3801 /* ALKConversationViewControllerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -562,6 +565,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B07253F2101C9B600FF3801 /* ALKConversationViewControllerTests.swift in Sources */,
 				8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */,
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
 				8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */,
