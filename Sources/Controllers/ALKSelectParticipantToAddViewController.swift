@@ -130,41 +130,70 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
 
 
     func getAllFriends(completion: @escaping () -> ()) {
-        let dbHandler = ALDBHandler.sharedInstance()
 
-        let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
 
-        var predicate = NSPredicate()
-        fetchReq.returnsDistinctResults = true
-        if !ALUserDefaultsHandler.getLoginUserConatactVisibility() {
-            predicate = NSPredicate(format: "userId!=%@ AND deletedAtTime == nil", ALUserDefaultsHandler.getUserId())
-        }
+        if(ALApplozicSettings.isContactsGroupEnabled())
+        {
+            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (error, channel) in
 
-        fetchReq.predicate = predicate
-        do {
-            let list = try dbHandler?.managedObjectContext.fetch(fetchReq)
-            var models = [ALKFriendViewModel]()
-            if let db = list {
-                for i in 0..<db.count {
-                    let dbContact = db[i]
-                    let contact = ALContact()
-                    contact.userId = dbContact.userId
-                    contact.fullName = dbContact.fullName
-                    contact.contactNumber = dbContact.contactNumber
-                    contact.displayName = dbContact.displayName
-                    contact.contactImageUrl = dbContact.contactImageUrl
-                    contact.email = dbContact.email
-                    contact.localImageResourceName = dbContact.localImageResourceName
-                    contact.contactType = dbContact.contactType
-                    models.append(ALKFriendViewModel.init(identity: contact))
+                if(error == nil && channel != nil) {
+                    let alchannel: ALChannel = channel!
+                    var models = [ALKFriendViewModel]()
+                    let contactService = ALContactService()
+
+                    for userId in alchannel.membersId {
+
+                        if (userId as! String != ALUserDefaultsHandler.getUserId() as String) {
+
+                            let contact: ALContact? = contactService.loadContact(byKey: "userId", value: userId as! String)
+                            if(contact?.deletedAtTime == nil) {
+                                models.append(ALKFriendViewModel.init(identity: contact!))
+                            }
+                        }
+
+                    }
+                    self.datasource.update(datasource: models, state: .full)
                 }
-                self.datasource.update(datasource: models, state: .full)
-                completion()
+
             }
 
-        } catch( _) {
+        } else {
+            let dbHandler = ALDBHandler.sharedInstance()
 
-            completion()
+            let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
+
+            var predicate = NSPredicate()
+            fetchReq.returnsDistinctResults = true
+            if !ALUserDefaultsHandler.getLoginUserConatactVisibility() {
+                predicate = NSPredicate(format: "userId!=%@ AND deletedAtTime == nil", ALUserDefaultsHandler.getUserId())
+            }
+
+            fetchReq.predicate = predicate
+            do {
+                let list = try dbHandler?.managedObjectContext.fetch(fetchReq)
+                var models = [ALKFriendViewModel]()
+                if let db = list {
+                    for i in 0..<db.count {
+                        let dbContact = db[i]
+                        let contact = ALContact()
+                        contact.userId = dbContact.userId
+                        contact.fullName = dbContact.fullName
+                        contact.contactNumber = dbContact.contactNumber
+                        contact.displayName = dbContact.displayName
+                        contact.contactImageUrl = dbContact.contactImageUrl
+                        contact.email = dbContact.email
+                        contact.localImageResourceName = dbContact.localImageResourceName
+                        contact.contactType = dbContact.contactType
+                        models.append(ALKFriendViewModel.init(identity: contact))
+                    }
+                    self.datasource.update(datasource: models, state: .full)
+                    completion()
+                }
+
+            } catch(_) {
+
+                completion()
+            }
         }
     }
 

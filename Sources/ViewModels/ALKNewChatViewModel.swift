@@ -33,19 +33,56 @@ final class ALKNewChatViewModel {
             self.friendList = self.bufferFriendList.filter({($0.friendProfileName != nil) ? $0.friendProfileName!.lowercased().contains(keyword.lowercased()): false})
         }
     }
-    
-    func getContacts(userService: ALUserService = ALUserService(),completion:@escaping () ->()) {
-        applozicSettings.getFilterContactsStatus()
-        if applozicSettings.getFilterContactsStatus() {
-            userService.getListOfRegisteredUsers(completion: {error in
+
+
+    func getContacts(userService: ALUserService = ALUserService(), completion: @escaping () -> ()) {
+
+        if(ALApplozicSettings.isContactsGroupEnabled())
+        {
+            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (error, channel) in
+
+                if(error == nil && channel != nil) {
+                    let alchannel: ALChannel = channel!
+                    
+                     var friendList = [ALKContactProtocol]()
+                    
+
+                    let contactService = ALContactService()
+
+                    for userId in alchannel.membersId {
+
+                        if (userId as! String != ALUserDefaultsHandler.getUserId() as String) {
+
+                            let contact: ALContact? = contactService.loadContact(byKey: "userId", value: userId as! String)
+
+                            if let alContact = contact {
+                                friendList.append(alContact)
+                            }
+                            
+                            self.bufferFriendList = friendList;
+
+                        }
+                    }
+                    completion()
+                }
+
+            }
+
+        } else {
+            applozicSettings.getFilterContactsStatus()
+            if applozicSettings.getFilterContactsStatus() {
+                userService.getListOfRegisteredUsers(completion: { error in
+                    self.bufferFriendList = self.fetchContactsFromDB() ?? []
+                    completion()
+                })
+            } else {
                 self.bufferFriendList = self.fetchContactsFromDB() ?? []
                 completion()
-            })
-        } else {
-            self.bufferFriendList = self.fetchContactsFromDB() ?? []
-            completion()
+            }
         }
+
     }
+
 
     func fetchContactsFromDB() -> [ALKContactProtocol]?{
         let dbHandler = ALDBHandler.sharedInstance()
