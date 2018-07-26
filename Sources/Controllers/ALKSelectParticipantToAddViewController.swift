@@ -44,12 +44,13 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
     var friendsInGroup: [ALKFriendViewModel]?
     weak var selectParticipantDelegate: ALKSelectParticipantToAddProtocol?
     
-    
     /*
      var alphabetDict = ["A":[],"B":[],"C":[],"D":[],"E":[],"F":[],"G":[],"H":[],"I":[],"J":[],"K":[],"L":[],"M":[],"N":[],"O":[],"P":[],"Q":[],"R":[],"S":[],"T":[],"U":[],"V":[],"W":[],"X":[],"Y":[],"Z":[],"#":[]]
      
      var alphabetSection : Array<String> = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
      */
+
+    
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -128,7 +129,6 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
         }
     }
 
-
     func getAllFriends(completion: @escaping () -> ()) {
 
 
@@ -153,6 +153,8 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
 
                     }
                     self.datasource.update(datasource: models, state: .full)
+                    completion()
+
                 }
 
             }
