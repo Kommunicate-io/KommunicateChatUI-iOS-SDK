@@ -32,6 +32,10 @@ if !git.modified_files.grep(/Sources/).empty? && git.modified_files.grep(/Tests/
     warn "Remember to write tests in case you have added a new API or fixed a bug. Feel free to ask for help if you need it 👍"
 end
 
+# Fail if release notes are not updated
+release_notes_updated = git.modified_files.include? "release_notes.txt"
+fail "You forgot to update your release notes file" if !declared_trivial && !release_notes_updated
+
 jira.check(
   key: ["AL"],
   url: "https://applozic.atlassian.net/browse",
