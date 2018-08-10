@@ -238,6 +238,14 @@ open class ALKConversationViewModel: NSObject {
         case .genericList:
             guard let template = genericTemplateFor(message: messageModel) as? ALKGenericListTemplate else {return 0}
             return ALKGenericListCell.rowHeightFor(template: template)
+        case .quickReply:
+            if messageModel.isMyMessage {
+                let heigh = ALKMyMessageQuickReplyCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return heigh + ALKMyMessageQuickReplyCell.rowHeightFor()
+            } else {
+                let heigh = ALKFriendMessageQuickReplyCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return heigh + ALKFriendMessageQuickReplyCell.rowHeightFor()
+            }
         }
     }
 
