@@ -32,8 +32,12 @@ if !git.modified_files.grep(/Sources/).empty? && git.modified_files.grep(/Tests/
     warn "Remember to write tests in case you have added a new API or fixed a bug. Feel free to ask for help if you need it 👍"
 end
 
+# Fail if release notes are not updated
+changelog_updated = git.modified_files.include? "CHANGELOG.md"
+fail "Any source code changes should have an entry in CHANGELOG.md." if !declared_trivial && !changelog_updated
+
 jira.check(
-  key: ["AL"],
+  key: ["AL", "CS"],
   url: "https://applozic.atlassian.net/browse",
   fail_on_warning: false
 )
