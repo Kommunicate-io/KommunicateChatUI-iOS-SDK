@@ -33,8 +33,8 @@ if !git.modified_files.grep(/Sources/).empty? && git.modified_files.grep(/Tests/
 end
 
 # Fail if release notes are not updated
-release_notes_updated = git.modified_files.include? "release_notes.txt"
-fail "You forgot to update your release notes file" if !declared_trivial && !release_notes_updated
+changelog_updated = git.modified_files.include? "CHANGELOG.md"
+fail "Any source code changes should have an entry in CHANGELOG.md." if !declared_trivial && !changelog_updated
 
 jira.check(
   key: ["AL", "CS"],
