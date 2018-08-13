@@ -7,3 +7,5 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 
 ### Fixes
+
+- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
