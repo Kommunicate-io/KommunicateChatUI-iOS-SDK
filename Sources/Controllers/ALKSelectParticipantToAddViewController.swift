@@ -136,27 +136,12 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
         {
             ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (error, channel) in
 
-                if(error == nil && channel != nil) {
-                    let alchannel: ALChannel = channel!
-                    var models = [ALKFriendViewModel]()
-                    let contactService = ALContactService()
-
-                    for userId in alchannel.membersId {
-
-                        if (userId as! String != ALUserDefaultsHandler.getUserId() as String) {
-
-                            let contact: ALContact? = contactService.loadContact(byKey: "userId", value: userId as! String)
-                            if(contact?.deletedAtTime == nil) {
-                                models.append(ALKFriendViewModel.init(identity: contact!))
-                            }
-                        }
-
-                    }
-                    self.datasource.update(datasource: models, state: .full)
+                guard let alChannel = channel else {
                     completion()
-
+                    return
                 }
-
+                self.addCategorizeContacts(channel: alChannel)
+                completion()
             }
 
         } else {
@@ -197,6 +182,31 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
                 completion()
             }
         }
+    }
+    
+    func addCategorizeContacts(channel:ALChannel?) {
+        
+        guard let alChannel = channel  else {
+            return
+        }
+        
+        var models = [ALKFriendViewModel]()
+        let contactService = ALContactService()
+        let savedLoginUserId = ALUserDefaultsHandler.getUserId() as String
+        
+        for memberId in alChannel.membersId {
+            
+            if let memberIdStr = memberId as? String, memberIdStr != savedLoginUserId {
+                
+                let contact: ALContact? = contactService.loadContact(byKey: "userId", value: memberIdStr)
+                
+                if(contact?.deletedAtTime == nil) {
+                    models.append(ALKFriendViewModel.init(identity: contact!))
+                }
+                
+            }
+        }
+        self.datasource.update(datasource: models, state: .full)
     }
 
 

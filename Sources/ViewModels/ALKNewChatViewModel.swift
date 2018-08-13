@@ -40,36 +40,16 @@ final class ALKNewChatViewModel {
         if(ALApplozicSettings.isContactsGroupEnabled())
         {
             ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (error, channel) in
-
-                if(error == nil && channel != nil) {
-                    let alchannel: ALChannel = channel!
-                    
-                     var friendList = [ALKContactProtocol]()
-                    
-
-                    let contactService = ALContactService()
-
-                    for userId in alchannel.membersId {
-
-                        if (userId as! String != ALUserDefaultsHandler.getUserId() as String) {
-
-                            let contact: ALContact? = contactService.loadContact(byKey: "userId", value: userId as! String)
-
-                            if let alContact = contact {
-                                friendList.append(alContact)
-                            }
-                            
-                            self.bufferFriendList = friendList;
-
-                        }
-                    }
+                
+                guard let alChannel = channel  else {
                     completion()
+                    return
                 }
-
+                self.addCategorizeContacts(channel: alChannel)
+                completion()
             }
 
         } else {
-            applozicSettings.getFilterContactsStatus()
             if applozicSettings.getFilterContactsStatus() {
                 userService.getListOfRegisteredUsers(completion: { error in
                     self.bufferFriendList = self.fetchContactsFromDB() ?? []
@@ -81,6 +61,34 @@ final class ALKNewChatViewModel {
             }
         }
 
+    }
+    
+    
+    func addCategorizeContacts(channel:ALChannel?) {
+        
+        guard let alChannel = channel  else {
+            return
+        }
+        
+        var friendList = [ALKContactProtocol]()
+        let contactService = ALContactService()
+        let savedLoginUserId = ALUserDefaultsHandler.getUserId() as String
+        
+        for memberId in alChannel.membersId {
+            
+            if let memberIdStr = memberId as? String, memberIdStr != savedLoginUserId {
+                
+                let contact: ALContact? = contactService.loadContact(byKey: "userId", value: memberIdStr)
+                
+                if(contact?.deletedAtTime == nil) {
+                    friendList.append(contact!)
+                }
+                
+            }
+        }
+        
+        self.bufferFriendList = friendList;
+    
     }
 
 
