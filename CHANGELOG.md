@@ -6,6 +6,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ---
 ### Enhancements
 
+- [CS-108] Add support for contacts group.
+
 ### Fixes
 
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
