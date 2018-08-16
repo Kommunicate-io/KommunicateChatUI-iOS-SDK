@@ -82,9 +82,8 @@ open class ALKMyMessageQuickReplyCell: ALKMyMessageCell {
         collectionView = ALKIndexedCollectionView(frame: frame, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-        let _ = contentView.subviews.map { $0.removeFromSuperview()}
-        contentView.addSubview(self.collectionView)
-        layoutMargins = UIEdgeInsetsMake(10, 0, 10, 0)
+        collectionView.isUserInteractionEnabled = true
+        contentView.insertSubview(collectionView, at: 0)
     }
 }
 

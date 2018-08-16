@@ -158,6 +158,33 @@ open class ALKConversationViewModel: NSObject {
         guard indexPath.section < messageModels.count && indexPath.section >= 0 else { return nil }
         return messageModels[indexPath.section]
     }
+    
+    open func quickReplyDictionary(message: ALKMessageViewModel?,indexRow row: Int) -> Dictionary<String,Any>? {
+        
+        guard let metadata = message?.metadata else {
+            return Dictionary<String,Any>()
+        }
+        
+        let payload = metadata["payload"] as? String
+        
+        let data = payload?.data
+        var jsonArray : [Dictionary<String,Any>]?
+        
+        do {
+            jsonArray = (try JSONSerialization.jsonObject(with: data!, options : .allowFragments) as? [Dictionary<String,Any>])
+            return   jsonArray?[row]
+        }catch let error as NSError {
+            print(error)
+        }
+        return Dictionary<String,Any>()
+    }
+    
+    open func getSizeForItemAt(row: Int,withData: Dictionary<String,Any>) -> CGSize {
+        
+        let size = (withData["title"] as? String)?.size(withAttributes: [NSAttributedStringKey.font: Font.normal(size: 14.0).font()])
+        let newSize = CGSize(width: (size?.width)!+46.0, height: 50.0)
+        return newSize
+    }
 
     open func messageForRow(identifier: String) -> ALKMessageViewModel? {
         guard let messageModel = messageModels.filter({$0.identifier == identifier}).first else {return nil}

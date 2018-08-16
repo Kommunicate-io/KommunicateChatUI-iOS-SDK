@@ -256,8 +256,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKMyMessageQuickReplyCell  = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.register(cell: ALQuickReplyCollectionViewCell.self)
                 cell.update(viewModel: message)
-                cell.update(chatBar: self.chatBar)
 
+                cell.update(chatBar: self.chatBar)
+                cell.menuAction = {[weak self] action in
+                    self?.menuItemSelected(action: action, message: message)}
                 return cell
                 
             } else {
@@ -336,10 +338,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             
         }
 
-        let templateId = metadata["templateId"] as? String
-        //Check for templateId 6 for quick reply message
-        if(templateId == "6" ){
-        
+        if(message?.messageType == ALKMessageType.quickReply){
+
             if(message?.isMyMessage)!{
                 guard let cell =  cell as? ALKMyMessageQuickReplyCell  else {
                     return
@@ -448,18 +448,17 @@ extension ALTopicDetail: ALKContextTitleDataType {
 
 }
 
-extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-
+extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+    
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
-            let metadata = message.metadata,
-            let templateId = metadata["templateId"] as? String
+            let metadata = message.metadata
             else {
-            return 0
+                return 0
         }
         
-        if(templateId == "6"){
+        if(message.messageType == ALKMessageType.quickReply){
             
             let payload = metadata["payload"] as! String?
             
@@ -490,7 +489,7 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
         return 0
         
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let collectionView = collectionView as? ALKIndexedCollectionView
@@ -499,48 +498,25 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
         }
         
         let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag))
-        
-        
-        guard let metadata = message?.metadata,
-            let templateId = metadata["templateId"] as? String else {
-            return  UICollectionViewCell()
-        }
-        
-        if(templateId == "6"){
+    
+        if(message?.messageType == ALKMessageType.quickReply){
             
-            let payload = metadata["payload"] as? String
-            
-            let data = payload?.data
-            
-            do {
-                if let jsonArray = try JSONSerialization.jsonObject(with: data!, options : .allowFragments) as? [Dictionary<String,Any>]{
-                    
-                    let cell: ALQuickReplyCollectionViewCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-                    
-                    cell.update(data: jsonArray[indexPath.row])
-                    
-                    cell.buttonSelected = {[weak self] tag, title in
-                        
-                        print("\(title, tag) button selected in generic card")
-                        
-                        guard let strongSelf = self else {return}
-                        var infoDict = [String: Any]()
-                        infoDict["buttonName"] = title
-                        infoDict["buttonIndex"] = tag
-                        
-            
-                    }
-                    return cell
-                    
-                }
-            } catch let error as NSError {
-                print(error)
+            guard let dictionary = viewModel.quickReplyDictionary(message: message, indexRow: indexPath.row) else {
+                return  UICollectionViewCell()
             }
+            
+            let cell: ALQuickReplyCollectionViewCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.update(data: dictionary)
+            
+            cell.buttonSelected = {[weak self] tag, title in
+                self?.viewModel.send(message: title, isOpenGroup: false)
+            }
+            
+            return cell
             
         }else{
             
-            guard let collectionView = collectionView as? ALKIndexedCollectionView,
-                let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
+            guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
                 let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate,
                 template.cards.count > indexPath.row else {
                     return UICollectionViewCell()
@@ -563,46 +539,28 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
             return cell
             
         }
-        return UICollectionViewCell()
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
+        
         let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag))
         
-        
-        guard let metadata = message?.metadata,let templateId = metadata["templateId"] as? String
+        guard let metadata = message?.metadata
             else {
-            return  CGSize(width: self.view.frame.width-50, height: 350)
+                return  CGSize(width: self.view.frame.width-50, height: 350)
         }
         
-        if(templateId == "6"){
+        if(message?.messageType == ALKMessageType.quickReply){
             
-         let payload = metadata["payload"] as? String
-         let data = payload?.data
-        
-            do {
-                if let jsonArray = try JSONSerialization.jsonObject(with: data!, options : .allowFragments) as? [Dictionary<String,Any>]{
-    
-                     return self.getSizeForItemAt(row: indexPath.row, withData: jsonArray[indexPath.row])
-                    
-                }
-            } catch let error as NSError {
-                print(error)
+            guard let dictionary = viewModel.quickReplyDictionary(message: message, indexRow: indexPath.row) else {
+                return  CGSize(width: self.view.frame.width-50, height: 350)
             }
+            
+            return viewModel.getSizeForItemAt(row: indexPath.row, withData: dictionary)
             
         }
         return CGSize(width: self.view.frame.width-50, height: 350)
         
     }
     
-    
-    open func getSizeForItemAt(row: Int,withData: Dictionary<String,Any>) -> CGSize {
-     
-        
-        let size = (withData["title"] as? String)?.size(withAttributes: [NSAttributedStringKey.font: Font.normal(size: 14.0).font()])
-        
-        let newSize = CGSize(width: (size?.width)!+46.0, height: 50.0)
-        return newSize
-    }
 }

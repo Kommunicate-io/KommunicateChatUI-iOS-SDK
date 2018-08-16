@@ -84,7 +84,8 @@ open class ALKFriendMessageQuickReplyCell: ALKFriendMessageCell {
         collectionView = ALKIndexedCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-        contentView.addSubview(self.collectionView)
+        collectionView.isUserInteractionEnabled = true
+        contentView.insertSubview(collectionView, at: 0)
     }
 }
 

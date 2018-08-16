@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import Applozic
 
 open class ALKQuickReplyCollectionView: ALKIndexedCollectionView {
     
@@ -17,38 +17,24 @@ open class ALKQuickReplyCollectionView: ALKIndexedCollectionView {
     }
     
     override open class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
-    
+        
         return ALQuickReplyCollectionViewCell.rowHeightFor()
     }
     
 }
 
-
 open class ALQuickReplyCollectionViewCell: UICollectionViewCell {
     
- 
     public enum Padding {
-        enum CoverImageView {
+        enum ButtonView {
             static var top: CGFloat = 5.0
             static var left: CGFloat = 5.0
             static var right: CGFloat = -5.0
             static var height: CGFloat = 80.0
         }
-        enum mainStackView {
-            static var bottom: CGFloat = -20.0
-            static var left: CGFloat = 0
-            static var right: CGFloat = 0
-        }
     }
     
-    func setupUI() {
-        let view = contentView
-        view.addViewsForAutolayout(views: [button])
-        button.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.CoverImageView.left).isActive = true
-        button.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-    }
+    open var buttonSelected: ((_ index: Int, _ name: String)->())?
     
     open let button: UIButton = {
         let button = UIButton()
@@ -56,25 +42,36 @@ open class ALQuickReplyCollectionViewCell: UICollectionViewCell {
         button.isUserInteractionEnabled = true
         button.setFont(font: UIFont.font(.bold(size: 14.0)))
         button.setTitle("Button", for: .normal)
-        button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
         button.layer.borderWidth = 1.0
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 10.0
         button.layer.borderWidth = 1
+        button.isUserInteractionEnabled = true
         button.layer.borderColor = UIColor.gray.cgColor
         return button
     }()
     
-
+    func setupUI() {
+        contentView.isUserInteractionEnabled = true
+        contentView.addViewsForAutolayout(views: [button])
+        contentView.bringSubview(toFront:button)
+        self.setUpButtonConstraints()
+    }
+    
+    func setUpButtonConstraints() {
+        button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
+        button.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.ButtonView.left).isActive = true
+        button.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+    }
+    
     open var descriptionLabelHeight: CGFloat = 80.0
     open var titleLabelStackViewHeight: CGFloat = 50.0
     
     open var actionUIButtons = [UIButton]()
-    open var card: ALKGenericCard!
     
     var jsonArray: [Dictionary<String,Any>]!
-    
-    open var buttonSelected: ((_ index: Int, _ name: String)->())?
     
     override open func awakeFromNib() {
         super.awakeFromNib()
@@ -82,7 +79,7 @@ open class ALQuickReplyCollectionViewCell: UICollectionViewCell {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-       setupUI()
+        setupUI()
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -97,19 +94,27 @@ open class ALQuickReplyCollectionViewCell: UICollectionViewCell {
     
     open func update(data: Dictionary<String,Any>) {
         updateViewFor(data)
-      
     }
     
-    @objc func buttonSelected(_ action: UIButton) {
-        self.buttonSelected?(action.tag, action.titleLabel?.text ?? "")
+    @objc func buttonSelected(_ sender: UIButton) {
+        self.sendMessage(sender)
     }
-
     
     private func updateViewFor(_ jsonArray: Dictionary<String,Any>) {
         button.setTitle(jsonArray["title"] as? String, for: .normal)
-
     }
-  
+    
+    func sendMessage(_ sender: UIButton) {
+        let alContactService = ALContactService()
+        let loginUserContact =   alContactService.loadContact(byKey: "userId", value: ALUserDefaultsHandler .getUserId())
+        
+        guard let contact = loginUserContact else {
+            return
+        }
+        if(contact.roleType == APPLICATION_ADMIN.rawValue as NSNumber){
+            self.buttonSelected?(sender.tag, sender.currentTitle ?? "")
+        }
+    }
 }
 
 
