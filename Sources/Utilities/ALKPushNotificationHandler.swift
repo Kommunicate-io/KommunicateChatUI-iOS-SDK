@@ -89,10 +89,11 @@ public class ALKPushNotificationHandler {
         let messagesVC = ALKConversationListViewController(configuration: configuration)
         messagesVC.contactId = userId
         messagesVC.channelKey = groupId
-        let rootVC =  UIApplication.shared.keyWindow?.rootViewController?.presentedViewController
+        let pushAssistant = ALPushAssist()
+        let topVC =  pushAssistant.topViewController
         let nav = ALKBaseNavigationViewController(rootViewController: messagesVC)
         navVC?.modalTransitionStyle = .crossDissolve
-        rootVC?.present(nav, animated: true, completion: nil)
+        topVC?.present(nav, animated: true, completion: nil)
 
     }
 
