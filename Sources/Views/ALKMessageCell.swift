@@ -435,12 +435,10 @@ final class ALKMyMessageCell: ALKMessageCell {
         // minimum height based on font set and other params.
         // Maybe create a sample viewModel and pass a couple of words
         // as a message.
-        let minimumHeight: CGFloat = 65.0
+        let minimumHeight: CGFloat = 40.0
 
         // 2x because padding is for both the sides.
-        let totalRowHeight = super.rowHeigh(
-            viewModel: viewModel,
-            width: width-CGFloat(2*ALKMessageStyle.sentBubble.widthPadding))
+        let totalRowHeight = super.rowHeigh(viewModel: viewModel, width: width-CGFloat(2*ALKMessageStyle.sentBubble.widthPadding))
         return totalRowHeight < minimumHeight ? 40 : totalRowHeight
     }
 
