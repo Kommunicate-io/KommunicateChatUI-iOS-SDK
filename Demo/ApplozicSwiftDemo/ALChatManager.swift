@@ -135,6 +135,7 @@ class ALChatManager: NSObject {
         ALApplozicSettings.setListOfViewControllers([ALKConversationListViewController.description(), ALKConversationViewController.description()])
         ALApplozicSettings.setFilterContactsStatus(true)
         ALUserDefaultsHandler.setDebugLogsRequire(true)
+        ALApplozicSettings.setSwiftFramework(true)
     }
 
     func launchChatList(from viewController: UIViewController, with configuration: ALKConfiguration) {
