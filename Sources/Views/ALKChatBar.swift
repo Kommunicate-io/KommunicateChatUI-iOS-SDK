@@ -248,7 +248,6 @@ open class ALKChatBar: UIView {
         backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
         
-//        micButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         plusButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         photoButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
@@ -262,7 +261,6 @@ open class ALKChatBar: UIView {
     
     deinit {
         
-//        micButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         plusButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         photoButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         sendButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
@@ -564,12 +562,10 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
         textView.resignFirstResponder()
         action?(.sendVoice(soundData))
         stopRecording()
-        //check here might be becomeFirstResponder and in aboe case it would be resign
     }
     
     public func cancelRecordingAudio() {
         stopRecording()
-//        textView.becomeFirstResponder()
     }
     
     public func permissionNotGrant() {
