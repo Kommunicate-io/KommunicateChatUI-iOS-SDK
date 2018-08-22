@@ -131,7 +131,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
             constant: 0).isActive = true
 
         messageView.topAnchor.constraint(equalTo: replyView.bottomAnchor, constant: Padding.MessageView.top).isActive = true
-        messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -57).isActive = true
+        messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -1 * ALKMessageCell.rightPadding()).isActive = true
 
         messageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -1 * ALKFriendMessageCell.bottomPadding()).isActive = true
 
@@ -240,11 +240,15 @@ final class ALKFriendMessageCell: ALKMessageCell {
         // minimum height based on font set and other params.
         // Maybe create a sample viewModel and pass a couple of words
         // as a message.
-        let minimumHeigh: CGFloat = 80.0
-
+        var minimumHeigh: CGFloat = 0.0
+        if ALKMessageStyle.receivedBubble.style == ALKMessageStyle.BubbleStyle.edge{
+            minimumHeigh = 20.0
+        }else if ALKMessageStyle.receivedBubble.style == ALKMessageStyle.BubbleStyle.round{
+            minimumHeigh = 62.0
+        }
         // 2x because padding is for both the sides.
         let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width-CGFloat(2*ALKMessageStyle.receivedBubble.widthPadding))
-        return totalRowHeigh < minimumHeigh ? 55 : totalRowHeigh
+        return totalRowHeigh < minimumHeigh ? minimumHeigh : totalRowHeigh
     }
 
     @objc private func avatarTappedAction() {
@@ -435,11 +439,16 @@ final class ALKMyMessageCell: ALKMessageCell {
         // minimum height based on font set and other params.
         // Maybe create a sample viewModel and pass a couple of words
         // as a message.
-        let minimumHeight: CGFloat = 40.0
+        var minimumHeight: CGFloat = 0.0
+        if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.edge{
+            minimumHeight = 45.0
+        }else if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.round{
+            minimumHeight = 62.0
+        }
 
         // 2x because padding is for both the sides.
         let totalRowHeight = super.rowHeigh(viewModel: viewModel, width: width-CGFloat(2*ALKMessageStyle.sentBubble.widthPadding))
-        return totalRowHeight < minimumHeight ? 40 : totalRowHeight
+        return totalRowHeight < minimumHeight ? minimumHeight  : totalRowHeight
     }
 
     fileprivate func setPreviewImageWidthToZero() {
@@ -589,7 +598,11 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
     }
 
     class func leftPadding() -> CGFloat {
-        return 16
+        if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.edge{
+            return 25
+        }else{
+            return 30
+        }
     }
 
     class func rightPadding() -> CGFloat {
@@ -611,8 +624,12 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
 
         if let message = viewModel.message {
 
-
-            let widthNoPadding = width - leftPadding() - rightPadding()
+            var widthNoPadding = width - leftPadding() - rightPadding()
+            if !viewModel.isMyMessage{
+                widthNoPadding -= 20
+            }else{
+                widthNoPadding += 20
+            }
             let maxSize = CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude)
 
             let font = ALKMessageStyle.message.font
@@ -643,12 +660,10 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
                 size =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0,length: 0), nil, maxSize, nil)
             }
             messageHeigh = ceil(size.height) + 10 // due to textview's bottom pading
-
             if viewModel.isReplyMessage {
                 messageHeigh += 90
             }
         }
-
         return topPadding()+messageHeigh+bottomPadding()
     }
 

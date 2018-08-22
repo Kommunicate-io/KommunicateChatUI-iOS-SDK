@@ -49,7 +49,7 @@ public enum ALKMessageStyle {
         public init(color: UIColor, style: BubbleStyle) {
             self.color = color
             self.style = style
-            self.widthPadding = self.style == .edge ? 5.0:10.0
+            self.widthPadding = 10.0
         }
     }
 
