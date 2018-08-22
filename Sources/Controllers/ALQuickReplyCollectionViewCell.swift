@@ -105,16 +105,9 @@ open class ALQuickReplyCollectionViewCell: UICollectionViewCell {
     }
     
     func sendMessage(_ sender: UIButton) {
-        let alContactService = ALContactService()
-        let loginUserContact =   alContactService.loadContact(byKey: "userId", value: ALUserDefaultsHandler .getUserId())
-        
-        guard let contact = loginUserContact else {
-            return
-        }
-        if(contact.roleType == APPLICATION_ADMIN.rawValue as NSNumber){
-            self.buttonSelected?(sender.tag, sender.currentTitle ?? "")
-        }
+      self.buttonSelected?(sender.tag, sender.currentTitle ?? "")
     }
+    
 }
 
 

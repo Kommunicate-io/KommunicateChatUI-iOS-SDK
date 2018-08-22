@@ -544,12 +544,7 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag))
-        
-        guard let metadata = message?.metadata
-            else {
-                return  CGSize(width: self.view.frame.width-50, height: 350)
-        }
-        
+
         if(message?.messageType == ALKMessageType.quickReply){
             
             guard let dictionary = viewModel.quickReplyDictionary(message: message, indexRow: indexPath.row) else {
