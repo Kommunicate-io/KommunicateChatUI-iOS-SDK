@@ -445,8 +445,10 @@ open class ALKChatBar: UIView {
     
     func stopRecording() {
         micButton.center = buttonCenter
-        changeButton()
         soundRec.userDidStopRecording()
+        micButton.isSelected = false
+        soundRec.isHidden = true
+        placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
     }
     
 }
@@ -488,6 +490,9 @@ extension ALKChatBar: UITextViewDelegate {
         self.placeHolder.isHidden = !textView.text.isEmpty
         self.placeHolder.alpha = textView.text.isEmpty ? 1.0 : 0.0
         
+        self.sendButton.isHidden = textView.text.isEmpty
+        self.micButton.isHidden = !textView.text.isEmpty
+        
         if let selectedTextRange = textView.selectedTextRange {
             let line = textView.caretRect(for: selectedTextRange.start)
             let overflow = line.origin.y + line.size.height  - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top )
@@ -504,8 +509,6 @@ extension ALKChatBar: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         action?(.chatBarTextBeginEdit())
-        sendButton.isHidden = false
-        micButton.isHidden = true
     }
     
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -535,7 +538,8 @@ extension ALKChatBar: UITextViewDelegate {
     
     fileprivate func clearTextInTextView() {
         if textView.text.isEmpty {
-            
+            sendButton.isHidden = true
+            micButton.isHidden = false
             if self.placeHolder.isHidden {
                 self.placeHolder.isHidden = false
                 self.placeHolder.alpha = 1.0
@@ -560,7 +564,9 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
     
     public func finishRecordingAudio(soundData: NSData) {
         textView.resignFirstResponder()
-        action?(.sendVoice(soundData))
+        if soundRec.isRecordingTimeSufficient(){
+            action?(.sendVoice(soundData))
+        }
         stopRecording()
     }
     
@@ -579,6 +585,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
 }
 
 extension ALKChatBar: ALKAudioRecorderViewProtocol {
+    
     public func cancelAudioRecording() {
         micButton.cancelAudioRecord()
         stopRecording()
