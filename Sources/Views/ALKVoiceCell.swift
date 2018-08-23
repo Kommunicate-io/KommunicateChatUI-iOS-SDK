@@ -52,6 +52,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         let progress = UIProgressView()
         progress.trackTintColor = UIColor.clear
         progress.tintColor = UIColor.background(.main).withAlphaComponent(0.32)
+        progress.clipsToBounds = true
+        progress.layer.cornerRadius = 12
         return progress
     }()
     
