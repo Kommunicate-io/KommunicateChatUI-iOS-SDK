@@ -12,6 +12,8 @@ import Applozic
 
 open class ALKChatBar: UIView {
     
+    public var configuration: ALKConfiguration!
+    
     public enum ButtonMode {
         case send
         case media
@@ -226,22 +228,11 @@ open class ALKChatBar: UIView {
     
     var chatIdentifier: String?
     
-    func setComingSoonDelegate(delegate: UIView) {
-        comingSoonDelegate = delegate
-    }
-    
-    open func clear() {
-        textView.text = ""
-        clearTextInTextView()
-        toggleKeyboardType(textView: textView)
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
+    private func initializeView(){
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }
-
+        
         micButton.setAudioRecDelegate(recorderDelegate: self)
         soundRec.setAudioRecViewDelegate(recorderDelegate: self)
         textView.delegate = self
@@ -255,9 +246,30 @@ open class ALKChatBar: UIView {
         galleryButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         chatButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
-
+        
         setupConstraints()
     }
+    
+    func setComingSoonDelegate(delegate: UIView) {
+        comingSoonDelegate = delegate
+    }
+    
+    open func clear() {
+        textView.text = ""
+        clearTextInTextView()
+        toggleKeyboardType(textView: textView)
+    }
+    
+    required public init(frame: CGRect, configuration: ALKConfiguration){
+        super.init(frame: frame)
+        self.configuration = configuration
+        initializeView()
+    }
+    
+//    public override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        initializeView()
+//    }
     
     deinit {
         
@@ -338,7 +350,7 @@ open class ALKChatBar: UIView {
         locationButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
 
-        lineImageView.trailingAnchor.constraint(equalTo: micButton.leadingAnchor, constant: -15).isActive = true
+        lineImageView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -15).isActive = true
         lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
         lineImageView.topAnchor.constraint(equalTo: textView.topAnchor, constant: 10).isActive = true
         lineImageView.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
@@ -348,12 +360,16 @@ open class ALKChatBar: UIView {
         sendButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         sendButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
         
-        sendButton.isHidden = true
-        
         micButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         micButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         micButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         micButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
+        
+        if configuration.hideAudioOptionInChatBar{
+            micButton.isHidden = true
+        }else{
+            sendButton.isHidden = true
+        }
         
         textView.topAnchor.constraint(equalTo: poweredByMessageLabel.bottomAnchor, constant: 0).isActive = true
         textView.bottomAnchor.constraint(equalTo: bottomGrayView.topAnchor, constant: 0).isActive = true
@@ -407,7 +423,9 @@ open class ALKChatBar: UIView {
         bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 0
         galleryButton.isHidden = true
         locationButton.isHidden = true
-        micButton.isHidden = true
+        if configuration.hideAudioOptionInChatBar{
+            micButton.isHidden = true
+        }
         photoButton.isHidden = true
         chatButton.isHidden = true
         videoButton.isHidden = true
@@ -417,7 +435,9 @@ open class ALKChatBar: UIView {
         bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 45
         galleryButton.isHidden = false
         locationButton.isHidden = false
-        micButton.isHidden = false
+        if !configuration.hideAudioOptionInChatBar{
+            micButton.isHidden = false
+        }
         photoButton.isHidden = false
         chatButton.isHidden = false
         videoButton.isHidden = false
@@ -490,9 +510,10 @@ extension ALKChatBar: UITextViewDelegate {
         self.placeHolder.isHidden = !textView.text.isEmpty
         self.placeHolder.alpha = textView.text.isEmpty ? 1.0 : 0.0
         
-        self.sendButton.isHidden = textView.text.isEmpty
-        self.micButton.isHidden = !textView.text.isEmpty
-        
+        if !configuration.hideAudioOptionInChatBar{
+            self.sendButton.isHidden = textView.text.isEmpty
+            self.micButton.isHidden = !textView.text.isEmpty
+        }
         if let selectedTextRange = textView.selectedTextRange {
             let line = textView.caretRect(for: selectedTextRange.start)
             let overflow = line.origin.y + line.size.height  - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top )
@@ -514,8 +535,10 @@ extension ALKChatBar: UITextViewDelegate {
     public func textViewDidEndEditing(_ textView: UITextView) {
         
         if textView.text.isEmpty {
-            sendButton.isHidden = true
-            micButton.isHidden = false
+            if !configuration.hideAudioOptionInChatBar{
+                sendButton.isHidden = true
+                micButton.isHidden = false
+            }
             if self.placeHolder.isHidden {
                 self.placeHolder.isHidden = false
                 self.placeHolder.alpha = 1.0
@@ -538,8 +561,10 @@ extension ALKChatBar: UITextViewDelegate {
     
     fileprivate func clearTextInTextView() {
         if textView.text.isEmpty {
-            sendButton.isHidden = true
-            micButton.isHidden = false
+            if !configuration.hideAudioOptionInChatBar{
+                sendButton.isHidden = true
+                micButton.isHidden = false
+            }
             if self.placeHolder.isHidden {
                 self.placeHolder.isHidden = false
                 self.placeHolder.alpha = 1.0

@@ -30,6 +30,8 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     /// See configuration.
     private var isProfileTapActionEnabled = true
+    
+    var chatBar: ALKChatBar = ALKChatBar(frame: .zero, configuration: ALKConfiguration())
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
@@ -82,8 +84,6 @@ open class ALKConversationViewController: ALKBaseViewController {
         return titleButton
     }()
 
-    let chatBar: ALKChatBar = ALKChatBar(frame: .zero)
-
     let unreadScrollButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.lightText
@@ -118,6 +118,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
         configurePropertiesWith(configuration: configuration)
+        self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -378,7 +379,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     private func setupConstraints() {
 
-        var allViews = [backgroundView, contextTitleView, tableView,moreBar,chatBar,typingNoticeView, unreadScrollButton, replyMessageView]
+        var allViews = [backgroundView, contextTitleView, tableView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
