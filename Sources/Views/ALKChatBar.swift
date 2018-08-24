@@ -381,7 +381,7 @@ open class ALKChatBar: UIView {
         poweredByMessageLabel.bottomAnchor.constraint(equalTo: textView.topAnchor).isActive = true
         poweredByMessageLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
 
-        textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor).isActive = true
+        textView.trailingAnchor.constraint(equalTo: lineImageView.leadingAnchor).isActive = true
         
         textViewHeighConstrain = textView.heightAnchor.constraint(equalToConstant: textViewHeigh)
         textViewHeighConstrain?.isActive = true
