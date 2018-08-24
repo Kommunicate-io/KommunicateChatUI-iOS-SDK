@@ -2,7 +2,16 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-0.15.0 (upcoming release)
+0.16.0 (upcoming release)
+---
+### Enhancements
+
+- [CS-127] Fixed an issue where tapping on notification was not opening chat screen.
+
+### Fixes
+
+
+0.15.0
 ---
 ### Enhancements
 
