@@ -116,7 +116,7 @@ open class ALKAudioRecorderView: UIView {
         recordingView.leadingAnchor.constraint(equalTo: redDot.leadingAnchor, constant: 20).isActive = true
         recordingView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
-        slideToCancel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -100).isActive = true
+        slideToCancel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         slideToCancel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
     

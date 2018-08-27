@@ -266,13 +266,7 @@ open class ALKChatBar: UIView {
         initializeView()
     }
     
-//    public override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        initializeView()
-//    }
-    
     deinit {
-        
         plusButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         photoButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         sendButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
@@ -280,8 +274,6 @@ open class ALKChatBar: UIView {
         galleryButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         chatButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
-
-
     }
 
     private var isNeedInitText = true
@@ -423,9 +415,7 @@ open class ALKChatBar: UIView {
         bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 0
         galleryButton.isHidden = true
         locationButton.isHidden = true
-        if configuration.hideAudioOptionInChatBar{
-            micButton.isHidden = true
-        }
+        hideAudioOptionInChatBar()
         photoButton.isHidden = true
         chatButton.isHidden = true
         videoButton.isHidden = true
@@ -435,9 +425,7 @@ open class ALKChatBar: UIView {
         bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 45
         galleryButton.isHidden = false
         locationButton.isHidden = false
-        if !configuration.hideAudioOptionInChatBar{
-            micButton.isHidden = false
-        }
+        hideAudioOptionInChatBar()
         photoButton.isHidden = false
         chatButton.isHidden = false
         videoButton.isHidden = false
@@ -469,6 +457,21 @@ open class ALKChatBar: UIView {
         micButton.isSelected = false
         soundRec.isHidden = true
         placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
+    }
+    
+    func hideAudioOptionInChatBar(){
+        if configuration.hideAudioOptionInChatBar{
+            micButton.isHidden = true
+        }else{
+            micButton.isHidden = false
+        }
+    }
+    
+    func toggleButtonInChatBar(hide: Bool){
+        if !configuration.hideAudioOptionInChatBar{
+            self.sendButton.isHidden = hide
+            self.micButton.isHidden = !hide
+        }
     }
     
 }
@@ -510,10 +513,7 @@ extension ALKChatBar: UITextViewDelegate {
         self.placeHolder.isHidden = !textView.text.isEmpty
         self.placeHolder.alpha = textView.text.isEmpty ? 1.0 : 0.0
         
-        if !configuration.hideAudioOptionInChatBar{
-            self.sendButton.isHidden = textView.text.isEmpty
-            self.micButton.isHidden = !textView.text.isEmpty
-        }
+        toggleButtonInChatBar(hide: textView.text.isEmpty)
         if let selectedTextRange = textView.selectedTextRange {
             let line = textView.caretRect(for: selectedTextRange.start)
             let overflow = line.origin.y + line.size.height  - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top )
@@ -535,10 +535,7 @@ extension ALKChatBar: UITextViewDelegate {
     public func textViewDidEndEditing(_ textView: UITextView) {
         
         if textView.text.isEmpty {
-            if !configuration.hideAudioOptionInChatBar{
-                sendButton.isHidden = true
-                micButton.isHidden = false
-            }
+            toggleButtonInChatBar(hide: true)
             if self.placeHolder.isHidden {
                 self.placeHolder.isHidden = false
                 self.placeHolder.alpha = 1.0
@@ -561,10 +558,7 @@ extension ALKChatBar: UITextViewDelegate {
     
     fileprivate func clearTextInTextView() {
         if textView.text.isEmpty {
-            if !configuration.hideAudioOptionInChatBar{
-                sendButton.isHidden = true
-                micButton.isHidden = false
-            }
+            toggleButtonInChatBar(hide: true)
             if self.placeHolder.isHidden {
                 self.placeHolder.isHidden = false
                 self.placeHolder.alpha = 1.0
