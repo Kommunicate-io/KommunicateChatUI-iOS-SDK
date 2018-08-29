@@ -9,6 +9,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Fixes
 
+0.15.1
+---
+### Fixes
 - [AL-2908] Fixed message character going out of bounds.
 - [CS-127] Fixed an issue where tapping on notification was not opening chat screen.
 

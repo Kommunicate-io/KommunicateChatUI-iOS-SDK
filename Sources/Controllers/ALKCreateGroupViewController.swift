@@ -253,9 +253,11 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToSelectFriendToAdd" {
+            
             let selectParticipantViewController = segue.destination as? ALKSelectParticipantToAddViewController
             selectParticipantViewController?.selectParticipantDelegate = self
             selectParticipantViewController?.friendsInGroup = self.groupList
+            selectParticipantViewController?.configuration = configuration
         }
     }
 
@@ -324,8 +326,6 @@ extension ALKCreateGroupViewController:ALKAddParticipantProtocol
         if (atIndex.row == self.groupList.count || self.groupList.count == 0) {
             txtfGroupName.resignFirstResponder()
             self.performSegue(withIdentifier: "goToSelectFriendToAdd", sender: nil)
-        } else {
-            //do nothing yet
         }
     }
 

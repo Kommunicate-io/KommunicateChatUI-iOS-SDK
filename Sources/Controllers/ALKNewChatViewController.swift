@@ -174,18 +174,20 @@ extension ALKNewChatViewController: UIScrollViewDelegate {
         // Update only when the search is not active
         guard (searchBar.text?.isEmpty)! else { return }
 
-        let  height = scrollView.frame.size.height
-        let contentYoffset = scrollView.contentOffset.y
-        let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
-        let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
-        if distanceFromBottom < height {
-            activityIndicator.startAnimating()
-            viewModel.getContacts(completion: {
-                self.searchBar.text = nil
-                self.tableView.reloadData()
-                ALUserDefaultsHandler.setContactServerCallIsDone(true)
-                self.activityIndicator.stopAnimating()
-            })
+        if(!ALApplozicSettings.isContactsGroupEnabled()){
+            let  height = scrollView.frame.size.height
+            let contentYoffset = scrollView.contentOffset.y
+            let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
+            let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
+            if distanceFromBottom < height {
+                activityIndicator.startAnimating()
+                viewModel.getContacts(completion: {
+                    self.searchBar.text = nil
+                    self.tableView.reloadData()
+                    ALUserDefaultsHandler.setContactServerCallIsDone(true)
+                    self.activityIndicator.stopAnimating()
+                })
+            }
         }
     }
 }
