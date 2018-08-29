@@ -184,6 +184,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
     
     override func setupViews() {
         super.setupViews()
+        
+        self.accessibilityIdentifier = "audioCell"
 
         actionButton.setImage(UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil), for: .normal)
         actionButton.setImage(UIImage(named: "icon_pause", in: Bundle.applozic, compatibleWith: nil), for: .selected)

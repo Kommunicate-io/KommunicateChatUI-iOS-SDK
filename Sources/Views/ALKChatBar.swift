@@ -98,6 +98,7 @@ open class ALKChatBar: UIView, Localizable {
     open let micButton: AudioRecordButton = {
         let button = AudioRecordButton(frame: CGRect())
         button.layer.masksToBounds = true
+        button.accessibilityIdentifier = "MicButton"
         return button
     }()
     
