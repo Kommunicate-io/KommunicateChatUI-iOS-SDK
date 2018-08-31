@@ -32,6 +32,23 @@ open class ALKAudioRecorderView: UIView {
         return label
     }()
     
+    let leftArrow: UIImageView = {
+        let image = UIImage(named: "leftArrow", in: Bundle.applozic, compatibleWith: nil)
+        let imageView = UIImageView(image: image)
+        imageView.heightAnchor.constraint(equalToConstant: 11).isActive = true
+        return imageView
+    }()
+    
+    lazy var slideView: UIStackView = {
+        let stackView: UIStackView = UIStackView(arrangedSubviews: [self.leftArrow, self.slideToCancel])
+        stackView.alignment = UIStackViewAlignment.fill
+        stackView.axis = UILayoutConstraintAxis.horizontal
+        stackView.distribution = UIStackViewDistribution.fill
+        stackView.spacing = 10.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     let redDot: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 4
@@ -105,7 +122,7 @@ open class ALKAudioRecorderView: UIView {
     
     private func setupUI(){
         addSubview(redDot)
-        addSubview(slideToCancel)
+        addSubview(slideView)
         addSubview(recordingView)
         
         redDot.widthAnchor.constraint(equalToConstant: 8).isActive = true
@@ -116,8 +133,8 @@ open class ALKAudioRecorderView: UIView {
         recordingView.leadingAnchor.constraint(equalTo: redDot.leadingAnchor, constant: 20).isActive = true
         recordingView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
-        slideToCancel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        slideToCancel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        slideView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        slideView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
     
     private func stopTimer() {
@@ -135,7 +152,8 @@ open class ALKAudioRecorderView: UIView {
         redDot.backgroundColor = UIColor(red: 255, green: 14, blue: 0)
         recordingValue.text = "00:00"
         previousGestureLocation = 0.0
-        slideToCancelStartLocation = slideToCancel.frame.origin.x - slideToCancel.intrinsicContentSize.width
+        
+        slideToCancelStartLocation = slideView.frame.origin.x - slideToCancel.intrinsicContentSize.width
         recordingViewStartLocation = recordingView.frame.origin.x + recordingLabel.intrinsicContentSize.width + 10.0
         redDotStartLocation = redDot.frame.origin.x + 5.0
     }
@@ -178,11 +196,11 @@ open class ALKAudioRecorderView: UIView {
     }
     
     @objc public func moveView(location: CGPoint){
-        let newPos = slideToCancel.frame.origin.x + (location.x - previousGestureLocation)
+        let newPos = slideView.frame.origin.x + (location.x - previousGestureLocation)
         if newPos > slideToCancelStartLocation{
             return
         }
-        if slideToCancel.frame.origin.x <= recordingViewStartLocation,
+        if slideView.frame.origin.x <= recordingViewStartLocation,
             redDot.frame.origin.x + (location.x - previousGestureLocation) <= redDotStartLocation{
             
             recordingView.frame.origin.x = recordingView.frame.origin.x + (location.x - previousGestureLocation)
@@ -191,7 +209,7 @@ open class ALKAudioRecorderView: UIView {
                 delegate.cancelAudioRecording()
             }
         }
-        slideToCancel.frame.origin.x = newPos
+        slideView.frame.origin.x = newPos
         previousGestureLocation = location.x
     }
     
