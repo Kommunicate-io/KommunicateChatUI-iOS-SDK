@@ -22,6 +22,7 @@ public enum ALKMessageType: String {
     case html = "HTML"
     case genericCard = "Card"
     case genericList = "List"
+    case quickReply = "QuickReply"
 }
 
 // MARK: - MessageViewModel

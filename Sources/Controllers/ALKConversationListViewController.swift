@@ -94,7 +94,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
                     message.message = alertComponents.first
                 }
                 weakSelf.viewModel.addMessages(messages: [message])
-            } else if updateUI == Int(APP_STATE_BACKGROUND.rawValue) {
+            } else if updateUI == Int(APP_STATE_INACTIVE.rawValue) {
                 // Coming from background
 
                 guard contactId != nil || groupId != nil else { return }
