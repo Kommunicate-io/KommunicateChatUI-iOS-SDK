@@ -12,7 +12,7 @@ import Kingfisher
 import Applozic
 
 // MARK: - ALKFriendMessageCell
-final class ALKFriendMessageCell: ALKMessageCell {
+open class ALKFriendMessageCell: ALKMessageCell {
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -254,7 +254,7 @@ final class ALKFriendMessageCell: ALKMessageCell {
 
 
 // MARK: - ALKMyMessageCell
-final class ALKMyMessageCell: ALKMessageCell {
+open class ALKMyMessageCell: ALKMessageCell {
 
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
@@ -378,13 +378,13 @@ final class ALKMyMessageCell: ALKMessageCell {
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
 
-    override func setupStyle() {
+  open  override func setupStyle() {
         super.setupStyle()
         bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style)
         bubbleView.tintColor = ALKMessageStyle.sentBubble.color
     }
 
-    override func update(viewModel: ALKMessageViewModel) {
+   open override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
         if viewModel.isReplyMessage {
@@ -470,7 +470,7 @@ final class ALKMyMessageCell: ALKMessageCell {
     }
 }
 
-class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
+open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
     fileprivate lazy var messageView: ALHyperLabel = {
         let label = ALHyperLabel.init(frame: .zero)
@@ -567,6 +567,8 @@ class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProto
             let mutableText = NSMutableAttributedString(attributedString: htmlText)
             mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
             self.messageView.attributedText = mutableText
+        }else if viewModel.messageType == .quickReply {
+             self.messageView.text = message
         }
         self.timeLabel.text   = viewModel.time
     }
