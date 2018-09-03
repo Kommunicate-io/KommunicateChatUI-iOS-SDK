@@ -136,6 +136,11 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
     
     private func login() {
         
+        let alert = XCUIApplication().alerts["“ApplozicSwiftDemo” Would Like to Send You Notifications"].buttons["Allow"]
+        if alert.exists{
+            alert.tap()
+        }
+        
         let path = Bundle(for: ApplozicSwiftAudioRecordingUITest.self).url(forResource: "Info", withExtension: "plist")
         let dict = NSDictionary(contentsOf: path!) as? [String: Any]
         let userId = dict!["TestUserId"]
