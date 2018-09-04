@@ -29,6 +29,8 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
         
+        sleep(5)
+        
         //First Login.
         guard !XCUIApplication().scrollViews.otherElements.buttons["Get Started"].exists else{
             login()
@@ -44,12 +46,21 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
     }
     
     func testAudioRecordButton_SendVoice(){
-        let groupTitle = "TestAudioRecord_SendVoice"
         sleep(2) //Proper time to load screen
-        let (app, chatbar, button) = beforeTest_createNewGroup(title: groupTitle)
+        let (app, chatbar, button) = beforeTest_EnterConversation()
         sleep(2) //This is important so that screen can load before testing
         XCTAssertTrue(chatbar.exists)
         XCTAssertTrue(button.exists)
+        
+        // This will handle microphone permission in new xcode
+        button.press(forDuration: 0.5)
+        addUIInterruptionMonitor(withDescription: "“ApplozicSwiftDemo” Would Like to Access the Microphone") { (alerts) -> Bool in
+            if(alerts.buttons["OK"].exists){
+                alerts.buttons["OK"].tap();
+            }
+            return true;
+        }
+        app.tap()
         
         let numberOfCells = app.tables.cells.count
         button.press(forDuration: 2.5)
@@ -61,13 +72,12 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         button.press(forDuration: 1.3)
         XCTAssertEqual(app.tables.cells.element(boundBy: numberOfCells + 2).identifier, "audioCell") // check if message is audio
         XCTAssertEqual(app.tables.cells.count, numberOfCells + 3)
-        afterTest_deleteNewlyCreatedGroup(app: app, title: groupTitle)
+        afterTest_DeleteConversation(app: app)
     }
     
     func testAudioRecordButton_SendVoiceWithSwipe() {
-        let groupTitle = "TestAudioRecord_SendVoiceWithSwipe"
         sleep(2) //Proper time to load screen
-        let (app, chatbar, button) = beforeTest_createNewGroup(title: groupTitle)
+        let (app, chatbar, button) = beforeTest_EnterConversation()
         sleep(2) //This is important so that screen can load before testing
         XCTAssertTrue(chatbar.exists)
         XCTAssertTrue(button.exists)
@@ -82,13 +92,12 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         startPoint.press(forDuration: 4.3, thenDragTo: finishPoint)
         XCTAssertEqual(app.tables.cells.element(boundBy: numberOfCells + 1).identifier, "audioCell") // check if message is audio
         XCTAssertEqual(app.tables.cells.count, numberOfCells + 2)
-        afterTest_deleteNewlyCreatedGroup(app: app, title: groupTitle)
+        afterTest_DeleteConversation(app: app)
     }
     
     func testAudioRecordButton_ShouldNotSendRecordingOfLessThanOneSecond() {
-        let groupTitle = "TestAudioRecord_DoNotSendVoiceOfLessThanOneSecond"
         sleep(2) //Proper time to load screen
-        let (app, _, button) = beforeTest_createNewGroup(title: groupTitle)
+        let (app, _, button) = beforeTest_EnterConversation()
         sleep(2) //This is important so that screen can load before testing
         
         let numberOfCells = app.tables.cells.count
@@ -103,13 +112,12 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         button.press(forDuration: 0.8)
         button.press(forDuration: 0.9)
         XCTAssertEqual(app.tables.cells.count, numberOfCells)
-        afterTest_deleteNewlyCreatedGroup(app: app, title: groupTitle)
+        afterTest_DeleteConversation(app: app)
     }
     
     func testAudioRecordButton_SwipeLeftShouldCancelRecording(){
-        let groupTitle = "TestAudioRecord_SwipeLeftToCancelRecording"
         sleep(2) //Proper time to load screen
-        let (app, chatbar, button) = beforeTest_createNewGroup(title: groupTitle)
+        let (app, chatbar, button) = beforeTest_EnterConversation()
         sleep(2) //This is important so that screen can load before testing
         XCTAssertTrue(chatbar.exists)
         XCTAssertTrue(button.exists)
@@ -124,14 +132,13 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         finishPoint = chatbar.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0))
         startPoint.press(forDuration: 2, thenDragTo: finishPoint)
         XCTAssertEqual(app.tables.cells.count, numberOfCells)
-        afterTest_deleteNewlyCreatedGroup(app: app, title: groupTitle)
+        afterTest_DeleteConversation(app: app)
         
     }
     
     func testAudioRecordButton_SwipeUpShouldCancelRecording() {
-        let groupTitle = "TestAudioRecord_SwipeUpToCancelRecording"
         sleep(2) //Proper time to load screen
-        let (app, chatbar, button) = beforeTest_createNewGroup(title: groupTitle)
+        let (app, chatbar, button) = beforeTest_EnterConversation()
         sleep(2) //This is important so that screen can load before testing
         XCTAssertTrue(chatbar.exists)
         XCTAssertTrue(button.exists)
@@ -141,16 +148,15 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         let finishPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
         startPoint.press(forDuration: 5, thenDragTo: finishPoint)
         XCTAssertEqual(app.tables.cells.count, numberOfCells)
-        afterTest_deleteNewlyCreatedGroup(app: app, title: groupTitle)
+        afterTest_DeleteConversation(app: app)
     }
     
     private func login() {
-        
         let path = Bundle(for: ApplozicSwiftAudioRecordingUITest.self).url(forResource: "Info", withExtension: "plist")
         let dict = NSDictionary(contentsOf: path!) as? [String: Any]
         let userId = dict!["TestUserId"]
         let password = dict!["TestUserPassword"]
-        
+        XCUIApplication().tap()
         let elementsQuery = XCUIApplication().scrollViews.otherElements
         let userIdTextField = elementsQuery.textFields["User id"]
         userIdTextField.tap()
@@ -161,21 +167,17 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         elementsQuery.buttons["Get Started"].tap()
     }
     
-    private func beforeTest_createNewGroup(title: String) -> (XCUIApplication, XCUIElement, XCUIElement){
+    private func beforeTest_EnterConversation()  -> (XCUIApplication, XCUIElement, XCUIElement){
         let app = XCUIApplication()
         app.buttons["Launch Chat"].tap()
+        sleep(2)
         app.navigationBars["My Chats"].buttons["fill 214"].tap()
-        app.tables.staticTexts["Create Group"].tap()
-        let groupNameTextField = app.textFields["Type group name"]
-        groupNameTextField.tap()
-        groupNameTextField.typeText(title)
-        
-        app.collectionViews.buttons["icon add people 1"].tap()
+        sleep(3)
         let searchField = app.searchFields["Search"]
         searchField.tap()
         searchField.typeText("user2ToTestAudioRecord")
-        
-        if app.tables["SelectParticipantTableView"].cells.count == 0{
+        sleep(1)
+        if app.tables.cells.count == 1{
             var emptyString = String()
             let stringValue = searchField.value as! String
             for _ in stringValue {
@@ -183,9 +185,7 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
             }
             searchField.typeText(emptyString)
         }
-        app.tables["SelectParticipantTableView"].cells.allElementsBoundByIndex.first?.tap()
-        app.tables["SelectParticipantTableView"].cells.allElementsBoundByIndex.first?.tap()
-        app.buttons["InviteButton"].tap()
+        app.tables.cells.allElementsBoundByIndex[1].tap()
         
         let chatbar = app.otherElements["chatBar"]
         let button = app.buttons["MicButton"]
@@ -193,14 +193,20 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         return (app, chatbar, button)
     }
     
-    private func afterTest_deleteNewlyCreatedGroup(app: XCUIApplication, title: String){
-        let backButton = app.navigationBars[title].buttons["icon back"]
+    private func afterTest_DeleteConversation(app: XCUIApplication) {
+        let backButton = app.navigationBars.buttons["icon back"]
         backButton.tap()
         let outerChatScreen = app.tables["OuterChatScreenTableView"]
+        
+        if outerChatScreen.cells.count == 1 {
+            // No Conversation to be deleted Because message wasn't sent
+            return
+        }
+        
         outerChatScreen.cells.allElementsBoundByIndex.first?.swipeRight()
         outerChatScreen/*@START_MENU_TOKEN@*/.buttons["icon delete white"]/*[[".cells.buttons[\"icon delete white\"]",".buttons[\"icon delete white\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         app.alerts.buttons["Remove"].tap()
-        sleep(5) // This is to ensure that group is deleted before closing the app
+        sleep(5) // This is to ensure that Conversation is deleted before closing the app
     }
     
     // Use recording to get started writing UI tests.
