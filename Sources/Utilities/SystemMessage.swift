@@ -23,6 +23,8 @@ struct SystemMessage {
     struct Microphone {
         static let MicNotAvailable = "Microphone is not available"
         static let PleaseAllowMic = "Please change Settings to allow sound recording"
+        static let SlideToCancel = "Slide to cancel"
+        static let Recording = "Recording"
     }
     
     struct Map {

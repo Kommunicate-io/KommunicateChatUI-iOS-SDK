@@ -52,6 +52,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         let progress = UIProgressView()
         progress.trackTintColor = UIColor.clear
         progress.tintColor = UIColor.background(.main).withAlphaComponent(0.32)
+        progress.clipsToBounds = true
+        progress.layer.cornerRadius = 12
         return progress
     }()
     
@@ -108,7 +110,6 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         return topPadding()+heigh+bottomPadding()
     }
     
-    
     func getTimeString(secLeft:CGFloat) -> String {
         
         let min = (Int(secLeft) / 60) % 60
@@ -119,7 +120,6 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         
         return "\(minStr):\(secStr)"
     }
-    
     
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
@@ -134,25 +134,27 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
             }
         }
 
-        if viewModel.voiceCurrentState == .pause && viewModel.voiceCurrentDuration > 0{
-            actionButton.isSelected = false
-            playTimeLabel.text = getTimeString(secLeft:viewModel.voiceCurrentDuration)
-        } else if viewModel.voiceCurrentState == .playing {
-            print("identifier: ", viewModel.identifier)
-            actionButton.isSelected = true
-            playTimeLabel.text = getTimeString(secLeft:viewModel.voiceCurrentDuration)
-        }
-        else if viewModel.voiceCurrentState == .stop {
-            actionButton.isSelected = false
-            playTimeLabel.text = getTimeString(secLeft:viewModel.voiceTotalDuration)
-        } else {
-            actionButton.isSelected = false
-            playTimeLabel.text = getTimeString(secLeft:viewModel.voiceTotalDuration)
-        }
-        
         let timeLeft = Int(viewModel.voiceTotalDuration)-Int(viewModel.voiceCurrentDuration)
         let totalTime = Int(viewModel.voiceTotalDuration)
         let percent = viewModel.voiceTotalDuration == 0 ? 0 : Float(timeLeft)/Float(totalTime)
+        
+        let currentPlayTime = CGFloat(timeLeft)
+        
+        if viewModel.voiceCurrentState == .pause && viewModel.voiceCurrentDuration > 0{
+            actionButton.isSelected = false
+            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+        } else if viewModel.voiceCurrentState == .playing {
+            print("identifier: ", viewModel.identifier)
+            actionButton.isSelected = true
+            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+        }
+        else if viewModel.voiceCurrentState == .stop {
+            actionButton.isSelected = false
+            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+        } else {
+            actionButton.isSelected = false
+            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+        }
         
         if viewModel.voiceCurrentState == .stop || viewModel.voiceCurrentDuration == 0 {
             progressBar.setProgress(0, animated: false)

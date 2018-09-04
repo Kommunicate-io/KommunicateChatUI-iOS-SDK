@@ -58,7 +58,10 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         
         bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
         
+        let width = UIScreen.main.bounds.width
+        
         soundPlayerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
+        soundPlayerView.widthAnchor.constraint(equalToConstant: width*0.48).isActive = true
         
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true

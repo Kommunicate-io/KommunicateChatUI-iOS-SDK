@@ -5,12 +5,11 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 0.16.0 (upcoming release)
 ---
 ### Enhancements
-=======
+- [AL-2875] New swipe based design for audio recording.
 - [AL-2769] Quick reply support in messages
 
 ### Fixes
 - [AL-2909] Fix trimming of  multiline message
-
 
 0.15.1
 ---
