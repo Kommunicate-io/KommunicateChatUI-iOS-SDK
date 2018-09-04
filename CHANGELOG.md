@@ -5,15 +5,19 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 0.16.0 (upcoming release)
 ---
 ### Enhancements
+=======
 - [AL-2769] Quick reply support in messages
 
 ### Fixes
+- [AL-2909] Fix trimming of  multiline message
+
 
 0.15.1
 ---
 ### Fixes
 - [AL-2908] Fixed message character going out of bounds.
 - [CS-127] Fixed an issue where tapping on notification was not opening chat screen.
+
 
 0.15.0
 ---
