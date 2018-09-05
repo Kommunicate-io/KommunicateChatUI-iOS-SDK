@@ -372,7 +372,7 @@ open class ALKConversationViewModel: NSObject {
     open func markConversationRead() {
         if let channelKey = channelKey {
             print("mark read1")
-            ALChannelService.markConversation(asRead: channelKey, withCompletion: {
+            ALChannelService.sharedInstance().markConversation(asRead: channelKey, withCompletion: {
                 _, error in
                 print("mark read")
                 if let error = error {
@@ -380,7 +380,7 @@ open class ALKConversationViewModel: NSObject {
                 }
             })
         } else if let contactId = contactId {
-            ALUserService.markConversation(asRead: contactId, withCompletion: {
+            ALUserService.sharedInstance().markConversation(asRead: contactId, withCompletion: {
                 _,error in
                 if let error = error {
                     NSLog("error while marking conversation read: \(error)")
@@ -469,7 +469,7 @@ open class ALKConversationViewModel: NSObject {
                 return
             })
         } else {
-            ALMessageService.sendMessages(alMessage, withCompletion: {
+            ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
                 message, error in
                 NSLog("Message sent section: \(indexPath.section), \(alMessage.message)")
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
@@ -887,7 +887,7 @@ open class ALKConversationViewModel: NSObject {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
-        ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
+        ALMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, userDetail in
             guard error == nil, let messages = messages else {
                 self.delegate?.loadingFinished(error: error)
@@ -981,7 +981,7 @@ open class ALKConversationViewModel: NSObject {
         messageListRequest.userId = contactId
         messageListRequest.channelKey = channelKey
         messageListRequest.endTimeStamp = time
-        ALMessageService.getMessageList(forUser: messageListRequest, withCompletion: {
+        ALMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, userDetail in
             guard error == nil, let newMessages = messages as? [ALMessage] else {
                 self.delegate?.loadingFinished(error: error)
@@ -1172,7 +1172,7 @@ open class ALKConversationViewModel: NSObject {
     }
 
     private func send(alMessage: ALMessage, completion: @escaping (ALMessage?)->()) {
-        ALMessageService.sendMessages(alMessage, withCompletion: {
+        ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
             message, error in
             let newMesg = alMessage
             NSLog("message is: ", newMesg.key)
