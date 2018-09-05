@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-0.16.0 (upcoming release)
+1.0.0
 ---
 ### Enhancements
 - [AL-2875] New swipe based design for audio recording.
