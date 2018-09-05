@@ -592,15 +592,25 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
 
             //TODO: Add activity indicator
 
+            
+            let deleteGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.DeleteGroupConversation, comment: "")
+            let leaveGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.LeaveGroupConoversation, comment: "")
+            let deleteSingleConversationPopupMessage = NSLocalizedString("DeleteSingleConversation", value: SystemMessage.Warning.DeleteSingleConversation, comment: "")
+            
+            let removeButtonText = NSLocalizedString("ButtonRemove", value: SystemMessage.ButtonName.Remove, comment: "")
+            let leaveButtonText = NSLocalizedString("ButtonLeave", value: SystemMessage.ButtonName.Leave, comment: "")
+            
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {return}
-
-                let prefixText = conversation.isGroupChat ? NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.DeleteGroupConversation, comment: "") : NSLocalizedString("DeleteSingleConversation", value: SystemMessage.Warning.DeleteSingleConversation, comment: "")
+                let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
+                let prefixText = conversation.isGroupChat ?(isChannelLeft ?  deleteGroupPopupMessage : leaveGroupPopupMessage) : deleteSingleConversationPopupMessage
+                
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
                 let text = "\(prefixText) \(name)?"
                 let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
                 let cancelButton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
-                let deleteButton = UIAlertAction(title: NSLocalizedString("ButtonRemove", value: SystemMessage.ButtonName.Remove, comment: ""), style: .destructive, handler: { [weak self] (alert) in
+                let buttonTitle = conversation.isGroupChat ? (isChannelLeft ? removeButtonText : leaveButtonText) : removeButtonText
+                let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (alert) in
                     guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
 
                     if conversation.isGroupChat {
@@ -623,8 +633,6 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
                                 ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                                     _,error in
                                     guard error == nil else { return }
-                                    weakSelf.searchFilteredChat.remove(at: indexPath.row)
-                                    weakSelf.viewModel.remove(message: conversation)
                                     weakSelf.tableView.reloadData()
                                     return
                                 })
@@ -644,13 +652,15 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
                 present(alert, animated: true, completion: nil)
             }
             else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
-
-                let prefixText = conversation.isGroupChat ? NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.DeleteGroupConversation, comment: "") : NSLocalizedString("DeleteSingleConversation", value: SystemMessage.Warning.DeleteSingleConversation, comment: "")
+                let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
+                let prefixText = conversation.isGroupChat ?(isChannelLeft ?  deleteGroupPopupMessage : leaveGroupPopupMessage) : deleteSingleConversationPopupMessage
+                
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
                 let text = "\(prefixText) \(name)?"
                 let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
                 let cancelBotton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
-                let deleteBotton = UIAlertAction(title: NSLocalizedString("ButtonRemove", value: SystemMessage.ButtonName.Remove, comment: ""), style: .destructive, handler: { [weak self] (alert) in
+                let buttonTitle = conversation.isGroupChat ? (isChannelLeft ? removeButtonText : leaveButtonText) : removeButtonText
+                let deleteBotton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (alert) in
                     guard let weakSelf = self else { return }
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
@@ -670,7 +680,6 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
                                 ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                                     _,error in
                                     guard error == nil else { return }
-                                    weakSelf.viewModel.remove(message: conversation)
                                     weakSelf.tableView.reloadData()
                                     return
                                 })

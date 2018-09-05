@@ -2,13 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+
 1.0.1(upcoming release)
 ---
 ### Enhancements
 
 ### Fixes
-- Fix position of audio-mic button. When coming back from photos screen or location screen position of mic button moves to left of screen.
-
+- [AL-2932] Fix removal of group from chat list after group is left by swiping right on group.
 
 1.0.0
 ---
