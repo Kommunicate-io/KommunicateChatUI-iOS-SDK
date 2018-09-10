@@ -581,6 +581,24 @@ extension ALKConversationListViewController: UISearchResultsUpdating,UISearchBar
 
 extension ALKConversationListViewController: ALKChatCellDelegate {
 
+    private func prefixAndButtonTitleForDeletePopup(conversation: ALMessage) -> (String, String){
+        
+        let deleteGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.DeleteGroupConversation, comment: "")
+        let leaveGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.LeaveGroupConoversation, comment: "")
+        let deleteSingleConversationPopupMessage = NSLocalizedString("DeleteSingleConversation", value: SystemMessage.Warning.DeleteSingleConversation, comment: "")
+        let removeButtonText = NSLocalizedString("ButtonRemove", value: SystemMessage.ButtonName.Remove, comment: "")
+        let leaveButtonText = NSLocalizedString("ButtonLeave", value: SystemMessage.ButtonName.Leave, comment: "")
+        
+        let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
+        
+        let popupMessageForChannel = isChannelLeft ?  deleteGroupPopupMessage : leaveGroupPopupMessage
+        let prefixTextForPopupMessage = conversation.isGroupChat ? popupMessageForChannel : deleteSingleConversationPopupMessage
+        let buttonTitleForChannel = isChannelLeft ? removeButtonText : leaveButtonText
+        let buttonTitleForPopupMessage = conversation.isGroupChat ? buttonTitleForChannel : removeButtonText
+        
+        return (prefixTextForPopupMessage, buttonTitleForPopupMessage)
+    }
+    
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol) {
 
         switch action {
@@ -591,25 +609,16 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
 //            guard let account = ChatManager.shared.currentUser else {return}
 
             //TODO: Add activity indicator
-
-            
-            let deleteGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.DeleteGroupConversation, comment: "")
-            let leaveGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.LeaveGroupConoversation, comment: "")
-            let deleteSingleConversationPopupMessage = NSLocalizedString("DeleteSingleConversation", value: SystemMessage.Warning.DeleteSingleConversation, comment: "")
-            
-            let removeButtonText = NSLocalizedString("ButtonRemove", value: SystemMessage.ButtonName.Remove, comment: "")
-            let leaveButtonText = NSLocalizedString("ButtonLeave", value: SystemMessage.ButtonName.Leave, comment: "")
             
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {return}
-                let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
-                let prefixText = conversation.isGroupChat ?(isChannelLeft ?  deleteGroupPopupMessage : leaveGroupPopupMessage) : deleteSingleConversationPopupMessage
+                
+                let(prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
                 
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
                 let text = "\(prefixText) \(name)?"
                 let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
                 let cancelButton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
-                let buttonTitle = conversation.isGroupChat ? (isChannelLeft ? removeButtonText : leaveButtonText) : removeButtonText
                 let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (alert) in
                     guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
 
@@ -652,15 +661,13 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
                 present(alert, animated: true, completion: nil)
             }
             else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
-                let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
-                let prefixText = conversation.isGroupChat ?(isChannelLeft ?  deleteGroupPopupMessage : leaveGroupPopupMessage) : deleteSingleConversationPopupMessage
+                let(prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
                 
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
                 let text = "\(prefixText) \(name)?"
                 let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
-                let cancelBotton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
-                let buttonTitle = conversation.isGroupChat ? (isChannelLeft ? removeButtonText : leaveButtonText) : removeButtonText
-                let deleteBotton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (alert) in
+                let cancelButton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
+                let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (alert) in
                     guard let weakSelf = self else { return }
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
@@ -694,8 +701,8 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
                         })
                     }
                 })
-                alert.addAction(cancelBotton)
-                alert.addAction(deleteBotton)
+                alert.addAction(cancelButton)
+                alert.addAction(deleteButton)
                 present(alert, animated: true, completion: nil)
 
             }
