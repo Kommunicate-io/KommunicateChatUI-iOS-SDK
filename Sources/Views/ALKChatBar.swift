@@ -35,8 +35,6 @@ open class ALKChatBar: UIView {
     }
     
     public var action: ((ActionType) -> ())?
-    
-    var buttonCenter: CGPoint = CGPoint()
 
     open let poweredByMessageLabel: ALHyperLabel = {
         let label = ALHyperLabel(frame: CGRect.zero)
@@ -96,7 +94,7 @@ open class ALKChatBar: UIView {
     }()
     
     open let micButton: AudioRecordButton = {
-        let button = AudioRecordButton(frame: CGRect.init())
+        let button = AudioRecordButton(frame: CGRect())
         button.layer.masksToBounds = true
         return button
     }()
@@ -452,7 +450,6 @@ open class ALKChatBar: UIView {
     }
     
     func stopRecording() {
-        micButton.center = buttonCenter
         soundRec.userDidStopRecording()
         micButton.isSelected = false
         soundRec.isHidden = true
@@ -575,7 +572,6 @@ extension ALKChatBar: UITextViewDelegate {
 extension ALKChatBar: ALKAudioRecorderProtocol {
     
     public func startRecordingAudio() {
-        buttonCenter = micButton.center
         changeButton()
         action?(.startVoiceRecord())
         soundRec.userDidStartRecording()
