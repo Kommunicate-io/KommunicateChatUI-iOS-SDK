@@ -2,6 +2,14 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+1.0.1(upcoming release)
+---
+### Enhancements
+
+### Fixes
+- Fix position of audio-mic button. When coming back from photos screen or location screen position of mic button moves to left of screen.
+
+
 1.0.0
 ---
 ### Enhancements
