@@ -276,7 +276,6 @@
 				8B36D0E11F3DC5E900FEFFD2 /* Frameworks */,
 				8B36D0E21F3DC5E900FEFFD2 /* Resources */,
 				3DCB4A4ABEE1D2821B97EE78 /* [CP] Embed Pods Frameworks */,
-				6197B8E3828018AC33629954 /* [CP] Copy Pods Resources */,
 				8B0E0D051F3DEF44000D976A /* Embed Frameworks */,
 			);
 			buildRules = (
@@ -297,7 +296,6 @@
 				8B36D0F51F3DC5EA00FEFFD2 /* Frameworks */,
 				8B36D0F61F3DC5EA00FEFFD2 /* Resources */,
 				55100D264B0275A9873DCB01 /* [CP] Embed Pods Frameworks */,
-				704C564DF61B508436516939 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -499,52 +497,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6197B8E3828018AC33629954 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-resources.sh",
-				"${PODS_ROOT}/../../Sources/CreateGroupChat.storyboard",
-				"${PODS_ROOT}/../../Sources/CustomCamera.storyboard",
-				"${PODS_ROOT}/../../Sources/CustomPicker.storyboard",
-				"${PODS_ROOT}/../../Sources/CustomVideoCapture.storyboard",
-				"${PODS_ROOT}/../../Sources/DateSectionHeaderView.xib",
-				"${PODS_ROOT}/../../Sources/EmptyChatCell.xib",
-				"${PODS_ROOT}/../../Sources/LaunchScreen.storyboard",
-				"${PODS_ROOT}/../../Sources/MarkerInfoWindowView.xib",
-				"${PODS_ROOT}/../../Sources/MediaViewer.storyboard",
-				"${PODS_ROOT}/../../Sources/PreviewImage.storyboard",
-				"${PODS_ROOT}/../../Sources/PreviewLocation.storyboard",
-				"${PODS_ROOT}/../../Sources/ShareLocation.storyboard",
-				"${PODS_ROOT}/../../Sources/ALKAssets.xcassets",
-				"${PODS_ROOT}/../../Sources/Base.lproj",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		704C564DF61B508436516939 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
