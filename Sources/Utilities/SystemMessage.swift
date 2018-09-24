@@ -59,6 +59,7 @@ struct SystemMessage {
         static let FetchFail = "Fetch data failed. Please retry again"
         static let OperationFail = "Operation could not be completed. Please retry again"
         static let DeleteSingleConversation = "Are you sure you want to remove the chat with"
+        static let LeaveGroupConoversation = "Are you sure you want to leave the group"
         static let DeleteGroupConversation = "Are you sure you want to remove the group"
         static let DeleteContactWith = "Are you sure you want to remove"
         static let DownloadOriginalImageFail = "Fail to download the original image"
@@ -70,6 +71,7 @@ struct SystemMessage {
         static let SignOut = "Sign out"
         static let Retry = "Retry"
         static let Remove = "Remove"
+        static let Leave = "Leave"
         static let Cancel = "Cancel"
         static let Discard = "Discard"
     }
