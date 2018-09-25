@@ -24,6 +24,9 @@ open class ALKConversationViewController: ALKBaseViewController {
             }
         }
     }
+    
+    /// Check if view is loaded from notification
+    private var isViewLoadedFromTappingOnNotification: Bool = false
 
     /// See configuration.
     private var isGroupDetailActionEnabled = true
@@ -123,6 +126,10 @@ open class ALKConversationViewController: ALKBaseViewController {
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    public func viewWillLoadFromTappingOnNotification(){
+        isViewLoadedFromTappingOnNotification = true
     }
 
     override func addObserver() {
@@ -875,20 +882,38 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
         }
     }
+    
+    //This is a temporary workaround for the issue that messages are not scrolling to bottom when opened from notification
+    //This issue is happening because table view has different cells of different heights so it cannot go to the bottom of cell when using function scrollToBottom
+    //And thats why when we check whether last cell is visible or not, it gives false result since the last cell is sometimes not fully visible.
+    //This is a known apple bug and has a thread in stackoverflow: https://stackoverflow.com/questions/25686490/ios-8-auto-cell-height-cant-scroll-to-last-row
+    private func moveTableViewToBottom(indexPath: IndexPath){
+        tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
+        }
+    }
 
     public func newMessagesAdded() {
         tableView.reloadData()
-        if tableView.isCellVisible(section: viewModel.messageModels.count-1, row: 0) {
-            tableView.scrollToBottom()
-        } else {
-            unreadScrollButton.isHidden = false
+        if isViewLoadedFromTappingOnNotification{
+            let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+            moveTableViewToBottom(indexPath: indexPath)
+            isViewLoadedFromTappingOnNotification = false
+        }else{
+            if tableView.isCellVisible(section: viewModel.messageModels.count-2, row: 0) { //1 for recent added msg and 1 because it starts with 0
+                let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+                moveTableViewToBottom(indexPath: indexPath)
+            } else {
+                unreadScrollButton.isHidden = false
+            }
         }
         guard self.isViewLoaded && self.view.window != nil && !viewModel.isOpenGroup else {
             return
         }
         viewModel.markConversationRead()
     }
-
+   
     public func messageSent(at indexPath: IndexPath) {
         DispatchQueue.main.async {
             NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)

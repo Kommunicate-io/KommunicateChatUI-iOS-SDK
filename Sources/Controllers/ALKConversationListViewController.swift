@@ -242,6 +242,7 @@ open class ALKConversationListViewController: ALKBaseViewController {
         let viewController = conversationViewControllerType.init(configuration: configuration)
         viewController.title = title
         viewController.viewModel = convViewModel
+        viewController.viewWillLoadFromTappingOnNotification()
         conversationViewController = viewController
         self.navigationController?.pushViewController(viewController, animated: false)
     }
