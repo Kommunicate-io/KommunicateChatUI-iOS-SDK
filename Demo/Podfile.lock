@@ -1,8 +1,8 @@
 PODS:
-  - Applozic (6.0.0):
+  - Applozic (6.2.0):
     - SDWebImage (~> 4.4)
   - ApplozicSwift (1.0.0):
-    - Applozic (~> 6.0.0)
+    - Applozic (~> 6.2.0)
     - Kingfisher (~> 4.7.0)
     - MGSwipeTableCell (~> 1.5.6)
   - Kingfisher (4.7.0)
@@ -14,17 +14,24 @@ PODS:
 DEPENDENCIES:
   - ApplozicSwift (from `../ApplozicSwift.podspec`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Applozic
+    - Kingfisher
+    - MGSwipeTableCell
+    - SDWebImage
+
 EXTERNAL SOURCES:
   ApplozicSwift:
-    :path: ../ApplozicSwift.podspec
+    :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: bd0c44bfd940f41ca08ad9e5d0486df22c6aff9f
-  ApplozicSwift: 7f427be00824cb900a3dcdefb0c5b959a4070b67
+  Applozic: 6ac9306449a4c0d5f7b6661fbc68c60662927fd5
+  ApplozicSwift: 2ba60fb454974cf8fb7caf2e543adc0bbdfce48c
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   MGSwipeTableCell: 616700eb0ffd1c611ba909066cb7fd739790a0a7
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
 
 PODFILE CHECKSUM: c518db42782b099d7771a3a88d3753ebe72ee321
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3
