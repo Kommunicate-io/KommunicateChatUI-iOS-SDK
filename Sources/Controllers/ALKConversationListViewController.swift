@@ -396,12 +396,10 @@ extension ALKConversationListViewController: UIScrollViewDelegate {
 //MARK: ALMessagesDelegate
 extension ALKConversationListViewController: ALMessagesDelegate {
     public func getMessagesArray(_ messagesArray: NSMutableArray!) {
-        print("message array: ", messagesArray.map { ($0 as! ALMessage).message})
-        print("message read: ", messagesArray.map { ($0 as! ALMessage).totalNumberOfUnreadMessages})
-
         guard let messages = messagesArray as? [Any] else {
             return
         }
+        print("Messages loaded: \(messages)")
         viewModel.updateMessageList(messages: messages)
     }
 
