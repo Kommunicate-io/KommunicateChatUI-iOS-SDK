@@ -96,7 +96,9 @@ final public class ALKConversationListViewModel: NSObject {
             if let _ = currentMessage.groupId {
                 messagePresent = allMessages.filter { ($0.groupId != nil) ? $0.groupId == currentMessage.groupId:false }
             } else {
-                messagePresent = allMessages.filter { ($0.contactId != nil) ? $0.contactId == currentMessage.contactId:false }
+                messagePresent = allMessages.filter {
+                    $0.groupId == nil ? (($0.contactId != nil) ? $0.contactId == currentMessage.contactId:false) : false
+                }
             }
 
             if let firstElement = messagePresent.first, let index = allMessages.index(of: firstElement)  {
