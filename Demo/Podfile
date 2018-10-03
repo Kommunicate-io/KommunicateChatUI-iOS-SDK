@@ -13,7 +13,3 @@ target 'ApplozicSwiftDemoTests' do
     pod 'Quick'
     pod 'Nimble-Snapshots'
 end
-
-target 'ApplozicSwiftDemoUITests' do
-    pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
-end
