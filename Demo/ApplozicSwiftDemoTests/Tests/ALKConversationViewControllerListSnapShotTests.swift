@@ -1,0 +1,56 @@
+//
+//  ALKConversationViewControllerUITests.swift
+//  ApplozicSwiftDemoTests
+//
+//  Created by Mukesh Thawani on 17/06/18.
+//  Copyright © 2018 Applozic. All rights reserved.
+//
+
+import Quick
+import Nimble
+import Nimble_Snapshots
+import Applozic
+@testable import ApplozicSwift
+
+class ALKConversationViewControllerMock: ALKConversationViewController {}
+
+class ALKConversationViewControllerListSnapShotTests: QuickSpec {
+
+    override func spec() {
+        
+        describe("Conversation list") {
+
+            var conversationVC: ALKConversationListViewController!
+            var navigationController: UINavigationController!
+
+            beforeEach {
+
+                conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
+                conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
+                navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            }
+
+            it("Show list") {
+                XCTAssertNotNil(navigationController.view)
+                XCTAssertNotNil(conversationVC.view)
+                expect(navigationController).to(haveValidSnapshot())
+            }
+
+            it("Open chat thread") {
+                conversationVC.beginAppearanceTransition(true, animated: false)
+                conversationVC.endAppearanceTransition()
+                conversationVC.tableView.delegate?.tableView?(conversationVC.tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+                XCTAssertNotNil(conversationVC.navigationController?.view)
+                expect(conversationVC.navigationController).toEventually(haveValidSnapshot())
+            }
+        }
+    }
+
+    func getApplicationKey() -> NSString {
+
+        let appKey = ALUserDefaultsHandler.getApplicationKey() as NSString?
+        let applicationKey = appKey
+        return applicationKey!
+    }
+}
