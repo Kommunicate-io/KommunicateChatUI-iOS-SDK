@@ -42,8 +42,11 @@ public struct ALKConfiguration {
     /// If true then all the media options in Chat bar will be hidden.
     public var hideAllOptionsInChatBar = false
     
-    //If true then audio option in chat bar will be hidden
+    /// If true then audio option in chat bar will be hidden.
     public var hideAudioOptionInChatBar = false
+
+    /// If true then the start new chat button will be hidden.
+    public var hideStartChatButton = false
 
     public init() { }
 }

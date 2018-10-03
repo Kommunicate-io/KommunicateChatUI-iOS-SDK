@@ -44,6 +44,11 @@ open class ALKConversationListViewController: ALKBaseViewController {
         return tv
     }()
 
+    let rightBarButtonItem = UIBarButtonItem(
+        image: UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil),
+        style: .plain,
+        target: self, action: #selector(compose))
+
     fileprivate lazy var searchBar: UISearchBar = {
         var bar = UISearchBar()
         bar.autocapitalizationType = .sentences
@@ -191,8 +196,9 @@ open class ALKConversationListViewController: ALKBaseViewController {
 
         title = "My Chats"
 
-        let rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil), style: .plain, target: self, action: #selector(compose))
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+        if !configuration.hideStartChatButton {
+            navigationItem.rightBarButtonItem = rightBarButtonItem
+        }
 
         let back = NSLocalizedString("Back", value: "Back", comment: "")
         let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
