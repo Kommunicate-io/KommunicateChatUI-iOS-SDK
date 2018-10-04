@@ -7,97 +7,101 @@
 //
 
 import Foundation
-import Foundation
 
 //handle all in app's display messages
 struct SystemMessage {
 
     struct Camera {
-        static let CamNotAvailable = "Camera is not available"
-        static let GalleryAvailable = "Gallery is not available"
-        static let PictureCropped = "Image cropped"
-        static let PictureReset = "Image reset"
-        static let PleaseAllowCamera = "Please change Settings to allow to access your camera"
+        static let CamNotAvailable = Localization.localizedString(forKey: "CameraNotAvailableMessage")
+        static let GalleryAvailable = Localization.localizedString(forKey: "GalleryNotAvailableMessage")
+        static let PictureCropped = Localization.localizedString(forKey: "ImageCroppedMessage")
+        static let PictureReset = Localization.localizedString(forKey: "ImageResetMessage")
+        static let PleaseAllowCamera = Localization.localizedString(forKey: "PleaseAllowCamera")
     }
-    
+
     struct Microphone {
-        static let MicNotAvailable = "Microphone is not available"
-        static let PleaseAllowMic = "Please change Settings to allow sound recording"
-        static let SlideToCancel = "Slide to cancel"
-        static let Recording = "Recording"
+        static let MicNotAvailable = Localization.localizedString(forKey: "MicrophoneNotAvailableMessage")
+        static let PleaseAllowMic = Localization.localizedString(forKey: "AllowSoundRecordingMessage")
+        static let SlideToCancel = Localization.localizedString(forKey: "SlideToCancelMessage")
+        static let Recording = Localization.localizedString(forKey: "RecordingMessage")
     }
-    
+
     struct Map {
-        static let NoGPS = "Cannot detects current location, please turn on GPS"
-        static let MapIsLoading = "Map is loading, please wait"
-        static let AllowPermission = "Please change Settings to allow GPS"
+        static let NoGPS = Localization.localizedString(forKey: "TurnGPSOnMessage")
+        static let MapIsLoading = Localization.localizedString(forKey: "MapLoadingMessage")
+        static let AllowPermission = Localization.localizedString(forKey: "AllowGPSMessage")
     }
-    
+
     struct Information {
-        static let FriendAdded = "Friend Added"
-        static let FriendRemoved = "Friend Removed"
+        static let FriendAdded = Localization.localizedString(forKey: "FriendAddedMessage")
+        static let FriendRemoved = Localization.localizedString(forKey: "FriendRemovedMessage")
         static let AppName = ""
-        static let ChatHere = "Type something..."
         static let NotPartOfGroup = "You are not part of this group"
+        static let ChatHere = Localization.localizedString(forKey: "ChatHere")
     }
-    
+
     struct Update {
-        static let CheckRequiredField = "Please input display name and profile image"
-        static let UpdateMood = "Update Mood success"
-        static let UpdateProfileName = "Update Profile success"
-        static let Failed = "Failed to update"
+        static let CheckRequiredField = Localization.localizedString(forKey: "CheckImageAndNameField")
+        static let UpdateMood = Localization.localizedString(forKey: "UpdateMoodMessage")
+        static let UpdateProfileName = Localization.localizedString(forKey: "UpdateProfileSuccessMessage")
+        static let Failed = Localization.localizedString(forKey: "FailedToUpdateMessage")
     }
-    
+
     struct Warning {
-        static let NoEmail = "Please enter email address"
-        static let InvalidEmail = "Invalid email address"
-        static let FillInAllFields = "Please fill-in all fields"
-        static let FillInPassword = "Please fill-in password"
-        static let PasswordNotMatched = "Password does not match the confirm password"
-        static let CamNotAvaiable = "Unable to start your camera"
-        static let Cancelled = "Cancelled"
-        static let PleaseTryAgain = "Connection failed. Please retry again"
-        static let FetchFail = "Fetch data failed. Please retry again"
-        static let OperationFail = "Operation could not be completed. Please retry again"
-        static let DeleteSingleConversation = "Are you sure you want to remove the chat with"
-        static let LeaveGroupConoversation = "Are you sure you want to leave the group"
-        static let DeleteGroupConversation = "Are you sure you want to remove the group"
-        static let DeleteContactWith = "Are you sure you want to remove"
-        static let DownloadOriginalImageFail = "Fail to download the original image"
-        static let ImageBeingUploaded = "The image is being uploaded"
-        static let SignOut = "Are you sure you want to sign out?"
+        static let NoEmail = Localization.localizedString(forKey: "EnterEmailMessage")
+        static let InvalidEmail = Localization.localizedString(forKey: "InvalidEmailMessage")
+        static let FillInAllFields = Localization.localizedString(forKey: "Please fill-in all fields")
+        static let FillInPassword = Localization.localizedString(forKey: "FillPasswordMessage")
+        static let PasswordNotMatched = Localization.localizedString(forKey: "PasswordNotMatchedMessage")
+        static let CamNotAvaiable = Localization.localizedString(forKey: "CamNotAvaiable")
+        static let Cancelled = Localization.localizedString(forKey: "CancelMessage")
+        static let PleaseTryAgain = Localization.localizedString(forKey: "ConnectionFailedMessage")
+        static let FetchFail = Localization.localizedString(forKey: "FetchFailedMessage")
+        static let OperationFail = Localization.localizedString(forKey: "OperationFailedMessage")
+        static let DeleteSingleConversation = Localization.localizedString(forKey: "DeleteSingleConversation")
+        static let LeaveGroupConoversation = Localization.localizedString(forKey: "LeaveGroupConversation")
+        static let DeleteGroupConversation = Localization.localizedString(forKey: "DeleteGroupConversation")
+        static let DeleteContactWith = Localization.localizedString(forKey: "RemoveMessage")
+        static let DownloadOriginalImageFail = Localization.localizedString(forKey: "DownloadOriginalImageFail")
+        static let ImageBeingUploaded = Localization.localizedString(forKey: "UploadingImageMessage")
+        static let SignOut = Localization.localizedString(forKey: "SignOutMessage")
     }
-    
+
     struct ButtonName {
-        static let SignOut = "Sign out"
-        static let Retry = "Retry"
-        static let Remove = "Remove"
-        static let Leave = "Leave"
-        static let Cancel = "Cancel"
-        static let Discard = "Discard"
+        static let SignOut = Localization.localizedString(forKey: "SignOutButtonName")
+        static let Retry = Localization.localizedString(forKey: "RetryButtonName")
+        static let Remove = Localization.localizedString(forKey: "RemoveButtonName")
+        static let Leave = Localization.localizedString(forKey: "LeaveButtonName")
+        static let Cancel = Localization.localizedString(forKey: "ButtonCancel")
+        static let Discard = Localization.localizedString(forKey: "ButtonDiscard")
         static let Confirm = "Confirm"
     }
-    
+
     struct NoData {
-        static let NoName = "No Name"
+        static let NoName = Localization.localizedString(forKey: "NoNameMessage")
     }
-    
+
     struct UIError {
-        static let unspecifiedLocation = "Unspecified Location"
+        static let unspecifiedLocation = Localization.localizedString(forKey: "UnspecifiedLocation")
     }
-    
+
     struct PhotoAlbum {
-        static let Success  = "Photo saved"
-        static let Fail     = "Save failed"
-        static let SuccessTitle = "Done"
-        static let FailureTitle = "Error"
-        static let Ok = "Ok"
+        static let Success  = Localization.localizedString(forKey: "PhotoAlbumSuccess")
+        static let Fail     = Localization.localizedString(forKey: "PhotoAlbumFail")
+        static let SuccessTitle = Localization.localizedString(forKey: "PhotoAlbumSuccessTitle")
+        static let FailureTitle = Localization.localizedString(forKey: "PhotoAlbumFailureTitle")
+        static let Ok = Localization.localizedString(forKey: "PhotoAlbumOk")
     }
 
     struct Message {
-        static let isTypingForRTL = "typing is "
+        static let isTypingForRTL = Localization.localizedString(forKey: "IsTypingForRTL")
     }
-    
+
+    struct ChatList {
+        static let title = Localization.localizedString(forKey: "ConversationListVCTitle")
+        static let leftBarBackButton = Localization.localizedString(forKey: "Back")
+    }
+
     struct Mute {
         static let MuteUser = "Mute user %@"
         static let MuteChannel = "Mute group %@"
@@ -106,7 +110,7 @@ struct SystemMessage {
         static let MuteButton = "Mute"
         static let UnmuteButton = "Unmute"
     }
-    
+
     struct MutePopup {
         static let EightHour = "8 hours"
         static let OneWeek = "1 week"
