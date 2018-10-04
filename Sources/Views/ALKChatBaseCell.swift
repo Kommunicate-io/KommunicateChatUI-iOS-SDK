@@ -121,7 +121,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T> {
 
 extension ALKCopyMenuItemProtocol {
     var title: String {
-        return "Copy"
+        return NSLocalizedString("Copy", value: SystemMessage.LabelName.Copy, comment: "")
     }
     var selector: Selector {
         return #selector(menuCopy(_:))
@@ -136,7 +136,7 @@ extension ALKCopyMenuItemProtocol {
 
 extension ALKReplyMenuItemProtocol {
     var title: String {
-        return "Reply"
+        return NSLocalizedString("Reply", value: SystemMessage.LabelName.Reply, comment: "")
     }
 
     var selector: Selector {

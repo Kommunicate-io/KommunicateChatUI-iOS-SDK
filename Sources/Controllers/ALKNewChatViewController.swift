@@ -24,7 +24,7 @@ final class ALKNewChatViewController: ALKBaseViewController {
     }()
     
     fileprivate lazy var searchBar: UISearchBar = {
-        return UISearchBar.createAXSearchBar(placeholder: NSLocalizedString("SearchPlaceholder", value: "Search", comment: ""))
+        return UISearchBar.createAXSearchBar(placeholder: NSLocalizedString("SearchPlaceholder", value: SystemMessage.LabelName.SearchPlaceholder, comment: ""))
     }()
 
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
@@ -74,7 +74,7 @@ final class ALKNewChatViewController: ALKBaseViewController {
     
     private func setupView() {
 
-        title = NSLocalizedString("NewChatTitle", value: "New Chat", comment: "")
+        title = NSLocalizedString("NewChatTitle", value: SystemMessage.LabelName.NewChatTitle, comment: "")
         
         view.addViewsForAutolayout(views: [tableView])
         

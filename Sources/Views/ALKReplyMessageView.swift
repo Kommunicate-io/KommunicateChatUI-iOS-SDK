@@ -40,7 +40,7 @@ open class ALKReplyMessageView: UIView {
         return imageView
     }()
 
-    open var selfNameText = "You"
+    open var selfNameText = NSLocalizedString("You", value: SystemMessage.LabelName.You, comment: "")
 
     public var closeButtonTapped: ((Bool)->())?
 

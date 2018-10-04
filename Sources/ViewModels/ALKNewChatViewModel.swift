@@ -143,7 +143,7 @@ final class ALKNewChatViewModel {
     // Internal class
     final class CreateGroup: ALKContactProtocol {
         
-        var friendProfileName: String? = NSLocalizedString("CreateGroupTitle", value: "Create Group", comment: "")
+        var friendProfileName: String? = NSLocalizedString("CreateGroupTitle", value: SystemMessage.NavbarTitle.createGroupTitle, comment: "")
         var friendUUID: String? = ""
         var friendMood: String? = ""
         var friendDisplayImgURL: URL? = nil

@@ -86,7 +86,20 @@ RemoveButtonName = "Remove";
 LeaveButtonName = "Leave";
 NoNameMessage = "No Name";
 ConversationListVCTitle = "My Chats";
-
+Somebody = "Somebody";
+EnableCameraPermissionMessage = "Enable Camera Permission";
+FillGroupName = "Please fill out group name";
+Settings = "Settings";
+Cancel = "Cancel";
+SendVideo = "Send Video";
+TurnOnLocationService = "Turn On Location Services";
+LocationAlertMessage = "1. Tap Settings\n2. Tap Location\n 3. Tap 'While Using the App'";
+NotNow = "Not Now";
+IsTyping = " is typing";
+AreTyping = " are typing";
+Copy = "Copy";
+Reply = "Reply";
+You = "You";
 
 NotPartOfGroup = "You are not part of this group";
 MuteChannel = "Mute group %@";

@@ -33,8 +33,8 @@ class ALKCustomPickerViewController: ALKBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        doneButton.title = NSLocalizedString("DoneButton", value: "Done", comment: "")
-        self.title = NSLocalizedString("PhotosTitle", value: "Photos", comment: "")
+        doneButton.title = NSLocalizedString("DoneButton", value: SystemMessage.ButtonName.Done, comment: "")
+        self.title = NSLocalizedString("PhotosTitle", value: SystemMessage.LabelName.Photos, comment: "")
         checkPhotoLibraryPermission()
         previewGallery.delegate = self
         previewGallery.dataSource = self

@@ -24,16 +24,20 @@ extension CLLocationManager {
         switch CLLocationManager.authorizationStatus() {
             
         case .restricted, .denied, .notDetermined:
+            let alertTitle = NSLocalizedString("TurnOnLocationService", value: SystemMessage.Map.TurnOnLocationService, comment: "")
+            let alertMessage = NSLocalizedString("LocationAlertMessage", value: SystemMessage.Map.LocationAlertMessage, comment: "")
             let alertController = UIAlertController(
-                title: "Turn On Location Services",
-                message: "1. Tap Settings\n2. Tap Location\n 3. Tap 'While Using the App'",
+                title: alertTitle,
+                message: alertMessage,
                 preferredStyle: .alert)
             
-            let notNowAction = UIAlertAction(title: "Not Now",
+            let notNowTitle = NSLocalizedString("NotNow", value: SystemMessage.LabelName.NotNow, comment: "")
+            let notNowAction = UIAlertAction(title: notNowTitle,
                                              style: .cancel,
                                              handler: nil)
             
-            let openSettingAction = UIAlertAction(title: "Settings", style: .default) { (action) in
+            let settingsTitle = NSLocalizedString("Settings", value: SystemMessage.LabelName.Settings, comment: "")
+            let openSettingAction = UIAlertAction(title: settingsTitle, style: .default) { (action) in
                 if let url = NSURL(string: UIApplicationOpenSettingsURLString) {
                     UIApplication.shared.openURL(url as URL)
                 }

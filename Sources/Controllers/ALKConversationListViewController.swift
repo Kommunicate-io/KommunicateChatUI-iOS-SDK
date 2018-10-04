@@ -196,14 +196,14 @@ open class ALKConversationListViewController: ALKBaseViewController {
     }
 
     private func setupView() {
-
-        title = "My Chats"
+        
+        title = NSLocalizedString("ConversationListVCTitle", value: SystemMessage.ChatList.title, comment: "")
 
         if !configuration.hideStartChatButton {
             navigationItem.rightBarButtonItem = rightBarButtonItem
         }
 
-        let back = NSLocalizedString("Back", value: "Back", comment: "")
+        let back = NSLocalizedString("Back", value: SystemMessage.ChatList.leftBarBackButton, comment: "")
         let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
         navigationItem.leftBarButtonItem = leftBarButtonItem
 
@@ -245,7 +245,8 @@ open class ALKConversationListViewController: ALKBaseViewController {
         else if let key = contactId,let alContact = alContactDbService.loadContact(byKey: "userId", value: key), let name = alContact.getDisplayName() {
             title = name
         }
-        title = title.isEmpty ? "No name":title
+        let noName = NSLocalizedString("NoNameMessage", value: SystemMessage.NoData.NoName, comment: "")
+        title = title.isEmpty ? noName : title
         let convViewModel = conversationViewModelType.init(contactId: contactId, channelKey: groupId)
         let convService = ALConversationService()
         if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
@@ -609,7 +610,7 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
     private func prefixAndButtonTitleForDeletePopup(conversation: ALMessage) -> (String, String){
         
         let deleteGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.DeleteGroupConversation, comment: "")
-        let leaveGroupPopupMessage = NSLocalizedString("DeleteGroupConversation", value: SystemMessage.Warning.LeaveGroupConoversation, comment: "")
+        let leaveGroupPopupMessage = NSLocalizedString("LeaveGroupConversation", value: SystemMessage.Warning.LeaveGroupConoversation, comment: "")
         let deleteSingleConversationPopupMessage = NSLocalizedString("DeleteSingleConversation", value: SystemMessage.Warning.DeleteSingleConversation, comment: "")
         let removeButtonText = NSLocalizedString("ButtonRemove", value: SystemMessage.ButtonName.Remove, comment: "")
         let leaveButtonText = NSLocalizedString("ButtonLeave", value: SystemMessage.ButtonName.Leave, comment: "")

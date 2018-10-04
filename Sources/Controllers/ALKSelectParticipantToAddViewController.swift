@@ -81,9 +81,9 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
     private func setupUI() {
         setupInviteButton()
         setupSearchBar()
-        self.navigationItem.title = NSLocalizedString("AddToGroupTitle", value: "Add to Group", comment: "")
+        self.navigationItem.title = NSLocalizedString("AddToGroupTitle", value: SystemMessage.LabelName.AddToGroupTitle, comment: "")
         definesPresentationContext = true
-        btnInvite.setTitle(NSLocalizedString("InviteButton", value: "INVITE", comment: ""), for: .normal)
+        btnInvite.setTitle(NSLocalizedString("InviteButton", value: SystemMessage.ButtonName.Invite, comment: ""), for: .normal)
         tblParticipants.tableHeaderView = searchController.searchBar
     }
     
@@ -404,7 +404,7 @@ extension ALKSelectParticipantToAddViewController: ALKInviteButtonProtocol {
         let isEnabled = (count > 0) ? true: false
         let background = (isEnabled ? UIColor.mainRed() : UIColor.disabledButton())
         let newMember = count > 0 ? " (\(count))" : ""
-        let inviteMessage = NSLocalizedString("InviteMessage", value: "Invite", comment: "")
+        let inviteMessage = NSLocalizedString("InviteMessage", value: SystemMessage.LabelName.InviteMessage, comment: "")
         let title = "\(inviteMessage) \(newMember)"
         return (title, background, isEnabled)
     }

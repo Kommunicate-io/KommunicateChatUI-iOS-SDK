@@ -27,7 +27,7 @@ class TypingNotice: UIView {
     
     private var lblIsTyping:UILabel = {
         
-        let isTypingString = " is typing"
+        let isTypingString = NSLocalizedString("IsTyping", value: SystemMessage.Message.isTyping, comment: "")
         let isTypingWidth:CGFloat = isTypingString.evaluateStringWidth(textToEvaluate:isTypingString, fontSize: 12)
         
         let lblIsTyping = UILabel.init(frame: .zero)
@@ -107,7 +107,7 @@ class TypingNotice: UIView {
         if(!displayName.isEmpty)
         {
             lblName.text = " " + displayName
-            lblIsTyping.text = " is typing"
+            lblIsTyping.text = NSLocalizedString("IsTyping", value: SystemMessage.Message.isTyping, comment: "")
         }
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             lblIsTyping.text = NSLocalizedString("IsTypingForRTL",value: SystemMessage.Message.isTypingForRTL, comment: "")
@@ -119,7 +119,7 @@ class TypingNotice: UIView {
         if( number > 1)
         {
             lblName.text = "\(number) people"
-            lblIsTyping.text = " are typing"
+            lblIsTyping.text = NSLocalizedString("AreTyping", value: SystemMessage.Message.areTyping, comment: "")
         }
     }
 }

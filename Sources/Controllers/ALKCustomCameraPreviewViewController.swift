@@ -32,7 +32,7 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.title = NSLocalizedString("SendPhoto", value: "Send Photo", comment: "")
+        self.title = NSLocalizedString("SendPhoto", value: SystemMessage.LabelName.SendPhoto, comment: "")
     }
 
     required public init(configuration: ALKConfiguration) {

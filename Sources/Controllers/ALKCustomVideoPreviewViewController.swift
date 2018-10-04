@@ -36,7 +36,7 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.title = "Send Video"
+        self.title = NSLocalizedString("SendVideo", value: SystemMessage.LabelName.SendVideo, comment: "")
     }
 
     required public init(configuration: ALKConfiguration) {

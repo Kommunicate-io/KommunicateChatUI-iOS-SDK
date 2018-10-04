@@ -18,14 +18,14 @@ enum ALKAddContactMode {
     var navigationBarTitle: String {
         switch self {
         case .newChat:
-            return NSLocalizedString("CreateGroupTitle", value: "Create Group", comment: "")
+            return NSLocalizedString("CreateGroupTitle", value: SystemMessage.NavbarTitle.createGroupTitle, comment: "")
         default:
-            return NSLocalizedString("EditGroupTitle", value: "Edit Group", comment: "")
+            return NSLocalizedString("EditGroupTitle", value: SystemMessage.NavbarTitle.editGroupTitle, comment: "")
         }
     }
     
     var doneButtonTitle: String {
-        return NSLocalizedString("SaveButtonTitle", value: "Save", comment: "")
+        return NSLocalizedString("SaveButtonTitle", value: SystemMessage.ButtonName.Save, comment: "")
     }
 }
 
@@ -82,13 +82,14 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     @IBAction func createGroupPress(_ sender: Any) {
 
         guard var groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-            alert(msg: "Please fill out group name")
+            let msg = NSLocalizedString("FillGroupName", value: SystemMessage.Warning.FillGroupName, comment: "")
+            alert(msg: msg)
             return
         }
         
         if groupName.lengthOfBytes(using: .utf8) < 1 {
-            
-            alert(msg: "Please fill out group name")
+            let msg = NSLocalizedString("FillGroupName", value: SystemMessage.Warning.FillGroupName, comment: "")
+            alert(msg: msg)
             return
         }
         
@@ -151,8 +152,8 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
         //set btns into circle
         viewGroupImg.layer.cornerRadius = 0.5 * viewGroupImg.frame.size.width
         viewGroupImg.clipsToBounds = true
-        editLabel.text = NSLocalizedString("Edit", value: "Edit",comment: "")
-        participantsLabel.text = NSLocalizedString("Participants", value: "Participants",comment: "")
+        editLabel.text = NSLocalizedString("Edit", value: SystemMessage.LabelName.Edit ,comment: "")
+        participantsLabel.text = NSLocalizedString("Participants", value: SystemMessage.LabelName.Participants, comment: "")
         
         if addContactMode == .existingChat {
             // Button Create Group
@@ -192,7 +193,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
             NSAttributedStringKey(rawValue: NSAttributedStringKey.paragraphStyle.rawValue):style,
             NSAttributedStringKey.foregroundColor: UIColor.placeholderGray()
         ]
-        let typeGroupNameMsg = NSLocalizedString("TypeGroupName", value: "Type group name", comment: "")
+        let typeGroupNameMsg = NSLocalizedString("TypeGroupName", value: SystemMessage.LabelName.TypeGroupName, comment: "")
             textField.attributedPlaceholder  = NSAttributedString(string: typeGroupNameMsg, attributes: attr)
     }
     

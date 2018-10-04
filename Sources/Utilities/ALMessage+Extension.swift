@@ -57,7 +57,7 @@ extension ALMessage: ALKChatViewModelProtocol {
 
     var name: String {
         guard let alContact = alContact, let id = alContact.userId  else {
-            return "No Name"
+            return NSLocalizedString("NoNameMessage", value: SystemMessage.NoData.NoName, comment: "")
         }
         guard let displayName = alContact.getDisplayName(), !displayName.isEmpty else { return id }
 

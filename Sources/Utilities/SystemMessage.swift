@@ -12,7 +12,9 @@ import Foundation
 struct SystemMessage {
 
     struct Camera {
+        static let cameraPermission = Localization.localizedString(forKey: "EnableCameraPermissionMessage")
         static let CamNotAvailable = Localization.localizedString(forKey: "CameraNotAvailableMessage")
+        static let camNotAvailableTitle = Localization.localizedString(forKey: "CameraNotAvailableTitle")
         static let GalleryAvailable = Localization.localizedString(forKey: "GalleryNotAvailableMessage")
         static let PictureCropped = Localization.localizedString(forKey: "ImageCroppedMessage")
         static let PictureReset = Localization.localizedString(forKey: "ImageResetMessage")
@@ -30,6 +32,8 @@ struct SystemMessage {
         static let NoGPS = Localization.localizedString(forKey: "TurnGPSOnMessage")
         static let MapIsLoading = Localization.localizedString(forKey: "MapLoadingMessage")
         static let AllowPermission = Localization.localizedString(forKey: "AllowGPSMessage")
+        static let TurnOnLocationService = Localization.localizedString(forKey: "TurnOnLocationService")
+        static let LocationAlertMessage = Localization.localizedString(forKey: "LocationAlertMessage")
     }
 
     struct Information {
@@ -65,6 +69,8 @@ struct SystemMessage {
         static let DownloadOriginalImageFail = Localization.localizedString(forKey: "DownloadOriginalImageFail")
         static let ImageBeingUploaded = Localization.localizedString(forKey: "UploadingImageMessage")
         static let SignOut = Localization.localizedString(forKey: "SignOutMessage")
+        static let FillGroupName = Localization.localizedString(forKey: "FillGroupName")
+        static let DiscardChange = Localization.localizedString(forKey: "DiscardChangeMessage")
     }
 
     struct ButtonName {
@@ -74,6 +80,11 @@ struct SystemMessage {
         static let Leave = Localization.localizedString(forKey: "LeaveButtonName")
         static let Cancel = Localization.localizedString(forKey: "ButtonCancel")
         static let Discard = Localization.localizedString(forKey: "ButtonDiscard")
+        static let Save = Localization.localizedString(forKey: "SaveButtonTitle")
+        static let ResetPhoto = Localization.localizedString(forKey: "ResetPhotoButton")
+        static let Select = Localization.localizedString(forKey: "SelectButton")
+        static let Done = Localization.localizedString(forKey: "DoneButton")
+        static let Invite = Localization.localizedString(forKey: "InviteButton")
         static let Confirm = "Confirm"
     }
 
@@ -95,12 +106,46 @@ struct SystemMessage {
 
     struct Message {
         static let isTypingForRTL = Localization.localizedString(forKey: "IsTypingForRTL")
+        static let isTyping = Localization.localizedString(forKey: "IsTyping")
+        static let areTyping = Localization.localizedString(forKey: "AreTyping")
     }
 
     struct ChatList {
         static let title = Localization.localizedString(forKey: "ConversationListVCTitle")
         static let leftBarBackButton = Localization.localizedString(forKey: "Back")
     }
+
+    struct Chat {
+        static let somebody = Localization.localizedString(forKey: "Somebody")
+    }
+
+    struct NavbarTitle {
+        static let createGroupTitle = Localization.localizedString(forKey: "CreateGroupTitle")
+        static let editGroupTitle = Localization.localizedString(forKey: "EditGroupTitle")
+    }
+
+    struct LabelName {
+        static let Edit = Localization.localizedString(forKey: "Edit")
+        static let Participants = Localization.localizedString(forKey: "Participants")
+        static let TypeGroupName = Localization.localizedString(forKey: "TypeGroupName")
+        static let SendPhoto = Localization.localizedString(forKey: "SendPhoto")
+        static let Settings = Localization.localizedString(forKey: "Settings")
+        static let Camera = Localization.localizedString(forKey: "Camera")
+        static let Cancel = Localization.localizedString(forKey: "Cancel")
+        static let CropImage = Localization.localizedString(forKey: "CropImage")
+        static let Photos = Localization.localizedString(forKey: "PhotosTitle")
+        static let SendVideo = Localization.localizedString(forKey: "SendVideo")
+        static let SearchPlaceholder = Localization.localizedString(forKey: "SearchPlaceholder")
+        static let NewChatTitle = Localization.localizedString(forKey: "NewChatTitle")
+        static let AddToGroupTitle = Localization.localizedString(forKey: "AddToGroupTitle")
+        static let InviteMessage = Localization.localizedString(forKey: "InviteMessage")
+        static let DiscardChangeTitle = Localization.localizedString(forKey: "DiscardChangeTitle")
+        static let NotNow = Localization.localizedString(forKey: "NotNow")
+        static let Copy = Localization.localizedString(forKey: "Copy")
+        static let Reply = Localization.localizedString(forKey: "Reply")
+        static let You = Localization.localizedString(forKey: "You")
+    }
+
 
     struct Mute {
         static let MuteUser = "Mute user %@"

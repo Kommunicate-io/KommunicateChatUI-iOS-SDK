@@ -527,7 +527,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         return imageView
     }()
 
-    var selfNameText = "You"
+    var selfNameText = NSLocalizedString("You", value: SystemMessage.LabelName.You, comment: "")
     var replyViewAction: (()->())? = nil
 
     override func update(viewModel: ALKMessageViewModel) {

@@ -59,9 +59,9 @@ final class ALKCustomCropImageViewController: ALKBaseViewController {
     {
         self.view.backgroundColor = UIColor.mainRed()
 
-        self.title = NSLocalizedString("CropImage",value: "Crop Image", comment: "")
-        btnReset.setTitle(NSLocalizedString("ResetPhotoButton",value: "Reset Photo" ,comment: ""), for: .normal)
-        btnSave.setTitle(NSLocalizedString("SelectButton",value: "Select", comment: ""), for: .normal)
+        self.title = NSLocalizedString("CropImage",value: SystemMessage.LabelName.CropImage, comment: "")
+        btnReset.setTitle(NSLocalizedString("ResetPhotoButton",value: SystemMessage.ButtonName.ResetPhoto, comment: ""), for: .normal)
+        btnSave.setTitle(NSLocalizedString("SelectButton",value: SystemMessage.ButtonName.Select, comment: ""), for: .normal)
         
         btnSave.layer.cornerRadius = 15
         btnSave.clipsToBounds = true

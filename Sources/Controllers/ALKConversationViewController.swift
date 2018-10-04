@@ -1,6 +1,6 @@
 
 //  ConversationViewController.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -15,7 +15,7 @@ import SafariServices
 open class ALKConversationViewController: ALKBaseViewController {
 
     var contactService: ALContactService!
-    
+
     public var viewModel: ALKConversationViewModel! {
         willSet(updatedVM) {
             guard viewModel != nil else {return}
@@ -26,7 +26,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             }
         }
     }
-    
+
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
 
@@ -35,7 +35,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     /// See configuration.
     private var isProfileTapActionEnabled = true
-    
+
     var chatBar: ALKChatBar = ALKChatBar(frame: .zero, configuration: ALKConfiguration())
 
     private var isFirstTime = true
@@ -126,11 +126,11 @@ open class ALKConversationViewController: ALKBaseViewController {
         configurePropertiesWith(configuration: configuration)
         self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
     public func viewWillLoadFromTappingOnNotification(){
         isViewLoadedFromTappingOnNotification = true
     }
@@ -296,7 +296,14 @@ open class ALKConversationViewController: ALKBaseViewController {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
         }
-    
+
+        if self.viewModel.isGroup == true {
+            let dispName = NSLocalizedString("Somebody", value: SystemMessage.Chat.somebody, comment: "")
+            self.setTypingNotiDisplayName(displayName: dispName)
+        } else {
+            self.setTypingNotiDisplayName(displayName: self.title ?? "")
+        }
+
         viewModel.delegate = self
         viewModel.prepareController()
         if let templates = viewModel.getMessageTemplates(){
@@ -372,11 +379,11 @@ open class ALKConversationViewController: ALKBaseViewController {
         }
         //Check for group left
         isChannelLeft()
-        
+
         guard viewModel.isContextBasedChat else { return }
         prepareContextView()
     }
-    
+
     func isChannelLeft() {
         guard let channelKey = viewModel.channelKey else {
             return
@@ -516,7 +523,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         tableView.register(ALKGenericListCell.self)
         tableView.register(ALKFriendMessageQuickReplyCell.self)
         tableView.register(ALKMyMessageQuickReplyCell.self)
-    
+
     }
 
 
@@ -627,12 +634,15 @@ open class ALKConversationViewController: ALKBaseViewController {
                                 imagePicker.mediaTypes = [kUTTypeMovie as String]
                                 UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
                             } else {
-                                ALUtilityClass.permissionPopUp(withMessage: "Enable Camera Permission", andViewController: self)
+                                let msg = NSLocalizedString("EnableCameraPermissionMessage", value: SystemMessage.Camera.cameraPermission, comment: "")
+                                ALUtilityClass.permissionPopUp(withMessage: msg, andViewController: self)
                             }
                         }
                     })
                 } else {
-                    ALUtilityClass.showAlertMessage(NSLocalizedString("CameraNotAvailableMessage", value: "Camera is not Available !!!", comment: ""), andTitle: NSLocalizedString("CameraNotAvailableTitle", value: "OOPS !!!", comment: ""))
+                    let msg = NSLocalizedString("CameraNotAvailableMessage", value: SystemMessage.Camera.CamNotAvailable, comment: "")
+                    let title = NSLocalizedString("CameraNotAvailableTitle", value: SystemMessage.Camera.camNotAvailableTitle, comment: "")
+                    ALUtilityClass.showAlertMessage(msg, andTitle: title)
                 }
             case .showImagePicker():
                 guard let vc = ALKCustomPickerViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
@@ -676,7 +686,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
     }
-    
+
     private func defaultNameForTypingStatus() -> String{
         if self.viewModel.isGroup == true {
             return "Somebody"
@@ -684,7 +694,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             return self.title ?? ""
         }
     }
-    
+
     private func nameForTypingStatusUsing(userId: String) -> String?{
         guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
             return nil
@@ -702,7 +712,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         if tableView.isAtBottom {
             tableView.scrollToBottomByOfset(animated: false)
         }
-        
+
         if configuration.showNameWhenUserTypesInGroup {
             guard let name = nameForTypingStatusUsing(userId: userId) else {
                 return
@@ -929,7 +939,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
         }
     }
-    
+
     //This is a temporary workaround for the issue that messages are not scrolling to bottom when opened from notification
     //This issue is happening because table view has different cells of different heights so it cannot go to the bottom of cell when using function scrollToBottom
     //And thats why when we check whether last cell is visible or not, it gives false result since the last cell is sometimes not fully visible.
@@ -945,7 +955,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.reloadData()
         //Check if current user is removed from the group
         isChannelLeft()
-        
+
         if isViewLoadedFromTappingOnNotification{
             let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)
@@ -963,7 +973,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
         viewModel.markConversationRead()
     }
-   
+
     public func messageSent(at indexPath: IndexPath) {
         DispatchQueue.main.async {
             NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)
@@ -1018,7 +1028,7 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
                 self.title = groupName
                 titleButton.setTitle(self.title, for: .normal)
             }
-            
+
             viewModel.updateGroup(groupName: groupName, groupImage: groupImgUrl, friendsAdded: friendsAdded)
 
             if let titleButton = navigationItem.titleView as? UIButton {
@@ -1039,7 +1049,7 @@ extension ALKConversationViewController: ALKShareLocationViewControllerDelegate 
         self.tableView.beginUpdates()
         self.tableView.insertSections(IndexSet(integer: (newIndexPath.section)), with: .automatic)
         self.tableView.endUpdates()
-        
+
         // Not scrolling down without the delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.tableView.scrollToBottom(animated: false)
@@ -1168,7 +1178,7 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
         DispatchQueue.main.async { [weak self] in
             guard let weakSelf = self else { return }
             if var lastMessage = weakSelf.viewModel.messageForRow(identifier: weakSelf.audioPlayer.getCurrentAudioTrack()) {
-                
+
                 if lastMessage.voiceCurrentState == .playing {
                     weakSelf.audioPlayer.pauseAudio()
                     lastMessage.voiceCurrentState = .pause
