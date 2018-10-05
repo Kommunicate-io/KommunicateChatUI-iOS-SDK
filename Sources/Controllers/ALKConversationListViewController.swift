@@ -44,10 +44,13 @@ open class ALKConversationListViewController: ALKBaseViewController {
         return tv
     }()
 
-    let rightBarButtonItem = UIBarButtonItem(
-        image: UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil),
-        style: .plain,
-        target: self, action: #selector(compose))
+    lazy var rightBarButtonItem: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(
+            image: UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil),
+            style: .plain,
+            target: self, action: #selector(compose))
+        return barButton
+    }()
 
     fileprivate lazy var searchBar: UISearchBar = {
         var bar = UISearchBar()
