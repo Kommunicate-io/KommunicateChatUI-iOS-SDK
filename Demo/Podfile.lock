@@ -1,8 +1,8 @@
 PODS:
-  - Applozic (6.2.0):
+  - Applozic (6.2.1):
     - SDWebImage (~> 4.4)
   - ApplozicSwift (1.0.0):
-    - Applozic (~> 6.2.0)
+    - Applozic (~> 6.2.1)
     - Kingfisher (~> 4.7.0)
     - MGSwipeTableCell (~> 1.5.6)
   - iOSSnapshotTestCase (4.0.0):
@@ -45,8 +45,8 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: 6ac9306449a4c0d5f7b6661fbc68c60662927fd5
-  ApplozicSwift: 2ba60fb454974cf8fb7caf2e543adc0bbdfce48c
+  Applozic: c54fe6937209685fc551080aef6d702bc1c444ae
+  ApplozicSwift: cc97d92529436c1be0591e016958db2073b5bdb2
   iOSSnapshotTestCase: 711379b19f69a22c131527df862352c877c2773c
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   MGSwipeTableCell: 616700eb0ffd1c611ba909066cb7fd739790a0a7
