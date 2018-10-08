@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 
-final class ALKCustomVideoPreviewViewController: ALKBaseViewController {
+final class ALKCustomVideoPreviewViewController: ALKBaseViewController, Localizable {
 
     // MARK: - Variables and Types
     private var customCamDelegate:ALKCustomCameraProtocol!
@@ -36,7 +36,8 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.title = NSLocalizedString("SendVideo", value: SystemMessage.LabelName.SendVideo, comment: "")
+        
+        self.title = localizedString(forKey: "SendVideo", withDefaultValue: SystemMessage.LabelName.SendVideo, config: configuration)
     }
 
     required public init(configuration: ALKConfiguration) {

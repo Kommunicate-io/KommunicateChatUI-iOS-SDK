@@ -13,7 +13,9 @@ public protocol ALKAudioRecorderViewProtocol{
     func cancelAudioRecording()
 }
 
-open class ALKAudioRecorderView: UIView {
+open class ALKAudioRecorderView: UIView, Localizable {
+    
+    var configuration: ALKConfiguration!
     
     private var isTimerStart:Bool = false
     private var timer = Timer()
@@ -108,8 +110,9 @@ open class ALKAudioRecorderView: UIView {
         })
     }
     
-    override public init(frame: CGRect) {
+    public init(frame: CGRect, configuration: ALKConfiguration) {
         super.init(frame: frame)
+        self.configuration = configuration
         self.translatesAutoresizingMaskIntoConstraints = false;
         setupUI()
         layer.cornerRadius = 12
@@ -147,8 +150,8 @@ open class ALKAudioRecorderView: UIView {
     
     private func initializeParameters(){
         self.backgroundColor = UIColor.color(.none)
-        slideToCancel.text = NSLocalizedString("SlideToCancel", value: SystemMessage.Microphone.SlideToCancel, comment: "")
-        recordingLabel.text = NSLocalizedString("Recording", value: SystemMessage.Microphone.Recording, comment: "")
+        slideToCancel.text = localizedString(forKey: "SlideToCancel", withDefaultValue: SystemMessage.Microphone.SlideToCancel, config: configuration)
+        recordingLabel.text = localizedString(forKey: "Recording", withDefaultValue: SystemMessage.Microphone.Recording, config: configuration)
         redDot.backgroundColor = UIColor(red: 255, green: 14, blue: 0)
         recordingValue.text = "00:00"
         previousGestureLocation = 0.0

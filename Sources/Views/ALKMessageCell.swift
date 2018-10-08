@@ -13,6 +13,10 @@ import Applozic
 
 // MARK: - ALKFriendMessageCell
 open class ALKFriendMessageCell: ALKMessageCell {
+    
+    override public func setConfiguration(_ configuration: ALKConfiguration) {
+        super.setConfiguration(configuration)
+    }
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -260,6 +264,10 @@ open class ALKFriendMessageCell: ALKMessageCell {
 // MARK: - ALKMyMessageCell
 open class ALKMyMessageCell: ALKMessageCell {
 
+    override public func setConfiguration(_ configuration: ALKConfiguration) {
+        super.setConfiguration(configuration)
+    }
+
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
@@ -478,7 +486,6 @@ open class ALKMyMessageCell: ALKMessageCell {
 }
 
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
-
     fileprivate lazy var messageView: ALHyperLabel = {
         let label = ALHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
@@ -527,7 +534,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         return imageView
     }()
 
-    var selfNameText = NSLocalizedString("You", value: SystemMessage.LabelName.You, comment: "")
+    lazy var selfNameText: String = {
+        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, config: configuration)
+        return text
+    }()
     var replyViewAction: (()->())? = nil
 
     override func update(viewModel: ALKMessageViewModel) {

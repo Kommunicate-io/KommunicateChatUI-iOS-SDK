@@ -11,29 +11,29 @@ import UIKit
 import Kingfisher
 import Applozic
 
-enum ALKAddContactMode {
-    case newChat
-    case existingChat
-    
-    var navigationBarTitle: String {
-        switch self {
-        case .newChat:
-            return NSLocalizedString("CreateGroupTitle", value: SystemMessage.NavbarTitle.createGroupTitle, comment: "")
-        default:
-            return NSLocalizedString("EditGroupTitle", value: SystemMessage.NavbarTitle.editGroupTitle, comment: "")
-        }
-    }
-    
-    var doneButtonTitle: String {
-        return NSLocalizedString("SaveButtonTitle", value: SystemMessage.ButtonName.Save, comment: "")
-    }
-}
-
 protocol ALKCreateGroupChatAddFriendProtocol {
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel],groupName:String,groupImgUrl:String, friendsAdded: [ALKFriendViewModel])
 }
 
-final class ALKCreateGroupViewController: ALKBaseViewController {
+final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
+
+    enum ALKAddContactMode: Localizable {
+        case newChat
+        case existingChat
+        
+        func navigationBarTitle(configuration: ALKConfiguration) -> String {
+            switch self {
+            case .newChat:
+                return localizedString(forKey: "CreateGroupTitle", withDefaultValue: SystemMessage.NavbarTitle.createGroupTitle, config: configuration)
+            default:
+                return localizedString(forKey: "EditGroupTitle", withDefaultValue: SystemMessage.NavbarTitle.editGroupTitle, config: configuration)
+            }
+        }
+        
+        func doneButtonTitle(configuration: ALKConfiguration) -> String {
+            return localizedString(forKey: "SaveButtonTitle", withDefaultValue: SystemMessage.ButtonName.Save, config: configuration)
+        }
+    }
 
     var groupList = [ALKFriendViewModel]()
     var addedList = [ALKFriendViewModel]()
@@ -82,13 +82,13 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
     @IBAction func createGroupPress(_ sender: Any) {
 
         guard var groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-            let msg = NSLocalizedString("FillGroupName", value: SystemMessage.Warning.FillGroupName, comment: "")
+            let msg = localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, config: configuration)
             alert(msg: msg)
             return
         }
         
         if groupName.lengthOfBytes(using: .utf8) < 1 {
-            let msg = NSLocalizedString("FillGroupName", value: SystemMessage.Warning.FillGroupName, comment: "")
+            let msg = localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, config: configuration)
             alert(msg: msg)
             return
         }
@@ -152,14 +152,15 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
         //set btns into circle
         viewGroupImg.layer.cornerRadius = 0.5 * viewGroupImg.frame.size.width
         viewGroupImg.clipsToBounds = true
-        editLabel.text = NSLocalizedString("Edit", value: SystemMessage.LabelName.Edit ,comment: "")
-        participantsLabel.text = NSLocalizedString("Participants", value: SystemMessage.LabelName.Participants, comment: "")
+        
+        editLabel.text = localizedString(forKey: "Edit", withDefaultValue: SystemMessage.LabelName.Edit, config: configuration)
+        participantsLabel.text = localizedString(forKey: "Participants", withDefaultValue: SystemMessage.LabelName.Participants, config: configuration)
         
         if addContactMode == .existingChat {
             // Button Create Group
             btnCreateGroup.layer.cornerRadius = 15
             btnCreateGroup.clipsToBounds = true
-            btnCreateGroup.setTitle(addContactMode.doneButtonTitle, for: UIControlState.normal)
+            btnCreateGroup.setTitle(addContactMode.doneButtonTitle(configuration: configuration), for: UIControlState.normal)
         } else {
             btnCreateGroup.isHidden = true
         }
@@ -170,7 +171,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
                                   groupname: txtfGroupName.trimmedWhitespaceText())
         
         self.tblParticipants.reloadData()
-        self.title = addContactMode.navigationBarTitle
+        self.title = addContactMode.navigationBarTitle(configuration: configuration)
         
         if let url = URL.init(string: groupProfileImgUrl) {
             let placeHolder = UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil)
@@ -193,7 +194,8 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
             NSAttributedStringKey(rawValue: NSAttributedStringKey.paragraphStyle.rawValue):style,
             NSAttributedStringKey.foregroundColor: UIColor.placeholderGray()
         ]
-        let typeGroupNameMsg = NSLocalizedString("TypeGroupName", value: SystemMessage.LabelName.TypeGroupName, comment: "")
+        
+        let typeGroupNameMsg = localizedString(forKey: "TypeGroupName", withDefaultValue: SystemMessage.LabelName.TypeGroupName, config: configuration)
             textField.attributedPlaceholder  = NSAttributedString(string: typeGroupNameMsg, attributes: attr)
     }
     
@@ -269,7 +271,13 @@ final class ALKCreateGroupViewController: ALKBaseViewController {
         }
         guard let navigationController = navigationController else { return }
 
-        UIAlertController.presentDiscardAlert(onPresenter: navigationController,
+        
+        let cancelTitle = localizedString(forKey: "ButtonCancel", withDefaultValue: SystemMessage.ButtonName.Cancel, config: configuration)
+        let discardTitle = localizedString(forKey: "ButtonDiscard", withDefaultValue: SystemMessage.ButtonName.Discard, config: configuration)
+        let alertTitle = localizedString(forKey: "DiscardChangeTitle", withDefaultValue: SystemMessage.LabelName.DiscardChangeTitle, config: configuration)
+        let alertMessage = localizedString(forKey: "DiscardChangeMessage", withDefaultValue: SystemMessage.Warning.DiscardChange, config: configuration)
+        
+        UIAlertController.presentDiscardAlert(onPresenter: navigationController, alertTitle: alertTitle, alertMessage: alertMessage, cancelTitle: cancelTitle, discardTitle: discardTitle,
                                               onlyForCondition: { () -> Bool in
                                                 return (
                                                     createGroupViewModel.groupName != createGroupViewModel.originalGroupName || cropedImage != nil
@@ -334,7 +342,7 @@ extension ALKCreateGroupViewController:ALKAddParticipantProtocol
         guard addContactMode == .existingChat,
             index.row < groupList.count else {return}
         let user = groupList[index.row]
-        let viewModel = ALKConversationViewModel(contactId: user.friendUUID, channelKey: nil)
+        let viewModel = ALKConversationViewModel(contactId: user.friendUUID, channelKey: nil, configuration: configuration)
 
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel

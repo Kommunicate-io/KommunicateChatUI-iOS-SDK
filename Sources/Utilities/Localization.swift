@@ -7,13 +7,23 @@
 
 import Foundation
 
-class Localization {
+protocol Localizable {
+    static func localizedString(forKey: String) -> String
+    func localizedString(forKey: String, withDefaultValue: String, config: ALKConfiguration) -> String
+}
+
+extension Localizable {
     
-    class func localizedString(forKey: String) -> String {
+    static func localizedString(forKey: String) -> String {
         // ApplozicSwift bundle
         let bundle = Bundle.applozic
         
         return NSLocalizedString(forKey, tableName: nil, bundle: bundle, value: "", comment: "")
+    }
+    
+    func localizedString(forKey: String, withDefaultValue: String, config: ALKConfiguration) -> String {
+        let fileName = config.localizedStringFileName
+        return NSLocalizedString(forKey, tableName: fileName, bundle: Bundle.main, value: withDefaultValue, comment: "")
     }
     
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class ALKCustomCropImageViewController: ALKBaseViewController {
+final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable {
     
     @IBOutlet var previewScroll: UIScrollView!
     
@@ -59,9 +59,9 @@ final class ALKCustomCropImageViewController: ALKBaseViewController {
     {
         self.view.backgroundColor = UIColor.mainRed()
 
-        self.title = NSLocalizedString("CropImage",value: SystemMessage.LabelName.CropImage, comment: "")
-        btnReset.setTitle(NSLocalizedString("ResetPhotoButton",value: SystemMessage.ButtonName.ResetPhoto, comment: ""), for: .normal)
-        btnSave.setTitle(NSLocalizedString("SelectButton",value: SystemMessage.ButtonName.Select, comment: ""), for: .normal)
+        self.title = localizedString(forKey: "CropImage", withDefaultValue: SystemMessage.LabelName.CropImage, config: configuration)
+        btnReset.setTitle(localizedString(forKey: "ResetPhotoButton", withDefaultValue: SystemMessage.ButtonName.ResetPhoto, config: configuration), for: .normal)
+        btnSave.setTitle(localizedString(forKey: "SelectButton", withDefaultValue: SystemMessage.ButtonName.Select, config: configuration), for: .normal)
         
         btnSave.layer.cornerRadius = 15
         btnSave.clipsToBounds = true

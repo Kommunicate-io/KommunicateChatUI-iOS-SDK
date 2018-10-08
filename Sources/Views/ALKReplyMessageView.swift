@@ -12,7 +12,10 @@ import Applozic
  bottom (above chat bar) when replying
  to a message */
 
-open class ALKReplyMessageView: UIView {
+open class ALKReplyMessageView: UIView, Localizable {
+    
+    var configuration: ALKConfiguration!
+    
     open let nameLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.text = "Name"
@@ -40,8 +43,11 @@ open class ALKReplyMessageView: UIView {
         return imageView
     }()
 
-    open var selfNameText = NSLocalizedString("You", value: SystemMessage.LabelName.You, comment: "")
-
+    lazy open var selfNameText: String = {
+        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, config: configuration)
+        return text
+    }()
+    
     public var closeButtonTapped: ((Bool)->())?
 
     private var message: ALKMessageViewModel?
@@ -81,8 +87,9 @@ open class ALKReplyMessageView: UIView {
 
     }
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, configuration: ALKConfiguration) {
         super.init(frame: frame)
+        self.configuration = configuration
         setUpViews()
     }
 

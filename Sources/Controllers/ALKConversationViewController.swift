@@ -12,7 +12,7 @@ import AVFoundation
 import Applozic
 import SafariServices
 
-open class ALKConversationViewController: ALKBaseViewController {
+open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contactService: ALContactService!
 
@@ -51,7 +51,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     fileprivate let audioPlayer = ALKAudioPlayer()
 
     fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
-    fileprivate let typingNoticeView = TypingNotice()
+    fileprivate var typingNoticeView = TypingNotice(configuration: ALKConfiguration())
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
@@ -112,8 +112,8 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     open var templateView: ALKTemplateMessagesView?
 
-    open var replyMessageView: ALKReplyMessageView = {
-        let view = ALKReplyMessageView(frame: CGRect.zero)
+    lazy open var replyMessageView: ALKReplyMessageView = {
+        let view = ALKReplyMessageView(frame: CGRect.zero, configuration: configuration)
         view.backgroundColor = UIColor.gray
         return view
     }()
@@ -125,6 +125,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         self.contactService = ALContactService()
         configurePropertiesWith(configuration: configuration)
         self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
+        self.typingNoticeView = TypingNotice(configuration: configuration)
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -298,7 +299,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         }
 
         if self.viewModel.isGroup == true {
-            let dispName = NSLocalizedString("Somebody", value: SystemMessage.Chat.somebody, comment: "")
+            let dispName = localizedString(forKey: "Somebody", withDefaultValue: SystemMessage.Chat.somebody, config: configuration)
             self.setTypingNotiDisplayName(displayName: dispName)
         } else {
             self.setTypingNotiDisplayName(displayName: self.title ?? "")
@@ -634,14 +635,14 @@ open class ALKConversationViewController: ALKBaseViewController {
                                 imagePicker.mediaTypes = [kUTTypeMovie as String]
                                 UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
                             } else {
-                                let msg = NSLocalizedString("EnableCameraPermissionMessage", value: SystemMessage.Camera.cameraPermission, comment: "")
+                                let msg = weakSelf.localizedString(forKey: "EnableCameraPermissionMessage", withDefaultValue: SystemMessage.Camera.cameraPermission, config: weakSelf.configuration)
                                 ALUtilityClass.permissionPopUp(withMessage: msg, andViewController: self)
                             }
                         }
                     })
                 } else {
-                    let msg = NSLocalizedString("CameraNotAvailableMessage", value: SystemMessage.Camera.CamNotAvailable, comment: "")
-                    let title = NSLocalizedString("CameraNotAvailableTitle", value: SystemMessage.Camera.camNotAvailableTitle, comment: "")
+                    let msg = weakSelf.localizedString(forKey: "CameraNotAvailableMessage", withDefaultValue: SystemMessage.Camera.CamNotAvailable, config: weakSelf.configuration)
+                    let title = weakSelf.localizedString(forKey: "CameraNotAvailableTitle", withDefaultValue: SystemMessage.Camera.camNotAvailableTitle, config: weakSelf.configuration)
                     ALUtilityClass.showAlertMessage(msg, andTitle: title)
                 }
             case .showImagePicker():
@@ -790,7 +791,7 @@ open class ALKConversationViewController: ALKBaseViewController {
         // Get the user id of that user
         guard let receiverId = messageVM.receiverId else {return}
 
-        let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil)
+        let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil, configuration: configuration)
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = vm
         conversationVC.title = messageVM.displayName
@@ -1301,6 +1302,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 self.tableView.scrollToBottom(animated: false)
                 //            }
                 guard let cell = tableView.cellForRow(at: newIndexPath) as? ALKMyPhotoPortalCell else { return }
+                cell.setConfiguration(configuration)
                 guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
                     let notificationView = ALNotificationView()
                     notificationView.noDataConnectionNotificationView()

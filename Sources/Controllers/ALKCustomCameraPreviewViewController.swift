@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class ALKCustomCameraPreviewViewController: ALKBaseViewController {
+final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localizable {
     
     // MARK: - Variables and Types
     private var customCamDelegate:ALKCustomCameraProtocol!
@@ -32,7 +32,7 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.title = NSLocalizedString("SendPhoto", value: SystemMessage.LabelName.SendPhoto, comment: "")
+        self.title = localizedString(forKey: "SendPhoto", withDefaultValue: SystemMessage.LabelName.SendPhoto, config: configuration)
     }
 
     required public init(configuration: ALKConfiguration) {

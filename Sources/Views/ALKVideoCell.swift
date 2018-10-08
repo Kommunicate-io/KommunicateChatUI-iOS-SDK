@@ -12,6 +12,10 @@ import AVKit
 
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
                     ALKReplyMenuItemProtocol {
+    
+    public override func setConfiguration(_ configuration: ALKConfiguration) {
+        super.setConfiguration(configuration)
+    }
 
     enum state {
         case download
@@ -236,7 +240,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         guard let viewModel = viewModel as? ALKMessageModel,
             let currentIndex = messageModels.index(of: viewModel) else { return }
-        vc?.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex)
+        vc?.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex, configuration: configuration)
         UIViewController.topViewController()?.present(nav!, animated: true, completion: {
             self.playButton.isEnabled = true
         })

@@ -32,6 +32,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
 
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setConfiguration(configuration)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.menuAction = {[weak self] action in
@@ -43,6 +44,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             } else {
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setConfiguration(configuration)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.avatarTapped = {[weak self] in
@@ -62,6 +64,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
 
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setConfiguration(configuration)
+                cell.setConfiguration(configuration)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.menuAction = {[weak self] action in
@@ -70,6 +74,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             } else {
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setConfiguration(configuration)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.avatarTapped = {[weak self] in
@@ -87,6 +92,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     print("image messsage called")
                     let cell: ALKMyPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                     // Set the value to nil so that previous image gets removed before reuse
+                    cell.setConfiguration(configuration)
                     cell.photoView.image = nil
                     cell.update(viewModel: message)
                     cell.uploadTapped = {[weak self]
@@ -108,6 +114,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                 } else {
                     let cell: ALKMyPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.setConfiguration(configuration)
                     cell.update(viewModel: message)
                     cell.uploadCompleted = {[weak self]
                         responseDict in
@@ -120,6 +127,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 if message.ratio < 1 {
 
                     let cell: ALKFriendPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.setConfiguration(configuration)
                     cell.update(viewModel: message)
                     cell.downloadTapped = {[weak self]
                         value in
@@ -135,6 +143,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                 } else {
                     let cell: ALKFriendPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.setConfiguration(configuration)
                     cell.update(viewModel: message)
                     return cell
                 }
@@ -172,6 +181,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .location:
             if message.isMyMessage {
                 let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setConfiguration(configuration)
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
                 cell.menuAction = {[weak self] action in
@@ -180,6 +190,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             } else {
                 let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setConfiguration(configuration)
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
                 cell.avatarTapped = {[weak self] in

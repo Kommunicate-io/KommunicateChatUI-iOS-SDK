@@ -9,7 +9,7 @@
 import UIKit
 import Applozic
 
-final class ALKNewChatViewController: ALKBaseViewController {
+final class ALKNewChatViewController: ALKBaseViewController, Localizable {
 
     fileprivate var viewModel: ALKNewChatViewModel!
     
@@ -24,7 +24,7 @@ final class ALKNewChatViewController: ALKBaseViewController {
     }()
     
     fileprivate lazy var searchBar: UISearchBar = {
-        return UISearchBar.createAXSearchBar(placeholder: NSLocalizedString("SearchPlaceholder", value: SystemMessage.LabelName.SearchPlaceholder, comment: ""))
+        return UISearchBar.createAXSearchBar(placeholder: localizedString(forKey: "SearchPlaceholder", withDefaultValue: SystemMessage.LabelName.SearchPlaceholder, config: configuration))
     }()
 
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
@@ -74,7 +74,7 @@ final class ALKNewChatViewController: ALKBaseViewController {
     
     private func setupView() {
 
-        title = NSLocalizedString("NewChatTitle", value: SystemMessage.LabelName.NewChatTitle, comment: "")
+        title = localizedString(forKey: "NewChatTitle", withDefaultValue: SystemMessage.LabelName.NewChatTitle, config: configuration)
         
         view.addViewsForAutolayout(views: [tableView])
         
@@ -147,7 +147,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
         tableView.isUserInteractionEnabled = false
 
-        let viewModel = ALKConversationViewModel(contactId: friendViewModel.friendUUID, channelKey: nil)
+        let viewModel = ALKConversationViewModel(contactId: friendViewModel.friendUUID, channelKey: nil, configuration: configuration)
 
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
@@ -229,7 +229,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             let list = NSMutableArray(object: message)
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTable"), object: list)
 
-            let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key)
+            let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key, configuration: self.configuration)
             let conversationVC = ALKConversationViewController(configuration: self.configuration)
             conversationVC.viewModel = viewModel
             conversationVC.title = groupName

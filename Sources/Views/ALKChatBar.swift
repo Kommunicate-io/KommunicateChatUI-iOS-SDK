@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 import Applozic
 
-open class ALKChatBar: UIView {
+open class ALKChatBar: UIView, Localizable {
     
-    public var configuration: ALKConfiguration!
+    var configuration: ALKConfiguration!
     
     public var isMicButtonHidden: Bool!
     
@@ -48,8 +48,8 @@ open class ALKChatBar: UIView {
         return label
     }()
     
-    open let soundRec: ALKAudioRecorderView = {
-        let view = ALKAudioRecorderView(frame: CGRect.zero)
+    lazy open var soundRec: ALKAudioRecorderView = {
+        let view = ALKAudioRecorderView(frame: CGRect.zero, configuration: self.configuration)
         view.layer.masksToBounds = true
         return view
     }()
@@ -82,12 +82,12 @@ open class ALKChatBar: UIView {
         return view
     }()
     
-    open let placeHolder: UITextView = {
+    lazy open var placeHolder: UITextView = {
         
         let view = UITextView()
         view.setFont(UIFont.font(.normal(size: 14)))
         view.setTextColor(.color(Color.Text.gray9B))
-        view.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
+        view.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, config: configuration)
         view.isUserInteractionEnabled = false
         view.isScrollEnabled = false
         view.scrollsToTop = false
@@ -464,7 +464,7 @@ open class ALKChatBar: UIView {
         } else {
             micButton.isSelected = false
             soundRec.isHidden = true
-            placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
+            placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, config: configuration)
         }
     }
     
@@ -472,7 +472,7 @@ open class ALKChatBar: UIView {
         soundRec.userDidStopRecording()
         micButton.isSelected = false
         soundRec.isHidden = true
-        placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
+        placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, config: configuration)
     }
     
     func hideAudioOptionInChatBar(){

@@ -21,7 +21,7 @@ PhotoAlbumOk = "Ok";
 PhotoAlbumFailureTitle = "Error";
 PhotoAlbumFail = "Save failed";
 DownloadOriginalImageFail = "Fail to download the original image";
-IsTypingForRTL = "typing is ";
+IsTypingForRTL = "typing is %@";
 ButtonDiscard = "Discard";
 
 // Storyboard
@@ -95,7 +95,7 @@ SendVideo = "Send Video";
 TurnOnLocationService = "Turn On Location Services";
 LocationAlertMessage = "1. Tap Settings\n2. Tap Location\n 3. Tap 'While Using the App'";
 NotNow = "Not Now";
-IsTyping = " is typing";
+IsTyping = "%@ is typing";
 AreTyping = " are typing";
 Copy = "Copy";
 Reply = "Reply";

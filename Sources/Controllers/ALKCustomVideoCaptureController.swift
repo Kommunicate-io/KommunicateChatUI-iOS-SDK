@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import Photos
 
-final class ALKCustomVideoViewController: ALKBaseViewController {
+final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
 
     //delegate
     var customCamDelegate:ALKCustomCameraProtocol!
@@ -39,7 +39,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = NSLocalizedString("Camera", value: SystemMessage.LabelName.Camera, comment: "")
+        self.title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, config: configuration)
         btnSwitchCam.isHidden = true
         reloadCamera()
     }
@@ -62,10 +62,10 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
         case .denied:
 
             // ask for permissions
-            let camNotAvailable = NSLocalizedString("CamNotAvaiable", value: SystemMessage.Warning.CamNotAvaiable,  comment: "")
-            let pleaseAllowCamera = NSLocalizedString("PleaseAllowCamera", value: SystemMessage.Camera.PleaseAllowCamera,  comment: "")
+            let camNotAvailable = localizedString(forKey: "CamNotAvaiable", withDefaultValue: SystemMessage.Warning.CamNotAvaiable, config: configuration)
+            let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, config: configuration)
             let alertController = UIAlertController (title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
-            let settingsTitle = NSLocalizedString("Settings", value: SystemMessage.LabelName.Settings, comment: "")
+            let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, config: configuration)
             let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
                 guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
                     return
@@ -82,7 +82,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
                 }
             }
             alertController.addAction(settingsAction)
-            let cancelTitle = NSLocalizedString("Cancel", value: SystemMessage.LabelName.Cancel, comment: "")
+            let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, config: configuration)
             let cancelAction = UIAlertAction(title: cancelTitle, style: .default, handler: nil)
             alertController.addAction(cancelAction)
             present(alertController, animated: true, completion: nil)
@@ -174,11 +174,11 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
             beginSession()
         case .denied:
             // ask for permissions
-            let camNotAvailable = NSLocalizedString("CamNotAvaiable", value: SystemMessage.Warning.CamNotAvaiable,  comment: "")
-            let pleaseAllowCamera = NSLocalizedString("PleaseAllowCamera", value: SystemMessage.Camera.PleaseAllowCamera,  comment: "")
+            let camNotAvailable = localizedString(forKey: "CamNotAvaiable", withDefaultValue: SystemMessage.Warning.CamNotAvaiable, config: configuration)
+            let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, config: configuration)
             let alertController = UIAlertController (title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
-            let settingTitle = NSLocalizedString("Settings", value: SystemMessage.LabelName.Settings, comment: "")
-            let settingsAction = UIAlertAction(title: settingTitle, style: .default) { (_) -> Void in
+            let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, config: configuration)
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
                 guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
                     return
                 }
@@ -195,7 +195,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController {
                 }
             }
             alertController.addAction(settingsAction)
-            let cancelTitle = NSLocalizedString("Cancel", value: SystemMessage.LabelName.Cancel, comment: "")
+            let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, config: configuration)
             let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
             alertController.addAction(cancelAction)
             present(alertController, animated: true, completion: nil)

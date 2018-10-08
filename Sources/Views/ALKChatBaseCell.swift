@@ -8,7 +8,13 @@
 
 import UIKit
 
-open class ALKChatBaseCell<T>: ALKBaseCell<T> {
+open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
+    
+    var configuration: ALKConfiguration!
+    
+    public func setConfiguration(_ configuration: ALKConfiguration) {
+        self.configuration = configuration
+    }
     
     fileprivate weak var chatBar: ALKChatBar?
     
@@ -101,7 +107,8 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T> {
         guard let copyMenuItem = copyItem as? ALKCopyMenuItemProtocol else {
             return nil
         }
-        let copyMenu = UIMenuItem(title: copyMenuItem.title, action: copyMenuItem.selector)
+        let title = localizedString(forKey: "Copy", withDefaultValue: SystemMessage.LabelName.Copy, config: configuration)
+        let copyMenu = UIMenuItem(title: title, action: copyMenuItem.selector)
         return copyMenu
     }
 
@@ -109,7 +116,8 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T> {
         guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else{
             return nil
         }
-        let replyMenu = UIMenuItem(title: replyMenuItem.title, action: replyMenuItem.selector)
+        let title = localizedString(forKey: "Reply", withDefaultValue: SystemMessage.LabelName.Reply, config: configuration)
+        let replyMenu = UIMenuItem(title: title, action: replyMenuItem.selector)
         return replyMenu
     }
 }
@@ -120,9 +128,6 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T> {
 }
 
 extension ALKCopyMenuItemProtocol {
-    var title: String {
-        return NSLocalizedString("Copy", value: SystemMessage.LabelName.Copy, comment: "")
-    }
     var selector: Selector {
         return #selector(menuCopy(_:))
     }
@@ -135,10 +140,6 @@ extension ALKCopyMenuItemProtocol {
 }
 
 extension ALKReplyMenuItemProtocol {
-    var title: String {
-        return NSLocalizedString("Reply", value: SystemMessage.LabelName.Reply, comment: "")
-    }
-
     var selector: Selector {
         return #selector(menuReply(_:))
     }

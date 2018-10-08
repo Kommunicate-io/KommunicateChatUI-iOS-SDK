@@ -21,7 +21,7 @@ protocol ALKInviteButtonProtocol: class {
 }
 
 
-class ALKSelectParticipantToAddViewController: ALKBaseViewController {
+class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizable{
     
     // MARK: - UI Stuff
     @IBOutlet private var btnInvite: UIButton!
@@ -81,9 +81,9 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
     private func setupUI() {
         setupInviteButton()
         setupSearchBar()
-        self.navigationItem.title = NSLocalizedString("AddToGroupTitle", value: SystemMessage.LabelName.AddToGroupTitle, comment: "")
+        self.navigationItem.title = localizedString(forKey: "AddToGroupTitle", withDefaultValue: SystemMessage.LabelName.AddToGroupTitle, config: configuration)
         definesPresentationContext = true
-        btnInvite.setTitle(NSLocalizedString("InviteButton", value: SystemMessage.ButtonName.Invite, comment: ""), for: .normal)
+        btnInvite.setTitle(localizedString(forKey: "InviteButton", withDefaultValue: SystemMessage.ButtonName.Invite, config: configuration), for: .normal)
         tblParticipants.tableHeaderView = searchController.searchBar
     }
     
@@ -106,11 +106,16 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController {
             _ = weakSelf.navigationController?.popViewController(animated: true)
         }
         if (newFriendsInGroupStore.hasAtLeastOneMember()) {
-            let alertInformationDiscardTitle = NSLocalizedString("DiscardChangeTitle",value: ALKAlertInformation.discardChange.title, comment: "")
-            let alertInformationDiscardMessage = NSLocalizedString("DiscardChangeMessage",value: ALKAlertInformation.discardChange.message, comment: "")
+            let alertInformationDiscardTitle = localizedString(forKey: "DiscardChangeTitle", withDefaultValue: SystemMessage.LabelName.DiscardChangeTitle, config: configuration)
+            let alertInformationDiscardMessage = localizedString(forKey: "DiscardChangeMessage", withDefaultValue: SystemMessage.Warning.DiscardChange, config: configuration)
 
+            let cancelTitle = localizedString(forKey: "ButtonCancel", withDefaultValue: SystemMessage.ButtonName.Cancel, config: configuration)
+            let discardTitle = localizedString(forKey: "ButtonDiscard", withDefaultValue: SystemMessage.ButtonName.Discard, config: configuration)
+            
             let alert = UIAlertController.makeCancelDiscardAlert(title: alertInformationDiscardTitle,
                                                                  message: alertInformationDiscardMessage,
+                                                                 cancelTitle: cancelTitle,
+                                                                 discardTitle: discardTitle,
                                                                  discardAction: {
                                                                     completion()
             })
@@ -404,7 +409,7 @@ extension ALKSelectParticipantToAddViewController: ALKInviteButtonProtocol {
         let isEnabled = (count > 0) ? true: false
         let background = (isEnabled ? UIColor.mainRed() : UIColor.disabledButton())
         let newMember = count > 0 ? " (\(count))" : ""
-        let inviteMessage = NSLocalizedString("InviteMessage", value: SystemMessage.LabelName.InviteMessage, comment: "")
+        let inviteMessage = localizedString(forKey: "InviteMessage", withDefaultValue: SystemMessage.LabelName.InviteMessage, config: configuration)
         let title = "\(inviteMessage) \(newMember)"
         return (title, background, isEnabled)
     }
