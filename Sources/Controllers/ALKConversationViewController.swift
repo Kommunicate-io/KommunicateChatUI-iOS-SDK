@@ -255,6 +255,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
             weakSelf.titleButton.setTitle(name, for: .normal)
+            weakSelf.newMessagesAdded()
             })
     }
 
@@ -372,8 +373,28 @@ open class ALKConversationViewController: ALKBaseViewController {
         replyMessageView.closeButtonTapped = {[weak self] _ in
             self?.hideReplyMessageView()
         }
+        //Check for group left
+        isChannelLeft()
+        
         guard viewModel.isContextBasedChat else { return }
         prepareContextView()
+    }
+    
+    func isChannelLeft() {
+        guard let channelKey = viewModel.channelKey else {
+            return
+        }
+        let messages = viewModel.messageModels
+        if  ALChannelService().getChannelByKey(channelKey).type != 6 &&
+            !ALChannelService().isLoginUser(inChannel: channelKey) {
+            chatBar.disableChat()
+            //Disable click on toolbar
+            titleButton.isUserInteractionEnabled = false
+        } else {
+            chatBar.enableChat()
+            //Enable Click on toolbar
+            titleButton.isUserInteractionEnabled = true
+        }
     }
 
     func prepareContextView(){
@@ -896,6 +917,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     public func newMessagesAdded() {
         tableView.reloadData()
+        //Check if current user is removed from the group
+        isChannelLeft()
+        
         if isViewLoadedFromTappingOnNotification{
             let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)

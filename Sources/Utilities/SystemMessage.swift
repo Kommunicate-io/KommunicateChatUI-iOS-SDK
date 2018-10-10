@@ -38,6 +38,7 @@ struct SystemMessage {
         static let FriendRemoved = "Friend Removed"
         static let AppName = ""
         static let ChatHere = "Type something..."
+        static let NotPartOfGroup = "You are not part of this group"
     }
     
     struct Update {

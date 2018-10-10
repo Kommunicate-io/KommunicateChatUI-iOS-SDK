@@ -471,6 +471,32 @@ open class ALKChatBar: UIView {
         }
     }
     
+    func toggleUserInteractionForViews(enabled: Bool){
+        micButton.isUserInteractionEnabled = enabled
+        sendButton.isUserInteractionEnabled = enabled
+        soundRec.isUserInteractionEnabled = enabled
+        photoButton.isUserInteractionEnabled = enabled
+        videoButton.isUserInteractionEnabled = enabled
+        locationButton.isUserInteractionEnabled = enabled
+        galleryButton.isUserInteractionEnabled = enabled
+        plusButton.isUserInteractionEnabled = enabled
+        chatButton.isUserInteractionEnabled = enabled
+        textView.isUserInteractionEnabled = enabled
+    }
+    
+    func disableChat() {
+        toggleUserInteractionForViews(enabled: false)
+        
+        //change text from "chat here" to "you are not allowed to chat"
+        placeHolder.text = NSLocalizedString("NotPartOfGroup", value: SystemMessage.Information.NotPartOfGroup, comment: "")
+    }
+    
+    func enableChat() {
+        toggleUserInteractionForViews(enabled: true)
+        
+        //change text from "you are not allowed to chat" to "chat here"
+        placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
+    }
 }
 
 extension ALKChatBar: UITextViewDelegate {
