@@ -460,30 +460,39 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             self.tableView.reloadData()
         })
     }
+    
+    func isNewMessageForActiveThread(alMessage: ALMessage, vm: ALKConversationViewModel) -> Bool{
+        let isGroupMessage = alMessage.groupId != nil && alMessage.groupId == vm.channelKey
+        let isOneToOneMessage = alMessage.groupId == nil && vm.channelKey == nil && alMessage.contactId == vm.contactId
+        if ( isGroupMessage || isOneToOneMessage){
+            return true
+        }
+        return false
+    }
 
 
     open func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call: ", alMessage.message)
         guard let message = alMessage else { return }
         let viewController = conversationViewController
-        if let vm = viewController?.viewModel, (vm.contactId != nil || vm.channelKey != nil), let visibleController = self.navigationController?.visibleViewController, visibleController.isKind(of: ALKConversationViewController.self) {
-
+        if let vm = viewController?.viewModel, (vm.contactId != nil || vm.channelKey != nil),
+            let visibleController = self.navigationController?.visibleViewController,
+            visibleController.isKind(of: ALKConversationViewController.self),
+            isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
                 viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
-
             
-        } else if let visibleController = self.navigationController?.visibleViewController, visibleController.isKind(of: ALKConversationListViewController.self)  {
+        } else {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler({
                 response in
                 self.launchChat(contactId: message.contactId, groupId: message.groupId, conversationId: message.conversationId)
             })
+            if let visibleController = self.navigationController?.visibleViewController,
+                visibleController.isKind(of: ALKConversationListViewController.self) {
+                sync(message: alMessage)
+            }
         }
-
-
-//        sync(message: alMessage)
-
-        
-        }
+    }
 
     open func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
         viewModel.updateDeliveryReport(convVC: conversationViewController, messageKey: messageKey, contactId: contactId, status: status)
