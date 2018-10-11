@@ -48,6 +48,7 @@ ImageCroppedMessage = "Image cropped";
 ImageResetMessage = "Image reset";
 CameraNotAvailableTitle = "OOPS !!!";
 ShareLocationTitle = "Share Location";
+SendLocationButton = "Send Location";
 Participants = "Participants";
 TypeGroupName = "Type group name";
 NewChatTitle = "New Chat";

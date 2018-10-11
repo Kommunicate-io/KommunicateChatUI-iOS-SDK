@@ -657,6 +657,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
                 guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
                 mapViewVC.delegate = self
+                mapViewVC.setConfiguration(weakSelf.configuration)
                 self?.present(nav, animated: true, completion: {})
             case .cameraButtonClicked(let button):
                 guard let vc = ALKCustomCameraViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
