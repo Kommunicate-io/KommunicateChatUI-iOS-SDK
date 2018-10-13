@@ -87,10 +87,6 @@ class ALChatManager: NSObject {
             else
             {
                 print("registered")
-                if(ALChatManager.isNilOrEmpty(ALUserDefaultsHandler.getApnDeviceToken() as NSString?))
-                {
-                    alChatLauncher.registerForNotification()
-                }
                 completion(response , error as NSError?)
             }
         })
