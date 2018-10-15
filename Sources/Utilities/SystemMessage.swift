@@ -75,6 +75,7 @@ struct SystemMessage {
         static let Leave = "Leave"
         static let Cancel = "Cancel"
         static let Discard = "Discard"
+        static let Confirm = "Confirm"
     }
     
     struct NoData {
@@ -95,5 +96,20 @@ struct SystemMessage {
 
     struct Message {
         static let isTypingForRTL = "typing is "
+    }
+    
+    struct Mute {
+        static let MuteUser = "Mute user %@"
+        static let MuteChannel = "Mute group %@"
+        static let UnmuteUser = "Are you sure you want to unmute user %@"
+        static let UnmuteChannel = "Are you sure you want to unmute group %@"
+        static let MuteButton = "Mute"
+        static let UnmuteButton = "Unmute"
+    }
+    
+    struct MutePopup {
+        static let EightHour = "8 hours"
+        static let OneWeek = "1 week"
+        static let OneYear = "1 year"
     }
 }
