@@ -50,3 +50,4 @@ NewChatTitle = "New Chat";
 SearchPlaceholder = "Search";
 HoldToTalkMessage = "Hold to Talk / Tap to Type";
 RecordingMessage = "Recording...00:00:00";
+NotPartOfGroup = "You are not part of this group";
