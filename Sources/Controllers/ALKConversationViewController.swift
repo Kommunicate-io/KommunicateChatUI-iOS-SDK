@@ -958,9 +958,19 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         titleButton.setTitle(name, for: .normal)
     }
 
-    func addRefreshButton() {
-        let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(ALKConversationViewController.refreshButtonAction(_:)))
-        self.navigationItem.rightBarButtonItem = refreshButton
+    private func addRefreshButton() {
+        guard !configuration.hideRightNavBarButtonForConversationView else {
+            return
+        }
+        var button: UIBarButtonItem
+        if let image = configuration.rightNavBarImageForConversationView {
+            button = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self,
+                                         action: #selector(ALKConversationViewController.refreshButtonAction(_:)))
+        }else {
+            button = UIBarButtonItem(barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView, target: self,
+                                     action: #selector(ALKConversationViewController.refreshButtonAction(_:)))
+        }
+        self.navigationItem.rightBarButtonItem = button
     }
 
     @objc func refreshButtonAction(_ selector: UIBarButtonItem) {

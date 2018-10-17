@@ -148,9 +148,9 @@ open class ALKChatBar: UIView {
         return imageView
     }()
 
-    open let sendButton: UIButton = {
+    lazy open var sendButton: UIButton = {
         let bt = UIButton(type: .custom)
-        var image = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
+        var image = configuration.sendMessageIcon
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         bt.setImage(image, for: .normal)
         bt.accessibilityIdentifier = "sendButton"
@@ -248,6 +248,10 @@ open class ALKChatBar: UIView {
         chatButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         
         setupConstraints()
+        
+        if configuration.hideLineImageFromChatBar {
+            lineImageView.isHidden = true
+        }
     }
     
     func setComingSoonDelegate(delegate: UIView) {
