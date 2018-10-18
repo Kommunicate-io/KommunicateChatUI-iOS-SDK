@@ -14,6 +14,8 @@ open class ALKChatBar: UIView {
     
     public var configuration: ALKConfiguration!
     
+    public var isMicButtonHidden: Bool!
+    
     public enum ButtonMode {
         case send
         case media
@@ -258,9 +260,16 @@ open class ALKChatBar: UIView {
         toggleKeyboardType(textView: textView)
     }
     
+    func hideMicButton() {
+        self.isMicButtonHidden = true
+        self.micButton.isHidden = true
+        self.sendButton.isHidden = false
+    }
+    
     required public init(frame: CGRect, configuration: ALKConfiguration){
         super.init(frame: frame)
         self.configuration = configuration
+        self.isMicButtonHidden = configuration.hideAudioOptionInChatBar
         initializeView()
     }
     
@@ -355,7 +364,7 @@ open class ALKChatBar: UIView {
         micButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         micButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
         
-        if configuration.hideAudioOptionInChatBar{
+        if isMicButtonHidden {
             micButton.isHidden = true
         }else{
             sendButton.isHidden = true
@@ -457,7 +466,7 @@ open class ALKChatBar: UIView {
     }
     
     func hideAudioOptionInChatBar(){
-        if configuration.hideAudioOptionInChatBar{
+        if isMicButtonHidden{
             micButton.isHidden = true
         }else{
             micButton.isHidden = false
@@ -465,7 +474,7 @@ open class ALKChatBar: UIView {
     }
     
     func toggleButtonInChatBar(hide: Bool){
-        if !configuration.hideAudioOptionInChatBar{
+        if !isMicButtonHidden{
             self.sendButton.isHidden = hide
             self.micButton.isHidden = !hide
         }

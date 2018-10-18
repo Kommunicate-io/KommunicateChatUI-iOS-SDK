@@ -542,6 +542,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
         if viewModel.isOpenGroup {
             hideMediaOptions()
+            chatBar.hideMicButton()
         }else {
             if configuration.hideAllOptionsInChatBar {hideMediaOptions()}
             else {showMediaOptions()}
