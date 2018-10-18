@@ -12,7 +12,9 @@ import Applozic
 
 class ALKConversationViewModelMock: ALKConversationViewModel {
 
-    private func getMessageToPost() -> ALMessage {
+    static var testMessages: [ALKMessageModel] = []
+
+    static func getMessageToPost() -> ALMessage {
         let alMessage = ALMessage()
         alMessage.to = "testexample"
         alMessage.contactIds = "testexample"
@@ -35,11 +37,7 @@ class ALKConversationViewModelMock: ALKConversationViewModel {
     }
 
     override func prepareController() {
-        let firstMessage = getMessageToPost()
-        firstMessage.message = "first message"
-        let secondmessage = getMessageToPost()
-        secondmessage.message = "second message"
-        self.messageModels = [firstMessage.messageModel, secondmessage.messageModel]
+        messageModels = ALKConversationViewModelMock.testMessages
         self.delegate?.loadingFinished(error: nil)
     }
 

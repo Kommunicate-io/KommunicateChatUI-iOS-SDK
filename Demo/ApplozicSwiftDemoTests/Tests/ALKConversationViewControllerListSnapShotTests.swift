@@ -27,6 +27,11 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
                 conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
                 conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                let firstMessage = ALKConversationViewModelMock.getMessageToPost()
+                firstMessage.message = "first message"
+                let secondmessage = ALKConversationViewModelMock.getMessageToPost()
+                secondmessage.message = "second message"
+                ALKConversationViewModelMock.testMessages = [firstMessage.messageModel, secondmessage.messageModel]
                 conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
             }
