@@ -9,6 +9,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Fixes
 - [AL-3022] Fix an issue where audio option was still visible for open group.
+- [AL-2973] Fix an issue where notification won't come for messages when chat screen is open.
 
 1.1.0
 ---
