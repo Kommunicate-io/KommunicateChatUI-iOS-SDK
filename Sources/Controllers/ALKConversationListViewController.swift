@@ -835,8 +835,8 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
     }
 }
 
-extension ALKConversationListViewController: MuteConversationProtocol {
-    func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+extension ALKConversationListViewController: Muteable {
+    @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
         //Start activity indicator
         self.activityIndicator.startAnimating()
         

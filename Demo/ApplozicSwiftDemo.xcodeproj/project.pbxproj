@@ -12,6 +12,8 @@
 		146FC441BE00A406AB5AECD0 /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 084DD25F4E6E25CFBBA2EA78 /* BuddyBuildSDK.framework */; };
 		19BB518C9B7B907025C26B4D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1309D324746FFC327EC8AF /* QuartzCore.framework */; };
 		1A2E788721726E7200CF35AE /* ALKConversationListViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E788621726E7200CF35AE /* ALKConversationListViewControllerTests.swift */; };
+		1ACD2A13217E5CB900B46BCC /* MuteConversationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */; };
+		1ACD2A1A217F6C4700B46BCC /* MuteableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACD2A19217F6C4700B46BCC /* MuteableMock.swift */; };
 		1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A1D05B99581079D018089B /* CoreTelephony.framework */; };
 		220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA26913248851F7DE250BCB9 /* CoreText.framework */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
@@ -75,6 +77,8 @@
 		07E325DA866C383971E4AC1F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		084DD25F4E6E25CFBBA2EA78 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
 		1A2E788621726E7200CF35AE /* ALKConversationListViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationListViewControllerTests.swift; sourceTree = "<group>"; };
+		1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteConversationViewControllerTests.swift; sourceTree = "<group>"; };
+		1ACD2A19217F6C4700B46BCC /* MuteableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteableMock.swift; sourceTree = "<group>"; };
 		3063FEBE8909243F69F4E935 /* Pods-ApplozicSwiftDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		52ED4FD6D53E2CE8781D3C10 /* Pods-ApplozicSwiftDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5F504D2CB3F5D0E6D22C39A8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -227,6 +231,7 @@
 				8BF8D85F1FBEB20200804824 /* ALUserServiceMock.swift */,
 				8B4E9FFB215A31B2001FD5F3 /* ALMessageDBServiceMock.swift */,
 				8B4E9FFE215BC804001FD5F3 /* ALKConversationViewModelMock.swift */,
+				1ACD2A19217F6C4700B46BCC /* MuteableMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -241,6 +246,7 @@
 				8B1E967220D679EC00A4EB34 /* ALKConversationViewControllerListSnapShotTests.swift */,
 				8BA6FAE22089F18700BB1F6F /* ALKGenericListTests.swift */,
 				1A2E788621726E7200CF35AE /* ALKConversationListViewControllerTests.swift */,
+				1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -539,11 +545,13 @@
 				8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */,
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
 				8B4E9FFF215BC804001FD5F3 /* ALKConversationViewModelMock.swift in Sources */,
+				1ACD2A1A217F6C4700B46BCC /* MuteableMock.swift in Sources */,
 				8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */,
 				8B4E9FFC215A31B2001FD5F3 /* ALMessageDBServiceMock.swift in Sources */,
 				8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */,
 				8BF8D85E1FBEAFDD00804824 /* ALApplozicSettingsMock.swift in Sources */,
 				8BF8D8601FBEB20200804824 /* ALUserServiceMock.swift in Sources */,
+				1ACD2A13217E5CB900B46BCC /* MuteConversationViewControllerTests.swift in Sources */,
 				8BA84180206A5A40004DD252 /* ALKGenericCardTests.swift in Sources */,
 				8B523B432067E1DE001B5989 /* ALMessageTests.swift in Sources */,
 				1A2E788721726E7200CF35AE /* ALKConversationListViewControllerTests.swift in Sources */,

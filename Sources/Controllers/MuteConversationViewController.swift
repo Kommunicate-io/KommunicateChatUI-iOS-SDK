@@ -8,13 +8,13 @@
 import Foundation
 import Applozic
 
-protocol MuteConversationProtocol: class {
-    func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)
+@objc protocol Muteable: class {
+    @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)
 }
 
 class MuteConversationViewController: UIViewController {
     
-    var delegate: MuteConversationProtocol!
+    var delegate: Muteable!
     var conversation: ALMessage!
     var indexPath: IndexPath!
     
@@ -71,7 +71,7 @@ class MuteConversationViewController: UIViewController {
         return values
     }()
     
-    init(delegate: MuteConversationProtocol, conversation: ALMessage, atIndexPath: IndexPath) {
+    init(delegate: Muteable, conversation: ALMessage, atIndexPath: IndexPath) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         self.conversation = conversation
@@ -95,6 +95,19 @@ class MuteConversationViewController: UIViewController {
     
     func updateTitle(_ text: String) {
         self.popupTitle.text = text
+    }
+    
+    func selectPickerRow(_ row: Int) {
+        timePicker.selectRow(row, inComponent: 0, animated: true)
+    }
+    
+    func setUpPickerView() {
+        //Picker view delegate and datasource
+        timePicker.delegate = self
+        timePicker.dataSource = self
+        
+        //Default set first row i.e. 8 hours
+        selectPickerRow(0)
     }
     
     @objc func tappedConfirm() {
@@ -149,12 +162,7 @@ class MuteConversationViewController: UIViewController {
         actionButtons.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -2).isActive = true
         actionButtons.bottomAnchor.constraint(equalTo: modalView.bottomAnchor).isActive = true
         
-        //Picker view delegate and datasource
-        timePicker.delegate = self
-        timePicker.dataSource = self
-        
-        //Default set first row i.e. 8 hours
-        timePicker.selectRow(0, inComponent: 0, animated: true)
+        setUpPickerView()
         
         //Add button actions
         confirmButton.addTarget(self, action: #selector(tappedConfirm), for: .touchUpInside)
