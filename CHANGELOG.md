@@ -6,11 +6,12 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ---
 ### Enhancements
 - [AL-3004] Update chat screen to enable/disble chat for user when user is added/removed in the group.
-- [AL-2944] Update mute functionality in conversation view. 
+- [AL-2944] Update mute functionality in conversation view.
 - [AL-2922] Option to configure icon of navigation bar for conversation view and conversation list view.
 - [AL-2922] Option to configure icon of send message button.
 - [AL-2922] Option to configure line image visibility in chat bar.
 - [AL-2922] Option to enable custom handling of navigation item click in conversation view.
+- [CS-174] Update typing status to show display name of user in group conversation.
 
 ### Fixes
 - [AL-3022] Fix an issue where audio option was still visible for open group.
