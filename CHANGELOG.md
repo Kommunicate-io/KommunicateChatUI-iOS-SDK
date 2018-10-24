@@ -2,7 +2,16 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-1.0.1(upcoming release)
+1.2.0(upcoming releases)
+---
+### Enhancements
+- [AL-3004] Update chat screen to enable/disble chat for user when user is added/removed in the group.
+
+### Fixes
+- [AL-3022] Fix an issue where audio option was still visible for open group.
+- [AL-2973] Fix an issue where notification won't come for messages when chat screen is open.
+
+1.1.0
 ---
 ### Enhancements
 
