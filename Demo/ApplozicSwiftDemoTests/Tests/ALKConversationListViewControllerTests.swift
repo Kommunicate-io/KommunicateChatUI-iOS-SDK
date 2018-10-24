@@ -54,4 +54,31 @@ class ALKConversationListViewControllerTests: XCTestCase {
         let result = conversationVC.isNewMessageForActiveThread(alMessage: mockMessage, vm: conversationVM)
         XCTAssertTrue(result)
     }
+
+    func testMuteConversationCalledFromDelegate() {
+        
+        class ALKConversationListViewControllerMock: ALKConversationListViewController {
+            var isMuteCalled: Bool = false
+            
+            required init(configuration: ALKConfiguration) {
+                super.init(configuration: configuration)
+            }
+            
+            required init?(coder aDecoder: NSCoder) {
+                fatalError("init(coder:) has not been implemented")
+            }
+            
+            override func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+                isMuteCalled = true
+            }
+        }
+        
+        let conversationListVC = ALKConversationListViewControllerMock(configuration: ALKConfiguration())
+        XCTAssertFalse(conversationListVC.isMuteCalled)
+        let muteConversationVC = MuteConversationViewController(delegate: conversationListVC.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0))
+
+        muteConversationVC.tappedConfirm()
+        
+        XCTAssertTrue(conversationListVC.isMuteCalled)
+    }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ApplozicSwift
 
@@ -50,4 +50,13 @@ NewChatTitle = "New Chat";
 SearchPlaceholder = "Search";
 HoldToTalkMessage = "Hold to Talk / Tap to Type";
 RecordingMessage = "Recording...00:00:00";
+
 NotPartOfGroup = "You are not part of this group";
+MuteChannel = "Mute group %@";
+MuteUser = "Mute user %@";
+UnmuteChannel = "Are you sure you want to unmute group %@";
+UnmuteUser = "Are you sure you want to unmute user %@";
+ConfirmButton = "Confirm"
+EightHour = "8 Hours"
+OneWeek = "1 Week"
+OneYear = "1 Year"

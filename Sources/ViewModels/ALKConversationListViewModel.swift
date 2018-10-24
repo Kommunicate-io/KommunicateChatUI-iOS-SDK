@@ -137,4 +137,40 @@ final public class ALKConversationListViewModel: NSObject {
             NSLog("List updated")
         })
     }
+    
+    func sendUnmuteRequestFor(conversation: ALMessage, withCompletion: @escaping (Bool) -> ()) {
+
+        let time = (Int(Date().timeIntervalSince1970) * 1000)
+        sendMuteRequestFor(conversation: conversation, tillTime: time as NSNumber) { (success) in
+            withCompletion(success)
+        }
+    }
+    
+    func sendMuteRequestFor(conversation: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->()) {
+        if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
+            // Unmute channel
+            let muteRequest = ALMuteRequest()
+            muteRequest.id = channel.key
+            muteRequest.notificationAfterTime = tillTime as NSNumber
+            ALChannelService().muteChannel(muteRequest) { (response, error) in
+                if error != nil {
+                    withCompletion(false)
+                }
+                withCompletion(true)
+            }
+        } else if let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactId){
+            // Unmute Contact
+            let muteRequest = ALMuteRequest()
+            muteRequest.userId = contact.userId
+            muteRequest.notificationAfterTime = tillTime as NSNumber
+            ALUserService().muteUser(muteRequest) { (response, error) in
+                if error != nil {
+                    withCompletion(false)
+                }
+                withCompletion(true)
+            }
+        }else {
+            withCompletion(false)
+        }
+    }
 }

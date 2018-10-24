@@ -2,10 +2,11 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-1.2.0(upcoming releases)
+1.2.0(upcoming release)
 ---
 ### Enhancements
 - [AL-3004] Update chat screen to enable/disble chat for user when user is added/removed in the group.
+- [AL-2944] Update mute functionality in conversation view. 
 
 ### Fixes
 - [AL-3022] Fix an issue where audio option was still visible for open group.
@@ -13,8 +14,6 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 1.1.0
 ---
-### Enhancements
-
 ### Fixes
 - Fix position of audio-mic button. When coming back from photos screen or location screen position of mic button moves to left of screen.
 - [AL-2932] Fix removal of group from chat list after group is left by swiping right on group.

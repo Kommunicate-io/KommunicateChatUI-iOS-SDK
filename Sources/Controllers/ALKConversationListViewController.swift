@@ -619,6 +619,79 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
         return (prefixTextForPopupMessage, buttonTitleForPopupMessage)
     }
     
+    private func alertMessageAndButtonTitleToUnmute(conversation: ALMessage) -> (String?, String?) {
+        let unmuteButton = NSLocalizedString("UnmuteButton", value: SystemMessage.Mute.UnmuteButton, comment: "")
+        if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
+            let unmuteChannelMessage = String(format: NSLocalizedString("UnmuteChannel", value: SystemMessage.Mute.UnmuteChannel, comment: ""), channel.name)
+            return (unmuteChannelMessage, unmuteButton)
+        }else if let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactId) {
+            let unmuteUserMessage = String(format: NSLocalizedString("UnmuteUser", value: SystemMessage.Mute.UnmuteUser, comment: ""), contact.getDisplayName())
+            return (unmuteUserMessage, unmuteButton)
+        }else {
+            return (nil, nil)
+        }
+    }
+    
+    private func sendUnmuteRequestFor(conversation: ALMessage, atIndexPath: IndexPath) {
+        //Start activity indicator
+        self.activityIndicator.startAnimating()
+        
+        viewModel.sendUnmuteRequestFor(conversation: conversation, withCompletion: { (success) in
+            
+            //Stop activity indicator
+            self.activityIndicator.stopAnimating()
+            
+            guard success == true else {
+                return
+            }
+            //Update UI
+            if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell{
+                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatForRow(indexPath: atIndexPath) as? ALMessage else {
+                    return
+                }
+                cell.update(viewModel: chat, identity: nil)
+            }
+        })
+    }
+    
+    private func handleUnmuteActionFor(conversation: ALMessage, atIndexPath: IndexPath) {
+        let (message, buttonTitle) = alertMessageAndButtonTitleToUnmute(conversation: conversation)
+        guard message != nil && buttonTitle != nil else{
+            return
+        }
+        
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let cancelButton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
+        let unmuteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (alert) in
+            guard let weakSelf = self else { return }
+            weakSelf.sendUnmuteRequestFor(conversation: conversation, atIndexPath: atIndexPath)
+        })
+        alert.addAction(cancelButton)
+        alert.addAction(unmuteButton)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
+    private func popupTitleToMute(conversation: ALMessage) -> String? {
+        if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
+            return String(format: NSLocalizedString("MuteChannel", value: SystemMessage.Mute.MuteChannel, comment: ""), channel.name)
+        }else if let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactId) {
+            return String(format: NSLocalizedString("MuteUser", value: SystemMessage.Mute.MuteUser, comment: ""), contact.getDisplayName())
+        }else {
+            return nil
+        }
+    }
+    
+    private func handleMuteActionFor(conversation: ALMessage, atIndexPath: IndexPath) {
+        guard let title = popupTitleToMute(conversation: conversation) else {
+            return
+        }
+        let muteConversationVC = MuteConversationViewController(delegate: self, conversation: conversation, atIndexPath: atIndexPath)
+        muteConversationVC.updateTitle(title)
+        muteConversationVC.modalPresentationStyle = .overCurrentContext
+        self.present(muteConversationVC, animated: true, completion: nil)
+    }
+    
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol) {
 
         switch action {
@@ -727,9 +800,63 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
 
             }
             break
+            
+        case .mute:
+            guard let indexPath = self.tableView.indexPath(for: cell) else {
+                return
+            }
+            
+            if searchActive {
+                guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
+                    return
+                }
+                self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
+            }else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+                self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
+            }
+            
+        case .unmute:
+            guard let indexPath = self.tableView.indexPath(for: cell) else {
+                return
+            }
+            if searchActive {
+                guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
+                    return
+                }
+                self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
+            }else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+                self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
+            }
+            
+            
         default:
             print("not present")
         }
     }
 }
 
+extension ALKConversationListViewController: Muteable {
+    @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+        //Start activity indicator
+        self.activityIndicator.startAnimating()
+        
+        let time = (Int64(Date().timeIntervalSince1970) * 1000) + forTime
+        
+        self.viewModel.sendMuteRequestFor(conversation: conversation, tillTime: NSNumber(value: time)) { (success) in
+            
+            //Stop activity indicator
+            self.activityIndicator.stopAnimating()
+            
+            //Update indexPath
+            guard success == true else {
+                return
+            }
+            if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell{
+                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatForRow(indexPath: atIndexPath) as? ALMessage else {
+                    return
+                }
+                cell.update(viewModel: chat, identity: nil)
+            }
+        }
+    }
+}
