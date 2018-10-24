@@ -236,7 +236,7 @@ open class ALKChatBar: UIView {
         micButton.setAudioRecDelegate(recorderDelegate: self)
         soundRec.setAudioRecViewDelegate(recorderDelegate: self)
         textView.delegate = self
-        backgroundColor = .white
+        backgroundColor = .background(.grayEF)
         translatesAutoresizingMaskIntoConstraints = false
         
         plusButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
@@ -310,6 +310,14 @@ open class ALKChatBar: UIView {
         maxLength: CGFloat = max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)) {
         plusButton.isHidden = true
 
+        var bottomAnchor: NSLayoutYAxisAnchor {
+            if #available(iOS 11.0, *) {
+                return self.safeAreaLayoutGuide.bottomAnchor
+            } else {
+                return self.bottomAnchor
+            }
+        }
+
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
         addViewsForAutolayout(views: [bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
@@ -322,12 +330,12 @@ open class ALKChatBar: UIView {
         chatButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         chatButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         chatButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        chatButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12).isActive = true
+        chatButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
         
         photoButton.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: buttonSpacing).isActive = true
         photoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         photoButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        photoButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        photoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
         
         plusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
         plusButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -347,7 +355,7 @@ open class ALKChatBar: UIView {
         locationButton.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: buttonSpacing).isActive = true
         locationButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        locationButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        locationButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
         lineImageView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -15).isActive = true
         lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
@@ -376,7 +384,6 @@ open class ALKChatBar: UIView {
         poweredByMessageLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         poweredByMessageLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         poweredByMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.poweredByMessageHeight.rawValue).isActive = true
-        poweredByMessageLabel.bottomAnchor.constraint(equalTo: textView.topAnchor).isActive = true
         poweredByMessageLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
 
         textView.trailingAnchor.constraint(equalTo: lineImageView.leadingAnchor).isActive = true
@@ -406,7 +413,6 @@ open class ALKChatBar: UIView {
         grayView.rightAnchor.constraint(equalTo: frameView.rightAnchor, constant: 0).isActive = true
 
         bottomGrayView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-        bottomGrayView.heightAnchor.constraint(equalToConstant: 45).isActive = true
         bottomGrayView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue).isActive = true
         bottomGrayView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bottomGrayView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
