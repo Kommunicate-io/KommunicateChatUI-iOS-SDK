@@ -40,9 +40,12 @@ class ALKConversationViewControllerSnapShotTests: QuickSpec {
 
                 let testBundle = Bundle(for: ALKConversationViewControllerSnapShotTests.self)
                 let (firstImageMessage, _) = convVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!)
+                let date = Date(timeIntervalSince1970: -123456789.0).timeIntervalSince1970*1000
+                firstImageMessage?.createdAtTime = NSNumber(value: date)
                 firstImageMessage?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 let (secondImageMessage, _) = convVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!)
                 secondImageMessage?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
+                secondImageMessage?.createdAtTime = NSNumber(value: date)
                 secondImageMessage?.type = "4"
 
                 ALKConversationViewModelMock.testMessages = [firstMessage.messageModel, secondMessage.messageModel, thirdMessage.messageModel, fourthMessage.messageModel, firstImageMessage!.messageModel, secondImageMessage!.messageModel]
@@ -51,20 +54,15 @@ class ALKConversationViewControllerSnapShotTests: QuickSpec {
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
             }
 
-            it("has attachments") {
+            it("has all the messages") {
                 XCTAssertNotNil(navigationController.view)
                 XCTAssertNotNil(conversationVC.view)
                 XCTAssertNotNil(conversationVC.navigationController?.view)
+
+                // We are not verifying the actual image, just the image message
+                // as image is loaded asynchronously so, it will be tested through
+                // functional tests.
                 expect(conversationVC.navigationController).to(haveValidSnapshot())
-            }
-
-            it("has text messages") {
-                XCTAssertNotNil(conversationVC.viewModel.messageModels)
-                XCTAssertFalse(conversationVC.viewModel.messageModels.isEmpty)
-
-                conversationVC.tableView.setContentOffset(.zero, animated: true)
-                expect(conversationVC.navigationController).to(recordSnapshot())
-
             }
         }
     }
