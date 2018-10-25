@@ -47,6 +47,31 @@ public struct ALKConfiguration {
 
     /// If true then the start new chat button will be hidden.
     public var hideStartChatButton = false
+    
+    /// Send message icon in chat bar.
+    public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
+    
+    /// Image for navigation bar right side icon in conversation view.
+    public var rightNavBarImageForConversationView: UIImage?
+    
+    /// System icon for right side navigation bar in conversation view.
+    public var rightNavBarSystemIconForConversationView = UIBarButtonItem.SystemItem.refresh
+    
+    /// If true then right side navigation icon in conversation view will be hidden.
+    public var hideRightNavBarButtonForConversationView = false
+    
+    /// conversationlist view navigation icon for right side.
+    /// By default, create group icon image will be used.
+    public var rightNavBarImageForConversationListView = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
+    
+    /// If true then click action on navigation icon in conversation list view will be handled from outside
+    public var handleNavIconClickOnConversationListView = false
+    
+    /// Notification name for navigation icon click in conversation list
+    public var nsNotificationNameForNavIconClick = "handleNavigationItemClick"
+    
+    /// If true then line between send button and text view will be hidden.
+    public var hideLineImageFromChatBar = false
 
     public init() { }
 }
