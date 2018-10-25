@@ -12,8 +12,6 @@ import Nimble_Snapshots
 import Applozic
 @testable import ApplozicSwift
 
-class ALKConversationViewControllerMock: ALKConversationViewController {}
-
 class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
     override func spec() {

@@ -14,6 +14,8 @@ import SafariServices
 
 open class ALKConversationViewController: ALKBaseViewController {
 
+    var contactService: ALContactService!
+    
     public var viewModel: ALKConversationViewModel! {
         willSet(updatedVM) {
             guard viewModel != nil else {return}
@@ -120,6 +122,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
+        self.contactService = ALContactService()
         configurePropertiesWith(configuration: configuration)
         self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
     }
@@ -683,7 +686,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
     
     private func nameForTypingStatusUsing(userId: String) -> String?{
-        guard let contact = ALContactService().loadContact(byKey: "userId", value: userId) else {
+        guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
             return nil
         }
         if contact.block || contact.blockBy {
