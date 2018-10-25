@@ -50,6 +50,30 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 expect(conversationVC.navigationController).toEventually(haveValidSnapshot())
             }
         }
+
+        describe("configure right nav bar icon") {
+
+            var configuration: ALKConfiguration!
+            var conversationVC: ALKConversationListViewController!
+            var navigationController: UINavigationController!
+
+            beforeEach {
+                configuration = ALKConfiguration()
+                configuration.rightNavBarImageForConversationListView = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
+                conversationVC = ALKConversationListViewController(configuration: configuration)
+                conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
+                conversationVC.beginAppearanceTransition(true, animated: false)
+                conversationVC.endAppearanceTransition()
+                navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            }
+
+            it("change icon image") {
+                navigationController.navigationBar.snapshotView(afterScreenUpdates: true)
+                expect(navigationController.navigationBar).to(haveValidSnapshot())
+            }
+        }
+
     }
 
     func getApplicationKey() -> NSString {
