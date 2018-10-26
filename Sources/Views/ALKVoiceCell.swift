@@ -27,10 +27,6 @@ public enum ALKVoiceCellState {
 class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
                     ALKReplyMenuItemProtocol {
     
-    public override func setConfiguration(_ configuration: ALKConfiguration) {
-        super.setConfiguration(configuration)
-    }
-    
     var soundPlayerView: UIView = {
         let mv = UIView()
         mv.backgroundColor = UIColor.background(.grayF2)
@@ -276,7 +272,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
         guard let viewModel = viewModel as? ALKMessageModel,
             let currentIndex = messageModels.index(of: viewModel) else { return }
-        vc?.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex, configuration: configuration)
+        vc?.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex, localizedStringFileName: localizedStringFileName)
         UIViewController.topViewController()?.present(nav!, animated: true, completion: {
         })
     }

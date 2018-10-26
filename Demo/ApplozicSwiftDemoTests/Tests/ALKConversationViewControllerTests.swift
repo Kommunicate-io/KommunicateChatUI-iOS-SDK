@@ -47,7 +47,7 @@ class ALKConversationViewControllerTests: XCTestCase {
     
     func testTypingStatusInGroup_UseDisplayName() {
         let conversationVC = ALKConversationViewControllerMock(configuration: ALKConfiguration())
-        conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000)
+        conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         conversationVC.contactService = ALContactServiceMock()
         conversationVC.showTypingLabel(status: true, userId: "demoUserId")
         XCTAssertEqual("demoDisplayName", conversationVC.testDisplayName)
@@ -57,7 +57,7 @@ class ALKConversationViewControllerTests: XCTestCase {
         var configuration = ALKConfiguration()
         configuration.showNameWhenUserTypesInGroup = false
         let conversationVC = ALKConversationViewControllerMock(configuration: configuration)
-        conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000)
+        conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         conversationVC.contactService = ALContactServiceMock()
         conversationVC.showTypingLabel(status: true, userId: "demoUserId")
         XCTAssertEqual("Somebody", conversationVC.testDisplayName)

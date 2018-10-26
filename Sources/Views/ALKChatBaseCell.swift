@@ -10,10 +10,10 @@ import UIKit
 
 open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     
-    var configuration: ALKConfiguration!
+    var localizedStringFileName: String!
     
-    public func setConfiguration(_ configuration: ALKConfiguration) {
-        self.configuration = configuration
+    public func setLocalizedStringFileName(_ localizedStringFileName: String) {
+        self.localizedStringFileName = localizedStringFileName
     }
     
     fileprivate weak var chatBar: ALKChatBar?
@@ -107,7 +107,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
         guard let copyMenuItem = copyItem as? ALKCopyMenuItemProtocol else {
             return nil
         }
-        let title = localizedString(forKey: "Copy", withDefaultValue: SystemMessage.LabelName.Copy, config: configuration)
+        let title = localizedString(forKey: "Copy", withDefaultValue: SystemMessage.LabelName.Copy, fileName: localizedStringFileName)
         let copyMenu = UIMenuItem(title: title, action: copyMenuItem.selector)
         return copyMenu
     }
@@ -116,7 +116,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
         guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else{
             return nil
         }
-        let title = localizedString(forKey: "Reply", withDefaultValue: SystemMessage.LabelName.Reply, config: configuration)
+        let title = localizedString(forKey: "Reply", withDefaultValue: SystemMessage.LabelName.Reply, fileName: localizedStringFileName)
         let replyMenu = UIMenuItem(title: title, action: replyMenuItem.selector)
         return replyMenu
     }

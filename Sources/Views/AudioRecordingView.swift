@@ -150,8 +150,8 @@ open class ALKAudioRecorderView: UIView, Localizable {
     
     private func initializeParameters(){
         self.backgroundColor = UIColor.color(.none)
-        slideToCancel.text = localizedString(forKey: "SlideToCancel", withDefaultValue: SystemMessage.Microphone.SlideToCancel, config: configuration)
-        recordingLabel.text = localizedString(forKey: "Recording", withDefaultValue: SystemMessage.Microphone.Recording, config: configuration)
+        slideToCancel.text = localizedString(forKey: "SlideToCancelMessage", withDefaultValue: SystemMessage.Microphone.SlideToCancel, fileName: configuration.localizedStringFileName)
+        recordingLabel.text = localizedString(forKey: "RecordingMessage", withDefaultValue: SystemMessage.Microphone.Recording, fileName: configuration.localizedStringFileName)
         redDot.backgroundColor = UIColor(red: 255, green: 14, blue: 0)
         recordingValue.text = "00:00"
         previousGestureLocation = 0.0

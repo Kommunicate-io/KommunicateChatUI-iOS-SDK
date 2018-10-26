@@ -14,10 +14,6 @@ import Applozic
 // MARK: - ALKFriendMessageCell
 open class ALKFriendMessageCell: ALKMessageCell {
     
-    override public func setConfiguration(_ configuration: ALKConfiguration) {
-        super.setConfiguration(configuration)
-    }
-
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -263,10 +259,6 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
 // MARK: - ALKMyMessageCell
 open class ALKMyMessageCell: ALKMessageCell {
-
-    override public func setConfiguration(_ configuration: ALKConfiguration) {
-        super.setConfiguration(configuration)
-    }
 
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
@@ -535,7 +527,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }()
 
     lazy var selfNameText: String = {
-        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, config: configuration)
+        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, fileName: localizedStringFileName)
         return text
     }()
     var replyViewAction: (()->())? = nil

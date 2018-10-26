@@ -50,7 +50,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
      var alphabetSection : Array<String> = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
      */
 
-    
+    lazy var localizedStringFileName: String! = configuration.localizedStringFileName
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -81,9 +81,9 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
     private func setupUI() {
         setupInviteButton()
         setupSearchBar()
-        self.navigationItem.title = localizedString(forKey: "AddToGroupTitle", withDefaultValue: SystemMessage.LabelName.AddToGroupTitle, config: configuration)
+        self.navigationItem.title = localizedString(forKey: "AddToGroupTitle", withDefaultValue: SystemMessage.LabelName.AddToGroupTitle, fileName: localizedStringFileName)
         definesPresentationContext = true
-        btnInvite.setTitle(localizedString(forKey: "InviteButton", withDefaultValue: SystemMessage.ButtonName.Invite, config: configuration), for: .normal)
+        btnInvite.setTitle(localizedString(forKey: "InviteButton", withDefaultValue: SystemMessage.ButtonName.Invite, fileName: localizedStringFileName), for: .normal)
         tblParticipants.tableHeaderView = searchController.searchBar
     }
     
@@ -106,11 +106,11 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
             _ = weakSelf.navigationController?.popViewController(animated: true)
         }
         if (newFriendsInGroupStore.hasAtLeastOneMember()) {
-            let alertInformationDiscardTitle = localizedString(forKey: "DiscardChangeTitle", withDefaultValue: SystemMessage.LabelName.DiscardChangeTitle, config: configuration)
-            let alertInformationDiscardMessage = localizedString(forKey: "DiscardChangeMessage", withDefaultValue: SystemMessage.Warning.DiscardChange, config: configuration)
+            let alertInformationDiscardTitle = localizedString(forKey: "DiscardChangeTitle", withDefaultValue: SystemMessage.LabelName.DiscardChangeTitle, fileName: localizedStringFileName)
+            let alertInformationDiscardMessage = localizedString(forKey: "DiscardChangeMessage", withDefaultValue: SystemMessage.Warning.DiscardChange, fileName: localizedStringFileName)
 
-            let cancelTitle = localizedString(forKey: "ButtonCancel", withDefaultValue: SystemMessage.ButtonName.Cancel, config: configuration)
-            let discardTitle = localizedString(forKey: "ButtonDiscard", withDefaultValue: SystemMessage.ButtonName.Discard, config: configuration)
+            let cancelTitle = localizedString(forKey: "ButtonCancel", withDefaultValue: SystemMessage.ButtonName.Cancel, fileName: localizedStringFileName)
+            let discardTitle = localizedString(forKey: "ButtonDiscard", withDefaultValue: SystemMessage.ButtonName.Discard, fileName: localizedStringFileName)
             
             let alert = UIAlertController.makeCancelDiscardAlert(title: alertInformationDiscardTitle,
                                                                  message: alertInformationDiscardMessage,
@@ -409,7 +409,7 @@ extension ALKSelectParticipantToAddViewController: ALKInviteButtonProtocol {
         let isEnabled = (count > 0) ? true: false
         let background = (isEnabled ? UIColor.mainRed() : UIColor.disabledButton())
         let newMember = count > 0 ? " (\(count))" : ""
-        let inviteMessage = localizedString(forKey: "InviteMessage", withDefaultValue: SystemMessage.LabelName.InviteMessage, config: configuration)
+        let inviteMessage = localizedString(forKey: "InviteMessage", withDefaultValue: SystemMessage.LabelName.InviteMessage, fileName: localizedStringFileName)
         let title = "\(inviteMessage) \(newMember)"
         return (title, background, isEnabled)
     }

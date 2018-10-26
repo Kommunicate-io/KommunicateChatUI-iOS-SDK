@@ -147,7 +147,7 @@ class ALChatManager: NSObject {
             title = name
         }
         title = title.isEmpty ? "No name":title
-        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil, configuration: configuration)
+        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
         let conversationViewController = ALKConversationViewController(configuration: configuration)
         conversationViewController.title = title
         conversationViewController.viewModel = convViewModel
@@ -158,7 +158,7 @@ class ALChatManager: NSObject {
         let alChannelService = ALChannelService()
         alChannelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) { (channel) in
             guard let channel = channel, let key = channel.key else {return}
-            let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key, configuration: configuration)
+            let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key, localizedStringFileName: configuration.localizedStringFileName)
             let conversationViewController = ALKConversationViewController(configuration: configuration)
             conversationViewController.title = channel.name
             conversationViewController.viewModel = convViewModel

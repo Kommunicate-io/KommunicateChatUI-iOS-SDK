@@ -32,7 +32,6 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.title = localizedString(forKey: "SendPhoto", withDefaultValue: SystemMessage.LabelName.SendPhoto, config: configuration)
     }
 
     required public init(configuration: ALKConfiguration) {
@@ -47,6 +46,7 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupContent()
+        self.title = localizedString(forKey: "SendPhoto", withDefaultValue: SystemMessage.LabelName.SendPhoto, fileName: configuration.localizedStringFileName)
     }
     
     override func viewWillAppear(_ animated: Bool) {

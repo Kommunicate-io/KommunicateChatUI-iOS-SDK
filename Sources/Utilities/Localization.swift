@@ -9,7 +9,7 @@ import Foundation
 
 protocol Localizable {
     static func localizedString(forKey: String) -> String
-    func localizedString(forKey: String, withDefaultValue: String, config: ALKConfiguration) -> String
+    func localizedString(forKey: String, withDefaultValue: String, fileName: String) -> String
 }
 
 extension Localizable {
@@ -21,8 +21,7 @@ extension Localizable {
         return NSLocalizedString(forKey, tableName: nil, bundle: bundle, value: "", comment: "")
     }
     
-    func localizedString(forKey: String, withDefaultValue: String, config: ALKConfiguration) -> String {
-        let fileName = config.localizedStringFileName
+    func localizedString(forKey: String, withDefaultValue: String, fileName: String) -> String {
         return NSLocalizedString(forKey, tableName: fileName, bundle: Bundle.main, value: withDefaultValue, comment: "")
     }
     

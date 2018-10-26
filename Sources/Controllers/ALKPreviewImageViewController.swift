@@ -10,8 +10,11 @@ import UIKit
 
 final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
     
+    var localizedStringFileName: String!
+    
     required init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
+        localizedStringFileName = configuration.localizedStringFileName
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -163,17 +166,17 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
     @IBAction private func downlaodImgPress(_ sender: Any) {
         guard let viewModel = viewModel else { return }
         viewModel.saveImage(image: imageView.image, successBlock: {
-            let photoAlbumSuccessTitleMsg = self.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, config: self.configuration)
-            let photoAlbumSuccessMsg = self.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, config: self.configuration)
+            let photoAlbumSuccessTitleMsg = self.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: self.localizedStringFileName)
+            let photoAlbumSuccessMsg = self.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: self.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumSuccessTitleMsg, message: photoAlbumSuccessMsg, preferredStyle: UIAlertControllerStyle.alert)
-            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, config: self.configuration)
+            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: self.localizedStringFileName)
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }) { (error) in
-            let photoAlbumFailureTitleMsg = self.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, config: self.configuration)
-            let photoAlbumFailMsg = self.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, config: self.configuration)
+            let photoAlbumFailureTitleMsg = self.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: self.localizedStringFileName)
+            let photoAlbumFailMsg = self.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: self.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertControllerStyle.alert)
-            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, config: self.configuration)
+            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: self.localizedStringFileName)
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }

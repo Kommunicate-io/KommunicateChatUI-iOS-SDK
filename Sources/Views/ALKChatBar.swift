@@ -87,7 +87,7 @@ open class ALKChatBar: UIView, Localizable {
         let view = UITextView()
         view.setFont(UIFont.font(.normal(size: 14)))
         view.setTextColor(.color(Color.Text.gray9B))
-        view.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, config: configuration)
+        view.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
         view.isUserInteractionEnabled = false
         view.isScrollEnabled = false
         view.scrollsToTop = false
@@ -464,7 +464,7 @@ open class ALKChatBar: UIView, Localizable {
         } else {
             micButton.isSelected = false
             soundRec.isHidden = true
-            placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, config: configuration)
+            placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
         }
     }
     
@@ -472,7 +472,7 @@ open class ALKChatBar: UIView, Localizable {
         soundRec.userDidStopRecording()
         micButton.isSelected = false
         soundRec.isHidden = true
-        placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, config: configuration)
+        placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
     }
     
     func hideAudioOptionInChatBar(){
@@ -507,7 +507,7 @@ open class ALKChatBar: UIView, Localizable {
         toggleUserInteractionForViews(enabled: false)
         
         //change text from "chat here" to "you are not allowed to chat"
-        placeHolder.text = NSLocalizedString("NotPartOfGroup", value: SystemMessage.Information.NotPartOfGroup, comment: "")
+        placeHolder.text = localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName)
     }
     
     func enableChat() {

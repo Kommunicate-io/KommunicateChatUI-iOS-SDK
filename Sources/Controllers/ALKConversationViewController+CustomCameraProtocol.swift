@@ -23,7 +23,7 @@ extension ALKConversationViewController: ALKCustomCameraProtocol {
         tableView.scrollToBottom(animated: false)
 
         guard let cell = tableView.cellForRow(at: newIndexPath) as? ALKMyPhotoPortalCell else { return }
-        cell.setConfiguration(configuration)
+        cell.setLocalizedStringFileName(configuration.localizedStringFileName)
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()
             notificationView.noDataConnectionNotificationView()

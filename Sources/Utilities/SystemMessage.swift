@@ -42,7 +42,7 @@ struct SystemMessage : Localizable{
         static let FriendAdded = localizedString(forKey: "FriendAddedMessage")
         static let FriendRemoved = localizedString(forKey: "FriendRemovedMessage")
         static let AppName = ""
-        static let NotPartOfGroup = "You are not part of this group"
+        static let NotPartOfGroup = localizedString(forKey: "NotPartOfGroup")
         static let ChatHere = localizedString(forKey: "ChatHere")
     }
 
@@ -87,7 +87,7 @@ struct SystemMessage : Localizable{
         static let Select = localizedString(forKey: "SelectButton")
         static let Done = localizedString(forKey: "DoneButton")
         static let Invite = localizedString(forKey: "InviteButton")
-        static let Confirm = "Confirm"
+        static let Confirm = localizedString(forKey: "ConfirmButton")
     }
 
     struct NoData {
@@ -150,17 +150,17 @@ struct SystemMessage : Localizable{
 
 
     struct Mute {
-        static let MuteUser = "Mute user %@"
-        static let MuteChannel = "Mute group %@"
-        static let UnmuteUser = "Are you sure you want to unmute user %@"
-        static let UnmuteChannel = "Are you sure you want to unmute group %@"
-        static let MuteButton = "Mute"
-        static let UnmuteButton = "Unmute"
+        static let MuteUser = localizedString(forKey: "MuteUser")
+        static let MuteChannel = localizedString(forKey: "MuteChannel")
+        static let UnmuteUser = localizedString(forKey: "UnmuteUser")
+        static let UnmuteChannel = localizedString(forKey: "UnmuteChannel")
+        static let MuteButton = localizedString(forKey: "MuteButton")
+        static let UnmuteButton = localizedString(forKey: "UnmuteButton")
     }
 
     struct MutePopup {
-        static let EightHour = "8 hours"
-        static let OneWeek = "1 week"
-        static let OneYear = "1 year"
+        static let EightHour = localizedString(forKey: "EightHour")
+        static let OneWeek = localizedString(forKey: "OneWeek")
+        static let OneYear = localizedString(forKey: "OneYear")
     }
 }

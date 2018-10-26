@@ -22,7 +22,7 @@ class ALKConversationViewModelTests: XCTestCase {
     }
 
     func testContentType_WhenSendingImage() {
-        let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil)
+        let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         let testBundle = Bundle(for: ALKConversationViewModelTests.self)
         let (message, _) = conversationVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!)
         XCTAssertNotNil(message)
@@ -31,7 +31,7 @@ class ALKConversationViewModelTests: XCTestCase {
     }
 
     func testMessage_WhenSendingEmptyImage_isNil() {
-        let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil)
+        let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         let (message, _) = conversationVM.send(photo: UIImage())
         XCTAssertNil(message)
     }

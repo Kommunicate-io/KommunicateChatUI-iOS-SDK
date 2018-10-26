@@ -28,8 +28,8 @@ class ALKMapViewController: UIViewController, Localizable {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, config: configuration)
-        let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, config: configuration)
+        self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
+        let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
         ShareLocationButton.setTitle(locationButtonTitle, for: UIControlState.normal)
         ShareLocationButton.setTitle(locationButtonTitle, for: UIControlState.selected)
     }

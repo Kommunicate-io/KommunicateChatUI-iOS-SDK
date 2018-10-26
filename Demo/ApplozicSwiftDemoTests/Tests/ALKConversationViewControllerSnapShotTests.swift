@@ -24,7 +24,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
             beforeEach {
                 let contactId = "testExample"
                 conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
-                let convVM = ALKConversationViewModelMock(contactId: contactId, channelKey: nil)
+                let convVM = ALKConversationViewModelMock(contactId: contactId, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 
                 let firstMessage = ALKConversationViewModelMock.getMessageToPost()
                 firstMessage.message = "first message"
@@ -70,7 +70,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
             
             func prepareController() {
                 conversationVC = ALKConversationViewController(configuration: configuration)
-                conversationVC.viewModel = ALKConversationViewModelMock(contactId: "demoUserId", channelKey: nil)
+                conversationVC.viewModel = ALKConversationViewModelMock(contactId: "demoUserId", channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()
                 conversationVC.updateDisplay(name: "demoDisplayName")

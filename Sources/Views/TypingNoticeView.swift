@@ -9,7 +9,8 @@
 import UIKit
 
 class TypingNotice: UIView, Localizable {
-    var configuration: ALKConfiguration!
+    
+    fileprivate var localizedStringFileName: String!
     /*
      // Only override draw() if you perform custom drawing.
      // An empty implementation adversely affects performance during animation.
@@ -19,7 +20,7 @@ class TypingNotice: UIView, Localizable {
      */
     
     lazy private var lblIsTyping:UILabel = {
-        let isTypingString = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, config: configuration)
+        let isTypingString = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, fileName: localizedStringFileName)
         let isTypingWidth:CGFloat = isTypingString.evaluateStringWidth(textToEvaluate:isTypingString, fontSize: 12)
         
         let lblIsTyping = UILabel.init(frame: .zero)
@@ -57,9 +58,9 @@ class TypingNotice: UIView, Localizable {
         
     }()
     
-    init(configuration: ALKConfiguration) {
+    init(localizedStringFileName: String) {
         super.init(frame: .zero)
-        self.configuration = configuration
+        self.localizedStringFileName = localizedStringFileName
         createUI()
     }
     
@@ -97,10 +98,10 @@ class TypingNotice: UIView, Localizable {
             return
         }
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            let isTyping = localizedString(forKey: "IsTypingForRTL", withDefaultValue: SystemMessage.Message.isTypingForRTL, config: configuration)
+            let isTyping = localizedString(forKey: "IsTypingForRTL", withDefaultValue: SystemMessage.Message.isTypingForRTL, fileName: localizedStringFileName)
             populateTypingStatus(isTyping: isTyping, displayName: displayName)
         } else {
-            let isTyping = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, config: configuration)
+            let isTyping = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, fileName: localizedStringFileName)
             populateTypingStatus(isTyping: isTyping, displayName: displayName)
         }
     }
@@ -118,7 +119,7 @@ class TypingNotice: UIView, Localizable {
         if( number > 1)
         {
             let displayName = "\(number) people"
-            let isTyping = localizedString(forKey: "AreTyping", withDefaultValue: SystemMessage.Message.areTyping, config: configuration)
+            let isTyping = localizedString(forKey: "AreTyping", withDefaultValue: SystemMessage.Message.areTyping, fileName: localizedStringFileName)
             populateTypingStatus(isTyping: isTyping, displayName: displayName)
         }
     }

@@ -41,7 +41,7 @@ class ALKConversationListViewControllerTests: XCTestCase {
 
     func testNewMessage_WhenActiveThreadIsDifferent() {
         let conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
-        let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil)
+        let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         
         let result = conversationVC.isNewMessageForActiveThread(alMessage: mockMessage, vm: conversationVM)
         XCTAssertFalse(result)
@@ -49,7 +49,7 @@ class ALKConversationListViewControllerTests: XCTestCase {
     
     func testNewMessage_WhenActiveThreadIsSame() {
         let conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
-        let conversationVM = ALKConversationViewModel(contactId: "testUser123", channelKey: nil)
+        let conversationVM = ALKConversationViewModel(contactId: "testUser123", channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         
         let result = conversationVC.isNewMessageForActiveThread(alMessage: mockMessage, vm: conversationVM)
         XCTAssertTrue(result)
@@ -75,7 +75,7 @@ class ALKConversationListViewControllerTests: XCTestCase {
         
         let conversationListVC = ALKConversationListViewControllerMock(configuration: ALKConfiguration())
         XCTAssertFalse(conversationListVC.isMuteCalled)
-        let muteConversationVC = MuteConversationViewController(delegate: conversationListVC.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0))
+        let muteConversationVC = MuteConversationViewController(delegate: conversationListVC.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
 
         muteConversationVC.tappedConfirm()
         

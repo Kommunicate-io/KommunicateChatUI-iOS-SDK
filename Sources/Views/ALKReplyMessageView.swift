@@ -44,7 +44,7 @@ open class ALKReplyMessageView: UIView, Localizable {
     }()
 
     lazy open var selfNameText: String = {
-        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, config: configuration)
+        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, fileName: configuration.localizedStringFileName)
         return text
     }()
     

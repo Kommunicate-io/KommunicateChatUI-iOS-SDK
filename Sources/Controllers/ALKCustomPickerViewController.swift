@@ -29,12 +29,13 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
 
     @IBOutlet weak var previewGallery: UICollectionView!
 
-
+    private lazy var localizedStringFileName: String = configuration.localizedStringFileName
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        doneButton.title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done, config: configuration)
-        self.title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, config: configuration)
+        doneButton.title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done, fileName: localizedStringFileName)
+        self.title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
         checkPhotoLibraryPermission()
         previewGallery.delegate = self
         previewGallery.dataSource = self

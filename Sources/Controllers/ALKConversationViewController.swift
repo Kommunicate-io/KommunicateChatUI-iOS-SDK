@@ -51,11 +51,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate let audioPlayer = ALKAudioPlayer()
 
     fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
-    fileprivate var typingNoticeView = TypingNotice(configuration: ALKConfiguration())
+    fileprivate lazy var typingNoticeView = TypingNotice(localizedStringFileName : configuration.localizedStringFileName)
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     fileprivate var keyboardSize: CGRect?
+    
+    fileprivate var localizedStringFileName: String!
 
     fileprivate enum ConstraintIdentifier {
         static let contextTitleView = "contextTitleView"
@@ -122,10 +124,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
+        self.localizedStringFileName = configuration.localizedStringFileName
         self.contactService = ALContactService()
         configurePropertiesWith(configuration: configuration)
         self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
-        self.typingNoticeView = TypingNotice(configuration: configuration)
+        self.typingNoticeView = TypingNotice(localizedStringFileName: configuration.localizedStringFileName)
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -299,10 +302,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         if self.viewModel.isGroup == true {
-            let dispName = localizedString(forKey: "Somebody", withDefaultValue: SystemMessage.Chat.somebody, config: configuration)
-            self.setTypingNotiDisplayName(displayName: dispName)
+            let dispName = localizedString(forKey: "Somebody", withDefaultValue: SystemMessage.Chat.somebody, fileName: localizedStringFileName)
+            self.setTypingNoticeDisplayName(displayName: dispName)
         } else {
-            self.setTypingNotiDisplayName(displayName: self.title ?? "")
+            self.setTypingNoticeDisplayName(displayName: self.title ?? "")
         }
 
         viewModel.delegate = self
@@ -635,14 +638,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                                 imagePicker.mediaTypes = [kUTTypeMovie as String]
                                 UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
                             } else {
-                                let msg = weakSelf.localizedString(forKey: "EnableCameraPermissionMessage", withDefaultValue: SystemMessage.Camera.cameraPermission, config: weakSelf.configuration)
+                                let msg = weakSelf.localizedString(forKey: "EnableCameraPermissionMessage", withDefaultValue: SystemMessage.Camera.cameraPermission, fileName: weakSelf.localizedStringFileName)
                                 ALUtilityClass.permissionPopUp(withMessage: msg, andViewController: self)
                             }
                         }
                     })
                 } else {
-                    let msg = weakSelf.localizedString(forKey: "CameraNotAvailableMessage", withDefaultValue: SystemMessage.Camera.CamNotAvailable, config: weakSelf.configuration)
-                    let title = weakSelf.localizedString(forKey: "CameraNotAvailableTitle", withDefaultValue: SystemMessage.Camera.camNotAvailableTitle, config: weakSelf.configuration)
+                    let msg = weakSelf.localizedString(forKey: "CameraNotAvailableMessage", withDefaultValue: SystemMessage.Camera.CamNotAvailable, fileName: weakSelf.localizedStringFileName)
+                    let title = weakSelf.localizedString(forKey: "CameraNotAvailableTitle", withDefaultValue: SystemMessage.Camera.camNotAvailableTitle, fileName: weakSelf.localizedStringFileName)
                     ALUtilityClass.showAlertMessage(msg, andTitle: title)
                 }
             case .showImagePicker():
@@ -792,7 +795,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         // Get the user id of that user
         guard let receiverId = messageVM.receiverId else {return}
 
-        let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil, configuration: configuration)
+        let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = vm
         conversationVC.title = messageVM.displayName
@@ -1303,7 +1306,6 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 self.tableView.scrollToBottom(animated: false)
                 //            }
                 guard let cell = tableView.cellForRow(at: newIndexPath) as? ALKMyPhotoPortalCell else { return }
-                cell.setConfiguration(configuration)
                 guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
                     let notificationView = ALNotificationView()
                     notificationView.noDataConnectionNotificationView()
