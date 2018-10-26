@@ -44,4 +44,22 @@ class ALKConversationViewControllerTests: XCTestCase {
         _ = TestVC(expectation: vcExpectation)
         waitForExpectations(timeout: 0, handler: nil)
     }
+    
+    func testTypingStatusInGroup_UseDisplayName() {
+        let conversationVC = ALKConversationViewControllerMock(configuration: ALKConfiguration())
+        conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000)
+        conversationVC.contactService = ALContactServiceMock()
+        conversationVC.showTypingLabel(status: true, userId: "demoUserId")
+        XCTAssertEqual("demoDisplayName", conversationVC.testDisplayName)
+    }
+    
+    func testTypingStatusInGroup_UseSomebody() {
+        var configuration = ALKConfiguration()
+        configuration.showNameWhenUserTypesInGroup = false
+        let conversationVC = ALKConversationViewControllerMock(configuration: configuration)
+        conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000)
+        conversationVC.contactService = ALContactServiceMock()
+        conversationVC.showTypingLabel(status: true, userId: "demoUserId")
+        XCTAssertEqual("Somebody", conversationVC.testDisplayName)
+    }
 }

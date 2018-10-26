@@ -14,6 +14,8 @@ import SafariServices
 
 open class ALKConversationViewController: ALKBaseViewController {
 
+    var contactService: ALContactService!
+    
     public var viewModel: ALKConversationViewModel! {
         willSet(updatedVM) {
             guard viewModel != nil else {return}
@@ -120,6 +122,7 @@ open class ALKConversationViewController: ALKBaseViewController {
 
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
+        self.contactService = ALContactService()
         configurePropertiesWith(configuration: configuration)
         self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
     }
@@ -293,13 +296,7 @@ open class ALKConversationViewController: ALKBaseViewController {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
         }
-
-        if self.viewModel.isGroup == true {
-            self.setTypingNotiDisplayName(displayName: "Somebody")
-        } else {
-            self.setTypingNotiDisplayName(displayName: self.title ?? "")
-        }
-        
+    
         viewModel.delegate = self
         viewModel.prepareController()
         if let templates = viewModel.getMessageTemplates(){
@@ -665,7 +662,7 @@ open class ALKConversationViewController: ALKBaseViewController {
     }
 
     //MARK: public Control Typing notification
-    func setTypingNotiDisplayName(displayName:String)
+    func setTypingNoticeDisplayName(displayName:String)
     {
         typingNoticeView.setDisplayName(displayName: displayName)
     }
@@ -679,6 +676,24 @@ open class ALKConversationViewController: ALKBaseViewController {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
     }
+    
+    private func defaultNameForTypingStatus() -> String{
+        if self.viewModel.isGroup == true {
+            return "Somebody"
+        } else {
+            return self.title ?? ""
+        }
+    }
+    
+    private func nameForTypingStatusUsing(userId: String) -> String?{
+        guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
+            return nil
+        }
+        if contact.block || contact.blockBy {
+            return nil
+        }
+        return contact.getDisplayName()
+    }
 
     // Called from the parent VC
     func showTypingLabel(status: Bool, userId: String) {
@@ -686,6 +701,16 @@ open class ALKConversationViewController: ALKBaseViewController {
         view.layoutIfNeeded()
         if tableView.isAtBottom {
             tableView.scrollToBottomByOfset(animated: false)
+        }
+        
+        if configuration.showNameWhenUserTypesInGroup {
+            guard let name = nameForTypingStatusUsing(userId: userId) else {
+                return
+            }
+            setTypingNoticeDisplayName(displayName: name)
+        } else {
+            let name = defaultNameForTypingStatus()
+            setTypingNoticeDisplayName(displayName: name)
         }
     }
 
