@@ -12,7 +12,9 @@ import Applozic
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)
 }
 
-class MuteConversationViewController: UIViewController {
+class MuteConversationViewController: UIViewController, Localizable {
+    
+    var configuration: ALKConfiguration!
     
     var delegate: Muteable!
     var conversation: ALMessage!
@@ -38,8 +40,9 @@ class MuteConversationViewController: UIViewController {
         return picker
     }()
     
-    private let confirmButton: UIButton = {
+    private lazy var confirmButton: UIButton = {
         let button = UIButton()
+        let title = localizedString(forKey: "ConfirmButton", withDefaultValue: SystemMessage.ButtonName.Confirm, fileName: configuration.localizedStringFileName)
         button.setTitle(NSLocalizedString("ConfirmButton", value: SystemMessage.ButtonName.Confirm, comment: ""), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         return button
@@ -62,20 +65,21 @@ class MuteConversationViewController: UIViewController {
         return buttons
     }()
     
-    let timeValues: [String] = {
+    lazy var timeValues: [String] = {
         let values = [
-            NSLocalizedString("EightHour", value: SystemMessage.MutePopup.EightHour, comment: ""),
-            NSLocalizedString("OneWeek", value: SystemMessage.MutePopup.OneWeek, comment: ""),
-            NSLocalizedString("OneYear", value: SystemMessage.MutePopup.OneYear, comment: "")
+            localizedString(forKey: "EightHour", withDefaultValue: SystemMessage.MutePopup.EightHour, fileName: configuration.localizedStringFileName),
+            localizedString(forKey: "OneWeek", withDefaultValue: SystemMessage.MutePopup.OneWeek, fileName: configuration.localizedStringFileName),
+            localizedString(forKey: "OneYear", withDefaultValue: SystemMessage.MutePopup.OneYear, fileName: configuration.localizedStringFileName)
         ]
         return values
     }()
     
-    init(delegate: Muteable, conversation: ALMessage, atIndexPath: IndexPath) {
+    init(delegate: Muteable, conversation: ALMessage, atIndexPath: IndexPath, configuration: ALKConfiguration) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         self.conversation = conversation
         self.indexPath = atIndexPath
+        self.configuration = configuration
     }
     
     required init?(coder aDecoder: NSCoder) {

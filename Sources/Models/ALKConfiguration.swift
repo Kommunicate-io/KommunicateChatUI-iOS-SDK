@@ -47,6 +47,9 @@ public struct ALKConfiguration {
 
     /// If true then the start new chat button will be hidden.
     public var hideStartChatButton = false
+    
+    /// Pass the name of Localizable Strings file
+    public var localizedStringFileName = "Localizable"
 
     /// Send message icon in chat bar.
     public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)

@@ -11,11 +11,11 @@ import Foundation
 
 struct ALKAlertText {
     struct Title {
-        static let Discard = "Discard change"
+        static let Discard = NSLocalizedString("DiscardChangeTitle", value: SystemMessage.LabelName.DiscardChangeTitle, comment: "")
     }
     
     struct Message {
-        static let Discard = "If you go back now, your change will be discarded"
+        static let Discard = NSLocalizedString("DiscardChangeMessage", value: SystemMessage.Warning.DiscardChange, comment: "")
     }
 }
 

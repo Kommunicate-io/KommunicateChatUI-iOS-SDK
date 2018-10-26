@@ -12,6 +12,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-2922] Option to configure line image visibility in chat bar.
 - [AL-2922] Option to enable custom handling of navigation item click in conversation view.
 - [CS-174] Update typing status to show display name of user in group conversation.
+- [AL-2921] Add localization support.
 
 ### Fixes
 - [AL-3022] Fix an issue where audio option was still visible for open group.

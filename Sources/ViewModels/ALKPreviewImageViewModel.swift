@@ -8,7 +8,9 @@
 
 import Foundation
 
-final class ALKPreviewImageViewModel: NSObject {
+final class ALKPreviewImageViewModel: NSObject, Localizable {
+    
+    var localizedStringFileName: String
     
     var imageUrl: URL
     private var savingImagesuccessBlock: (() -> ())?
@@ -17,11 +19,13 @@ final class ALKPreviewImageViewModel: NSObject {
     fileprivate var downloadImageSuccessBlock: (() -> ())?
     fileprivate var downloadImageFailBlock: ((String) -> ())?
 
-    fileprivate let loadingFailErrorMessage = NSLocalizedString("DownloadOriginalImageFail",value:  SystemMessage.Warning.DownloadOriginalImageFail, comment: "")
+    fileprivate lazy var loadingFailErrorMessage: String = {
+        let text = localizedString(forKey: "DownloadOriginalImageFail", withDefaultValue: SystemMessage.Warning.DownloadOriginalImageFail, fileName: localizedStringFileName)
+        return text
+    }()
 
-
-    init(imageUrl: URL) {
-
+    init(imageUrl: URL, localizedStringFileName: String) {
+        self.localizedStringFileName = localizedStringFileName
         self.imageUrl = imageUrl
     }
 

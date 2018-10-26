@@ -13,7 +13,7 @@ import Applozic
 
 // MARK: - ALKFriendMessageCell
 open class ALKFriendMessageCell: ALKMessageCell {
-
+    
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -478,7 +478,6 @@ open class ALKMyMessageCell: ALKMessageCell {
 }
 
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
-
     fileprivate lazy var messageView: ALHyperLabel = {
         let label = ALHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
@@ -527,7 +526,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         return imageView
     }()
 
-    var selfNameText = "You"
+    lazy var selfNameText: String = {
+        let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, fileName: localizedStringFileName)
+        return text
+    }()
     var replyViewAction: (()->())? = nil
 
     override func update(viewModel: ALKMessageViewModel) {

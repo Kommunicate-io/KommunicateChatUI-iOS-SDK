@@ -8,11 +8,12 @@
 
 import UIKit
 
-final class ALKCustomCropImageViewController: ALKBaseViewController {
+final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable {
     
     @IBOutlet var previewScroll: UIScrollView!
     
     private var customCamDelegate:ALKCustomCameraProtocol!
+    fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
     var imgview:UIImageView! = UIImageView()
     var imagepicked:UIImage!
     var imageCroped:UIImage!
@@ -59,9 +60,9 @@ final class ALKCustomCropImageViewController: ALKBaseViewController {
     {
         self.view.backgroundColor = UIColor.mainRed()
 
-        self.title = NSLocalizedString("CropImage",value: "Crop Image", comment: "")
-        btnReset.setTitle(NSLocalizedString("ResetPhotoButton",value: "Reset Photo" ,comment: ""), for: .normal)
-        btnSave.setTitle(NSLocalizedString("SelectButton",value: "Select", comment: ""), for: .normal)
+        self.title = localizedString(forKey: "CropImage", withDefaultValue: SystemMessage.LabelName.CropImage, fileName: localizedStringFileName)
+        btnReset.setTitle(localizedString(forKey: "ResetPhotoButton", withDefaultValue: SystemMessage.ButtonName.ResetPhoto, fileName: localizedStringFileName), for: .normal)
+        btnSave.setTitle(localizedString(forKey: "SelectButton", withDefaultValue: SystemMessage.ButtonName.Select, fileName: localizedStringFileName), for: .normal)
         
         btnSave.layer.cornerRadius = 15
         btnSave.clipsToBounds = true

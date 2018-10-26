@@ -13,7 +13,7 @@ protocol ALKCustomPickerDelegate: class {
     func filesSelected(images: [UIImage], videos: [String])
 }
 
-class ALKCustomPickerViewController: ALKBaseViewController {
+class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     //photo library
     var asset: PHAsset!
     var allPhotos: PHFetchResult<PHAsset>!
@@ -29,12 +29,13 @@ class ALKCustomPickerViewController: ALKBaseViewController {
 
     @IBOutlet weak var previewGallery: UICollectionView!
 
-
+    private lazy var localizedStringFileName: String = configuration.localizedStringFileName
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        doneButton.title = NSLocalizedString("DoneButton", value: "Done", comment: "")
-        self.title = NSLocalizedString("PhotosTitle", value: "Photos", comment: "")
+        doneButton.title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done, fileName: localizedStringFileName)
+        self.title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
         checkPhotoLibraryPermission()
         previewGallery.delegate = self
         previewGallery.dataSource = self

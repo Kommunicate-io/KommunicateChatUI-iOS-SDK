@@ -10,10 +10,14 @@ import MapKit
 import Applozic
 import Kingfisher
 
-class ALKMapViewController: UIViewController {
+class ALKMapViewController: UIViewController, Localizable {
 
+    var configuration: ALKConfiguration!
+    
     @IBOutlet weak var mapView: MKMapView!
 
+    @IBOutlet weak var ShareLocationButton: UIButton!
+    
     var locationManager = CLLocationManager()
     var region = MKCoordinateRegion()
     var isInitialized = false
@@ -23,6 +27,13 @@ class ALKMapViewController: UIViewController {
         super.viewDidLoad()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
+        let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
+        ShareLocationButton.setTitle(locationButtonTitle, for: UIControlState.normal)
+        ShareLocationButton.setTitle(locationButtonTitle, for: UIControlState.selected)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         determineCurrentLocation()
     }
@@ -79,6 +90,10 @@ class ALKMapViewController: UIViewController {
                 success(image)
             }
         }
+    }
+    
+    public func setConfiguration(_ configuration: ALKConfiguration) {
+        self.configuration = configuration
     }
 }
 

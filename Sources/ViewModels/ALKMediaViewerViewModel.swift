@@ -13,7 +13,9 @@ protocol ALKMediaViewerViewModelDelegate: class {
     func reloadView()
 }
 
-final class ALKMediaViewerViewModel: NSObject {
+final class ALKMediaViewerViewModel: NSObject, Localizable {
+    
+    var localizedStringFileName: String!
     
     private var savingImagesuccessBlock: (() -> ())?
     private var savingImagefailBlock: ((Error) -> ())?
@@ -21,7 +23,10 @@ final class ALKMediaViewerViewModel: NSObject {
     fileprivate var downloadImageSuccessBlock: (() -> ())?
     fileprivate var downloadImageFailBlock: ((String) -> ())?
 
-    fileprivate let loadingFailErrorMessage = NSLocalizedString("DownloadOriginalImageFail",value:  SystemMessage.Warning.DownloadOriginalImageFail, comment: "")
+    fileprivate lazy var loadingFailErrorMessage: String = {
+        let text = localizedString(forKey: "DownloadOriginalImageFail", withDefaultValue: SystemMessage.Warning.DownloadOriginalImageFail, fileName: localizedStringFileName)
+        return text
+    }()
 
     fileprivate var messages: [ALKMessageViewModel]
     fileprivate var currentIndex: Int {
@@ -32,7 +37,8 @@ final class ALKMediaViewerViewModel: NSObject {
     fileprivate var isFirstIndexAudioVideo = false
     weak var delegate: ALKMediaViewerViewModelDelegate?
 
-    init(messages: [ALKMessageViewModel], currentIndex: Int) {
+    init(messages: [ALKMessageViewModel], currentIndex: Int, localizedStringFileName: String) {
+        self.localizedStringFileName = localizedStringFileName
         self.messages = messages
         self.currentIndex = currentIndex
         super.init()

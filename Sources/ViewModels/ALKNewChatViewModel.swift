@@ -11,6 +11,8 @@ import Applozic
 
 final class ALKNewChatViewModel {
     
+    fileprivate var localizedStringFileName: String!
+    
     var friendList = [ALKContactProtocol]()    // For UI presentation
     var bufferFriendList = [ALKContactProtocol]() {
         didSet {
@@ -22,7 +24,8 @@ final class ALKNewChatViewModel {
 
     //MARK: - Intialization
 
-    init() {
+    init(localizedStringFileName: String) {
+        self.localizedStringFileName = localizedStringFileName
     }
 
     //MARK: Internal
@@ -141,15 +144,25 @@ final class ALKNewChatViewModel {
     }
     
     // Internal class
-    final class CreateGroup: ALKContactProtocol {
+    final class CreateGroup: ALKContactProtocol, Localizable {
         
-        var friendProfileName: String? = NSLocalizedString("CreateGroupTitle", value: "Create Group", comment: "")
+        var localizedStringFileName: String!
+        
+        lazy var friendProfileName: String? = {
+            let text = localizedString(forKey: "CreateGroupTitle", withDefaultValue: SystemMessage.NavbarTitle.createGroupTitle, fileName: localizedStringFileName)
+            return text
+        }()
         var friendUUID: String? = ""
         var friendMood: String? = ""
         var friendDisplayImgURL: URL? = nil
+        
+        init(localizedStringFileName: String) {
+            self.localizedStringFileName = localizedStringFileName
+        }
+        
     }
     
     func createGroupCell() -> ALKContactProtocol {
-        return CreateGroup()
+        return CreateGroup(localizedStringFileName: localizedStringFileName)
     }
 }

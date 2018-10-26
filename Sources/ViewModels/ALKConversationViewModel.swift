@@ -20,7 +20,9 @@ public protocol ALKConversationViewModelDelegate: class {
     func willSendMessage()
 }
 
-open class ALKConversationViewModel: NSObject {
+open class ALKConversationViewModel: NSObject, Localizable {
+    
+    fileprivate var localizedStringFileName: String!
 
     //MARK: - Inputs
     open var contactId: String?
@@ -77,11 +79,13 @@ open class ALKConversationViewModel: NSObject {
     //MARK: - Initializer
     public required init(contactId: String?,
                 channelKey: NSNumber?,
-                conversationProxy: ALConversationProxy? = nil)
+                conversationProxy: ALConversationProxy? = nil,
+                localizedStringFileName: String!)
     {
         self.contactId = contactId
         self.channelKey = channelKey
         self.conversationProxy = conversationProxy
+        self.localizedStringFileName = localizedStringFileName
     }
 
     //MARK: - Public methods
@@ -666,7 +670,8 @@ open class ALKConversationViewModel: NSObject {
                 self.contactId = contactId
                 self.channelKey = nil
                 self.isFirstTime = true
-                self.delegate?.updateDisplay(name: message.name)
+                let messageName = message.name.count > 0 ? message.name : self.localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: self.localizedStringFileName)
+                self.delegate?.updateDisplay(name: messageName)
                 self.prepareController()
             })
         }

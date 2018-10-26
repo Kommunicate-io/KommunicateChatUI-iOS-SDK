@@ -16,6 +16,7 @@ protocol ALKLocationCellDelegate: class {
 
 class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
                         ALKReplyMenuItemProtocol {
+    
     weak var delegate:ALKLocationCellDelegate?
 
     // MARK: - Declare Variables or Types
@@ -161,10 +162,10 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     // MARK: - ALKPreviewLocationViewControllerDelegate
     func locationPreviewViewModel() -> ALKLocationPreviewViewModel {
         guard let loc = tempLocation else {
-            let unspecifiedLocaltionMsg = NSLocalizedString("UnspecifiedLocation", value: SystemMessage.UIError.unspecifiedLocation, comment: "")
-            return ALKLocationPreviewViewModel(addressText: unspecifiedLocaltionMsg)
+            let unspecifiedLocaltionMsg = localizedString(forKey: "UnspecifiedLocation", withDefaultValue: SystemMessage.UIError.unspecifiedLocation, fileName: localizedStringFileName)
+            return ALKLocationPreviewViewModel(addressText: unspecifiedLocaltionMsg, localizedStringFileName: localizedStringFileName)
         }
-        return ALKLocationPreviewViewModel(geocode:loc)
+        return ALKLocationPreviewViewModel(geocode:loc, localizedStringFileName: localizedStringFileName)
     }
 
     func menuReply(_ sender: Any) {

@@ -16,7 +16,7 @@ class ALKNewChatViewModelTests: XCTestCase {
     }
 
     func testContactsFetch() {
-        let newChatVM = ALKNewChatViewModel()
+        let newChatVM = ALKNewChatViewModel(localizedStringFileName: ALKConfiguration().localizedStringFileName)
         let settingsMock = ALApplozicSettingsMock.self
         let userServiceMock = ALUserServiceMock()
 
@@ -28,7 +28,7 @@ class ALKNewChatViewModelTests: XCTestCase {
     }
 
     func testAllRegisteredContactsFetch() {
-        let newChatVM = ALKNewChatViewModel()
+        let newChatVM = ALKNewChatViewModel(localizedStringFileName: ALKConfiguration().localizedStringFileName)
         let settingsMock = ALApplozicSettingsMock.self
         let userServiceMock = ALUserServiceMock()
 

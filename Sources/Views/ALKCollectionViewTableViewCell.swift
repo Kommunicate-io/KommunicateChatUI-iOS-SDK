@@ -44,7 +44,7 @@ open class ALKCollectionTableViewCell: ALKChatBaseCell<ALKMessageViewModel> {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override open func layoutSubviews() {
         super.layoutSubviews()
         let frame = self.contentView.bounds

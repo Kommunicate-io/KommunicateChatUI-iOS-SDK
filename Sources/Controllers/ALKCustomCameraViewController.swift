@@ -27,7 +27,7 @@ protocol ALKCustomCameraProtocol {
     func customCameraDidTakePicture(cropedImage: UIImage)
 }
 
-final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhotoCaptureDelegate {
+final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhotoCaptureDelegate, Localizable {
 
     //delegate
     var customCamDelegate: ALKCustomCameraProtocol!
@@ -59,11 +59,13 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     private var captureDevice: AVCaptureDevice?
     private var captureDeviceInput: AVCaptureDeviceInput?
     fileprivate var isUserControlEnable = true
+    
+    fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "Camera"
+        self.title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, fileName: localizedStringFileName)
         btnSwitchCam.isHidden = true
         checkPhotoLibraryPermission()
         reloadCamera()
@@ -84,10 +86,12 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         switch authStatus {
         case .denied:
             // ask for permissions
-            let camNotAvailable = NSLocalizedString("CamNotAvaiable", value: SystemMessage.Warning.CamNotAvaiable, comment: "")
-            let pleaseAllowCamera = NSLocalizedString("PleaseAllowCamera", value: SystemMessage.Camera.PleaseAllowCamera, comment: "")
+            
+            let camNotAvailable = localizedString(forKey: "CamNotAvaiable", withDefaultValue: SystemMessage.Warning.CamNotAvaiable, fileName: localizedStringFileName)
+            let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, fileName: localizedStringFileName)
             let alertController = UIAlertController(title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
-            let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+            let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
                 guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
                     return
                 }
@@ -103,7 +107,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 }
             }
             alertController.addAction(settingsAction)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizedStringFileName)
+            let cancelAction = UIAlertAction(title: cancelTitle, style: .default, handler: nil)
             alertController.addAction(cancelAction)
             present(alertController, animated: true, completion: nil)
         default: ()
@@ -197,7 +202,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
     //MARK: - UI control
     private func setupNavigation() {
-        let title = NSLocalizedString("Camera", value: "Camera", comment: "")
+        
+        let title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, fileName: localizedStringFileName)
         self.navigationItem.title = title
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.tintColor = UIColor.black
@@ -296,11 +302,12 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         case .denied:
             // ask for permissions
 
-            let camNotAvailable = NSLocalizedString("CamNotAvaiable", value: SystemMessage.Warning.CamNotAvaiable, comment: "")
-            let pleaseAllowCamera = NSLocalizedString("PleaseAllowCamera", value: SystemMessage.Camera.PleaseAllowCamera, comment: "")
+            let camNotAvailable = localizedString(forKey: "CamNotAvaiable", withDefaultValue: SystemMessage.Warning.CamNotAvaiable, fileName: localizedStringFileName)
+            let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, fileName: localizedStringFileName)
 
             let alertController = UIAlertController (title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
-            let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+            let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
                 guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
                     return
                 }
@@ -317,7 +324,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 }
             }
             alertController.addAction(settingsAction)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizedStringFileName)
+            let cancelAction = UIAlertAction(title: cancelTitle, style: .default, handler: nil)
             alertController.addAction(cancelAction)
             present(alertController, animated: true, completion: nil)
         case .notDetermined:

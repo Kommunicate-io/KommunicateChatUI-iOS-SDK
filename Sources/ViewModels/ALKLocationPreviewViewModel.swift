@@ -9,8 +9,10 @@
 import Foundation
 import CoreLocation
 
-struct ALKLocationPreviewViewModel {
+struct ALKLocationPreviewViewModel: Localizable {
 
+    fileprivate var localizedStringFileName: String!
+    
     private var address: String
     private var coor: CLLocationCoordinate2D
 
@@ -28,18 +30,19 @@ struct ALKLocationPreviewViewModel {
 
     var isReady: Bool {
         get {
-            let unspecifiedLocaltionMsg = NSLocalizedString("UnspecifiedLocation", value: SystemMessage.UIError.unspecifiedLocation, comment: "")
+            let unspecifiedLocaltionMsg = localizedString(forKey: "UnspecifiedLocation", withDefaultValue: SystemMessage.UIError.unspecifiedLocation, fileName: localizedStringFileName)
             return addressText != SystemMessage.UIError.unspecifiedLocation
         }
     }
 
-    init(geocode: Geocode) {
-        self.init(addressText:  geocode.displayName, coor: geocode.location)
+    init(geocode: Geocode, localizedStringFileName: String) {
+        self.init(addressText:  geocode.displayName, coor: geocode.location, localizedStringFileName: localizedStringFileName)
     }
 
-    init(addressText: String, coor: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: defaultLatitude, longitude: defaultLongitude)) {
+    init(addressText: String, coor: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: defaultLatitude, longitude: defaultLongitude), localizedStringFileName: String) {
         self.address    = addressText
         self.coor       = coor
+        self.localizedStringFileName = localizedStringFileName
     }
 }
 

@@ -43,7 +43,7 @@ class MuteConversationViewControllerTests: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         delegate = MuteableMock()
-        muteConversationVC = MuteConversationViewController(delegate: delegate, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0))
+        muteConversationVC = MuteConversationViewController(delegate: delegate, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
         muteConversationVC.setUpPickerView()
     }
     

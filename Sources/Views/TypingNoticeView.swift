@@ -8,8 +8,9 @@
 
 import UIKit
 
-class TypingNotice: UIView {
+class TypingNotice: UIView, Localizable {
     
+    fileprivate var localizedStringFileName: String!
     /*
      // Only override draw() if you perform custom drawing.
      // An empty implementation adversely affects performance during animation.
@@ -17,17 +18,9 @@ class TypingNotice: UIView {
      // Drawing code
      }
      */
-    private var lblName: UILabel = {
-        let name = UILabel.init(frame: .zero)
-        name.font =  UIFont(name: "HelveticaNeue-Italic", size: 12)
-        name.textColor = UIColor.lightGray
-        name.text = ""
-        return name
-    }()
     
-    private var lblIsTyping:UILabel = {
-        
-        let isTypingString = " is typing"
+    lazy private var lblIsTyping:UILabel = {
+        let isTypingString = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, fileName: localizedStringFileName)
         let isTypingWidth:CGFloat = isTypingString.evaluateStringWidth(textToEvaluate:isTypingString, fontSize: 12)
         
         let lblIsTyping = UILabel.init(frame: .zero)
@@ -65,8 +58,9 @@ class TypingNotice: UIView {
         
     }()
     
-    init() {
+    init(localizedStringFileName: String) {
         super.init(frame: .zero)
+        self.localizedStringFileName = localizedStringFileName
         createUI()
     }
     
@@ -81,16 +75,12 @@ class TypingNotice: UIView {
         self.clipsToBounds = false
         self.backgroundColor = UIColor.white
         
-        self.addViewsForAutolayout(views: [lblName,lblIsTyping,imgAnimate])
-        
-        lblName.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        lblName.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        lblName.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        self.addViewsForAutolayout(views: [lblIsTyping,imgAnimate])
         
         lblIsTyping.topAnchor.constraint(equalTo: topAnchor).isActive = true
         lblIsTyping.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        lblIsTyping.leadingAnchor.constraint(equalTo: lblName.trailingAnchor).isActive = true
+        lblIsTyping.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         lblIsTyping.widthAnchor.constraint(greaterThanOrEqualToConstant: 56).isActive = true
         
         imgAnimate.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -104,13 +94,23 @@ class TypingNotice: UIView {
     
     func setDisplayName(displayName:String)
     {
-        if(!displayName.isEmpty)
-        {
-            lblName.text = " " + displayName
-            lblIsTyping.text = " is typing"
+        guard !displayName.isEmpty else {
+            return
         }
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            lblIsTyping.text = NSLocalizedString("IsTypingForRTL",value: SystemMessage.Message.isTypingForRTL, comment: "")
+            let isTyping = localizedString(forKey: "IsTypingForRTL", withDefaultValue: SystemMessage.Message.isTypingForRTL, fileName: localizedStringFileName)
+            populateTypingStatus(isTyping: isTyping, displayName: displayName)
+        } else {
+            let isTyping = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, fileName: localizedStringFileName)
+            populateTypingStatus(isTyping: isTyping, displayName: displayName)
+        }
+    }
+    
+    func populateTypingStatus(isTyping: String, displayName: String) {
+        if isTyping.contains("%@"){
+            lblIsTyping.text = String(format: isTyping, displayName)
+        }else {
+            lblIsTyping.text = displayName + " " + isTyping
         }
     }
 
@@ -118,8 +118,9 @@ class TypingNotice: UIView {
     {
         if( number > 1)
         {
-            lblName.text = "\(number) people"
-            lblIsTyping.text = " are typing"
+            let displayName = "\(number) people"
+            let isTyping = localizedString(forKey: "AreTyping", withDefaultValue: SystemMessage.Message.areTyping, fileName: localizedStringFileName)
+            populateTypingStatus(isTyping: isTyping, displayName: displayName)
         }
     }
 }

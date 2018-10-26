@@ -57,7 +57,7 @@ extension ALMessage: ALKChatViewModelProtocol {
 
     var name: String {
         guard let alContact = alContact, let id = alContact.userId  else {
-            return "No Name"
+            return ""
         }
         guard let displayName = alContact.getDisplayName(), !displayName.isEmpty else { return id }
 
