@@ -79,6 +79,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
     
     // MARK: - UI Setup
     private func setupUI() {
+        tblParticipants.accessibilityIdentifier = "SelectParticipantTableView"
         setupInviteButton()
         setupSearchBar()
         self.navigationItem.title = localizedString(forKey: "AddToGroupTitle", withDefaultValue: SystemMessage.LabelName.AddToGroupTitle, fileName: localizedStringFileName)
@@ -90,6 +91,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
     private func setupInviteButton() {
         btnInvite.layer.cornerRadius = 15
         btnInvite.clipsToBounds = true
+        btnInvite.accessibilityIdentifier = "InviteButton"
     }
     
     private func setupSearchBar() {

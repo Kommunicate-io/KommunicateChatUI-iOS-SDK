@@ -13,6 +13,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-2922] Option to enable custom handling of navigation item click in conversation view.
 - [CS-174] Update typing status to show display name of user in group conversation.
 - [AL-2921] Add localization support.
+- [AL-2928] UI Test case for audio recording view.
 
 ### Fixes
 - [AL-3022] Fix an issue where audio option was still visible for open group.
@@ -41,7 +42,6 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Fixes
 - [AL-2908] Fixed message character going out of bounds.
 - [CS-127] Fixed an issue where tapping on notification was not opening chat screen.
-
 
 0.15.0
 ---

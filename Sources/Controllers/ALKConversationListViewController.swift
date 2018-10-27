@@ -43,6 +43,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         tv.separatorStyle = .none
         tv.backgroundColor = UIColor.white
         tv.keyboardDismissMode = .onDrag
+        tv.accessibilityIdentifier = "OuterChatScreenTableView"
         return tv
     }()
 
