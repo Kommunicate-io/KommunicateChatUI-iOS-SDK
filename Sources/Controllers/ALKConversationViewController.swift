@@ -951,6 +951,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     //And thats why when we check whether last cell is visible or not, it gives false result since the last cell is sometimes not fully visible.
     //This is a known apple bug and has a thread in stackoverflow: https://stackoverflow.com/questions/25686490/ios-8-auto-cell-height-cant-scroll-to-last-row
     private func moveTableViewToBottom(indexPath: IndexPath){
+        guard indexPath.section >= 0 else {
+            return
+        }
         tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
@@ -962,7 +965,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         //Check if current user is removed from the group
         isChannelLeft()
 
-        if isViewLoadedFromTappingOnNotification{
+        if isViewLoadedFromTappingOnNotification {
             let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)
             isViewLoadedFromTappingOnNotification = false
@@ -970,7 +973,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             if tableView.isCellVisible(section: viewModel.messageModels.count-2, row: 0) { //1 for recent added msg and 1 because it starts with 0
                 let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
                 moveTableViewToBottom(indexPath: indexPath)
-            } else {
+            } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
                 unreadScrollButton.isHidden = false
             }
         }
