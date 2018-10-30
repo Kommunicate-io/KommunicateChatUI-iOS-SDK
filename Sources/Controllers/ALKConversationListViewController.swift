@@ -481,28 +481,35 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         }
         return false
     }
+    
+    func isMessageSentByLoggedInUser(alMessage: ALMessage) -> Bool {
+        if ALUserDefaultsHandler.getUserId() == alMessage.contactId {
+            return true
+        }
+        return false
+    }
 
 
     open func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call: ", alMessage.message)
         guard let message = alMessage else { return }
-        let viewController = conversationViewController
+        let viewController = self.navigationController?.visibleViewController  as? ALKConversationViewController
         if let vm = viewController?.viewModel, (vm.contactId != nil || vm.channelKey != nil),
             let visibleController = self.navigationController?.visibleViewController,
             visibleController.isKind(of: ALKConversationViewController.self),
             isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
                 viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
-        } else {
+        } else if !isMessageSentByLoggedInUser(alMessage: alMessage){
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler({
                 response in
                 self.launchChat(contactId: message.contactId, groupId: message.groupId, conversationId: message.conversationId)
             })
-            if let visibleController = self.navigationController?.visibleViewController,
-                visibleController.isKind(of: ALKConversationListViewController.self) {
-                sync(message: alMessage)
-            }
+        }
+        if let visibleController = self.navigationController?.visibleViewController,
+            visibleController.isKind(of: ALKConversationListViewController.self) {
+            sync(message: alMessage)
         }
     }
 
