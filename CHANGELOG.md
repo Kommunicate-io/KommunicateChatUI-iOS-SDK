@@ -8,6 +8,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 - [AL-2856] Added a header view in chat bar to inject custom views from outside.
 
+### Fixes
+
+- [AL-3056] Fix an issue where earlier conversation won't load when scrolled to top.
+
 1.2.0
 ---
 ### Enhancements
