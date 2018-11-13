@@ -137,29 +137,27 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         // Do any additional setup after loading the view.
         captureSession.sessionPreset = AVCaptureSession.Preset.high
 
-        if let devices = AVCaptureDevice.devices() as? [AVCaptureDevice] {
-            for device in devices {
-                // Make sure this particular device supports video
-                if (device.hasMediaType(AVMediaType.video)) {
-                    if(camera == .Back)
-                    {
-                        if(device.position == AVCaptureDevice.Position.back) {
-                            captureDevice = device
-                            if captureDevice != nil {
-                                checkCameraPermission()
-                            }
+        let devices = AVCaptureDevice.devices()
+        for device in devices {
+            // Make sure this particular device supports video
+            if (device.hasMediaType(AVMediaType.video)) {
+                if(camera == .Back)
+                {
+                    if(device.position == AVCaptureDevice.Position.back) {
+                        captureDevice = device
+                        if captureDevice != nil {
+                            checkCameraPermission()
                         }
                     }
-                    else
-                    {
-                        if(device.position == AVCaptureDevice.Position.front) {
-                            captureDevice = device
-                            if captureDevice != nil {
-                                checkCameraPermission()
-                            }
+                }
+                else
+                {
+                    if(device.position == AVCaptureDevice.Position.front) {
+                        captureDevice = device
+                        if captureDevice != nil {
+                            checkCameraPermission()
                         }
                     }
-
                 }
             }
         }
@@ -198,7 +196,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
             }
             alertController.addAction(settingsAction)
             let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizedStringFileName)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            let cancelAction = UIAlertAction(title: cancelTitle, style: .default, handler: nil)
             alertController.addAction(cancelAction)
             present(alertController, animated: true, completion: nil)
         case .notDetermined:

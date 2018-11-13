@@ -203,7 +203,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             notification in
             guard let weakSelf = self else { return }
             let msgArray = notification.object as? [ALMessage]
-            print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count)
+            print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded, weakSelf.viewModel != nil else { return }
             weakSelf.viewModel.addMessagesToList(list)
 //            weakSelf.handlePushNotification = false
@@ -393,7 +393,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let channelKey = viewModel.channelKey else {
             return
         }
-        let messages = viewModel.messageModels
         if  ALChannelService().getChannelByKey(channelKey).type != 6 &&
             !ALChannelService().isLoginUser(inChannel: channelKey) {
             chatBar.disableChat()
@@ -591,7 +590,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             case .sendText(let button, let message):
 
-                if message.characters.count < 1 {
+                if message.count < 1 {
                     return
                 }
 

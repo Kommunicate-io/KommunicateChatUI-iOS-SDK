@@ -231,29 +231,27 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         // Do any additional setup after loading the view.
         captureSession.sessionPreset = AVCaptureSession.Preset.high
 
-        if let devices = AVCaptureDevice.devices() as? [AVCaptureDevice] {
-            for device in devices {
-                // Make sure this particular device supports video
-                if (device.hasMediaType(AVMediaType.video)) {
-                    if(camera == .Back)
-                    {
-                        if(device.position == AVCaptureDevice.Position.back) {
-                            captureDevice = device
-                            if captureDevice != nil {
-                                checkCameraPermission()
-                            }
+        let devices = AVCaptureDevice.devices()
+        for device in devices {
+            // Make sure this particular device supports video
+            if (device.hasMediaType(AVMediaType.video)) {
+                if(camera == .Back)
+                {
+                    if(device.position == AVCaptureDevice.Position.back) {
+                        captureDevice = device
+                        if captureDevice != nil {
+                            checkCameraPermission()
                         }
                     }
-                    else
-                    {
-                        if(device.position == AVCaptureDevice.Position.front) {
-                            captureDevice = device
-                            if captureDevice != nil {
-                                checkCameraPermission()
-                            }
+                }
+                else
+                {
+                    if(device.position == AVCaptureDevice.Position.front) {
+                        captureDevice = device
+                        if captureDevice != nil {
+                            checkCameraPermission()
                         }
                     }
-
                 }
             }
         }

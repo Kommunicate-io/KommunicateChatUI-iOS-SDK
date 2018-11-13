@@ -209,7 +209,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     }
 
     private func getPictureFilename() -> String {
-        var name = ""
+        let name = ""
 
         // Add user id
 //        if let userID = ChatManager.shared.userID {

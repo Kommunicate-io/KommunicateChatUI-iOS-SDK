@@ -9,7 +9,7 @@ import UIKit
 
 open class ALKTemplateMessageCell: UICollectionViewCell {
 
-    open let textLabel: UILabel = {
+    open var textLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.textColor = UIColor.black
         label.contentMode = .center

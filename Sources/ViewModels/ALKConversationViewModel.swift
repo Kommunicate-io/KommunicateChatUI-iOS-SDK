@@ -361,7 +361,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         var sortedArray = filteredArray
         if filteredArray.count > 1 {
-            sortedArray = filteredArray.sorted { Int($0.createdAtTime) < Int($1.createdAtTime) }
+            sortedArray = filteredArray.sorted { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
         }
         guard !sortedArray.isEmpty else { return }
 
@@ -475,7 +475,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         } else {
             ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
                 message, error in
-                NSLog("Message sent section: \(indexPath.section), \(alMessage.message)")
+                NSLog("Message sent section: \(indexPath.section), \(String(describing: alMessage.message))")
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))

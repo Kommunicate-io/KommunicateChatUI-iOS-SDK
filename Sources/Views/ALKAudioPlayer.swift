@@ -159,7 +159,7 @@ final class ALKAudioPlayer {
                 }
             }
             
-        } catch let error as NSError {
+        } catch _ as NSError {
         }
     }
     

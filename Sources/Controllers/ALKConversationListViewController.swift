@@ -75,7 +75,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: {[weak self] notification in
             guard let weakSelf = self, let viewModel = weakSelf.viewModel else { return }
             let msgArray = notification.object as? [ALMessage]
-            print("new notification received: ", msgArray?.first?.message)
+            print("new notification received: ", msgArray?.first?.message ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty else { return }
             viewModel.addMessages(messages: list)
 
@@ -83,7 +83,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "pushNotification"), object: nil, queue: nil, using: {[weak self] notification in
-            print("push notification received: ", notification.object)
+            print("push notification received: ", notification.object ?? "")
             guard let weakSelf = self, let object = notification.object as? String else { return }
             let components = object.components(separatedBy: ":")
             var groupId: NSNumber? = nil
