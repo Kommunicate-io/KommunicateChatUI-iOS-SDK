@@ -2,7 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-1.2.0(upcoming release)
+1.3.0(upcoming release)
+---
+### Enhancements
+
+- [AL-2856] Added a header view in chat bar to inject custom views from outside.
+
+1.2.0
 ---
 ### Enhancements
 - [AL-3004] Update chat screen to enable/disble chat for user when user is added/removed in the group.
