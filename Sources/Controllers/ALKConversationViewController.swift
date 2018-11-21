@@ -27,6 +27,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    public var chatBar: ALKChatBar = ALKChatBar(frame: .zero, configuration: ALKConfiguration())
+
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
 
@@ -35,8 +37,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// See configuration.
     private var isProfileTapActionEnabled = true
-
-    var chatBar: ALKChatBar = ALKChatBar(frame: .zero, configuration: ALKConfiguration())
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
@@ -128,7 +128,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         self.localizedStringFileName = configuration.localizedStringFileName
         self.contactService = ALContactService()
         configurePropertiesWith(configuration: configuration)
-        self.chatBar = ALKChatBar(frame: .zero, configuration: configuration)
+        self.chatBar.configuration = configuration
         self.typingNoticeView = TypingNotice(localizedStringFileName: configuration.localizedStringFileName)
     }
 

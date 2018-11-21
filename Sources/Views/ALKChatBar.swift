@@ -47,12 +47,27 @@ open class ALKChatBar: UIView, Localizable {
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
-    
+
     lazy open var soundRec: ALKAudioRecorderView = {
         let view = ALKAudioRecorderView(frame: CGRect.zero, configuration: self.configuration)
         view.layer.masksToBounds = true
         return view
     }()
+
+    /// A header view which will be present on top of the chat bar.
+    /// Use this to add custom views on top. It's default height will be 0.
+    /// Make sure to set the height using `headerViewHeight` property.
+    open var headerView: UIView = {
+        let view = UIView(frame: CGRect.zero)
+        return view
+    }()
+
+    /// Use this to set `headerView`'s height. Default height is 0.
+    open var headerViewHeight: Double = 0 {
+        didSet {
+            headerView.constraint(withIdentifier: ConstraintIdentifier.headerViewHeight.rawValue)?.constant = CGFloat(headerViewHeight)
+        }
+    }
 
     open let textView: ALKChatBarTextView = {
         let style = NSMutableParagraphStyle()
@@ -184,8 +199,9 @@ open class ALKChatBar: UIView, Localizable {
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
         case poweredByMessageHeight = "poweredByMessageHeight"
+        case headerViewHeight = "headerViewHeight"
     }
-    
+
     @objc func tapped(button: UIButton) {
         switch button {
         case sendButton:
@@ -325,12 +341,17 @@ open class ALKChatBar: UIView, Localizable {
 
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
-        addViewsForAutolayout(views: [bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
+        addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
 
-        lineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         lineView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+
+        headerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        headerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        headerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        headerView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.headerViewHeight.rawValue).isActive = true
 
         chatButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         chatButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -389,7 +410,7 @@ open class ALKChatBar: UIView, Localizable {
         poweredByMessageLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         poweredByMessageLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         poweredByMessageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.poweredByMessageHeight.rawValue).isActive = true
-        poweredByMessageLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        poweredByMessageLabel.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
 
         textView.trailingAnchor.constraint(equalTo: lineImageView.leadingAnchor).isActive = true
         
@@ -406,8 +427,8 @@ open class ALKChatBar: UIView, Localizable {
         soundRec.bottomAnchor.constraint(equalTo: textView.bottomAnchor).isActive = true
         soundRec.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: 0).isActive = true
         soundRec.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: 0).isActive = true
-        
-        frameView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+
+        frameView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0).isActive = true
         frameView.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: 0).isActive = true
         frameView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -4).isActive = true
         frameView.rightAnchor.constraint(equalTo: rightAnchor, constant: 2).isActive = true
