@@ -921,7 +921,13 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     public func loadingFinished(error: Error?) {
         activityIndicator.stopAnimating()
+        let oldSectionCount = tableView.numberOfSections
         tableView.reloadData()
+        let newSectionCount = tableView.numberOfSections
+        if newSectionCount > oldSectionCount {
+            let offset = newSectionCount - oldSectionCount
+            tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: true)
+        }
         print("loading finished")
         DispatchQueue.main.async {
             if self.viewModel.isFirstTime {
