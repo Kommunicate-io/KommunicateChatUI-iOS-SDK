@@ -925,7 +925,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.reloadData()
         let newSectionCount = tableView.numberOfSections
         if newSectionCount > oldSectionCount {
-            let offset = newSectionCount - oldSectionCount
+            let offset = newSectionCount - oldSectionCount - 1
             tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: true)
         }
         print("loading finished")
