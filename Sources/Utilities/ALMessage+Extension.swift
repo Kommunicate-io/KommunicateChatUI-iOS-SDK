@@ -36,18 +36,18 @@ extension ALMessage: ALKChatViewModelProtocol {
         return alChannel
     }
 
-    var avatar: URL? {
+    public var avatar: URL? {
         guard let alContact = alContact, let url = alContact.contactImageUrl else {
             return nil
         }
         return URL(string: url)
     }
 
-    var avatarImage: UIImage? {
+    public var avatarImage: UIImage? {
         return isGroupChat ? UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil) : nil
     }
 
-    var avatarGroupImageUrl: String? {
+    public var avatarGroupImageUrl: String? {
 
         guard let alChannel = alChannel, let avatar = alChannel.channelImageURL else {
             return nil
@@ -55,7 +55,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         return avatar
     }
 
-    var name: String {
+    public var name: String {
         guard let alContact = alContact, let id = alContact.userId  else {
             return ""
         }
@@ -64,7 +64,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         return displayName
     }
 
-    var groupName: String {
+    public var groupName: String {
         if isGroupChat {
             guard let alChannel = alChannel, let name = alChannel.name else {
                 return ""
@@ -74,7 +74,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         return ""
     }
 
-    var theLastMessage: String? {
+    public var theLastMessage: String? {
         switch messageType {
         case .text:
             return message
@@ -99,7 +99,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         }
     }
 
-    var hasUnreadMessages: Bool {
+    public var hasUnreadMessages: Bool {
         if isGroupChat {
             guard let alChannel = alChannel, let unreadCount = alChannel.unreadCount else {
                 return false
@@ -124,37 +124,37 @@ extension ALMessage: ALKChatViewModelProtocol {
         return nil
     }
 
-    var totalNumberOfUnreadMessages: UInt {
+    public var totalNumberOfUnreadMessages: UInt {
         if isGroupChat {
             guard let alChannel = alChannel, let unreadCount = alChannel.unreadCount else {
                 return 0
             }
-            return UInt(unreadCount)
+            return UInt(truncating: unreadCount)
         } else {
             guard let alContact = alContact, let unreadCount = alContact.unreadCount else {
                 return 0
             }
-            return UInt(unreadCount)
+            return UInt(truncating: unreadCount)
         }
 
     }
 
-    var isGroupChat: Bool {
+    public var isGroupChat: Bool {
         guard let _ = self.groupId else {
             return false
         }
         return true
     }
 
-    var contactId: String? {
+    public var contactId: String? {
         return self.contactIds
     }
 
-    var channelKey: NSNumber? {
+    public var channelKey: NSNumber? {
         return self.groupId
     }
 
-    var createdAt: String? {
+    public var createdAt: String? {
         let isToday = ALUtilityClass.isToday(date)
         return getCreatedAtTime(isToday)
     }
@@ -323,7 +323,7 @@ extension ALMessage {
 
 extension ALMessage {
 
-    var messageModel: ALKMessageModel {
+    public var messageModel: ALKMessageModel {
         let messageModel = ALKMessageModel()
         messageModel.message = message
         messageModel.isMyMessage = isMyMessage
