@@ -129,12 +129,12 @@ extension ALMessage: ALKChatViewModelProtocol {
             guard let alChannel = alChannel, let unreadCount = alChannel.unreadCount else {
                 return 0
             }
-            return UInt(unreadCount)
+            return UInt(truncating: unreadCount)
         } else {
             guard let alContact = alContact, let unreadCount = alContact.unreadCount else {
                 return 0
             }
-            return UInt(unreadCount)
+            return UInt(truncating: unreadCount)
         }
 
     }

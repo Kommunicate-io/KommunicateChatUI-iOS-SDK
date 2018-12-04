@@ -19,7 +19,7 @@ open class ALKTemplateMessagesView: UIView {
     
     open var viewModel: ALKTemplateMessagesViewModel!
 
-    open let collectionView: UICollectionView = {
+    open var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)

@@ -343,7 +343,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         
         let message = viewModel.messageForRow(indexPath: indexPath)
         
-        guard let metadata = message?.metadata else {
+        guard message?.metadata != nil else {
             return
             
         }

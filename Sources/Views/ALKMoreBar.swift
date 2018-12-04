@@ -97,7 +97,7 @@ final class ALKMoreBar: UIView {
             
             let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.shareLocation, bundle: Bundle.applozic)
             
-            guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+            guard (storyboard.instantiateInitialViewController() as? UINavigationController) != nil else { return }
            
 //            guard let shareLocationVC = nav.viewControllers.first as? ALKShareLocationViewController else { return }
 

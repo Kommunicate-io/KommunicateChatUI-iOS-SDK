@@ -110,7 +110,7 @@ final public class ALKConversationListViewModel: NSObject {
         }
         if self.allMessages.count > 1 {
 
-            self.allMessages = allMessages.sorted { ($0.createdAtTime != nil && $1.createdAtTime != nil) ? Int($0.createdAtTime) > Int($1.createdAtTime):false }
+            self.allMessages = allMessages.sorted { ($0.createdAtTime != nil && $1.createdAtTime != nil) ? Int(truncating: $0.createdAtTime) > Int(truncating: $1.createdAtTime):false }
         }
         delegate?.listUpdated()
         

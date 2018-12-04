@@ -27,7 +27,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return label
     }
 
-    open let mainBackgroundView: UIView = {
+    open var mainBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 5
         view.layer.borderColor = UIColor.gray.cgColor
@@ -43,7 +43,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return stackView
     }
 
-    open let buttonStackView: UIStackView = {
+    open var buttonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -51,7 +51,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return stackView
     }()
 
-    open let mainStackView: UIStackView = {
+    open var mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill

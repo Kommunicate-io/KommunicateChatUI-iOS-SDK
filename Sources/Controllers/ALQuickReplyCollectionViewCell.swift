@@ -36,7 +36,7 @@ open class ALQuickReplyCollectionViewCell: UICollectionViewCell {
     
     open var buttonSelected: ((_ index: Int, _ name: String)->())?
     
-    open let button: UIButton = {
+    open var button: UIButton = {
         let button = UIButton()
         button.setTitleColor(.gray, for: .normal)
         button.isUserInteractionEnabled = true

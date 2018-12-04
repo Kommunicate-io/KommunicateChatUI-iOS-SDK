@@ -30,8 +30,8 @@ struct ALKLocationPreviewViewModel: Localizable {
 
     var isReady: Bool {
         get {
-            let unspecifiedLocaltionMsg = localizedString(forKey: "UnspecifiedLocation", withDefaultValue: SystemMessage.UIError.unspecifiedLocation, fileName: localizedStringFileName)
-            return addressText != SystemMessage.UIError.unspecifiedLocation
+            let unspecifiedLocationMsg = localizedString(forKey: "UnspecifiedLocation", withDefaultValue: SystemMessage.UIError.unspecifiedLocation, fileName: localizedStringFileName)
+            return addressText != unspecifiedLocationMsg
         }
     }
 

@@ -30,10 +30,10 @@ extension String {
 //get index of char
 extension String {
     public func indexOfCharacter(char: Character) -> Int? {
-        if let idx = characters.index(of: char) {
-            return characters.distance(from: startIndex, to: idx)
+        guard let range = range(of: String(char)) else {
+            return nil
         }
-        return nil
+        return distance(from: startIndex, to: range.lowerBound)
     }
 }
 

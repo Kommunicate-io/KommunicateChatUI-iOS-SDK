@@ -39,7 +39,7 @@ final class ALKFriendContactCell: UITableViewCell {
         if let mood = viewModel.friendMood, !mood.isEmpty, let expireDate = viewModel.friendMoodExpiredAt {
             
             let currentDate = Date()
-            let expireDate = Date(timeIntervalSince1970: TimeInterval(expireDate))
+            let expireDate = Date(timeIntervalSince1970: TimeInterval(truncating: expireDate))
             if currentDate < expireDate {
                 setMood(text: viewModel.friendMood)
             } else {
