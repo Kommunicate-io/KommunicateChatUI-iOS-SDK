@@ -7,32 +7,33 @@
 
 import Foundation
 
-public struct ALKGenericCardTemplate: Codable {
-
-    public let cards: [ALKGenericCard]
-
-    private enum CodingKeys: String, CodingKey {
-        case cards = "elements"
+public struct ALKGenericCardTemplate {
+    public var cards: [ALKGenericCard]
+    init(cards: [ALKGenericCard]) {
+        self.cards = cards
     }
 }
 
 public struct ALKGenericCard: Codable {
     public let title: String
     public let subtitle: String
-    public let description: String
     public let imageUrl: URL?
+    public let overlayText: String?
+    public let description: String
+    public let rating: Int?
     public struct Button: Codable {
-        public let type: String
-        public let title: String
-        public let url: URL?
-        public let id: String?
+        public let data: String
+        public let name: String
+        public let action: String
     }
-    public let buttons: [Button]?
+    public let actions: [Button]?
     private enum CodingKeys: String, CodingKey {
         case title
         case subtitle
+        case imageUrl = "headerImageUrl"
+        case overlayText
         case description
-        case imageUrl = "image_url"
-        case buttons
+        case rating
+        case actions
     }
 }

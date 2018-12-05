@@ -522,11 +522,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendLocationCell.self)
         tableView.register(ALKMyVideoCell.self)
         tableView.register(ALKFriendVideoCell.self)
-        tableView.register(ALKCollectionTableViewCell.self)
         tableView.register(ALKGenericListCell.self)
         tableView.register(ALKFriendMessageQuickReplyCell.self)
         tableView.register(ALKMyMessageQuickReplyCell.self)
-
+        tableView.register(ALKMyGenericCardCell.self)
+        tableView.register(ALKFriendGenericCardCell.self)
     }
 
 

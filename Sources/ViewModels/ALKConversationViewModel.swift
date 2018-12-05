@@ -265,7 +265,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             return height
         case .genericCard:
-            return ALKGenericCardCollectionView.rowHeightFor(message: messageModel)
+            if messageModel.isMyMessage {
+                return ALKMyGenericCardCell.rowHeightFor(message: messageModel)
+            } else {
+                return ALKFriendGenericCardCell.rowHeightFor(message: messageModel)
+            }
         case .genericList:
             guard let template = genericTemplateFor(message: messageModel) as? ALKGenericListTemplate else {return 0}
             return ALKGenericListCell.rowHeightFor(template: template)
@@ -1229,7 +1233,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             let payload = metadata["payload"] as? String
             else { return nil}
         do {
-            let cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+            let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
+            let cardTemplate = ALKGenericCardTemplate(cards: cards)
             richMessages[message.identifier] = cardTemplate
             return cardTemplate
         } catch(let error) {

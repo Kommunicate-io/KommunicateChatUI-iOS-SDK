@@ -21,7 +21,8 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
             let payload = metadata["payload"] as? String
             else { return}
         do {
-            cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+            let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
+            cardTemplate = ALKGenericCardTemplate(cards: cards)
         } catch(let error) {
             print("\(error)")
         }
@@ -43,7 +44,8 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
             let payload = metadata["payload"] as? String
             else { return nil}
         do {
-            let cardTemplate = try JSONDecoder().decode(ALKGenericCardTemplate.self, from: payload.data)
+            let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
+            let cardTemplate = ALKGenericCardTemplate(cards: cards)
             return cardTemplate
         } catch(let error) {
             print("\(error)")
@@ -59,6 +61,27 @@ open class ALKGenericCardCell: UICollectionViewCell {
         let imageView = UIImageView(frame: CGRect.zero)
         imageView.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         return imageView
+    }()
+    
+    var overlayText: InsetLabel = {
+        let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+        label.backgroundColor = UIColor.white
+        label.text = ""
+        label.textColor = UIColor.black
+        label.font = Font.bold(size: 17.0).font()
+        label.layer.borderColor = UIColor.lightGray.cgColor
+        label.layer.borderWidth = 1
+        label.numberOfLines = 1
+        return label
+    }()
+    
+    var ratingLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.textColor = UIColor.black
+        label.font = Font.normal(size: 15.0).font()
+        label.numberOfLines = 1
+        return label
     }()
 
     open var titleLabel: UILabel = {
@@ -90,9 +113,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
     
     open var titleStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
+        stackView.axis = .horizontal
         stackView.alignment = .fill
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fill
         return stackView
     }()
 
@@ -123,7 +146,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     public enum Padding {
         enum CoverImageView {
-            static var top: CGFloat = 5.0
+            static var top: CGFloat = 10.0
             static var left: CGFloat = 5.0
             static var right: CGFloat = -5.0
             static var height: CGFloat = 80.0
@@ -136,7 +159,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     open var descriptionLabelHeight: CGFloat = 80.0
-    open var titleLabelStackViewHeight: CGFloat = 50.0
+    open var titleLabelStackViewHeight: CGFloat = 30.0
+    open var subtitleLabelHeight: CGFloat = 20.0
 
     open var actionButtons = [UIButton]()
     open var card: ALKGenericCard!
@@ -158,10 +182,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open class func rowHeightFor(card: ALKGenericCard) -> CGFloat {
         let buttonHeight = 30
-        let baseHeight:CGFloat = 170
+        let baseHeight:CGFloat = 200
         let padding:CGFloat = 10
         let coverImageHeight = (card.imageUrl != nil) ? Padding.CoverImageView.height:0
-        let totalButtonHeight:CGFloat = (card.buttons != nil) ? CGFloat(buttonHeight*(card.buttons?.count)!):0
+        let totalButtonHeight:CGFloat = (card.actions != nil) ? CGFloat(buttonHeight*(card.actions?.count)!):0
         return baseHeight + coverImageHeight + totalButtonHeight + padding
     }
 
@@ -170,18 +194,38 @@ open class ALKGenericCardCell: UICollectionViewCell {
         self.titleLabel.text = card.title
         self.subtitleLabel.text = card.subtitle
         self.descriptionLabel.text = card.description
-        guard let buttons = card.buttons, !buttons.isEmpty else {return}
+        setOverlayText(card)
+        setCoverImage(card)
+        setRatingLabel(card)
+        guard let buttons = card.actions, !buttons.isEmpty else {return}
         updateViewFor(buttons)
+    }
+
+    @objc func buttonSelected(_ action: UIButton) {
+        self.buttonSelected?(action.tag, action.currentTitle ?? "")
+    }
+    
+    private func setOverlayText(_ card: ALKGenericCard) {
+        guard let overlay = card.overlayText else {
+            self.overlayText.isHidden = true
+            return
+        }
+        self.overlayText.text = overlay
+    }
+    
+    private func setCoverImage(_ card: ALKGenericCard) {
         guard let url = card.imageUrl else {
             coverImageView.isHidden = true
             return
         }
         self.coverImageView.kf.setImage(with: url)
-
     }
-
-    @objc func buttonSelected(_ action: UIButton) {
-        self.buttonSelected?(action.tag, action.currentTitle ?? "")
+    
+    private func setRatingLabel(_ card: ALKGenericCard) {
+        guard let rating = card.rating else {
+            return
+        }
+        self.ratingLabel.text = String(rating)
     }
 
     private func setUpButtons() {
@@ -205,40 +249,57 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     private func setupConstraints() {
         let view = contentView
-
+        
         titleStackView.addArrangedSubview(titleLabel)
-        titleStackView.addArrangedSubview(subtitleLabel)
+        titleStackView.addArrangedSubview(ratingLabel)
         actionButtons.forEach {
             buttonStackView.addArrangedSubview($0)
             $0.heightAnchor.constraint(equalToConstant: 30).isActive = true
         }
         mainStackView.addArrangedSubview(titleStackView)
+        mainStackView.addArrangedSubview(subtitleLabel)
+        mainStackView.addArrangedSubview(subtitleLabel)
         mainStackView.addArrangedSubview(descriptionLabel)
         mainStackView.addArrangedSubview(buttonStackView)
 
-        view.addViewsForAutolayout(views: [mainBackgroundView, coverImageView, mainStackView])
+        view.addViewsForAutolayout(views: [mainBackgroundView, coverImageView, mainStackView, overlayText])
 
         coverImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Padding.CoverImageView.top).isActive = true
         coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.CoverImageView.left).isActive = true
         coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
         coverImageView.heightAnchor.constraint(equalToConstant: Padding.CoverImageView.height).isActive = true
+        
+        overlayText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        overlayText.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor, constant: 0).isActive = true
+        overlayText.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor).isActive = true
 
-        titleStackView.heightAnchor.constraint(equalToConstant: titleLabelStackViewHeight).isActive = true
-        titleStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
-        titleStackView.trailingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: -10).isActive = true
-        descriptionLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
-        descriptionLabel.trailingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: -10).isActive = true
-
-        descriptionLabel.heightAnchor.constraint(equalToConstant: descriptionLabelHeight).isActive = true
         mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true
         mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
         mainStackView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor).isActive = true
         mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Padding.mainStackView.bottom).isActive = true
 
+        titleStackView.heightAnchor.constraint(equalToConstant: titleLabelStackViewHeight).isActive = true
+        titleStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
+        titleStackView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -10).isActive = true
+        
+        ratingLabel.trailingAnchor.constraint(equalTo: titleStackView.trailingAnchor, constant: -10).isActive = true
+        ratingLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 40).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: titleStackView.leadingAnchor).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: ratingLabel.leadingAnchor, constant: -10).isActive = true
+        
+        subtitleLabel.heightAnchor.constraint(equalToConstant: subtitleLabelHeight).isActive = true
+        subtitleLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
+        subtitleLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -10).isActive = true
+        
+        descriptionLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
+        descriptionLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -10).isActive = true
+        descriptionLabel.heightAnchor.constraint(equalToConstant: descriptionLabelHeight).isActive = true
+        
         mainBackgroundView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor).isActive = true
         mainBackgroundView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
         mainBackgroundView.topAnchor.constraint(equalTo: coverImageView.topAnchor).isActive = true
         mainBackgroundView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor).isActive = true
+        
         buttonStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
     }
 
@@ -246,7 +307,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         // Hide extra buttons
         actionButtons.enumerated().forEach {
             if $0 >= buttons.count {$1.isHidden = true}
-            else {$1.setTitle(buttons[$0].title, for: .normal)}
+            else {$1.setTitle(buttons[$0].name, for: .normal)}
         }
     }
 }
@@ -291,5 +352,31 @@ public class VerticalAlignLabel: UILabel {
     override public func drawText(in rect: CGRect) {
         let r = self.textRect(forBounds: rect, limitedToNumberOfLines: self.numberOfLines)
         super.drawText(in: r)
+    }
+}
+
+class InsetLabel: UILabel {
+    
+    var insets = UIEdgeInsets()
+    
+    convenience init(insets: UIEdgeInsets) {
+        self.init(frame: CGRect.zero)
+        self.insets = insets
+    }
+    
+    convenience init(dx: CGFloat, dy: CGFloat) {
+        let insets = UIEdgeInsets(top: dy, left: dx, bottom: dy, right: dx)
+        self.init(insets: insets)
+    }
+    
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
+    }
+    
+    override var intrinsicContentSize: CGSize  {
+        var size = super.intrinsicContentSize
+        size.width += insets.left + insets.right
+        size.height += insets.top + insets.bottom
+        return size
     }
 }
