@@ -20,7 +20,13 @@ class GenericCardsMessageView: UIView {
         return label
     }()
     
-    fileprivate var bubbleView: UIImageView = {
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.isOpaque = true
+        return lb
+    }()
+    
+    public var bubbleView: UIImageView = {
         let bv = UIImageView()
         let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
         bv.tintColor = UIColor(netHex: 0xF1F0F0)
@@ -30,7 +36,7 @@ class GenericCardsMessageView: UIView {
         return bv
     }()
     
-    fileprivate var avatarImageView: UIImageView = {
+    public var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
         imv.clipsToBounds = true
@@ -65,7 +71,7 @@ class GenericCardsMessageView: UIView {
     
     func setupViews() {
         
-        self.addViewsForAutolayout(views: [avatarImageView, nameLabel, bubbleView, messageView])
+        self.addViewsForAutolayout(views: [avatarImageView, nameLabel, bubbleView, messageView, timeLabel])
         self.bringSubview(toFront: messageView)
         
         nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 6).isActive = true
@@ -87,16 +93,18 @@ class GenericCardsMessageView: UIView {
         messageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor).isActive = true
         
-        messageView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor).isActive = true
+        messageView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -2).isActive = true
         messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 18).isActive = true
         
         
-        bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
+        bubbleView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: -2).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 2).isActive = true
         
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
         
+        timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 10).isActive = true
+        timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
     
     func update(viewModel: ALKMessageViewModel) {
@@ -112,8 +120,10 @@ class GenericCardsMessageView: UIView {
         
         nameLabel.text = viewModel.displayName
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        messageView.text = viewModel.message
+        messageView.text = viewModel.message ?? ""
         messageView.setStyle(ALKMessageStyle.message)
+        timeLabel.text = viewModel.time
+        timeLabel.setStyle(ALKMessageStyle.time)
     }
     
     class func rowHeigh(viewModel: ALKMessageViewModel,widthNoPadding: CGFloat) -> CGFloat {
@@ -150,7 +160,8 @@ class GenericCardsMessageView: UIView {
                 size =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0,length: 0), nil, maxSize, nil)
             }
             messageHeigh = ceil(size.height) + 10
+            return messageHeigh
         }
-        return messageHeigh + 20
+        return messageHeigh + 50
     }
 }

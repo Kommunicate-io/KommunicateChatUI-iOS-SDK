@@ -7,16 +7,20 @@
 
 import UIKit
 
-class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
+class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
-    open var itemTitleLabel: UILabel {
-        let label = UILabel()
+    open var itemTitleLabel: InsetLabel = {
+        let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         label.text = "title"
-        label.numberOfLines = 3
+        label.numberOfLines = 1
         label.font = Font.bold(size: 16.0).font()
         label.textColor = UIColor.black
         return label
-    }
+    }()
+
+    var messageView: GenericCardsMessageView = {
+        return GenericCardsMessageView()
+    }()
 
     open var itemDescriptionLabel: VerticalAlignLabel {
         let label = VerticalAlignLabel()
@@ -27,7 +31,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return label
     }
 
-    open var mainBackgroundView: UIView = {
+    let mainBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 5
         view.layer.borderColor = UIColor.gray.cgColor
@@ -35,7 +39,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return view
     }()
 
-    open var itemLabelStackView: UIStackView {
+    var itemLabelStackView: UIStackView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -43,7 +47,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return stackView
     }
 
-    open var buttonStackView: UIStackView = {
+    let buttonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -51,7 +55,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return stackView
     }()
 
-    open var mainStackView: UIStackView = {
+    let mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -62,18 +66,18 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public enum Padding {
         enum mainStackView {
-            static var bottom: CGFloat = -20.0
+            static var bottom: CGFloat = -10.0
             static var left: CGFloat = 10
-            static var right: CGFloat = -10
+            static var right: CGFloat = -95
         }
     }
 
     open var actionButtons = [UIButton]()
-    open var itemLabels = [(UILabel,UILabel,UIView)]()
+
     open var template: ALKGenericListTemplate!
     open var buttonSelected: ((_ index: Int, _ name: String) -> ())?
 
-    private var items = [ALKGenericListTemplate.Element]()
+    private var items = [ALKGenericListTemplate]()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -90,63 +94,48 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         super.setupViews()
         setUpButtons()
         setUpViews()
-        setupItemLabels()
     }
 
-    open class func rowHeightFor(template: ALKGenericListTemplate) -> CGFloat {
-        let elementHeight = 60
-        let buttonHeight = 30
-        let baseHeight: CGFloat = 10
+    open class func rowHeightFor(template: [ALKGenericListTemplate], viewModel: ALKMessageViewModel) -> CGFloat {
+        let buttonHeight = 35
+        let baseHeight: CGFloat = 20
         let padding: CGFloat = 10
-        let elementsHeight: CGFloat = CGFloat(elementHeight * template.elements.count)
-        let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.buttons.count))
-        return baseHeight + elementsHeight + totalButtonHeight + padding
-    }
-
-    open func update(template: ALKGenericListTemplate) {
-        items = template.elements
-        let elements = template.elements
-        if !elements.isEmpty { updateViewFor(elements) }
-        let buttons = template.buttons
-        guard !buttons.isEmpty else { return }
-        updateViewFor(buttons)
+        let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
+        return baseHeight + totalButtonHeight + padding + GenericCardsMessageView.rowHeigh(viewModel: viewModel,  widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
 
     @objc func buttonSelected(_ action: UIButton) {
         self.buttonSelected?(action.tag, action.currentTitle ?? "")
     }
 
+    override func update(viewModel: ALKMessageViewModel) {
+        messageView.update(viewModel: viewModel)
+        guard let metadata = viewModel.metadata, let payload = metadata["payload"] as? String else {
+            return
+        }
+        do {
+            let cardTemplate = try JSONDecoder().decode([ALKGenericListTemplate].self, from: payload.data)
+            guard let title = metadata["headerText"] as? String else {
+                return
+            }
+            self.updateTitle(title)
+            self.updateViewFor(cardTemplate)
+        } catch(let error) {
+            print("\(error)")
+        }
+    }
+
     private func setUpButtons() {
-        actionButtons = (1...3).map {
+        actionButtons = (0...7).map {
             let button = UIButton()
-            button.setTitleColor(.gray, for: .normal)
+            button.setTitleColor(UIColor(netHex: 0x5c5aa7), for: .normal)
             button.setFont(font: UIFont.font(.bold(size: 16.0)))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.layer.borderWidth = 1.0
             button.tag = $0
-            button.layer.borderColor = UIColor.gray.cgColor
+            button.layer.borderColor = UIColor.lightGray.cgColor
             return button
-        }
-    }
-
-    private func setupItemLabels() {
-        itemLabels = (0...7).map {
-            let item = itemLabelStackView
-            let itemTitle = itemTitleLabel
-            let itemDescription = itemDescriptionLabel
-            let borderView = UIView()
-            borderView.backgroundColor = UIColor.borderGray()
-            item.addArrangedSubview(itemTitle)
-            item.addArrangedSubview(itemDescription)
-            item.addArrangedSubview(borderView)
-            itemTitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            itemDescription.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            borderView.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
-            mainStackView.insertArrangedSubview(item, at: $0)
-            item.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 5).isActive = true
-            item.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -5).isActive = true
-            return (itemTitle,itemDescription,borderView)
         }
     }
 
@@ -160,15 +149,28 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
         actionButtons.forEach {
             buttonStackView.addArrangedSubview($0)
-            $0.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 35).isActive = true
         }
+        mainStackView.addArrangedSubview(itemTitleLabel)
         mainStackView.addArrangedSubview(buttonStackView)
-        view.addViewsForAutolayout(views: [mainBackgroundView, mainStackView])
+        view.addViewsForAutolayout(views: [messageView, mainBackgroundView, mainStackView])
+
+        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4).isActive = true
+        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
+        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
+        messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
+        messageView.layoutIfNeeded()
 
         mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true
         mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
-        mainStackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        mainStackView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 5).isActive = true
         mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Padding.mainStackView.bottom).isActive = true
+
+        itemTitleLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
+        itemTitleLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: 0).isActive = true
+        itemTitleLabel.topAnchor.constraint(equalTo: mainStackView.topAnchor, constant: 0).isActive = true
+        itemTitleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        itemTitleLabel.backgroundColor = UIColor.lightGray
 
         mainBackgroundView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor).isActive = true
         mainBackgroundView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
@@ -178,7 +180,7 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         buttonStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
     }
 
-    private func updateViewFor(_ buttons: [ALKGenericListTemplate.Button]) {
+    private func updateViewFor(_ buttons: [ALKGenericListTemplate]) {
         // Hide3 extra buttons
         actionButtons.enumerated().forEach {
             if $0 >= buttons.count { $1.isHidden = true }
@@ -186,13 +188,12 @@ class ALKGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
     }
 
-    private func updateViewFor(_ elements: [ALKGenericListTemplate.Element]) {
-        itemLabels.enumerated().forEach {
-            if $0 >= elements.count {
-                $1.0.isHidden = true; $1.1.isHidden = true; $1.2.isHidden = true }
-            else {
-                $1.0.isHidden = false; $1.1.isHidden = false; $1.2.isHidden = false
-                $1.0.text = elements[$0].title; $1.1.text = elements[$0].description }
+    private func updateTitle(_ title: String?) {
+        guard let text = title else {
+            itemTitleLabel.isHidden = true
+            return
         }
+        itemTitleLabel.text = text
     }
+
 }

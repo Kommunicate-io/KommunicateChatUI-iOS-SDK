@@ -147,8 +147,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
     public enum Padding {
         enum CoverImageView {
             static var top: CGFloat = 10.0
-            static var left: CGFloat = 5.0
-            static var right: CGFloat = -5.0
+            static var left: CGFloat = 0.0
+            static var right: CGFloat = 0.0
             static var height: CGFloat = 80.0
         }
         enum mainStackView {
@@ -181,7 +181,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     open class func rowHeightFor(card: ALKGenericCard) -> CGFloat {
-        let buttonHeight = 30
+        let buttonHeight = 35
         let baseHeight:CGFloat = 200
         let padding:CGFloat = 10
         let coverImageHeight = (card.imageUrl != nil) ? Padding.CoverImageView.height:0
@@ -215,9 +215,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
     
     private func setCoverImage(_ card: ALKGenericCard) {
         guard let url = card.imageUrl else {
+            coverImageView.constraint(withIdentifier: "coverImage")?.constant = 0
             coverImageView.isHidden = true
             return
         }
+        coverImageView.constraint(withIdentifier: "coverImage")?.constant = Padding.CoverImageView.height
         self.coverImageView.kf.setImage(with: url)
     }
     
@@ -231,7 +233,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     private func setUpButtons() {
         actionButtons = (1...3).map {
             let button = UIButton()
-            button.setTitleColor(.gray, for: .normal)
+            button.setTitleColor(UIColor(netHex: 0x5c5aa7), for: .normal)
             button.setFont(font: UIFont.font(.bold(size: 16.0)))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
@@ -249,12 +251,12 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     private func setupConstraints() {
         let view = contentView
-        
+
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(ratingLabel)
         actionButtons.forEach {
             buttonStackView.addArrangedSubview($0)
-            $0.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 35).isActive = true
         }
         mainStackView.addArrangedSubview(titleStackView)
         mainStackView.addArrangedSubview(subtitleLabel)
@@ -268,7 +270,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
         coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.CoverImageView.left).isActive = true
         coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
         coverImageView.heightAnchor.constraint(equalToConstant: Padding.CoverImageView.height).isActive = true
-        
+        coverImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: "coverImage")?.isActive = true
+
         overlayText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         overlayText.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor, constant: 0).isActive = true
         overlayText.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor).isActive = true
@@ -281,26 +284,27 @@ open class ALKGenericCardCell: UICollectionViewCell {
         titleStackView.heightAnchor.constraint(equalToConstant: titleLabelStackViewHeight).isActive = true
         titleStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
         titleStackView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -10).isActive = true
-        
+
         ratingLabel.trailingAnchor.constraint(equalTo: titleStackView.trailingAnchor, constant: -10).isActive = true
         ratingLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 40).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: titleStackView.leadingAnchor).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: ratingLabel.leadingAnchor, constant: -10).isActive = true
-        
+
         subtitleLabel.heightAnchor.constraint(equalToConstant: subtitleLabelHeight).isActive = true
         subtitleLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
         subtitleLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -10).isActive = true
-        
+
         descriptionLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 10).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -10).isActive = true
         descriptionLabel.heightAnchor.constraint(equalToConstant: descriptionLabelHeight).isActive = true
-        
+
         mainBackgroundView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor).isActive = true
         mainBackgroundView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
-        mainBackgroundView.topAnchor.constraint(equalTo: coverImageView.topAnchor).isActive = true
+        mainBackgroundView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
         mainBackgroundView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor).isActive = true
-        
+
         buttonStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
+        
     }
 
     private func updateViewFor(_ buttons: [ALKGenericCard.Button]) {

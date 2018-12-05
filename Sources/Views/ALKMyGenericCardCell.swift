@@ -10,7 +10,7 @@ import Applozic
 
 class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     
-    open var collectionView: ALKIndexedCollectionView!
+    open var collectionView: ALKGenericCardCollectionView!
     
     var height: CGFloat!
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
@@ -20,6 +20,19 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label
+    }()
+    
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.isOpaque = true
+        return lb
+    }()
+    
+    fileprivate var stateView: UIImageView = {
+        let sv = UIImageView()
+        sv.isUserInteractionEnabled = false
+        sv.contentMode = .center
+        return sv
     }()
     
     fileprivate var bubbleView: UIImageView = {
@@ -45,14 +58,31 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         self.viewModel = viewModel
         collectionView.setMessage(viewModel: viewModel)
         collectionView.reloadData()
-        messageView.text = viewModel.message
+        
+        messageView.text = viewModel.message ?? ""
         messageView.setStyle(ALKMessageStyle.message)
+        timeLabel.text = viewModel.time
+        timeLabel.setStyle(ALKMessageStyle.time)
+        
+        if viewModel.isAllRead {
+            stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
+            stateView.tintColor = UIColor(netHex: 0x0578FF)
+        } else if viewModel.isAllReceived {
+            stateView.image = UIImage(named: "read_state_2", in: Bundle.applozic, compatibleWith: nil)
+            stateView.tintColor = nil
+        } else if viewModel.isSent {
+            stateView.image = UIImage(named: "read_state_1", in: Bundle.applozic, compatibleWith: nil)
+            stateView.tintColor = nil
+        } else {
+            stateView.image = UIImage(named: "seen_state_0", in: Bundle.applozic, compatibleWith: nil)
+            stateView.tintColor = UIColor.red
+        }
     }
     
     override func setupViews() {
         setupCollectionView()
         
-        contentView.addViewsForAutolayout(views: [self.collectionView, self.messageView, self.bubbleView])
+        contentView.addViewsForAutolayout(views: [self.collectionView, self.messageView, self.bubbleView, timeLabel, stateView])
         contentView.bringSubview(toFront: messageView)
         
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
@@ -65,8 +95,16 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 8).isActive = true
         
-        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
+        stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
+        stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
+        stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1.0).isActive = true
+        stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -2.0).isActive = true
+
+        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
+        timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
+        
+        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
         collectionView.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 10).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
     }
@@ -74,7 +112,7 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     public class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
         // Update height based on number of buttons
         // present and if image is set.
-        return ALKGenericCardCollectionView.rowHeightFor(message:message) + GenericCardsMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 200)
+        return ALKGenericCardCollectionView.rowHeightFor(message:message) + GenericCardsMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 130) - 20
     }
     
     open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, index: NSInteger) {
@@ -98,14 +136,10 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     private func setupCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 5)
-        layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
-        layout.itemSize = CGSize(width: 91, height: 91)
         layout.scrollDirection = .horizontal
-        collectionView = ALKIndexedCollectionView(frame: frame, collectionViewLayout: layout)
+        collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-        layoutMargins = UIEdgeInsetsMake(10, 0, 10, 0)
     }
 }
