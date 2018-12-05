@@ -59,6 +59,8 @@ open class ALKChatBar: UIView, Localizable {
     /// Make sure to set the height using `headerViewHeight` property.
     open var headerView: UIView = {
         let view = UIView(frame: CGRect.zero)
+        view.backgroundColor = UIColor.clear
+        view.accessibilityIdentifier = "Header view"
         return view
     }()
 

@@ -12,7 +12,7 @@ import Kingfisher
 import MGSwipeTableCell
 import Applozic
 
-protocol ALKChatViewModelProtocol {
+public protocol ALKChatViewModelProtocol {
     var avatar: URL? { get }
     var avatarImage: UIImage? { get }
     var avatarGroupImageUrl: String? { get }

@@ -11,18 +11,29 @@ import UIKit
 import ContactsUI
 import Applozic
 
+/// The delegate of an `ALKConversationListViewController` object.
+/// Provides different methods to manage chat thread selections.
+public protocol ALKConversationListDelegate {
+    func conversation(
+        _ message: ALKChatViewModelProtocol,
+        willSelectItemAt index: Int,
+        viewController: ALKConversationListViewController
+    )
+}
+
 open class ALKConversationListViewController: ALKBaseViewController, Localizable {
+
+    public var conversationViewController: ALKConversationViewController?
+    public var dbServiceType = ALMessageDBService.self
+    public var viewModelType = ALKConversationListViewModel.self
+    public var conversationViewModelType = ALKConversationViewModel.self
+    public var delegate: ALKConversationListDelegate?
 
     var viewModel: ALKConversationListViewModel!
 
     // To check if coming from push notification
     var contactId: String?
     var channelKey: NSNumber?
-
-    public var conversationViewControllerType = ALKConversationViewController.self
-    public var dbServiceType = ALMessageDBService.self
-    public var viewModelType = ALKConversationListViewModel.self
-    public var conversationViewModelType = ALKConversationViewModel.self
 
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate let searchController = UISearchController(searchResultsController: nil)
@@ -32,8 +43,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     fileprivate var dbService: ALMessageDBService!
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
-    fileprivate var conversationViewController: ALKConversationViewController?
-    
     fileprivate var localizedStringFileName: String!
 
     let tableView : UITableView = {
@@ -257,7 +266,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
         }
-        let viewController = conversationViewControllerType.init(configuration: configuration)
+        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
         viewController.title = title
         viewController.viewModel = convViewModel
         viewController.viewWillLoadFromTappingOnNotification()
@@ -350,12 +359,17 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
 
         if searchActive {
             guard let chat = searchFilteredChat[indexPath.row] as? ALMessage else {return}
+            delegate?.conversation(
+                chat,
+                willSelectItemAt: indexPath.row,
+                viewController: self
+            )
             let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, localizedStringFileName: configuration.localizedStringFileName)
             let convService = ALConversationService()
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
             }
-            let viewController = conversationViewControllerType.init(configuration: configuration)
+            let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             let chatName = chat.name.count > 0 ? chat.name : localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizedStringFileName)
             viewController.title = chat.isGroupChat ? chat.groupName:chatName
             viewController.viewModel = convViewModel
@@ -363,12 +377,18 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             self.navigationController?.pushViewController(viewController, animated: false)
         } else {
             guard let chat = viewModel.chatForRow(indexPath: indexPath) else { return }
+
+            delegate?.conversation(
+                chat,
+                willSelectItemAt: indexPath.row,
+                viewController: self
+            )
             let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, localizedStringFileName: configuration.localizedStringFileName)
             let convService = ALConversationService()
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
                 convViewModel.conversationProxy = convProxy
             }
-            let viewController = conversationViewControllerType.init(configuration: configuration)
+            let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             viewController.title = chat.isGroupChat ? chat.groupName:chat.name
             viewController.viewModel = convViewModel
             conversationViewController = viewController
