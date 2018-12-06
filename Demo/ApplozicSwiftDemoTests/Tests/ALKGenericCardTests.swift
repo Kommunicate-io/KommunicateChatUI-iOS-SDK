@@ -11,7 +11,7 @@ import XCTest
 
 class ALKGenericCardTests: XCTestCase {
 
-    let templateJsonData = "{\"elements\":[{\"title\":\"Book\",\"subtitle\":\"The only subtitle.\",\"description\":\"It's a good book.\",\"image_url\":\"https://www.image.com\",\"buttons\":[{\"type\":\"link\",\"title\":\"See more\",\"url\":\"https://www.click.com\"},{\"type\":\"post\",\"title\":\"Send message\",\"id\":\"12345\"},{\"type\":\"post\",\"title\":\"Send new message\",\"id\":\"123456\"}]},{\"title\":\"New Book\",\"subtitle\":\"The only subtitle.\",\"description\":\"It's a good book.\",\"image_url\":\"https://www.image.com\",\"buttons\":[{\"type\":\"link\",\"title\":\"See more\",\"url\":\"https://www.click.com\"},{\"type\":\"post\",\"title\":\"Send message\",\"id\":\"1234567\"},{\"type\":\"post\",\"title\":\"Send new message\",\"id\":\"12345689\"}]}]}".data(using: .utf8)
+    let templateJsonData = "[{\n  \"title\": \"Demo First Title\",\n  \"subtitle\": \"demo first subtitle.\",\n  \"headerImageUrl\": \"http://www.tollesonhotels.com/wp-content/uploads/2017/03/hotel-room.jpg\",\n  \"overlayText\": \"Rs. 4000\",\n  \"description\": \"demo description\",\n  \"rating\": 2345,\n  \"actions\": [\n    {\n      \"data\": \"Thanks for selections, We will send details\",\n      \"name\": \"View Details\",\n      \"action\": \"sendMessage\"\n    },\n    {\n      \"data\": \"www.facebook.com/myhotel.html\",\n      \"name\": \"Go to Facebook\",\n      \"action\": \"openUrl\"\n    },\n    {\n      \"data\": \"Thanks for selections, We will send details\",\n      \"name\": \"Open Activity\",\n      \"action\": \"openActivity\"\n    }\n  ]\n\n},\n{\"title\": \"Demo Second Title\",\n  \"subtitle\": \"demo second subtitle.\",\n  \"headerImageUrl\": \"http://www.tollesonhotels.com/wp-content/uploads/2017/03/hotel-room.jpg\",\n  \"overlayText\": \"Rs. 3000\",\n  \"description\": \"demo description\",\n  \"rating\": 2345,\n  \"actions\": [\n    {\n      \"data\": \"Thanks for selections, We will send details\",\n      \"name\": \"View Details\",\n      \"action\": \"sendMessage\"\n    },\n    {\n      \"data\": \"www.facebook.com\",\n      \"name\": \"Go to Facebook\",\n      \"action\": \"openUrl\"\n    },\n    {\n      \"data\": \"Thanks for selections, We will send details\",\n      \"name\": \"Open Activity\",\n      \"action\": \"openActivity\"\n    }\n  ]\n}]".data(using: .utf8)
 
     override func setUp() {
         super.setUp()
@@ -19,21 +19,21 @@ class ALKGenericCardTests: XCTestCase {
     }
 
     func testJsonMapping() {
-        let temp = try! JSONDecoder().decode(ALKGenericCardTemplate.self, from: templateJsonData!)
+        let cards = try! JSONDecoder().decode([ALKGenericCard].self, from: templateJsonData!)
+        let temp = ALKGenericCardTemplate(cards: cards)
         XCTAssertNotNil(temp.cards.first)
         XCTAssertEqual(temp.cards.count, 2)
-        XCTAssertEqual(temp.cards.first?.title, "Book")
-        XCTAssertEqual(temp.cards[1].title, "New Book")
+        XCTAssertEqual(temp.cards.first?.title, "Demo First Title")
+        XCTAssertEqual(temp.cards[1].title, "Demo Second Title")
         XCTAssertEqual(temp.cards.first?.buttons?.count, 3)
         XCTAssertEqual(temp.cards[1].buttons?.count, 3)
     }
 
     func testModelToJson() {
-        let rich = ALKGenericCard(title: "Hello", subtitle: "subtitle", description: "descr", imageUrl: nil, buttons: nil)
-        let richtemp = ALKGenericCardTemplate(cards: [rich])
-        let jsonData = try! JSONEncoder().encode(richtemp)
+        let rich = ALKGenericCard(title: "Hello", subtitle: "subtitle", imageUrl: nil, overlayText: nil, description: "dummy description", rating: nil, buttons: nil)
+        let jsonData = try! JSONEncoder().encode(rich)
         let jsonString = String(bytes: jsonData, encoding: .utf8)
-        let expectedJson = "{\"elements\":[{\"title\":\"Hello\",\"subtitle\":\"subtitle\",\"description\":\"descr\"}]}"
+        let expectedJson = "{\"title\":\"Hello\",\"subtitle\":\"subtitle\",\"description\":\"dummy description\"}"
         XCTAssertNotNil(jsonString)
         XCTAssert(!(jsonString?.isEmpty)!)
         XCTAssertEqual(jsonString!, expectedJson)

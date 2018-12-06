@@ -74,7 +74,7 @@ class ALMessageTests: XCTestCase {
     func testMessageType_WhenGenericList() {
         let message = mockMessage
         let mockMetaData = NSMutableDictionary()
-        mockMetaData["templateId"] = "3"
+        mockMetaData["templateId"] = "8"
         message.metadata = mockMetaData
         XCTAssert(message.messageType == .genericList)
     }

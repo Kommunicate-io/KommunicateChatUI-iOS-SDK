@@ -26,7 +26,7 @@ public struct ALKGenericCard: Codable {
         public let name: String
         public let action: String
     }
-    public let actions: [Button]?
+    public let buttons: [Button]?
     private enum CodingKeys: String, CodingKey {
         case title
         case subtitle
@@ -34,6 +34,6 @@ public struct ALKGenericCard: Codable {
         case overlayText
         case description
         case rating
-        case actions
+        case buttons = "actions"
     }
 }

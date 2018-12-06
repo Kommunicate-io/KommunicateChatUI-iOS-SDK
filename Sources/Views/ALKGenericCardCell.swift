@@ -185,7 +185,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         let baseHeight:CGFloat = 200
         let padding:CGFloat = 10
         let coverImageHeight = (card.imageUrl != nil) ? Padding.CoverImageView.height:0
-        let totalButtonHeight:CGFloat = (card.actions != nil) ? CGFloat(buttonHeight*(card.actions?.count)!):0
+        let totalButtonHeight:CGFloat = (card.buttons != nil) ? CGFloat(buttonHeight*(card.buttons?.count)!):0
         return baseHeight + coverImageHeight + totalButtonHeight + padding
     }
 
@@ -197,7 +197,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         setOverlayText(card)
         setCoverImage(card)
         setRatingLabel(card)
-        guard let buttons = card.actions, !buttons.isEmpty else {return}
+        guard let buttons = card.buttons, !buttons.isEmpty else {return}
         updateViewFor(buttons)
     }
 
