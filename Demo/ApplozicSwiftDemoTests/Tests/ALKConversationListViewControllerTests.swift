@@ -58,33 +58,6 @@ class ALKConversationListViewControllerTests: XCTestCase {
         XCTAssertTrue(result)
     }
 
-    func testMuteConversationCalledFromDelegate() {
-
-        class ALKConversationListViewControllerMock: ALKConversationListViewController {
-            var isMuteCalled: Bool = false
-
-            required init(configuration: ALKConfiguration) {
-                super.init(configuration: configuration)
-            }
-
-            required init?(coder aDecoder: NSCoder) {
-                fatalError("init(coder:) has not been implemented")
-            }
-
-            override func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
-                isMuteCalled = true
-            }
-        }
-
-        let conversationListVCMock = ALKConversationListViewControllerMock(configuration: ALKConfiguration())
-        XCTAssertFalse(conversationListVCMock.isMuteCalled)
-        let muteConversationVC = MuteConversationViewController(delegate: conversationListVCMock.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
-
-        muteConversationVC.tappedConfirm()
-
-        XCTAssertTrue(conversationListVCMock.isMuteCalled)
-    }
-
     func testDelegateCallback_whenMessageThreadIsSelected() {
 
         let selectItemExpectation = XCTestExpectation(description: "Conversation list item selected")
@@ -104,8 +77,13 @@ class ALKConversationListViewControllerTests: XCTestCase {
         // Select first thread
         conversationListVC.viewWillAppear(false)
         let firstIndex = IndexPath(row: 0, section: 0)
-        conversationListVC.tableView(conversationVC.tableView, didSelectRowAt: firstIndex)
-
+        XCTAssertNotNil(conversationListVC.tableView)
+        guard let tableView = conversationListVC.tableView else {
+            return
+        }
+        tableView.selectRow(at: firstIndex, animated: false, scrollPosition: .none)
+        tableView.delegate?.tableView?(tableView, didSelectRowAt: firstIndex)
+        
         wait(for: [selectItemExpectation], timeout: 2)
     }
     

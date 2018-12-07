@@ -29,7 +29,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     public var conversationViewModelType = ALKConversationViewModel.self
     public weak var delegate: ALKConversationListDelegate?
 
-    fileprivate lazy var conversationListTableViewController = ConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self)
+    fileprivate lazy var conversationListTableViewController = ALKConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self)
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate var dbService: ALMessageDBService!
@@ -451,13 +451,9 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 }
 
-extension ALKConversationListViewController: ConversationListTableViewDelegate {
-
-    func emptyChatCellTapped() {
-        self.compose()
-    }
-
-    func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
+extension ALKConversationListViewController: ALKConversationListTableViewDelegate {
+    
+    public func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
         delegate?.conversation(
             chat,
             willSelectItemAt: index,
@@ -474,5 +470,12 @@ extension ALKConversationListViewController: ConversationListTableViewDelegate {
         viewController.viewModel = convViewModel
         self.navigationController?.pushViewController(viewController, animated: false)
     }
-
+    
+    public func emptyChatCellTapped() {
+        self.compose()
+    }
+    
+    public func scrolledToBottom() {
+        viewModel.fetchMoreMessages(dbService: dbService)
+    }
 }

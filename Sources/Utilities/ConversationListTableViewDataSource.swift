@@ -13,10 +13,10 @@ class ConversationListTableViewDataSource: NSObject, UITableViewDataSource {
     /// A closure to configure tableview cell with the message object
     typealias CellConfigurator = (ALKChatViewModelProtocol, UITableViewCell) -> Void
     
-    var viewModel: ConversationListViewModelProtocol
+    var viewModel: ALKConversationListViewModelProtocol
     var cellConfigurator: CellConfigurator
     
-    init(viewModel: ConversationListViewModelProtocol, cellConfigurator: @escaping CellConfigurator) {
+    init(viewModel: ALKConversationListViewModelProtocol, cellConfigurator: @escaping CellConfigurator) {
         self.viewModel = viewModel
         self.cellConfigurator = cellConfigurator
     }
@@ -30,7 +30,7 @@ class ConversationListTableViewDataSource: NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let message = viewModel.chatForRow(indexPath: indexPath) as? ALMessage else {
+        guard let message = viewModel.chatFor(indexPath: indexPath) as? ALMessage else {
             return UITableViewCell()
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)

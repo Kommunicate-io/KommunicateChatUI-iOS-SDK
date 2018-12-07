@@ -20,32 +20,31 @@ protocol ALKConversationListViewModelDelegate: class {
  The `ConversationListViewModelProtocol` protocol defines the common interface though which an object provides message list information to an instance of `ConversationListTableViewController`.
 
  A concrete class that conforms to this protocol is provided in the SDK. See `ALKConversationListViewModel`.
-
  */
-public protocol ConversationListViewModelProtocol: class {
+public protocol ALKConversationListViewModelProtocol: class {
 
     /**
-     This method is used to determine the number of sections in the tableView.
+     This method is returns the number of sections in the tableView.
      - Returns: The number of sections in the tableView
     */
     func numberOfSection() -> Int
 
     /**
-     This method is used to determine the number of rows in a particular tableview section.
+     This method is returns the number of rows in a particular tableview section.
      - Parameter section: Section of the tableView.
      - Returns: The number of rows in `section`
     */
     func numberOfRowsInSection(section: Int) -> Int
 
     /**
-     This method is used to determine the message object at a particular indexPath of tableView.
+     This method returns the message object for the given indexpath of the tableview.
      - Parameter indexPath: IndexPath of the current tableView cell.
      - Returns: An object that conforms to ALKChatViewModelProtocol for the required indexPath.
      */
-    func chatForRow(indexPath: IndexPath) -> ALKChatViewModelProtocol?
+    func chatFor(indexPath: IndexPath) -> ALKChatViewModelProtocol?
 
     /**
-     This method is used to determine the complete message list.
+     This method returns the complete message list.
      - Returns: An array of all the messages in the list.
     */
     func getChatList() -> [Any]
@@ -59,29 +58,24 @@ public protocol ConversationListViewModelProtocol: class {
     /**
      This method is used to mute a particular conversation thread.
      - Parameters:
-        - conversation: The message object whose conversation is to be muted.
+        - message: The message object whose conversation is to be muted.
         - tillTime: NSNumber determining the amount of time conversation is to be muted.
         - withCompletion: Escaping Closure when the mute request is complete.
     */
-    func sendMuteRequestFor(conversation: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->())
+    func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->())
 
     /**
      This method is used to unmute a particular conversation thread.
      - Parameters:
-     - conversation: The message object whose conversation is to be unmuted.
+     - message: The message object whose conversation is to be unmuted.
      - withCompletion: Escaping Closure when the unmute request is complete.
      */
-    func sendUnmuteRequestFor(conversation: ALMessage, withCompletion: @escaping (Bool) -> ())
+    func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> ())
 
-    /**
-     This method is used to fetch more messages from db if present.
-     - Parameter dbService: An object of `ALMessageDBService` to complete the fetching operation
-     */
-    func fetchMoreMessages(dbService: ALMessageDBService)
 }
 
 
-final public class ALKConversationListViewModel: NSObject, ConversationListViewModelProtocol {
+final public class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol, Localizable {
 
     weak var delegate: ALKConversationListViewModelDelegate?
 
@@ -109,7 +103,7 @@ final public class ALKConversationListViewModel: NSObject, ConversationListViewM
         return allMessages.count
     }
 
-    public func chatForRow(indexPath: IndexPath) -> ALKChatViewModelProtocol? {
+    public func chatFor(indexPath: IndexPath) -> ALKChatViewModelProtocol? {
         guard indexPath.row < allMessages.count else {
             return nil
         }
@@ -198,7 +192,7 @@ final public class ALKConversationListViewModel: NSObject, ConversationListViewM
         }
     }
 
-    public func fetchMoreMessages(dbService: ALMessageDBService) {
+    func fetchMoreMessages(dbService: ALMessageDBService) {
         guard !ALUserDefaultsHandler.getFlagForAllConversationFetched() else { return }
         delegate?.startedLoading()
         dbService.fetchConversationfromServer(completion: {
@@ -207,16 +201,16 @@ final public class ALKConversationListViewModel: NSObject, ConversationListViewM
         })
     }
 
-    public func sendUnmuteRequestFor(conversation: ALMessage, withCompletion: @escaping (Bool) -> ()) {
+    public func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> ()) {
 
         let time = (Int(Date().timeIntervalSince1970) * 1000)
-        sendMuteRequestFor(conversation: conversation, tillTime: time as NSNumber) { (success) in
+        sendMuteRequestFor(message: message, tillTime: time as NSNumber) { (success) in
             withCompletion(success)
         }
     }
 
-    public func sendMuteRequestFor(conversation: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->()) {
-        if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
+    public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->()) {
+        if message.isGroupChat, let channel = ALChannelService().getChannelByKey(message.groupId) {
             // Unmute channel
             let muteRequest = ALMuteRequest()
             muteRequest.id = channel.key
@@ -227,7 +221,7 @@ final public class ALKConversationListViewModel: NSObject, ConversationListViewM
                 }
                 withCompletion(true)
             }
-        } else if let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactId){
+        } else if let contact = ALContactService().loadContact(byKey: "userId", value: message.contactId){
             // Unmute Contact
             let muteRequest = ALMuteRequest()
             muteRequest.userId = contact.userId

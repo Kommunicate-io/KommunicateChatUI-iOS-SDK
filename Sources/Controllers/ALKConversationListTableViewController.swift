@@ -11,13 +11,16 @@ import Applozic
 /**
  A delegate used to notify the receiver of the click events in `ConversationListTableViewController`
  */
-protocol ConversationListTableViewDelegate {
+public protocol ALKConversationListTableViewDelegate {
     
     /// Tells the delegate which chat cell is tapped alongwith the position.
     func tapped(_ chat: ALKChatViewModelProtocol, at index: Int)
     
     /// Tells the delegate empty list cell is tapped.
     func emptyChatCellTapped()
+    
+    /// Tells the delegate that the tableview is scrolled to bottom.
+    func scrolledToBottom()
 }
 
 /**
@@ -25,20 +28,22 @@ protocol ConversationListTableViewDelegate {
  
  It uses ALKChatCell and EmptyChatCell as tableview cell and handles the swipe interaction of user with the chat cell.
  */
-public class ConversationListTableViewController: UITableViewController, Localizable {
+public class ALKConversationListTableViewController: UITableViewController, Localizable {
     
-    var viewModel: ConversationListViewModelProtocol
-    var configuration: ALKConfiguration
-    var localizedStringFileName: String
-    var tapToDismiss: UITapGestureRecognizer!
-    var dbService: ALMessageDBService!
-    var delegate: ConversationListTableViewDelegate
-    lazy var dataSource = ConversationListTableViewDataSource(viewModel: self.viewModel, cellConfigurator: { (message, tableCell) in
+    //MARK: - PUBLIC PROPERTIES
+    public var viewModel: ALKConversationListViewModelProtocol
+    public var dbService: ALMessageDBService!
+    
+    //MARK: - PRIVATE PROPERTIES
+    fileprivate  var delegate: ALKConversationListTableViewDelegate
+    fileprivate var configuration: ALKConfiguration
+    fileprivate var localizedStringFileName: String
+    fileprivate var tapToDismiss: UITapGestureRecognizer!
+    fileprivate lazy var dataSource = ConversationListTableViewDataSource(viewModel: self.viewModel, cellConfigurator: { (message, tableCell) in
         let cell = tableCell as! ALKChatCell
         cell.update(viewModel: message, identity: nil)
         cell.chatCellDelegate = self
     })
-    
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate var searchActive : Bool = false
@@ -58,7 +63,7 @@ public class ConversationListTableViewController: UITableViewController, Localiz
         - configuration: A configuration to be used by this controller to configure different settings.
         - delegate: A delegate used to receive callbacks when chat cell is tapped.
      */
-    init(viewModel: ConversationListViewModelProtocol, dbService: ALMessageDBService, configuration: ALKConfiguration, delegate: ConversationListTableViewDelegate) {
+    public init(viewModel: ALKConversationListViewModelProtocol, dbService: ALMessageDBService, configuration: ALKConfiguration, delegate: ALKConversationListTableViewDelegate) {
         self.viewModel = viewModel
         self.configuration = configuration
         self.localizedStringFileName = configuration.localizedStringFileName
@@ -131,7 +136,7 @@ public class ConversationListTableViewController: UITableViewController, Localiz
             }
             delegate.tapped(message, at: indexPath.row)
         } else {
-            guard let message = viewModel.chatForRow(indexPath: indexPath) else {
+            guard let message = viewModel.chatFor(indexPath: indexPath) else {
                 return
             }
             delegate.tapped(message, at: indexPath.row)
@@ -193,7 +198,7 @@ public class ConversationListTableViewController: UITableViewController, Localiz
 }
 
 //MARK: - SEARCH BAR DELEGATE
-extension ConversationListTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
+extension ALKConversationListTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     func filterContentForSearchText(searchText: String, scope: String = "All") {
         searchFilteredChat = viewModel.getChatList().filter { (chatViewModel) -> Bool in
@@ -266,7 +271,7 @@ extension ConversationListTableViewController: UISearchResultsUpdating, UISearch
 }
 
 //MARK: - ALKChatCell DELEGATE
-extension ConversationListTableViewController: ALKChatCellDelegate {
+extension ALKConversationListTableViewController: ALKChatCellDelegate {
     
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol) {
         
@@ -330,7 +335,7 @@ extension ConversationListTableViewController: ALKChatCellDelegate {
                 alert.addAction(deleteButton)
                 present(alert, animated: true, completion: nil)
             }
-            else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 let(prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
                 
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
@@ -388,7 +393,7 @@ extension ConversationListTableViewController: ALKChatCellDelegate {
                     return
                 }
                 self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
-            }else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            }else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
             
@@ -401,7 +406,7 @@ extension ConversationListTableViewController: ALKChatCellDelegate {
                     return
                 }
                 self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
-            }else if let _ = self.viewModel.chatForRow(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            }else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
             
@@ -449,7 +454,7 @@ extension ConversationListTableViewController: ALKChatCellDelegate {
         //Start activity indicator
         self.activityIndicator.startAnimating()
         
-        viewModel.sendUnmuteRequestFor(conversation: conversation, withCompletion: { (success) in
+        viewModel.sendUnmuteRequestFor(message: conversation, withCompletion: { (success) in
             
             //Stop activity indicator
             self.activityIndicator.stopAnimating()
@@ -459,7 +464,7 @@ extension ConversationListTableViewController: ALKChatCellDelegate {
             }
             //Update UI
             if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell{
-                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatForRow(indexPath: atIndexPath) as? ALMessage else {
+                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
                     return
                 }
                 cell.update(viewModel: chat, identity: nil)
@@ -510,14 +515,14 @@ extension ConversationListTableViewController: ALKChatCellDelegate {
 }
 
 // MARK: - MUTE DELEGATE
-extension ConversationListTableViewController: Muteable {
+extension ALKConversationListTableViewController: Muteable {
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
         //Start activity indicator
         self.activityIndicator.startAnimating()
         
         let time = (Int64(Date().timeIntervalSince1970) * 1000) + forTime
         
-        self.viewModel.sendMuteRequestFor(conversation: conversation, tillTime: NSNumber(value: time)) { (success) in
+        self.viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { (success) in
             
             //Stop activity indicator
             self.activityIndicator.stopAnimating()
@@ -527,7 +532,7 @@ extension ConversationListTableViewController: Muteable {
                 return
             }
             if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell{
-                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatForRow(indexPath: atIndexPath) as? ALMessage else {
+                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
                     return
                 }
                 cell.update(viewModel: chat, identity: nil)
@@ -537,14 +542,14 @@ extension ConversationListTableViewController: Muteable {
 }
 
 //MARK: - SCROLL VIEW DELEGATE
-extension ConversationListTableViewController {
+extension ALKConversationListTableViewController {
     override public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let height = scrollView.frame.size.height
         let contentYoffset = scrollView.contentOffset.y
         let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
         if distanceFromBottom < height {
-            viewModel.fetchMoreMessages(dbService: dbService)
+            delegate.scrolledToBottom()
         }
     }
 }

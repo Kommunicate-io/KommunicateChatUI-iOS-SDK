@@ -20,6 +20,8 @@
 		1ACB6806218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB6805218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift */; };
 		1ACD2A13217E5CB900B46BCC /* MuteConversationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */; };
 		1ACD2A1A217F6C4700B46BCC /* MuteableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACD2A19217F6C4700B46BCC /* MuteableMock.swift */; };
+		1AE8248321BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE8248221BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift */; };
+		1AE8248821BA633D009C70FE /* ConversationListTableViewDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE8248721BA633D009C70FE /* ConversationListTableViewDelegateMock.swift */; };
 		1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A1D05B99581079D018089B /* CoreTelephony.framework */; };
 		220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA26913248851F7DE250BCB9 /* CoreText.framework */; };
 		8B1BFF4E21D2728B00768400 /* ViewControllerTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1BFF4D21D2728B00768400 /* ViewControllerTestUtil.swift */; };
@@ -95,6 +97,8 @@
 		1ACB6805218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKChatBarSnapshotTests.swift; sourceTree = "<group>"; };
 		1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteConversationViewControllerTests.swift; sourceTree = "<group>"; };
 		1ACD2A19217F6C4700B46BCC /* MuteableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteableMock.swift; sourceTree = "<group>"; };
+		1AE8248221BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListTableViewControllerTests.swift; sourceTree = "<group>"; };
+		1AE8248721BA633D009C70FE /* ConversationListTableViewDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListTableViewDelegateMock.swift; sourceTree = "<group>"; };
 		3063FEBE8909243F69F4E935 /* Pods-ApplozicSwiftDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		52ED4FD6D53E2CE8781D3C10 /* Pods-ApplozicSwiftDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5F504D2CB3F5D0E6D22C39A8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -256,6 +260,7 @@
 				1A0B17EE21819FF800B19187 /* ALKConversationViewControllerMock.swift */,
 				8B27B3D021B5858C003DA749 /* ConversationListDelegateMock.swift */,
 				8BDDEA6E21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift */,
+				1AE8248721BA633D009C70FE /* ConversationListTableViewDelegateMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -277,6 +282,7 @@
 				8B1BFF4D21D2728B00768400 /* ViewControllerTestUtil.swift */,
 				8BDDEA6A21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift */,
 				8BDDEA6C21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift */,
+				1AE8248221BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -575,6 +581,7 @@
 				8B1BFF4E21D2728B00768400 /* ViewControllerTestUtil.swift in Sources */,
 				8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */,
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
+				1AE8248321BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift in Sources */,
 				8B4E9FFF215BC804001FD5F3 /* ALKConversationViewModelMock.swift in Sources */,
 				8BDDEA6D21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift in Sources */,
 				1ACD2A1A217F6C4700B46BCC /* MuteableMock.swift in Sources */,
@@ -583,6 +590,7 @@
 				8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */,
 				1ACB680421806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift in Sources */,
 				8B4E9FFC215A31B2001FD5F3 /* ALMessageDBServiceMock.swift in Sources */,
+				1AE8248821BA633D009C70FE /* ConversationListTableViewDelegateMock.swift in Sources */,
 				8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */,
 				8BF8D85E1FBEAFDD00804824 /* ALApplozicSettingsMock.swift in Sources */,
 				8BF8D8601FBEB20200804824 /* ALUserServiceMock.swift in Sources */,
