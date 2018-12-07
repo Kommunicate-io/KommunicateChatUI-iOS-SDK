@@ -513,7 +513,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
     
     func isMessageSentByLoggedInUser(alMessage: ALMessage) -> Bool {
-        if ALUserDefaultsHandler.getUserId() == alMessage.contactId {
+        if alMessage.isSentMessage() {
             return true
         }
         return false
