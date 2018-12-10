@@ -244,7 +244,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
         if ALKMessageStyle.receivedBubble.style == ALKMessageStyle.BubbleStyle.edge{
             minimumHeigh = 20.0
         }else if ALKMessageStyle.receivedBubble.style == ALKMessageStyle.BubbleStyle.round{
-            minimumHeigh = 62.0
+            minimumHeigh = 85.0
         }
         // 2x because padding is for both the sides.
         let totalRowHeigh = super.rowHeigh(viewModel: viewModel, width: width-CGFloat(2*ALKMessageStyle.receivedBubble.widthPadding))
@@ -443,7 +443,7 @@ open class ALKMyMessageCell: ALKMessageCell {
         if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.edge{
             minimumHeight = 45.0
         }else if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.round{
-            minimumHeight = 62.0
+            minimumHeight = 75.0
         }
 
         // 2x because padding is for both the sides.

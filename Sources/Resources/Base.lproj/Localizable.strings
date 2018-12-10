@@ -113,3 +113,4 @@ OneWeek = "1 Week";
 OneYear = "1 Year";
 MuteButton = "Mute";
 UnmuteButton = "Unmute";
+NoConversationsLabelText = "Start to chat with your friends by tapping the 'New Chat' button";

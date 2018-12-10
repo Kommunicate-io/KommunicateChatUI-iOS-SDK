@@ -11,14 +11,15 @@ import Foundation
 import UIKit
 
 final class ALKInformationCell: UITableViewCell {
-    
+
+    var configuration = ALKConfiguration()
+
     fileprivate var messageView: UITextView = {
         let tv = UITextView()
         tv.setFont(UIFont.font(.bold(size: 12.0)))
         tv.isEditable = false
         tv.backgroundColor = .clear
         tv.isSelectable = false
-        tv.setTextColor(.color(Color.Background.gray9B))
         tv.isScrollEnabled = false
         tv.isUserInteractionEnabled = false
         tv.textAlignment = .center
@@ -34,6 +35,11 @@ final class ALKInformationCell: UITableViewCell {
         bv.isUserInteractionEnabled = false
         return bv
     }()
+
+
+    func setConfiguration(configuration:ALKConfiguration)  {
+       self.configuration = configuration
+    }
     
     class func topPadding() -> CGFloat {
         return 8
@@ -84,9 +90,10 @@ final class ALKInformationCell: UITableViewCell {
     
     fileprivate func setupConstraints() {
         
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
-        
+        contentView.backgroundColor = UIColor.clear
+        self.backgroundColor = UIColor.clear
+        bubbleView.backgroundColor = configuration.conversationViewCustomCellBackgroundColor
+        messageView.textColor = configuration.conversationViewCustomCellTextColor
         contentView.addViewsForAutolayout(views: [messageView,bubbleView])
         contentView.bringSubview(toFront: messageView)
         

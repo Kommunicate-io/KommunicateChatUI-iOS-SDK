@@ -218,7 +218,10 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
         let back = localizedString(forKey: "Back", withDefaultValue: SystemMessage.ChatList.leftBarBackButton, fileName: localizedStringFileName)
         let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
-        navigationItem.leftBarButtonItem = leftBarButtonItem
+
+        if !configuration.hideBackButtonInConversationList {
+            navigationItem.leftBarButtonItem = leftBarButtonItem
+        }
 
         #if DEVELOPMENT
             let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
@@ -242,9 +245,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         self.automaticallyAdjustsScrollViewInsets = false
         tableView.register(ALKChatCell.self)
-
-        let nib = UINib(nibName: "EmptyChatCell", bundle: Bundle.applozic)
-        tableView.register(nib, forCellReuseIdentifier: "EmptyChatCell")
         tableView.estimatedRowHeight = 0
     }
 
@@ -406,15 +406,25 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
 
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 
-        let view = tableView.dequeueReusableCell(withIdentifier: "EmptyChatCell")?.contentView
-        if let tap = view?.gestureRecognizers?.first {
-            view?.removeGestureRecognizer(tap)
-        }
-        let tap = UITapGestureRecognizer.init(target: self, action: #selector(compose))
-        tap.numberOfTapsRequired = 1
+        let emptyCellView = ALKEmptyView.instanceFromNib()
 
-        view?.addGestureRecognizer(tap)
-        return view
+        let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
+        emptyCellView.conversationLabel.text = noConversationLabelText
+        emptyCellView.startNewConversationButtonIcon.isHidden = configuration.hideEmptyStateStartNewButtonInConversationList
+
+        if !configuration.hideEmptyStateStartNewButtonInConversationList{
+            if let tap = emptyCellView.gestureRecognizers?.first {
+                emptyCellView.removeGestureRecognizer(tap)
+            }
+
+            let tap = UITapGestureRecognizer.init(target: self, action: #selector(compose))
+            tap.numberOfTapsRequired = 1
+
+            emptyCellView.addGestureRecognizer(tap)
+        }
+
+
+        return emptyCellView
     }
 
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

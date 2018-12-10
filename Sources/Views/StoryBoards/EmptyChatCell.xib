@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyChatCell" rowHeight="324" id="nMX-ht-dTa">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="EmptyChatCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyChatCell" rowHeight="324" id="nMX-ht-dTa" customClass="ALKEmptyView" customModule="ApplozicSwift" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nMX-ht-dTa" id="TRd-eu-tFe">
@@ -44,7 +44,11 @@
                     <constraint firstAttribute="trailing" secondItem="kYa-lk-kp3" secondAttribute="trailing" constant="24" id="t4V-5O-dM6"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="10.5" y="136"/>
+            <connections>
+                <outlet property="conversationLabel" destination="kYa-lk-kp3" id="OpY-yI-Kbv"/>
+                <outlet property="startNewConversationButtonIcon" destination="Ujb-kh-Yl0" id="4Nq-x0-g5c"/>
+            </connections>
+            <point key="canvasLocation" x="10.4" y="135.832083958021"/>
         </tableViewCell>
     </objects>
     <resources>

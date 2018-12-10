@@ -114,6 +114,7 @@ struct SystemMessage : Localizable{
 
     struct ChatList {
         static let title = localizedString(forKey: "ConversationListVCTitle")
+        static let NoConversationsLabelText = localizedString(forKey: "NoConversationsLabelText")
         static let leftBarBackButton = localizedString(forKey: "Back")
     }
 

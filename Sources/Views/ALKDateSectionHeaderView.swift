@@ -12,8 +12,8 @@ class ALKDateSectionHeaderView: UIView {
 
     // MARK: - Variables and Types
     // MARK: ChatDate
-    @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var dateView: UIView! {
+    @IBOutlet  weak var dateLabel: UILabel!
+    @IBOutlet  weak var dateView: UIView! {
         didSet {
             dateView.layer.cornerRadius = dateView.frame.size.height / 2.0
         }

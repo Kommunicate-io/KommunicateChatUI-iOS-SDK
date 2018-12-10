@@ -9,10 +9,14 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-2856] Added a header view in chat bar to inject custom views from outside.
 - [AL-3044] Added ALKConversationListDelegate to get chat thread selection callback.
 	 And updated properties of `ALKChatViewModelProtocol` to public.
+- [AL-2923] Added configure for hide start new in empty conversation
+- [AL-2923] Added configure for hide back button in conversation list
+- [AL-2923] Added configure for changing  color in navigation title
 
 ### Fixes
 
 - [AL-3056] Fix an issue where earlier conversation won't load when scrolled to top.
+- [AL-2923] Fix the crash for media cells for localization file name
 
 1.2.0
 ---

@@ -35,6 +35,10 @@ public struct ALKConfiguration {
     /// ViewControllers where navigation bar is visible.
     public var navigationBarItemColor = UIColor.navigationTextOceanBlue()
 
+    /// Navigation bar's title color. It will be used in all the
+    /// ViewControllers where navigation bar is visible.
+    public var navigationBarTitleColor = UIColor.black
+
     /// ChatBar's bottom view color. This is the view which contains
     /// all the attachment and other options.
     public var chatBarAttachmentViewBackgroundColor = UIColor.background(.grayEF)
@@ -63,6 +67,9 @@ public struct ALKConfiguration {
     /// If true then right side navigation icon in conversation view will be hidden.
     public var hideRightNavBarButtonForConversationView = false
 
+    /// If true then back  navigation icon in conversation list will be hidden.
+    public var hideBackButtonInConversationList = false
+
     /// conversationlist view navigation icon for right side.
     /// By default, create group icon image will be used.
     public var rightNavBarImageForConversationListView = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
@@ -78,6 +85,15 @@ public struct ALKConfiguration {
 
     /// If true then typing status will show user names.
     public var showNameWhenUserTypesInGroup = true
-    
+
+    /// If true then start new conversation button shown in the empty state will be disabled
+    public var hideEmptyStateStartNewButtonInConversationList = false
+
+    /// Date cell and  information cell  background color
+    public var conversationViewCustomCellBackgroundColor = UIColor.gray
+
+    /// Date cell and  information cell  text color
+    public var conversationViewCustomCellTextColor = UIColor.white
+
     public init() { }
 }
