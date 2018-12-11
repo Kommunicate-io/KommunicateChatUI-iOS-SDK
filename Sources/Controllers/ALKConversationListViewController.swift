@@ -34,6 +34,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     // To check if coming from push notification
     var contactId: String?
     var channelKey: NSNumber?
+    var conversationId: NSNumber?
 
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate let searchController = UISearchController(searchResultsController: nil)
@@ -97,12 +98,18 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             let components = object.components(separatedBy: ":")
             var groupId: NSNumber? = nil
             var contactId: String? = nil
-            if components.count > 1, let secondComponent = Int(components[1]) {
-                let id = NSNumber(integerLiteral: secondComponent)
-                groupId = id
+            var conversationId: NSNumber? = nil
+
+            if components.count > 2 {
+                let groupComponent = Int(components[1])
+                groupId = NSNumber(integerLiteral: groupComponent!)
+            } else if components.count == 2 {
+                let conversationComponent = Int(components[1])
+                conversationId = NSNumber(integerLiteral: conversationComponent!)
             } else {
                 contactId = object
             }
+
             let message = ALMessage()
             message.contactIds = contactId
             message.groupId = groupId
@@ -122,7 +129,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
                 // Coming from background
 
                 guard contactId != nil || groupId != nil else { return }
-               weakSelf.launchChat(contactId: contactId, groupId: groupId)
+               weakSelf.launchChat(contactId: contactId, groupId: groupId, conversationId: conversationId)
             }
         })
 
@@ -192,11 +199,12 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     override open func viewDidAppear(_ animated: Bool) {
         print("contact id: ", contactId as Any)
-        if contactId != nil || channelKey != nil {
+        if contactId != nil || channelKey != nil || conversationId != nil {
             print("contact id present")
-            launchChat(contactId: contactId, groupId: channelKey)
+            launchChat(contactId: contactId, groupId: channelKey, conversationId: conversationId)
             self.contactId = nil
             self.channelKey = nil
+            self.conversationId = nil
         }
     }
 
@@ -376,11 +384,12 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
                 willSelectItemAt: indexPath.row,
                 viewController: self
             )
-            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, localizedStringFileName: configuration.localizedStringFileName)
+            var conversationProxy: ALConversationProxy? = nil
             let convService = ALConversationService()
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
-                convViewModel.conversationProxy = convProxy
+                conversationProxy = convProxy
             }
+            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
             let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             let chatName = chat.name.count > 0 ? chat.name : localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizedStringFileName)
             viewController.title = chat.isGroupChat ? chat.groupName:chatName
@@ -395,11 +404,12 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
                 willSelectItemAt: indexPath.row,
                 viewController: self
             )
-            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, localizedStringFileName: configuration.localizedStringFileName)
+            var conversationProxy: ALConversationProxy? = nil
             let convService = ALConversationService()
             if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
-                convViewModel.conversationProxy = convProxy
+                conversationProxy = convProxy
             }
+            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
             let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             viewController.title = chat.isGroupChat ? chat.groupName:chat.name
             viewController.viewModel = convViewModel
@@ -523,7 +533,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         }
         return false
     }
-    
+
     func isMessageSentByLoggedInUser(alMessage: ALMessage) -> Bool {
         if alMessage.isSentMessage() {
             return true
@@ -684,7 +694,7 @@ extension ALKConversationListViewController: ALKChatCellDelegate {
 
     private func alertMessageAndButtonTitleToUnmute(conversation: ALMessage) -> (String?, String?) {
         let unmuteButton = localizedString(forKey: "UnmuteButton", withDefaultValue: SystemMessage.Mute.UnmuteButton, fileName: localizedStringFileName)
-        
+
         if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
             let unmuteChannelFormat = localizedString(forKey: "UnmuteChannel", withDefaultValue: SystemMessage.Mute.UnmuteChannel, fileName: localizedStringFileName)
             let unmuteChannelMessage = String(format: unmuteChannelFormat, channel.name)

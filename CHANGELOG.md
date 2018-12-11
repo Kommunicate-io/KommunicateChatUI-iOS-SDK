@@ -13,6 +13,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-2923] Added configure for hide back button in conversation list
 - [AL-2923] Added configure for changing  color in navigation title
 - [Al-3093] Update rich message layout to display message on top of templates.
+- [AL-3131] Update notification to support context-based-chat.
 
 ### Fixes
 
