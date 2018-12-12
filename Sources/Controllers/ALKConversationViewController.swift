@@ -392,7 +392,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         //Check for group left
         isChannelLeft()
 
-        guard viewModel.isContextBasedChat else { return }
+        guard viewModel.isContextBasedChat else {
+            toggleVisibilityOfContextTitleView(false)
+            return
+        }
         prepareContextView()
     }
 
@@ -414,9 +417,17 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func prepareContextView(){
         guard let topicDetail = viewModel.getContextTitleData() else {return }
         contextTitleView.configureWith(value: topicDetail)
+        toggleVisibilityOfContextTitleView(true)
+    }
+    
+    private func toggleVisibilityOfContextTitleView(_ show: Bool) {
+        var height: CGFloat = 0
+        if show {
+            height = Padding.ContextView.height
+        }
         contextTitleView.constraint(
             withIdentifier: ConstraintIdentifier.contextTitleView)?
-            .constant = Padding.ContextView.height
+            .constant = height
     }
     
     private func refreshViewController() {
