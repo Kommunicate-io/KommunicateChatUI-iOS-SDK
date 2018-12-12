@@ -29,6 +29,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public var chatBar: ALKChatBar = ALKChatBar(frame: .zero, configuration: ALKConfiguration())
 
+    override open var title: String? {
+        didSet {
+            titleButton.setTitle(title, for: .normal)
+        }
+    }
+
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
 
