@@ -12,15 +12,14 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     open var itemTitleLabel: InsetLabel = {
         let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         label.text = "title"
+        /// TODO: Make number of lines to 3.
         label.numberOfLines = 1
         label.font = Font.bold(size: 16.0).font()
         label.textColor = UIColor.black
         return label
     }()
 
-    var messageView: GenericCardsMessageView = {
-        return GenericCardsMessageView()
-    }()
+    var messageView = GenericCardsMessageView()
 
     open var itemDescriptionLabel: VerticalAlignLabel {
         let label = VerticalAlignLabel()
@@ -159,6 +158,8 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
         messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
+        
+        /// TODO: Find alternative to layoutIfNeeded
         messageView.layoutIfNeeded()
 
         mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true

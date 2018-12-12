@@ -247,6 +247,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .genericCard:
             if message.isMyMessage {
                 let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
                 cell.update(viewModel: message)
                 cell.menuAction = {[weak self] action in
@@ -254,6 +255,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
                 cell.update(viewModel: message)
                 cell.menuAction = {[weak self] action in
@@ -263,30 +265,20 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .genericList:
             if message.isMyMessage {
                 let cell: ALKMyGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
                 cell.update(viewModel: message)
                 cell.buttonSelected = {[unowned self] tag, title in
-                    print("\(title, tag) button selected in generic card")
-                    var infoDict = [String: Any]()
-                    infoDict["buttonName"] = title
-                    infoDict["buttonIndex"] = tag
-                    infoDict["template"] = template
-                    infoDict["userId"] = self.viewModel.contactId
-                    NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
+                    self.genericListButtonAction(tag: tag, title: title, template: template)
                 }
                 return cell
             } else {
                 let cell: ALKFriendGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
                 cell.update(viewModel: message)
                 cell.buttonSelected = {[unowned self] tag, title in
-                    print("\(title, tag) button selected in generic card")
-                    var infoDict = [String: Any]()
-                    infoDict["buttonName"] = title
-                    infoDict["buttonIndex"] = tag
-                    infoDict["template"] = template
-                    infoDict["userId"] = self.viewModel.contactId
-                    NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
+                    self.genericListButtonAction(tag: tag, title: title, template: template)
                 }
                 return cell
             }
@@ -410,18 +402,14 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
                 let index = cell.collectionView.tag
-                let value = contentOffsetDictionary[index]
-                let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
-                cell.collectionView.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: false)
+                cell.collectionView.setContentOffset(CGPoint(x: collectionViewOffsetFromIndex(index), y: 0), animated: false)
             }else{
                 guard let cell =  cell as? ALKFriendGenericCardCell else {
                     return
                 }
                 cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
                 let index = cell.collectionView.tag
-                let value = contentOffsetDictionary[index]
-                let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
-                cell.collectionView.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: false)
+                cell.collectionView.setContentOffset(CGPoint(x: collectionViewOffsetFromIndex(index), y: 0), animated: false)
             }
         }
     }
@@ -464,6 +452,23 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             contentOffsetDictionary[collectionView.tag] = horizontalOffset as AnyObject
         }
     }
+    
+    private func genericListButtonAction(tag: Int, title: String, template: [ALKGenericListTemplate]) {
+        print("\(title, tag) button selected in generic list")
+        var infoDict = [String: Any]()
+        infoDict["buttonName"] = title
+        infoDict["buttonIndex"] = tag
+        infoDict["template"] = template
+        infoDict["userId"] = self.viewModel.contactId
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
+    }
+    
+    private func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
+        let value = contentOffsetDictionary[index]
+        let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
+        return horizontalOffset
+    }
+    
 }
 
 extension ALTopicDetail: ALKContextTitleDataType {

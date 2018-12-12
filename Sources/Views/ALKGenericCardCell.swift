@@ -63,7 +63,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         return imageView
     }()
     
-    var overlayText: InsetLabel = {
+    open var overlayText: InsetLabel = {
         let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         label.backgroundColor = UIColor.white
         label.text = ""
@@ -75,7 +75,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         return label
     }()
     
-    var ratingLabel: UILabel = {
+    open var ratingLabel: UILabel = {
         let label = UILabel()
         label.text = ""
         label.textColor = UIColor.black
@@ -359,7 +359,7 @@ public class VerticalAlignLabel: UILabel {
     }
 }
 
-class InsetLabel: UILabel {
+public class InsetLabel: UILabel {
     
     var insets = UIEdgeInsets()
     
@@ -373,11 +373,11 @@ class InsetLabel: UILabel {
         self.init(insets: insets)
     }
     
-    override func drawText(in rect: CGRect) {
+    override public func drawText(in rect: CGRect) {
         super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
     }
     
-    override var intrinsicContentSize: CGSize  {
+    override public var intrinsicContentSize: CGSize  {
         var size = super.intrinsicContentSize
         size.width += insets.left + insets.right
         size.height += insets.top + insets.bottom

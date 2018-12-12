@@ -45,6 +45,8 @@ open class ALKFriendGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
         messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
+        
+        ///TODO: Find alternative to layoutIfNeeded.
         messageView.layoutIfNeeded()
         
         collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
