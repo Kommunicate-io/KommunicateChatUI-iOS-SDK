@@ -340,6 +340,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+        setupConstraints()
     }
 
     override open func viewDidLayoutSubviews() {
@@ -382,7 +383,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
         backgroundView.backgroundColor = configuration.backgroundColor
-        setupConstraints()
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
