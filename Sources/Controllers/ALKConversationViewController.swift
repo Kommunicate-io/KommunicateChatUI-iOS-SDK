@@ -287,6 +287,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Refresh view when it appears.
+        self.refreshViewController()
+        
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
@@ -414,6 +417,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.constraint(
             withIdentifier: ConstraintIdentifier.contextTitleView)?
             .constant = Padding.ContextView.height
+    }
+    
+    private func refreshViewController() {
+        viewModel.clearViewModel()
+        tableView.reloadData()
     }
 
     private func setupConstraints() {

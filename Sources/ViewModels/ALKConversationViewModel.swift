@@ -107,6 +107,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadMessages()
         }
     }
+    
+    func clearViewModel() {
+        self.messageModels.removeAll()
+        self.alMessages.removeAll()
+        self.richMessages.removeAll()
+    }
 
     open func groupProfileImgUrl() -> String {
         guard let message = alMessages.last, let imageUrl = message.avatarGroupImageUrl else {
