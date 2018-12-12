@@ -252,10 +252,20 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
         let title = viewModel.titleFor(contactId: contactId, channelId: groupId)
         let conversationViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: contactId, channelId: groupId, conversationId: conversationId)
-        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
-        viewController.title = title
-        viewController.viewModel = conversationViewModel
-        conversationViewController = viewController
+
+        let viewController: ALKConversationViewController!
+        if conversationViewController == nil {
+            viewController = ALKConversationViewController(configuration: configuration)
+            viewController.title = title
+            viewController.viewModel = conversationViewModel
+            conversationViewController = viewController
+        } else {
+            viewController = conversationViewController
+            viewController.title = title
+            viewController.viewModel.contactId = conversationViewModel.contactId
+            viewController.viewModel.channelKey = conversationViewModel.channelKey
+            viewController.viewModel.conversationProxy = conversationViewModel.conversationProxy
+        }
         push(conversationVC: viewController, with: conversationViewModel, title: title)
     }
 
@@ -321,6 +331,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             topVC.title = title
             topVC.viewModel.contactId = viewModel.contactId
             topVC.viewModel.channelKey = viewModel.channelKey
+            topVC.viewModel.conversationProxy = viewModel.conversationProxy
             topVC.viewWillLoadFromTappingOnNotification()
             topVC.viewModel.prepareController()
         } else {

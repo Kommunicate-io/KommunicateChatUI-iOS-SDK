@@ -181,14 +181,20 @@ final public class ALKConversationListViewModel: NSObject, Localizable {
 
     func titleFor(contactId: String?, channelId: NSNumber?) -> String {
         var title = ""
-        if let key = channelId, let alChannel = alChannelService.getChannelByKey(key), let name = alChannel.name {
+        if let key = channelId,
+            let alChannel = alChannelService.getChannelByKey(key),
+            let name = alChannel.name {
             title = name
-        }
-        else if let key = contactId, let alContact = alContactService.loadContact(byKey: "userId", value: key), let name = alContact.getDisplayName() {
+        } else if let key = contactId,
+            let alContact = alContactService.loadContact(byKey: "userId", value: key),
+            let name = alContact.getDisplayName() {
             title = name
         }
 
-        let noName = localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizationFileName)
+        let noName = localizedString(
+            forKey: "NoNameMessage",
+            withDefaultValue: SystemMessage.NoData.NoName,
+            fileName: localizationFileName)
         title = title.isEmpty ? noName : title
         return title
     }
@@ -198,10 +204,17 @@ final public class ALKConversationListViewModel: NSObject, Localizable {
         contactId: String?,
         channelId: NSNumber?,
         conversationId: NSNumber?) -> ALKConversationViewModel {
-        let convViewModel = conversationViewModelType.init(contactId: contactId, channelKey: channelId, localizedStringFileName : localizationFileName)
-        if let convId = conversationId, let convProxy = conversationService.getConversationByKey(convId) {
-            convViewModel.conversationProxy = convProxy
+
+        var convProxy: ALConversationProxy?
+        if let convId = conversationId, let conversationProxy = conversationService.getConversationByKey(convId) {
+            convProxy = conversationProxy
         }
+
+        let convViewModel = conversationViewModelType.init(
+            contactId: contactId,
+            channelKey: channelId,
+            conversationProxy: convProxy,
+            localizedStringFileName : localizationFileName)
         return convViewModel
     }
 }
