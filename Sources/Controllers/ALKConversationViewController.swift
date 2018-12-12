@@ -394,11 +394,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func isChannelLeft() {
-        guard let channelKey = viewModel.channelKey else {
+        guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
-        if  ALChannelService().getChannelByKey(channelKey).type != 6 &&
-            !ALChannelService().isLoginUser(inChannel: channelKey) {
+        if  channel.type != 6 && !ALChannelService().isLoginUser(inChannel: channelKey) {
             chatBar.disableChat()
             //Disable click on toolbar
             titleButton.isUserInteractionEnabled = false
