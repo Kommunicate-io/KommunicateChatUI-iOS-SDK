@@ -17,7 +17,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Fixes
 
 - [AL-3056] Fix an issue where earlier conversation won't load when scrolled to top.
-- [AL-2923] Fix the crash for media cells for localization file name
+- [AL-2923] Fix the crash for media cells for localization file name.
+- [Al-3123] Fix an issue where notification will come for the message sent by the logged in user from different device.
 
 1.2.0
 ---
