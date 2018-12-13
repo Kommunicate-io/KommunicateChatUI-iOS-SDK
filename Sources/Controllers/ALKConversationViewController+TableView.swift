@@ -269,7 +269,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
                 cell.update(viewModel: message)
                 cell.buttonSelected = {[unowned self] tag, title in
-                    self.genericListButtonAction(tag: tag, title: title, template: template)
+                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template)
                 }
                 return cell
             } else {
@@ -278,7 +278,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
                 cell.update(viewModel: message)
                 cell.buttonSelected = {[unowned self] tag, title in
-                    self.genericListButtonAction(tag: tag, title: title, template: template)
+                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template)
                 }
                 return cell
             }
@@ -451,22 +451,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             let collectionView = scrollView as! UICollectionView
             contentOffsetDictionary[collectionView.tag] = horizontalOffset as AnyObject
         }
-    }
-    
-    private func genericListButtonAction(tag: Int, title: String, template: [ALKGenericListTemplate]) {
-        print("\(title, tag) button selected in generic list")
-        var infoDict = [String: Any]()
-        infoDict["buttonName"] = title
-        infoDict["buttonIndex"] = tag
-        infoDict["template"] = template
-        infoDict["userId"] = self.viewModel.contactId
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
-    }
-    
-    private func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
-        let value = contentOffsetDictionary[index]
-        let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
-        return horizontalOffset
     }
     
 }

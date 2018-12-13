@@ -838,6 +838,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
 
     }
+    
+    func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate]) {
+        print("\(title, tag) button selected in generic list")
+        var infoDict = [String: Any]()
+        infoDict["buttonName"] = title
+        infoDict["buttonIndex"] = tag
+        infoDict["template"] = template
+        infoDict["userId"] = self.viewModel.contactId
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
+    }
+    
+    func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
+        let value = contentOffsetDictionary[index]
+        let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
+        return horizontalOffset
+    }
 
     fileprivate func hideMediaOptions() {
         chatBar.hideMediaView()
