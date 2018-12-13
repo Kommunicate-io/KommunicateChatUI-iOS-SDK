@@ -308,7 +308,7 @@ extension ALMessage {
             let templateId = metadata["templateId"] as? String else {
                 return false
         }
-        return templateId == "3"
+        return templateId == "8"
     }
     
     private func isQuickReply() -> Bool {
