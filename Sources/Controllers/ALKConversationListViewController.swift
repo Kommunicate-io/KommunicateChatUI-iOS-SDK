@@ -172,6 +172,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         dbService.delegate = self
         viewModel = viewModelType.init()
         viewModel.delegate = self
+        viewModel.localizationFileName = configuration.localizedStringFileName
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
@@ -249,29 +250,23 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
-        let alChannelService = ALChannelService()
-        let alContactDbService = ALContactDBService()
-        var title = ""
-        if let key = groupId, let alChannel = alChannelService.getChannelByKey(key), let name = alChannel.name {
-            title = name
-        }
-        else if let key = contactId,let alContact = alContactDbService.loadContact(byKey: "userId", value: key), let name = alContact.getDisplayName() {
-            title = name
-        }
+        let title = viewModel.titleFor(contactId: contactId, channelId: groupId)
+        let conversationViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: contactId, channelId: groupId, conversationId: conversationId)
 
-        let noName = localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizedStringFileName)
-        title = title.isEmpty ? noName : title
-        let convViewModel = conversationViewModelType.init(contactId: contactId, channelKey: groupId, localizedStringFileName : configuration.localizedStringFileName)
-        let convService = ALConversationService()
-        if let convId = conversationId, let convProxy = convService.getConversationByKey(convId) {
-            convViewModel.conversationProxy = convProxy
+        let viewController: ALKConversationViewController!
+        if conversationViewController == nil {
+            viewController = ALKConversationViewController(configuration: configuration)
+            viewController.title = title
+            viewController.viewModel = conversationViewModel
+            conversationViewController = viewController
+        } else {
+            viewController = conversationViewController
+            viewController.title = title
+            viewController.viewModel.contactId = conversationViewModel.contactId
+            viewController.viewModel.channelKey = conversationViewModel.channelKey
+            viewController.viewModel.conversationProxy = conversationViewModel.conversationProxy
         }
-        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
-        viewController.title = title
-        viewController.viewModel = convViewModel
-        viewController.viewWillLoadFromTappingOnNotification()
-        conversationViewController = viewController
-        self.navigationController?.pushViewController(viewController, animated: false)
+        push(conversationVC: viewController, with: conversationViewModel, title: title)
     }
 
     @objc func compose() {
@@ -326,6 +321,23 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             if popVC == nil {
                 self?.navigationController?.dismiss(animated: true, completion: nil)
             }
+        }
+    }
+
+
+    fileprivate func push(conversationVC: ALKConversationViewController, with viewModel: ALKConversationViewModel, title: String) {
+        if let topVC = navigationController?.topViewController as? ALKConversationViewController {
+            // Update the details and refresh
+            topVC.title = title
+            topVC.viewModel.contactId = viewModel.contactId
+            topVC.viewModel.channelKey = viewModel.channelKey
+            topVC.viewModel.conversationProxy = viewModel.conversationProxy
+            topVC.viewWillLoadFromTappingOnNotification()
+            topVC.viewModel.prepareController()
+        } else {
+            // push conversation VC
+            conversationVC.viewWillLoadFromTappingOnNotification()
+            self.navigationController?.pushViewController(conversationVC, animated: false)
         }
     }
 }

@@ -17,9 +17,14 @@ protocol ALKConversationListViewModelDelegate: class {
 }
 
 
-final public class ALKConversationListViewModel: NSObject {
+final public class ALKConversationListViewModel: NSObject, Localizable {
 
     weak var delegate: ALKConversationListViewModelDelegate?
+
+    var localizationFileName = String()
+    var alChannelService = ALChannelService()
+    var alContactService = ALContactService()
+    var conversationService = ALConversationService()
 
     fileprivate var allMessages = [Any]()
 
@@ -172,5 +177,44 @@ final public class ALKConversationListViewModel: NSObject {
         }else {
             withCompletion(false)
         }
+    }
+
+    func titleFor(contactId: String?, channelId: NSNumber?) -> String {
+        var title = ""
+        if let key = channelId,
+            let alChannel = alChannelService.getChannelByKey(key),
+            let name = alChannel.name {
+            title = name
+        } else if let key = contactId,
+            let alContact = alContactService.loadContact(byKey: "userId", value: key),
+            let name = alContact.getDisplayName() {
+            title = name
+        }
+
+        let noName = localizedString(
+            forKey: "NoNameMessage",
+            withDefaultValue: SystemMessage.NoData.NoName,
+            fileName: localizationFileName)
+        title = title.isEmpty ? noName : title
+        return title
+    }
+
+    func conversationViewModelOf(
+        type conversationViewModelType: ALKConversationViewModel.Type,
+        contactId: String?,
+        channelId: NSNumber?,
+        conversationId: NSNumber?) -> ALKConversationViewModel {
+
+        var convProxy: ALConversationProxy?
+        if let convId = conversationId, let conversationProxy = conversationService.getConversationByKey(convId) {
+            convProxy = conversationProxy
+        }
+
+        let convViewModel = conversationViewModelType.init(
+            contactId: contactId,
+            channelKey: channelId,
+            conversationProxy: convProxy,
+            localizedStringFileName : localizationFileName)
+        return convViewModel
     }
 }
