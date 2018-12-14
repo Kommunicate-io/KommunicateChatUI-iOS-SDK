@@ -47,7 +47,9 @@ public class ALKPushNotificationHandler {
         // No need to add removeObserver() as it is present in pushAssist.
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "showNotificationAndLaunchChat"), object: nil, queue: nil, using: {[weak self] notification in
             print("launch chat push notification received")
-
+            self?.contactId = nil
+            self?.groupId = nil
+            self?.title = ""
             //Todo: Handle group
 
             guard let weakSelf = self, let object = notification.object as? String else { return }
