@@ -429,11 +429,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             withIdentifier: ConstraintIdentifier.contextTitleView)?
             .constant = height
     }
-    
-    private func refreshViewController() {
-        viewModel.clearViewModel()
-        tableView.reloadData()
-    }
 
     private func setupConstraints() {
 
@@ -711,6 +706,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         view.endEditing(true)
     }
 
+    public func refreshViewController() {
+        viewModel.clearViewModel()
+        tableView.reloadData()
+    }
+    
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
