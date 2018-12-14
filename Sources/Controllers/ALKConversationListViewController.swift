@@ -343,7 +343,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             topVC.viewModel.conversationProxy = viewModel.conversationProxy
             topVC.viewWillLoadFromTappingOnNotification()
             topVC.refreshViewController()
-            topVC.viewModel.prepareController()
         } else {
             // push conversation VC
             conversationVC.viewWillLoadFromTappingOnNotification()

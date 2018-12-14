@@ -287,8 +287,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Refresh view when it appears.
-        self.refreshViewController()
         
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
@@ -317,7 +315,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         viewModel.delegate = self
-        viewModel.prepareController()
+        self.refreshViewController()
+        
         if let templates = viewModel.getMessageTemplates(){
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
@@ -421,10 +420,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
-        var height: CGFloat = 0
-        if show {
-            height = Padding.ContextView.height
-        }
+        let height: CGFloat = show ? Padding.ContextView.height : 0
         contextTitleView.constraint(
             withIdentifier: ConstraintIdentifier.contextTitleView)?
             .constant = height
@@ -706,9 +702,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         view.endEditing(true)
     }
 
+    /// Call this method after proper viewModel initialization
     public func refreshViewController() {
         viewModel.clearViewModel()
         tableView.reloadData()
+        viewModel.prepareController()
     }
     
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
