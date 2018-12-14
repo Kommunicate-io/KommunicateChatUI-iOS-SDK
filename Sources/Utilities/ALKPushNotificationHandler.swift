@@ -50,6 +50,7 @@ public class ALKPushNotificationHandler: Localizable {
             self?.contactId = nil
             self?.groupId = nil
             self?.title = ""
+            self?.conversationId = nil
             //Todo: Handle group
 
             guard let weakSelf = self, let object = notification.object as? String else { return }
@@ -100,10 +101,7 @@ public class ALKPushNotificationHandler: Localizable {
         let messagesVC = ALKConversationListViewController(configuration: configuration)
         messagesVC.contactId = userId
         messagesVC.channelKey = groupId
-        
-        if self.conversationId != nil {
-            messagesVC.conversationId = self.conversationId
-        }
+        messagesVC.conversationId = self.conversationId
         
         let pushAssistant = ALPushAssist()
         let topVC =  pushAssistant.topViewController

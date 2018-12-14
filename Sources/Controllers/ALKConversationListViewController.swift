@@ -106,6 +106,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             } else if components.count == 2 {
                 let conversationComponent = Int(components[1])
                 conversationId = NSNumber(integerLiteral: conversationComponent!)
+                contactId = components[0]
             } else {
                 contactId = object
             }
@@ -128,7 +129,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             } else if updateUI == Int(APP_STATE_INACTIVE.rawValue) {
                 // Coming from background
 
-                guard contactId != nil || groupId != nil else { return }
+                guard contactId != nil || groupId != nil || conversationId != nil else { return }
                weakSelf.launchChat(contactId: contactId, groupId: groupId, conversationId: conversationId)
             }
         })
@@ -384,12 +385,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
                 willSelectItemAt: indexPath.row,
                 viewController: self
             )
-            var conversationProxy: ALConversationProxy? = nil
-            let convService = ALConversationService()
-            if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
-                conversationProxy = convProxy
-            }
-            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
+            let convViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: chat.contactId, channelId: chat.channelKey, conversationId: chat.conversationId)
             let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             let chatName = chat.name.count > 0 ? chat.name : localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizedStringFileName)
             viewController.title = chat.isGroupChat ? chat.groupName:chatName
@@ -404,12 +400,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
                 willSelectItemAt: indexPath.row,
                 viewController: self
             )
-            var conversationProxy: ALConversationProxy? = nil
-            let convService = ALConversationService()
-            if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
-                conversationProxy = convProxy
-            }
-            let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
+            let convViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: chat.contactId, channelId: chat.channelKey, conversationId: chat.conversationId)
             let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             viewController.title = chat.isGroupChat ? chat.groupName:chat.name
             viewController.viewModel = convViewModel
