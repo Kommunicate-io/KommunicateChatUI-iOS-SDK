@@ -287,6 +287,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
@@ -314,7 +315,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         viewModel.delegate = self
-        viewModel.prepareController()
+        self.refreshViewController()
+        
         if let templates = viewModel.getMessageTemplates(){
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
@@ -337,6 +339,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+        setupConstraints()
     }
 
     override open func viewDidLayoutSubviews() {
@@ -379,7 +382,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
         backgroundView.backgroundColor = configuration.backgroundColor
-        setupConstraints()
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
@@ -389,16 +391,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         //Check for group left
         isChannelLeft()
 
-        guard viewModel.isContextBasedChat else { return }
+        guard viewModel.isContextBasedChat else {
+            toggleVisibilityOfContextTitleView(false)
+            return
+        }
         prepareContextView()
     }
 
     func isChannelLeft() {
-        guard let channelKey = viewModel.channelKey else {
+        guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
-        if  ALChannelService().getChannelByKey(channelKey).type != 6 &&
-            !ALChannelService().isLoginUser(inChannel: channelKey) {
+        if  channel.type != 6 && !ALChannelService().isLoginUser(inChannel: channelKey) {
             chatBar.disableChat()
             //Disable click on toolbar
             titleButton.isUserInteractionEnabled = false
@@ -412,9 +416,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func prepareContextView(){
         guard let topicDetail = viewModel.getContextTitleData() else {return }
         contextTitleView.configureWith(value: topicDetail)
+        toggleVisibilityOfContextTitleView(true)
+    }
+    
+    private func toggleVisibilityOfContextTitleView(_ show: Bool) {
+        let height: CGFloat = show ? Padding.ContextView.height : 0
         contextTitleView.constraint(
             withIdentifier: ConstraintIdentifier.contextTitleView)?
-            .constant = Padding.ContextView.height
+            .constant = height
     }
 
     private func setupConstraints() {
@@ -693,6 +702,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         view.endEditing(true)
     }
 
+    /// Call this method after proper viewModel initialization
+    public func refreshViewController() {
+        viewModel.clearViewModel()
+        tableView.reloadData()
+        viewModel.prepareController()
+    }
+    
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()

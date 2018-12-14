@@ -60,6 +60,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
+        setupConstraints()
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -74,7 +75,6 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
     }
 
     open func setupUI() {
-        setupConstraints()
         let imageUrl = viewModel?.getTitleImageURL
         contextImageView.kf.setImage(with: imageUrl)
         titleLabel.text = viewModel?.getTitleText
