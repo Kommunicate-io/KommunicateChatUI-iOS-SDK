@@ -35,8 +35,9 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     public var dbService: ALMessageDBService!
     
     //MARK: - PRIVATE PROPERTIES
-    fileprivate  var delegate: ALKConversationListTableViewDelegate
+    fileprivate var delegate: ALKConversationListTableViewDelegate
     fileprivate var configuration: ALKConfiguration
+    fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
     fileprivate var tapToDismiss: UITapGestureRecognizer!
     fileprivate lazy var dataSource = ConversationListTableViewDataSource(viewModel: self.viewModel, cellConfigurator: { (message, tableCell) in
@@ -63,23 +64,32 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         - configuration: A configuration to be used by this controller to configure different settings.
         - delegate: A delegate used to receive callbacks when chat cell is tapped.
      */
-    public init(viewModel: ALKConversationListViewModelProtocol, dbService: ALMessageDBService, configuration: ALKConfiguration, delegate: ALKConversationListTableViewDelegate) {
+    public init(viewModel: ALKConversationListViewModelProtocol, dbService: ALMessageDBService, configuration: ALKConfiguration, delegate: ALKConversationListTableViewDelegate, showSearch: Bool) {
         self.viewModel = viewModel
         self.configuration = configuration
+        self.showSearch = showSearch
         self.localizedStringFileName = configuration.localizedStringFileName
         self.dbService = dbService
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// This method is used to replace current viewModel with a new one and then refresh the tableView.
+    /// - Parameter viewModel: The new viewModel that needs to be updated in tableView
+    public func replaceViewModel(_ viewModel: ALKConversationListViewModelProtocol) {
+        self.viewModel = viewModel
+        self.dataSource.viewModel = viewModel
+        self.tableView.reloadData()
+    }
+    
     //MARK: - VIEW LIFE CYCLE
     override public func viewDidLoad() {
         super.viewDidLoad()
+        setupView()
         searchBar.delegate = self
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -148,7 +158,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
     
     public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
+        return showSearch ? 50 : 0
     }
     
     public override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

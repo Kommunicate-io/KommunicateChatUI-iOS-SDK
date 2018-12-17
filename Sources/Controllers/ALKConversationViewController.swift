@@ -289,7 +289,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
@@ -318,7 +318,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         viewModel.delegate = self
         self.refreshViewController()
-        
+
         if let templates = viewModel.getMessageTemplates(){
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
@@ -420,7 +420,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.configureWith(value: topicDetail)
         toggleVisibilityOfContextTitleView(true)
     }
-    
+
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
         let height: CGFloat = show ? Padding.ContextView.height : 0
         contextTitleView.constraint(
@@ -709,28 +709,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.reloadData()
         viewModel.prepareController()
     }
-    
+
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
-    }
-
-    private func defaultNameForTypingStatus() -> String{
-        if self.viewModel.isGroup == true {
-            return "Somebody"
-        } else {
-            return self.title ?? ""
-        }
-    }
-
-    private func nameForTypingStatusUsing(userId: String) -> String?{
-        guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
-            return nil
-        }
-        if contact.block || contact.blockBy {
-            return nil
-        }
-        return contact.getDisplayName()
     }
 
     // Called from the parent VC
@@ -768,18 +750,36 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.sync(message: message)
     }
 
-    func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
+    public func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
         guard let key = messageKey, let status = status else {
             return
         }
         viewModel.updateDeliveryReport(messageKey: key, status: status)
     }
 
-    func updateStatusReport(contactId: String?, status: Int32?) {
+    public func updateStatusReport(contactId: String?, status: Int32?) {
         guard let id = contactId, let status = status else {
             return
         }
         viewModel.updateStatusReportForConversation(contactId: id, status: status)
+    }
+
+    private func defaultNameForTypingStatus() -> String{
+        if self.viewModel.isGroup == true {
+            return "Somebody"
+        } else {
+            return self.title ?? ""
+        }
+    }
+
+    private func nameForTypingStatusUsing(userId: String) -> String?{
+        guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
+            return nil
+        }
+        if contact.block || contact.blockBy {
+            return nil
+        }
+        return contact.getDisplayName()
     }
 
     fileprivate func subscribeChannelToMqtt() {
@@ -873,7 +873,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
 
     }
-    
+
     func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate]) {
         print("\(title, tag) button selected in generic list")
         var infoDict = [String: Any]()
@@ -883,7 +883,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         infoDict["userId"] = self.viewModel.contactId
         NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
     }
-    
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)

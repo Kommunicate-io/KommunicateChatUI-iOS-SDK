@@ -57,7 +57,7 @@ class ConversationListTableViewControllerTests: XCTestCase {
             }
             
         }
-        let conversationListTableVCMock = ConversationListTableVCMock(viewModel: ALKConversationListViewModel(), dbService: ALMessageDBService(), configuration: ALKConfiguration(), delegate: ConversationListTableViewDelegateMock())
+        let conversationListTableVCMock = ConversationListTableVCMock(viewModel: ALKConversationListViewModel(), dbService: ALMessageDBService(), configuration: ALKConfiguration(), delegate: ConversationListTableViewDelegateMock(), showSearch: false)
         
         let muteConversationVC = MuteConversationViewController(delegate: conversationListTableVCMock.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
         
