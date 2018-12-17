@@ -14,8 +14,6 @@ import SafariServices
 
 open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
-    var contactService: ALContactService!
-
     public var viewModel: ALKConversationViewModel! {
         willSet(updatedVM) {
             guard viewModel != nil else {return}
@@ -27,13 +25,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    public var chatBar: ALKChatBar = ALKChatBar(frame: .zero, configuration: ALKConfiguration())
-
     override open var title: String? {
         didSet {
             titleButton.setTitle(title, for: .normal)
         }
     }
+
+    public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
+
+    var contactService: ALContactService!
 
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
@@ -62,7 +62,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     fileprivate var keyboardSize: CGRect?
-    
+
     fileprivate var localizedStringFileName: String!
 
     fileprivate enum ConstraintIdentifier {
@@ -554,7 +554,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             self?.hideMoreBar()
         }
     }
-
 
     private func prepareChatBar() {
         // Update ChatBar's top view which contains send button and the text view.
