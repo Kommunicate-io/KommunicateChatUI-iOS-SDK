@@ -1114,6 +1114,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
         delegate?.willSendMessage()
         alMessage.to = contactId
         alMessage.contactIds = contactId
+
+        var metaData = NSMutableDictionary()
+
+        if alMessage.metadata != nil {
+            metaData = alMessage.metadata
+        }
+
+        if(ALKUserSettings.getMessageMetaData() != nil){
+            metaData.addEntries(from: ALKUserSettings.getMessageMetaData() as! [AnyHashable : Any])
+        }
+        alMessage.metadata = metaData
         alMessage.message = ""
         alMessage.type = "5"
         let date = Date().timeIntervalSince1970*1000
