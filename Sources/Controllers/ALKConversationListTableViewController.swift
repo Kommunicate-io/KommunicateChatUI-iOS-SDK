@@ -94,9 +94,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         self.tableView.delegate = self
         self.tableView.dataSource = self
         tableView.register(ALKChatCell.self, forCellReuseIdentifier: "cell")
-        
-        let nib = UINib(nibName: "EmptyChatCell", bundle: Bundle.applozic)
-        tableView.register(nib, forCellReuseIdentifier: "EmptyChatCell")
         tableView.estimatedRowHeight = 0
     }
     
@@ -162,14 +159,26 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
     
     public override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableCell(withIdentifier: "EmptyChatCell")?.contentView
-        if let tap = view?.gestureRecognizers?.first {
-            view?.removeGestureRecognizer(tap)
+        
+        let emptyCellView = ALKEmptyView.instanceFromNib()
+        
+        let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
+        emptyCellView.conversationLabel.text = noConversationLabelText
+        emptyCellView.startNewConversationButtonIcon.isHidden = configuration.hideEmptyStateStartNewButtonInConversationList
+        
+        if !configuration.hideEmptyStateStartNewButtonInConversationList{
+            if let tap = emptyCellView.gestureRecognizers?.first {
+                emptyCellView.removeGestureRecognizer(tap)
+            }
+            
+            let tap = UITapGestureRecognizer.init(target: self, action: #selector(compose))
+            tap.numberOfTapsRequired = 1
+            
+            emptyCellView.addGestureRecognizer(tap)
         }
-        let tap = UITapGestureRecognizer.init(target: self, action: #selector(compose))
-        tap.numberOfTapsRequired = 1
-        view?.addGestureRecognizer(tap)
-        return view
+        
+        
+        return emptyCellView
     }
     
     public override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
