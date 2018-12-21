@@ -81,7 +81,6 @@ class ALKConversationListViewControllerTests: XCTestCase {
         guard let tableView = conversationListVC.tableView else {
             return
         }
-        tableView.selectRow(at: firstIndex, animated: false, scrollPosition: .none)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: firstIndex)
         
         wait(for: [selectItemExpectation], timeout: 2)

@@ -40,23 +40,6 @@ class ConversationListTableViewControllerTests: XCTestCase {
     }
     
     func testMuteConversationCalledFromDelegate() {
-        class ConversationListTableVCMock: ALKConversationListTableViewController {
-            
-            var isMuteCalled: Bool = false
-            
-            override func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
-                isMuteCalled = true
-            }
-            
-            func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
-                
-            }
-            
-            func emptyChatCellTapped() {
-                
-            }
-            
-        }
         let conversationListTableVCMock = ConversationListTableVCMock(viewModel: ALKConversationListViewModel(), dbService: ALMessageDBService(), configuration: ALKConfiguration(), delegate: ConversationListTableViewDelegateMock(), showSearch: false)
         
         let muteConversationVC = MuteConversationViewController(delegate: conversationListTableVCMock.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())

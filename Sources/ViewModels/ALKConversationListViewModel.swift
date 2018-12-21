@@ -27,14 +27,14 @@ public protocol ALKConversationListViewModelProtocol: class {
      This method is returns the number of sections in the tableView.
      - Returns: The number of sections in the tableView
     */
-    func numberOfSection() -> Int
+    func numberOfSections() -> Int
 
     /**
      This method is returns the number of rows in a particular tableview section.
      - Parameter section: Section of the tableView.
      - Returns: The number of rows in `section`
     */
-    func numberOfRowsInSection(section: Int) -> Int
+    func numberOfRowsInSection(_ section: Int) -> Int
 
     /**
      This method returns the message object for the given indexpath of the tableview.
@@ -95,11 +95,11 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         return allMessages
     }
 
-    public func numberOfSection() -> Int {
+    public func numberOfSections() -> Int {
         return 1
     }
 
-    public func numberOfRowsInSection(section: Int) -> Int {
+    public func numberOfRowsInSection(_ section: Int) -> Int {
         return allMessages.count
     }
 

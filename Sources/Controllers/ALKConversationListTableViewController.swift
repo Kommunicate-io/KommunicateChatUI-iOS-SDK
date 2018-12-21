@@ -182,7 +182,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
     
     public override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return viewModel.numberOfRowsInSection(section: 0) == 0 ? 325 : 0
+        return viewModel.numberOfRowsInSection(0) == 0 ? 325 : 0
     }
 
     //MARK: - HANDLE KEYBOARD
