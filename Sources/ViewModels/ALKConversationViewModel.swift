@@ -306,7 +306,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadOpenGroupMessages()
             return
         }
-        var id = self.contactId ?? self.channelKey?.stringValue
+        var id = self.channelKey?.stringValue ?? self.contactId 
         if let convId = conversationId {
             id = convId.stringValue
         }
