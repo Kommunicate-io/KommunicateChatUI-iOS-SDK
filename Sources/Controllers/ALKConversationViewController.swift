@@ -14,6 +14,8 @@ import SafariServices
 
 open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
+    var timerTask = Timer();
+
     public var viewModel: ALKConversationViewModel! {
         willSet(updatedVM) {
             guard viewModel != nil else {return}
@@ -733,6 +735,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // Called from the parent VC
     func showTypingLabel(status: Bool, userId: String) {
+
+        if(status){
+            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.typingView(_:)), userInfo: nil, repeats: false)
+        }else{
+            timerTask.invalidate()
+        }
+
         typingNoticeViewHeighConstaint?.constant = status ? 30:0
         view.layoutIfNeeded()
         if tableView.isAtBottom {
@@ -748,6 +757,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let name = defaultNameForTypingStatus()
             setTypingNoticeDisplayName(displayName: name)
         }
+    }
+
+    @objc public func typingView(_ timer: Timer?)  {
+        timerTask.invalidate()
+        typingNoticeViewHeighConstaint?.constant = 0
     }
 
     func sync(message: ALMessage) {
@@ -951,6 +965,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
+
     public func loadingStarted() {
         activityIndicator.startAnimating()
     }
@@ -1067,6 +1082,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         // Clear reply message and the view
         viewModel.clearSelectedMessageToReply()
         hideReplyMessageView()
+    }
+
+    public func onUpdateTyingStatusView(status: Bool, userId: String) {
+        self.showTypingLabel(status: status, userId: userId)
     }
 
 }
