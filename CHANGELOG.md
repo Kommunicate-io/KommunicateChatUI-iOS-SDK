@@ -8,6 +8,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 - [AL-3170] Fixed a memory leak issue in ALKConversationViewController.
 
+### Enhancements
+
+- [AL-2856] Dismiss Typing indicator in 30 seconds if stop flag not received
+
 1.3.0
 ---
 ### Enhancements
