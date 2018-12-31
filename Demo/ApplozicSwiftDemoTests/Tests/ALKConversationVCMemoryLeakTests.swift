@@ -17,7 +17,7 @@ class ALKConversationVCMemoryLeakTests: QuickSpec {
         var conversationVC: ALKConversationViewControllerMock?
         var isDeinitCalled: Bool = false
 
-        describe("Controller should be deallocated when dismissed") {
+        describe("when ALKConversationViewController is dismissed") {
             beforeEach {
                 waitUntil(timeout: 5.0) { done in
                     conversationVC  = ALKConversationViewControllerMock(configuration: ALKConfiguration())
@@ -34,7 +34,7 @@ class ALKConversationVCMemoryLeakTests: QuickSpec {
                     conversationVC = nil
                 }
             }
-            it("deinit called") {
+            it("calls deinit") {
                 expect(isDeinitCalled).to(beTrue())
             }
         }
