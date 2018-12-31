@@ -7,25 +7,38 @@
 
 import UIKit
 
-class ALKAccountSuspensionController: UIViewController {
+public class ALKAccountSuspensionController: UIViewController {
+    public var closePressed: (() -> Void)?
 
-    var closePressed: (()->())?
-
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(netHex: 0xfafafa)
+        view.backgroundColor = UIColor(netHex: 0xFAFAFA)
         guard let accountView = Bundle.applozic.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?.first as? UIView else {
             return
         }
-        accountView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height-50)
+        accountView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 50)
         view.addSubview(accountView)
-        view.addSubview(closeButtonOf(frame: CGRect(x: 20, y: 20, width: 30, height: 30)))
+        let closeButton = closeButtonOf(frame: CGRect.zero)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(closeButton)
+
+        // Constraints
+        var topAnchor = view.topAnchor
+        if #available(iOS 11, *) {
+            topAnchor = view.safeAreaLayoutGuide.topAnchor
+        }
+        NSLayoutConstraint.activate(
+            [closeButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+             closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+             closeButton.heightAnchor.constraint(equalToConstant: 30),
+             closeButton.widthAnchor.constraint(equalToConstant: 30)]
+        )
     }
 
-    @objc func closeButtonAction(_ button: UIButton) {
+    @objc func closeButtonAction(_: UIButton) {
         let popVC = navigationController?.popViewController(animated: true)
         if popVC == nil {
-            self.dismiss(animated: true, completion: nil)
+            dismiss(animated: true, completion: nil)
         }
         closePressed?()
     }
