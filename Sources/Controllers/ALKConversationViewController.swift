@@ -573,10 +573,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         chatBar.poweredByMessageLabel.attributedText =
             NSAttributedString(string: "Powered by Applozic")
         chatBar.poweredByMessageLabel.setLinkForSubstring("Applozic", withLinkHandler: {
-            label, substring in
+            [weak self] label, substring in
             guard let _ = substring else {return}
             let svc = SFSafariViewController(url: URL(string:"https://Applozic.com")!)
-            self.present(svc, animated: true, completion: nil)
+            self?.present(svc, animated: true, completion: nil)
         })
         if viewModel.showPoweredByMessage() {chatBar.showPoweredByMessage()}
         chatBar.accessibilityIdentifier = "chatBar"

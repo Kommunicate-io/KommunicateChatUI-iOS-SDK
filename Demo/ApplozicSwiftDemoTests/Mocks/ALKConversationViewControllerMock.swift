@@ -12,6 +12,7 @@ import Foundation
 class ALKConversationViewControllerMock: ALKConversationViewController {
     
     var testDisplayName: String!
+    var onDeinitialized: (() -> Void)?
     
     required init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
@@ -19,6 +20,10 @@ class ALKConversationViewControllerMock: ALKConversationViewController {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    deinit {
+        onDeinitialized?()
     }
     
     override func setTypingNoticeDisplayName(displayName: String) {
