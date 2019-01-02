@@ -18,7 +18,7 @@ public protocol ALKConversationViewModelDelegate: class {
     func messageSent(at: IndexPath)
     func updateDisplay(name: String)
     func willSendMessage()
-    func onUpdateTyingStatusView(status: Bool, userId: String)
+    func updateTyingStatus(status: Bool, userId: String)
 }
 
 open class ALKConversationViewModel: NSObject, Localizable {
@@ -381,16 +381,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if  channelKey  != nil  && channelKey != 0
                 && channelKey ==  message.groupId
                 && message.to != nil  {
-                delegate?.onUpdateTyingStatusView(status: false, userId: message.to)
-            }else if  contactId != nil && contactId == message.to  {
-                delegate?.onUpdateTyingStatusView(status: false, userId: message.to)
+                filteredArray.append(message);
+                delegate?.updateTyingStatus(status: false, userId: message.to)
+            }else if channelKey == nil && channelKey == 0 && contactId != nil && contactId == message.to
+            {
+                filteredArray.append(message);
+                delegate?.updateTyingStatus(status: false, userId: message.to)
             }
-        }
-
-        if let channelkey = channelKey {
-            filteredArray = messages.filter { ($0.groupId != nil) ? $0.groupId == channelkey:false }
-        } else {
-            filteredArray  = messages.filter { ($0.groupId != nil || $0.contactId != nil) ? $0.groupId == 0 || $0.groupId == nil && $0.contactId == self.contactId:false }
         }
 
         var sortedArray = filteredArray

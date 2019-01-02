@@ -737,7 +737,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func showTypingLabel(status: Bool, userId: String) {
 
         if(status){
-            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.typingView(_:)), userInfo: nil, repeats: false)
+            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.invalidateTimerAndUpdateHightConstraint(_:)), userInfo: nil, repeats: false)
         }else{
             timerTask.invalidate()
         }
@@ -759,7 +759,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    @objc public func typingView(_ timer: Timer?)  {
+    @objc public func invalidateTimerAndUpdateHightConstraint(_ timer: Timer?)  {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
     }
@@ -1084,7 +1084,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         hideReplyMessageView()
     }
 
-    public func onUpdateTyingStatusView(status: Bool, userId: String) {
+    public func updateTyingStatus(status: Bool, userId: String) {
         self.showTypingLabel(status: status, userId: userId)
     }
 
