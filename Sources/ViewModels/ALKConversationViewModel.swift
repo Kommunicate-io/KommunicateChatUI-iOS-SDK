@@ -383,7 +383,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 && message.to != nil  {
                 filteredArray.append(message);
                 delegate?.updateTyingStatus(status: false, userId: message.to)
-            }else if channelKey == nil && channelKey == 0 && contactId != nil && contactId == message.to
+            }else if (channelKey == nil || channelKey == 0) && contactId != nil && contactId == message.to
             {
                 filteredArray.append(message);
                 delegate?.updateTyingStatus(status: false, userId: message.to)
