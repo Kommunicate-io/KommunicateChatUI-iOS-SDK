@@ -7,27 +7,42 @@
 
 import UIKit
 
-class ALKAccountSuspensionController: UIViewController {
+public class ALKAccountSuspensionController: UIViewController {
 
-    var closePressed: (()->())?
+    /// When the close button is tapped this will be called.
+    public var closePressed: (() -> Void)?
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(netHex: 0xfafafa)
+        setupViews()
+    }
+
+    @objc func closeButtonAction(_: UIButton) {
+        closePressed?()
+    }
+
+    private func setupViews() {
+        view.backgroundColor = UIColor(netHex: 0xFAFAFA)
         guard let accountView = Bundle.applozic.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?.first as? UIView else {
             return
         }
-        accountView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height-50)
+        accountView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 50)
         view.addSubview(accountView)
-        view.addSubview(closeButtonOf(frame: CGRect(x: 20, y: 20, width: 30, height: 30)))
-    }
+        let closeButton = closeButtonOf(frame: CGRect.zero)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(closeButton)
 
-    @objc func closeButtonAction(_ button: UIButton) {
-        let popVC = navigationController?.popViewController(animated: true)
-        if popVC == nil {
-            self.dismiss(animated: true, completion: nil)
+        // Constraints
+        var topAnchor = view.topAnchor
+        if #available(iOS 11, *) {
+            topAnchor = view.safeAreaLayoutGuide.topAnchor
         }
-        closePressed?()
+        NSLayoutConstraint.activate(
+            [closeButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+             closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+             closeButton.heightAnchor.constraint(equalToConstant: 30),
+             closeButton.widthAnchor.constraint(equalToConstant: 30)]
+        )
     }
 
     private func closeButtonOf(frame: CGRect) -> UIButton {
