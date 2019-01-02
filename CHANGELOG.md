@@ -2,7 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-1.3.0(upcoming release)
+1.4.0(upcoming release)
+---
+### Fixes
+
+- [AL-3170] Fixed a memory leak issue in ALKConversationViewController.
+
+1.3.0
 ---
 ### Enhancements
 

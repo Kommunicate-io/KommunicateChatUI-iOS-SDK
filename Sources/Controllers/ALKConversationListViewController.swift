@@ -13,7 +13,7 @@ import Applozic
 
 /// The delegate of an `ALKConversationListViewController` object.
 /// Provides different methods to manage chat thread selections.
-public protocol ALKConversationListDelegate {
+public protocol ALKConversationListDelegate: class {
     func conversation(
         _ message: ALKChatViewModelProtocol,
         willSelectItemAt index: Int,
@@ -27,7 +27,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     public var dbServiceType = ALMessageDBService.self
     public var viewModelType = ALKConversationListViewModel.self
     public var conversationViewModelType = ALKConversationViewModel.self
-    public var delegate: ALKConversationListDelegate?
+    public weak var delegate: ALKConversationListDelegate?
 
     var viewModel: ALKConversationListViewModel!
 
@@ -267,7 +267,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             viewController = ALKConversationViewController(configuration: configuration)
             viewController.title = title
             viewController.viewModel = conversationViewModel
-            conversationViewController = viewController
         } else {
             viewController = conversationViewController
             viewController.title = title
@@ -390,7 +389,6 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             let chatName = chat.name.count > 0 ? chat.name : localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizedStringFileName)
             viewController.title = chat.isGroupChat ? chat.groupName:chatName
             viewController.viewModel = convViewModel
-            conversationViewController = viewController
             self.navigationController?.pushViewController(viewController, animated: false)
         } else {
             guard let chat = viewModel.chatForRow(indexPath: indexPath) else { return }
@@ -404,7 +402,6 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
             let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
             viewController.title = chat.isGroupChat ? chat.groupName:chat.name
             viewController.viewModel = convViewModel
-            conversationViewController = viewController
             self.navigationController?.pushViewController(viewController, animated: false)
         }
     }
