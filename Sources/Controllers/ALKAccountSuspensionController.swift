@@ -8,10 +8,20 @@
 import UIKit
 
 public class ALKAccountSuspensionController: UIViewController {
+
+    /// When the close button is tapped this will be called.
     public var closePressed: (() -> Void)?
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+    }
+
+    @objc func closeButtonAction(_: UIButton) {
+        closePressed?()
+    }
+
+    private func setupViews() {
         view.backgroundColor = UIColor(netHex: 0xFAFAFA)
         guard let accountView = Bundle.applozic.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?.first as? UIView else {
             return
@@ -33,14 +43,6 @@ public class ALKAccountSuspensionController: UIViewController {
              closeButton.heightAnchor.constraint(equalToConstant: 30),
              closeButton.widthAnchor.constraint(equalToConstant: 30)]
         )
-    }
-
-    @objc func closeButtonAction(_: UIButton) {
-        let popVC = navigationController?.popViewController(animated: true)
-        if popVC == nil {
-            dismiss(animated: true, completion: nil)
-        }
-        closePressed?()
     }
 
     private func closeButtonOf(frame: CGRect) -> UIButton {
