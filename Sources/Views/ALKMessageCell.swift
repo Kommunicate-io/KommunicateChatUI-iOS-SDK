@@ -163,7 +163,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style, isReceiverSide: true)
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style, isReceiverSide: true,showHangOverImage: false)
         bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
     }
 
@@ -226,12 +226,12 @@ open class ALKFriendMessageCell: ALKMessageCell {
     // MARK: - ChatMenuCell
     override func menuWillShow(_ sender: Any) {
         super.menuWillShow(sender)
-        self.bubbleView.image = UIImage.init(named: "chat_bubble_grey_hover", in: Bundle.applozic, compatibleWith: nil)
+        self.bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style,isReceiverSide: true,showHangOverImage: true)
     }
 
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
-        self.bubbleView.image = UIImage.init(named: "chat_bubble_grey", in: Bundle.applozic, compatibleWith: nil)
+        self.bubbleView.image =  bubbleViewImage(for: ALKMessageStyle.receivedBubble.style,isReceiverSide: true,showHangOverImage: false)
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
@@ -384,7 +384,7 @@ open class ALKMyMessageCell: ALKMessageCell {
 
   open  override func setupStyle() {
         super.setupStyle()
-        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style)
+        bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide: false,showHangOverImage: false)
         bubbleView.tintColor = ALKMessageStyle.sentBubble.color
     }
 
@@ -425,12 +425,12 @@ open class ALKMyMessageCell: ALKMessageCell {
     // MARK: - ChatMenuCell
     override func menuWillShow(_ sender: Any) {
         super.menuWillShow(sender)
-        self.bubbleView.image = UIImage.init(named: "chat_bubble_red_hover", in: Bundle.applozic, compatibleWith: nil)
+        self.bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide: false,showHangOverImage: true)
     }
 
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
-        self.bubbleView.image = UIImage.init(named: "chat_bubble_red", in: Bundle.applozic, compatibleWith: nil)
+        self.bubbleView.image =  bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide: false,showHangOverImage: false)
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -688,16 +688,16 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         replyViewAction?()
     }
 
-    func bubbleViewImage(for style: ALKMessageStyle.BubbleStyle, isReceiverSide: Bool = false) -> UIImage? {
+    func bubbleViewImage(for style: ALKMessageStyle.BubbleStyle, isReceiverSide: Bool = false,showHangOverImage:Bool) -> UIImage? {
 
         func getImage(style: ALKMessageStyle.BubbleStyle) -> UIImage? {
             switch style {
             case .edge:
-                var imageTitle = "chat_bubble_red"
+                var imageTitle = showHangOverImage ? "chat_bubble_red_hover":"chat_bubble_red"
 
                 // We can rotate the above image but loading the required
                 // image would be faster and we already have both the images.
-                if isReceiverSide {imageTitle = "chat_bubble_grey"}
+                if isReceiverSide {imageTitle = showHangOverImage ? "chat_bubble_grey_hover":"chat_bubble_grey"}
                 return UIImage.init(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
             case .round:
                 return UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
