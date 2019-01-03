@@ -548,7 +548,7 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
             cell.update(data: dictionary)
 
             cell.buttonSelected = {[weak self] tag, title in
-                self?.viewModel.send(message: title, isOpenGroup: false)
+                self?.viewModel.send(message: title, isOpenGroup: false,metadata: self?.configuration.messageMetadata)
             }
 
             return cell

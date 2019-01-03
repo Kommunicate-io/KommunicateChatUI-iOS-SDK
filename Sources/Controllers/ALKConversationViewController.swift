@@ -324,7 +324,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
         templateView?.messageSelected = { [weak self] template in
-            self?.viewModel.selected(template: template)
+            self?.viewModel.selected(template: template,metadata: self?.configuration.messageMetadata)
         }
         if self.isFirstTime {
             self.setupNavigation()
@@ -620,7 +620,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
                 NSLog("Sent: ", message)
 
-                weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup)
+                weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup, metadata:self?.configuration.messageMetadata)
                 button.isUserInteractionEnabled = true
             case .chatBarTextChange(_):
 
@@ -639,7 +639,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     }
                 })
             case .sendVoice(let voice):
-                weakSelf.viewModel.send(voiceMessage: voice as Data)
+                weakSelf.viewModel.send(voiceMessage: voice as Data, metadata:self?.configuration.messageMetadata)
                 break;
 
             case .startVideoRecord():
@@ -1113,7 +1113,7 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
 
 extension ALKConversationViewController: ALKShareLocationViewControllerDelegate {
     func locationDidSelected(geocode: Geocode, image: UIImage) {
-        let (message, indexPath) = viewModel.add(geocode: geocode)
+        let (message, indexPath) = viewModel.add(geocode: geocode,metadata: self.configuration.messageMetadata)
         guard let newMessage = message, let newIndexPath = indexPath else {
             return
         }
@@ -1337,7 +1337,7 @@ extension ALKConversationViewController: UIImagePickerControllerDelegate, UINavi
                 guard let newPath = path else { return }
                 var indexPath: IndexPath? = nil
                 DispatchQueue.main.async {
-                    (_, indexPath) = self.viewModel.sendVideo(atPath: newPath, sourceType: picker.sourceType)
+                    (_, indexPath) = self.viewModel.sendVideo(atPath: newPath, sourceType: picker.sourceType,metadata: self.configuration.messageMetadata)
                     self.tableView.beginUpdates()
                     self.tableView.insertSections(IndexSet(integer: (indexPath?.section)!), with: .automatic)
                     self.tableView.endUpdates()
@@ -1363,7 +1363,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
         for i in 0..<count {
             if i < images.count {
                 let image = images[i]
-                let (message, indexPath) =  self.viewModel.send(photo: image)
+                let (message, indexPath) =  self.viewModel.send(photo: image, metadata : self.configuration.messageMetadata)
                 guard let _ = message, let newIndexPath = indexPath else { return }
                 //            DispatchQueue.main.async {
                 self.tableView.beginUpdates()
@@ -1380,7 +1380,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
                 let path = videos[i - images.count]
-                let (_, indexPath) = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary)
+                let (_, indexPath) = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary, metadata : self.configuration.messageMetadata)
                 self.tableView.beginUpdates()
                 self.tableView.insertSections(IndexSet(integer: (indexPath?.section)!), with: .automatic)
                 self.tableView.endUpdates()
