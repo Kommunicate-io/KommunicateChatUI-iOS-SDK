@@ -11,7 +11,7 @@ import Applozic
 /**
  A delegate used to notify the receiver of the click events in `ConversationListTableViewController`
  */
-public protocol ALKConversationListTableViewDelegate {
+public protocol ALKConversationListTableViewDelegate: class {
     
     /// Tells the delegate which chat cell is tapped alongwith the position.
     func tapped(_ chat: ALKChatViewModelProtocol, at index: Int)
@@ -35,7 +35,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     public var dbService: ALMessageDBService!
     
     //MARK: - PRIVATE PROPERTIES
-    fileprivate var delegate: ALKConversationListTableViewDelegate
+    fileprivate weak var delegate: ALKConversationListTableViewDelegate?
     fileprivate var configuration: ALKConfiguration
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
@@ -141,12 +141,12 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             guard let message = searchFilteredChat[indexPath.row] as? ALMessage else {
                 return
             }
-            delegate.tapped(message, at: indexPath.row)
+            delegate?.tapped(message, at: indexPath.row)
         } else {
             guard let message = viewModel.chatFor(indexPath: indexPath) else {
                 return
             }
-            delegate.tapped(message, at: indexPath.row)
+            delegate?.tapped(message, at: indexPath.row)
         }
     }
     
@@ -201,7 +201,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
 
     @objc func compose() {
-        delegate.emptyChatCellTapped()
+        delegate?.emptyChatCellTapped()
     }
     
     //MARK: - PRIVATE METHODS
@@ -568,7 +568,7 @@ extension ALKConversationListTableViewController {
         let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
         if distanceFromBottom < height {
-            delegate.scrolledToBottom()
+            delegate?.scrolledToBottom()
         }
     }
 }

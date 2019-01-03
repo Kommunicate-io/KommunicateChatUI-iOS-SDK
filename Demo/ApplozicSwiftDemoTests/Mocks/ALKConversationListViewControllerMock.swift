@@ -10,7 +10,7 @@ import Foundation
 import Applozic
 @testable import ApplozicSwift
 
-class ALKConversationListViewControllerMock: ALKConversationListViewController {
+class ALKConversationListViewControllerMock: ALKConversationListViewController, Muteable {
     var isMuteCalled: Bool = false
     var onDeinitialized: (() -> Void)?
 
@@ -26,7 +26,7 @@ class ALKConversationListViewControllerMock: ALKConversationListViewController {
         onDeinitialized?()
     }
 
-    override func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+    func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
         isMuteCalled = true
     }
 }
