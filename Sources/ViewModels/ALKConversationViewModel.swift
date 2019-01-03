@@ -34,10 +34,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     weak public var delegate: ALKConversationViewModelDelegate?
 
-    open var individualLaunch = false
-
-
-
     //MARK: - Outputs
     open var isFirstTime = true
 

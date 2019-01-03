@@ -27,6 +27,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    /// Make this false if you want to use custom list view controller
+    public var individualLaunch = true
+
     override open var title: String? {
         didSet {
             titleButton.setTitle(title, for: .normal)
@@ -298,13 +301,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         addRefreshButton()
-        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded  {
-            viewModel.individualLaunch = false
-        } else {
-            viewModel.individualLaunch = true
+        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch  {
+            individualLaunch = false
         }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
-        if viewModel.individualLaunch {
+        if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
         }
@@ -356,7 +357,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording()
-        if viewModel.individualLaunch {
+        if individualLaunch {
             if let _ = alMqttConversationService {
                 alMqttConversationService.unsubscribeToConversation()
             }
@@ -1262,7 +1263,7 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
 extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func mqttDidConnected() {
-        if viewModel.individualLaunch {
+        if individualLaunch {
             subscribeChannelToMqtt()
         }
     }
