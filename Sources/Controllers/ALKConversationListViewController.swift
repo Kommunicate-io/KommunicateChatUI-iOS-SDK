@@ -348,6 +348,10 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             self.navigationController?.pushViewController(conversationVC, animated: false)
         }
     }
+
+    func conversationVC() -> ALKConversationViewController? {
+        return navigationController?.topViewController as? ALKConversationViewController
+    }
 }
 
 extension ALKConversationListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -554,17 +558,26 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 
     open func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
-        viewModel.updateDeliveryReport(convVC: conversationViewController, messageKey: messageKey, contactId: contactId, status: status)
+
+        guard let viewController = conversationViewController ?? conversationVC(), let _ = viewController.viewModel else {
+            return
+        }
+
+        viewModel.updateDeliveryReport(convVC: viewController, messageKey: messageKey, contactId: contactId, status: status)
     }
 
     open func updateStatus(forContact contactId: String!, withStatus status: Int32) {
-        viewModel.updateStatusReport(convVC: conversationViewController, forContact: contactId, status: status)
+        guard let viewController = conversationViewController ?? conversationVC(), let _ = viewController.viewModel else {
+            return
+        }
+
+        viewModel.updateStatusReport(convVC: viewController, forContact: contactId, status: status)
     }
 
     open func updateTypingStatus(_ applicationKey: String!, userId: String!, status: Bool) {
         print("Typing status is", status)
 
-        guard let viewController = conversationViewController, let vm = viewController.viewModel else { return
+        guard let viewController = conversationViewController ?? conversationVC(), let vm = viewController.viewModel else { return
         }
         guard (vm.contactId != nil && vm.contactId == userId) || vm.channelKey != nil else {
             return
