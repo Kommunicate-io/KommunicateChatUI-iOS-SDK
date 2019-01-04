@@ -717,7 +717,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     // Called from the parent VC
-    func showTypingLabel(status: Bool, userId: String) {
+    public func showTypingLabel(status: Bool, userId: String) {
 
         if(status){
             timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
@@ -747,7 +747,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         typingNoticeViewHeighConstaint?.constant = 0
     }
 
-    func sync(message: ALMessage) {
+    public func sync(message: ALMessage) {
         viewModel.sync(message: message)
     }
 
