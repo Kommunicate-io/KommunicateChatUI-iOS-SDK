@@ -43,7 +43,11 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
             it("Open chat thread") {
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()
-                conversationVC.tableView.delegate?.tableView?(conversationVC.tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
+                XCTAssertNotNil(conversationVC.tableView)
+                guard let tableView = conversationVC.tableView else {
+                    return
+                }
+                tableView.delegate?.tableView?(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
                 XCTAssertNotNil(conversationVC.navigationController?.view)
                 expect(conversationVC.navigationController).toEventually(haveValidSnapshot())
             }

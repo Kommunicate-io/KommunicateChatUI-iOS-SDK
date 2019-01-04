@@ -34,10 +34,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     weak public var delegate: ALKConversationViewModelDelegate?
 
-    open var individualLaunch = false
-
-
-
     //MARK: - Outputs
     open var isFirstTime = true
 
@@ -117,9 +113,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     func clearViewModel() {
+        self.isFirstTime = true
         self.messageModels.removeAll()
         self.alMessages.removeAll()
         self.richMessages.removeAll()
+        self.alMessageWrapper = ALMessageArrayWrapper()
     }
 
     open func groupProfileImgUrl() -> String {

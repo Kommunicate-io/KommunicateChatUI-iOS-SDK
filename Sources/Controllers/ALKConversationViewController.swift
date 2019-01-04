@@ -27,6 +27,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    /// Make this false if you want to use custom list view controller
+    public var individualLaunch = true
+
     override open var title: String? {
         didSet {
             titleButton.setTitle(title, for: .normal)
@@ -289,7 +292,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
@@ -298,13 +301,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         addRefreshButton()
-        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded  {
-            viewModel.individualLaunch = false
-        } else {
-            viewModel.individualLaunch = true
+        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch  {
+            individualLaunch = false
         }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
-        if viewModel.individualLaunch {
+        if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
         }
@@ -318,7 +319,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         viewModel.delegate = self
         self.refreshViewController()
-        
+
         if let templates = viewModel.getMessageTemplates(){
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
@@ -356,7 +357,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording()
-        if viewModel.individualLaunch {
+        if individualLaunch {
             if let _ = alMqttConversationService {
                 alMqttConversationService.unsubscribeToConversation()
             }
@@ -420,7 +421,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.configureWith(value: topicDetail)
         toggleVisibilityOfContextTitleView(true)
     }
-    
+
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
         let height: CGFloat = show ? Padding.ContextView.height : 0
         contextTitleView.constraint(
@@ -709,28 +710,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.reloadData()
         viewModel.prepareController()
     }
-    
+
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
-    }
-
-    private func defaultNameForTypingStatus() -> String{
-        if self.viewModel.isGroup == true {
-            return "Somebody"
-        } else {
-            return self.title ?? ""
-        }
-    }
-
-    private func nameForTypingStatusUsing(userId: String) -> String?{
-        guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
-            return nil
-        }
-        if contact.block || contact.blockBy {
-            return nil
-        }
-        return contact.getDisplayName()
     }
 
     // Called from the parent VC
@@ -768,18 +751,36 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.sync(message: message)
     }
 
-    func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
+    public func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
         guard let key = messageKey, let status = status else {
             return
         }
         viewModel.updateDeliveryReport(messageKey: key, status: status)
     }
 
-    func updateStatusReport(contactId: String?, status: Int32?) {
+    public func updateStatusReport(contactId: String?, status: Int32?) {
         guard let id = contactId, let status = status else {
             return
         }
         viewModel.updateStatusReportForConversation(contactId: id, status: status)
+    }
+
+    private func defaultNameForTypingStatus() -> String{
+        if self.viewModel.isGroup == true {
+            return "Somebody"
+        } else {
+            return self.title ?? ""
+        }
+    }
+
+    private func nameForTypingStatusUsing(userId: String) -> String?{
+        guard let contact = contactService.loadContact(byKey: "userId", value: userId) else {
+            return nil
+        }
+        if contact.block || contact.blockBy {
+            return nil
+        }
+        return contact.getDisplayName()
     }
 
     fileprivate func subscribeChannelToMqtt() {
@@ -873,7 +874,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
 
     }
-    
+
     func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate]) {
         print("\(title, tag) button selected in generic list")
         var infoDict = [String: Any]()
@@ -883,7 +884,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         infoDict["userId"] = self.viewModel.contactId
         NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
     }
-    
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
@@ -1262,7 +1263,7 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
 extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func mqttDidConnected() {
-        if viewModel.individualLaunch {
+        if individualLaunch {
             subscribeChannelToMqtt()
         }
     }
