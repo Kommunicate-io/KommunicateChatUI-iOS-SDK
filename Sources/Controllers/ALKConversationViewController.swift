@@ -720,7 +720,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func showTypingLabel(status: Bool, userId: String) {
 
         if(status){
-            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.invalidateTimerAndUpdateHightConstraint(_:)), userInfo: nil, repeats: false)
+            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
         }else{
             timerTask.invalidate()
         }
@@ -742,7 +742,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    @objc public func invalidateTimerAndUpdateHightConstraint(_ timer: Timer?)  {
+    @objc public func invalidateTimerAndUpdateHeightConstraint(_ timer: Timer?)  {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
     }
