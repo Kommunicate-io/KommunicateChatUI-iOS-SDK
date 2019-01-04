@@ -36,11 +36,11 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
                 fourthMessage.type = "4"
                 
                 let testBundle = Bundle(for: ALKConversationViewControllerSnapshotTests.self)
-                let (firstImageMessage, _) = convVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!)
+                let (firstImageMessage, _) = convVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!, metadata :nil)
                 let date = Date(timeIntervalSince1970: -123456789.0).timeIntervalSince1970*1000
                 firstImageMessage?.createdAtTime = NSNumber(value: date)
                 firstImageMessage?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-                let (secondImageMessage, _) = convVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!)
+                let (secondImageMessage, _) = convVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!, metadata :nil)
                 secondImageMessage?.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 secondImageMessage?.createdAtTime = NSNumber(value: date)
                 secondImageMessage?.type = "4"

@@ -11,6 +11,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 
 - [AL-2856] Dismiss Typing indicator in 30 seconds if stop flag not received
+-[AL 3136] Default message meta data configuration
+
 
 1.3.0
 ---

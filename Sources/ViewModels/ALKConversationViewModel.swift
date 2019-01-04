@@ -376,14 +376,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var filteredArray = [ALMessage]()
 
         for message in messages {
-            if  channelKey  != nil  && channelKey != 0
-                && channelKey ==  message.groupId
-                && message.to != nil  {
-                filteredArray.append(message);
+            if channelKey ==  message.groupId {
+                filteredArray.append(message)
                 delegate?.updateTyingStatus(status: false, userId: message.to)
-            }else if (channelKey == nil || channelKey == 0) && contactId != nil && contactId == message.to
+            }else if message.channelKey == nil && channelKey == nil && contactId == message.to
             {
-                filteredArray.append(message);
+                filteredArray.append(message)
                 delegate?.updateTyingStatus(status: false, userId: message.to)
             }
         }
@@ -484,9 +482,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     }
 
-    open func send(message: String, isOpenGroup: Bool = false) {
+    open func send(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable : Any]?) {
         let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
+        alMessage.metadata = self.modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
 
         addToWrapper(message: alMessage)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
@@ -514,12 +513,26 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func send(photo: UIImage) -> (ALMessage?, IndexPath?) {
+    func modfiedMessageMetadata(alMessage : ALMessage,metadata: [AnyHashable : Any]?) -> NSMutableDictionary {
+
+        var metaData = NSMutableDictionary()
+
+        if alMessage.metadata != nil {
+            metaData = alMessage.metadata
+        }
+
+        if let messageMetadata = metadata, messageMetadata.count > 0 {
+            metaData.addEntries(from: messageMetadata)
+        }
+        return metaData
+    }
+
+    open func send(photo: UIImage, metadata : [AnyHashable : Any]?) -> (ALMessage?, IndexPath?) {
         print("image is:  ", photo)
         let filePath = ALImagePickerHandler.saveImage(toDocDirectory: photo)
         print("filepath:: \(String(describing: filePath))")
         guard let path = filePath, let url = URL(string: path) else { return (nil, nil) }
-        guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(ALMESSAGE_CONTENT_ATTACHMENT)) else {
+        guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(ALMESSAGE_CONTENT_ATTACHMENT), metadata : metadata) else {
             return (nil, nil)
         }
         self.addToWrapper(message: alMessage)
@@ -528,7 +541,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     }
 
-    open func send(voiceMessage: Data) {
+    open func send(voiceMessage: Data,metadata : [AnyHashable : Any]?) {
         print("voice data received: ", voiceMessage.count)
         let fileName = String(format: "AUD-%f.m4a", Date().timeIntervalSince1970*1000)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -538,17 +551,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
         } catch {
             NSLog("error when saving the voice message")
         }
-        guard let alMessage = processAttachment(filePath: fullPath, text: "", contentType: Int(ALMESSAGE_CONTENT_AUDIO)) else { return }
+        guard let alMessage = processAttachment(filePath: fullPath, text: "", contentType: Int(ALMESSAGE_CONTENT_AUDIO),metadata : metadata) else { return }
         self.addToWrapper(message: alMessage)
         self.delegate?.messageSent(at:  IndexPath(row: 0, section: self.messageModels.count-1))
         self.uploadAudio(alMessage: alMessage, indexPath: IndexPath(row: 0, section: self.messageModels.count-1))
 
     }
 
-    open func add(geocode: Geocode) -> (ALMessage?, IndexPath?) {
+    open func add(geocode: Geocode, metadata: [AnyHashable : Any]?) -> (ALMessage?, IndexPath?) {
+
         let latlonString = ["lat": "\(geocode.location.latitude)", "lon": "\(geocode.location.longitude)"]
         guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
         let message = getLocationMessage(latLonString: jsonString)
+        message.metadata = self.modfiedMessageMetadata(alMessage: message,metadata: metadata)
         alMessageWrapper.addALMessage(toMessageArray: message)
         addToWrapper(message: message)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
@@ -569,14 +584,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func sendVideo(atPath path: String, sourceType: UIImagePickerControllerSourceType) -> (ALMessage?, IndexPath?){
+    open func sendVideo(atPath path: String, sourceType: UIImagePickerControllerSourceType, metadata: [AnyHashable : Any]?) -> (ALMessage?, IndexPath?){
         guard let url = URL(string: path) else { return (nil, nil) }
         var contentType = ALMESSAGE_CONTENT_ATTACHMENT
         if sourceType == .camera {
             contentType = ALMESSAGE_CONTENT_CAMERA_RECORDING
         }
 
-        guard let alMessage = self.processAttachment(filePath: url, text: "", contentType: Int(contentType), isVideo: true) else { return (nil, nil) }
+        guard let alMessage = self.processAttachment(filePath: url, text: "", contentType: Int(contentType), isVideo: true, metadata:metadata ) else { return (nil, nil) }
         self.addToWrapper(message: alMessage)
         return (alMessage, IndexPath(row: 0, section: messageModels.count-1))
     }
@@ -865,14 +880,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     /// One of the template message was selected.
-    open func selected(template: ALKTemplateMessageModel) {
+    open func selected(template: ALKTemplateMessageModel,metadata: [AnyHashable : Any]?) {
         // Send message if property is set
         guard template.sendMessageOnSelection else {return}
         var text = template.text
         if let messageToSend = template.messageToSend {
             text = messageToSend
         }
-        send(message: text)
+
+        send(message: text, isOpenGroup: isOpenGroup, metadata:metadata)
     }
 
     open func setSelectedMessageToReply(_ message: ALKMessageViewModel) {
@@ -1145,8 +1161,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return info
     }
 
-    private func processAttachment(filePath: URL, text: String, contentType: Int, isVideo: Bool = false) -> ALMessage? {
+    private func processAttachment(filePath: URL, text: String, contentType: Int, isVideo: Bool = false, metadata : [AnyHashable : Any]? ) -> ALMessage? {
         let alMessage = getMessageToPost()
+        alMessage.metadata = self.modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
         alMessage.contentType = Int16(contentType)
         alMessage.fileMeta = getFileMetaInfo()
         alMessage.imageFilePath = filePath.lastPathComponent

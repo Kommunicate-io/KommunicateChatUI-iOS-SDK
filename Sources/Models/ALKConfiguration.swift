@@ -95,5 +95,8 @@ public struct ALKConfiguration {
     /// Date cell and  information cell  text color
     public var conversationViewCustomCellTextColor = UIColor.white
 
+    /// Additional information you can pass in message metadata in all the messages.
+    public var messageMetadata : [AnyHashable : Any]?
+
     public init() { }
 }
