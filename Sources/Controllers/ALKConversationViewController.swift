@@ -546,6 +546,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyMessageQuickReplyCell.self)
         tableView.register(ALKMyGenericCardCell.self)
         tableView.register(ALKFriendGenericCardCell.self)
+        tableView.register(ALKFriendQuickReplyCell.self)
     }
 
 

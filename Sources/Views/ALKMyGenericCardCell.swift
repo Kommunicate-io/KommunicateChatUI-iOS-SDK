@@ -112,7 +112,7 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     public class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
         // Update height based on number of buttons
         // present and if image is set.
-        return ALKGenericCardCollectionView.rowHeightFor(message:message) + GenericCardsMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 130) - 20
+        return ALKGenericCardCollectionView.rowHeightFor(message:message) + ALKFriendMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 130) - 20
     }
     
     open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, index: NSInteger) {

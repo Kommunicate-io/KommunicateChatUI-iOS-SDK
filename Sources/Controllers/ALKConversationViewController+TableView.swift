@@ -296,17 +296,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
 
             } else {
-                let cell: ALKFriendMessageQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell: ALKFriendQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.register(cell: ALQuickReplyCollectionViewCell.self)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
-                cell.avatarTapped = {[weak self] in
-                    guard let currentModel = cell.viewModel else {return}
-                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
-                }
-                cell.menuAction = {[weak self] action in
-                    self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
 
@@ -374,28 +367,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let metadata = message.metadata else {
             return
         }
-
-        if(message.messageType == ALKMessageType.quickReply){
-            if message.isMyMessage {
-                guard let cell =  cell as? ALKMyMessageQuickReplyCell  else {
-                    return
-                }
-                cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
-                let index = cell.collectionView.tag
-                let value = contentOffsetDictionary[index]
-                let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
-                cell.collectionView.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: false)
-            } else {
-                guard let cell =  cell as? ALKFriendMessageQuickReplyCell else {
-                    return
-                }
-                cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
-                let index = cell.collectionView.tag
-                let value = contentOffsetDictionary[index]
-                let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
-                cell.collectionView.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: false)
-            }
-        } else if message.messageType == .genericCard {
+        if message.messageType == .genericCard {
             if message.isMyMessage {
                 guard let cell =  cell as? ALKMyGenericCardCell else {
                     return

@@ -19,10 +19,10 @@ public class ALKCurvedButton: UIButton {
     var maxWidth: CGFloat
 
     public struct Padding {
-        var left: CGFloat = 14.0
-        var right: CGFloat = 14.0
-        var top: CGFloat = 8.0
-        var bottom: CGFloat = 8.0
+        var left: CGFloat = 10.0
+        var right: CGFloat = 10.0
+        var top: CGFloat = 5.0
+        var bottom: CGFloat = 5.0
     }
 
     public let padding = Padding()
@@ -57,7 +57,8 @@ public class ALKCurvedButton: UIButton {
     /// - Returns: Returns button width.
     public func buttonWidth() -> CGFloat {
         let titleWidth = title.rectWithConstrainedWidth(maxWidth, font: textFont).width
-        let buttonWidth = titleWidth + padding.left + padding.right
+        var buttonWidth = titleWidth + padding.left + padding.right
+        buttonWidth = buttonWidth > maxWidth ? maxWidth : buttonWidth
         return buttonWidth >= 45 ? buttonWidth : 45 //Minimum width is 45
     }
 
@@ -70,6 +71,15 @@ public class ALKCurvedButton: UIButton {
         return buttonHeight >= 35 ? buttonHeight : 35 //Minimum height is 35
     }
 
+    public class func buttonSize(text: String, maxWidth: CGFloat, font: UIFont) -> CGSize {
+        let textSize = text.rectWithConstrainedWidth(maxWidth, font: font)
+        var width = textSize.width + 28
+        var height = textSize.height + 16
+        width = width >= 45 ? width : 45
+        height = height >= 35 ? height : 35
+        return CGSize(width: width, height: height)
+    }
+
     // MARK: - Private methods.
     private func setupButton() {
         /// Attributed title for button
@@ -79,8 +89,12 @@ public class ALKCurvedButton: UIButton {
 
         self.setAttributedTitle(attributedTitle, for: .normal)
         self.frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
+        self.widthAnchor.constraint(equalToConstant: buttonWidth()).isActive = true
+        self.heightAnchor.constraint(equalToConstant: buttonHeight()).isActive = true
+//        self.contentEdgeInsets = UIEdgeInsets(top: padding.top, left: padding.left, bottom: padding.bottom, right: padding.right)
+        self.titleLabel?.lineBreakMode = .byWordWrapping
         self.backgroundColor = .clear
-        self.layer.cornerRadius = 10
+        self.layer.cornerRadius = 15
         self.layer.borderWidth = 2
         self.layer.borderColor = color.cgColor
         self.clipsToBounds = true

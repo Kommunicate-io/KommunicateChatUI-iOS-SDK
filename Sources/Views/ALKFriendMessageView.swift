@@ -9,7 +9,7 @@ import Foundation
 import Applozic
 import Kingfisher
 
-class GenericCardsMessageView: UIView {
+class ALKFriendMessageView: UIView {
     
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
     
@@ -124,6 +124,18 @@ class GenericCardsMessageView: UIView {
         messageView.setStyle(ALKMessageStyle.message)
         timeLabel.text = viewModel.time
         timeLabel.setStyle(ALKMessageStyle.time)
+    }
+
+    class func rowHeight(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+        let minimumHeight: CGFloat = 60 // 55 is avatar image... + padding
+        guard let message = viewModel.message else {
+            return minimumHeight
+        }
+        let font = ALKMessageStyle.message.font
+        let messageWidth = width - 64 // left padding 9 + 18 + 37
+        var messageHeight = message.heightWithConstrainedWidth(width: messageWidth, font: font)
+        messageHeight += 30 // 6 + 16 + 4 + 2 + 2
+        return messageHeight > minimumHeight ? messageHeight : minimumHeight
     }
     
     class func rowHeigh(viewModel: ALKMessageViewModel,widthNoPadding: CGFloat) -> CGFloat {

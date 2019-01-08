@@ -114,7 +114,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         let baseHeight: CGFloat = 10
         let padding: CGFloat = 10
         let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
-        return baseHeight + totalButtonHeight + padding + GenericCardsMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
+        return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
     
     @objc func buttonSelected(_ action: UIButton) {
