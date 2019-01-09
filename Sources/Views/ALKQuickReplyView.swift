@@ -6,13 +6,12 @@
 //
 struct QuickReplySettings {
     static let font = UIFont.systemFont(ofSize: 14)
-    static let maxWidth = UIScreen.main.bounds.width - 100
 }
 
 class ALKQuickReplyView: UIView {
 
     let font = QuickReplySettings.font
-    let maxWidth = QuickReplySettings.maxWidth
+    let maxWidth: CGFloat
 
     let mainStackView: UIStackView = {
         let stackView = UIStackView()
@@ -23,7 +22,8 @@ class ALKQuickReplyView: UIView {
         return stackView
     }()
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, maxWidth: CGFloat) {
+        self.maxWidth = maxWidth
         super.init(frame: frame)
         setupConstraints()
     }
@@ -36,25 +36,27 @@ class ALKQuickReplyView: UIView {
         setupQuickReplyButtons(quickReplyArray)
     }
 
-    class func rowHeight(quickReplyArray: [Dictionary<String, Any>]) -> CGFloat {
+    class func rowHeight(quickReplyArray: [Dictionary<String, Any>], maxWidth: CGFloat) -> CGFloat {
         let font = QuickReplySettings.font
-        let maxWidth = QuickReplySettings.maxWidth
-        var currWidth: CGFloat
         var width: CGFloat = 0
-        // Height of first item to start
-        var height = ALKCurvedButton.buttonSize(text: quickReplyArray[0]["title"] as? String ?? "", maxWidth: maxWidth, font: font).height // spacing
+        var height: CGFloat = 0
+        var size = CGSize(width: 0, height: 0)
 
         for dict in quickReplyArray {
             let title = dict["title"] as? String ?? ""
-            let size = ALKCurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
-            currWidth = size.width
+            size = ALKCurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
+            let currWidth = size.width
+
             if width + currWidth > maxWidth {
-                width = currWidth
+                width = width > 0 ? currWidth : 0
                 height += size.height + 10
+                size = CGSize(width: 0, height: 0) //Empty size
             } else {
                 width += currWidth + 10 //spacing
             }
         }
+
+        height += size.height
         return height
     }
 

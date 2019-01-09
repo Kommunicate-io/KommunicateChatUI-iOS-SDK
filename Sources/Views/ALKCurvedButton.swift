@@ -19,10 +19,10 @@ public class ALKCurvedButton: UIButton {
     var maxWidth: CGFloat
 
     public struct Padding {
-        var left: CGFloat = 10.0
-        var right: CGFloat = 10.0
-        var top: CGFloat = 5.0
-        var bottom: CGFloat = 5.0
+        var left: CGFloat = 16.0
+        var right: CGFloat = 16.0
+        var top: CGFloat = 8.0
+        var bottom: CGFloat = 8.0
     }
 
     public let padding = Padding()
@@ -59,7 +59,7 @@ public class ALKCurvedButton: UIButton {
         let titleWidth = title.rectWithConstrainedWidth(maxWidth, font: textFont).width
         var buttonWidth = titleWidth + padding.left + padding.right
         buttonWidth = buttonWidth > maxWidth ? maxWidth : buttonWidth
-        return buttonWidth >= 45 ? buttonWidth : 45 //Minimum width is 45
+        return max(buttonWidth, 45) //Minimum width is 45
     }
 
     /// This method calculates height of button.
@@ -68,15 +68,15 @@ public class ALKCurvedButton: UIButton {
     public func buttonHeight() -> CGFloat {
         let titleHeight = title.rectWithConstrainedWidth(maxWidth, font: textFont).height
         let buttonHeight = titleHeight + padding.top + padding.bottom
-        return buttonHeight >= 35 ? buttonHeight : 35 //Minimum height is 35
+        return max(buttonHeight, 35) //Minimum height is 35
     }
 
     public class func buttonSize(text: String, maxWidth: CGFloat, font: UIFont) -> CGSize {
         let textSize = text.rectWithConstrainedWidth(maxWidth, font: font)
-        var width = textSize.width + 28
+        var width = textSize.width + 32
         var height = textSize.height + 16
-        width = width >= 45 ? width : 45
-        height = height >= 35 ? height : 35
+        width = max(width, 45)
+        height = max(height, 35)
         return CGSize(width: width, height: height)
     }
 
@@ -91,7 +91,7 @@ public class ALKCurvedButton: UIButton {
         self.frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
         self.widthAnchor.constraint(equalToConstant: buttonWidth()).isActive = true
         self.heightAnchor.constraint(equalToConstant: buttonHeight()).isActive = true
-//        self.contentEdgeInsets = UIEdgeInsets(top: padding.top, left: padding.left, bottom: padding.bottom, right: padding.right)
+        self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
         self.titleLabel?.lineBreakMode = .byWordWrapping
         self.backgroundColor = .clear
         self.layer.cornerRadius = 15

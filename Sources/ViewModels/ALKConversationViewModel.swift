@@ -291,8 +291,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         case .quickReply:
             if messageModel.isMyMessage {
-                let heigh = ALKMyMessageQuickReplyCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh + ALKMyMessageQuickReplyCell.rowHeightFor()
+                return ALKMyQuickReplyCell.rowHeight(viewModel: messageModel)
             } else {
                 return ALKFriendQuickReplyCell.rowHeight(viewModel: messageModel)
             }

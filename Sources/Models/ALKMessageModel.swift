@@ -97,10 +97,9 @@ extension ALKMessageModel: Equatable {
 
 extension ALKMessageViewModel {
     func quickReplyDictionary() -> [Dictionary<String,Any>]? {
-        guard let metadata = self.metadata else { return nil }
-        let payload = metadata["payload"] as? String
-        let data = payload?.data
-        let jsonArray = try? JSONSerialization.jsonObject(with: data!, options : .allowFragments)
+        guard let metadata = self.metadata, let payload = metadata["payload"] as? String else { return nil }
+        let data = payload.data
+        let jsonArray = try? JSONSerialization.jsonObject(with: data, options : .allowFragments)
         guard let quickReplyArray = jsonArray as? [Dictionary<String,Any>] else { return nil }
         return quickReplyArray
     }

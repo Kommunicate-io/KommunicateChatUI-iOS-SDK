@@ -135,7 +135,7 @@ class ALKFriendMessageView: UIView {
         let messageWidth = width - 64 // left padding 9 + 18 + 37
         var messageHeight = message.heightWithConstrainedWidth(width: messageWidth, font: font)
         messageHeight += 30 // 6 + 16 + 4 + 2 + 2
-        return messageHeight > minimumHeight ? messageHeight : minimumHeight
+        return max(messageHeight, minimumHeight)
     }
     
     class func rowHeigh(viewModel: ALKMessageViewModel,widthNoPadding: CGFloat) -> CGFloat {

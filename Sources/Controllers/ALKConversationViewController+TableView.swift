@@ -283,18 +283,12 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             }
         case .quickReply:
-        if message.isMyMessage {
-
-                let cell: ALKMyMessageQuickReplyCell  = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            if message.isMyMessage {
+                let cell: ALKMyQuickReplyCell  = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.register(cell: ALQuickReplyCollectionViewCell.self)
                 cell.update(viewModel: message)
-
                 cell.update(chatBar: self.chatBar)
-                cell.menuAction = {[weak self] action in
-                    self?.menuItemSelected(action: action, message: message)}
                 return cell
-
             } else {
                 let cell: ALKFriendQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
