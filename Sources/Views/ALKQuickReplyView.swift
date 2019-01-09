@@ -8,7 +8,7 @@ struct QuickReplySettings {
     static let font = UIFont.systemFont(ofSize: 14)
 }
 
-class ALKQuickReplyView: UIView {
+public class ALKQuickReplyView: UIView {
 
     let font = QuickReplySettings.font
     let maxWidth: CGFloat
@@ -22,7 +22,9 @@ class ALKQuickReplyView: UIView {
         return stackView
     }()
 
-    init(frame: CGRect, maxWidth: CGFloat) {
+    public var quickReplySelected: ((_ index: Int?, _ name: String, _ dict: Dictionary<String, Any>?) -> ())?
+
+    public init(frame: CGRect, maxWidth: CGFloat) {
         self.maxWidth = maxWidth
         super.init(frame: frame)
         setupConstraints()
@@ -32,32 +34,38 @@ class ALKQuickReplyView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(quickReplyArray: [Dictionary<String, Any>]) {
+    public func update(quickReplyArray: [Dictionary<String, Any>]) {
         setupQuickReplyButtons(quickReplyArray)
     }
 
-    class func rowHeight(quickReplyArray: [Dictionary<String, Any>], maxWidth: CGFloat) -> CGFloat {
+    public class func rowHeight(quickReplyArray: [Dictionary<String, Any>], maxWidth: CGFloat) -> CGFloat {
         let font = QuickReplySettings.font
         var width: CGFloat = 0
-        var height: CGFloat = 0
+        var totalHeight: CGFloat = 0
         var size = CGSize(width: 0, height: 0)
+        var prevHeight: CGFloat = 0
 
         for dict in quickReplyArray {
             let title = dict["title"] as? String ?? ""
             size = ALKCurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
             let currWidth = size.width
-
+            if currWidth > maxWidth {
+                totalHeight += size.height + prevHeight + 10 // 10 padding between buttons
+                width = 0
+                prevHeight = 0
+                continue
+            }
             if width + currWidth > maxWidth {
-                width = width > 0 ? currWidth : 0
-                height += size.height + 10
-                size = CGSize(width: 0, height: 0) //Empty size
+                totalHeight += prevHeight + 10 // 10 padding between buttons
+                width = currWidth
+                prevHeight = size.height
             } else {
-                width += currWidth + 10 //spacing
+                width += currWidth + 10 // 10 padding between buttons
+                prevHeight = size.height
             }
         }
-
-        height += size.height
-        return height
+        totalHeight += prevHeight
+        return totalHeight
     }
 
     private func setupConstraints() {
@@ -74,11 +82,13 @@ class ALKQuickReplyView: UIView {
         }
         var width: CGFloat = 0
         var subviews = [UIView]()
+        var index: Int = 0
         for quickReply in quickReplyArray {
             guard let title = quickReply["title"] as? String else {
                 continue
             }
-            let button = ALKCurvedButton(title: title, font: font, maxWidth: maxWidth)
+            index += 1
+            let button = curvedButton(title: title, index: index, metadata: quickReply["replyMetadata"] as? Dictionary<String, Any>)
             width += button.buttonWidth()
 
             if width >= maxWidth {
@@ -124,5 +134,14 @@ class ALKQuickReplyView: UIView {
         view.backgroundColor = .clear
         view.frame.size = size
         return view
+    }
+
+    private func curvedButton(title: String, index: Int, metadata: Dictionary<String, Any>?) -> ALKCurvedButton {
+        let button = ALKCurvedButton(title: title, font: font, maxWidth: maxWidth)
+        button.index = index
+        button.buttonSelected = { [weak self] index, title in
+            self?.quickReplySelected?(index, title, metadata)
+        }
+        return button
     }
 }
