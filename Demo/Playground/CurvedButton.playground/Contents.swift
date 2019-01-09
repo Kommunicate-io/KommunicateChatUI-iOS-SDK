@@ -2,8 +2,6 @@
 import ApplozicSwift
 import UIKit
 
-var str = "Hello, playground"
-
 /// Using default font and color
 var button = ALKCurvedButton(title: "Demo Button")
 
