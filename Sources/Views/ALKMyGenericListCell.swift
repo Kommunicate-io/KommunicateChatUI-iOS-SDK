@@ -5,9 +5,6 @@
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
-import Foundation
-import Applozic
-
 class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     var itemTitleLabel: InsetLabel = {
@@ -22,8 +19,8 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     var height: CGFloat!
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
     
-    fileprivate lazy var messageView: ALHyperLabel = {
-        let label = ALHyperLabel.init(frame: .zero)
+    fileprivate lazy var messageView: ALKHyperLabel = {
+        let label = ALKHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label

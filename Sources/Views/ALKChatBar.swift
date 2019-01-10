@@ -38,8 +38,8 @@ open class ALKChatBar: UIView, Localizable {
 
     public var action: ((ActionType) -> ())?
 
-    open var poweredByMessageLabel: ALHyperLabel = {
-        let label = ALHyperLabel(frame: CGRect.zero)
+    open var poweredByMessageLabel: ALKHyperLabel = {
+        let label = ALKHyperLabel(frame: CGRect.zero)
         label.backgroundColor = UIColor.darkGray
         label.numberOfLines = 1
         label.textAlignment = NSTextAlignment.center

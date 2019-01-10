@@ -4,14 +4,15 @@
 //
 //  Created by Shivam Pokhriyal on 07/01/19.
 //
-struct QuickReplySettings {
-    static let font = UIFont.systemFont(ofSize: 14)
+public struct QuickReplySettings {
+    public static var font = UIFont.systemFont(ofSize: 14)
+    public static var color = UIColor(red: 85, green: 83, blue: 183)
 }
 
 public class ALKQuickReplyView: UIView {
 
     let font = QuickReplySettings.font
-    let maxWidth: CGFloat
+    let color = QuickReplySettings.color
 
     let mainStackView: UIStackView = {
         let stackView = UIStackView()
@@ -22,10 +23,11 @@ public class ALKQuickReplyView: UIView {
         return stackView
     }()
 
+    public var alignLeft: Bool = true
+    public var maxWidth: CGFloat = UIScreen.main.bounds.width // Need default value otherwise crash if someone don't change from outside
     public var quickReplySelected: ((_ index: Int?, _ name: String, _ dict: Dictionary<String, Any>?) -> ())?
 
-    public init(frame: CGRect, maxWidth: CGFloat) {
-        self.maxWidth = maxWidth
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setupConstraints()
     }
@@ -99,7 +101,7 @@ public class ALKQuickReplyView: UIView {
                     continue
                 }
                 let hiddenView = hiddenViewUsing(currWidth: width - button.buttonWidth(), maxWidth: maxWidth, subViews: subviews)
-                subviews.append(hiddenView)
+                alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
                 width = button.buttonWidth()
                 let stackView = horizontalStackView(subviews: subviews)
                 mainStackView.addArrangedSubview(stackView)
@@ -111,7 +113,7 @@ public class ALKQuickReplyView: UIView {
             }
         }
         let hiddenView = hiddenViewUsing(currWidth: width, maxWidth: maxWidth, subViews: subviews)
-        subviews.append(hiddenView)
+        alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
         let stackView = horizontalStackView(subviews: subviews)
         mainStackView.addArrangedSubview(stackView)
     }
@@ -137,7 +139,7 @@ public class ALKQuickReplyView: UIView {
     }
 
     private func curvedButton(title: String, index: Int, metadata: Dictionary<String, Any>?) -> ALKCurvedButton {
-        let button = ALKCurvedButton(title: title, font: font, maxWidth: maxWidth)
+        let button = ALKCurvedButton(title: title, font: font, color: color, maxWidth: maxWidth)
         button.index = index
         button.buttonSelected = { [weak self] index, title in
             self?.quickReplySelected?(index, title, metadata)

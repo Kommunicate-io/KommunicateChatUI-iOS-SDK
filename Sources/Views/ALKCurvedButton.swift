@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// **ALKCurvedButton** is a generic curved button which renders text supplied to it.
+/// `ALKCurvedButton` is a generic curved button which renders text supplied to it.
 ///
 /// It also accepts optional font, color and maxWidth for rendering.
 /// - NOTE: Minimum width is 45 and minimum height is 35
@@ -19,13 +19,12 @@ public class ALKCurvedButton: UIButton {
     var maxWidth: CGFloat
 
     public struct Padding {
-        var left: CGFloat = 16.0
-        var right: CGFloat = 16.0
-        var top: CGFloat = 8.0
-        var bottom: CGFloat = 8.0
+        static var left: CGFloat = 16.0
+        static var right: CGFloat = 16.0
+        static var top: CGFloat = 8.0
+        static var bottom: CGFloat = 8.0
     }
 
-    public let padding = Padding()
     public var index: Int?
     public var buttonSelected: ((_ index: Int?, _ name: String)->())?
 
@@ -44,7 +43,7 @@ public class ALKCurvedButton: UIButton {
         self.title = title
         self.textFont = font
         self.color = color
-        self.maxWidth = maxWidth - padding.left - padding.right
+        self.maxWidth = maxWidth - Padding.left - Padding.right
         super.init(frame: .zero)
         setupButton()
     }
@@ -56,27 +55,30 @@ public class ALKCurvedButton: UIButton {
     // MARK: - Public methods
     /// This method calculates width of button.
     ///
-    /// - Returns: Returns button width.
+    /// - Returns: Button width for the given title
     public func buttonWidth() -> CGFloat {
         let titleWidth = title.rectWithConstrainedWidth(maxWidth, font: textFont).width
-        var buttonWidth = titleWidth + padding.left + padding.right
+        var buttonWidth = titleWidth + Padding.left + Padding.right
         buttonWidth = buttonWidth > maxWidth ? maxWidth : buttonWidth
         return max(buttonWidth, 45) //Minimum width is 45
     }
 
     /// This method calculates height of button.
     ///
-    /// - Returns: Returns button height.
+    /// - Returns: Button height for the given title
     public func buttonHeight() -> CGFloat {
         let titleHeight = title.rectWithConstrainedWidth(maxWidth, font: textFont).height
-        let buttonHeight = titleHeight + padding.top + padding.bottom
+        let buttonHeight = titleHeight + Padding.top + Padding.bottom
         return max(buttonHeight, 35) //Minimum height is 35
     }
 
+    /// This method calculates size of button.
+    ///
+    /// - Returns: Button size for the given title
     public class func buttonSize(text: String, maxWidth: CGFloat, font: UIFont) -> CGSize {
-        let textSize = text.rectWithConstrainedWidth(maxWidth - 32, font: font)
-        var width = textSize.width + 32
-        var height = textSize.height + 16
+        let textSize = text.rectWithConstrainedWidth(maxWidth - (Padding.left + Padding.right), font: font)
+        var width = textSize.width + (Padding.left + Padding.right)
+        var height = textSize.height + (Padding.top + Padding.bottom)
         width = max(width, 45)
         height = max(height, 35)
         return CGSize(width: width, height: height)

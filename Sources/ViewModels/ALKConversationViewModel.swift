@@ -291,9 +291,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         case .quickReply:
             if messageModel.isMyMessage {
-                return ALKMyQuickReplyCell.rowHeight(viewModel: messageModel)
+                return ALKMyQuickReplyCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
             } else {
-                return ALKFriendQuickReplyCell.rowHeight(viewModel: messageModel)
+                return ALKFriendQuickReplyCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
             }
         }
     }

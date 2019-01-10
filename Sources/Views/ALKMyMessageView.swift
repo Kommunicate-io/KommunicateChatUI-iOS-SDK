@@ -4,13 +4,30 @@
 //
 //  Created by Shivam Pokhriyal on 08/01/19.
 //
-import Applozic
 
 class ALKMyMessageView: UIView {
 
+    struct Padding {
+        struct MessageView {
+            static let top: CGFloat = 4
+            static let bottom: CGFloat = 6
+        }
+        struct BubbleView {
+            static let bottom: CGFloat = 2
+        }
+        struct StateView {
+            static let bottom: CGFloat = 1
+            static let right: CGFloat = 2
+        }
+        struct TimeLabel {
+            static let right: CGFloat = 2
+            static let bottom: CGFloat = 2
+        }
+    }
+
     fileprivate var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
-    fileprivate lazy var messageView: ALHyperLabel = {
-        let label = ALHyperLabel.init(frame: .zero)
+    fileprivate lazy var messageView: ALKHyperLabel = {
+        let label = ALKHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -88,23 +105,23 @@ class ALKMyMessageView: UIView {
     private func setupConstraints() {
         self.addViewsForAutolayout(views: [messageView, bubbleView, stateView, timeLabel])
         self.bringSubview(toFront: messageView)
-        messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
+        messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        messageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -6).isActive = true
+        messageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Padding.MessageView.bottom).isActive = true
         messageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
-        bubbleView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2).isActive = true
+        bubbleView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Padding.BubbleView.bottom).isActive = true
 
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
-        stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1.0).isActive = true
-        stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -2.0).isActive = true
+        stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * Padding.StateView.bottom).isActive = true
+        stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -1 * Padding.StateView.right).isActive = true
 
-        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
-        timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
+        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
+        timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: Padding.TimeLabel.bottom).isActive = true
     }
 
 }
