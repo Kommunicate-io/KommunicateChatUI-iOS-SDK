@@ -1030,7 +1030,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    public func newMessagesAdded() {
+    @objc open func newMessagesAdded() {
         tableView.reloadData()
         //Check if current user is removed from the group
         isChannelLeft()
