@@ -539,6 +539,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendGenericCardCell.self)
         tableView.register(ALKFriendQuickReplyCell.self)
         tableView.register(ALKMyQuickReplyCell.self)
+        tableView.register(ALKMyMessageButtonCell.self)
+        tableView.register(ALKFriendMessageButtonCell.self)
     }
 
 
@@ -897,6 +899,28 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.send(message: msg, metadata: customMetadata)
     }
 
+    func messageButtonSelected(index: Int, title: String, message: ALKMessageViewModel) {
+        guard
+            let dict = message.payloadFromMetadata(),
+            let selectedButton = dict[index] as? Dictionary<String, Any>,
+            let buttonTitle = selectedButton["name"] as? String,
+            buttonTitle == title
+            else {
+            return
+        }
+
+        guard
+            let type = selectedButton["type"] as? String,
+            type == "link"
+            else {
+                /// Submit Button
+                let text = selectedButton["replyText"] as? String ?? selectedButton["name"] as! String
+                submitButtonSelected(metadata: message.metadata!, text: text)
+                return
+        }
+        linkButtonSelected(selectedButton)
+    }
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
@@ -982,6 +1006,87 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     private func configurePropertiesWith(configuration: ALKConfiguration) {
         self.isGroupDetailActionEnabled = configuration.isTapOnNavigationBarEnabled
         self.isProfileTapActionEnabled = configuration.isProfileTapActionEnabled
+    }
+
+    private func postRequestUsing(url: URL, param: String) -> URLRequest? {
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 600
+        request.httpMethod = "POST"
+        guard let data = param.data(using: .utf8) else { return nil }
+        request.httpBody = data
+        let contentLength = String(format: "%lu", UInt(data.count))
+        request.setValue(contentLength, forHTTPHeaderField: "Content-Length")
+        return request
+    }
+
+    private func requestHandler(_ request: URLRequest, _ completion: @escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void) {
+        let task = URLSession.shared.dataTask(with: request) {
+            data, response, error in
+            print("Response is \(String(describing: response)) and error is \(String(describing: error))")
+            completion(data, response, error)
+        }
+        task.resume()
+    }
+    
+    private func linkButtonSelected(_ selectedButton: Dictionary<String, Any>) {
+        guard
+            let urlString = selectedButton["url"] as? String,
+            let url = URL(string: urlString)
+        else {
+            return
+        }
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
+    }
+
+    private func submitButtonResponse(request: URLRequest) {
+        activityIndicator.startAnimating()
+        let group = DispatchGroup()
+        group.enter()
+        var responseData: String?
+        var responseUrl: URL?
+        requestHandler(request) { dat, response, error in
+            guard error == nil, let data = dat, let url = response?.url else {
+                print("Error while making submit button request: \(error), \(dat), \(response)")
+                group.leave()
+                return
+            }
+            responseData = String(data: data, encoding: .utf8)
+            responseUrl = url
+            group.leave()
+        }
+        group.notify(queue: .main) {
+            self.activityIndicator.stopAnimating()
+            guard let data = responseData, let url = responseUrl else {
+                return
+            }
+            let vc = WebViewController(htmlString: data, url: url)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    private func submitButtonSelected(metadata: Dictionary<String, Any>, text: String) {
+        guard
+            let formData = metadata["formData"] as? String,
+            let urlString = metadata["formAction"] as? String,
+            let url = URL(string: urlString),
+            var request = postRequestUsing(url: url, param: formData)
+            else {
+                return
+        }
+        self.viewModel.send(message: text, metadata: nil)
+        if let type = metadata["requestType"] as? String, type == "json" {
+            let contentType = "application/json"
+            request.addValue(contentType, forHTTPHeaderField: "Content-Type")
+            requestHandler(request) { _, _, _ in }
+        } else {
+            let contentType = "application/x-www-form-urlencoded"
+            request.addValue(contentType, forHTTPHeaderField: "Content-Type")
+            submitButtonResponse(request: request)
+        }
     }
 }
 

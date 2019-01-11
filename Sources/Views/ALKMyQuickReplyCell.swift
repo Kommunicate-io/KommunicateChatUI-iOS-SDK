@@ -24,7 +24,7 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         let messageWidth = maxWidth -
-            (QuickReplyConfig.SentMessage.MessagePadding.left + QuickReplyConfig.SentMessage.MessagePadding.right)
+            (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
         let height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
         messageViewHeight.constant = height
         messageView.update(viewModel: viewModel)
@@ -34,20 +34,20 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
             return
         }
         let quickReplyViewWidth = maxWidth -
-            (QuickReplyConfig.SentMessage.QuickReplyPadding.left + QuickReplyConfig.SentMessage.QuickReplyPadding.right)
+            (ChatCellPadding.SentMessage.QuickReply.left + ChatCellPadding.SentMessage.QuickReply.right)
         updateQuickReplyView(quickReplyArray: quickReplyArray, height: height, width: quickReplyViewWidth)
         self.layoutIfNeeded()
     }
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
         let messageWidth = maxWidth -
-            (QuickReplyConfig.SentMessage.MessagePadding.left + QuickReplyConfig.SentMessage.MessagePadding.right)
+            (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
         let height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
         guard let quickReplyDict = viewModel.payloadFromMetadata() else {
             return height
         }
         let quickReplyViewWidth = maxWidth -
-            (QuickReplyConfig.SentMessage.QuickReplyPadding.left + QuickReplyConfig.SentMessage.QuickReplyPadding.right)
+            (ChatCellPadding.SentMessage.QuickReply.left + ChatCellPadding.SentMessage.QuickReply.right)
         return height + ALKQuickReplyView.rowHeight(quickReplyArray: quickReplyDict, maxWidth: quickReplyViewWidth) + 20 // Padding between messages
     }
 
@@ -56,8 +56,8 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(quickReplyView)
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: QuickReplyConfig.SentMessage.MessagePadding.left).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * QuickReplyConfig.SentMessage.MessagePadding.right).isActive = true
+        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.SentMessage.Message.left).isActive = true
+        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * ChatCellPadding.SentMessage.Message.right).isActive = true
         messageViewHeight.isActive = true
     }
 
@@ -67,8 +67,8 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         quickReplyView.update(quickReplyArray: quickReplyArray)
         let quickReplyViewHeight = ALKQuickReplyView.rowHeight(quickReplyArray: quickReplyArray, maxWidth: width)
 
-        quickReplyView.frame = CGRect(x: QuickReplyConfig.SentMessage.QuickReplyPadding.left,
-                                      y: height + QuickReplyConfig.SentMessage.QuickReplyPadding.top,
+        quickReplyView.frame = CGRect(x: ChatCellPadding.SentMessage.QuickReply.left,
+                                      y: height + ChatCellPadding.SentMessage.QuickReply.top,
                                       width: width,
                                       height: quickReplyViewHeight)
     }

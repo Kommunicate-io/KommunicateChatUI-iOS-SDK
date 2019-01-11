@@ -303,7 +303,24 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
-
+        case .button:
+            if message.isMyMessage {
+                /// No button action if message sent by same user.
+                let cell: ALKMyMessageButtonCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
+                cell.update(chatBar: self.chatBar)
+                return cell
+            } else {
+                let cell: ALKFriendMessageButtonCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
+                cell.update(chatBar: self.chatBar)
+                cell.buttonView.buttonSelected = {[weak self] index, title in
+                    self?.messageButtonSelected(index: index, title: title, message: message)
+                }
+                return cell
+            }
         }
     }
 

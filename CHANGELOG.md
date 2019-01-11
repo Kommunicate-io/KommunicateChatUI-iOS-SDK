@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 
 -[Al-3137] Change quick reply view to a staggered grid layout.
+-[AL-3137] Added support for submit button and link button as rich messages.
 
 ### Fixes
 - Fixed an issue where view was taking time in moving upwards when keyboard appears in the screen.

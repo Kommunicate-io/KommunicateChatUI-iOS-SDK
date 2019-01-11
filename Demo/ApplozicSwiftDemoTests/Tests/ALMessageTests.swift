@@ -66,6 +66,7 @@ class ALMessageTests: XCTestCase {
     func testMessageType_WhenGenericCard() {
         let message = mockMessage
         let mockMetaData = NSMutableDictionary()
+        mockMetaData["contentType"] = "300"
         mockMetaData["templateId"] = "2"
         message.metadata = mockMetaData
         XCTAssert(message.messageType == .genericCard)
@@ -74,6 +75,7 @@ class ALMessageTests: XCTestCase {
     func testMessageType_WhenGenericList() {
         let message = mockMessage
         let mockMetaData = NSMutableDictionary()
+        mockMetaData["contentType"] = "300"
         mockMetaData["templateId"] = "8"
         message.metadata = mockMetaData
         XCTAssert(message.messageType == .genericList)
