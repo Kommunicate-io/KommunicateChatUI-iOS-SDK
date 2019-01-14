@@ -94,3 +94,13 @@ extension ALKMessageModel: Equatable {
         return lhs.identifier == rhs.identifier
     }
 }
+
+extension ALKMessageViewModel {
+    func payloadFromMetadata() -> [Dictionary<String,Any>]? {
+        guard let metadata = self.metadata, let payload = metadata["payload"] as? String else { return nil }
+        let data = payload.data
+        let jsonArray = try? JSONSerialization.jsonObject(with: data, options : .allowFragments)
+        guard let quickReplyArray = jsonArray as? [Dictionary<String,Any>] else { return nil }
+        return quickReplyArray
+    }
+}

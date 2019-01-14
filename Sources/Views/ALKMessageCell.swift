@@ -478,8 +478,8 @@ open class ALKMyMessageCell: ALKMessageCell {
 }
 
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
-    fileprivate lazy var messageView: ALHyperLabel = {
-        let label = ALHyperLabel.init(frame: .zero)
+    fileprivate lazy var messageView: ALKHyperLabel = {
+        let label = ALKHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label
@@ -808,7 +808,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }
 }
 
-extension ALHyperLabel {
+extension ALKHyperLabel {
 
     // To highlight when long pressed
     override open var canBecomeFirstResponder: Bool {

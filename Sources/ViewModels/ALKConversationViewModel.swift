@@ -291,11 +291,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         case .quickReply:
             if messageModel.isMyMessage {
-                let heigh = ALKMyMessageQuickReplyCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh + ALKMyMessageQuickReplyCell.rowHeightFor()
+                return ALKMyQuickReplyCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
             } else {
-                let heigh = ALKFriendMessageQuickReplyCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh + ALKFriendMessageQuickReplyCell.rowHeightFor()
+                return ALKFriendQuickReplyCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
             }
         }
     }
@@ -376,7 +374,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var filteredArray = [ALMessage]()
 
         for message in messages {
-            if channelKey ==  message.groupId {
+            if channelKey != nil && channelKey ==  message.groupId {
                 filteredArray.append(message)
                 delegate?.updateTyingStatus(status: false, userId: message.to)
             }else if message.channelKey == nil && channelKey == nil && contactId == message.to

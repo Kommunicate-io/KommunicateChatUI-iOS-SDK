@@ -542,10 +542,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendVideoCell.self)
         tableView.register(ALKMyGenericListCell.self)
         tableView.register(ALKFriendGenericListCell.self)
-        tableView.register(ALKFriendMessageQuickReplyCell.self)
-        tableView.register(ALKMyMessageQuickReplyCell.self)
         tableView.register(ALKMyGenericCardCell.self)
         tableView.register(ALKFriendGenericCardCell.self)
+        tableView.register(ALKFriendQuickReplyCell.self)
+        tableView.register(ALKMyQuickReplyCell.self)
     }
 
 
@@ -885,6 +885,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
     }
 
+    func quickReplySelected(index: Int, title: String, template: [Dictionary<String, Any>], message: ALKMessageViewModel, metadata: Dictionary<String, Any>?) {
+        viewModel.send(message: title, metadata: metadata)
+        print("\(title, index) quick reply button selected")
+        var infoDict = [String: Any]()
+        infoDict["buttonName"] = title
+        infoDict["buttonIndex"] = index
+        infoDict["template"] = template
+        infoDict["message"] = message
+        infoDict["userId"] = self.viewModel.contactId
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "QuickReplyButtonSelected"), object: infoDict)
+    }
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
@@ -1018,7 +1030,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    public func newMessagesAdded() {
+    @objc open func newMessagesAdded() {
         tableView.reloadData()
         //Check if current user is removed from the group
         isChannelLeft()

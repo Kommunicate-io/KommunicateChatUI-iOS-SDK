@@ -5,9 +5,6 @@
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
-import Foundation
-import Applozic
-
 class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     var itemTitleLabel: InsetLabel = {
@@ -22,8 +19,8 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     var height: CGFloat!
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
     
-    fileprivate lazy var messageView: ALHyperLabel = {
-        let label = ALHyperLabel.init(frame: .zero)
+    fileprivate lazy var messageView: ALKHyperLabel = {
+        let label = ALKHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label
@@ -114,7 +111,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         let baseHeight: CGFloat = 10
         let padding: CGFloat = 10
         let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
-        return baseHeight + totalButtonHeight + padding + GenericCardsMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
+        return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
     
     @objc func buttonSelected(_ action: UIButton) {

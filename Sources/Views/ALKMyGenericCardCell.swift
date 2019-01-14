@@ -5,9 +5,6 @@
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
-import Foundation
-import Applozic
-
 class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     open var collectionView: ALKGenericCardCollectionView!
@@ -15,8 +12,8 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     var height: CGFloat!
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
     
-    fileprivate lazy var messageView: ALHyperLabel = {
-        let label = ALHyperLabel.init(frame: .zero)
+    fileprivate lazy var messageView: ALKHyperLabel = {
+        let label = ALKHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label
@@ -112,7 +109,7 @@ class ALKMyGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     public class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
         // Update height based on number of buttons
         // present and if image is set.
-        return ALKGenericCardCollectionView.rowHeightFor(message:message) + GenericCardsMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 130) - 20
+        return ALKGenericCardCollectionView.rowHeightFor(message:message) + ALKFriendMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 130) - 20
     }
     
     open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, index: NSInteger) {

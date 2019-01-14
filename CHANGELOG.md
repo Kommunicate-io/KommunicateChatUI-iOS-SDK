@@ -2,7 +2,15 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-1.4.0(upcoming release)
+2.0.1 (upcoming release)
+---
+### Enhancements
+
+-[Al-3137] Change quick reply view to a staggered grid layout.
+
+### Fixes
+
+2.0.0
 ---
 ### Fixes
 

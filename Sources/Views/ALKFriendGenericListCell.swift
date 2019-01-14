@@ -19,7 +19,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         return label
     }()
 
-    var messageView = GenericCardsMessageView()
+    var messageView = ALKFriendMessageView()
 
     open var itemDescriptionLabel: VerticalAlignLabel {
         let label = VerticalAlignLabel()
@@ -100,7 +100,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         let baseHeight: CGFloat = 20
         let padding: CGFloat = 10
         let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
-        return baseHeight + totalButtonHeight + padding + GenericCardsMessageView.rowHeigh(viewModel: viewModel,  widthNoPadding: UIScreen.main.bounds.width - 200) + 40
+        return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel,  widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
 
     @objc func buttonSelected(_ action: UIButton) {
