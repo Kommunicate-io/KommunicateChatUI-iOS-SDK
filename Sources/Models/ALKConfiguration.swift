@@ -98,5 +98,13 @@ public struct ALKConfiguration {
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata : [AnyHashable : Any]?
 
+    /// Status bar style. It will be used in all view controllers.
+    /// Default value is lightContent.
+    public var statusBarStyle: UIStatusBarStyle = .lightContent {
+        didSet {
+            ALKBaseNavigationViewController.statusBarStyle = statusBarStyle
+        }
+    }
+
     public init() { }
 }

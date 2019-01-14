@@ -8,6 +8,8 @@
 
 import Foundation
 public class ALKBaseNavigationViewController: UINavigationController {
+
+    static var statusBarStyle: UIStatusBarStyle = .lightContent
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +23,7 @@ public class ALKBaseNavigationViewController: UINavigationController {
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
+        return ALKBaseNavigationViewController.statusBarStyle
     }
     
 }
