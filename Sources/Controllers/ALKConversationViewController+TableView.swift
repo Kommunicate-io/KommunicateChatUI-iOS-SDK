@@ -288,13 +288,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: self.chatBar)
-                guard let template = message.quickReplyDictionary() else {
-                    return cell
-                }
-                cell.quickReplyView.quickReplySelected = {[weak self] tag, title, metadata in
-                    guard let index = tag else { return }
-                    self?.quickReplySelected(index: index, title: title, template: template, message: message, metadata: metadata)
-                }
                 return cell
             } else {
                 let cell: ALKFriendQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)

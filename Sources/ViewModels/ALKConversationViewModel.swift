@@ -374,7 +374,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var filteredArray = [ALMessage]()
 
         for message in messages {
-            if channelKey ==  message.groupId {
+            if channelKey != nil && channelKey ==  message.groupId {
                 filteredArray.append(message)
                 delegate?.updateTyingStatus(status: false, userId: message.to)
             }else if message.channelKey == nil && channelKey == nil && contactId == message.to
