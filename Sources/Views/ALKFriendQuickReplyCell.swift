@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 07/01/19.
 //
 
-class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
+public class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var messageView = ALKFriendMessageView()
     var quickReplyView = ALKQuickReplyView(frame: .zero)
@@ -20,13 +20,13 @@ class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
+    public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         let messageWidth = maxWidth -
             (QuickReplyConfig.ReceivedMessage.MessagePadding.left + QuickReplyConfig.ReceivedMessage.MessagePadding.right)
         let height = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
         messageViewHeight.constant = height
         messageView.update(viewModel: viewModel)
-        guard let quickReplyArray = viewModel.quickReplyDictionary() else {
+        guard let quickReplyArray = viewModel.payloadFromMetadata() else {
             self.layoutIfNeeded()
             return
         }
@@ -36,11 +36,11 @@ class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         self.layoutIfNeeded()
     }
 
-    class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
+    public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
         let messageWidth = maxWidth -
             (QuickReplyConfig.ReceivedMessage.MessagePadding.left + QuickReplyConfig.ReceivedMessage.MessagePadding.right)
         let height = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
-        guard let quickReplyDict = viewModel.quickReplyDictionary() else {
+        guard let quickReplyDict = viewModel.payloadFromMetadata() else {
             return height
         }
         let quickReplyViewWidth = maxWidth -

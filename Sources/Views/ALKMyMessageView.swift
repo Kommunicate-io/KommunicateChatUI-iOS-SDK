@@ -5,6 +5,7 @@
 //  Created by Shivam Pokhriyal on 08/01/19.
 //
 
+/// A custom view which has text, time and state labels. And it's used in multiple cells.
 class ALKMyMessageView: UIView {
 
     struct Padding {

@@ -294,7 +294,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: self.chatBar)
-                guard let template = message.quickReplyDictionary() else {
+                guard let template = message.payloadFromMetadata() else {
                     return cell
                 }
                 cell.quickReplyView.quickReplySelected = {[weak self] tag, title, metadata in

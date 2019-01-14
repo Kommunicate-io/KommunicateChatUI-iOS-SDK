@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// `ALKCurvedButton` is a generic curved button which renders text supplied to it.
+/// It's a curved shaped button which has methods to get the height and, width for the text passed.
 ///
 /// It also accepts optional font, color and maxWidth for rendering.
 /// - NOTE: Minimum width is 45 and minimum height is 35
