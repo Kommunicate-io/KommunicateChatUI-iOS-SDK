@@ -367,6 +367,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override func backTapped() {
         print("back tapped")
+        view.endEditing(true)
         self.viewModel.sendKeyboardDoneTyping()
         _ = navigationController?.popToRootViewController(animated: true)
     }
@@ -405,7 +406,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
-        if  channel.type != 6 && !ALChannelService().isLoginUser(inChannel: channelKey) {
+        if  channel.type != 6 && channel.type != 10 && !ALChannelService().isLoginUser(inChannel: channelKey) {
             chatBar.disableChat()
             //Disable click on toolbar
             titleButton.isUserInteractionEnabled = false
