@@ -46,7 +46,7 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different width") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Very long text for button", maxWidth: 200)
+                    button = ALKCurvedButton(title: "Very long text for button", maxWidth: 100)
                 }
                 it("has a valid snapshot") {
                     expect(button).to(haveValidSnapshot())

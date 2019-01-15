@@ -886,7 +886,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func quickReplySelected(index: Int, title: String, template: [Dictionary<String, Any>], message: ALKMessageViewModel, metadata: Dictionary<String, Any>?) {
-        viewModel.send(message: title, metadata: metadata)
+        guard index <= template.count && index > 0 else { return }
+        let dict = template[index - 1]
+        let msg = dict["message"] as? String ?? title
+        viewModel.send(message: msg, metadata: metadata)
         print("\(title, index) quick reply button selected")
         var infoDict = [String: Any]()
         infoDict["buttonName"] = title
