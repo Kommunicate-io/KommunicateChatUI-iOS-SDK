@@ -160,12 +160,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.keyboardSize = keyboardSize
 
                 let tableView = weakSelf.tableView
-                let isAtBotom = tableView.isAtBottom
-                let isJustSent = weakSelf.isJustSent
-
-                let view = weakSelf.view
-                _ = weakSelf.navigationController
-
 
                 var h = CGFloat(0)
                 h = keyboardSize.height-h
@@ -175,16 +169,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
                 weakSelf.bottomConstraint?.constant = newH
 
-                let duration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.05
+                weakSelf.view?.layoutIfNeeded()
 
-                UIView.animate(withDuration: duration, animations: {
-                    view?.layoutIfNeeded()
-                }, completion: { (_) in
-                    print("animated ")
-                    if isAtBotom == true && isJustSent == false {
-                        tableView.scrollToBottomByOfset(animated: false)
-                    }
-                })
+                if tableView.isCellVisible(section: weakSelf.viewModel.messageModels.count-1, row: 0) {
+                    tableView.scrollToBottomByOfset(animated: false)
+                } else if weakSelf.viewModel.messageModels.count > 1 {
+                    weakSelf.unreadScrollButton.isHidden = false
+                }
+
             }
         })
 
