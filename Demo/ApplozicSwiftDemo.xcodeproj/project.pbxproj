@@ -94,6 +94,8 @@
 		1A3D93F7213D29AC00BEC565 /* ApplozicSwiftAudioRecordingUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplozicSwiftAudioRecordingUITests.swift; sourceTree = "<group>"; };
 		1A6D3A532180C9A300BB7538 /* ALKConversationViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerTests.swift; sourceTree = "<group>"; };
 		1A6D3A552180CB4500BB7538 /* ALContactServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALContactServiceMock.swift; sourceTree = "<group>"; };
+		1A7129A521E61296007A7B78 /* CurvedButton.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CurvedButton.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		1A7129A621E61B4A007A7B78 /* QuickReplyView.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuickReplyView.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1A933D7D21CA2E81004C5191 /* ConversationListTableVCMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListTableVCMock.swift; sourceTree = "<group>"; };
 		1ACB680321806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		1ACB6805218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKChatBarSnapshotTests.swift; sourceTree = "<group>"; };
@@ -183,9 +185,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A7129A421E61241007A7B78 /* Playground */ = {
+			isa = PBXGroup;
+			children = (
+				1A7129A621E61B4A007A7B78 /* QuickReplyView.playground */,
+				1A7129A521E61296007A7B78 /* CurvedButton.playground */,
+			);
+			path = Playground;
+			sourceTree = "<group>";
+		};
 		8B36D0DB1F3DC5E900FEFFD2 = {
 			isa = PBXGroup;
 			children = (
+				1A7129A421E61241007A7B78 /* Playground */,
 				8B36D0E61F3DC5E900FEFFD2 /* ApplozicSwiftDemo */,
 				8B36D0FB1F3DC5EA00FEFFD2 /* ApplozicSwiftDemoTests */,
 				8B36D1061F3DC5EA00FEFFD2 /* ApplozicSwiftDemoUITests */,
