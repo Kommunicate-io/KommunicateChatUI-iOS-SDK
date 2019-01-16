@@ -59,7 +59,6 @@ public class ALKCurvedButton: UIButton {
     public func buttonWidth() -> CGFloat {
         let titleWidth = title.rectWithConstrainedWidth(maxWidth, font: textFont).width
         var buttonWidth = titleWidth + Padding.left + Padding.right
-        buttonWidth = buttonWidth > maxWidth ? maxWidth : buttonWidth
         return max(buttonWidth, 45) //Minimum width is 45
     }
 

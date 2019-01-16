@@ -29,6 +29,7 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageViewHeight.constant = height
         messageView.update(viewModel: viewModel)
         guard let quickReplyArray = viewModel.payloadFromMetadata() else {
+            quickReplyView.isHidden = true
             self.layoutIfNeeded()
             return
         }
