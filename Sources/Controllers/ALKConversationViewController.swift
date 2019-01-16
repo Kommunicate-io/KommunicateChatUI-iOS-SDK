@@ -879,18 +879,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func quickReplySelected(index: Int, title: String, template: [Dictionary<String, Any>], message: ALKMessageViewModel, metadata: Dictionary<String, Any>?) {
+        print("\(title, index) quick reply button selected")
+        sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template)
+
+        /// Get message to send
         guard index <= template.count && index > 0 else { return }
         let dict = template[index - 1]
         let msg = dict["message"] as? String ?? title
-        viewModel.send(message: msg, metadata: metadata)
-        print("\(title, index) quick reply button selected")
-        var infoDict = [String: Any]()
-        infoDict["buttonName"] = title
-        infoDict["buttonIndex"] = index
-        infoDict["template"] = template
-        infoDict["message"] = message
-        infoDict["userId"] = self.viewModel.contactId
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "QuickReplyButtonSelected"), object: infoDict)
+
+        /// Use metadata
+        guard let key = configuration.quickReplyMetadataKey, let metadata = metadata else {
+            viewModel.send(message: msg, metadata: nil)
+            return
+        }
+        var customMetadata = [String: Any]()
+        customMetadata[key] = metadata
+        viewModel.send(message: msg, metadata: customMetadata)
     }
 
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
@@ -922,6 +926,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 strongSelf.view.sendSubview(toBack: strongSelf.tableView)
         })
 
+    }
+
+    private func sendNotification(withName: String, buttonName: String, buttonIndex: Int, template: [Dictionary<String, Any>]) {
+        var infoDict = [String: Any]()
+        infoDict["buttonName"] = title
+        infoDict["buttonIndex"] = index
+        infoDict["template"] = template
+        infoDict["userId"] = self.viewModel.contactId
+        NotificationCenter.default.post(name: Notification.Name(rawValue: withName), object: infoDict)
     }
 
     private func hideMoreBar() {

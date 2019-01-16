@@ -98,6 +98,9 @@ public struct ALKConfiguration {
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata : [AnyHashable : Any]?
 
+    /// Set this value if you want to get custom metadata on quick reply messages.
+    public var quickReplyMetadataKey: String?
+
     /// Status bar style. It will be used in all view controllers.
     /// Default value is lightContent.
     public var statusBarStyle: UIStatusBarStyle = .lightContent {
