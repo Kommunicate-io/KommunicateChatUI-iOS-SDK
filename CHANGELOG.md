@@ -9,6 +9,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 -[Al-3137] Change quick reply view to a staggered grid layout.
 
 ### Fixes
+- Fixed an issue where view was taking time in moving upwards when keyboard appears in the screen.
 
 2.0.0
 ---
