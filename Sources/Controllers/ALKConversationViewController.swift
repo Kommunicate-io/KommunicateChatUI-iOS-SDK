@@ -160,12 +160,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.keyboardSize = keyboardSize
 
                 let tableView = weakSelf.tableView
-                let isAtBotom = tableView.isAtBottom
-                let isJustSent = weakSelf.isJustSent
-
-                let view = weakSelf.view
-                _ = weakSelf.navigationController
-
 
                 var h = CGFloat(0)
                 h = keyboardSize.height-h
@@ -175,16 +169,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
                 weakSelf.bottomConstraint?.constant = newH
 
-                let duration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.05
+                weakSelf.view?.layoutIfNeeded()
 
-                UIView.animate(withDuration: duration, animations: {
-                    view?.layoutIfNeeded()
-                }, completion: { (_) in
-                    print("animated ")
-                    if isAtBotom == true && isJustSent == false {
-                        tableView.scrollToBottomByOfset(animated: false)
-                    }
-                })
+                if tableView.isCellVisible(section: weakSelf.viewModel.messageModels.count-1, row: 0) {
+                    tableView.scrollToBottomByOfset(animated: false)
+                } else if weakSelf.viewModel.messageModels.count > 1 {
+                    weakSelf.unreadScrollButton.isHidden = false
+                }
+
             }
         })
 
@@ -367,6 +359,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override func backTapped() {
         print("back tapped")
+        view.endEditing(true)
         self.viewModel.sendKeyboardDoneTyping()
         _ = navigationController?.popToRootViewController(animated: true)
     }
@@ -405,7 +398,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
-        if  channel.type != 6 && !ALChannelService().isLoginUser(inChannel: channelKey) {
+        if  channel.type != 6 && channel.type != 10 && !ALChannelService().isLoginUser(inChannel: channelKey) {
             chatBar.disableChat()
             //Disable click on toolbar
             titleButton.isUserInteractionEnabled = false
@@ -886,18 +879,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func quickReplySelected(index: Int, title: String, template: [Dictionary<String, Any>], message: ALKMessageViewModel, metadata: Dictionary<String, Any>?) {
+        print("\(title, index) quick reply button selected")
+        sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template)
+
+        /// Get message to send
         guard index <= template.count && index > 0 else { return }
         let dict = template[index - 1]
         let msg = dict["message"] as? String ?? title
-        viewModel.send(message: msg, metadata: metadata)
-        print("\(title, index) quick reply button selected")
-        var infoDict = [String: Any]()
-        infoDict["buttonName"] = title
-        infoDict["buttonIndex"] = index
-        infoDict["template"] = template
-        infoDict["message"] = message
-        infoDict["userId"] = self.viewModel.contactId
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "QuickReplyButtonSelected"), object: infoDict)
+
+        /// Use metadata
+        guard let key = configuration.quickReplyMetadataKey, let metadata = metadata else {
+            viewModel.send(message: msg, metadata: nil)
+            return
+        }
+        var customMetadata = [String: Any]()
+        customMetadata[key] = metadata
+        viewModel.send(message: msg, metadata: customMetadata)
     }
 
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
@@ -929,6 +926,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 strongSelf.view.sendSubview(toBack: strongSelf.tableView)
         })
 
+    }
+
+    private func sendNotification(withName: String, buttonName: String, buttonIndex: Int, template: [Dictionary<String, Any>]) {
+        var infoDict = [String: Any]()
+        infoDict["buttonName"] = title
+        infoDict["buttonIndex"] = index
+        infoDict["template"] = template
+        infoDict["userId"] = self.viewModel.contactId
+        NotificationCenter.default.post(name: Notification.Name(rawValue: withName), object: infoDict)
     }
 
     private func hideMoreBar() {
@@ -993,7 +999,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let newSectionCount = tableView.numberOfSections
         if newSectionCount > oldSectionCount {
             let offset = newSectionCount - oldSectionCount - 1
-            tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: true)
+            tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: false)
         }
         print("loading finished")
         DispatchQueue.main.async {
