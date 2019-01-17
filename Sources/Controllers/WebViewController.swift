@@ -11,8 +11,8 @@ import WebKit
 class WebViewController: UIViewController {
 
     var webView: WKWebView = WKWebView()
-    var htmlString: String
-    var url: URL
+    let htmlString: String
+    let url: URL
 
     init(htmlString: String, url: URL) {
         self.htmlString = htmlString
@@ -23,7 +23,6 @@ class WebViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 
     override func loadView() {
         let webConfiguration = WKWebViewConfiguration()

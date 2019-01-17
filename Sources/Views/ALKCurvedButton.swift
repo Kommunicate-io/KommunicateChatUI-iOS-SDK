@@ -19,10 +19,10 @@ public class ALKCurvedButton: UIButton {
     var maxWidth: CGFloat
 
     public struct Padding {
-        static var left: CGFloat = 16.0
-        static var right: CGFloat = 16.0
-        static var top: CGFloat = 8.0
-        static var bottom: CGFloat = 8.0
+        public static var left: CGFloat = 16.0
+        public static var right: CGFloat = 16.0
+        public static var top: CGFloat = 8.0
+        public static var bottom: CGFloat = 8.0
     }
 
     public var index: Int?

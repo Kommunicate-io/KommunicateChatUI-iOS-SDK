@@ -5,22 +5,18 @@
 //  Created by Shivam Pokhriyal on 10/01/19.
 //
 
-class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
+open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var messageView = ALKMyMessageView()
     var buttonView = ButtonsView(frame: .zero)
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupViews() {
+        super.setupViews()
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
+    open func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         self.viewModel = viewModel
         let messageWidth = maxWidth -
             (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
@@ -37,7 +33,7 @@ class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         self.layoutIfNeeded()
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let messageWidth = width -
             (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
         let messageHeight = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
@@ -79,16 +75,12 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     var buttonView = ButtonsView(frame: .zero)
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupViews() {
+        super.setupViews()
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
+    open func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         self.viewModel = viewModel
         let messageWidth = maxWidth -
             (ChatCellPadding.ReceivedMessage.Message.left + ChatCellPadding.ReceivedMessage.Message.right)
@@ -105,7 +97,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         self.layoutIfNeeded()
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let messageWidth = width -
             (ChatCellPadding.ReceivedMessage.Message.left + ChatCellPadding.ReceivedMessage.Message.right)
         let messageHeight = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
@@ -140,115 +132,3 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
 }
-
-public struct MessageButtonConfig {
-
-    public static var font = UIFont(name: "HelveticaNeue", size: 14) ?? UIFont.systemFont(ofSize: 14)
-
-    public struct SubmitButton {
-        public static var textColor = UIColor(red: 85, green: 83, blue: 183)
-    }
-
-    public struct LinkButton {
-        public static var textColor = UIColor(red: 85, green: 83, blue: 183)
-    }
-}
-
-public class ButtonsView: UIView {
-
-    let font = MessageButtonConfig.font
-
-    lazy var mainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 2
-        stackView.alignment = stackViewAlignment
-        stackView.axis = .vertical
-        stackView.distribution = .fill
-        return stackView
-    }()
-
-    public var maxWidth: CGFloat!
-    public var stackViewAlignment: UIStackView.Alignment = .leading {
-        didSet {
-            mainStackView.alignment = stackViewAlignment
-        }
-    }
-    public var buttonSelected: ((_ index: Int, _ name: String) -> ())?
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupConstraints()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    public func update(payload: [Dictionary<String, Any>]) {
-        mainStackView.arrangedSubviews.forEach {
-            $0.removeFromSuperview()
-        }
-        for i in 0 ..< payload.count {
-            let dict = payload[i]
-            guard let type = dict["type"] as? String, type == "link" else {
-                // Submit button
-                let name = dict["name"] as? String ?? ""
-                let button = submitButton(title: name, index: i)
-                mainStackView.addArrangedSubview(button)
-                continue
-            }
-            // Link Button
-            let name = dict["name"] as? String ?? ""
-            let button = linkButton(title: name, index: i)
-            mainStackView.addArrangedSubview(button)
-        }
-    }
-
-    public class func rowHeight(payload: [Dictionary<String, Any>], maxWidth: CGFloat) -> CGFloat {
-        var height: CGFloat = 0
-        for dict in payload {
-            let title = dict["name"] as? String ?? ""
-            let currHeight = ALKCurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: MessageButtonConfig.font).height
-            height += currHeight + 2  // StackView spacing
-        }
-        return height
-    }
-
-    private func setupConstraints() {
-        self.addViewsForAutolayout(views: [mainStackView])
-        mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        mainStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-    }
-
-    private func submitButton(title: String, index: Int) -> ALKCurvedButton {
-        let color = MessageButtonConfig.SubmitButton.textColor
-        let button = ALKCurvedButton(title: title, font: font, color: color, maxWidth: maxWidth)
-        button.index = index
-//        button.layer.borderWidth = 0
-//        button.backgroundColor = MessageButtonConfig.SubmitButton.backgroundColor
-        button.buttonSelected = { [weak self] tag, title in
-            self?.buttonSelected?(tag!, title)
-        }
-        return button
-    }
-
-    private func linkButton(title: String, index: Int) -> ALKCurvedButton {
-        let color = MessageButtonConfig.LinkButton.textColor
-        let button = ALKCurvedButton(title: title, font: font, color: color, maxWidth: maxWidth)
-        button.index = index
-        button.layer.borderWidth = 0
-
-        let attributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: font,
-                                                          NSAttributedString.Key.foregroundColor : color,
-                                                          NSAttributedString.Key.underlineStyle: 1]
-        let attributedTitle = NSAttributedString(string: title, attributes: attributes)
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        button.buttonSelected = { [weak self] tag, title in
-            self?.buttonSelected?(tag!, title)
-        }
-        return button
-    }
-}
-
