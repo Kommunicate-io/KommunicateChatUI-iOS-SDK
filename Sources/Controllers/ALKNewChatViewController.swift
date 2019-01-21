@@ -9,7 +9,7 @@
 import UIKit
 import Applozic
 
-final class ALKNewChatViewController: ALKBaseViewController, Localizable {
+final public class ALKNewChatViewController: ALKBaseViewController, Localizable {
 
     fileprivate var viewModel: ALKNewChatViewModel!
     
@@ -31,7 +31,7 @@ final class ALKNewChatViewController: ALKBaseViewController, Localizable {
     
     //MARK: - Life cycle
     
-    convenience init(configuration: ALKConfiguration, viewModel: ALKNewChatViewModel) {
+    public convenience init(configuration: ALKConfiguration, viewModel: ALKNewChatViewModel) {
         self.init(configuration: configuration)
         self.viewModel = viewModel
         setupView()
@@ -45,7 +45,7 @@ final class ALKNewChatViewController: ALKBaseViewController, Localizable {
         super.init(configuration: configuration)
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
         ALUserDefaultsHandler.setContactServerCallIsDone(false)
@@ -55,7 +55,7 @@ final class ALKNewChatViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
@@ -108,22 +108,22 @@ final class ALKNewChatViewController: ALKBaseViewController, Localizable {
 //MARK: -  UITableViewDelegate, UITableViewDataSource
 extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.numberOfSection()
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (section == 0) ? 1 : viewModel.numberOfRowsInSection(section: section)
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let friendViewModel = (indexPath.section == 0) ? viewModel.createGroupCell() : viewModel.friendForRow(indexPath: indexPath)
         let cell: ALKFriendNewChatCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         cell.update(friend: friendViewModel)
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if indexPath.section == 0 {
             
@@ -159,11 +159,11 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return (section == 0) ? searchBar : nil
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return (section == 0) ? 44 : 0
     }
 
@@ -197,7 +197,7 @@ extension ALKNewChatViewController: UIScrollViewDelegate {
 //MARK: - UISearchBarDelegate
 extension ALKNewChatViewController: UISearchBarDelegate {
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.filter(keyword: searchText)
         tableView.reloadData()
     }

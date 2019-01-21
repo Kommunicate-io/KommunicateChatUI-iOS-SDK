@@ -9,7 +9,7 @@
 import Foundation
 import Applozic
 
-final class ALKNewChatViewModel {
+final public class ALKNewChatViewModel {
     
     fileprivate var localizedStringFileName: String!
     
@@ -24,7 +24,7 @@ final class ALKNewChatViewModel {
 
     //MARK: - Intialization
 
-    init(localizedStringFileName: String) {
+    public init(localizedStringFileName: String) {
         self.localizedStringFileName = localizedStringFileName
     }
 
