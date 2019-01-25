@@ -119,8 +119,9 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                         NSLog("GROUP PROFILE PICTURE UPDATE FAILED")
                         return
                     }
+                    // Pass groupName empty in case of group name update
                     DispatchQueue.main.async {
-                        self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: groupName, groupImgUrl: imageUrl, friendsAdded: self.addedList)
+                        self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: "", groupImgUrl: imageUrl, friendsAdded: self.addedList)
                     }
                 })
                 }
@@ -129,7 +130,8 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                 if groupName == self.groupName {
                     groupName = ""
                 }
-                groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: groupProfileImgUrl, friendsAdded:addedList)
+                // Pass groupImgUrl empty in case of group name update
+                groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: "", friendsAdded:addedList)
             }
 
             }
