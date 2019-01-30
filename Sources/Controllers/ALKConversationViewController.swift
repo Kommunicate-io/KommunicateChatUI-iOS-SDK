@@ -92,6 +92,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tv.clipsToBounds    = true
         tv.keyboardDismissMode = UIScrollViewKeyboardDismissMode.onDrag
         tv.accessibilityIdentifier = "InnerChatScreenTableView"
+        tv.backgroundColor = UIColor.clear
         return tv
     }()
 
