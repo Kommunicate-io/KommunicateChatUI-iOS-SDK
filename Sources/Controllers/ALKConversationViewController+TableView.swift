@@ -298,8 +298,15 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     return cell
                 }
                 cell.quickReplyView.quickReplySelected = {[weak self] tag, title, metadata in
-                    guard let index = tag else { return }
-                    self?.quickReplySelected(index: index, title: title, template: template, message: message, metadata: metadata)
+                    guard let weakSelf = self,
+                        let index = tag else { return }
+                    weakSelf.quickReplySelected(
+                        index: index,
+                        title: title,
+                        template: template,
+                        message: message,
+                        metadata: metadata,
+                        isButtonClickDisabled: weakSelf.configuration.disableRichMessageButtonAction)
                 }
                 return cell
             }
@@ -317,7 +324,12 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: self.chatBar)
                 cell.buttonView.buttonSelected = {[weak self] index, title in
-                    self?.messageButtonSelected(index: index, title: title, message: message)
+                    guard let weakSelf = self else { return }
+                    weakSelf.messageButtonSelected(
+                        index: index,
+                        title: title,
+                        message: message,
+                        isButtonClickDisabled: weakSelf.configuration.disableRichMessageButtonAction)
                 }
                 return cell
             }

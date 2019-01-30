@@ -2,6 +2,12 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.2.0(upcoming release)
+---
+### Enhancments
+
+-[AL-3196] Add a config option to disable the rich message button clicks.
+
 2.1.0
 ---
 ### Enhancements
