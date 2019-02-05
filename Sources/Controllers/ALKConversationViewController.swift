@@ -880,9 +880,17 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
     }
 
-    func quickReplySelected(index: Int, title: String, template: [Dictionary<String, Any>], message: ALKMessageViewModel, metadata: Dictionary<String, Any>?) {
+    func quickReplySelected(
+        index: Int,
+        title: String,
+        template: [Dictionary<String, Any>],
+        message: ALKMessageViewModel,
+        metadata: Dictionary<String, Any>?,
+        isButtonClickDisabled: Bool) {
         print("\(title, index) quick reply button selected")
         sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template)
+
+        guard !isButtonClickDisabled else { return }
 
         /// Get message to send
         guard index <= template.count && index > 0 else { return }
@@ -899,10 +907,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.send(message: msg, metadata: customMetadata)
     }
 
-    func messageButtonSelected(index: Int, title: String, message: ALKMessageViewModel) {
-        guard
-            let dict = message.payloadFromMetadata(),
-            let selectedButton = dict[index] as? Dictionary<String, Any>,
+    func messageButtonSelected(
+        index: Int,
+        title: String,
+        message: ALKMessageViewModel,
+        isButtonClickDisabled: Bool) {
+        guard !isButtonClickDisabled,
+            let selectedButton = message.payloadFromMetadata()?[index],
             let buttonTitle = selectedButton["name"] as? String,
             buttonTitle == title
             else {
