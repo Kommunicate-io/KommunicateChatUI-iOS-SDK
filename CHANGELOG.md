@@ -8,6 +8,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 -[AL-3196] Add a config option to disable the rich message button clicks.
 
+### Fixes
+
+-[AL-3224] Fixed an issue where changing background color was not updating the background of conversation view.
+
 2.1.0
 ---
 ### Enhancements
