@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import AVFoundation
 import Applozic
+import WebKit
 
 extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSource {
 
@@ -351,12 +352,22 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+
+        case .email:
+
+            let cell: ALKFriendEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.setWebViewDelegate(delegate: self, index: indexPath)
+            cell.update(viewModel: message)
+            cell.updateHeightConstraints(height: self.contentHeights[message.identifier] ?? 0 )
+            return cell
+
         }
     }
 
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return viewModel.heightForRow(indexPath: indexPath, cellFrame: self.view.frame)
+
+        return viewModel.heightForRow(indexPath: indexPath, cellFrame: self.view.frame,contentHeights: contentHeights)
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -472,7 +483,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             contentOffsetDictionary[collectionView.tag] = horizontalOffset as AnyObject
         }
     }
-    
+
 }
 
 extension ALTopicDetail: ALKContextTitleDataType {
@@ -504,6 +515,7 @@ extension ALTopicDetail: ALKContextTitleDataType {
         }
         return "\(key): \(value)"
     }
+
 
 }
 
@@ -570,4 +582,29 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
 
     }
 
+}
+
+
+// MARK: - WKNavigationDelegate
+extension ALKConversationViewController:WKNavigationDelegate{
+
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: webView.tag, section: 0))  else {
+            return
+        }
+
+        //We already know the height of webview return from here
+        if ((contentHeights[message.identifier]) != nil) {
+            return;
+        }
+
+        //Set frame size and add it in Dictionary
+        webView.frame.size = webView.scrollView.contentSize
+        contentHeights[message.identifier] = webView.scrollView.contentSize.height
+        tableView.reloadRows(at: [NSIndexPath(row: webView.tag, section: 0) as IndexPath] , with: .automatic)
+    }
+
+    private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(.cancel)
+    }
 }
