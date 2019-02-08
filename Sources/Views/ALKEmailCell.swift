@@ -22,6 +22,19 @@ open class ALKFriendEmailCell: UITableViewCell{
             static let height: CGFloat =  16
         }
 
+        struct EmailLabel{
+            static let top: CGFloat =  3
+            static let leading: CGFloat =  3
+            static let height: CGFloat =  13
+        }
+
+        struct RepliedImageView{
+            static let top: CGFloat =  4
+            static let leading: CGFloat =  2
+            static let width: CGFloat = 20
+            static let height: CGFloat =  13
+        }
+
         struct AvatarImageView{
             static let top: CGFloat =  18
             static let leading: CGFloat =  9
@@ -66,6 +79,23 @@ open class ALKFriendEmailCell: UITableViewCell{
         return label
     }()
 
+
+    fileprivate var emailImage: UIImageView = {
+        let sv = UIImageView()
+        sv.image = UIImage(named: "alk_replied_icon", in: Bundle.applozic, compatibleWith: nil)
+        sv.isUserInteractionEnabled = false
+        sv.contentMode = .center
+        return sv
+    }()
+
+    private var emailLabel: UILabel = {
+        let label = UILabel()
+        label.text = "via email"
+        label.numberOfLines = 1
+        label.font = UIFont(name: "Helvetica", size: 12)
+        label.isOpaque = true
+        return label
+    }()
 
     public var wkWebView: WKWebView = {
 
@@ -126,9 +156,19 @@ open class ALKFriendEmailCell: UITableViewCell{
     func setupViews() {
 
         contentView.backgroundColor = UIColor.clear
-        contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel,wkWebView,timeLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView,emailImage,emailLabel,nameLabel,wkWebView,timeLabel])
 
-        nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.NameLabel.top).isActive = true
+        emailImage.topAnchor.constraint(equalTo: contentView.topAnchor,constant: Padding.RepliedImageView.top).isActive = true
+        emailImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.RepliedImageView.leading).isActive = true
+        emailImage.heightAnchor.constraint(equalToConstant:  Padding.RepliedImageView.height).isActive = true
+        emailImage.widthAnchor.constraint(equalToConstant:  Padding.RepliedImageView.width).isActive = true
+
+        emailLabel.topAnchor.constraint(equalTo: contentView.topAnchor,constant:  Padding.RepliedImageView.top).isActive = true
+        emailLabel.leadingAnchor.constraint(equalTo: emailImage.trailingAnchor, constant: Padding.RepliedImageView.leading).isActive = true
+        emailLabel.heightAnchor.constraint(equalToConstant: Padding.RepliedImageView.height).isActive = true
+        emailLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor).isActive = true
+
+        nameLabel.topAnchor.constraint(equalTo: emailImage.bottomAnchor, constant: Padding.NameLabel.top).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.NameLabel.leading).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.NameLabel.trailing).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: Padding.NameLabel.height).isActive = true
@@ -176,14 +216,14 @@ open class ALKFriendEmailCell: UITableViewCell{
     }
 
     func updateHeightConstraints( height : CGFloat) {
-     wkWebView.constraint(withIdentifier:ConstraintIdentifier.wkWebViewHeight)?.constant = height
+        wkWebView.constraint(withIdentifier:ConstraintIdentifier.wkWebViewHeight)?.constant = height
     }
 
     class func rowHeight(viewModel: ALKMessageViewModel, contentHeights: Dictionary<String,CGFloat> ) ->  CGFloat {
         guard let height = contentHeights[viewModel.identifier] else {
             return 0;
         }
-        return height + 16+37+10; //Name,time label
+        return height + 13+16+37+10; //Name,time label
     }
 
 }
