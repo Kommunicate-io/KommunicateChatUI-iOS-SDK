@@ -11,6 +11,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Fixes
 
 -[AL-3224] Fixed an issue where changing background color was not updating the background of conversation view.
+-[AL-3240] While mute/unmute if the title is large it will exceed out of screen.
 
 2.1.0
 ---

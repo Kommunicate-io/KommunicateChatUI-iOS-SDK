@@ -29,7 +29,9 @@ class MuteConversationViewController: UIViewController, Localizable {
     
     private let popupTitle: UILabel = {
         let label = UILabel()
+        label.textAlignment = .center
         label.textColor = UIColor.black
+        label.numberOfLines = 3
         label.font = UIFont(name: "Helvetica", size: 14)
         return label
     }()
@@ -151,12 +153,13 @@ class MuteConversationViewController: UIViewController, Localizable {
         modalView.heightAnchor.constraint(equalToConstant: 200).isActive = true
         modalView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
         modalView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
-        
+
         modalView.addViewsForAutolayout(views: [popupTitle, timePicker, actionButtons])
         
+        popupTitle.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 10).isActive = true
+        popupTitle.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -10).isActive = true
         popupTitle.topAnchor.constraint(equalTo: modalView.topAnchor, constant: 10).isActive = true
-        popupTitle.centerXAnchor.constraint(equalTo: modalView.centerXAnchor).isActive = true
-        
+
         timePicker.topAnchor.constraint(equalTo: popupTitle.bottomAnchor, constant: 2).isActive = true
         timePicker.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 2).isActive = true
         timePicker.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: 2).isActive = true
