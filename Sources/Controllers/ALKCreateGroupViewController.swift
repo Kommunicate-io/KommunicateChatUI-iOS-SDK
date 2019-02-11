@@ -94,9 +94,13 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             alert(msg: msg)
             return
         }
-        
+
+         groupName =  self.groupName == groupName ? "" : groupName
+
         if self.groupDelegate != nil
         {
+
+
             if let image = cropedImage {
 
                //upload image first
@@ -121,15 +125,12 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                     }
                     // Pass groupName empty in case of group name update
                     DispatchQueue.main.async {
-                        self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: "", groupImgUrl: imageUrl, friendsAdded: self.addedList)
+                        self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: groupName, groupImgUrl: imageUrl, friendsAdded: self.addedList)
                     }
                 })
                 }
             else {
 
-                if groupName == self.groupName {
-                    groupName = ""
-                }
                 // Pass groupImgUrl empty in case of group name update
                 groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: "", friendsAdded:addedList)
             }
