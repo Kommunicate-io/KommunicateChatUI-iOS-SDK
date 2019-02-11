@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancments
 
 -[AL-3196] Add a config option to disable the rich message button clicks.
+- Now message key will also come in the click action for rich messages.
 
 2.1.0
 ---

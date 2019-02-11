@@ -269,7 +269,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
                 cell.update(viewModel: message)
                 cell.buttonSelected = {[unowned self] tag, title in
-                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template)
+                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template, key: message.identifier)
                 }
                 return cell
             } else {
@@ -278,7 +278,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
                 cell.update(viewModel: message)
                 cell.buttonSelected = {[unowned self] tag, title in
-                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template)
+                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template, key: message.identifier)
                 }
                 return cell
             }
@@ -531,6 +531,7 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
             infoDict["buttonIndex"] = tag
             infoDict["card"] = card
             infoDict["template"] = template
+            infoDict["messageKey"] = message.identifier
             infoDict["userId"] = strongSelf.viewModel.contactId
             NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
         }

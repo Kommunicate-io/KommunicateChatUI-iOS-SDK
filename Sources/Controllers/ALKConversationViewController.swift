@@ -870,12 +870,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     }
 
-    func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate]) {
+    func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate], key: String) {
         print("\(title, tag) button selected in generic list")
         var infoDict = [String: Any]()
         infoDict["buttonName"] = title
         infoDict["buttonIndex"] = tag
         infoDict["template"] = template
+        infoDict["messageKey"] = key
         infoDict["userId"] = self.viewModel.contactId
         NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
     }
