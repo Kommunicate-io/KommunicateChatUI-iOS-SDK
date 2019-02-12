@@ -70,8 +70,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     var bubbleView: UIView = {
         let bv = UIView()
-        bv.backgroundColor = .gray
-        bv.layer.cornerRadius = 12
+        bv.clipsToBounds = true;
         bv.isUserInteractionEnabled = false
         return bv
     }()

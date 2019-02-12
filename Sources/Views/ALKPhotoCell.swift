@@ -35,8 +35,6 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     var bubbleView: UIView = {
         let bv = UIView()
-        bv.backgroundColor = .gray
-        bv.layer.cornerRadius = 12
         bv.isUserInteractionEnabled = false
         return bv
     }()

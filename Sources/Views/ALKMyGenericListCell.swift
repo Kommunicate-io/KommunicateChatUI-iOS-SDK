@@ -155,10 +155,16 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func setupStyle() {
         super.setupStyle()
-        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-        bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-    }
+        if(ALKMessageStyle.sentBubble.style == .edge){
+            let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
+            bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
+            bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
+        }else{
+            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
+            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+        }
+     }
     
     private func setupConstraints() {
         let view = contentView

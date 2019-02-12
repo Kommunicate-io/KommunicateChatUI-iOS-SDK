@@ -46,11 +46,16 @@ class ALKFriendVoiceCell: ALKVoiceCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        soundPlayerView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-        bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
-        bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
-        soundPlayerView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        if(ALKMessageStyle.receivedBubble.style == .edge){
+            bubbleView.backgroundColor = UIColor.background(.grayF2)
+            bubbleView.layer.cornerRadius = 12
+        }else{
+            soundPlayerView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            soundPlayerView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        }
     }
     
     override func setupViews() {

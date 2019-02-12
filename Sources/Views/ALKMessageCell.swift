@@ -163,9 +163,14 @@ open class ALKFriendMessageCell: ALKMessageCell {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-        bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
-        bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        if ALKMessageStyle.receivedBubble.style == .edge {
+            bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
+            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style, isReceiverSide: true,showHangOverImage: false)
+        }else{
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        }
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -243,6 +248,21 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
     @objc private func avatarTappedAction() {
         avatarTapped?()
+    }
+
+    // MARK: - ChatMenuCell
+    override func menuWillShow(_ sender: Any) {
+        super.menuWillShow(sender)
+        if(ALKMessageStyle.receivedBubble.style == .edge){
+            self.bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style,isReceiverSide: true,showHangOverImage: true)
+        }
+    }
+
+    override func menuWillHide(_ sender: Any) {
+        super.menuWillHide(sender)
+        if(ALKMessageStyle.receivedBubble.style == .edge){
+            self.bubbleView.image =  bubbleViewImage(for: ALKMessageStyle.receivedBubble.style,isReceiverSide: true,showHangOverImage: false)
+        }
     }
 }
 
@@ -372,11 +392,16 @@ open class ALKMyMessageCell: ALKMessageCell {
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
 
-  open  override func setupStyle() {
+    open  override func setupStyle() {
         super.setupStyle()
-        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-        bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+        if ALKMessageStyle.sentBubble.style == .edge {
+            bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
+            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false,showHangOverImage: false)
+        }else{
+            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
+            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+        }
     }
 
    open override func update(viewModel: ALKMessageViewModel) {
@@ -454,6 +479,21 @@ open class ALKMyMessageCell: ALKMessageCell {
         previewMessageTrailingConstraint?.constant = 0
         previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.height)?.constant = 0
         previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = 0
+    }
+
+    // MARK: - ChatMenuCell
+    override func menuWillShow(_ sender: Any) {
+        super.menuWillShow(sender)
+        if(ALKMessageStyle.sentBubble.style == .edge){
+            self.bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide:false,showHangOverImage: true)
+        }
+    }
+
+    override func menuWillHide(_ sender: Any) {
+        super.menuWillHide(sender)
+        if(ALKMessageStyle.sentBubble.style == .edge){
+            self.bubbleView.image =  bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide: false,showHangOverImage: false)
+        }
     }
 }
 
@@ -600,6 +640,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }
 
 
+
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
 
         var messageHeigh: CGFloat = 0
@@ -664,6 +705,24 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     @objc func replyViewTapped() {
         replyViewAction?()
+    }
+
+    func bubbleViewImage(for style: ALKMessageStyle.BubbleStyle, isReceiverSide: Bool = false,showHangOverImage:Bool) -> UIImage? {
+
+        var imageTitle = showHangOverImage ? "chat_bubble_red_hover":"chat_bubble_red"
+        // We can rotate the above image but loading the required
+        // image would be faster and we already have both the images.
+        if isReceiverSide {imageTitle = showHangOverImage ? "chat_bubble_grey_hover":"chat_bubble_grey"}
+
+        guard let bubbleImage = UIImage.init(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
+            else {return nil}
+
+        // This API is from the Kingfisher so instead of directly using
+        // imageFlippedForRightToLeftLayoutDirection() we are using this as it handles
+        // platform availability and future updates for us.
+        let modifier = FlipsForRightToLeftLayoutDirectionImageModifier()
+        return modifier.modify(bubbleImage)
+
     }
 
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {
