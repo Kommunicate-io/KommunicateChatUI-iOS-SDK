@@ -390,10 +390,11 @@ open class ALKChatBar: UIView, Localizable {
         lineImageView.topAnchor.constraint(equalTo: textView.topAnchor, constant: 10).isActive = true
         lineImageView.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
 
+        
         sendButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        sendButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -7).isActive = true
 
         micButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         micButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
