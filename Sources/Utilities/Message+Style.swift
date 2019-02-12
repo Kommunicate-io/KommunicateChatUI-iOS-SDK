@@ -39,8 +39,8 @@ public enum ALKMessageStyle {
         /// Message bubble's background color.
         public var color: UIColor
 
-        /// Message bubble cornor Radius
-        public var cornorRadius:CGFloat
+        /// Message bubble corner Radius
+        public var cornerRadius:CGFloat
 
         /// BubbleStyle of the message bubble.
         public var style: BubbleStyle
@@ -53,7 +53,7 @@ public enum ALKMessageStyle {
             self.color = color
             self.style = style
             self.widthPadding = 10.0
-            self.cornorRadius = 5
+            self.cornerRadius = 5
         }
     }
 

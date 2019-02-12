@@ -38,8 +38,8 @@ class ALKFriendVideoCell: ALKVideoCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornorRadius
-        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornorRadius
+        photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
     }
 
     override func setupViews() {

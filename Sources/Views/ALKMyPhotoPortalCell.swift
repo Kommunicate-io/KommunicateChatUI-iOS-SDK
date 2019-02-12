@@ -79,7 +79,7 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
     override func setupStyle() {
         super.setupStyle()
-        photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
-        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
     }
 }

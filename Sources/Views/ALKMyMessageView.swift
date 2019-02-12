@@ -66,7 +66,7 @@ class ALKMyMessageView: UIView {
     }
 
     func setupStyle() {
-        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         bubbleView.tintColor = ALKMessageStyle.sentBubble.color
         bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
     }

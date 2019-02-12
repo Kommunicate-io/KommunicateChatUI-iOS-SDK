@@ -70,8 +70,8 @@ class ALKMyVoiceCell: ALKVoiceCell {
 
     override func setupStyle() {
         super.setupStyle()
-        soundPlayerView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
-        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        soundPlayerView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         bubbleView.tintColor = ALKMessageStyle.sentBubble.color
         bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
         soundPlayerView.backgroundColor = ALKMessageStyle.sentBubble.color

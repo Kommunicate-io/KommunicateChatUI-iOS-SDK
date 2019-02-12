@@ -155,7 +155,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func setupStyle() {
         super.setupStyle()
-        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         bubbleView.tintColor = ALKMessageStyle.sentBubble.color
         bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
     }
