@@ -491,7 +491,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Applozic/Applozic.framework",
 				"${BUILT_PRODUCTS_DIR}/ApplozicSwift/ApplozicSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
@@ -510,7 +510,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		813CBFCC68B5E45F2436C68F /* [CP] Check Pods Manifest.lock */ = {
@@ -565,7 +565,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Applozic/Applozic.framework",
 				"${BUILT_PRODUCTS_DIR}/ApplozicSwift/ApplozicSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
@@ -592,7 +592,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
