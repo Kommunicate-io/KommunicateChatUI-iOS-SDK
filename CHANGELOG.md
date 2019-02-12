@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.2.0(upcoming release)
+2.2.0
 ---
 ### Enhancments
 
@@ -13,8 +13,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Fixes
 
 -[AL-3224] Fixed an issue where changing background color was not updating the background of conversation view.
--[AL-3240] While mute/unmute if the title is large it will exceed out of screen.
--[AL-3241] Fixed If we update change name it will update group icon also.
+-[AL-3240] Fixed an where clicking mute/unmute and if the title is large then it was going out of screen.
+-[AL-3241] Fixed an issue where if we update the name it was also updating the group icon.
 
 2.1.0
 ---
