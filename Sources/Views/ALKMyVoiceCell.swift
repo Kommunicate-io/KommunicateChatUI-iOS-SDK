@@ -67,5 +67,14 @@ class ALKMyVoiceCell: ALKVoiceCell {
     override class func bottomPadding() -> CGFloat {
         return 6
     }
-    
+
+    override func setupStyle() {
+        super.setupStyle()
+        soundPlayerView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
+        bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+        soundPlayerView.backgroundColor = ALKMessageStyle.sentBubble.color
+    }
+
 }

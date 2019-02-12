@@ -63,6 +63,9 @@ final class ALKFriendLocationCell: ALKLocationCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornorRadius
+        bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+        bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
     }
     
     override func update(viewModel: ALKMessageViewModel) {

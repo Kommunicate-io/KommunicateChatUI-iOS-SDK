@@ -25,7 +25,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         mv.backgroundColor = .clear
         mv.contentMode = .scaleAspectFill
         mv.clipsToBounds = true
-        mv.layer.cornerRadius = 12
         return mv
     }()
 

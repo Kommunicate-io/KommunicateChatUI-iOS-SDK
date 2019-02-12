@@ -27,14 +27,12 @@ class ALKFriendMessageView: UIView {
     
     public var bubbleView: UIImageView = {
         let bv = UIImageView()
-        let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
-        bv.tintColor = UIColor(netHex: 0xF1F0F0)
-        bv.image = image?.imageFlippedForRightToLeftLayoutDirection()
+        bv.clipsToBounds = true
         bv.isUserInteractionEnabled = false
         bv.isOpaque = true
         return bv
     }()
-    
+
     public var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -62,12 +60,19 @@ class ALKFriendMessageView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         setupViews()
+        setupStyle()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+     func setupStyle() {
+        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornorRadius
+        bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+        bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+    }
+
     func setupViews() {
         
         self.addViewsForAutolayout(views: [avatarImageView, nameLabel, bubbleView, messageView, timeLabel])

@@ -29,10 +29,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
     
     var soundPlayerView: UIView = {
         let mv = UIView()
-        mv.backgroundColor = UIColor.background(.grayF2)
         mv.contentMode = .scaleAspectFill
         mv.clipsToBounds = true
-        mv.layer.cornerRadius = 12
         return mv
     }()
     

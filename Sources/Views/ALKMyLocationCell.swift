@@ -59,6 +59,13 @@ final class ALKMyLocationCell: ALKLocationCell {
         }
     }
 
+    override func setupStyle() {
+        super.setupStyle()
+        bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornorRadius
+        bubbleView.tintColor = ALKMessageStyle.sentBubble.color
+        bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+    }
+
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
         return super.rowHeigh(viewModel: viewModel, width: width) + 12.0
     }

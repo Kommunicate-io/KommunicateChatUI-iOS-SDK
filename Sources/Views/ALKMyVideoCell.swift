@@ -66,4 +66,9 @@ class ALKMyVideoCell: ALKVideoCell {
     override class func bottomPadding() -> CGFloat {
         return 6
     }
+    override func setupStyle() {
+        super.setupStyle()
+        photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornorRadius
+        bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornorRadius
+    }
 }
