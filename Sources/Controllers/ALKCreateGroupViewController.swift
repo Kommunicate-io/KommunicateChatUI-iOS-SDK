@@ -94,9 +94,13 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             alert(msg: msg)
             return
         }
-        
+
+         groupName =  self.groupName == groupName ? "" : groupName
+
         if self.groupDelegate != nil
         {
+
+
             if let image = cropedImage {
 
                //upload image first
@@ -119,6 +123,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                         NSLog("GROUP PROFILE PICTURE UPDATE FAILED")
                         return
                     }
+                    // Pass groupName empty in case of group name update
                     DispatchQueue.main.async {
                         self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: groupName, groupImgUrl: imageUrl, friendsAdded: self.addedList)
                     }
@@ -126,10 +131,8 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                 }
             else {
 
-                if groupName == self.groupName {
-                    groupName = ""
-                }
-                groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: groupProfileImgUrl, friendsAdded:addedList)
+                // Pass groupImgUrl empty in case of group name update
+                groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: "", friendsAdded:addedList)
             }
 
             }

@@ -425,7 +425,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func updateGroup(groupName: String, groupImage: String, friendsAdded: [ALKFriendViewModel]) {
-        if !groupName.isEmpty {
+        if !groupName.isEmpty  || !groupImage.isEmpty {
             updateGroupInfo(groupName: groupName, groupImage: groupImage, completion: {
                 success in
                 guard success, friendsAdded.count > 0 else { return }
