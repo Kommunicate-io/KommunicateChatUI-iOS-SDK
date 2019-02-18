@@ -42,7 +42,7 @@ class ALKHTTPManager: NSObject {
         request.setValue(contentType, forHTTPHeaderField: "Content-Type")
         var body = Data()
         let fileParamConstant = "file"
-        let imageData = UIImagePNGRepresentation(image)
+        let imageData = image.pngData()
 
         if let data = imageData as Data? {
             print("data present")

@@ -38,7 +38,7 @@ extension CLLocationManager {
             
             let settingsTitle = NSLocalizedString("Settings", value: SystemMessage.LabelName.Settings, comment: "")
             let openSettingAction = UIAlertAction(title: settingsTitle, style: .default) { (action) in
-                if let url = NSURL(string: UIApplicationOpenSettingsURLString) {
+                if let url = NSURL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.openURL(url as URL)
                 }
             }

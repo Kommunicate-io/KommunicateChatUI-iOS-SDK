@@ -80,7 +80,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
         view.addViewsForAutolayout(views: [scrollView,closeButton])
         scrollView.addViewsForAutolayout(views: [imageView])
         
-        view.bringSubview(toFront: closeButton)
+        view.bringSubviewToFront(closeButton)
         
         closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true

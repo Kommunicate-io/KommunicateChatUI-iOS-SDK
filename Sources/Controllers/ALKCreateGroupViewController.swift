@@ -53,7 +53,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     fileprivate var tempSelectedImg:UIImage!
     fileprivate var cropedImage: UIImage?
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
     
@@ -165,7 +165,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             // Button Create Group
             btnCreateGroup.layer.cornerRadius = 15
             btnCreateGroup.clipsToBounds = true
-            btnCreateGroup.setTitle(addContactMode.doneButtonTitle(localizedStringFileName: localizedStringFileName), for: UIControlState.normal)
+            btnCreateGroup.setTitle(addContactMode.doneButtonTitle(localizedStringFileName: localizedStringFileName), for: UIControl.State.normal)
         } else {
             btnCreateGroup.isHidden = true
         }
@@ -194,10 +194,10 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         style.lineBreakMode = .byWordWrapping
         
         guard let font      = UIFont(name: "HelveticaNeue-Italic", size: 14) else { return }
-        let attr:[NSAttributedStringKey:Any] = [
-            NSAttributedStringKey.font:font,
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.paragraphStyle.rawValue):style,
-            NSAttributedStringKey.foregroundColor: UIColor.placeholderGray()
+        let attr:[NSAttributedString.Key:Any] = [
+            NSAttributedString.Key.font:font,
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.paragraphStyle.rawValue):style,
+            NSAttributedString.Key.foregroundColor: UIColor.placeholderGray()
         ]
         
         let typeGroupNameMsg = localizedString(forKey: "TypeGroupName", withDefaultValue: SystemMessage.LabelName.TypeGroupName, fileName: localizedStringFileName)

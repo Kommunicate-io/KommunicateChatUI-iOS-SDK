@@ -16,7 +16,7 @@ open class ALKFriendGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     var messageView = ALKFriendMessageView()
     
-    override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
@@ -37,7 +37,7 @@ open class ALKFriendGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         setupCollectionView()
         
         contentView.addViewsForAutolayout(views: [self.collectionView, self.messageView])
-        contentView.bringSubview(toFront: messageView)
+        contentView.bringSubviewToFront(messageView)
         
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true

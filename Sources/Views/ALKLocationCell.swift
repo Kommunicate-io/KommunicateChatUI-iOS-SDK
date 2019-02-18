@@ -90,7 +90,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
         contentView.addViewsForAutolayout(views: [bubbleView, timeLabel])
 
         bubbleView.addViewsForAutolayout(views: [frontView, locationImageView, addressLabel])
-        bubbleView.bringSubview(toFront: frontView)
+        bubbleView.bringSubviewToFront(frontView)
 
         frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 0.0).isActive = true
         frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0.0).isActive = true

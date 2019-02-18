@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Applozic
 
 protocol ALKAudioPlayerProtocol: class {
     func audioPlaying(maxDuratation:CGFloat,atSec:CGFloat,lastPlayTrack:String)
@@ -39,7 +40,13 @@ final class ALKAudioPlayer {
             timer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(ALKAudioPlayer.updateCounter), userInfo: nil, repeats: true)
             
             do {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                if #available(iOS 10.0, *) {
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+                    try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
+                } else {
+                    // Fallback on earlier versions
+                   ALAudioSession().getWithPlayback(true)
+                }
             }
             catch {
             }
@@ -61,7 +68,12 @@ final class ALKAudioPlayer {
             timer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(ALKAudioPlayer.updateCounter), userInfo: nil, repeats: true)
             
             do {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                if #available(iOS 10.0, *) {
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+                } else {
+                    // Fallback on earlier versions
+                    ALAudioSession().getWithPlayback(true)
+                }
             }
             catch {
             }

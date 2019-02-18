@@ -197,7 +197,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     open func getSizeForItemAt(row: Int,withData: Dictionary<String,Any>) -> CGSize {
         
-        let size = (withData["title"] as? String)?.size(withAttributes: [NSAttributedStringKey.font: Font.normal(size: 14.0).font()])
+        let size = (withData["title"] as? String)?.size(withAttributes: [NSAttributedString.Key.font: Font.normal(size: 14.0).font()])
         let newSize = CGSize(width: (size?.width)!+46.0, height: 50.0)
         return newSize
     }
@@ -588,7 +588,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func sendVideo(atPath path: String, sourceType: UIImagePickerControllerSourceType, metadata: [AnyHashable : Any]?) -> (ALMessage?, IndexPath?){
+    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable : Any]?) -> (ALMessage?, IndexPath?){
         guard let url = URL(string: path) else { return (nil, nil) }
         var contentType = ALMESSAGE_CONTENT_ATTACHMENT
         if sourceType == .camera {
@@ -856,8 +856,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         exportSession!.outputURL = filePath
         exportSession!.outputFileType = AVFileType.mp4
         exportSession!.shouldOptimizeForNetworkUse = true
-        let start = CMTimeMakeWithSeconds(0.0, 0)
-        let range = CMTimeRangeMake(start, avAsset.duration)
+        let start = CMTimeMakeWithSeconds(0.0, preferredTimescale: 0)
+        let range = CMTimeRangeMake(start: start, duration: avAsset.duration)
         exportSession?.timeRange = range
 
         exportSession!.exportAsynchronously(completionHandler: {() -> Void in

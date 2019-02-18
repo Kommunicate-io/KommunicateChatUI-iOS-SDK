@@ -11,7 +11,7 @@ public class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
     var quickReplyView = ALKQuickReplyView(frame: .zero)
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
     }

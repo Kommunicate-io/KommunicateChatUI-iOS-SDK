@@ -39,11 +39,11 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     }
     
     @objc func menuWillShow(_ sender: Any) {
-        NotificationCenter.default.removeObserver(self, name: .UIMenuControllerWillShowMenu, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIMenuController.willShowMenuNotification, object: nil)
     }
     
     @objc func menuWillHide(_ sender: Any) {
-        NotificationCenter.default.removeObserver(self, name: .UIMenuControllerWillHideMenu, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
         
         if let chatBar = self.chatBar {
             chatBar.textView.overrideNextResponder = nil
@@ -52,8 +52,8 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     
     @objc func showMenuController(withLongPress sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
-            NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: .UIMenuControllerWillShowMenu, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: .UIMenuControllerWillHideMenu, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
             
             if let chatBar = self.chatBar, chatBar.textView.isFirstResponder {
                 chatBar.textView.overrideNextResponder = self.contentView

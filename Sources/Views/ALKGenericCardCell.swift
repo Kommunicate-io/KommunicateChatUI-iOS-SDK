@@ -374,7 +374,7 @@ public class InsetLabel: UILabel {
     }
     
     override public func drawText(in rect: CGRect) {
-        super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
+        super.drawText(in: self.frame.inset(by: insets))
     }
     
     override public var intrinsicContentSize: CGSize  {

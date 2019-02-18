@@ -86,16 +86,16 @@ final class ALKMediaViewerViewController: UIViewController {
         playButton.addTarget(self, action: #selector(ALKMediaViewerViewController.playButtonAction(_:)), for: .touchUpInside)
         audioPlayButton.addTarget(self, action: #selector(ALKMediaViewerViewController.audioPlayButtonAction(_:)), for: .touchUpInside)
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(ALKMediaViewerViewController.swipeRightAction)) // put : at the end of method name
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         self.view.addGestureRecognizer(swipeRight)
 
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ALKMediaViewerViewController.swipeLeftAction))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeLeft)
         view.addViewsForAutolayout(views: [imageView, playButton, audioPlayButton, audioIcon])
-        imageView.bringSubview(toFront: playButton)
-        view.bringSubview(toFront: audioPlayButton)
-        view.bringSubview(toFront: audioIcon)
+        imageView.bringSubviewToFront(playButton)
+        view.bringSubviewToFront(audioPlayButton)
+        view.bringSubviewToFront(audioIcon)
 
         playButton.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
         playButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
