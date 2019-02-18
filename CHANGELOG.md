@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancments
 - Updates Swift version to 4.2
 - Added Online/LastSeen status at navigation bar in conversation detail screen.
+- [AL-3206] Added support for new richMessage type : `ListTemplate` and deprecated `ALKGenericList`
 
 2.2.0
 ---
