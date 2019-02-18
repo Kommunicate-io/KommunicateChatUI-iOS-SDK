@@ -301,6 +301,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return ALKFriendMessageButtonCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
             }
+        case .listTemplate:
+            if messageModel.isMyMessage {
+                return ALKMyListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+            } else {
+                return ALKFriendListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+            }
         }
     }
 

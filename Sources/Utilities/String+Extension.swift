@@ -48,6 +48,11 @@ extension String {
         let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
         return boundingBox
     }
+
+    func rectWithConstrainedSize(_ size: CGSize, font: UIFont) -> CGRect {
+        let boundingBox = self.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
+        return boundingBox
+    }
     
     func evaluateStringWidth (textToEvaluate: String,fontSize:CGFloat) -> CGFloat{
         let font = UIFont.systemFont(ofSize: fontSize)

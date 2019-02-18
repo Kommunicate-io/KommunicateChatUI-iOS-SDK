@@ -24,6 +24,7 @@ public enum ALKMessageType: String {
     case genericList = "List"
     case quickReply = "QuickReply"
     case button = "Button"
+    case listTemplate = "ListTemplate"
 }
 
 // MARK: - MessageViewModel
@@ -103,5 +104,16 @@ extension ALKMessageViewModel {
         let jsonArray = try? JSONSerialization.jsonObject(with: data, options : .allowFragments)
         guard let quickReplyArray = jsonArray as? [Dictionary<String,Any>] else { return nil }
         return quickReplyArray
+    }
+}
+
+extension ALKMessageViewModel {
+    func listTemplateFromMetadata() -> ListTemplateModel? {
+        guard let metadata = self.metadata,
+            let payload = metadata["payload"] as? String
+            else {
+                return nil
+        }
+        return try? JSONDecoder().decode(ListTemplateModel.self, from: payload.data)
     }
 }

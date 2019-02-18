@@ -333,6 +333,24 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+        case .listTemplate:
+            if message.isMyMessage {
+                let cell: ALKMyListTemplateCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
+                cell.update(chatBar: self.chatBar)
+                return cell
+            } else {
+                let cell: ALKFriendListTemplateCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
+                cell.update(chatBar: self.chatBar)
+                cell.templateSelected = { [weak self] defaultText, action in
+                    guard let weakSelf = self else { return }
+                    weakSelf.listTemplateSelected(defaultText: defaultText, action: action)
+                }
+                return cell
+            }
         }
     }
 
