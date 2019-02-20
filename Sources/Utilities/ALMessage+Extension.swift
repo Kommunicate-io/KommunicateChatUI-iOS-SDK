@@ -179,7 +179,7 @@ extension ALMessage {
         return (type != nil) ? (type == myMessage):false
     }
 
-    var messageType: ALKMessageType {
+    public var messageType: ALKMessageType {
 
         switch Int32(contentType) {
         case ALMESSAGE_CONTENT_DEFAULT:
