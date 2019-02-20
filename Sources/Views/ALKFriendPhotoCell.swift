@@ -31,6 +31,12 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         label.textColor = UIColor.lightGray
         return label
     }()
+
+    struct Padding {
+        struct PhotoView {
+            static let right: CGFloat = -56
+        }
+    }
     
     override class func topPadding() -> CGFloat {
         return 28
@@ -55,6 +61,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
+        let width = UIScreen.main.bounds.width
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
@@ -72,9 +79,16 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         avatarImageView.heightAnchor.constraint(equalToConstant: 37).isActive = true
         avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
         
-        photoView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -56).isActive = true
-        photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
-        
+        photoView.trailingAnchor
+            .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: Padding.PhotoView.right)
+            .isActive = true
+        photoView.widthAnchor
+            .constraint(equalToConstant: width*ALKPhotoCell.widthPercentage)
+            .isActive = true
+        photoView.heightAnchor
+            .constraint(equalToConstant: width*ALKPhotoCell.heightPercentage)
+            .isActive = true
+
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         

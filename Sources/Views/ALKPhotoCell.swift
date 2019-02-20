@@ -65,6 +65,16 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
+    var captionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = ALKMessageStyle.message.font
+        return label
+    }()
+
+    // This will be used to calculate the size of the photo view.
+    static var heightPercentage: CGFloat = 0.5
+    static var widthPercentage: CGFloat = 0.48
     var url: URL? = nil
     enum state {
         case upload(filePath: String)
@@ -89,17 +99,19 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return 16
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(
+        viewModel: ALKMessageViewModel,
+        width: CGFloat) -> CGFloat {
 
-        let heigh: CGFloat
+        var height: CGFloat
+        let font = ALKMessageStyle.message.font
 
-        if viewModel.ratio < 1 {
-            heigh = viewModel.ratio == 0 ? (width*0.48) : ceil((width*0.48)/viewModel.ratio)
-        } else {
-            heigh = ceil((width*0.64)/viewModel.ratio)
+        height = ceil(width*heightPercentage)
+        if let message = viewModel.message, !message.isEmpty {
+            height += message.rectWithConstrainedWidth(width*heightPercentage, font: font).height.rounded(.up)
         }
 
-        return topPadding()+heigh+bottomPadding()
+        return topPadding()+height+bottomPadding()
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -127,6 +139,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             }
         }
         timeLabel.text   = viewModel.time
+        captionLabel.text = viewModel.message
 
     }
 
@@ -167,7 +180,16 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         frontView.addGestureRecognizer(singleTap)
 
         downloadButton.addTarget(self, action: #selector(ALKPhotoCell.downloadButtonAction(_:)), for: .touchUpInside)
-        contentView.addViewsForAutolayout(views: [frontView ,photoView,bubbleView,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
+        contentView.addViewsForAutolayout(views:
+            [frontView,
+             photoView,
+             bubbleView,
+             timeLabel,
+             fileSizeLabel,
+             captionLabel,
+             uploadButton,
+             downloadButton,
+             activityIndicator])
         contentView.bringSubviewToFront(photoView)
         contentView.bringSubviewToFront(frontView)
         contentView.bringSubviewToFront(downloadButton)
@@ -180,7 +202,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: captionLabel.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
         
@@ -198,7 +220,11 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         downloadButton.centerYAnchor.constraint(equalTo: photoView.centerYAnchor).isActive = true
         downloadButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         downloadButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-
+        captionLabel.layout {
+            $0.leading == photoView.leadingAnchor
+            $0.trailing == photoView.trailingAnchor
+            $0.top == photoView.bottomAnchor
+        }
     }
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
