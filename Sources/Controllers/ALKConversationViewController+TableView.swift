@@ -357,6 +357,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             let cell: ALKFriendEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.setWebViewDelegate(delegate: self, index: indexPath)
+            cell.setBackgroundColor(UIColor.clear)
             cell.update(viewModel: message)
             cell.updateHeightConstraints(height: self.contentHeights[message.identifier] ?? 0 )
             return cell

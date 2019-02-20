@@ -23,16 +23,16 @@ open class ALKFriendEmailCell: UITableViewCell{
         }
 
         struct EmailLabel{
-            static let top: CGFloat =  3
+            static let top: CGFloat =  10
             static let leading: CGFloat =  3
-            static let height: CGFloat =  13
+            static let height: CGFloat =  16
         }
 
         struct RepliedImageView{
-            static let top: CGFloat =  4
-            static let leading: CGFloat =  2
+            static let top: CGFloat =  14
+            static let leading: CGFloat =  57
             static let width: CGFloat = 20
-            static let height: CGFloat =  13
+            static let height: CGFloat =  11
         }
 
         struct AvatarImageView{
@@ -43,12 +43,18 @@ open class ALKFriendEmailCell: UITableViewCell{
         }
 
         struct WKWebView {
-            static let top: CGFloat =  5
-            static let trailing: CGFloat =  10
+            static let top: CGFloat =  0
+            static let trailing: CGFloat =  50
             static let leading: CGFloat =  10
             static let height: CGFloat =  0
         }
 
+        struct EmailUIView{
+            static let top: CGFloat =  5
+            static let trailing: CGFloat =  50
+            static let leading: CGFloat =  10
+            static let height: CGFloat =  20
+        }
         struct TimeLabel {
             static let top: CGFloat =  2
             static let trailing: CGFloat =  10
@@ -97,9 +103,17 @@ open class ALKFriendEmailCell: UITableViewCell{
         return label
     }()
 
+    fileprivate var repliedEmailUIView: UIView = {
+        let view = UIView(frame: CGRect.zero)
+        view.backgroundColor = UIColor.white
+        view.isUserInteractionEnabled = true
+        return view
+    }()
+
     public var wkWebView: WKWebView = {
 
-        let viewportScriptString = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); meta.setAttribute('initial-scale', '1.0'); meta.setAttribute('maximum-scale', '1.0'); meta.setAttribute('minimum-scale', '1.0'); meta.setAttribute('user-scalable', 'yes'); document.getElementsByTagName('head')[0].appendChild(meta); var body = document.getElementsByTagName('body')[0]; body.style.wordBreak = 'break-word';"
+        let viewportScriptString =  "<header><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes'></header>; body.style.wordBreak = 'break-word'";
+
         let disableCalloutScriptString = "document.documentElement.style.webkitTouchCallout='none';"
 
         let viewportScript = WKUserScript(source: viewportScriptString, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
@@ -107,7 +121,7 @@ open class ALKFriendEmailCell: UITableViewCell{
         //  Initialize a user content controller
         let controller = WKUserContentController()
         // Add scripts
-        controller.addUserScript(viewportScript)
+        //controller.addUserScript(viewportScript)
         controller.addUserScript(disableCalloutScript)
         // Initialize a configuration and set controller
         let webConfiguration = WKWebViewConfiguration()
@@ -156,22 +170,29 @@ open class ALKFriendEmailCell: UITableViewCell{
     func setupViews() {
 
         contentView.backgroundColor = UIColor.clear
-        contentView.addViewsForAutolayout(views: [avatarImageView,emailImage,emailLabel,nameLabel,wkWebView,timeLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView,repliedEmailUIView,emailImage,emailLabel,nameLabel,wkWebView,timeLabel])
 
-        emailImage.topAnchor.constraint(equalTo: contentView.topAnchor,constant: Padding.RepliedImageView.top).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.NameLabel.top).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.NameLabel.leading).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.NameLabel.trailing).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: Padding.NameLabel.height).isActive = true
+
+        repliedEmailUIView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.EmailUIView.top).isActive = true
+        repliedEmailUIView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.EmailUIView.trailing).isActive = true
+        repliedEmailUIView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.EmailUIView.leading).isActive = true
+        repliedEmailUIView.heightAnchor.constraint(equalToConstant:20).isActive = true
+
+        emailImage.topAnchor.constraint(equalTo: nameLabel.bottomAnchor,constant: Padding.RepliedImageView.top).isActive = true
         emailImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.RepliedImageView.leading).isActive = true
         emailImage.heightAnchor.constraint(equalToConstant:  Padding.RepliedImageView.height).isActive = true
         emailImage.widthAnchor.constraint(equalToConstant:  Padding.RepliedImageView.width).isActive = true
 
-        emailLabel.topAnchor.constraint(equalTo: contentView.topAnchor,constant:  Padding.RepliedImageView.top).isActive = true
-        emailLabel.leadingAnchor.constraint(equalTo: emailImage.trailingAnchor, constant: Padding.RepliedImageView.leading).isActive = true
-        emailLabel.heightAnchor.constraint(equalToConstant: Padding.RepliedImageView.height).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor,constant:  Padding.EmailLabel.top).isActive = true
+        emailLabel.leadingAnchor.constraint(equalTo: emailImage.trailingAnchor, constant: Padding.EmailLabel.leading).isActive = true
+        emailLabel.heightAnchor.constraint(equalToConstant: Padding.EmailLabel.height).isActive = true
         emailLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor).isActive = true
 
-        nameLabel.topAnchor.constraint(equalTo: emailImage.bottomAnchor, constant: Padding.NameLabel.top).isActive = true
-        nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.NameLabel.leading).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.NameLabel.trailing).isActive = true
-        nameLabel.heightAnchor.constraint(equalToConstant: Padding.NameLabel.height).isActive = true
+        repliedEmailUIView.addViewsForAutolayout(views: [emailImage,emailLabel])
 
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.AvatarImageView.top).isActive = true
 
@@ -179,7 +200,7 @@ open class ALKFriendEmailCell: UITableViewCell{
         avatarImageView.heightAnchor.constraint(equalToConstant: Padding.AvatarImageView.height).isActive = true
         avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImageView.width ).isActive = true
 
-        wkWebView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.WKWebView.top).isActive = true
+        wkWebView.topAnchor.constraint(equalTo: repliedEmailUIView.bottomAnchor, constant: Padding.WKWebView.top).isActive = true
 
         wkWebView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.WKWebView.trailing).isActive = true
 
@@ -223,7 +244,7 @@ open class ALKFriendEmailCell: UITableViewCell{
         guard let height = contentHeights[viewModel.identifier] else {
             return 0;
         }
-        return height + 13+16+37+10; //Name,time label
+        return height + 20+16+37+10; //Name,emailUIVIew,time label
     }
 
 }
