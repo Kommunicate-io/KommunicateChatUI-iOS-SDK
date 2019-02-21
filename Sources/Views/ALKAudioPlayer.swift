@@ -41,8 +41,7 @@ final class ALKAudioPlayer {
             
             do {
                 if #available(iOS 10.0, *) {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .defaultToSpeaker)
-                    try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 } else {
                     // Fallback on earlier versions
                    ALAudioSession().getWithPlayback(true)
@@ -69,7 +68,7 @@ final class ALKAudioPlayer {
             
             do {
                 if #available(iOS 10.0, *) {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 } else {
                     // Fallback on earlier versions
                     ALAudioSession().getWithPlayback(true)

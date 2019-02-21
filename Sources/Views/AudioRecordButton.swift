@@ -134,7 +134,7 @@ open class AudioRecordButton: UIButton{
         ]
         do {
             if #available(iOS 10.0, *) {
-                try recordingSession.setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
+                try recordingSession.setCategory(.playAndRecord, mode: .default)
             } else {
                 // Fallback on earlier versions
                 recordingSession = ALAudioSession().getWithPlayback(false)
