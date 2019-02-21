@@ -928,7 +928,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         if type == "link" {
-            guard let url = action.url else { return }
+            guard let urlString = action.url, let url = URL(string: urlString) else { return }
             openLink(url)
         } else if type == "quick_reply" {
             let text = action.text ?? defaultText

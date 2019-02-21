@@ -5,6 +5,7 @@
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
+@available(*, deprecated, message: "This will be removed by end of May 2019. Please use ALKMyListTemplateCell")
 class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     var itemTitleLabel: InsetLabel = {

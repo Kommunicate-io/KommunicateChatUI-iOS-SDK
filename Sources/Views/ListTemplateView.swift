@@ -16,6 +16,7 @@ class ListTemplateElement: UIView {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 4
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
 
@@ -51,10 +52,16 @@ class ListTemplateElement: UIView {
     }
 
     func update(item: ListTemplateModel.Element) {
+        self.item = item
         title.text = item.title
         subtitle.text = item.description
-        thumbnail.kf.setImage(with: item.imgSrc)
-        self.item = item
+        guard let urlString = item.imgSrc, let url = URL(string: urlString) else {
+            thumbnail.isHidden = true
+            self.layoutIfNeeded()
+            return
+        }
+        thumbnail.isHidden = false
+        thumbnail.kf.setImage(with: url)
         self.layoutIfNeeded()
     }
 
@@ -101,15 +108,16 @@ class ListTemplateElement: UIView {
 class ListTemplateView: UIView {
 
     static var headerFont = UIFont(name: "Helvetica", size: 15) ?? UIFont.systemFont(ofSize: 15)
-    static var headerImageHeight: CGFloat = 100
-    static var headerTextHeight: CGFloat = 25
-    static var buttonHeight: CGFloat = 30
+    static var imageHeight: CGFloat = 100
+    static var textHeight: CGFloat = 30
+    static var buttonHeight: CGFloat = 40
 
     let buttonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
+        stackView.spacing = 1
         return stackView
     }()
 
@@ -118,13 +126,14 @@ class ListTemplateView: UIView {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        stackView.spacing = 0
+        stackView.spacing = 1
         return stackView
     }()
 
     let headerImage: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 0
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
 
@@ -132,6 +141,8 @@ class ListTemplateView: UIView {
         let label = UILabel()
         label.numberOfLines = 1
         label.font = ListTemplateView.headerFont
+        label.backgroundColor = .white
+        label.textAlignment = .center
         label.textColor = UIColor(red: 32, green: 31, blue: 31)
         return label
     }()
@@ -139,8 +150,8 @@ class ListTemplateView: UIView {
     var actionButtons = [UIButton]()
     var listItems = [ListTemplateElement]()
 
-    lazy var headerImageHeight = self.headerImage.heightAnchor.constraint(equalToConstant: ListTemplateView.headerImageHeight)
-    lazy var headerTextHeight = self.headerText.heightAnchor.constraint(equalToConstant: ListTemplateView.headerTextHeight)
+    lazy var headerImageHeight = self.headerImage.heightAnchor.constraint(equalToConstant: ListTemplateView.imageHeight)
+    lazy var headerTextHeight = self.headerText.heightAnchor.constraint(equalToConstant: ListTemplateView.textHeight)
 
     var item: ListTemplateModel?
     var selected: ((_ text: String?, _ action: ListTemplateModel.Action) -> Void)?
@@ -165,11 +176,12 @@ class ListTemplateView: UIView {
         self.layoutIfNeeded()
     }
 
-    private func updateHeaderImage(_ url: URL?) {
-        guard let url = url else {
+    private func updateHeaderImage(_ urlString: String?) {
+        guard let urlString = urlString, let url = URL(string: urlString) else {
             headerImageHeight.constant = 0
             return
         }
+        headerImageHeight.constant = ListTemplateView.imageHeight
         headerImage.kf.setImage(with: url)
     }
 
@@ -178,11 +190,15 @@ class ListTemplateView: UIView {
             headerTextHeight.constant = 0
             return
         }
+        headerTextHeight.constant = ListTemplateView.textHeight
         headerText.text = text
     }
 
     private func updateButtons(_ buttons: [ListTemplateModel.Button]?) {
-        guard let buttons = buttons else { return }
+        guard let buttons = buttons else {
+            actionButtons.enumerated().forEach { $1.isHidden = true }
+            return
+        }
         if buttons.count > actionButtons.count {
             print("Number of buttons are >8. Only first 8 will be shown")
         }
@@ -196,7 +212,10 @@ class ListTemplateView: UIView {
     }
 
     private func updateListItems(_ elements: [ListTemplateModel.Element]?) {
-        guard let elements = elements else { return }
+        guard let elements = elements else {
+            listItems.enumerated().forEach { $1.isHidden = true }
+            return
+        }
         if elements.count > listItems.count {
             print("Number of elements are >8. Only first 8 will be shown")
         }
@@ -211,13 +230,14 @@ class ListTemplateView: UIView {
 
     static func rowHeight(template: ListTemplateModel) -> CGFloat {
         var height: CGFloat = 0
-        height += template.headerImgSrc != nil ? headerImageHeight : CGFloat(0)
-        height += template.headerText != nil ? headerTextHeight : CGFloat(0)
+        height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
+        height += template.headerText != nil ? textHeight : CGFloat(0)
         let elementCount = min(8, template.elements?.count ?? 0)
         height += CGFloat(elementCount) * ListTemplateElement.height()
         let buttonCount = min(8, template.buttons?.count ?? 0)
         height += CGFloat(buttonCount) * buttonHeight
-        return height
+        let spacing = min(8, template.elements?.count ?? 0) + min(8, template.buttons?.count ?? 0)
+        return height + CGFloat(spacing)
     }
 
     @objc private func buttonSelected(_ sender: UIButton) {
@@ -241,9 +261,9 @@ class ListTemplateView: UIView {
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.titleLabel?.numberOfLines = 1
-            button.layer.borderWidth = 1.0
             button.tag = $0
-            button.layer.borderColor = UIColor.lightGray.cgColor
+            button.backgroundColor = .white
+            button.layoutIfNeeded()
             return button
         }
     }
@@ -251,9 +271,8 @@ class ListTemplateView: UIView {
     private func setupElements() {
         listItems = (0...7).map {
             let item = ListTemplateElement()
-            item.layer.borderWidth = 1.0
-            item.layer.borderColor = UIColor.lightGray.cgColor
             item.tag = $0
+            item.backgroundColor = .white
             item.selected = { [weak self] defaultText, action in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
                 selected(defaultText, action)
@@ -271,7 +290,7 @@ class ListTemplateView: UIView {
             elementStackView.addArrangedSubview($0)
             $0.heightAnchor.constraint(equalToConstant: ListTemplateElement.height()).isActive = true
         }
-
+        self.backgroundColor = .lightGray
         self.addViewsForAutolayout(views: [headerImage, headerText, elementStackView, buttonStackView])
 
         headerImage.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
@@ -281,14 +300,16 @@ class ListTemplateView: UIView {
 
         headerText.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         headerText.topAnchor.constraint(equalTo: headerImage.bottomAnchor).isActive = true
+        headerText.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        headerText.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         headerTextHeight.isActive = true
 
         elementStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         elementStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        elementStackView.topAnchor.constraint(equalTo: headerText.bottomAnchor).isActive = true
+        elementStackView.topAnchor.constraint(equalTo: headerText.bottomAnchor, constant: 1).isActive = true
 
         buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        buttonStackView.topAnchor.constraint(equalTo: elementStackView.bottomAnchor).isActive = true
+        buttonStackView.topAnchor.constraint(equalTo: elementStackView.bottomAnchor, constant: 1).isActive = true
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "This will be removed by end of May 2019. Please use ListTemplateModel")
 public struct ALKGenericListTemplate: Codable {
 
     public let title: String

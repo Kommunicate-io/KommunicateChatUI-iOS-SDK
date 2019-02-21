@@ -9,13 +9,13 @@ import Foundation
 
 public struct ListTemplateModel: Codable {
 
-    public let headerImgSrc: URL?
+    public let headerImgSrc: String?
     public let headerText: String?
     public let elements: [Element]?
     public let buttons: [Button]?
 
     public struct Element: Codable {
-        public let imgSrc: URL?
+        public let imgSrc: String?
         public let title: String?
         public let description: String?
         public let action: Action?
@@ -27,7 +27,7 @@ public struct ListTemplateModel: Codable {
     }
 
     public struct Action: Codable {
-        public let url: URL?
+        public let url: String?
         public let type: String?
         public let text: String?
     }

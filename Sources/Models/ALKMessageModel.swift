@@ -21,7 +21,10 @@ public enum ALKMessageType: String {
     case video = "Video"
     case html = "HTML"
     case genericCard = "Card"
+
+    @available(*, deprecated, message: "This will be removed by end of May 2019. Please Use listTemplate.")
     case genericList = "List"
+
     case quickReply = "QuickReply"
     case button = "Button"
     case listTemplate = "ListTemplate"
