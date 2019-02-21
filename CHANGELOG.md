@@ -21,7 +21,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
         ALKMessageStyle.sentBubble.style = .edge
         ALKMessageStyle.receivedBubble.style = .edge
-```        
+```     
+- [AL-3229] Added caption support with image attachments. If the message(text) is present then it will be shown as caption.   
 2.2.0
 ---
 ### Enhancments
