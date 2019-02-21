@@ -276,11 +276,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 height = ALKFriendVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
             return height
-        case .genericCard:
+        case .genericCard, .cardTemplate:
             if messageModel.isMyMessage {
-                return ALKMyGenericCardCell.rowHeightFor(message: messageModel)
+                return ALKMyGenericCardCell.rowHeightFor(message: messageModel, width: maxWidth)
             } else {
-                return ALKFriendGenericCardCell.rowHeightFor(message: messageModel)
+                return ALKFriendGenericCardCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
         case .genericList:
             guard let template = genericTemplateFor(message: messageModel) as? [ALKGenericListTemplate] else {return 0}

@@ -889,7 +889,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         metadata: Dictionary<String, Any>?,
         isButtonClickDisabled: Bool) {
         print("\(title, index) quick reply button selected")
-        sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template)
+        sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template, messageKey: message.identifier)
 
         guard !isButtonClickDisabled else { return }
 
@@ -953,6 +953,31 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    func cardTemplateSelected(tag: Int, title: String, template: CardTemplateModel, message: ALKMessageViewModel) {
+        guard let buttons = template.buttons, tag < buttons.count else {
+            print("\(tag) Button for this card is nil unexpectedly :: \(template)")
+            return
+        }
+        let action = buttons[tag].action
+        let payload = action.payload
+        if action.type == "quickReply" {
+            let text = payload.title ?? buttons[tag].name
+            sendQuickReply(text, metadata: nil)
+        } else if action.type == "link" {
+            guard let urlString = payload.url, let url = URL(string: urlString) else { return }
+            openLink(url)
+        } else if action.type == "submit" {
+            var dict = [String: Any]()
+            dict["formData"] = payload.formData
+            dict["formAction"] = payload.formAction
+            dict["requestType"] = payload.requestType
+            submitButtonSelected(metadata: dict, text: payload.text ?? "")
+        } else {
+            /// Action not defined. Post notification outside.
+            sendNotification(withName: "GenericRichCardButtonSelected", buttonName: title, buttonIndex: tag, template: message.payloadFromMetadata() ?? [], messageKey: message.identifier)
+        }
+    }
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
@@ -984,11 +1009,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     }
 
-    private func sendNotification(withName: String, buttonName: String, buttonIndex: Int, template: [Dictionary<String, Any>]) {
+    private func sendNotification(withName: String, buttonName: String, buttonIndex: Int, template: [Dictionary<String, Any>], messageKey: String) {
         var infoDict = [String: Any]()
         infoDict["buttonName"] = title
         infoDict["buttonIndex"] = index
         infoDict["template"] = template
+        infoDict["messageKey"] = messageKey
         infoDict["userId"] = self.viewModel.contactId
         NotificationCenter.default.post(name: Notification.Name(rawValue: withName), object: infoDict)
     }

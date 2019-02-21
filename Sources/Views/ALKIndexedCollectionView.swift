@@ -21,7 +21,7 @@ open class ALKIndexedCollectionView: UICollectionView {
         super.init(coder: aDecoder)
     }
 
-    open class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
+    open class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         //This should be overridden
         return 0
     }
