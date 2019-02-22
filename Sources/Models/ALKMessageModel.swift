@@ -27,7 +27,7 @@ public enum ALKMessageType: String {
 
     @available(*, deprecated, message: "Use `listTemplate`")
     case genericList = "List"
-    @available(*, deprecated, message: "This will be removed by end of May 2019. Please Use cardTemplate.")
+    @available(*, deprecated, message: "Use `cardTemplate`.")
     case genericCard = "Card"
 }
 

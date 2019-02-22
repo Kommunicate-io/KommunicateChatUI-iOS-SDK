@@ -71,6 +71,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         case quickReply = "quick_reply"
     }
 
+    fileprivate enum CardTemplateActionType: String {
+        case link = "link"
+        case submit = "submit"
+        case quickReply = "quickReply"
+    }
+
     fileprivate enum ConstraintIdentifier {
         static let contextTitleView = "contextTitleView"
         static let replyMessageViewHeight = "replyMessageViewHeight"
@@ -953,32 +959,44 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    func cardTemplateSelected(tag: Int, title: String, template: CardTemplateModel, message: ALKMessageViewModel) {
-        guard let buttons = template.buttons, tag < buttons.count else {
+    func cardTemplateSelected(tag: Int, title: String, template: CardTemplate, message: ALKMessageViewModel) {
+        guard
+            message.isMyMessage == false,
+            configuration.disableRichMessageButtonAction == false
+        else {
+                return
+        }
+
+        guard
+            let buttons = template.buttons, tag < buttons.count,
+            let action = buttons[tag].action,
+            let payload = action.payload
+        else {
             print("\(tag) Button for this card is nil unexpectedly :: \(template)")
             return
         }
-        let action = buttons[tag].action
-        let payload = action.payload
-        if action.type == "quickReply" {
-            let text = payload.title ?? buttons[tag].name
-            sendQuickReply(text, metadata: nil)
-        } else if action.type == "link" {
+
+        switch action.type {
+        case CardTemplateActionType.link.rawValue:
             guard let urlString = payload.url, let url = URL(string: urlString) else { return }
             openLink(url)
-        } else if action.type == "submit" {
+        case CardTemplateActionType.submit.rawValue:
             var dict = [String: Any]()
             dict["formData"] = payload.formData
             dict["formAction"] = payload.formAction
             dict["requestType"] = payload.requestType
             submitButtonSelected(metadata: dict, text: payload.text ?? "")
-        } else {
+        case CardTemplateActionType.quickReply.rawValue:
+            let text = payload.title ?? buttons[tag].name
+            sendQuickReply(text, metadata: nil)
+        default:
             /// Action not defined. Post notification outside.
             sendNotification(withName: "GenericRichCardButtonSelected", buttonName: title, buttonIndex: tag, template: message.payloadFromMetadata() ?? [], messageKey: message.identifier)
         }
     }
 
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
+
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
         return horizontalOffset

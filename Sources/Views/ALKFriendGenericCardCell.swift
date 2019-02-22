@@ -48,20 +48,28 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
 
         let width = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
         let templateLeftPadding = leftPadding + 64 - width
-        let templateRightPadding = rightPadding - width
 
         collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: templateLeftPadding).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -templateRightPadding).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKFriendGenericCardCell.cardTopPadding).isActive = true
         collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue)?.isActive = true
     }
 
-    override open class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
                 ChatCellPadding.ReceivedMessage.Message.right)
-        let messageHeight = ALKFriendMessageView.rowHeight(viewModel: message, width: messageWidth)
-        let cardHeight = super.rowHeightFor(message: message, width: width)
+        let messageHeight = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        let cardHeight = super.cardHeightFor(message: viewModel, width: width)
         return cardHeight + messageHeight + 10 // Extra 10 below complete view. Modify this for club/unclub.
+    }
+
+    private func setupCollectionView() {
+        let layout: TopAlignedCollectionViewFlowLayout = TopAlignedCollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 10
+        layout.scrollDirection = .horizontal
+        collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
     }
 
 }

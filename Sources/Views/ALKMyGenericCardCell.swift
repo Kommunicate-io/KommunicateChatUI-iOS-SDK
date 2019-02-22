@@ -13,7 +13,6 @@ open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
-        collectionView.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
     }
 
     override func setupStyle() {
@@ -55,23 +54,30 @@ open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
         messageViewHeight.isActive = true
 
         let width = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
-        let cardLeftPadding = leftPadding + width
         let cardRightPadding = rightPadding - width
 
         collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -cardRightPadding).isActive = true
-        collectionView.leadingAnchor.constraint(lessThanOrEqualTo: contentView.leadingAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKGenericCardBaseCell.cardTopPadding).isActive = true
         collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue)?.isActive = true
     }
 
-    public override class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    public override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let messageWidth = width -
             (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
-        let messageHeight = ALKMyMessageView.rowHeight(viewModel: message, width: messageWidth)
-        let cardHeight = super.rowHeightFor(message: message, width: width)
+        let messageHeight = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        let cardHeight = super.cardHeightFor(message: viewModel, width: width)
         return cardHeight + messageHeight + 10 // Extra padding below view. Change this for club/unclub
     }
 
+    private func setupCollectionView() {
+        let layout: TopRightAlignedCollectionViewFlowLayout = TopRightAlignedCollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 10
+        layout.scrollDirection = .horizontal
+        collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+    }
 }
 
 
@@ -94,7 +100,7 @@ open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
         collectionView.constraint(withIdentifier: ConstraintIdentifier.collectionView.rawValue)?.constant = collectionViewHeight
     }
 
-    public class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    public class func cardHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let cardHeight = ALKGenericCardCollectionView.rowHeightFor(message:message, width:width)
         return cardHeight + cardTopPadding
     }
@@ -118,12 +124,4 @@ open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
         collectionView.register(cell, forCellWithReuseIdentifier: cell.reuseIdentifier)
     }
 
-    open func setupCollectionView() {
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 10
-        layout.scrollDirection = .horizontal
-        collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .clear
-    }
 }

@@ -278,7 +278,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return height
         case .genericCard, .cardTemplate:
             if messageModel.isMyMessage {
-                return ALKMyGenericCardCell.rowHeightFor(message: messageModel, width: maxWidth)
+                return ALKMyGenericCardCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             } else {
                 return ALKFriendGenericCardCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }

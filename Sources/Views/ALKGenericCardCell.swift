@@ -10,7 +10,7 @@ import Kingfisher
 
 open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
 
-    open var cardTemplate: [CardTemplateModel]?
+    open var cardTemplate: [CardTemplate]?
 
     override open func setMessage(viewModel: ALKMessageViewModel) {
         super.setMessage(viewModel: viewModel)
@@ -25,10 +25,14 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
             else {
                 return 0
         }
-        return ALKGenericCardCell.rowHeight(card: card, maxWidth: width)
+        let maxHeight = template
+                        .map { ALKGenericCardCell.rowHeight(card: $0, maxWidth: width) }
+                        .max { $0 < $1 }
+        let defaultHeight = ALKGenericCardCell.rowHeight(card: card, maxWidth: width)
+        return maxHeight ?? defaultHeight
     }
 
-    class func getCardTemplate(message: ALKMessageViewModel) -> [CardTemplateModel]? {
+    class func getCardTemplate(message: ALKMessageViewModel) -> [CardTemplate]? {
         guard
             let metadata = message.metadata,
             let payload = metadata["payload"] as? String,
@@ -36,7 +40,7 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
             else { return nil}
         if templateId == "10" {
             do {
-                let templates = try JSONDecoder().decode([CardTemplateModel].self, from: payload.data)
+                let templates = try JSONDecoder().decode([CardTemplate].self, from: payload.data)
                 return templates
             } catch(let error) {
                 print("\(error)")
@@ -45,7 +49,7 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
         } else if templateId == "2" {
             do {
                 let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
-                var templates = [CardTemplateModel]()
+                var templates = [CardTemplate]()
                 for card in cards {
                     templates.append(Util().cardTemplate(from: card))
                 }
@@ -108,6 +112,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var coverImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
         imageView.layer.cornerRadius = 0
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
     
@@ -187,8 +192,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }()
 
     open var actionButtons = [UIButton]()
-    open var card: CardTemplateModel!
-    open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplateModel)->())?
+    open var card: CardTemplate!
+    open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplate)->())?
 
     override open func awakeFromNib() {
         super.awakeFromNib()
@@ -204,11 +209,26 @@ open class ALKGenericCardCell: UICollectionViewCell {
         super.init(coder: aDecoder)
     }
 
-    open class func rowHeight(card: CardTemplateModel, maxWidth: CGFloat) -> CGFloat {
-        var headerHeight: CGFloat = 0
+    private class func headerHeight(_ header: CardTemplate.Header) -> CGFloat {
+        guard
+            let urlString = header.imgSrc,
+            let _ = URL(string: urlString)
+        else {
+            if let text = header.overlayText, text.count > 0 {
+                return Config.OverlayText.height
+            } else {
+                return CGFloat(0)
+            }
+
+            return (header.overlayText != nil && header.overlayText!.count > 0) ? Config.OverlayText.height : CGFloat(0)
+        }
+        return Config.imageHeight
+    }
+
+    open class func rowHeight(card: CardTemplate, maxWidth: CGFloat) -> CGFloat {
+        var headerHt: CGFloat = 0
         if let header = card.header {
-            let textHeight = header.overlayText != nil ? Config.OverlayText.height : CGFloat(0)
-            headerHeight = (header.imgSrc != nil && URL(string: header.imgSrc!) != nil) ? Config.imageHeight : textHeight
+            headerHt = headerHeight(header)
         }
         let titleConstraint = CGSize(width: maxWidth, height: Font.title.lineHeight)
         let titleHeight = card.title.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up)
@@ -226,14 +246,14 @@ open class ALKGenericCardCell: UICollectionViewCell {
         stackViewSpacing += (card.description != nil) ? 3 : 0
         stackViewSpacing += (card.buttons?.count ?? 1) - 1 // 1 space between 2 buttons.
 
-        return headerHeight + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
+        return headerHt + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
     }
 
     @objc func buttonSelected(_ action: UIButton) {
         self.buttonSelected?(action.tag, action.currentTitle ?? "", card)
     }
 
-    open func update(card: CardTemplateModel) {
+    open func update(card: CardTemplate) {
         self.card = card
         setTitle(card.title)
         setSubtitle(card.subtitle)
@@ -261,8 +281,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
         subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = height
     }
 
-    private func setOverlayText(_ header: CardTemplateModel.Header?) {
-        guard let text = header?.overlayText else {
+    private func setOverlayText(_ header: CardTemplate.Header?) {
+        guard let text = header?.overlayText, text.count > 0 else {
             self.overlayText.isHidden = true
             return
         }
@@ -270,20 +290,25 @@ open class ALKGenericCardCell: UICollectionViewCell {
         self.overlayText.text = text
     }
 
-    private func setCoverImage(_ header: CardTemplateModel.Header?) {
-        guard let urlString = header?.imgSrc, let url = URL(string: urlString) else {
-            coverImageHeight.constant = header?.overlayText != nil ? Config.OverlayText.height : CGFloat(0)
+    private func setCoverImage(_ header: CardTemplate.Header?) {
+        guard let header = header else {
+            coverImageView.isHidden = true
+            coverImageHeight.constant = 0
+            return
+        }
+        coverImageHeight.constant = ALKGenericCardCell.headerHeight(header)
+
+        guard let urlString = header.imgSrc, let url = URL(string: urlString) else {
             coverImageView.isHidden = true
             overlayText.backgroundColor = UIColor(red: 230, green: 229, blue: 236)
             overlayText.layer.masksToBounds = true
             return
         }
         coverImageView.isHidden = false
-        coverImageHeight.constant = Config.imageHeight
         self.coverImageView.kf.setImage(with: url)
     }
 
-    private func setRatingLabel(_ card: CardTemplateModel) {
+    private func setRatingLabel(_ card: CardTemplate) {
         guard let rating = card.titleExt else {
             self.ratingLabel.isHidden = true
             return
@@ -292,7 +317,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         ratingLabel.text = String(rating)
     }
 
-    private func setDescription(_ card: CardTemplateModel) {
+    private func setDescription(_ card: CardTemplate) {
         guard let description = card.description else {
             descriptionLabel.constraint(withIdentifier: ConstraintIdentifier.descriptionView.rawValue)?.constant = 0
             descriptionLabel.isHidden = true
@@ -305,7 +330,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         descriptionLabel.constraint(withIdentifier: ConstraintIdentifier.descriptionView.rawValue)?.constant = height
     }
 
-    private func updateViewFor(_ buttons: [CardTemplateModel.Button]?) {
+    private func updateViewFor(_ buttons: [CardTemplate.Button]?) {
         guard let buttons = buttons else { return }
         // Hide extra buttons
         actionButtons.enumerated().forEach {

@@ -1,5 +1,5 @@
 //
-//  CardTemplateModel.swift
+//  CardTemplate.swift
 //  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 19/02/19.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CardTemplateModel: Codable {
+public struct CardTemplate: Codable {
     public let title: String
     public let titleExt: String?
     public let subtitle: String
@@ -22,12 +22,12 @@ public struct CardTemplateModel: Codable {
 
     public struct Button: Codable {
         public let name: String
-        public let action: CardTemplateModel.Action
+        public let action: CardTemplate.Action?
     }
 
     public struct Action: Codable {
         public let type: String
-        public let payload: CardTemplateModel.Payload
+        public let payload: CardTemplate.Payload?
     }
 
     public struct Payload: Codable {
@@ -37,7 +37,7 @@ public struct CardTemplateModel: Codable {
         public let text: String?
         public let formAction: String?
         public let requestType: String?
-        public let formData: CardTemplateModel.FormData?
+        public let formData: CardTemplate.FormData?
     }
 
     public struct FormData: Codable {
@@ -48,21 +48,21 @@ public struct CardTemplateModel: Codable {
 
 public class Util {
 
-    public func cardTemplate(from genericCard: ALKGenericCard) -> CardTemplateModel {
-        let header = CardTemplateModel.Header(imgSrc: genericCard.imageUrl?.absoluteString, overlayText: genericCard.overlayText)
+    public func cardTemplate(from genericCard: ALKGenericCard) -> CardTemplate {
+        let header = CardTemplate.Header(imgSrc: genericCard.imageUrl?.absoluteString, overlayText: genericCard.overlayText)
 
-        var buttons: [CardTemplateModel.Button]?
+        var buttons: [CardTemplate.Button]?
         if let cardButtons = genericCard.buttons {
-            buttons = [CardTemplateModel.Button]()
+            buttons = [CardTemplate.Button]()
             for btn in cardButtons {
-                let payload = CardTemplateModel.Payload(url: nil, title: btn.name, message: btn.action, text: btn.data, formAction: nil, requestType: nil, formData: nil)
-                let action = CardTemplateModel.Action(type: "ALKGenericCard", payload: payload)
-                let button = CardTemplateModel.Button(name: btn.name, action: action)
+                let payload = CardTemplate.Payload(url: nil, title: btn.name, message: btn.action, text: btn.data, formAction: nil, requestType: nil, formData: nil)
+                let action = CardTemplate.Action(type: "ALKGenericCard", payload: payload)
+                let button = CardTemplate.Button(name: btn.name, action: action)
                 buttons!.append(button)
             }
         }
 
-        let template = CardTemplateModel(title: genericCard.title, titleExt: String(describing: genericCard.rating), subtitle: genericCard.subtitle, description: genericCard.description, header: header, buttons: buttons)
+        let template = CardTemplate(title: genericCard.title, titleExt: String(describing: genericCard.rating), subtitle: genericCard.subtitle, description: genericCard.description, header: header, buttons: buttons)
         return template
     }
 }

@@ -546,9 +546,6 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
             guard let strongSelf = self else {return}
             strongSelf.cardTemplateSelected(tag: tag, title: title, template: card, message: message)
         }
-        if message.isMyMessage {
-            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        }
         return cell
 
 
