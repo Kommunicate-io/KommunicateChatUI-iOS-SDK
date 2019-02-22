@@ -332,7 +332,7 @@ extension ALKSelectParticipantToAddViewController: UITableViewDelegate, UITableV
         if !isInPreviousFriendGroup(fri: fri) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: {
                 tableView.deselectRow(at: indexPath, animated: true)
-                tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+                tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
             })
         }
     }

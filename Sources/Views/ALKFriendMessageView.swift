@@ -71,7 +71,7 @@ class ALKFriendMessageView: UIView {
     func setupViews() {
         
         self.addViewsForAutolayout(views: [avatarImageView, nameLabel, bubbleView, messageView, timeLabel])
-        self.bringSubview(toFront: messageView)
+        self.bringSubviewToFront(messageView)
         
         nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 57).isActive = true
@@ -154,15 +154,15 @@ class ALKFriendMessageView: UIView {
             style.minimumLineHeight = 17
             style.maximumLineHeight = 17
             
-            let attributes: [NSAttributedStringKey: Any] = [
-                NSAttributedStringKey.font: font,
-                NSAttributedStringKey.foregroundColor: color]
+            let attributes: [NSAttributedString.Key: Any] = [
+                NSAttributedString.Key.font: font,
+                NSAttributedString.Key.foregroundColor: color]
             
             var size = CGSize()
             if viewModel.messageType == .html {
                 guard let htmlText = message.data.attributedString else { return 30}
                 let mutableText = NSMutableAttributedString(attributedString: htmlText)
-                let attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.paragraphStyle: style]
+                let attributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.paragraphStyle: style]
                 mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
                 size = mutableText.boundingRect(with: maxSize, options: [NSStringDrawingOptions.usesFontLeading, NSStringDrawingOptions.usesLineFragmentOrigin], context: nil).size
             } else {

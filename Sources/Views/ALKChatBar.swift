@@ -79,7 +79,7 @@ open class ALKChatBar: UIView, Localizable {
         tv.scrollsToTop = false
         tv.autocapitalizationType = .sentences
         tv.accessibilityIdentifier = "chatTextView"
-        tv.typingAttributes = [NSAttributedStringKey.paragraphStyle.rawValue: style, NSAttributedStringKey.font.rawValue: UIFont.font(.normal(size: 16.0))]
+        tv.typingAttributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: UIFont.font(.normal(size: 16.0))]
         return tv
     }()
 
@@ -446,7 +446,7 @@ open class ALKChatBar: UIView, Localizable {
         bottomGrayView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bottomGrayView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
 
-        bringSubview(toFront: frameView)
+        bringSubviewToFront(frameView)
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -555,7 +555,7 @@ extension ALKChatBar: UITextViewDelegate {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
         let font = textView.font ?? UIFont.font(.normal(size: 14.0))
-        let attributes = [NSAttributedStringKey.paragraphStyle: style, NSAttributedStringKey.font: font]
+        let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
         let tv = UITextView(frame: textView.frame)
         tv.attributedText = NSAttributedString(string: text as String, attributes:attributes)
 

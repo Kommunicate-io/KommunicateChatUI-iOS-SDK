@@ -95,11 +95,11 @@ open class AudioRecordButton: UIButton{
     private func checkMicrophonePermission() -> Bool {
         
         let soundSession = AVAudioSession.sharedInstance()
-        let permissionStatus = soundSession.recordPermission()
+        let permissionStatus = soundSession.recordPermission
         var isAllow = false
         
         switch (permissionStatus) {
-        case AVAudioSessionRecordPermission.undetermined:
+        case AVAudioSession.RecordPermission.undetermined:
             soundSession.requestRecordPermission({ (isGrant) in
                 if (isGrant) {
                     isAllow = true
@@ -109,11 +109,11 @@ open class AudioRecordButton: UIButton{
                 }
             })
             break
-        case AVAudioSessionRecordPermission.denied:
+        case AVAudioSession.RecordPermission.denied:
             // direct to settings...
             isAllow = false
             break;
-        case AVAudioSessionRecordPermission.granted:
+        case AVAudioSession.RecordPermission.granted:
             // mic access ok...
             isAllow = true
             break;
@@ -133,7 +133,12 @@ open class AudioRecordButton: UIButton{
             AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue
         ]
         do {
-            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            if #available(iOS 10.0, *) {
+                try recordingSession.setCategory(.playAndRecord, mode: .default)
+            } else {
+                // Fallback on earlier versions
+                recordingSession = ALAudioSession().getWithPlayback(false)
+            }
             try recordingSession.overrideOutputAudioPort(.speaker)
             try recordingSession.setActive(true)
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)

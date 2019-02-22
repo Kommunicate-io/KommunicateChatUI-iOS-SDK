@@ -43,9 +43,9 @@ open class ALKAudioRecorderView: UIView, Localizable {
     
     lazy var slideView: UIStackView = {
         let stackView: UIStackView = UIStackView(arrangedSubviews: [self.leftArrow, self.slideToCancel])
-        stackView.alignment = UIStackViewAlignment.fill
-        stackView.axis = UILayoutConstraintAxis.horizontal
-        stackView.distribution = UIStackViewDistribution.fill
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
         stackView.spacing = 10.0
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -77,9 +77,9 @@ open class ALKAudioRecorderView: UIView, Localizable {
     
     lazy var recordingView: UIStackView = {
         let stackView: UIStackView = UIStackView(arrangedSubviews: [self.recordingLabel, self.recordingValue])
-        stackView.alignment = UIStackViewAlignment.leading
-        stackView.axis = UILayoutConstraintAxis.vertical
-        stackView.distribution = UIStackViewDistribution.equalSpacing
+        stackView.alignment = .leading
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
         stackView.spacing = 2.0
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView

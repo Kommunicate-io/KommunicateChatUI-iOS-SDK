@@ -64,7 +64,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
     fileprivate lazy var typingNoticeView = TypingNotice(localizedStringFileName : configuration.localizedStringFileName)
     fileprivate var alMqttConversationService: ALMQTTConversationService!
-    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
     fileprivate var keyboardSize: CGRect?
 
@@ -90,7 +90,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tv.separatorStyle   = .none
         tv.allowsSelection  = false
         tv.clipsToBounds    = true
-        tv.keyboardDismissMode = UIScrollViewKeyboardDismissMode.onDrag
+        tv.keyboardDismissMode = UIScrollView.KeyboardDismissMode.onDrag
         tv.accessibilityIdentifier = "InnerChatScreenTableView"
         tv.backgroundColor = UIColor.clear
         return tv
@@ -151,12 +151,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     override func addObserver() {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil, queue: nil, using: { [weak self]
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil, using: { [weak self]
             notification in
             print("keyboard will show")
             guard let weakSelf = self else {return}
 
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
 
                 weakSelf.keyboardSize = keyboardSize
 
@@ -182,7 +182,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         })
 
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil, queue: nil, using: {[weak self]
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil, using: {[weak self]
             (notification) in
 
             guard let weakSelf = self else {return}
@@ -190,7 +190,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             weakSelf.bottomConstraint?.constant = 0
 
-            let duration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.05
+            let duration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.05
 
             UIView.animate(withDuration: duration, animations: {
                 view?.layoutIfNeeded()
@@ -271,8 +271,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override func removeObserver() {
 
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "newMessageNotification"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "report_DELIVERED"), object: nil)
@@ -515,7 +515,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         self.automaticallyAdjustsScrollViewInsets = false
 
         if #available(iOS 11.0, *) {
-            tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.never
+            tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         }
         tableView.estimatedRowHeight = 0
 
@@ -959,8 +959,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
                 guard let strongSelf = self else {return}
 
-                strongSelf.view.bringSubview(toFront: strongSelf.moreBar)
-                strongSelf.view.sendSubview(toBack: strongSelf.tableView)
+                strongSelf.view.bringSubviewToFront(strongSelf.moreBar)
+                strongSelf.view.sendSubviewToBack(strongSelf.tableView)
         })
 
     }
@@ -1151,9 +1151,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         guard indexPath.section >= 0 else {
             return
         }
-        tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
+        tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
+            self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
         }
     }
 
@@ -1205,7 +1205,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
         var button: UIBarButtonItem
         if let image = configuration.rightNavBarImageForConversationView {
-            button = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self,
+            button = UIBarButtonItem(image: image, style: UIBarButtonItem.Style.plain, target: self,
                                          action: #selector(ALKConversationViewController.refreshButtonAction(_:)))
         }else {
             button = UIBarButtonItem(barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView, target: self,
@@ -1468,8 +1468,8 @@ extension ALKConversationViewController: UIImagePickerControllerDelegate, UINavi
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
 
         // Video attachment
-        if let mediaType = info[UIImagePickerControllerMediaType] as? String, mediaType == "public.movie" {
-            guard let url = info[UIImagePickerControllerMediaURL] as? URL else { return }
+        if let mediaType = info[UIImagePickerController.InfoKey.mediaType.rawValue] as? String, mediaType == "public.movie" {
+            guard let url = info[UIImagePickerController.InfoKey.mediaURL.rawValue] as? URL else { return }
             print("video path is: ", url.path)
             viewModel.encodeVideo(videoURL: url, completion: {
                 path in

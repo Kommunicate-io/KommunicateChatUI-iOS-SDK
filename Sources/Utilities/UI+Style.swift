@@ -98,13 +98,13 @@ extension UITextField {
 
 extension UIButton {
     
-    func setStyle(style: Style, forState state: UIControlState) {
+    func setStyle(style: Style, forState state: UIControl.State) {
         setFont(font: style.font)
         setTextColor(color: style.text, forState: state)
         setBackgroundColor(style.background)
     }
     
-    func setTextColor(color: UIColor, forState state: UIControlState) {
+    func setTextColor(color: UIColor, forState state: UIControl.State) {
         setTitleColor(color, for: state)
     }
     

@@ -30,8 +30,8 @@ class ALKMapViewController: UIViewController, Localizable {
     override func viewWillAppear(_ animated: Bool) {
         self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
         let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
-        ShareLocationButton.setTitle(locationButtonTitle, for: UIControlState.normal)
-        ShareLocationButton.setTitle(locationButtonTitle, for: UIControlState.selected)
+        ShareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)
+        ShareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.selected)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -106,9 +106,9 @@ extension ALKMapViewController: CLLocationManagerDelegate {
         let longitude = userLoction.coordinate.longitude
         let latDelta: CLLocationDegrees = 0.05
         let lonDelta: CLLocationDegrees = 0.05
-        let span:MKCoordinateSpan = MKCoordinateSpanMake(latDelta, lonDelta)
+        let span:MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
         let location: CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
-        let region: MKCoordinateRegion = MKCoordinateRegionMake(location, span)
+        let region: MKCoordinateRegion = MKCoordinateRegion(center: location, span: span)
         self.mapView.setRegion(region, animated: true)
         self.mapView.showsUserLocation = true
     }

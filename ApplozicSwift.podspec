@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
 
   s.ios.deployment_target = '9.0'
-  s.swift_version = '4.1'
+  s.swift_version = '4.2'
 
   s.dependency 'Kingfisher', '~> 4.7.0'
   s.dependency 'MGSwipeTableCell', '~> 1.5.6'

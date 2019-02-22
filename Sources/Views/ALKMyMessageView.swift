@@ -105,7 +105,7 @@ class ALKMyMessageView: UIView {
     
     private func setupConstraints() {
         self.addViewsForAutolayout(views: [messageView, bubbleView, stateView, timeLabel])
-        self.bringSubview(toFront: messageView)
+        self.bringSubviewToFront(messageView)
         messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         messageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Padding.MessageView.bottom).isActive = true

@@ -37,7 +37,7 @@ final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable
         self.previewScroll.addSubview(self.imgview)
         self.previewScroll.contentSize = self.imgview.image!.size
     
-        self.previewScroll.contentMode = UIViewContentMode.scaleAspectFit
+        self.previewScroll.contentMode = UIView.ContentMode.scaleAspectFit
         self.previewScroll.maximumZoomScale = 4.0
         self.previewScroll.minimumZoomScale = 1.0
         self.previewScroll.contentOffset.y  = imgview.bounds.size.height/2.0 - previewScroll.bounds.size.height/2.0

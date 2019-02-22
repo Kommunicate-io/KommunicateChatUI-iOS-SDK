@@ -92,7 +92,7 @@ final class ALKChatCell: MGSwipeTableCell {
         bt.setImage(UIImage(named: "icon_favorite"), for: .normal)
         bt.setImage(UIImage(named: "icon_favorite_active"), for: .highlighted)
         bt.setImage(UIImage(named: "icon_favorite_active"), for: .selected)
-        bt.addTarget(self, action: #selector(favoriteTapped(button:)), for: UIControlEvents.touchUpInside)
+        bt.addTarget(self, action: #selector(favoriteTapped(button:)), for: UIControl.Event.touchUpInside)
         return bt
     }()
 
@@ -144,7 +144,7 @@ final class ALKChatCell: MGSwipeTableCell {
 
     weak var chatCellDelegate: ALKChatCellDelegate?
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         voipButton.isHidden = true

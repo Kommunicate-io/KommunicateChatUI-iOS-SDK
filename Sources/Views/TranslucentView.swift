@@ -115,14 +115,22 @@ extension TranslucentView {
         let _nonExistentSubview = UIView(frame: self.bounds)
         _nonExistentSubview.backgroundColor = UIColor.clear
         _nonExistentSubview.clipsToBounds = true
-        _nonExistentSubview.autoresizingMask = [UIViewAutoresizing.flexibleBottomMargin, UIViewAutoresizing.flexibleLeftMargin, UIViewAutoresizing.flexibleRightMargin, UIViewAutoresizing.flexibleTopMargin]
+        _nonExistentSubview.autoresizingMask = [
+            UIView.AutoresizingMask.flexibleBottomMargin,
+            UIView.AutoresizingMask.flexibleLeftMargin,
+            UIView.AutoresizingMask.flexibleRightMargin,
+            UIView.AutoresizingMask.flexibleTopMargin]
         self.nonExistentSubview = _nonExistentSubview
         self.insertSubview(self.nonExistentSubview!, at: 0)
         
         let _toolbarContainerClipView = UIView(frame: self.bounds)
         _toolbarContainerClipView.backgroundColor = UIColor.clear
         _toolbarContainerClipView.clipsToBounds = true
-        _toolbarContainerClipView.autoresizingMask = [UIViewAutoresizing.flexibleBottomMargin, UIViewAutoresizing.flexibleLeftMargin, UIViewAutoresizing.flexibleRightMargin, UIViewAutoresizing.flexibleTopMargin]
+        _toolbarContainerClipView.autoresizingMask = [
+            UIView.AutoresizingMask.flexibleBottomMargin,
+            UIView.AutoresizingMask.flexibleLeftMargin,
+            UIView.AutoresizingMask.flexibleRightMargin,
+            UIView.AutoresizingMask.flexibleTopMargin]
         self.toolbarContainerClipView = _toolbarContainerClipView
         self.nonExistentSubview!.addSubview(self.toolbarContainerClipView!)
         
@@ -131,7 +139,7 @@ extension TranslucentView {
         rect.size.height += 1
         
         let _toolbarBG = UIToolbar(frame: rect)
-        _toolbarBG.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
+        _toolbarBG.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleHeight]
         self.toolbarBG = _toolbarBG
         
         self.toolbarContainerClipView!.addSubview(self.toolbarBG!)
@@ -139,7 +147,7 @@ extension TranslucentView {
         
         let _overlayBackgroundView = UIView(frame: self.bounds)
         _overlayBackgroundView.backgroundColor = self.backgroundColor
-        _overlayBackgroundView.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
+        _overlayBackgroundView.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleHeight]
         self.overlayBackgroundView = _overlayBackgroundView
         self.toolbarContainerClipView!.addSubview(self.overlayBackgroundView!)
         
@@ -249,11 +257,11 @@ extension TranslucentView {
         }
     }
     
-    override open func sendSubview(toBack view: UIView)  {
+    override open func sendSubviewToBack(_ view: UIView)  {
         if self.initComplete {
             self.insertSubview(view, aboveSubview: self.toolbarContainerClipView!)
         } else {
-            super.sendSubview(toBack: view)
+            super.sendSubviewToBack(view)
         }
     }
     

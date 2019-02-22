@@ -27,7 +27,7 @@ final public class ALKNewChatViewController: ALKBaseViewController, Localizable 
         return UISearchBar.createAXSearchBar(placeholder: localizedString(forKey: "SearchPlaceholder", withDefaultValue: SystemMessage.LabelName.SearchPlaceholder, fileName: configuration.localizedStringFileName))
     }()
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     
     //MARK: - Life cycle
     
@@ -61,7 +61,7 @@ final public class ALKNewChatViewController: ALKBaseViewController, Localizable 
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
-        self.view.bringSubview(toFront: activityIndicator)
+        self.view.bringSubviewToFront(activityIndicator)
         activityIndicator.startAnimating()
         viewModel.getContacts(completion: {
             self.searchBar.text = nil

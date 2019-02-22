@@ -33,7 +33,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate var dbService: ALMessageDBService!
-    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate var localizedStringFileName: String!
 
     var viewModel: ALKConversationListViewModel!
@@ -169,7 +169,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
-        self.view.bringSubview(toFront: activityIndicator)
+        self.view.bringSubviewToFront(activityIndicator)
         self.edgesForExtendedLayout = []
         viewModel.prepareController(dbService: dbService)
     }

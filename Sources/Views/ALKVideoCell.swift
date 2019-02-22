@@ -164,18 +164,18 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         frontView.addGestureRecognizer(longPressGesture)
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
-        downloadButton.addTarget(self, action: #selector(ALKVideoCell.downloadButtonAction(_:)), for: UIControlEvents.touchUpInside)
+        downloadButton.addTarget(self, action: #selector(ALKVideoCell.downloadButtonAction(_:)), for: UIControl.Event.touchUpInside)
         uploadButton.addTarget(self, action: #selector(ALKVideoCell.uploadButtonAction(_:)), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(ALKVideoCell.playButtonAction(_:)), for: .touchUpInside)
 
         contentView.addViewsForAutolayout(views: [frontView, photoView,bubbleView, timeLabel,fileSizeLabel, downloadButton, playButton, progressView, uploadButton])
-        contentView.bringSubview(toFront: photoView)
-        contentView.bringSubview(toFront: frontView)
-        contentView.bringSubview(toFront: actionButton)
-        contentView.bringSubview(toFront: downloadButton)
-        contentView.bringSubview(toFront: playButton)
-        contentView.bringSubview(toFront: progressView)
-        contentView.bringSubview(toFront: uploadButton)
+        contentView.bringSubviewToFront(photoView)
+        contentView.bringSubviewToFront(frontView)
+        contentView.bringSubviewToFront(actionButton)
+        contentView.bringSubviewToFront(downloadButton)
+        contentView.bringSubviewToFront(playButton)
+        contentView.bringSubviewToFront(progressView)
+        contentView.bringSubviewToFront(uploadButton)
 
         frontView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
         frontView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor).isActive = true
@@ -298,7 +298,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             let asset = AVURLAsset(url: filePath , options: nil)
             let imgGenerator = AVAssetImageGenerator(asset: asset)
             imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             return UIImage(cgImage: cgImage)
 
         } catch let error {

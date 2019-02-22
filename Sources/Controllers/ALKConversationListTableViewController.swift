@@ -45,7 +45,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         cell.update(viewModel: message, identity: nil)
         cell.chatCellDelegate = self
     })
-    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate var searchActive : Bool = false
     fileprivate var searchFilteredChat:[Any] = []
