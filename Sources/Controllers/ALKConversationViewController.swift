@@ -923,6 +923,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func listTemplateSelected(defaultText: String?, action: ListTemplateModel.Action) {
+        guard !configuration.disableRichMessageButtonAction else { return }
         guard let type = action.type else {
             print("Type not defined for action")
             return
