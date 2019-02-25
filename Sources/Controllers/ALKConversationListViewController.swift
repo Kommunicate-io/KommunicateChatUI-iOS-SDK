@@ -444,6 +444,10 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     open func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
         print("Last seen updated")
         viewModel.updateStatusFor(userDetail: alUserDetail)
+        guard let viewController = self.navigationController?.visibleViewController as? ALKConversationViewController else {
+            return
+        }
+        viewController.updateLastSeen(atStatus: alUserDetail)
     }
 
     open func mqttConnectionClosed() {

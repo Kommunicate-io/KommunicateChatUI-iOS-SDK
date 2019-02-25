@@ -16,7 +16,7 @@ public protocol ALKConversationViewModelDelegate: class {
     func updateMessageAt(indexPath: IndexPath)
     func newMessagesAdded()
     func messageSent(at: IndexPath)
-    func updateDisplay(name: String)
+    func updateDisplay(contact: ALContact?, channel: ALChannel?)
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
 }
@@ -428,6 +428,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if !groupName.isEmpty  || !groupImage.isEmpty {
             updateGroupInfo(groupName: groupName, groupImage: groupImage, completion: {
                 success in
+                self.groupUpdated()
                 guard success, friendsAdded.count > 0 else { return }
                 self.addMembersToGroup(users: friendsAdded, completion: {
                     result in
@@ -435,6 +436,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 })
             })
         } else {
+            groupUpdated()
             guard friendsAdded.count > 0 else { return }
             self.addMembersToGroup(users: friendsAdded, completion: {
                 result in
@@ -708,7 +710,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.contactId = nil
                 self.channelKey = groupId
                 self.isFirstTime = true
-                self.delegate?.updateDisplay(name: message.groupName)
+                self.delegate?.updateDisplay(contact: nil, channel: ALChannelService().getChannelByKey(groupId))
                 self.prepareController()
             })
         } else if let contactId = message.contactId, contactId != self.contactId {
@@ -719,7 +721,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.channelKey = nil
                 self.isFirstTime = true
                 let messageName = message.name.count > 0 ? message.name : self.localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: self.localizedStringFileName)
-                self.delegate?.updateDisplay(name: messageName)
+                self.delegate?.updateDisplay(contact: ALContactService().loadContact(byKey: "userId", value: contactId), channel: nil)
                 self.prepareController()
             })
         }
@@ -930,6 +932,20 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     //MARK: - Internal Methods
+
+    func currentChat() -> (ALContact?, ALChannel?, ALConversationProxy?) {
+        if channelKey != nil {
+            let channel = ALChannelService().getChannelByKey(channelKey)
+            return (nil, channel, nil)
+        } else if contactId != nil {
+            let contact = ALContactService().loadContact(byKey: "userId", value: contactId)
+            return (contact, nil, nil)
+        } else if conversationId != nil {
+            let conversationProxy = ALConversationService().getConversationByKey(conversationId)
+            return (nil, nil, conversationProxy)
+        }
+        return (nil, nil, nil)
+    }
 
     func loadMessages() {
         var time: NSNumber? = nil
@@ -1264,6 +1280,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             message.metadata = metaData
         }
         return message
+    }
+
+    private func groupUpdated() {
+        guard let groupId = groupKey() else { return }
+        let channel = ALChannelService().getChannelByKey(groupId)
+        self.delegate?.updateDisplay(contact: nil, channel: channel)
     }
 
     private func getGenericCardTemplateFor(message: ALKMessageViewModel) -> ALKGenericCardTemplate? {
