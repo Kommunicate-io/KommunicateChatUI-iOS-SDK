@@ -9,7 +9,7 @@ import Foundation
 import Applozic
 import Kingfisher
 
-protocol NavigationBarCallbacks {
+protocol NavigationBarCallbacks: class {
     func backButtonTapped()
     func titleTapped()
 }
@@ -18,7 +18,7 @@ class ALKConversationNavBar: UIView, Localizable {
 
     let navigationBarBackgroundColor: UIColor
     let configuration: ALKConfiguration
-    let delegate: NavigationBarCallbacks
+    weak var delegate: NavigationBarCallbacks?
     var disableTitleAction: Bool = false
 
     let backButton: UIButton = {
@@ -124,12 +124,12 @@ class ALKConversationNavBar: UIView, Localizable {
     }
 
     @objc func backButtonTapped() {
-        delegate.backButtonTapped()
+        delegate?.backButtonTapped()
     }
 
     @objc func titleTapped() {
         guard !disableTitleAction else { return }
-        delegate.titleTapped()
+        delegate?.titleTapped()
     }
 
     private func setupConstraints() {
@@ -207,6 +207,10 @@ class ALKConversationNavBar: UIView, Localizable {
     }
 
     private func showLastSeen(contact: ALContact) {
+        guard contact.lastSeenAt != nil else {
+            onlineStatusText.isHidden = true
+            return
+        }
         let currentTime = Date()
         let lastSeen = Double(exactly: contact.lastSeenAt) ?? 0.0
         let lastOnlineTime = Date(timeIntervalSince1970: lastSeen/1000)
