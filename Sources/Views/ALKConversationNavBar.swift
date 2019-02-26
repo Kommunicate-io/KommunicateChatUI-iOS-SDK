@@ -220,7 +220,7 @@ class ALKConversationNavBar: UIView, Localizable {
         if difference < 60.0 { // Less than 1 minute
             status = localizedString(forKey: "JustNow", withDefaultValue: SystemMessage.UserStatus.JustNow, fileName: configuration.localizedStringFileName)
         } else if difference < 60.0 * 60.0 { // Less than 1 hour
-            let minutes = (difference.remainder(dividingBy: 3600)) / 60
+            let minutes = (difference.truncatingRemainder(dividingBy: 3600)) / 60
             let format = localizedString(forKey: "MinutesAgo",
                                          withDefaultValue: SystemMessage.UserStatus.MinutesAgo,
                                          fileName: configuration.localizedStringFileName)
