@@ -23,6 +23,7 @@ class ALKConversationNavBar: UIView, Localizable {
 
     let backButton: UIButton = {
         let view = UIButton()
+        view.accessibilityIdentifier = "conversationBackButton"
         view.backgroundColor = .clear
         return view
     }()
