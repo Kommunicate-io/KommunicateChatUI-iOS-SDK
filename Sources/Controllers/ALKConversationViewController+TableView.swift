@@ -601,7 +601,9 @@ extension ALKConversationViewController:WKNavigationDelegate{
 
         //Set frame size and add it in Dictionary
         webView.frame.size = webView.scrollView.contentSize
-        contentHeights[message.identifier] = webView.scrollView.contentSize.height
+        if(webView.scrollView.contentSize.height != 0){
+            contentHeights[message.identifier] = webView.scrollView.contentSize.height
+        }
         tableView.reloadRows(at: [NSIndexPath(row: webView.tag, section: 0) as IndexPath] , with: .automatic)
     }
 

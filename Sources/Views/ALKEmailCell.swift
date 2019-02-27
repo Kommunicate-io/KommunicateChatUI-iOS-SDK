@@ -56,7 +56,7 @@ open class ALKFriendEmailCell: UITableViewCell{
             static let height: CGFloat =  20
         }
         struct TimeLabel {
-            static let top: CGFloat =  2
+            static let top: CGFloat =  1
             static let trailing: CGFloat =  10
             static let width: CGFloat =  50
             static let height: CGFloat =  37
