@@ -247,14 +247,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
-            weakSelf.navigationBar.updateView(contact: nil, channel: channel, conversationProxy: nil)
+            let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel, conversation: nil)
+            weakSelf.navigationBar.updateView(profile: profile)
             weakSelf.newMessagesAdded()
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil, queue: nil) { [weak self] notification in
             guard let weakSelf = self else { return }
-            let (contact, channel, conversationProxy) = weakSelf.viewModel.currentChat()
-            weakSelf.navigationBar.updateView(contact: contact, channel: channel, conversationProxy: conversationProxy)
+            let profile = weakSelf.viewModel.currentConversationProfile()
+            weakSelf.navigationBar.updateView(profile: profile)
         }
     }
 
@@ -482,8 +483,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         self.navigationItem.titleView = hiddenView
 
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
-        let (contact, channel, conversationProxy) = viewModel.currentChat()
-        navigationBar.updateView(contact: contact, channel: channel, conversationProxy: conversationProxy)
+        let profile = viewModel.currentConversationProfile()
+        navigationBar.updateView(profile: profile)
     }
 
     private func prepareTable() {
@@ -1186,7 +1187,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
-        navigationBar.updateView(contact: contact, channel: channel, conversationProxy: nil)
+        let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel, conversation: nil)
+        navigationBar.updateView(profile: profile)
     }
 
     private func addRefreshButton() {
@@ -1417,7 +1419,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             return
         }
         guard contact.userId == viewModel.contactId, !viewModel.isGroup else { return }
-        navigationBar.updateView(contact: contact, channel: nil, conversationProxy: nil)
+        navigationBar.updateStatus(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
     }
 
     public func mqttConnectionClosed() {
@@ -1444,7 +1446,8 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
                 userId == self.viewModel.contactId,
                 let contact = ALContactService().loadContact(byKey: "userId", value: userId)
             else { return }
-            self.navigationBar.updateView(contact: contact, channel: nil, conversationProxy: nil)
+            let profile = self.viewModel.conversationProfileFrom(contact: contact, channel: nil, conversation: nil)
+            self.navigationBar.updateView(profile: profile)
         })
     }
 }

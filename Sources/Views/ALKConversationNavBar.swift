@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Applozic
 import Kingfisher
 
 protocol NavigationBarCallbacks: class {
@@ -50,7 +49,7 @@ class ALKConversationNavBar: UIView, Localizable {
         return label
     }()
 
-    lazy var statusIconBackgroundColor: UIView = {
+    lazy var statusIconBackground: UIView = {
         let view = UIView()
         view.backgroundColor = self.navigationBarBackgroundColor
         view.layer.cornerRadius = 6
@@ -98,28 +97,22 @@ class ALKConversationNavBar: UIView, Localizable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateView(contact: ALContact?, channel: ALChannel?, conversationProxy: ALConversationProxy?) {
-        if let contact = contact {
-            setupProfile(contact)
-            updateStatus(contact: contact)
-        } else if let channel = channel {
+    func updateView(profile: ALKConversationProfile) {
+        setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: (profile.status != nil))
+        guard let status = profile.status else {
+            statusIconBackground.isHidden = true
             onlineStatusText.isHidden = true
-            statusIconBackgroundColor.isHidden = true
-            setupProfile(channel)
-        } else if let conversationProxy = conversationProxy {
-            onlineStatusText.isHidden = true
-            statusIconBackgroundColor.isHidden = true
-            profileImage.isHidden = true
-            profileName.text = conversationProxy.topicId
+            return
         }
+        updateStatus(isOnline: status.isOnline, lastSeenAt: status.lastSeenAt)
     }
 
-    func updateStatus(contact: ALContact) {
-        if contact.connected {
+    func updateStatus(isOnline: Bool, lastSeenAt: NSNumber?) {
+        if isOnline {
             onlineStatusText.text = localizedString(forKey: "Online", withDefaultValue: SystemMessage.UserStatus.Online, fileName: configuration.localizedStringFileName)
             onlineStatusIcon.backgroundColor = UIColor(28, green: 222, blue: 20)
         } else {
-            showLastSeen(contact: contact)
+            showLastSeen(lastSeenAt)
             onlineStatusIcon.backgroundColor = UIColor(165, green: 170, blue: 165)
         }
     }
@@ -134,8 +127,8 @@ class ALKConversationNavBar: UIView, Localizable {
     }
 
     private func setupConstraints() {
-        statusIconBackgroundColor.addViewsForAutolayout(views: [onlineStatusIcon])
-        self.addViewsForAutolayout(views: [backImage, backButton, profileImage, statusIconBackgroundColor, profileView])
+        statusIconBackground.addViewsForAutolayout(views: [onlineStatusIcon])
+        self.addViewsForAutolayout(views: [backImage, backButton, profileImage, statusIconBackground, profileView])
 
         //Setup constraints
         backButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
@@ -153,13 +146,13 @@ class ALKConversationNavBar: UIView, Localizable {
         profileImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 35).isActive = true
 
-        statusIconBackgroundColor.bottomAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 0).isActive = true
-        statusIconBackgroundColor.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: -10).isActive = true
-        statusIconBackgroundColor.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        statusIconBackgroundColor.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        statusIconBackground.bottomAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 0).isActive = true
+        statusIconBackground.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: -10).isActive = true
+        statusIconBackground.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        statusIconBackground.heightAnchor.constraint(equalToConstant: 12).isActive = true
 
-        onlineStatusIcon.centerXAnchor.constraint(equalTo: statusIconBackgroundColor.centerXAnchor).isActive = true
-        onlineStatusIcon.centerYAnchor.constraint(equalTo: statusIconBackgroundColor.centerYAnchor).isActive = true
+        onlineStatusIcon.centerXAnchor.constraint(equalTo: statusIconBackground.centerXAnchor).isActive = true
+        onlineStatusIcon.centerYAnchor.constraint(equalTo: statusIconBackground.centerYAnchor).isActive = true
         onlineStatusIcon.widthAnchor.constraint(equalToConstant: 10).isActive = true
         onlineStatusIcon.heightAnchor.constraint(equalToConstant: 10).isActive = true
 
@@ -177,43 +170,29 @@ class ALKConversationNavBar: UIView, Localizable {
         profileView.addGestureRecognizer(tapAction)
     }
 
-    private func setupProfile(_ contact: ALContact) {
-        profileName.text = contact.getDisplayName()
+    private func setupProfile(name: String, imageUrl: String?, isContact: Bool) {
+        profileName.text = name
 
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeholderName = isContact ? "placeholder" : "group_profile_picture"
+        let placeHolder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
         guard
-            let urlString = contact.contactImageUrl,
+            let urlString = imageUrl,
             let url = URL(string: urlString)
-        else {
-            self.profileImage.image = placeHolder
-            return
+            else {
+                self.profileImage.image = placeHolder
+                return
         }
         let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
         profileImage.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
     }
 
-    private func setupProfile(_ channel: ALChannel) {
-        profileName.text = channel.name
-
-        let placeHolder = UIImage(named: "group_profile_picture", in: Bundle.applozic, compatibleWith: nil)
-        guard
-            let urlString = channel.channelImageURL,
-            let url = URL(string: urlString)
-        else {
-            self.profileImage.image = placeHolder
-            return
-        }
-        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-        profileImage.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
-    }
-
-    private func showLastSeen(contact: ALContact) {
-        guard contact.lastSeenAt != nil else {
+    private func showLastSeen(_ lastSeenAt: NSNumber?) {
+        guard let lastSeenAt = lastSeenAt else {
             onlineStatusText.isHidden = true
             return
         }
         let currentTime = Date()
-        let lastSeen = Double(exactly: contact.lastSeenAt) ?? 0.0
+        let lastSeen = Double(exactly: lastSeenAt) ?? 0.0
         let lastOnlineTime = Date(timeIntervalSince1970: lastSeen/1000)
         let difference = currentTime.timeIntervalSince(lastOnlineTime)
         var status: String = ""

@@ -428,7 +428,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if !groupName.isEmpty  || !groupImage.isEmpty {
             updateGroupInfo(groupName: groupName, groupImage: groupImage, completion: {
                 success in
-                self.groupUpdated()
+                self.updateInfo()
                 guard success, friendsAdded.count > 0 else { return }
                 self.addMembersToGroup(users: friendsAdded, completion: {
                     result in
@@ -436,7 +436,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 })
             })
         } else {
-            groupUpdated()
+            updateInfo()
             guard friendsAdded.count > 0 else { return }
             self.addMembersToGroup(users: friendsAdded, completion: {
                 result in
@@ -931,20 +931,29 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return ALApplicationInfo().showPoweredByMessage()
     }
 
-    //MARK: - Internal Methods
-
-    func currentChat() -> (ALContact?, ALChannel?, ALConversationProxy?) {
-        if channelKey != nil {
+    func currentConversationProfile() -> ALKConversationProfile {
+        if conversationId != nil {
+            let conversationProxy = ALConversationService().getConversationByKey(conversationId)
+            return conversationProfileFrom(contact: nil, channel: nil, conversation: conversationProxy)
+        } else if channelKey != nil {
             let channel = ALChannelService().getChannelByKey(channelKey)
-            return (nil, channel, nil)
+            return conversationProfileFrom(contact: nil, channel: channel, conversation: nil)
         } else if contactId != nil {
             let contact = ALContactService().loadContact(byKey: "userId", value: contactId)
-            return (contact, nil, nil)
-        } else if conversationId != nil {
-            let conversationProxy = ALConversationService().getConversationByKey(conversationId)
-            return (nil, nil, conversationProxy)
+            return conversationProfileFrom(contact: contact, channel: nil, conversation: nil)
         }
-        return (nil, nil, nil)
+        return ALKConversationProfile()
+    }
+
+    func conversationProfileFrom(contact: ALContact?, channel: ALChannel?, conversation: ALConversationProxy?) -> ALKConversationProfile {
+        var conversationProfile = ALKConversationProfile()
+        conversationProfile.name = conversation?.topicId ?? channel?.name ?? contact?.getDisplayName() ?? ""
+        conversationProfile.imageUrl = channel?.channelImageURL ?? contact?.contactImageUrl
+        guard let contact = contact, channel == nil else {
+            return conversationProfile
+        }
+        conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
+        return conversationProfile
     }
 
     func loadMessages() {
@@ -1282,7 +1291,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return message
     }
 
-    private func groupUpdated() {
+    private func updateInfo() {
         guard let groupId = groupKey() else { return }
         let channel = ALChannelService().getChannelByKey(groupId)
         self.delegate?.updateDisplay(contact: nil, channel: channel)
