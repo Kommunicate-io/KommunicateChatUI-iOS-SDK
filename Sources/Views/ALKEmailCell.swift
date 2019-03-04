@@ -118,6 +118,8 @@ open class ALKFriendEmailCell: UITableViewCell {
         return timeLabel
     }()
 
+    fileprivate var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+
     // MARK: - Initializer
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -139,6 +141,7 @@ open class ALKFriendEmailCell: UITableViewCell {
     }
 
     func update(viewModel: ALKMessageViewModel) {
+        activityIndicator.startAnimating()
         if(viewModel.message != nil){
             wkWebView.loadHTMLString(viewModel.message ?? "", baseURL:nil)
         }
@@ -159,6 +162,7 @@ open class ALKFriendEmailCell: UITableViewCell {
         guard let height = height else {
             return
         }
+        activityIndicator.stopAnimating()
         wkWebView.constraint(withIdentifier:ConstraintIdentifier.wkWebViewHeight)?.constant = height
     }
 
@@ -217,7 +221,7 @@ document.getElementsByTagName('head')[0].appendChild(meta);
 
     private func setupConstraints() {
         repliedEmailUIView.addViewsForAutolayout(views: [emailImage,emailLabel])
-        contentView.addViewsForAutolayout(views: [avatarImageView,repliedEmailUIView,emailImage,emailLabel,nameLabel,wkWebView,timeLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView,repliedEmailUIView,emailImage,emailLabel,nameLabel,wkWebView,timeLabel, activityIndicator])
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.NameLabel.top).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.NameLabel.leading).isActive = true
@@ -248,6 +252,9 @@ document.getElementsByTagName('head')[0].appendChild(meta);
         wkWebView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.WKWebView.trailing).isActive = true
         wkWebView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.WKWebView.leading).isActive = true
         wkWebView.heightAnchor.constraintEqualToAnchor(constant: Padding.WKWebView.height, identifier: ConstraintIdentifier.wkWebViewHeight).isActive = true
+
+        activityIndicator.centerXAnchor.constraint(equalTo: wkWebView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: wkWebView.centerYAnchor).isActive = true
 
         timeLabel.topAnchor.constraint(equalTo: wkWebView.bottomAnchor, constant: Padding.TimeLabel.top).isActive = true
         timeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.TimeLabel.trailing).isActive = true
