@@ -194,7 +194,7 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
     }
     
     private func afterTest_DeleteConversation(app: XCUIApplication) {
-        let backButton = app.navigationBars.buttons["icon back"]
+        let backButton = app.buttons["conversationBackButton"]
         backButton.tap()
         let outerChatScreen = app.tables["OuterChatScreenTableView"]
         

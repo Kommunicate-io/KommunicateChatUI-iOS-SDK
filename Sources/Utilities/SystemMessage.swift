@@ -164,4 +164,12 @@ struct SystemMessage : Localizable{
         static let OneWeek = localizedString(forKey: "OneWeek")
         static let OneYear = localizedString(forKey: "OneYear")
     }
+
+    struct UserStatus {
+        static let Online = localizedString(forKey: "Online")
+        static let LastSeen = localizedString(forKey: "LastSeen")
+        static let JustNow = localizedString(forKey: "JustNow")
+        static let MinutesAgo = localizedString(forKey: "MinutesAgo")
+        static let HoursAgo = localizedString(forKey: "HoursAgo")
+    }
 }

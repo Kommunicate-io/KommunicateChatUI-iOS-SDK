@@ -30,12 +30,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     /// Make this false if you want to use custom list view controller
     public var individualLaunch = true
 
-    override open var title: String? {
-        didSet {
-            titleButton.setTitle(title, for: .normal)
-        }
-    }
-
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
 
     var contactService: ALContactService!
@@ -66,6 +60,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
+    fileprivate lazy var navigationBar = ALKConversationNavBar(configuration: self.configuration, delegate: self)
+
     fileprivate var keyboardSize: CGRect?
 
     fileprivate var localizedStringFileName: String!
@@ -94,12 +90,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tv.accessibilityIdentifier = "InnerChatScreenTableView"
         tv.backgroundColor = UIColor.clear
         return tv
-    }()
-
-    fileprivate let titleButton : UIButton = {
-        let titleButton = UIButton(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-        titleButton.titleLabel?.font  = UIFont.boldSystemFont(ofSize: 17.0)
-        return titleButton
     }()
 
     let unreadScrollButton: UIButton = {
@@ -247,14 +237,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil, queue: nil, using: {[weak self] notification in
             NSLog("update user detail notification received")
             guard let weakSelf = self, let userId = notification.object as? String else { return }
-            print("update user detail")
-            ALUserService.updateUserDetail(userId, withCompletion: {
-                userDetail in
-                guard let detail = userDetail else { return }
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
-                guard !weakSelf.viewModel.isGroup && userId == weakSelf.viewModel.contactId else { return }
-                weakSelf.titleButton.setTitle(detail.getDisplayName(), for: .normal)
-            })
+            weakSelf.updateUserDetail(userId)
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: {[weak self] notification in
@@ -264,9 +247,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
-            weakSelf.titleButton.setTitle(name, for: .normal)
+            let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel, conversation: nil)
+            weakSelf.navigationBar.updateView(profile: profile)
             weakSelf.newMessagesAdded()
-            })
+        })
+
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil, queue: nil) { [weak self] notification in
+            guard let weakSelf = self else { return }
+            let profile = weakSelf.viewModel.currentConversationProfile()
+            weakSelf.navigationBar.updateView(profile: profile)
+        }
     }
 
     override func removeObserver() {
@@ -281,6 +271,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_MESSAGE_SEND_STATUS"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil)
     }
 
     override open func viewWillAppear(_ animated: Bool) {
@@ -320,11 +311,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             self?.viewModel.selected(template: template,metadata: self?.configuration.messageMetadata)
         }
         if self.isFirstTime {
-            self.setupNavigation()
             setupView()
         } else {
             tableView.reloadData()
         }
+        self.setupNavigation()
         contentOffsetDictionary = Dictionary<NSObject,AnyObject>()
         subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
@@ -402,11 +393,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if  channel.type != 6 && channel.type != 10 && !ALChannelService().isLoginUser(inChannel: channelKey) {
             chatBar.disableChat()
             //Disable click on toolbar
-            titleButton.isUserInteractionEnabled = false
+            navigationBar.disableTitleAction = true
         } else {
             chatBar.enableChat()
             //Enable Click on toolbar
-            titleButton.isUserInteractionEnabled = true
+            navigationBar.disableTitleAction = false
         }
     }
 
@@ -487,12 +478,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupNavigation() {
+        let hiddenView = UIView(frame: .zero)
+        hiddenView.isHidden = true
+        self.navigationItem.titleView = hiddenView
 
-        titleButton.setTitle(self.title, for: .normal)
-        titleButton.setTitleColor(self.configuration.navigationBarTitleColor, for: .normal)
-        titleButton.addTarget(self, action: #selector(showParticipantListChat), for: .touchUpInside)
-        titleButton.isEnabled = isGroupDetailActionEnabled
-        self.navigationItem.titleView = titleButton
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
+        let profile = viewModel.currentConversationProfile()
+        navigationBar.updateView(profile: profile)
     }
 
     private func prepareTable() {
@@ -1194,9 +1186,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    public func updateDisplay(name: String) {
-        self.title = name
-        titleButton.setTitle(name, for: .normal)
+    public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
+        let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel, conversation: nil)
+        navigationBar.updateView(profile: profile)
     }
 
     private func addRefreshButton() {
@@ -1234,17 +1226,7 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
 
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
         if viewModel.isGroup {
-            if !groupName.isEmpty {
-                self.title = groupName
-                titleButton.setTitle(self.title, for: .normal)
-            }
-
             viewModel.updateGroup(groupName: groupName, groupImage: groupImgUrl, friendsAdded: friendsAdded)
-
-            if let titleButton = navigationItem.titleView as? UIButton {
-                titleButton.setTitle(title, for: .normal)
-            }
-
             let _ = navigationController?.popToViewController(self, animated: true)
         }
     }
@@ -1433,6 +1415,11 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
         print("Last seen updated")
+        guard let contact = contactService.loadContact(byKey: "userId", value: alUserDetail.userId) else {
+            return
+        }
+        guard contact.userId == viewModel.contactId, !viewModel.isGroup else { return }
+        navigationBar.updateStatus(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
     }
 
     public func mqttConnectionClosed() {
@@ -1454,8 +1441,13 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             userDetail in
             guard let detail = userDetail else { return }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
-            guard !self.viewModel.isGroup && userId == self.viewModel.contactId else { return }
-            self.titleButton.setTitle(detail.getDisplayName(), for: .normal)
+            guard
+                !self.viewModel.isGroup,
+                userId == self.viewModel.contactId,
+                let contact = ALContactService().loadContact(byKey: "userId", value: userId)
+            else { return }
+            let profile = self.viewModel.conversationProfileFrom(contact: contact, channel: nil, conversation: nil)
+            self.navigationBar.updateView(profile: profile)
         })
     }
 }
@@ -1534,5 +1526,16 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
             }
 
         }
+    }
+}
+
+extension ALKConversationViewController: NavigationBarCallbacks {
+    func backButtonTapped() {
+        backTapped()
+    }
+
+    func titleTapped() {
+        guard isGroupDetailActionEnabled else { return }
+        showParticipantListChat()
     }
 }
