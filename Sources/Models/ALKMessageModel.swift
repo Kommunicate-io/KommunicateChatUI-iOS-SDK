@@ -21,13 +21,12 @@ public enum ALKMessageType: String {
     case video = "Video"
     case html = "HTML"
     case genericCard = "Card"
-
-    @available(*, deprecated, message: "This will be removed by end of May 2019. Please Use listTemplate.")
-    case genericList = "List"
-
     case quickReply = "QuickReply"
     case button = "Button"
     case listTemplate = "ListTemplate"
+
+    @available(*, deprecated, message: "Use `listTemplate`")
+    case genericList = "List"
 }
 
 // MARK: - MessageViewModel
@@ -111,12 +110,12 @@ extension ALKMessageViewModel {
 }
 
 extension ALKMessageViewModel {
-    func listTemplateFromMetadata() -> ListTemplateModel? {
+    func listTemplateFromMetadata() -> ListTemplate? {
         guard let metadata = self.metadata,
             let payload = metadata["payload"] as? String
             else {
                 return nil
         }
-        return try? JSONDecoder().decode(ListTemplateModel.self, from: payload.data)
+        return try? JSONDecoder().decode(ListTemplate.self, from: payload.data)
     }
 }

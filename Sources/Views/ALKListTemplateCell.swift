@@ -110,7 +110,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     lazy var listTemplateHeight = listTemplateView.heightAnchor.constraint(equalToConstant: 0)
 
-    public var templateSelected: ((_ text: String?, _ action: ListTemplateModel.Action) -> Void)? {
+    public var templateSelected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)? {
         didSet {
             listTemplateView.selected = templateSelected
         }
@@ -145,7 +145,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     func setupConstraints() {
-
+        fatalError("This method must be overriden.")
     }
 
 }

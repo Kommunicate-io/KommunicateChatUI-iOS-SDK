@@ -66,6 +66,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     fileprivate var localizedStringFileName: String!
 
+    fileprivate enum ActionType: String {
+        case link = "link"
+        case quickReply = "quick_reply"
+    }
+
     fileprivate enum ConstraintIdentifier {
         static let contextTitleView = "contextTitleView"
         static let replyMessageViewHeight = "replyMessageViewHeight"
@@ -922,25 +927,29 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         linkButtonSelected(selectedButton)
     }
 
-    func listTemplateSelected(defaultText: String?, action: ListTemplateModel.Action) {
+    func listTemplateSelected(defaultText: String?, action: ListTemplate.Action) {
         guard !configuration.disableRichMessageButtonAction else { return }
         guard let type = action.type else {
             print("Type not defined for action")
             return
         }
-        if type == "link" {
-            guard let urlString = action.url, let url = URL(string: urlString) else { return }
-            openLink(url)
-        } else if type == "quick_reply" {
-            let text = action.text ?? defaultText
-            guard let msg = text else { return }
-            sendQuickReply(msg, metadata: nil)
-        } else {
-            print("Action type is neither \"link\" nor \"quick_reply\"")
-            var infoDict = [String: Any]()
-            infoDict["action"] = action
-            infoDict["userId"] = self.viewModel.contactId
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "ListTemplateSelected"), object: infoDict)
+
+        switch type {
+            case ActionType.link.rawValue:
+                guard let urlString = action.url, let url = URL(string: urlString) else { return }
+                openLink(url)
+
+            case ActionType.quickReply.rawValue:
+                let text = action.text ?? defaultText
+                guard let msg = text else { return }
+                sendQuickReply(msg, metadata: nil)
+
+            default:
+                print("Action type is neither \"link\" nor \"quick_reply\"")
+                var infoDict = [String: Any]()
+                infoDict["action"] = action
+                infoDict["userId"] = self.viewModel.contactId
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "ListTemplateSelected"), object: infoDict)
         }
     }
 

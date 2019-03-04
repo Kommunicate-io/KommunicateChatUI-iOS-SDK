@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(*, deprecated, message: "This will be removed by end of May 2019. Please use ALKFriendListTemplateCell")
 class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     open var itemTitleLabel: InsetLabel = {

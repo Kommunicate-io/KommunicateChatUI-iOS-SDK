@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class ListTemplateElement: UIView {
+class ListTemplateElementView: UIView {
 
     static let font = UIFont(name: "Helvetica", size: 14) ?? UIFont.systemFont(ofSize: 14)
 
@@ -24,7 +24,7 @@ class ListTemplateElement: UIView {
         let label = UILabel()
         label.numberOfLines = 1
         label.autoresizingMask = .flexibleLeftMargin
-        label.font = ListTemplateElement.font
+        label.font = ListTemplateElementView.font
         label.textColor = UIColor(red: 86, green: 84, blue: 84)
         return label
     }()
@@ -33,13 +33,13 @@ class ListTemplateElement: UIView {
         let label = UILabel()
         label.numberOfLines = 2
         label.autoresizingMask = .flexibleLeftMargin
-        label.font = ListTemplateElement.font
+        label.font = ListTemplateElementView.font
         label.textColor = UIColor(red: 121, green: 116, blue: 116)
         return label
     }()
 
-    var item: ListTemplateModel.Element?
-    var selected: ((_ text: String?, _ action: ListTemplateModel.Action) -> Void)?
+    var item: ListTemplate.Element?
+    var selected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,7 +51,7 @@ class ListTemplateElement: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(item: ListTemplateModel.Element) {
+    func update(item: ListTemplate.Element) {
         self.item = item
         title.text = item.title
         subtitle.text = item.description
@@ -148,13 +148,13 @@ class ListTemplateView: UIView {
     }()
 
     var actionButtons = [UIButton]()
-    var listItems = [ListTemplateElement]()
+    var listItems = [ListTemplateElementView]()
 
     lazy var headerImageHeight = self.headerImage.heightAnchor.constraint(equalToConstant: ListTemplateView.imageHeight)
     lazy var headerTextHeight = self.headerText.heightAnchor.constraint(equalToConstant: ListTemplateView.textHeight)
 
-    var item: ListTemplateModel?
-    var selected: ((_ text: String?, _ action: ListTemplateModel.Action) -> Void)?
+    var item: ListTemplate?
+    var selected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -167,7 +167,7 @@ class ListTemplateView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(item: ListTemplateModel) {
+    func update(item: ListTemplate) {
         updateHeaderImage(item.headerImgSrc)
         updateHeaderText(item.headerText)
         updateButtons(item.buttons)
@@ -194,7 +194,7 @@ class ListTemplateView: UIView {
         headerText.text = text
     }
 
-    private func updateButtons(_ buttons: [ListTemplateModel.Button]?) {
+    private func updateButtons(_ buttons: [ListTemplate.Button]?) {
         guard let buttons = buttons else {
             actionButtons.enumerated().forEach { $1.isHidden = true }
             return
@@ -211,7 +211,7 @@ class ListTemplateView: UIView {
         }
     }
 
-    private func updateListItems(_ elements: [ListTemplateModel.Element]?) {
+    private func updateListItems(_ elements: [ListTemplate.Element]?) {
         guard let elements = elements else {
             listItems.enumerated().forEach { $1.isHidden = true }
             return
@@ -228,12 +228,12 @@ class ListTemplateView: UIView {
         }
     }
 
-    static func rowHeight(template: ListTemplateModel) -> CGFloat {
+    static func rowHeight(template: ListTemplate) -> CGFloat {
         var height: CGFloat = 0
         height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
         height += template.headerText != nil ? textHeight : CGFloat(0)
         let elementCount = min(8, template.elements?.count ?? 0)
-        height += CGFloat(elementCount) * ListTemplateElement.height()
+        height += CGFloat(elementCount) * ListTemplateElementView.height()
         let buttonCount = min(8, template.buttons?.count ?? 0)
         height += CGFloat(buttonCount) * buttonHeight
         let spacing = min(8, template.elements?.count ?? 0) + min(8, template.buttons?.count ?? 0)
@@ -270,7 +270,7 @@ class ListTemplateView: UIView {
 
     private func setupElements() {
         listItems = (0...7).map {
-            let item = ListTemplateElement()
+            let item = ListTemplateElementView()
             item.tag = $0
             item.backgroundColor = .white
             item.selected = { [weak self] defaultText, action in
@@ -288,7 +288,7 @@ class ListTemplateView: UIView {
         }
         listItems.forEach {
             elementStackView.addArrangedSubview($0)
-            $0.heightAnchor.constraint(equalToConstant: ListTemplateElement.height()).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: ListTemplateElementView.height()).isActive = true
         }
         self.backgroundColor = .lightGray
         self.addViewsForAutolayout(views: [headerImage, headerText, elementStackView, buttonStackView])

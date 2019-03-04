@@ -1,5 +1,5 @@
 //
-//  ListTemplateModel.swift
+//  ListTemplate.swift
 //  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 18/02/19.
@@ -7,7 +7,8 @@
 
 import Foundation
 
-public struct ListTemplateModel: Codable {
+/// Use this instead of `ALKGenericListTemplate`
+public struct ListTemplate: Codable {
 
     public let headerImgSrc: String?
     public let headerText: String?
