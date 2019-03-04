@@ -354,14 +354,12 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
 
         case .email:
-
             let cell: ALKFriendEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.setWebViewDelegate(delegate: self, index: indexPath)
             cell.setBackgroundColor(UIColor.clear)
             cell.update(viewModel: message)
-            cell.updateHeightConstraints(height: self.contentHeights[message.identifier] ?? 0 )
+            cell.updateHeight(contentHeights[message.identifier])
             return cell
-
         }
     }
 
@@ -598,13 +596,19 @@ extension ALKConversationViewController:WKNavigationDelegate{
         if ((contentHeights[message.identifier]) != nil) {
             return;
         }
-
-        //Set frame size and add it in Dictionary
-        webView.frame.size = webView.scrollView.contentSize
         if(webView.scrollView.contentSize.height != 0){
             contentHeights[message.identifier] = webView.scrollView.contentSize.height
         }
-        tableView.reloadRows(at: [NSIndexPath(row: webView.tag, section: 0) as IndexPath] , with: .automatic)
+        guard
+            let cell = tableView.cellForRow(at: IndexPath(row: webView.tag, section: 0)) as? ALKFriendEmailCell
+        else {
+            return
+        }
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        UIView.animate(withDuration: 0.3) {
+            cell.updateHeight(webView.scrollView.contentSize.height)
+        }
     }
 
     private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

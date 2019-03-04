@@ -8,11 +8,9 @@
 import Foundation
 import UIKit
 import Kingfisher
-import Applozic
 import WebKit
 
-
-open class ALKFriendEmailCell: UITableViewCell{
+open class ALKFriendEmailCell: UITableViewCell {
 
     struct Padding {
         struct NameLabel{
@@ -46,7 +44,7 @@ open class ALKFriendEmailCell: UITableViewCell{
             static let top: CGFloat =  0
             static let trailing: CGFloat =  50
             static let leading: CGFloat =  10
-            static let height: CGFloat =  0
+            static let height: CGFloat =  60 // Default height..
         }
 
         struct EmailUIView{
@@ -66,6 +64,8 @@ open class ALKFriendEmailCell: UITableViewCell{
     struct ConstraintIdentifier {
         static  let wkWebViewHeight = "WkWebViewHeight"
     }
+
+    // MARK: - Properties
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -110,36 +110,7 @@ open class ALKFriendEmailCell: UITableViewCell{
         return view
     }()
 
-    public var wkWebView: WKWebView = {
-
-        let viewportScriptString =  "<header><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes'></header>; body.style.wordBreak = 'break-word'";
-
-        let disableCalloutScriptString = "document.documentElement.style.webkitTouchCallout='none';"
-
-        let viewportScript = WKUserScript(source: viewportScriptString, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-        let disableCalloutScript = WKUserScript(source: disableCalloutScriptString, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-        //  Initialize a user content controller
-        let controller = WKUserContentController()
-        // Add scripts
-        //controller.addUserScript(viewportScript)
-        controller.addUserScript(disableCalloutScript)
-        // Initialize a configuration and set controller
-        let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.userContentController = controller
-
-        let  wkWebView = WKWebView(frame: .zero, configuration: webConfiguration)
-        wkWebView.translatesAutoresizingMaskIntoConstraints = false
-        wkWebView.backgroundColor = UIColor.clear
-        wkWebView.allowsBackForwardNavigationGestures = false
-        wkWebView.contentMode = .scaleAspectFit
-        wkWebView.scrollView.isScrollEnabled = true
-
-        wkWebView.scrollView.showsVerticalScrollIndicator = true
-        wkWebView.scrollView.showsHorizontalScrollIndicator = true
-        wkWebView.scrollView.bounces = false
-        return wkWebView
-    }()
-
+    fileprivate var wkWebView: WKWebView!
 
     fileprivate var timeLabel: UILabel = {
         let timeLabel = UILabel()
@@ -147,29 +118,105 @@ open class ALKFriendEmailCell: UITableViewCell{
         return timeLabel
     }()
 
-    open func setWebViewDelegate(delegate : WKNavigationDelegate, index: IndexPath) {
-        wkWebView.navigationDelegate = delegate
-        wkWebView.tag = index.row
-    }
+    // MARK: - Initializer
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
+        setupWebView()
+        setupConstraints()
         setupStyle()
-    }
-
-    func setupStyle() {
-        timeLabel.setStyle(ALKMessageStyle.time)
-        nameLabel.setStyle(ALKMessageStyle.displayName)
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupViews() {
+    // MARK: - Internal methods
 
-        contentView.backgroundColor = UIColor.clear
+    func setWebViewDelegate(delegate : WKNavigationDelegate, index: IndexPath) {
+        wkWebView.navigationDelegate = delegate
+        wkWebView.tag = index.row
+    }
+
+    func update(viewModel: ALKMessageViewModel) {
+        if(viewModel.message != nil){
+            wkWebView.loadHTMLString(viewModel.message ?? "", baseURL:nil)
+        }
+
+        nameLabel.text = viewModel.displayName
+        timeLabel.text = viewModel.time
+
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        guard let url = viewModel.avatarURL else {
+            self.avatarImageView.image = placeHolder
+            return
+        }
+        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+        avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+    }
+
+    func updateHeight(_ height: CGFloat?) {
+        guard let height = height else {
+            return
+        }
+        wkWebView.constraint(withIdentifier:ConstraintIdentifier.wkWebViewHeight)?.constant = height
+    }
+
+    class func rowHeight(viewModel: ALKMessageViewModel, contentHeights: Dictionary<String,CGFloat>) ->  CGFloat {
+        var totalHeight: CGFloat = 0
+        totalHeight += Padding.NameLabel.height + Padding.NameLabel.top  /// Name height
+        totalHeight += Padding.EmailUIView.height + Padding.EmailUIView.top  /// Email heading height
+        totalHeight += Padding.TimeLabel.height + Padding.TimeLabel.top  /// time height
+
+        guard let height = contentHeights[viewModel.identifier] else {
+            return Padding.WKWebView.height + totalHeight;
+        }
+
+        totalHeight += height + Padding.WKWebView.top
+        return totalHeight
+    }
+
+    // MARK: - Private helper methods
+
+    private func webViewConfiguration() -> WKWebViewConfiguration {
+        let viewportSource = """
+var meta = document.createElement('meta');
+meta.setAttribute('name', 'viewport');
+meta.setAttribute('content', 'width=device-width');
+meta.setAttribute('initial-scale', '1.0');
+meta.setAttribute('shrink-to-fit', 'no');
+document.getElementsByTagName('head')[0].appendChild(meta);
+"""
+        let viewportScript = WKUserScript(source: viewportSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+
+        let disableCalloutSource = "document.documentElement.style.webkitTouchCallout='none';"
+
+        let disableCalloutScript = WKUserScript(source: disableCalloutSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+
+        /// Add script
+        let controller = WKUserContentController()
+        controller.addUserScript(viewportScript)
+        controller.addUserScript(disableCalloutScript)
+
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.userContentController = controller
+        return webConfiguration
+    }
+
+    private func setupWebView() {
+        wkWebView = WKWebView(frame: .zero, configuration: webViewConfiguration())
+        wkWebView.translatesAutoresizingMaskIntoConstraints = false
+        wkWebView.backgroundColor = UIColor.white
+        wkWebView.allowsBackForwardNavigationGestures = false
+        wkWebView.contentMode = .scaleAspectFit
+        wkWebView.scrollView.isScrollEnabled = true
+        wkWebView.scrollView.showsVerticalScrollIndicator = true
+        wkWebView.scrollView.showsHorizontalScrollIndicator = true
+        wkWebView.scrollView.bounces = false
+    }
+
+    private func setupConstraints() {
+        repliedEmailUIView.addViewsForAutolayout(views: [emailImage,emailLabel])
         contentView.addViewsForAutolayout(views: [avatarImageView,repliedEmailUIView,emailImage,emailLabel,nameLabel,wkWebView,timeLabel])
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.NameLabel.top).isActive = true
@@ -180,7 +227,7 @@ open class ALKFriendEmailCell: UITableViewCell{
         repliedEmailUIView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.EmailUIView.top).isActive = true
         repliedEmailUIView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.EmailUIView.trailing).isActive = true
         repliedEmailUIView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.EmailUIView.leading).isActive = true
-        repliedEmailUIView.heightAnchor.constraint(equalToConstant:20).isActive = true
+        repliedEmailUIView.heightAnchor.constraint(equalToConstant: Padding.EmailUIView.height).isActive = true
 
         emailImage.topAnchor.constraint(equalTo: nameLabel.bottomAnchor,constant: Padding.RepliedImageView.top).isActive = true
         emailImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.RepliedImageView.leading).isActive = true
@@ -192,18 +239,13 @@ open class ALKFriendEmailCell: UITableViewCell{
         emailLabel.heightAnchor.constraint(equalToConstant: Padding.EmailLabel.height).isActive = true
         emailLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor).isActive = true
 
-        repliedEmailUIView.addViewsForAutolayout(views: [emailImage,emailLabel])
-
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.AvatarImageView.top).isActive = true
-
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.AvatarImageView.leading).isActive = true
         avatarImageView.heightAnchor.constraint(equalToConstant: Padding.AvatarImageView.height).isActive = true
         avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImageView.width ).isActive = true
 
         wkWebView.topAnchor.constraint(equalTo: repliedEmailUIView.bottomAnchor, constant: Padding.WKWebView.top).isActive = true
-
         wkWebView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.WKWebView.trailing).isActive = true
-
         wkWebView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.WKWebView.leading).isActive = true
         wkWebView.heightAnchor.constraintEqualToAnchor(constant: Padding.WKWebView.height, identifier: ConstraintIdentifier.wkWebViewHeight).isActive = true
 
@@ -211,40 +253,12 @@ open class ALKFriendEmailCell: UITableViewCell{
         timeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.TimeLabel.trailing).isActive = true
         timeLabel.heightAnchor.constraint(equalToConstant: Padding.TimeLabel.height).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: Padding.TimeLabel.width).isActive = true
-
     }
 
-
-    func update(viewModel: ALKMessageViewModel) {
-
-
-        if(viewModel.message != nil){
-            wkWebView.loadHTMLString(viewModel.message ?? "", baseURL:nil)
-        }
-
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-
-        if let url = viewModel.avatarURL {
-            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
-        } else {
-            self.avatarImageView.image = placeHolder
-        }
-
-        nameLabel.text = viewModel.displayName
-        timeLabel.text = viewModel.time
-
-    }
-
-    func updateHeightConstraints( height : CGFloat) {
-        wkWebView.constraint(withIdentifier:ConstraintIdentifier.wkWebViewHeight)?.constant = height
-    }
-
-    class func rowHeight(viewModel: ALKMessageViewModel, contentHeights: Dictionary<String,CGFloat> ) ->  CGFloat {
-        guard let height = contentHeights[viewModel.identifier] else {
-            return 0;
-        }
-        return height + 20+16+37+10; //Name,emailUIVIew,time label
+    private func setupStyle() {
+        contentView.backgroundColor = UIColor.clear
+        timeLabel.setStyle(ALKMessageStyle.time)
+        nameLabel.setStyle(ALKMessageStyle.displayName)
     }
 
 }
