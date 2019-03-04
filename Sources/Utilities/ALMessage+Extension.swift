@@ -98,6 +98,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return message
         case .button:
             return message
+        case .listTemplate:
+            return message
         }
     }
 
@@ -309,6 +311,8 @@ extension ALMessage {
                 return .button
             case "6":
                 return .quickReply
+            case "7":
+                return .listTemplate
             case "8":
                 return .genericList
             default:

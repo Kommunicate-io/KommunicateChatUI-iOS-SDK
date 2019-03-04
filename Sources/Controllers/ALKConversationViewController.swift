@@ -66,6 +66,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     fileprivate var localizedStringFileName: String!
 
+    fileprivate enum ActionType: String {
+        case link = "link"
+        case quickReply = "quick_reply"
+    }
+
     fileprivate enum ConstraintIdentifier {
         static let contextTitleView = "contextTitleView"
         static let replyMessageViewHeight = "replyMessageViewHeight"
@@ -534,6 +539,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyQuickReplyCell.self)
         tableView.register(ALKMyMessageButtonCell.self)
         tableView.register(ALKFriendMessageButtonCell.self)
+        tableView.register(ALKMyListTemplateCell.self)
+        tableView.register(ALKFriendListTemplateCell.self)
     }
 
 
@@ -892,13 +899,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let msg = dict["message"] as? String ?? title
 
         /// Use metadata
-        guard let key = configuration.quickReplyMetadataKey, let metadata = metadata else {
-            viewModel.send(message: msg, metadata: nil)
-            return
-        }
-        var customMetadata = [String: Any]()
-        customMetadata[key] = metadata
-        viewModel.send(message: msg, metadata: customMetadata)
+        sendQuickReply(msg, metadata: metadata)
     }
 
     func messageButtonSelected(
@@ -924,6 +925,32 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 return
         }
         linkButtonSelected(selectedButton)
+    }
+
+    func listTemplateSelected(defaultText: String?, action: ListTemplate.Action) {
+        guard !configuration.disableRichMessageButtonAction else { return }
+        guard let type = action.type else {
+            print("Type not defined for action")
+            return
+        }
+
+        switch type {
+            case ActionType.link.rawValue:
+                guard let urlString = action.url, let url = URL(string: urlString) else { return }
+                openLink(url)
+
+            case ActionType.quickReply.rawValue:
+                let text = action.text ?? defaultText
+                guard let msg = text else { return }
+                sendQuickReply(msg, metadata: nil)
+
+            default:
+                print("Action type is neither \"link\" nor \"quick_reply\"")
+                var infoDict = [String: Any]()
+                infoDict["action"] = action
+                infoDict["userId"] = self.viewModel.contactId
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "ListTemplateSelected"), object: infoDict)
+        }
     }
 
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
@@ -1013,6 +1040,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         self.isProfileTapActionEnabled = configuration.isProfileTapActionEnabled
     }
 
+    private func sendQuickReply(_ text: String, metadata: Dictionary<String, Any>?) {
+        guard let key = configuration.quickReplyMetadataKey, let metadata = metadata else {
+            viewModel.send(message: text, metadata: nil)
+            return
+        }
+        var customMetadata = [String: Any]()
+        customMetadata[key] = metadata
+        viewModel.send(message: text, metadata: customMetadata)
+    }
+
     private func postRequestUsing(url: URL, param: String) -> URLRequest? {
         var request = URLRequest(url: url)
         request.timeoutInterval = 600
@@ -1032,6 +1069,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         task.resume()
     }
+
+    private func openLink(_ url: URL) {
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
+    }
     
     private func linkButtonSelected(_ selectedButton: Dictionary<String, Any>) {
         guard
@@ -1040,11 +1085,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
+        openLink(url)
     }
 
     private func submitButtonResponse(request: URLRequest) {

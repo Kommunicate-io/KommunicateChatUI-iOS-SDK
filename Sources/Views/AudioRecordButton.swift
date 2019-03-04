@@ -17,12 +17,12 @@ public protocol ALKAudioRecorderProtocol: class {
 }
 
 open class AudioRecordButton: UIButton{
-    
+
     public enum ALKSoundRecorderState{
         case Recording
         case None
     }
-    
+
     public var states : ALKSoundRecorderState = .None {
         didSet {
             self.invalidateIntrinsicContentSize()
@@ -30,41 +30,41 @@ open class AudioRecordButton: UIButton{
             self.layoutIfNeeded()
         }
     }
-    
+
     private var delegate: ALKAudioRecorderProtocol!
-    
+
     //aduio session
     private var recordingSession: AVAudioSession!
     private var audioRecorder: AVAudioRecorder!
     fileprivate var audioFilename:URL!
     private var audioPlayer: AVAudioPlayer?
-    
+
     let recordButton: UIButton = UIButton(type: .custom)
-    
+
     func setAudioRecDelegate(recorderDelegate:ALKAudioRecorderProtocol) {
         delegate = recorderDelegate
     }
-    
+
     func setupRecordButton(){
         recordButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(recordButton)
-        
+
         self.addConstraints([NSLayoutConstraint(item: recordButton, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)])
-        
+
         self.addConstraints([NSLayoutConstraint(item: recordButton, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0)])
-        
+
         self.addConstraints([NSLayoutConstraint(item: recordButton, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)])
-        
+
         self.addConstraints([NSLayoutConstraint(item: recordButton, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0)])
-        
+
         var image = UIImage(named: "microphone", in: Bundle.applozic, compatibleWith: nil)
-        
+
         if #available(iOS 9.0, *) {
             image = image?.imageFlippedForRightToLeftLayoutDirection()
         } else {
             // Fallback on earlier versions
         }
-        
+
         recordButton.setImage(image, for: .normal)
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(userDidTapRecord(_:)))
         longPress.cancelsTouchesInView = false
@@ -72,17 +72,17 @@ open class AudioRecordButton: UIButton{
         longPress.minimumPressDuration = 0.2
         recordButton.addGestureRecognizer(longPress)
     }
-    
+
     override public init(frame: CGRect) {
         super.init(frame: frame)
         self.translatesAutoresizingMaskIntoConstraints = false
         setupRecordButton()
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override open var intrinsicContentSize: CGSize {
         if state == .none {
             return recordButton.intrinsicContentSize
@@ -90,14 +90,14 @@ open class AudioRecordButton: UIButton{
             return CGSize(width: recordButton.intrinsicContentSize.width * 3, height: recordButton.intrinsicContentSize.height)
         }
     }
-    
+
     //MARK: - Function
     private func checkMicrophonePermission() -> Bool {
-        
+
         let soundSession = AVAudioSession.sharedInstance()
         let permissionStatus = soundSession.recordPermission
         var isAllow = false
-        
+
         switch (permissionStatus) {
         case AVAudioSession.RecordPermission.undetermined:
             soundSession.requestRecordPermission({ (isGrant) in
@@ -118,10 +118,10 @@ open class AudioRecordButton: UIButton{
             isAllow = true
             break;
         }
-        
+
         return isAllow
     }
-    
+
     @objc fileprivate func startAudioRecord()
     {
         recordingSession = AVAudioSession.sharedInstance()
@@ -149,7 +149,7 @@ open class AudioRecordButton: UIButton{
             stopAudioRecord()
         }
     }
-    
+
     @objc func cancelAudioRecord() {
         if states == .Recording{
             audioRecorder.stop()
@@ -157,7 +157,7 @@ open class AudioRecordButton: UIButton{
             states = .None
         }
     }
-    
+
     @objc fileprivate func stopAudioRecord()
     {
         if states == .Recording{
@@ -172,12 +172,12 @@ open class AudioRecordButton: UIButton{
             }
         }
     }
-    
+
     @objc func userDidTapRecord(_ gesture: UIGestureRecognizer) {
         let button = gesture.view as! UIButton
         let location = gesture.location(in: button)
         let height = button.frame.size.height
-        
+
         switch gesture.state {
             case .began:
                 if checkMicrophonePermission() == false {
@@ -190,7 +190,7 @@ open class AudioRecordButton: UIButton{
                     }
                     startAudioRecord()
                 }
-            
+
             case .changed:
                 if location.y < -10 || location.y > height+10{
                     if states == .Recording {
@@ -199,13 +199,13 @@ open class AudioRecordButton: UIButton{
                     }
                 }
                 delegate.moveButton(location: location)
-            
+
             case .ended:
                 if state == .none {
                     return
                 }
                 stopAudioRecord()
-            
+
             case .failed, .possible ,.cancelled :
                 if states == .Recording {
                     stopAudioRecord()
@@ -225,4 +225,3 @@ extension AudioRecordButton: AVAudioRecorderDelegate
         }
     }
 }
-
