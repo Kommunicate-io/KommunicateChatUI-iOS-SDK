@@ -47,8 +47,8 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
         if(ALKMessageStyle.receivedBubble.style == .edge){
-            bubbleView.backgroundColor = UIColor.background(.grayF2)
-            bubbleView.layer.cornerRadius = 12
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         }else{
             soundPlayerView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius

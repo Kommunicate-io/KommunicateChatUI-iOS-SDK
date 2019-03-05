@@ -39,8 +39,8 @@ class ALKFriendVideoCell: ALKVideoCell {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
         if(ALKMessageStyle.receivedBubble.style == .edge){
-            bubbleView.layer.cornerRadius = 12
-            bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
         }else{
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius

@@ -53,7 +53,7 @@ public enum ALKMessageStyle {
             self.color = color
             self.style = style
             self.widthPadding = 10.0
-            self.cornerRadius = 5
+            self.cornerRadius = 12
         }
     }
 
