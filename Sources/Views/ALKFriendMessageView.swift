@@ -70,7 +70,7 @@ class ALKFriendMessageView: UIView {
      func setupStyle() {
         if(ALKMessageStyle.receivedBubble.style == .edge){
             let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
-            bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
+            bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
             bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
         }else{
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius

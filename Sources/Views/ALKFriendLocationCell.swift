@@ -62,8 +62,8 @@ final class ALKFriendLocationCell: ALKLocationCell {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
         if(ALKMessageStyle.receivedBubble.style == .edge){
-            bubbleView.backgroundColor = .background(.grayF2)
-            bubbleView.layer.cornerRadius = 12
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         }else{
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.tintColor = ALKMessageStyle.receivedBubble.color

@@ -40,9 +40,9 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
         if(ALKMessageStyle.receivedBubble.style == .edge){
-            bubbleView.layer.cornerRadius = 12
-            bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
-            photoView.layer.cornerRadius = 12
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         }else{
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
