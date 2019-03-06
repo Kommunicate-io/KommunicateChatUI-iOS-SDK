@@ -34,6 +34,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contactService: ALContactService!
 
+    lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor, localizationFileName: self.configuration.localizedStringFileName)
+
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
 
@@ -259,8 +261,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil, queue: nil) { [weak self] notification in
             guard let weakSelf = self else { return }
-            let profile = weakSelf.viewModel.currentConversationProfile()
-            weakSelf.navigationBar.updateView(profile: profile)
+            let profile = weakSelf.viewModel.currentConversationProfile(completion: { (profile) in
+                guard let profile = profile else { return }
+                weakSelf.navigationBar.updateView(profile: profile)
+            })
+
         }
     }
 
@@ -483,13 +488,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupNavigation() {
-        let hiddenView = UIView(frame: .zero)
-        hiddenView.isHidden = true
-        self.navigationItem.titleView = hiddenView
+        self.navigationItem.titleView = loadingIndicator
+        loadingIndicator.startLoading()
 
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
-        let profile = viewModel.currentConversationProfile()
-        navigationBar.updateView(profile: profile)
+        viewModel.currentConversationProfile { (profile) in
+            guard let profile = profile else { return }
+            self.loadingIndicator.stopLoading()
+            self.navigationBar.updateView(profile: profile)
+        }
     }
 
     private func prepareTable() {
@@ -829,8 +836,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = vm
-        conversationVC.title = messageVM.displayName
-
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 

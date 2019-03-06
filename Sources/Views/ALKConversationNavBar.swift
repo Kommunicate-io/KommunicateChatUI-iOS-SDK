@@ -78,6 +78,7 @@ class ALKConversationNavBar: UIView, Localizable {
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 2
+        stackView.isHidden = true
         return stackView
     }()
 
@@ -85,11 +86,9 @@ class ALKConversationNavBar: UIView, Localizable {
         self.navigationBarBackgroundColor = configuration.navigationBarBackgroundColor
         self.configuration = configuration
         self.delegate = delegate
-        backImage.tintColor = configuration.navigationBarItemColor
-        profileName.textColor = configuration.navigationBarTitleColor
-        onlineStatusText.textColor = configuration.navigationBarTitleColor
         super.init(frame: .zero)
         setupConstraints()
+        setupStyle()
         setupActions()
     }
 
@@ -98,6 +97,7 @@ class ALKConversationNavBar: UIView, Localizable {
     }
 
     func updateView(profile: ALKConversationProfile) {
+        profileView.isHidden = false
         setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: (profile.status != nil))
         guard let status = profile.status else {
             statusIconBackground.isHidden = true
@@ -160,6 +160,12 @@ class ALKConversationNavBar: UIView, Localizable {
         profileView.topAnchor.constraint(equalTo: profileImage.topAnchor).isActive = true
         profileView.bottomAnchor.constraint(equalTo: profileImage.bottomAnchor).isActive = true
         profileView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+    }
+
+    private func setupStyle() {
+        backImage.tintColor = configuration.navigationBarItemColor
+        profileName.textColor = configuration.navigationBarTitleColor
+        onlineStatusText.textColor = configuration.navigationBarTitleColor
     }
 
     private func setupActions() {

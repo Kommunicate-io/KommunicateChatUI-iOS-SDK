@@ -119,3 +119,4 @@ LastSeen = "Last seen %@";
 JustNow = "just now";
 MinutesAgo = "%@ mins ago";
 HoursAgo = "%@ hrs ago";
+LoadingIndicatorText = "Loading...";

@@ -151,7 +151,6 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
-        conversationVC.title = friendViewModel.friendProfileName
             
         self.tableView.deselectRow(at: indexPath, animated: true)
         self.navigationController?.pushViewController(conversationVC, animated: true)
@@ -232,7 +231,6 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key, localizedStringFileName: self.configuration.localizedStringFileName)
             let conversationVC = ALKConversationViewController(configuration: self.configuration)
             conversationVC.viewModel = viewModel
-            conversationVC.title = groupName
             self.navigationController?.pushViewController(conversationVC, animated: true)
             self.tableView.isUserInteractionEnabled = true
         })
