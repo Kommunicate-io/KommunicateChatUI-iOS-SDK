@@ -37,8 +37,14 @@ class ALKFriendVideoCell: ALKVideoCell {
 
     override func setupStyle() {
         super.setupStyle()
-
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        if(ALKMessageStyle.receivedBubble.style == .edge){
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        }else{
+            photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+        }
     }
 
     override func setupViews() {
@@ -48,8 +54,6 @@ class ALKFriendVideoCell: ALKVideoCell {
         avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
-
-        bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true

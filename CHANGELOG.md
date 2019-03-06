@@ -8,7 +8,19 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - Updates Swift version to 4.2
 - Added Online/LastSeen status at navigation bar in conversation detail screen.
 - [AL-3206] Added support for new richMessage type : `ListTemplate` and deprecated `ALKGenericList`
+- [AL-3203] Removed the bubble image icon and added the corner Radius
 
+   You can change the corner Radius like below:
+```
+        ALKMessageStyle.receivedBubble.cornerRadius = 12
+        ALKMessageStyle.sentBubble.cornerRadius = 12
+
+        ALKMessageStyle.receivedBubble.color = UIColor.gray
+        ALKMessageStyle.sentBubble.color = UIColor.gray
+
+        ALKMessageStyle.sentBubble.style = .edge
+        ALKMessageStyle.receivedBubble.style = .edge
+```        
 2.2.0
 ---
 ### Enhancments

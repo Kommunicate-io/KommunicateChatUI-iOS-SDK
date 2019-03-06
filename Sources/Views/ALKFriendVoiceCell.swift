@@ -41,11 +41,21 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         heigh = 40
         return topPadding()+heigh+bottomPadding()
     }
-    
+
+
     override func setupStyle() {
         super.setupStyle()
-        
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        if(ALKMessageStyle.receivedBubble.style == .edge){
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+        }else{
+            soundPlayerView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            soundPlayerView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        }
     }
     
     override func setupViews() {

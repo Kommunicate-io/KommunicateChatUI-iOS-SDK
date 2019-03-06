@@ -35,9 +35,7 @@ final class ALKFriendLocationCell: ALKLocationCell {
     // MARK: - Lifecycle
     override func setupViews() {
         super.setupViews()
-        
-        bubbleView.backgroundColor = .background(.grayF2)
-        
+
         // add view to contenview and setup constraint
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
         
@@ -63,6 +61,14 @@ final class ALKFriendLocationCell: ALKLocationCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        if(ALKMessageStyle.receivedBubble.style == .edge){
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+        }else{
+            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+            bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        }
     }
     
     override func update(viewModel: ALKMessageViewModel) {

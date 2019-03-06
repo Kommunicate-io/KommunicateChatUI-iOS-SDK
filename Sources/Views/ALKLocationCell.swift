@@ -28,8 +28,6 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     internal var bubbleView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
-        view.layer.cornerRadius = 12
         view.clipsToBounds = true
         view.isUserInteractionEnabled = true
         return view

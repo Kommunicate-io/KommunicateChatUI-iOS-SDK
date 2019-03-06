@@ -32,8 +32,6 @@ class ALKMyVideoCell: ALKVideoCell {
         photoView.widthAnchor.constraint(equalToConstant: width*0.60).isActive = true
         photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
 
-        bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
-
         fileSizeLabel.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0).isActive = true
 
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
@@ -65,5 +63,16 @@ class ALKMyVideoCell: ALKVideoCell {
 
     override class func bottomPadding() -> CGFloat {
         return 6
+    }
+
+    override func setupStyle() {
+        super.setupStyle()
+        if(ALKMessageStyle.sentBubble.style == .edge){
+            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+        }else{
+            photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        }
     }
 }
