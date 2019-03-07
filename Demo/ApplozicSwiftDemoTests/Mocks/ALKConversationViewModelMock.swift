@@ -46,6 +46,10 @@ class ALKConversationViewModelMock: ALKConversationViewModel {
     }
 
     override func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> ()) {
+        guard contactId != nil else {
+            completion(nil)
+            return
+        }
         var conversationProfile = ALKConversationProfile()
         conversationProfile.name = "demoDisplayName"
         conversationProfile.status = ALKConversationProfile.Status(isOnline: false, lastSeenAt: nil)

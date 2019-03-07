@@ -104,5 +104,22 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
                 expect(navigationController.navigationBar).to(haveValidSnapshot())
             }
         }
+
+        context("when conversation details are not present.") {
+            var navigationController: UINavigationController!
+
+            beforeEach {
+                let conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
+                conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
+                conversationVC.beginAppearanceTransition(true, animated: false)
+                conversationVC.endAppearanceTransition()
+                navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            }
+
+            it("shows loading") {
+                navigationController.navigationBar.snapshotView(afterScreenUpdates: true)
+                expect(navigationController.navigationBar).to(haveValidSnapshot())
+            }
+        }
     }
 }
