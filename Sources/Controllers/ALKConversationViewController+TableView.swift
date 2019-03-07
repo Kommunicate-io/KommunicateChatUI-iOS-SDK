@@ -561,7 +561,7 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
         }
         if message.messageType == .genericCard || message.messageType == .cardTemplate {
 
-            let width = self.view.frame.width - 150
+            let width = self.view.frame.width - cardTemplateMargin
 
             let height = ALKGenericCardCell.rowHeight(card: template[indexPath.row], maxWidth: width)
             return CGSize(width: width, height: height)

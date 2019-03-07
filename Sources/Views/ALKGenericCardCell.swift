@@ -15,8 +15,8 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
     override open func setMessage(viewModel: ALKMessageViewModel) {
         super.setMessage(viewModel: viewModel)
         // set card template
-        guard let template = ALKGenericCardCollectionView.getCardTemplate(message: viewModel) else { return}
-        cardTemplate = template
+        guard let templates = ALKGenericCardCollectionView.getCardTemplate(message: viewModel) else { return}
+        cardTemplate = templates
     }
 
     override open class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -38,28 +38,31 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
             let payload = metadata["payload"] as? String,
             let templateId = metadata["templateId"] as? String
             else { return nil}
-        if templateId == "10" {
-            do {
-                let templates = try JSONDecoder().decode([CardTemplate].self, from: payload.data)
-                return templates
-            } catch(let error) {
-                print("\(error)")
-                return nil
-            }
-        } else if templateId == "2" {
-            do {
-                let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
-                var templates = [CardTemplate]()
-                for card in cards {
-                    templates.append(Util().cardTemplate(from: card))
+        switch templateId {
+            case ActionableMessageType.cardTemplate.rawValue:
+                do {
+                    let templates = try JSONDecoder().decode([CardTemplate].self, from: payload.data)
+                    return templates
+                } catch(let error) {
+                    print("\(error)")
+                    return nil
                 }
-                return templates
-            } catch(let error) {
-                print("\(error)")
+            case ActionableMessageType.genericCard.rawValue:
+                do {
+                    let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
+                    var templates = [CardTemplate]()
+                    for card in cards {
+                        templates.append(Util().cardTemplate(from: card))
+                    }
+                    return templates
+                } catch(let error) {
+                    print("\(error)")
+                    return nil
+                }
+            default:
+                print("Do nothing")
                 return nil
-            }
         }
-        return nil
     }
 
 }
@@ -83,6 +86,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
         public static var description = UIFont(name: "HelveticaNeue-Light", size: 14) ??
             UIFont.systemFont(ofSize: 14)
 
+        public static var button = UIFont.systemFont(ofSize: 15, weight: .medium)
+
     }
 
     public struct Config {
@@ -91,7 +96,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
         public static let imageHeight: CGFloat = 100
 
-        public static let padding: CGFloat = 3
+        public static let spacing: CGFloat = 3
+
+        public static let buttonStackViewSpacing: CGFloat = 1
 
         public struct OverlayText {
             public static let width: CGFloat = 80
@@ -106,6 +113,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
         case descriptionView = "descriptionView"
         case buttonsView = "buttonsView"
     }
+
+    let maxButtonCount = 8
 
     lazy var coverImageHeight = self.coverImageView.heightAnchor.constraint(equalToConstant: Config.imageHeight)
 
@@ -181,7 +190,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.spacing = 1
+        stackView.spacing = Config.buttonStackViewSpacing
         return stackView
     }()
 
@@ -241,11 +250,13 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
         let totalButtonHeight = Config.buttonHeight * CGFloat(card.buttons?.count ?? 0)
 
-        var stackViewSpacing = 6
-        stackViewSpacing += (card.buttons != nil) ? 3 : 0
-        stackViewSpacing += (card.description != nil) ? 3 : 0
-        stackViewSpacing += (card.buttons?.count ?? 1) - 1 // 1 space between 2 buttons.
-
+        var stackViewSpacing = (Config.spacing * 2)
+        stackViewSpacing += (card.buttons != nil) ? Config.spacing : 0
+        stackViewSpacing += (card.description != nil) ? Config.spacing : 0
+        if let count = card.buttons?.count {
+            stackViewSpacing += CGFloat(count) - Config.buttonStackViewSpacing // 1 space between 2 buttons.
+        }
+        
         return headerHt + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
     }
 
@@ -342,10 +353,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private func setUpButtons() {
-        actionButtons = (0...7).map {
+        actionButtons = (0..<maxButtonCount).map {
             let button = UIButton()
             button.setTitleColor(UIColor(netHex: 0x5c5aa7), for: .normal)
-            button.setFont(font: UIFont.systemFont(ofSize: 15, weight: .medium))
+            button.setFont(font: Font.button)
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.tag = $0
@@ -384,7 +395,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
         titleStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         titleStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        titleStackView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Config.padding).isActive = true
+        titleStackView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Config.spacing).isActive = true
         titleStackView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.titleView.rawValue)?.isActive = true
 
         ratingLabel.trailingAnchor.constraint(equalTo: titleStackView.trailingAnchor, constant: -10).isActive = true
@@ -394,17 +405,17 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
         subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        subtitleLabel.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: Config.padding).isActive = true
+        subtitleLabel.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: Config.spacing).isActive = true
         subtitleLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.subtitleView.rawValue)?.isActive = true
 
         descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        descriptionLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: Config.padding).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: Config.spacing).isActive = true
         descriptionLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.descriptionView.rawValue)?.isActive = true
 
         buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        buttonStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Config.padding).isActive = true
+        buttonStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Config.spacing).isActive = true
         buttonStackView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.buttonsView.rawValue)?.isActive = true
 
         buttonsBackground.leadingAnchor.constraint(equalTo: buttonStackView.leadingAnchor).isActive = true

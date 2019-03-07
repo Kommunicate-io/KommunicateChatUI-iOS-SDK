@@ -92,6 +92,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    let cardTemplateMargin: CGFloat = 150
+
       var tableView : UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.separatorStyle   = .none
