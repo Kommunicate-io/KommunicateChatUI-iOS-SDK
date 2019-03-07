@@ -118,11 +118,11 @@ open class ALKFriendEmailCell: UITableViewCell {
         return timeLabel
     }()
 
-    fileprivate var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    fileprivate var activityIndicator = UIActivityIndicatorView(style: .gray)
 
     // MARK: - Initializer
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupWebView()
         setupConstraints()
@@ -184,13 +184,13 @@ open class ALKFriendEmailCell: UITableViewCell {
 
     private func webViewConfiguration() -> WKWebViewConfiguration {
         let viewportSource = """
-var meta = document.createElement('meta');
-meta.setAttribute('name', 'viewport');
-meta.setAttribute('content', 'width=device-width');
-meta.setAttribute('initial-scale', '1.0');
-meta.setAttribute('shrink-to-fit', 'no');
-document.getElementsByTagName('head')[0].appendChild(meta);
-"""
+            var meta = document.createElement('meta');
+            meta.setAttribute('name', 'viewport');
+            meta.setAttribute('content', 'width=device-width');
+            meta.setAttribute('initial-scale', '1.0');
+            meta.setAttribute('shrink-to-fit', 'no');
+            document.getElementsByTagName('head')[0].appendChild(meta);
+        """
         let viewportScript = WKUserScript(source: viewportSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
 
         let disableCalloutSource = "document.documentElement.style.webkitTouchCallout='none';"

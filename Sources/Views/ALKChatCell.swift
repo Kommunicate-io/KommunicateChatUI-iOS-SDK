@@ -45,7 +45,16 @@ public protocol ALKChatCellDelegate: class {
 public final class ALKChatCell: MGSwipeTableCell {
 
     enum ConstraintIdentifier: String {
-        case iconHeightIdentifier = "iconViewHeight"
+        case iconWidthIdentifier = "iconViewWidth"
+    }
+
+    struct Padding {
+        struct Email {
+            static let top: CGFloat = 4
+            static let left: CGFloat = 12
+            static let height: CGFloat = 15
+            static let width: CGFloat = 24
+        }
     }
 
     private var avatarImageView: UIImageView = {
@@ -277,10 +286,10 @@ public final class ALKChatCell: MGSwipeTableCell {
 
         if(viewModel.messageType == .email){
             emailIcon.isHidden = false
-            emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconHeightIdentifier.rawValue)?.constant = 24
+            emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = Padding.Email.width
         }else{
             emailIcon.isHidden = true
-            emailIcon.constraint(withIdentifier:ConstraintIdentifier.iconHeightIdentifier.rawValue)?.constant = 0
+            emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = 0
         }
 
         self.rightButtons = [muteButton]
@@ -343,10 +352,10 @@ public final class ALKChatCell: MGSwipeTableCell {
         nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -5).isActive = true
 
-        emailIcon.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4).isActive = true
-        emailIcon.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12).isActive = true
-        emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0,identifier: ConstraintIdentifier.iconHeightIdentifier.rawValue).isActive = true
+        emailIcon.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.Email.top).isActive = true
+        emailIcon.heightAnchor.constraint(equalToConstant: Padding.Email.height).isActive = true
+        emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
+        emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0,identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
 
         // setup constraint of mood
         locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true

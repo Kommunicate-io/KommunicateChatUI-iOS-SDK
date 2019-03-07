@@ -189,7 +189,6 @@ extension ALMessage {
         case ALMESSAGE_CHANNEL_NOTIFICATION:
             return .information
         case ALMESSAGE_CONTENT_TEXT_HTML:
-            //TO-DO Add db entry in Applozic for source
             return source == 7 ? .email : .html
         default:
             guard let attachmentType = getAttachmentType() else {return .text}
