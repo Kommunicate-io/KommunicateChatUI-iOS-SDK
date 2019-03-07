@@ -73,9 +73,6 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
                 conversationVC.viewModel = ALKConversationViewModelMock(contactId: "demoUserId", channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()
-                let contact = ALContact()
-                contact.displayName = "demoDisplayName"
-                conversationVC.updateDisplay(contact: contact, channel: nil)
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
             }
             

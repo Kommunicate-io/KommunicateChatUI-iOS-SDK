@@ -44,4 +44,11 @@ class ALKConversationViewModelMock: ALKConversationViewModel {
     override func markConversationRead() {
 
     }
+
+    override func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> ()) {
+        var conversationProfile = ALKConversationProfile()
+        conversationProfile.name = "demoDisplayName"
+        conversationProfile.status = ALKConversationProfile.Status(isOnline: false, lastSeenAt: nil)
+        completion(conversationProfile)
+    }
 }
