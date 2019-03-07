@@ -1,6 +1,6 @@
 //
 //  ALKMessageModel.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -20,13 +20,15 @@ public enum ALKMessageType: String {
     case information = "Information"
     case video = "Video"
     case html = "HTML"
-    case genericCard = "Card"
     case quickReply = "QuickReply"
     case button = "Button"
     case listTemplate = "ListTemplate"
+    case cardTemplate = "CardTemplate"
 
     @available(*, deprecated, message: "Use `listTemplate`")
     case genericList = "List"
+    @available(*, deprecated, message: "Use `cardTemplate`.")
+    case genericCard = "Card"
 }
 
 // MARK: - MessageViewModel

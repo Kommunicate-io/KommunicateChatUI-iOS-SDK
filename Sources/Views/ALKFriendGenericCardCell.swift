@@ -8,14 +8,11 @@
 import Foundation
 import Applozic
 
-open class ALKFriendGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
-    
-    open var collectionView: ALKGenericCardCollectionView!
-    
-    var height: CGFloat!
-    
+open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
+
     var messageView = ALKFriendMessageView()
-    
+    lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
+
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -25,12 +22,15 @@ open class ALKFriendGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override open func update(viewModel: ALKMessageViewModel) {
-        super.update(viewModel: viewModel)
-        self.viewModel = viewModel
+    override open func update(viewModel: ALKMessageViewModel, width: CGFloat) {
         messageView.update(viewModel: viewModel)
-        collectionView.setMessage(viewModel: viewModel)
-        collectionView.reloadData()
+        let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
+            ChatCellPadding.ReceivedMessage.Message.right)
+        let height = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        messageViewHeight.constant = height
+        self.layoutIfNeeded()
+
+        super.update(viewModel: viewModel, width: width)
     }
     
     override func setupViews() {
@@ -38,53 +38,39 @@ open class ALKFriendGenericCardCell: ALKChatBaseCell<ALKMessageViewModel> {
         
         contentView.addViewsForAutolayout(views: [self.collectionView, self.messageView])
         contentView.bringSubviewToFront(messageView)
-        
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
-        messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
-        
-        ///TODO: Find alternative to layoutIfNeeded.
-        messageView.layoutIfNeeded()
-        
-        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50).isActive = true
-        collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 10).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+
+        let leftPadding = ChatCellPadding.ReceivedMessage.Message.left
+        let rightPadding = ChatCellPadding.ReceivedMessage.Message.right
+        messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leftPadding).isActive = true
+        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
+        messageViewHeight.isActive = true
+
+        let width = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
+        let templateLeftPadding = leftPadding + 64 - width
+
+        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: templateLeftPadding).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKFriendGenericCardCell.cardTopPadding).isActive = true
+        collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue)?.isActive = true
     }
-    
-    public class func rowHeightFor(message: ALKMessageViewModel) -> CGFloat {
-        // Update height based on number of buttons
-        // present and if image is set.
-        return ALKGenericCardCollectionView.rowHeightFor(message:message) + ALKFriendMessageView.rowHeigh(viewModel: message, widthNoPadding: UIScreen.main.bounds.width - 160) + 15
+
+    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+        let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
+                ChatCellPadding.ReceivedMessage.Message.right)
+        let messageHeight = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        let cardHeight = super.cardHeightFor(message: viewModel, width: width)
+        return cardHeight + messageHeight + 10 // Extra 10 below complete view. Modify this for club/unclub.
     }
-    
-    open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, index: NSInteger) {
-        collectionView.dataSource = delegate
-        collectionView.delegate = delegate
-        collectionView.tag = index
-        collectionView.reloadData()
-    }
-    
-    open func setCollectionViewDataSourceDelegate(dataSourceDelegate delegate: UICollectionViewDelegate & UICollectionViewDataSource, indexPath: IndexPath) {
-        collectionView.dataSource = delegate
-        collectionView.delegate = delegate
-        collectionView.indexPath = indexPath
-        collectionView.tag = indexPath.section
-        collectionView.reloadData()
-    }
-    
-    open func register(cell: UICollectionViewCell.Type) {
-        collectionView.register(cell, forCellWithReuseIdentifier: cell.reuseIdentifier)
-    }
-    
+
     private func setupCollectionView() {
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        let layout: TopAlignedCollectionViewFlowLayout = TopAlignedCollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 10
         layout.scrollDirection = .horizontal
-        collectionView = ALKGenericCardCollectionView(frame: frame, collectionViewLayout: layout)
+        collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
     }
+
 }
 

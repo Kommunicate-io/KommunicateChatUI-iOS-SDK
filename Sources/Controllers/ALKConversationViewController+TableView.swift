@@ -244,12 +244,12 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
-        case .genericCard:
+        case .genericCard, .cardTemplate:
             if message.isMyMessage {
                 let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
-                cell.update(viewModel: message)
+                cell.update(viewModel: message, width: UIScreen.main.bounds.width)
                 cell.menuAction = {[weak self] action in
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
@@ -257,7 +257,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
-                cell.update(viewModel: message)
+                cell.update(viewModel: message, width: UIScreen.main.bounds.width)
                 cell.menuAction = {[weak self] action in
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
@@ -415,7 +415,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let metadata = message.metadata else {
             return
         }
-        if message.messageType == .genericCard {
+        if message.messageType == .genericCard || message.messageType == .cardTemplate {
             if message.isMyMessage {
                 guard let cell =  cell as? ALKMyGenericCardCell else {
                     return
@@ -518,11 +518,11 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
         }
 
         guard let collectionView = collectionView as? ALKIndexedCollectionView,
-            let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate
+            let template = ALKGenericCardCollectionView.getCardTemplate(message: message)
             else {
                 return 0
         }
-        return template.cards.count
+        return template.count
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -533,25 +533,18 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
         }
 
         guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
-            let template = viewModel.genericTemplateFor(message: message) as? ALKGenericCardTemplate,
-            template.cards.count > indexPath.row else {
+            let template = ALKGenericCardCollectionView.getCardTemplate(message: message),
+            template.count > indexPath.row else {
                 return UICollectionViewCell()
         }
 
         let cell: ALKGenericCardCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-        let card = template.cards[indexPath.row]
+        let card = template[indexPath.row]
         cell.update(card: card)
-        cell.buttonSelected = {[weak self] tag, title in
-            print("\(title, tag) button selected in generic card")
+        cell.buttonSelected = {[weak self] tag, title, card in
+            print("\(title, tag) button selected in generic card \(card)")
             guard let strongSelf = self else {return}
-            var infoDict = [String: Any]()
-            infoDict["buttonName"] = title
-            infoDict["buttonIndex"] = tag
-            infoDict["card"] = card
-            infoDict["template"] = template
-            infoDict["messageKey"] = message.identifier
-            infoDict["userId"] = strongSelf.viewModel.contactId
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichCardButtonSelected"), object: infoDict)
+            strongSelf.cardTemplateSelected(tag: tag, title: title, template: card, message: message)
         }
         return cell
 
@@ -560,13 +553,17 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)) else {
+        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
+            let template = ALKGenericCardCollectionView.getCardTemplate(message: message),
+            template.count > indexPath.row
+            else {
             return CGSize(width: 0, height: 0)
         }
-        if message.messageType == .genericCard {
+        if message.messageType == .genericCard || message.messageType == .cardTemplate {
 
-            let width = self.view.frame.width - 100 // - 100 to ensure the card appears in the screen
-            let height = ALKGenericCardCollectionView.rowHeightFor(message: message) - 40 // Extra padding for top and bottom
+            let width = self.view.frame.width - cardTemplateMargin
+
+            let height = ALKGenericCardCell.rowHeight(card: template[indexPath.row], maxWidth: width)
             return CGSize(width: width, height: height)
         }
         return CGSize(width: self.view.frame.width-50, height: 350)
