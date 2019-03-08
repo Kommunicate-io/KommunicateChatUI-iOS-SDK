@@ -121,8 +121,10 @@ alChatManager.launchChatWith(contactId: <userId>, from: self)
 ## Requirements
 
 * iOS 9.0+
-* Xcode 8.2+
-* Swift 3.0+
+* Xcode 10.0+
+* Swift versions :: 
+< 4.0 - Use framework version below 1.1.0
+>= 4.0 - Use framework version starting from 1.1.0
 
 ## Contributing
 
