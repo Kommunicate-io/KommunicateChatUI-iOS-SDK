@@ -360,7 +360,7 @@ public final class ALKChatCell: MGSwipeTableCell {
         // setup constraint of mood
         locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         locationLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        locationLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 5).isActive = true
+        locationLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         locationLabel.trailingAnchor.constraint(equalTo: voipButton.leadingAnchor, constant: -19).isActive = true
 
         // setup constraint of line
