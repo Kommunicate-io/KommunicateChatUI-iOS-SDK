@@ -1,6 +1,6 @@
 //
 //  ChatCell.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -28,7 +28,7 @@ public protocol ALKChatViewModelProtocol {
     var createdAt: String? { get }
 }
 
-enum ALKChatCellAction {
+public enum ALKChatCellAction {
     case delete
     case favorite
     case store
@@ -37,11 +37,11 @@ enum ALKChatCellAction {
     case unmute
 }
 
-protocol ALKChatCellDelegate: class {
+public protocol ALKChatCellDelegate: class {
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol)
 }
 
-final class ALKChatCell: MGSwipeTableCell {
+public final class ALKChatCell: MGSwipeTableCell {
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -127,10 +127,10 @@ final class ALKChatCell: MGSwipeTableCell {
         view.backgroundColor = UIColor.onlineGreen()
         return view
     }()
-    
+
     let muteButton: MGSwipeButton = MGSwipeButton.init(type: .custom)
 
-    weak var chatCellDelegate: ALKChatCellDelegate?
+    public weak var chatCellDelegate: ALKChatCellDelegate?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -144,7 +144,7 @@ final class ALKChatCell: MGSwipeTableCell {
         //favoriteButton.removeTarget(self, action:  #selector(favoriteTapped(button:)), for: .touchUpInside)
     }
 
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+    override public func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
 
         guard let _ = viewModel else {
@@ -160,7 +160,7 @@ final class ALKChatCell: MGSwipeTableCell {
         badgeNumberView.setBackgroundColor(.background(.main))
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    override public func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         guard let _ = viewModel else {
@@ -176,7 +176,7 @@ final class ALKChatCell: MGSwipeTableCell {
         // set backgroundColor of badgeNumber
         badgeNumberView.setBackgroundColor(.background(.main))
     }
-    
+
     private func isConversationMuted(viewModel: ALKChatViewModelProtocol) -> Bool{
         if let channelKey = viewModel.channelKey,
             let channel = ALChannelService().getChannelByKey(channelKey){
@@ -197,10 +197,10 @@ final class ALKChatCell: MGSwipeTableCell {
             return true
         }
     }
-    
+
     var viewModel: ALKChatViewModelProtocol?
 
-    func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
+    public func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
 
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
@@ -246,13 +246,13 @@ final class ALKChatCell: MGSwipeTableCell {
         }else {
             muteButton.setImage(UIImage(named: "icon_mute_inactive", in: Bundle.applozic, compatibleWith: nil), for: .normal)
         }
- 
+
         muteButton.frame = CGRect.init(x: 0, y: 0, width: 69, height: 69)
         muteButton.callback = { [weak self] (buttnon) in
 
             guard let strongSelf = self else {return true}
             guard let viewModel = strongSelf.viewModel else {return true}
-            
+
             if strongSelf.isConversationMuted(viewModel: viewModel){
                 strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: .unmute, viewModel: viewModel)
             }else {
@@ -279,7 +279,7 @@ final class ALKChatCell: MGSwipeTableCell {
         onlineStatusView.isHidden = true
 
         if !viewModel.isGroupChat {
-            
+
             let contactService = ALContactService()
             guard let contactId = viewModel.contactId,
             let contact = contactService.loadContact(byKey: "userId", value: contactId) else {
@@ -400,7 +400,7 @@ final class ALKChatCell: MGSwipeTableCell {
 //        comingSoonDelegate?.makeToast(SystemMessage.ComingSoon.Favorite, duration: 1.0, position: .center)
     }
 
-    override func setEditing(_ editing: Bool, animated: Bool) {
+    override public func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
     }
 
@@ -413,5 +413,5 @@ final class ALKChatCell: MGSwipeTableCell {
     func randomInt(min: Int, max:Int) -> Int {
         return min + Int(arc4random_uniform(UInt32(max - min + 1)))
     }
-    
+
 }

@@ -28,8 +28,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     public var viewModelType = ALKConversationListViewModel.self
     public var conversationViewModelType = ALKConversationViewModel.self
     public weak var delegate: ALKConversationListDelegate?
+    public lazy var conversationListTableViewController = ALKConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self, showSearch: false)
 
-    fileprivate lazy var conversationListTableViewController = ALKConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self, showSearch: false)
     fileprivate var tapToDismiss:UITapGestureRecognizer!
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate var dbService: ALMessageDBService!
@@ -63,6 +63,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         dbService.delegate = self
         viewModel = viewModelType.init()
         viewModel.delegate = self
+        viewModel.localizationFileName = configuration.localizedStringFileName
     }
 
     deinit {
@@ -179,12 +180,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         alMqttConversationService.mqttConversationDelegate = self
         alMqttConversationService.subscribeToConversation()
-        dbService = dbServiceType.init()
-        dbService.delegate = self
-        viewModel = viewModelType.init()
-        viewModel.delegate = self
-        viewModel.localizationFileName = configuration.localizedStringFileName
-        viewModel.prepareController(dbService: dbService)
         setupView()
     }
 
