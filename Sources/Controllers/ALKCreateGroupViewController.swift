@@ -351,7 +351,6 @@ extension ALKCreateGroupViewController:ALKAddParticipantProtocol
 
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
-        conversationVC.title = user.friendProfileName
         self.navigationController?.pushViewController(conversationVC, animated: true)
 
     }

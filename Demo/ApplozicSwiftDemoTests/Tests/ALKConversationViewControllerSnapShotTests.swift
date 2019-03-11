@@ -74,9 +74,6 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
                 conversationVC.viewModel = ALKConversationViewModelMock(contactId: "demoUserId", channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()
-                let contact = ALContact()
-                contact.displayName = "demoDisplayName"
-                conversationVC.updateDisplay(contact: contact, channel: nil)
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
             }
             
@@ -104,6 +101,23 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
                 configuration = ALKConfiguration()
                 configuration.hideRightNavBarButtonForConversationView = true
                 prepareController()
+                navigationController.navigationBar.snapshotView(afterScreenUpdates: true)
+                expect(navigationController.navigationBar).to(haveValidSnapshot())
+            }
+        }
+
+        context("when conversation details are not present.") {
+            var navigationController: UINavigationController!
+
+            beforeEach {
+                let conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
+                conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
+                conversationVC.beginAppearanceTransition(true, animated: false)
+                conversationVC.endAppearanceTransition()
+                navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            }
+
+            it("shows loading") {
                 navigationController.navigationBar.snapshotView(afterScreenUpdates: true)
                 expect(navigationController.navigationBar).to(haveValidSnapshot())
             }

@@ -231,22 +231,19 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
-        let title = viewModel.titleFor(contactId: contactId, channelId: groupId)
         let conversationViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: contactId, channelId: groupId, conversationId: conversationId)
 
         let viewController: ALKConversationViewController!
         if conversationViewController == nil {
             viewController = ALKConversationViewController(configuration: configuration)
-            viewController.title = title
             viewController.viewModel = conversationViewModel
         } else {
             viewController = conversationViewController
-            viewController.title = title
             viewController.viewModel.contactId = conversationViewModel.contactId
             viewController.viewModel.channelKey = conversationViewModel.channelKey
             viewController.viewModel.conversationProxy = conversationViewModel.conversationProxy
         }
-        push(conversationVC: viewController, with: conversationViewModel, title: title)
+        push(conversationVC: viewController, with: conversationViewModel)
     }
 
     @objc func compose() {
@@ -290,10 +287,9 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
 
-    fileprivate func push(conversationVC: ALKConversationViewController, with viewModel: ALKConversationViewModel, title: String) {
+    fileprivate func push(conversationVC: ALKConversationViewController, with viewModel: ALKConversationViewModel) {
         if let topVC = navigationController?.topViewController as? ALKConversationViewController {
             // Update the details and refresh
-            topVC.title = title
             topVC.viewModel.contactId = viewModel.contactId
             topVC.viewModel.channelKey = viewModel.channelKey
             topVC.viewModel.conversationProxy = viewModel.conversationProxy
@@ -469,8 +465,6 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
             convViewModel.conversationProxy = convProxy
         }
         let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
-        let chatName = chat.name.count > 0 ? chat.name : localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: localizedStringFileName)
-        viewController.title = chat.isGroupChat ? chat.groupName:chatName
         viewController.viewModel = convViewModel
         self.navigationController?.pushViewController(viewController, animated: false)
     }

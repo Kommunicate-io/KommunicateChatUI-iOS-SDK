@@ -127,18 +127,6 @@ final class ALKChatCell: MGSwipeTableCell {
         view.backgroundColor = UIColor.onlineGreen()
         return view
     }()
-
-    private var avatarName: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = UIColor.gray
-        label.layer.cornerRadius = 22.5
-        label.textColor = UIColor.white
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        label.clipsToBounds = true
-        label.font = Font.bold(size: 20.0).font()
-        return label
-    }()
     
     let muteButton: MGSwipeButton = MGSwipeButton.init(type: .custom)
 
@@ -212,33 +200,23 @@ final class ALKChatCell: MGSwipeTableCell {
     
     var viewModel: ALKChatViewModelProtocol?
 
-    func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?) {
+    func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
 
         self.viewModel = viewModel
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-        avatarImageView.isHidden = true
-        avatarName.isHidden = true
-        avatarName.backgroundColor = UIColor.gray
+        let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
 
         if let avatarImage = viewModel.avatarImage {
             if let imgStr = viewModel.avatarGroupImageUrl,let imgURL = URL.init(string: imgStr) {
-                avatarImageView.isHidden = false
                 let resource = ImageResource(downloadURL: imgURL, cacheKey: imgStr)
                 avatarImageView.kf.setImage(with: resource, placeholder: avatarImage, options: nil, progressBlock: nil, completionHandler: nil)
             } else {
-                avatarName.isHidden = false
-                let name = getFirstTwoLetters(text: viewModel.groupName)
-                avatarName.text = name.isEmpty ? "X": name
+                avatarImageView.image = placeHolder
             }
-
         }else if let avatar = viewModel.avatar {
-            avatarImageView.isHidden = false
             let resource = ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
         } else {
-            avatarName.isHidden = false
-            let name = getFirstTwoLetters(text: viewModel.name)
-            avatarName.text = name.isEmpty ? "X": name
+            avatarImageView.image = placeHolder
         }
 
         let name = viewModel.isGroupChat ? viewModel.groupName:viewModel.name
@@ -319,9 +297,17 @@ final class ALKChatCell: MGSwipeTableCell {
         self.voipButton.isEnabled = !viewModel.isGroupChat
     }
 
+    private func placeholderImage(_ placeholderImage: UIImage? = nil, viewModel: ALKChatViewModelProtocol) -> UIImage? {
+        guard let image = placeholderImage else {
+            let placeholder = viewModel.isGroupChat ? "groupPlaceholder" : "contactPlaceholder"
+            return UIImage(named: placeholder, in: Bundle.applozic, compatibleWith: nil)
+        }
+        return image
+    }
+
     private func setupConstraints() {
 
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel,lineView,voipButton,/*favoriteButton,*/avatarName,badgeNumberView, timeLabel, onlineStatusView])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel,lineView,voipButton,/*favoriteButton,*/badgeNumberView, timeLabel, onlineStatusView])
 
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
@@ -387,11 +373,6 @@ final class ALKChatCell: MGSwipeTableCell {
         onlineStatusView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         onlineStatusView.widthAnchor.constraint(equalToConstant: 6).isActive = true
 
-        avatarName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
-        avatarName.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
-        avatarName.heightAnchor.constraint(equalToConstant: 45.0).isActive = true
-        avatarName.widthAnchor.constraint(equalToConstant: 45.0).isActive = true
-
         // update frame
         contentView.layoutIfNeeded()
 
@@ -421,17 +402,6 @@ final class ALKChatCell: MGSwipeTableCell {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-    }
-
-    private func getFirstTwoLetters(text: String) -> String {
-        let stringInputArr = text.components(separatedBy: " ")
-        var firstTwoCharStr = ""
-
-        for string in stringInputArr {
-            guard let firstChar = string.first else { continue }
-            firstTwoCharStr = firstTwoCharStr + String(firstChar)
-        }
-        return firstTwoCharStr
     }
 
     private func getRandomColor() -> UIColor {

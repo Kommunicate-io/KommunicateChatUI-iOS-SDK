@@ -39,6 +39,7 @@ class ALKConversationNavBar: UIView, Localizable {
         imageView.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         imageView.layer.cornerRadius = 18
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
 
@@ -78,6 +79,7 @@ class ALKConversationNavBar: UIView, Localizable {
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 2
+        stackView.isHidden = true
         return stackView
     }()
 
@@ -85,11 +87,9 @@ class ALKConversationNavBar: UIView, Localizable {
         self.navigationBarBackgroundColor = configuration.navigationBarBackgroundColor
         self.configuration = configuration
         self.delegate = delegate
-        backImage.tintColor = configuration.navigationBarItemColor
-        profileName.textColor = configuration.navigationBarTitleColor
-        onlineStatusText.textColor = configuration.navigationBarTitleColor
         super.init(frame: .zero)
         setupConstraints()
+        setupStyle()
         setupActions()
     }
 
@@ -98,6 +98,7 @@ class ALKConversationNavBar: UIView, Localizable {
     }
 
     func updateView(profile: ALKConversationProfile) {
+        profileView.isHidden = false
         setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: (profile.status != nil))
         guard let status = profile.status else {
             statusIconBackground.isHidden = true
@@ -162,6 +163,12 @@ class ALKConversationNavBar: UIView, Localizable {
         profileView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
     }
 
+    private func setupStyle() {
+        backImage.tintColor = configuration.navigationBarItemColor
+        profileName.textColor = configuration.navigationBarTitleColor
+        onlineStatusText.textColor = configuration.navigationBarTitleColor
+    }
+
     private func setupActions() {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
 
@@ -173,17 +180,17 @@ class ALKConversationNavBar: UIView, Localizable {
     private func setupProfile(name: String, imageUrl: String?, isContact: Bool) {
         profileName.text = name
 
-        let placeholderName = isContact ? "placeholder" : "group_profile_picture"
-        let placeHolder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
+        let placeholderName = isContact ?  "contactPlaceholder" : "groupPlaceholder"
+        let placeholder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
         guard
             let urlString = imageUrl,
             let url = URL(string: urlString)
             else {
-                self.profileImage.image = placeHolder
+                self.profileImage.image = placeholder
                 return
         }
         let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-        profileImage.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+        profileImage.kf.setImage(with: resource, placeholder: placeholder, options: nil, progressBlock: nil, completionHandler: nil)
     }
 
     private func showLastSeen(_ lastSeenAt: NSNumber?) {

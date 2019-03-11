@@ -937,18 +937,35 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return ALApplicationInfo().showPoweredByMessage()
     }
 
-    func currentConversationProfile() -> ALKConversationProfile {
+    func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> ()) {
         if conversationId != nil {
-            let conversationProxy = ALConversationService().getConversationByKey(conversationId)
-            return conversationProfileFrom(contact: nil, channel: nil, conversation: conversationProxy)
+            ALConversationService().fetchTopicDetails(conversationId) { (error, conversationProxy) in
+                guard error == nil, let conversationProxy = conversationProxy else {
+                    print("Error while fetching conversation details \(String(describing: error))")
+                    completion(nil)
+                    return
+                }
+                completion(self.conversationProfileFrom(contact: nil, channel: nil, conversation: conversationProxy))
+            }
         } else if channelKey != nil {
-            let channel = ALChannelService().getChannelByKey(channelKey)
-            return conversationProfileFrom(contact: nil, channel: channel, conversation: nil)
+            ALChannelService().getChannelInformation(channelKey, orClientChannelKey: nil) { (channel) in
+                guard let channel = channel else {
+                    print("Error while fetching channel details")
+                    completion(nil)
+                    return
+                }
+                completion(self.conversationProfileFrom(contact: nil, channel: channel, conversation: nil))
+            }
         } else if contactId != nil {
-            let contact = ALContactService().loadContact(byKey: "userId", value: contactId)
-            return conversationProfileFrom(contact: contact, channel: nil, conversation: nil)
+            ALUserService().getUserDetail(contactId) { (contact) in
+                guard let contact = contact else {
+                    print("Error while fetching contact details")
+                    completion(nil)
+                    return
+                }
+                completion(self.conversationProfileFrom(contact: contact, channel: nil, conversation: nil))
+            }
         }
-        return ALKConversationProfile()
     }
 
     func conversationProfileFrom(contact: ALContact?, channel: ALChannel?, conversation: ALConversationProxy?) -> ALKConversationProfile {

@@ -134,7 +134,6 @@ class ALChatManager: NSObject {
         title = title.isEmpty ? "No name":title
         let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
         let conversationViewController = ALKConversationViewController(configuration: configuration)
-        conversationViewController.title = title
         conversationViewController.viewModel = convViewModel
         viewController.navigationController?.pushViewController(conversationViewController, animated: false)
     }
@@ -145,7 +144,6 @@ class ALChatManager: NSObject {
             guard let channel = channel, let key = channel.key else {return}
             let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key, localizedStringFileName: configuration.localizedStringFileName)
             let conversationViewController = ALKConversationViewController(configuration: configuration)
-            conversationViewController.title = channel.name
             conversationViewController.viewModel = convViewModel
             viewController.navigationController?.pushViewController(conversationViewController, animated: false)
         }
@@ -157,7 +155,6 @@ class ALChatManager: NSObject {
         let title: String = chatTitleUsing(userId: userId, groupId: groupId)
         let convViewModel = ALKConversationViewModel(contactId: userId, channelKey: groupId, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
         let conversationViewController = ALKConversationViewController(configuration: configuration)
-        conversationViewController.title = title
         conversationViewController.viewModel = convViewModel
         viewController.navigationController?.pushViewController(conversationViewController, animated: false)
     }

@@ -44,6 +44,7 @@ struct SystemMessage : Localizable{
         static let AppName = ""
         static let NotPartOfGroup = localizedString(forKey: "NotPartOfGroup")
         static let ChatHere = localizedString(forKey: "ChatHere")
+        static let LoadingIndicatorText = localizedString(forKey: "LoadingIndicatorText")
     }
 
     struct Update {
