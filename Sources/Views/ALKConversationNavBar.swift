@@ -39,6 +39,7 @@ class ALKConversationNavBar: UIView, Localizable {
         imageView.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         imageView.layer.cornerRadius = 18
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
 
@@ -179,17 +180,17 @@ class ALKConversationNavBar: UIView, Localizable {
     private func setupProfile(name: String, imageUrl: String?, isContact: Bool) {
         profileName.text = name
 
-        let placeholderName = isContact ? "placeholder" : "group_profile_picture"
-        let placeHolder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
+        let placeholderName = isContact ?  "contactPlaceholder" : "groupPlaceholder"
+        let placeholder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
         guard
             let urlString = imageUrl,
             let url = URL(string: urlString)
             else {
-                self.profileImage.image = placeHolder
+                self.profileImage.image = placeholder
                 return
         }
         let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-        profileImage.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+        profileImage.kf.setImage(with: resource, placeholder: placeholder, options: nil, progressBlock: nil, completionHandler: nil)
     }
 
     private func showLastSeen(_ lastSeenAt: NSNumber?) {
