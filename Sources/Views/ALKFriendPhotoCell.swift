@@ -34,7 +34,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
 
     struct Padding {
         struct PhotoView {
-            static let right: CGFloat = -56
+            static let right: CGFloat = 56
         }
     }
     
@@ -80,7 +80,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
         
         photoView.trailingAnchor
-            .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: Padding.PhotoView.right)
+            .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
             .isActive = true
         photoView.widthAnchor
             .constraint(equalToConstant: width*ALKPhotoCell.widthPercentage)

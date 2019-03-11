@@ -26,7 +26,7 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
     struct Padding {
         struct PhotoView {
-            static let right: CGFloat = -14
+            static let right: CGFloat = 14
             static let top: CGFloat = 6
         }
     }
@@ -43,7 +43,7 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
             .isActive = true
 
         photoView.trailingAnchor
-            .constraint(equalTo: contentView.trailingAnchor, constant: Padding.PhotoView.right)
+            .constraint(equalTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
             .isActive = true
 
         photoView.widthAnchor
