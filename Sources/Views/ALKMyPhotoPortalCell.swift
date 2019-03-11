@@ -34,8 +34,6 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
     override func setupViews() {
         super.setupViews()
         
-        let width = UIScreen.main.bounds.width
-        
         contentView.addViewsForAutolayout(views: [stateView])
         
         photoView.topAnchor
@@ -47,10 +45,10 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
             .isActive = true
 
         photoView.widthAnchor
-            .constraint(equalToConstant: width*ALKPhotoCell.widthPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.widthPercentage)
             .isActive = true
         photoView.heightAnchor
-            .constraint(equalToConstant: width*ALKPhotoCell.heightPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.heightPercentage)
             .isActive = true
 
         bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)

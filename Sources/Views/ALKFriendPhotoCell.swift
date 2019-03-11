@@ -61,7 +61,6 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
-        let width = UIScreen.main.bounds.width
         contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
@@ -83,10 +82,10 @@ class ALKFriendPhotoCell: ALKPhotoCell {
             .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
             .isActive = true
         photoView.widthAnchor
-            .constraint(equalToConstant: width*ALKPhotoCell.widthPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.widthPercentage)
             .isActive = true
         photoView.heightAnchor
-            .constraint(equalToConstant: width*ALKPhotoCell.heightPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.heightPercentage)
             .isActive = true
 
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2).isActive = true

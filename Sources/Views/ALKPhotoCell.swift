@@ -71,6 +71,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         label.font = ALKMessageStyle.message.font
         return label
     }()
+    static var maxWidth = UIScreen.main.bounds.width
 
     // This will be used to calculate the size of the photo view.
     static var heightPercentage: CGFloat = 0.5
