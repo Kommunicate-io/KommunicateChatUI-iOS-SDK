@@ -119,7 +119,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         height = ceil(width*heightPercentage)
         if let message = viewModel.message, !message.isEmpty {
             height += message.rectWithConstrainedWidth(
-                width*heightPercentage,
+                width*widthPercentage,
                 font: font).height.rounded(.up) + Padding.CaptionLabel.bottom
         }
 
