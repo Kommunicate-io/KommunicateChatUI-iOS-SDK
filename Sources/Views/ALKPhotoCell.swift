@@ -65,6 +65,26 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
+    var captionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = ALKMessageStyle.message.font
+        return label
+    }()
+    static var maxWidth = UIScreen.main.bounds.width
+
+    // This will be used to calculate the size of the photo view.
+    static var heightPercentage: CGFloat = 0.5
+    static var widthPercentage: CGFloat = 0.48
+
+    struct Padding {
+        struct CaptionLabel {
+            static var bottom: CGFloat = 10.0
+            static var left: CGFloat = 5.0
+            static var right: CGFloat = 5.0
+        }
+    }
+
     var url: URL? = nil
     enum state {
         case upload(filePath: String)
@@ -89,17 +109,21 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return 16
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(
+        viewModel: ALKMessageViewModel,
+        width: CGFloat) -> CGFloat {
 
-        let heigh: CGFloat
+        var height: CGFloat
+        let font = ALKMessageStyle.message.font
 
-        if viewModel.ratio < 1 {
-            heigh = viewModel.ratio == 0 ? (width*0.48) : ceil((width*0.48)/viewModel.ratio)
-        } else {
-            heigh = ceil((width*0.64)/viewModel.ratio)
+        height = ceil(width*heightPercentage)
+        if let message = viewModel.message, !message.isEmpty {
+            height += message.rectWithConstrainedWidth(
+                width*widthPercentage,
+                font: font).height.rounded(.up) + Padding.CaptionLabel.bottom
         }
 
-        return topPadding()+heigh+bottomPadding()
+        return topPadding()+height+bottomPadding()
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -127,6 +151,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             }
         }
         timeLabel.text   = viewModel.time
+        captionLabel.text = viewModel.message
 
     }
 
@@ -167,7 +192,16 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         frontView.addGestureRecognizer(singleTap)
 
         downloadButton.addTarget(self, action: #selector(ALKPhotoCell.downloadButtonAction(_:)), for: .touchUpInside)
-        contentView.addViewsForAutolayout(views: [frontView ,photoView,bubbleView,timeLabel,fileSizeLabel,uploadButton, downloadButton, activityIndicator])
+        contentView.addViewsForAutolayout(views:
+            [frontView,
+             photoView,
+             bubbleView,
+             timeLabel,
+             fileSizeLabel,
+             captionLabel,
+             uploadButton,
+             downloadButton,
+             activityIndicator])
         contentView.bringSubviewToFront(photoView)
         contentView.bringSubviewToFront(frontView)
         contentView.bringSubviewToFront(downloadButton)
@@ -180,7 +214,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: captionLabel.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
         
@@ -199,6 +233,24 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         downloadButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         downloadButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
 
+        // CaptionLabel's Bottom Padding calculation:
+        //
+        // First understand how total view's(ContentView) height is calculated:
+        // ContentView => topPadding + PhotoView + CaptionLabel
+        //               + captionLabelBottomPadding(if caption is there) + bottomPadding
+        //
+        // Here's how CaptionLabel's vertical Constraints are calculated:
+        // CaptionLabelTop -> PhotoView.top
+        //
+        // CaptionLabelBottom -> (contentView - bottomPadding) which is equal to
+        // (CaptionLabel + captionLabelBottom)
+
+        captionLabel.layout {
+            $0.leading == photoView.leadingAnchor + Padding.CaptionLabel.left
+            $0.trailing == photoView.trailingAnchor - Padding.CaptionLabel.right
+            $0.top == photoView.bottomAnchor
+            $0.bottom == contentView.bottomAnchor - ALKPhotoCell.bottomPadding()
+        }
     }
 
     @objc private func downloadButtonAction(_ selector: UIButton) {

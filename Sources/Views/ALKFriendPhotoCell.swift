@@ -31,6 +31,12 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         label.textColor = UIColor.lightGray
         return label
     }()
+
+    struct Padding {
+        struct PhotoView {
+            static let right: CGFloat = 56
+        }
+    }
     
     override class func topPadding() -> CGFloat {
         return 28
@@ -72,9 +78,16 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         avatarImageView.heightAnchor.constraint(equalToConstant: 37).isActive = true
         avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
         
-        photoView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -56).isActive = true
-        photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
-        
+        photoView.trailingAnchor
+            .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
+            .isActive = true
+        photoView.widthAnchor
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.widthPercentage)
+            .isActive = true
+        photoView.heightAnchor
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.heightPercentage)
+            .isActive = true
+
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         
