@@ -13,6 +13,7 @@
 		1A0B17EF21819FF800B19187 /* ALKConversationViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0B17EE21819FF800B19187 /* ALKConversationViewControllerMock.swift */; };
 		1A2E788721726E7200CF35AE /* ALKConversationListViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E788621726E7200CF35AE /* ALKConversationListViewControllerTests.swift */; };
 		1A3D93F8213D29AC00BEC565 /* ApplozicSwiftAudioRecordingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3D93F7213D29AC00BEC565 /* ApplozicSwiftAudioRecordingUITests.swift */; };
+		1A5503FE22366BD700F642A9 /* MockMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5503FD22366BD700F642A9 /* MockMessage.swift */; };
 		1A6D3A542180C9A300BB7538 /* ALKConversationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D3A532180C9A300BB7538 /* ALKConversationViewControllerTests.swift */; };
 		1A6D3A562180CB4500BB7538 /* ALContactServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D3A552180CB4500BB7538 /* ALContactServiceMock.swift */; };
 		1A7129A821E71FD5007A7B78 /* ALKCurvedButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7129A721E71FD5007A7B78 /* ALKCurvedButtonSnapshotTests.swift */; };
@@ -93,6 +94,7 @@
 		1A0B17EE21819FF800B19187 /* ALKConversationViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerMock.swift; sourceTree = "<group>"; };
 		1A2E788621726E7200CF35AE /* ALKConversationListViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationListViewControllerTests.swift; sourceTree = "<group>"; };
 		1A3D93F7213D29AC00BEC565 /* ApplozicSwiftAudioRecordingUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplozicSwiftAudioRecordingUITests.swift; sourceTree = "<group>"; };
+		1A5503FD22366BD700F642A9 /* MockMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessage.swift; sourceTree = "<group>"; };
 		1A6D3A532180C9A300BB7538 /* ALKConversationViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerTests.swift; sourceTree = "<group>"; };
 		1A6D3A552180CB4500BB7538 /* ALContactServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALContactServiceMock.swift; sourceTree = "<group>"; };
 		1A7129A521E61296007A7B78 /* CurvedButton.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CurvedButton.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -279,6 +281,7 @@
 				8BDDEA6E21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift */,
 				1AE8248721BA633D009C70FE /* ConversationListTableViewDelegateMock.swift */,
 				1A933D7D21CA2E81004C5191 /* ConversationListTableVCMock.swift */,
+				1A5503FD22366BD700F642A9 /* MockMessage.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -623,6 +626,7 @@
 				1A6D3A562180CB4500BB7538 /* ALContactServiceMock.swift in Sources */,
 				1A6D3A542180C9A300BB7538 /* ALKConversationViewControllerTests.swift in Sources */,
 				8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */,
+				1A5503FE22366BD700F642A9 /* MockMessage.swift in Sources */,
 				1ACB680421806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift in Sources */,
 				8B4E9FFC215A31B2001FD5F3 /* ALMessageDBServiceMock.swift in Sources */,
 				1AE8248821BA633D009C70FE /* ConversationListTableViewDelegateMock.swift in Sources */,

@@ -26,13 +26,13 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
                 conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
                 let convVM = ALKConversationViewModelMock(contactId: contactId, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 
-                let firstMessage = ALKConversationViewModelMock.getMessageToPost()
+                let firstMessage = MockMessage().message
                 firstMessage.message = "first message"
-                let secondMessage = ALKConversationViewModelMock.getMessageToPost()
+                let secondMessage = MockMessage().message
                 secondMessage.message = "second message"
-                let thirdMessage = ALKConversationViewModelMock.getMessageToPost()
+                let thirdMessage = MockMessage().message
                 thirdMessage.type = "4"
-                let fourthMessage = ALKConversationViewModelMock.getMessageToPost()
+                let fourthMessage = MockMessage().message
                 fourthMessage.type = "4"
                 
                 let testBundle = Bundle(for: ALKConversationViewControllerSnapshotTests.self)
