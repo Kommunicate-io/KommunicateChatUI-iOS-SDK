@@ -208,10 +208,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: { [weak self]
             notification in
-            guard let weakSelf = self else { return }
+            guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
-            guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded, weakSelf.viewModel != nil else { return }
+            guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.viewModel.addMessagesToList(list)
 //            weakSelf.handlePushNotification = false
         })
@@ -223,21 +223,33 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "report_DELIVERED"), object: nil, queue: nil, using: {[weak self]
             notification in
-            guard let weakSelf = self, let key = notification.object as? String else { return }
+            guard
+                let weakSelf = self,
+                weakSelf.viewModel != nil,
+                let key = notification.object as? String
+                else { return }
             weakSelf.viewModel.updateDeliveryReport(messageKey: key, status: Int32(DELIVERED.rawValue))
             print("report delievered notification received")
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "report_DELIVERED_READ"), object: nil, queue: nil, using: {[weak self]
             notification in
-            guard let weakSelf = self, let key = notification.object as? String else { return }
+            guard
+                let weakSelf = self,
+                weakSelf.viewModel != nil,
+                let key = notification.object as? String
+                else { return }
             weakSelf.viewModel.updateDeliveryReport(messageKey: key, status: Int32(DELIVERED_AND_READ.rawValue))
             print("report delievered and read notification received")
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "report_CONVERSATION_DELIVERED_READ"), object: nil, queue: nil, using: {[weak self]
             notification in
-            guard let weakSelf = self, let key = notification.object as? String else { return }
+            guard
+                let weakSelf = self,
+                weakSelf.viewModel != nil,
+                let key = notification.object as? String
+                else { return }
             weakSelf.viewModel.updateStatusReportForConversation(contactId: key, status: Int32(DELIVERED_AND_READ.rawValue))
             print("report conversation delievered and read notification received")
         })
@@ -245,19 +257,27 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_MESSAGE_SEND_STATUS"), object: nil, queue: nil, using: {[weak self]
             notification in
             print("Message sent notification received")
-            guard let weakSelf = self, let message = notification.object as? ALMessage else { return }
+            guard
+                let weakSelf = self,
+                weakSelf.viewModel != nil,
+                let message = notification.object as? ALMessage
+                else { return }
             weakSelf.viewModel.updateSendStatus(message: message)
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil, queue: nil, using: {[weak self] notification in
             NSLog("update user detail notification received")
-            guard let weakSelf = self, let userId = notification.object as? String else { return }
+            guard
+                let weakSelf = self,
+                weakSelf.viewModel != nil,
+                let userId = notification.object as? String
+                else { return }
             weakSelf.updateUserDetail(userId)
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: {[weak self] notification in
             NSLog("update group name notification received")
-            guard let weakSelf = self else { return }
+            guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             print("update group detail")
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
@@ -268,7 +288,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil, queue: nil) { [weak self] notification in
-            guard let weakSelf = self else { return }
+            guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             let profile = weakSelf.viewModel.currentConversationProfile(completion: { (profile) in
                 guard let profile = profile else { return }
                 weakSelf.navigationBar.updateView(profile: profile)
@@ -1128,7 +1148,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             UIApplication.shared.openURL(url)
         }
     }
-    
+
     private func linkButtonSelected(_ selectedButton: Dictionary<String, Any>) {
         guard
             let urlString = selectedButton["url"] as? String,
