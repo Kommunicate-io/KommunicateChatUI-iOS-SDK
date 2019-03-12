@@ -71,7 +71,7 @@ class ALKConversationListViewControllerTests: XCTestCase {
         // Pass all mocks
         conversationListVC.viewModel = conversationListVM
         conversationListVC.delegate = conversation
-        conversationListVC.dbServiceType = ALMessageDBServiceMock.self
+        conversationListVC.dbService = ALMessageDBServiceMock()
         conversationListVC.conversationViewController = conversationVC
 
         // Select first thread
