@@ -587,28 +587,32 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
 // MARK: - WKNavigationDelegate
 extension ALKConversationViewController:WKNavigationDelegate{
 
+    func updateEmailCell(_ cell: ALKFriendEmailCell, withHeight height: CGFloat) {
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        UIView.animate(withDuration: 0.3) {
+            cell.updateHeight(height)
+        }
+    }
+
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: webView.tag, section: 0))  else {
+        guard
+            let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: webView.tag)),
+            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: webView.tag)) as? ALKFriendEmailCell
+            else {
             return
         }
 
         //We already know the height of webview return from here
-        if ((contentHeights[message.identifier]) != nil) {
-            return;
-        }
-        if(webView.scrollView.contentSize.height != 0){
-            contentHeights[message.identifier] = webView.scrollView.contentSize.height
-        }
-        guard
-            let cell = tableView.cellForRow(at: IndexPath(row: webView.tag, section: 0)) as? ALKFriendEmailCell
-        else {
+        if let height = contentHeights[message.identifier] {
+            updateEmailCell(cell, withHeight: height)
             return
         }
-        tableView.beginUpdates()
-        tableView.endUpdates()
-        UIView.animate(withDuration: 0.3) {
-            cell.updateHeight(webView.scrollView.contentSize.height)
+
+        if webView.scrollView.contentSize.height != 0 {
+            contentHeights[message.identifier] = webView.scrollView.contentSize.height
         }
+        updateEmailCell(cell, withHeight: webView.scrollView.contentSize.height)
     }
 
     private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

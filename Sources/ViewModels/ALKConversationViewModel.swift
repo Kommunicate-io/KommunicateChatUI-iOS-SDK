@@ -308,7 +308,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return ALKFriendListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
             }
         case .email:
-        return ALKFriendEmailCell.rowHeight(viewModel: messageModel, contentHeights: contentHeights)
+        return ALKFriendEmailCell.rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
         }
     }
 

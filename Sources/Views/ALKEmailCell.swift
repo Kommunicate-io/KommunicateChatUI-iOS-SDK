@@ -137,7 +137,7 @@ open class ALKFriendEmailCell: UITableViewCell {
 
     func setWebViewDelegate(delegate : WKNavigationDelegate, index: IndexPath) {
         wkWebView.navigationDelegate = delegate
-        wkWebView.tag = index.row
+        wkWebView.tag = index.section
     }
 
     func update(viewModel: ALKMessageViewModel) {
@@ -166,13 +166,13 @@ open class ALKFriendEmailCell: UITableViewCell {
         wkWebView.constraint(withIdentifier:ConstraintIdentifier.wkWebViewHeight)?.constant = height
     }
 
-    class func rowHeight(viewModel: ALKMessageViewModel, contentHeights: Dictionary<String,CGFloat>) ->  CGFloat {
+    class func rowHeight(viewModel: ALKMessageViewModel, height: CGFloat?) ->  CGFloat {
         var totalHeight: CGFloat = 0
         totalHeight += Padding.NameLabel.height + Padding.NameLabel.top  /// Name height
         totalHeight += Padding.EmailUIView.height + Padding.EmailUIView.top  /// Email heading height
         totalHeight += Padding.TimeLabel.height + Padding.TimeLabel.top  /// time height
 
-        guard let height = contentHeights[viewModel.identifier] else {
+        guard let height = height else {
             return Padding.WKWebView.height + totalHeight;
         }
 

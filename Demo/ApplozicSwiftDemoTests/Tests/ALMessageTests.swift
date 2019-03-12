@@ -63,4 +63,10 @@ class ALMessageTests: XCTestCase {
         message.metadata = mockMetaData
         XCTAssert(message.messageType == .genericList)
     }
+
+    func testMessageType_WhenSourceIsEmail() {
+        let message = MockMessage().message
+        message.source = 7
+        XCTAssert(message.messageType == .email)
+    }
 }

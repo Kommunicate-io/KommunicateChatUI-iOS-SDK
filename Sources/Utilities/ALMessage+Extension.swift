@@ -15,6 +15,8 @@ let myMessage = "5"
 let imageBaseUrl = ALUserDefaultsHandler.getFILEURL() + "/rest/ws/aws/file/"
 let CONVERSATION_SUBJECT = "KM_CONVERSATION_SUBJECT"
 
+let emailSourceType = 7
+
 extension ALMessage: ALKChatViewModelProtocol {
 
     private var alContact: ALContact? {
@@ -180,7 +182,9 @@ extension ALMessage {
     }
 
     public var messageType: ALKMessageType {
-
+        guard source != emailSourceType else {
+            return .email
+        }
         switch Int32(contentType) {
         case ALMESSAGE_CONTENT_DEFAULT:
             return richMessageType()
@@ -189,7 +193,7 @@ extension ALMessage {
         case ALMESSAGE_CHANNEL_NOTIFICATION:
             return .information
         case ALMESSAGE_CONTENT_TEXT_HTML:
-            return source == 7 ? .email : .html
+            return .html
         default:
             guard let attachmentType = getAttachmentType() else {return .text}
             return attachmentType
