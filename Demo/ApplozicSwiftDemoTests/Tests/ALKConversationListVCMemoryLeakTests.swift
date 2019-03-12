@@ -28,7 +28,7 @@ class ALKConversationListVCMemoryLeakTests: QuickSpec {
 
                     // Pass all mocks
                     conversationListVC.viewModel = conversationListVM
-                    conversationListVC.dbServiceType = ALMessageDBServiceMock.self
+                    conversationListVC.dbService = ALMessageDBServiceMock()
                     conversationListVC.conversationViewController = conversationVC
                     conversationListVC.onDeinitialized = {
                         done()

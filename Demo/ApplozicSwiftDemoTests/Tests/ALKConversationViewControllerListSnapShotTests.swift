@@ -24,7 +24,7 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
             beforeEach {
 
                 conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
-                conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                conversationVC.dbService = ALMessageDBServiceMock()
                 let firstMessage = ALKConversationViewModelMock.getMessageToPost()
                 firstMessage.message = "first message"
                 let secondmessage = ALKConversationViewModelMock.getMessageToPost()
@@ -32,6 +32,8 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 ALKConversationViewModelMock.testMessages = [firstMessage.messageModel, secondmessage.messageModel]
                 conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
+                conversationVC.beginAppearanceTransition(true, animated: false)
+                conversationVC.endAppearanceTransition()
             }
 
             it("Show list") {
@@ -41,8 +43,6 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
             }
 
             it("Open chat thread") {
-                conversationVC.beginAppearanceTransition(true, animated: false)
-                conversationVC.endAppearanceTransition()
                 XCTAssertNotNil(conversationVC.tableView)
                 guard let tableView = conversationVC.tableView else {
                     return
@@ -63,7 +63,7 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 configuration = ALKConfiguration()
                 configuration.rightNavBarImageForConversationListView = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
                 conversationVC = ALKConversationListViewController(configuration: configuration)
-                conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                conversationVC.dbService = ALMessageDBServiceMock()
                 conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()

@@ -24,19 +24,13 @@ public protocol ALKConversationListDelegate: class {
 open class ALKConversationListViewController: ALKBaseViewController, Localizable {
 
     public var conversationViewController: ALKConversationViewController?
-    public var dbServiceType = ALMessageDBService.self
-    public var viewModelType = ALKConversationListViewModel.self
     public var conversationViewModelType = ALKConversationViewModel.self
     public weak var delegate: ALKConversationListDelegate?
+    public lazy var conversationListTableViewController = ALKConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self, showSearch: false)
 
-    fileprivate lazy var conversationListTableViewController = ALKConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self, showSearch: false)
-    fileprivate var tapToDismiss:UITapGestureRecognizer!
-    fileprivate var alMqttConversationService: ALMQTTConversationService!
-    fileprivate var dbService: ALMessageDBService!
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
-    fileprivate var localizedStringFileName: String!
+    var dbService = ALMessageDBService()
+    var viewModel = ALKConversationListViewModel()
 
-    var viewModel: ALKConversationListViewModel!
     // To check if coming from push notification
     var contactId: String?
     var channelKey: NSNumber?
@@ -52,6 +46,11 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         return barButton
     }()
 
+    fileprivate var tapToDismiss:UITapGestureRecognizer!
+    fileprivate var alMqttConversationService: ALMQTTConversationService!
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate var localizedStringFileName: String!
+
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -59,10 +58,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
         self.localizedStringFileName = configuration.localizedStringFileName
-        dbService = dbServiceType.init()
-        dbService.delegate = self
-        viewModel = viewModelType.init()
-        viewModel.delegate = self
+        viewModel.localizationFileName = configuration.localizedStringFileName
     }
 
     deinit {
@@ -73,11 +69,11 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     override func addObserver() {
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: {[weak self] notification in
-            guard let weakSelf = self, let viewModel = weakSelf.viewModel else { return }
+            guard let weakSelf = self else { return }
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty else { return }
-            viewModel.addMessages(messages: list)
+            weakSelf.viewModel.addMessages(messages: list)
 
         })
 
@@ -179,12 +175,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         alMqttConversationService.mqttConversationDelegate = self
         alMqttConversationService.subscribeToConversation()
-        dbService = dbServiceType.init()
         dbService.delegate = self
-        viewModel = viewModelType.init()
         viewModel.delegate = self
-        viewModel.localizationFileName = configuration.localizedStringFileName
-        viewModel.prepareController(dbService: dbService)
         setupView()
     }
 
@@ -262,9 +254,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
-        if let dbService = dbService {
-            viewModel.prepareController(dbService: dbService)
-        }
+        viewModel.prepareController(dbService: dbService)
     }
 
     @objc func customBackAction() {

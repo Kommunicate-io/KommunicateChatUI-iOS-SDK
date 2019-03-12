@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ALKIdentityProtocol {
+public protocol ALKIdentityProtocol {
     
     var displayName: String {get}
     var displayPhoto: URL? {get}

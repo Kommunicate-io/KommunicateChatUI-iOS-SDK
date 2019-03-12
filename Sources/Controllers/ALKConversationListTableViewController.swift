@@ -33,18 +33,18 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     //MARK: - PUBLIC PROPERTIES
     public var viewModel: ALKConversationListViewModelProtocol
     public var dbService: ALMessageDBService!
-    
+    public lazy var dataSource = ConversationListTableViewDataSource(viewModel: self.viewModel, cellConfigurator: { (message, tableCell) in
+        let cell = tableCell as! ALKChatCell
+        cell.update(viewModel: message, identity: nil)
+        cell.chatCellDelegate = self
+    })
+
     //MARK: - PRIVATE PROPERTIES
     fileprivate weak var delegate: ALKConversationListTableViewDelegate?
     fileprivate var configuration: ALKConfiguration
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
     fileprivate var tapToDismiss: UITapGestureRecognizer!
-    fileprivate lazy var dataSource = ConversationListTableViewDataSource(viewModel: self.viewModel, cellConfigurator: { (message, tableCell) in
-        let cell = tableCell as! ALKChatCell
-        cell.update(viewModel: message, identity: nil)
-        cell.chatCellDelegate = self
-    })
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate var searchActive : Bool = false
@@ -292,7 +292,7 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
 //MARK: - ALKChatCell DELEGATE
 extension ALKConversationListTableViewController: ALKChatCellDelegate {
     
-    func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol) {
+    public func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol) {
         
         switch action {
             
