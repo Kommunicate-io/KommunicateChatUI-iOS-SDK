@@ -31,6 +31,10 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
         }
     }
 
+    override class var messageTextFont: UIFont {
+        return ALKMessageStyle.sentMessage.font
+    }
+
     override func setupViews() {
         super.setupViews()
         
@@ -88,6 +92,8 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
     override func setupStyle() {
         super.setupStyle()
+        captionLabel.font = ALKMessageStyle.sentMessage.font
+        captionLabel.textColor = ALKMessageStyle.sentMessage.text
         if(ALKMessageStyle.sentBubble.style == .edge){
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color

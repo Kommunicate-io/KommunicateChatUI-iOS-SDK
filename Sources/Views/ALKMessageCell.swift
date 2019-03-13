@@ -66,6 +66,10 @@ open class ALKFriendMessageCell: ALKMessageCell {
         case replyPreviewImageWidthIdentifier = "ReplyPreviewImageWidth"
     }
 
+    override class var messageTextFont: UIFont {
+        return ALKMessageStyle.receivedMessage.font
+    }
+
     override func setupViews() {
         super.setupViews()
 
@@ -163,6 +167,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
         super.setupStyle()
 
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        messageView.setStyle(ALKMessageStyle.receivedMessage)
         if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
             bubbleView.image = bubbleViewImage(for: ALKMessageStyle.receivedBubble.style, isReceiverSide: true,showHangOverImage: false)
@@ -321,6 +326,10 @@ open class ALKMyMessageCell: ALKMessageCell {
         static let replyViewHeightIdentifier = "ReplyViewHeight"
     }
 
+    override class var messageTextFont: UIFont {
+        return ALKMessageStyle.sentMessage.font
+    }
+
     override func setupViews() {
         super.setupViews()
 
@@ -394,6 +403,7 @@ open class ALKMyMessageCell: ALKMessageCell {
 
     open  override func setupStyle() {
         super.setupStyle()
+        messageView.setStyle(ALKMessageStyle.sentMessage)
         if ALKMessageStyle.sentBubble.style == .edge {
             bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
             bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false,showHangOverImage: false)
@@ -550,6 +560,11 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }()
     var replyViewAction: (()->())? = nil
 
+    // To be changed from the class that is subclassing `ALKMessageCell`
+    class var messageTextFont: UIFont {
+        return Font.normal(size: 12).font()
+    }
+
     override func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
 
@@ -615,8 +630,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         super.setupStyle()
 
         timeLabel.setStyle(ALKMessageStyle.time)
-        messageView.setStyle(ALKMessageStyle.message)
-
     }
 
     class func leftPadding() -> CGFloat {
@@ -655,9 +668,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
             }
             let maxSize = CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude)
 
-            let font = ALKMessageStyle.message.font
-            let color = ALKMessageStyle.message.text
-
             let style = NSMutableParagraphStyle.init()
             style.lineBreakMode = .byWordWrapping
             style.headIndent = 0
@@ -667,8 +677,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
             style.maximumLineHeight = 17
 
             let attributes: [NSAttributedString.Key: Any] = [
-                NSAttributedString.Key.font: font,
-                NSAttributedString.Key.foregroundColor: color]
+                NSAttributedString.Key.font: messageTextFont]
 
             var size = CGSize()
             if viewModel.messageType == .html {
