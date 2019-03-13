@@ -250,7 +250,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     func sync(message: ALMessage) {
 
-        if let viewController = conversationViewController, viewController.viewModel.contactId == message.contactId,viewController.viewModel.channelKey == message.groupId {
+        if let viewController = conversationViewController, viewController.viewModel != nil, viewController.viewModel.contactId == message.contactId,viewController.viewModel.channelKey == message.groupId {
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
