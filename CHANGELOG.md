@@ -24,6 +24,13 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
         ALKMessageStyle.receivedBubble.style = .edge
 ```     
 - [AL-3229] Added caption support with image attachments. If the message(text) is present then it will be shown as caption.   
+- [AL-3257] Added receive and sent message style. This is how you can change the styles:
+
+```
+        ALKMessageStyle.receivedMessage = Style(font: Font.bold(size: 14).font(), text: UIColor.red)
+        ALKMessageStyle.sentMessage = Style(font: Font.italic(size: 14).font(), text: UIColor.green)
+```
+
 2.2.0
 ---
 ### Enhancments

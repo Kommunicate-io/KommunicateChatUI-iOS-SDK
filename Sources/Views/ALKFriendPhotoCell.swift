@@ -41,10 +41,16 @@ class ALKFriendPhotoCell: ALKPhotoCell {
     override class func topPadding() -> CGFloat {
         return 28
     }
+
+    override class var messageTextFont: UIFont {
+        return ALKMessageStyle.receivedMessage.font
+    }
     
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        captionLabel.font = ALKMessageStyle.receivedMessage.font
+        captionLabel.textColor = ALKMessageStyle.receivedMessage.text
         if(ALKMessageStyle.receivedBubble.style == .edge){
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color

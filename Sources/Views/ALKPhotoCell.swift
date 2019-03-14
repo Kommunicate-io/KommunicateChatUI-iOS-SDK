@@ -68,10 +68,14 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     var captionLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = ALKMessageStyle.message.font
         return label
     }()
     static var maxWidth = UIScreen.main.bounds.width
+
+    // To be changed from the class that is subclassing `ALKPhotoCell`
+    class var messageTextFont: UIFont {
+        return Font.normal(size: 12).font()
+    }
 
     // This will be used to calculate the size of the photo view.
     static var heightPercentage: CGFloat = 0.5
@@ -114,13 +118,12 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         width: CGFloat) -> CGFloat {
 
         var height: CGFloat
-        let font = ALKMessageStyle.message.font
 
         height = ceil(width*heightPercentage)
         if let message = viewModel.message, !message.isEmpty {
             height += message.rectWithConstrainedWidth(
                 width*widthPercentage,
-                font: font).height.rounded(.up) + Padding.CaptionLabel.bottom
+                font: messageTextFont).height.rounded(.up) + Padding.CaptionLabel.bottom
         }
 
         return topPadding()+height+bottomPadding()

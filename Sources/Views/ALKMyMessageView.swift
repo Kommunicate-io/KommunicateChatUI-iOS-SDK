@@ -81,7 +81,7 @@ class ALKMyMessageView: UIView {
     func update(viewModel: ALKMessageViewModel) {
         // Set message
         messageView.text = viewModel.message ?? ""
-        messageView.setStyle(ALKMessageStyle.message)
+        messageView.setStyle(ALKMessageStyle.sentMessage)
 
         // Set time
         timeLabel.text = viewModel.time
@@ -108,7 +108,7 @@ class ALKMyMessageView: UIView {
         guard let message = viewModel.message else {
             return minimumHeight
         }
-        let font = ALKMessageStyle.message.font
+        let font = ALKMessageStyle.sentMessage.font
         var messageHeight = message.heightWithConstrainedWidth(width: width, font: font)
         messageHeight += 20 // (6 + 4) + 10 for extra padding
         return max(messageHeight, minimumHeight)

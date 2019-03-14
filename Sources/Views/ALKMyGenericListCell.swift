@@ -218,7 +218,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     private func updateMessageView(_ viewModel: ALKMessageViewModel) {
         messageView.text = viewModel.message ?? ""
-        messageView.setStyle(ALKMessageStyle.message)
+        messageView.setStyle(ALKMessageStyle.sentMessage)
         timeLabel.text = viewModel.time
         timeLabel.setStyle(ALKMessageStyle.time)
         

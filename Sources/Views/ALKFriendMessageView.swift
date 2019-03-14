@@ -131,7 +131,7 @@ class ALKFriendMessageView: UIView {
         nameLabel.text = viewModel.displayName
         nameLabel.setStyle(ALKMessageStyle.displayName)
         messageView.text = viewModel.message ?? ""
-        messageView.setStyle(ALKMessageStyle.message)
+        messageView.setStyle(ALKMessageStyle.receivedMessage)
         timeLabel.text = viewModel.time
         timeLabel.setStyle(ALKMessageStyle.time)
     }
@@ -141,7 +141,7 @@ class ALKFriendMessageView: UIView {
         guard let message = viewModel.message else {
             return minimumHeight
         }
-        let font = ALKMessageStyle.message.font
+        let font = ALKMessageStyle.receivedMessage.font
         let messageWidth = width - 64 // left padding 9 + 18 + 37
         var messageHeight = message.heightWithConstrainedWidth(width: messageWidth, font: font)
         messageHeight += 30 // 6 + 16 + 4 + 2 + 2
@@ -154,8 +154,8 @@ class ALKFriendMessageView: UIView {
         if let message = viewModel.message {
             let maxSize = CGSize.init(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude)
             
-            let font = ALKMessageStyle.message.font
-            let color = ALKMessageStyle.message.text
+            let font = ALKMessageStyle.receivedMessage.font
+            let color = ALKMessageStyle.receivedMessage.text
             
             let style = NSMutableParagraphStyle.init()
             style.lineBreakMode = .byWordWrapping
