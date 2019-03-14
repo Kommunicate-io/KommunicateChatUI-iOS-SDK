@@ -352,7 +352,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
-
         case .email:
             if message.isMyMessage {
                 let cell: ALKMyEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -367,6 +366,48 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setBackgroundColor(UIColor.clear)
                 cell.update(viewModel: message)
                 cell.updateHeight(contentHeights[message.identifier])
+                return cell
+            }
+        case .document:
+            if message.isMyMessage {
+                let cell: ALKMyDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+
+                cell.update(viewModel: message)
+                cell.update(chatBar: self.chatBar)
+                cell.uploadTapped = {[weak self]
+                    value in
+                    // upload
+                    self?.attachmentViewDidTapUpload(view: cell, indexPath: indexPath)
+                }
+                cell.uploadCompleted = {[weak self]
+                    responseDict in
+                    self?.attachmentUploadDidCompleteWith(response: responseDict, indexPath: indexPath)
+                }
+                cell.downloadTapped = {[weak self]
+                    value in
+                    self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
+                }
+
+                return cell
+            }else{
+                let cell: ALKFriendDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message)
+                cell.update(chatBar: self.chatBar)
+                cell.uploadTapped = {[weak self]
+                    value in
+                    // upload
+                    self?.attachmentViewDidTapUpload(view: cell, indexPath: indexPath)
+                }
+                cell.uploadCompleted = {[weak self]
+                    responseDict in
+                    self?.attachmentUploadDidCompleteWith(response: responseDict, indexPath: indexPath)
+                }
+                cell.downloadTapped = {[weak self]
+                    value in
+                    self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
+                }
                 return cell
             }
         }

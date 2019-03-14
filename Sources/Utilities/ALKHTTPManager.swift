@@ -77,6 +77,10 @@ class ALKHTTPManager: NSObject {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
         if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil, let downloadTask = self.downloadTask {
+            downloadTask.filePath = filePath
+            downloadTask.completed = true
+            downloadTask.isDownloading = false
+            self.downloadCompleted?(downloadTask)
             downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         } else {
             let configuration = URLSessionConfiguration.default
