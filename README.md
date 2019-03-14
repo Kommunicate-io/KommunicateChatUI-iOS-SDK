@@ -12,7 +12,7 @@ UI kit for Applozic SDK, written completely in Swift.
 
 Open source iOS Chat and Messaging SDK that lets you add real time messaging in your mobile (android, iOS) applications and website.
 
-Signup at https://www.applozic.com/signup.html to get the application key.
+Signup at https://www.applozic.com/signup.html to get the App ID.
 
 ------------------------
 
@@ -26,7 +26,7 @@ There's a sample project in the Demo directory. To use it, run `pod install` to 
 
 ## Project Status
 
-This project is actively under development.
+It's production ready.
 
 ## Installation
 
@@ -74,57 +74,18 @@ $ git submodule add https://github.com/MortimerGoro/MGSwipeTableCell.git
 
 > The four frameworks are automagically added as a target dependency, linked framework and embedded framework in a copy files build phase which is all you need to build on the simulator and a device.
 
-## Usage
+## Docs
 
-#### ChatManager
-
-Add the [ALChatManager](https://github.com/AppLozic/ApplozicSwift/blob/master/Demo/ApplozicSwiftDemo/ALChatManager.swift) file in your project. It contains the convenient methods required to handle the chat like registration, opening chat list etc.
-
-#### Registration
-
-```swift
-// Use the same API for login
-let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
-alChatManager.registerUser(alUser, completion: {response, error in
-      if error == nil {
-          NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(response?.isRegisteredSuccessfully())")
-          // Launch chat
-      } else {
-          NSLog("[REGISTRATION] Applozic user registration error: %@", error.debugDescription)
-      }
-})
-```
-
-#### Launch chat list
-
-```swift
-let alChatManager = ALChatManager(applicationKey: <Application key>, with: ALKConfiguration())
-alChatManager.launchChatList(from: self)
-```
-
-#### Launch Group
-
-```swift
-let alChatManager = ALChatManager(applicationKey: <Application key>, configuration: ALKConfiguration())
-alChatManager.launchGroupWith(clientGroupId: <groupId>, from: self)
-```
-
-
-#### Launch Individual Chat
-
-```swift
-let alChatManager = ALChatManager(applicationKey: <Application key>, configuration: ALKConfiguration())
-alChatManager.launchChatWith(contactId: <userId>, from: self)
-```
+Check out our detailed documentation [here](https://docs.applozic.com/docs/ios-chat-session).
 
 
 ## Requirements
 
 * iOS 9.0+
 * Xcode 10.0+
-* Swift versions :: 
-< 4.0 - Use framework version below 1.1.0
->= 4.0 - Use framework version starting from 1.1.0
+* Swift versions:
+Swift version < 4.0 -> Use framework version below 1.1.0.
+Swift version >= 4.0 -> Use framework version starting from 1.1.0.
 
 ## Contributing
 
