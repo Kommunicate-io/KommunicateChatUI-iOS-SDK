@@ -25,7 +25,7 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
                 conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
                 ALMessageDBServiceMock.lastMessage.createdAtTime = NSNumber(value: Date().timeIntervalSince1970 * 1000)
-                conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                conversationVC.dbService = ALMessageDBServiceMock()
                 let firstMessage = MockMessage().message
                 firstMessage.message = "first message"
                 let secondmessage = MockMessage().message
@@ -65,7 +65,7 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 mockMessage.contentType = Int16(ALMESSAGE_CONTENT_TEXT_HTML)
                 mockMessage.source = 7
                 mockMessage.createdAtTime = NSNumber(value: Date().timeIntervalSince1970 * 1000)
-                conversationVC.dbServiceType = ALMessageDBServiceMock.self
+                conversationVC.dbService = ALMessageDBServiceMock()
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
             }
 

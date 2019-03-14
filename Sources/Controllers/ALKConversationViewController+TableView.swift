@@ -354,12 +354,21 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
 
         case .email:
-            let cell: ALKFriendEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-            cell.setWebViewDelegate(delegate: self, index: indexPath)
-            cell.setBackgroundColor(UIColor.clear)
-            cell.update(viewModel: message)
-            cell.updateHeight(contentHeights[message.identifier])
-            return cell
+            if message.isMyMessage {
+                let cell: ALKMyEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.emailView.setWebViewDelegate(delegate: self, tag: indexPath.section)
+                cell.setBackgroundColor(UIColor.clear)
+                cell.update(viewModel: message)
+                cell.updateHeight(contentHeights[message.identifier])
+                return cell
+            } else {
+                let cell: ALKFriendEmailCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.emailView.setWebViewDelegate(delegate: self, tag: indexPath.section)
+                cell.setBackgroundColor(UIColor.clear)
+                cell.update(viewModel: message)
+                cell.updateHeight(contentHeights[message.identifier])
+                return cell
+            }
         }
     }
 
@@ -587,18 +596,22 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
 // MARK: - WKNavigationDelegate
 extension ALKConversationViewController:WKNavigationDelegate{
 
-    func updateEmailCell(_ cell: ALKFriendEmailCell, withHeight height: CGFloat) {
+    func updateEmailCell(_ cell: UITableViewCell, withHeight height: CGFloat) {
         tableView.beginUpdates()
         tableView.endUpdates()
         UIView.animate(withDuration: 0.3) {
-            cell.updateHeight(height)
+            if let friendCell = cell as? ALKFriendEmailCell {
+                friendCell.updateHeight(height)
+            } else if let myCell = cell as? ALKMyEmailCell {
+                myCell.updateHeight(height)
+            }
         }
     }
 
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         guard
             let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: webView.tag)),
-            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: webView.tag)) as? ALKFriendEmailCell
+            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: webView.tag))
             else {
             return
         }
