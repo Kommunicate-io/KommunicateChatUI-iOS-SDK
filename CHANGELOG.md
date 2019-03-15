@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.3.0 (upcoming releases)
+2.3.0
 ---
 ### Enhancments
 - Updates Swift version to 4.2
