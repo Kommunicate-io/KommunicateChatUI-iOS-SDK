@@ -624,8 +624,10 @@ extension ALKConversationViewController:WKNavigationDelegate{
 
         if webView.scrollView.contentSize.height != 0 {
             contentHeights[message.identifier] = webView.scrollView.contentSize.height
+            updateEmailCell(cell, withHeight: webView.scrollView.contentSize.height)
+        } else {
+            tableView.reloadRows(at: [IndexPath(row: 0, section: webView.tag)], with: .none)
         }
-        updateEmailCell(cell, withHeight: webView.scrollView.contentSize.height)
     }
 
     private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
