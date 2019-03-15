@@ -16,7 +16,6 @@ class ALKFileUtils: NSObject{
         return fileName
     }
 
-
     public func getFileSize(viewModel: ALKMessageViewModel) -> String? {
 
         guard  let fileName = viewModel.filePath else {
@@ -58,6 +57,15 @@ class ALKFileUtils: NSObject{
     func getDocumentDirectory(fileName:String) -> URL {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return docDirPath.appendingPathComponent(fileName)
+    }
+
+    func isSupportedFileType(viewModel: ALKMessageViewModel) -> Bool{
+        guard (viewModel.filePath) != nil,  let name =  viewModel.fileMetaInfo?.name,let pathExtension = URL(string: name)?.pathExtension else {
+                return false
+        }
+
+        let elements = ["docx", "pdf", "doc", "java", "js","txt","html","xlsx","xls"]
+        return  elements.contains(pathExtension)
     }
 
 }

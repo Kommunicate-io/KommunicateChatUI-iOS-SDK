@@ -123,7 +123,7 @@ ALKReplyMenuItemProtocol{
     }()
     
     func menuReply(_ sender: Any) {
-
+        menuAction?(.reply)
     }
 
     override func setupStyle() {
@@ -191,28 +191,22 @@ ALKReplyMenuItemProtocol{
 
     @objc func openWKWebView(gesture: UITapGestureRecognizer) {
 
-        if(self.viewModel?.filePath != nil){
+        guard  (self.viewModel?.filePath != nil) , let model = self.viewModel, ALKFileUtils().isSupportedFileType(viewModel: model) else {
 
-            let docViewController = ALKDocumentViewerController()
-            docViewController.filePath = self.viewModel?.filePath ?? ""
-            docViewController.fileName = self.viewModel?.fileMetaInfo?.name ?? ""
-            let pushAssist = ALPushAssist()
-            pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: false)
+            (self.viewModel?.filePath != nil)  ? print("File type is not supported") : print("File is not downloaded")
+            return
         }
+
+        let docViewController = ALKDocumentViewerController()
+        docViewController.filePath = self.viewModel?.filePath ?? ""
+        docViewController.fileName = self.viewModel?.fileMetaInfo?.name ?? ""
+        let pushAssist = ALPushAssist()
+        pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: false)
     }
 
-
-    func fileExtenion(viewModel: ALKMessageViewModel) -> String {
-
-        if(viewModel.filePath != nil){
-            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            return docDirPath.appendingPathComponent(viewModel.filePath ?? "").pathExtension
-        }else{
-            guard let name =  viewModel.fileMetaInfo?.name,let fileType = URL(string: name)?.pathExtension else {
-                return ""
-            }
-            return fileType
-        }
+    class func commonHeightPadding() ->  CGFloat {
+        return CommonPadding.FrameUIView.height + CommonPadding.FrameUIView.top
+            + CommonPadding.FileTypeView.height
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -287,7 +281,7 @@ ALKReplyMenuItemProtocol{
         do {
             try alHandler?.managedObjectContext.save()
         } catch {
-            NSLog("Not saved due to error")
+            print("Not saved due to error")
         }
     }
 
@@ -332,7 +326,6 @@ extension ALKDocumentCell: ALKHTTPManagerDownloadDelegate {
         }
         self.updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         DispatchQueue.main.async {
-            print("filePath @@@@@@@@@@",filePath)
             self.updateView(for: .downloaded(filePath: filePath))
         }
     }

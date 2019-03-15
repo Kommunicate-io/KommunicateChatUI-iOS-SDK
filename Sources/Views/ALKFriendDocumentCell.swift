@@ -115,10 +115,14 @@ class ALKFriendDocumentCell: ALKDocumentCell{
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
         return 40
     }
+
+    class func heightPadding() -> CGFloat {
+        return commonHeightPadding()+Padding.NameLabel.height+Padding.NameLabel.top+Padding.BubbleView.bottom+Padding.BubbleView.top
+    }
     
     class func rowHeight(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let minimumHeight: CGFloat = 60 // 55 is avatar image... + padding
-        let messageHeight : CGFloat = 16+1+40+25+15
+        let messageHeight : CGFloat = self.heightPadding()
         return max(messageHeight, minimumHeight)
     }
     
