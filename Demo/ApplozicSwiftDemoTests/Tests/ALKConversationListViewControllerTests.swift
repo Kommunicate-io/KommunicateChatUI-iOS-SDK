@@ -11,24 +11,6 @@ import Applozic
 @testable import ApplozicSwift
 class ALKConversationListViewControllerTests: XCTestCase {
 
-    let mockMessage: ALMessage = {
-        let alMessage = ALMessage()
-        alMessage.contactIds = "testUser123"
-        alMessage.message = "This is a test message"
-        alMessage.type = "5"
-        let date = Date().timeIntervalSince1970 * 1000
-        alMessage.createdAtTime = NSNumber(value: date)
-        alMessage.sendToDevice = false
-        alMessage.deviceKey = ALUserDefaultsHandler.getDeviceKeyString()
-        alMessage.shared = false
-        alMessage.fileMeta = nil
-        alMessage.storeOnDevice = false
-        alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
-        alMessage.key = UUID().uuidString
-        alMessage.source = Int16(SOURCE_IOS)
-        return alMessage
-    }()
-
     var conversationListVC: ALKConversationListViewController!
 
     override func setUp() {
@@ -43,8 +25,8 @@ class ALKConversationListViewControllerTests: XCTestCase {
 
     func testNewMessage_WhenActiveThreadIsDifferent() {
         let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
-
-        let result = conversationListVC.isNewMessageForActiveThread(alMessage: mockMessage, vm: conversationVM)
+        let message = MockMessage().message
+        let result = conversationListVC.isNewMessageForActiveThread(alMessage: message, vm: conversationVM)
         XCTAssertFalse(result)
     }
 
@@ -53,8 +35,10 @@ class ALKConversationListViewControllerTests: XCTestCase {
             contactId: "testUser123",
             channelKey: nil,
             localizedStringFileName: ALKConfiguration().localizedStringFileName)
+        let message = MockMessage().message
+        message.contactIds = "testUser123"
         let result = conversationListVC
-            .isNewMessageForActiveThread(alMessage: mockMessage, vm: conversationVM)
+            .isNewMessageForActiveThread(alMessage: message, vm: conversationVM)
         XCTAssertTrue(result)
     }
 
@@ -87,12 +71,16 @@ class ALKConversationListViewControllerTests: XCTestCase {
     }
     
     func testMessageSentByLoggedInUser_WhenTypeOutBox() {
-        mockMessage.type = "5" // Message type OUTBOX
-        XCTAssertTrue(conversationListVC.isMessageSentByLoggedInUser(alMessage: mockMessage))
+        let message = MockMessage().message
+        message.contactIds = "testUser123"
+        message.type = "5" // Message type OUTBOX
+        XCTAssertTrue(conversationListVC.isMessageSentByLoggedInUser(alMessage: message))
     }
     
     func testMessageSentByLoggedInUser_WhenTypeInBox() {
-        mockMessage.type = "4" // Message type INBOX
-        XCTAssertFalse(conversationListVC.isMessageSentByLoggedInUser(alMessage: mockMessage))
+        let message = MockMessage().message
+        message.contactIds = "testUser123"
+        message.type = "4" // Message type INBOX
+        XCTAssertFalse(conversationListVC.isMessageSentByLoggedInUser(alMessage: message))
     }
 }

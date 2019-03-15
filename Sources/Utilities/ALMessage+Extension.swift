@@ -13,6 +13,9 @@ let friendsMessage = "4"
 let myMessage = "5"
 
 let imageBaseUrl = ALUserDefaultsHandler.getFILEURL() + "/rest/ws/aws/file/"
+let CONVERSATION_SUBJECT = "KM_CONVERSATION_SUBJECT"
+
+let emailSourceType = 7
 
 extension ALMessage: ALKChatViewModelProtocol {
 
@@ -102,7 +105,13 @@ extension ALMessage: ALKChatViewModelProtocol {
             return message
         case .cardTemplate:
             return message
+        case .email:
+            guard let channelMetadata = alChannel?.metadata, let messageText = channelMetadata[CONVERSATION_SUBJECT]  else {
+                return message
+            }
+            return messageText as? String
         }
+
     }
 
     public var hasUnreadMessages: Bool {
@@ -172,8 +181,10 @@ extension ALMessage {
         return (type != nil) ? (type == myMessage):false
     }
 
-    var messageType: ALKMessageType {
-
+    public var messageType: ALKMessageType {
+        guard source != emailSourceType else {
+            return .email
+        }
         switch Int32(contentType) {
         case ALMESSAGE_CONTENT_DEFAULT:
             return richMessageType()

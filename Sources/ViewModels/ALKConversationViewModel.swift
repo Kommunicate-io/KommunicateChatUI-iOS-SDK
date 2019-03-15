@@ -207,7 +207,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return messageModel
     }
 
-    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect) -> CGFloat {
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect,contentHeights: Dictionary<String,CGFloat>) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         switch messageModel.messageType {
         case .text, .html:
@@ -306,6 +306,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return ALKMyListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
             } else {
                 return ALKFriendListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+            }
+        case .email:
+            if messageModel.isMyMessage {
+                return ALKMyEmailCell.rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
+            } else {
+                return ALKFriendEmailCell.rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
             }
         }
     }

@@ -15,7 +15,7 @@ import Applozic
 class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
     override func spec() {
-        
+
         describe("Conversation list") {
 
             var conversationVC: ALKConversationListViewController!
@@ -24,10 +24,11 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
             beforeEach {
 
                 conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
+                ALMessageDBServiceMock.lastMessage.createdAtTime = NSNumber(value: Date().timeIntervalSince1970 * 1000)
                 conversationVC.dbService = ALMessageDBServiceMock()
-                let firstMessage = ALKConversationViewModelMock.getMessageToPost()
+                let firstMessage = MockMessage().message
                 firstMessage.message = "first message"
-                let secondmessage = ALKConversationViewModelMock.getMessageToPost()
+                let secondmessage = MockMessage().message
                 secondmessage.message = "second message"
                 ALKConversationViewModelMock.testMessages = [firstMessage.messageModel, secondmessage.messageModel]
                 conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
@@ -50,6 +51,26 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 tableView.delegate?.tableView?(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
                 XCTAssertNotNil(conversationVC.navigationController?.view)
                 expect(conversationVC.navigationController).toEventually(haveValidSnapshot())
+            }
+        }
+
+        context("Conversation list screen") {
+            var conversationVC: ALKConversationListViewController!
+            var navigationController: UINavigationController!
+
+            beforeEach {
+                conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
+                let mockMessage = ALMessageDBServiceMock.lastMessage!
+                mockMessage.message = "Re: Subject"
+                mockMessage.contentType = Int16(ALMESSAGE_CONTENT_TEXT_HTML)
+                mockMessage.source = 7
+                mockMessage.createdAtTime = NSNumber(value: Date().timeIntervalSince1970 * 1000)
+                conversationVC.dbService = ALMessageDBServiceMock()
+                navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            }
+
+            it("show email thread") {
+                expect(navigationController).to(haveValidSnapshot())
             }
         }
 

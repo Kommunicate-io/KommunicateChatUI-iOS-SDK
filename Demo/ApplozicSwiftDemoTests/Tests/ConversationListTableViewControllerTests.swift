@@ -13,24 +13,6 @@ import Applozic
 
 class ConversationListTableViewControllerTests: XCTestCase {
 
-    let mockMessage: ALMessage = {
-        let alMessage = ALMessage()
-        alMessage.contactIds = "testUser123"
-        alMessage.message = "This is a test message"
-        alMessage.type = "5"
-        let date = Date().timeIntervalSince1970 * 1000
-        alMessage.createdAtTime = NSNumber(value: date)
-        alMessage.sendToDevice = false
-        alMessage.deviceKey = ALUserDefaultsHandler.getDeviceKeyString()
-        alMessage.shared = false
-        alMessage.fileMeta = nil
-        alMessage.storeOnDevice = false
-        alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
-        alMessage.key = UUID().uuidString
-        alMessage.source = Int16(SOURCE_IOS)
-        return alMessage
-    }()
-
     var conversationVM: ALKConversationViewModel!
     
     override func setUp() {
@@ -42,7 +24,7 @@ class ConversationListTableViewControllerTests: XCTestCase {
     func testMuteConversationCalledFromDelegate() {
         let conversationListTableVCMock = ConversationListTableVCMock(viewModel: ALKConversationListViewModel(), dbService: ALMessageDBService(), configuration: ALKConfiguration(), delegate: ConversationListTableViewDelegateMock(), showSearch: false)
         
-        let muteConversationVC = MuteConversationViewController(delegate: conversationListTableVCMock.self, conversation: mockMessage, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
+        let muteConversationVC = MuteConversationViewController(delegate: conversationListTableVCMock.self, conversation: MockMessage().message, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
         
         XCTAssertFalse(conversationListTableVCMock.isMuteCalled)
         

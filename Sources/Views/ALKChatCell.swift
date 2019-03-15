@@ -26,6 +26,7 @@ public protocol ALKChatViewModelProtocol {
     var channelKey: NSNumber? { get }
     var conversationId: NSNumber! {get set}
     var createdAt: String? { get }
+    var messageType: ALKMessageType { get }
 }
 
 public enum ALKChatCellAction {
@@ -42,6 +43,19 @@ public protocol ALKChatCellDelegate: class {
 }
 
 public final class ALKChatCell: MGSwipeTableCell {
+
+    enum ConstraintIdentifier: String {
+        case iconWidthIdentifier = "iconViewWidth"
+    }
+
+    struct Padding {
+        struct Email {
+            static let top: CGFloat = 4
+            static let left: CGFloat = 12
+            static let height: CGFloat = 15
+            static let width: CGFloat = 24
+        }
+    }
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -94,6 +108,15 @@ public final class ALKChatCell: MGSwipeTableCell {
         bt.setImage(UIImage(named: "icon_favorite_active"), for: .selected)
         bt.addTarget(self, action: #selector(favoriteTapped(button:)), for: UIControl.Event.touchUpInside)
         return bt
+    }()
+
+    private var emailIcon: UIImageView = {
+        let imv = UIImageView()
+        imv.contentMode = .scaleAspectFill
+        imv.clipsToBounds = true
+        imv.isHidden = true
+        imv.image = UIImage(named: "alk_email_icon", in: Bundle.applozic, compatibleWith: nil)
+        return imv
     }()
 
     // MARK: BadgeNumber
@@ -261,6 +284,14 @@ public final class ALKChatCell: MGSwipeTableCell {
             return true
         }
 
+        if(viewModel.messageType == .email){
+            emailIcon.isHidden = false
+            emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = Padding.Email.width
+        }else{
+            emailIcon.isHidden = true
+            emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = 0
+        }
+
         self.rightButtons = [muteButton]
         self.rightSwipeSettings.transition = .static
 
@@ -307,7 +338,7 @@ public final class ALKChatCell: MGSwipeTableCell {
 
     private func setupConstraints() {
 
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel,lineView,voipButton,/*favoriteButton,*/badgeNumberView, timeLabel, onlineStatusView])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel,lineView,voipButton,/*favoriteButton,*/badgeNumberView, timeLabel, onlineStatusView,emailIcon])
 
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
@@ -321,10 +352,15 @@ public final class ALKChatCell: MGSwipeTableCell {
         nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -5).isActive = true
 
+        emailIcon.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.Email.top).isActive = true
+        emailIcon.heightAnchor.constraint(equalToConstant: Padding.Email.height).isActive = true
+        emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
+        emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0,identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
+
         // setup constraint of mood
         locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         locationLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        locationLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12).isActive = true
+        locationLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         locationLabel.trailingAnchor.constraint(equalTo: voipButton.leadingAnchor, constant: -19).isActive = true
 
         // setup constraint of line
