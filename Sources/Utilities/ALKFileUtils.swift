@@ -65,7 +65,7 @@ class ALKFileUtils: NSObject{
         }
 
         let pathExtension = self.getDocumentDirectory(fileName: viewModel.filePath ?? "").pathExtension
-        let fileTypes = ["docx", "pdf", "doc", "java", "js","txt","html","xlsx","xls"]
+        let fileTypes = ["docx", "pdf", "doc", "java", "js","txt","html","xlsx","xls","ppt","pptx"]
         return  fileTypes.contains(pathExtension)
     }
 
