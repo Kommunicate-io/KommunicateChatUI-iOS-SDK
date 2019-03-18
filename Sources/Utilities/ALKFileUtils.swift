@@ -60,12 +60,13 @@ class ALKFileUtils: NSObject{
     }
 
     func isSupportedFileType(viewModel: ALKMessageViewModel) -> Bool{
-        guard (viewModel.filePath) != nil,  let name =  viewModel.fileMetaInfo?.name,let pathExtension = URL(string: name)?.pathExtension else {
+        guard (viewModel.filePath) != nil else {
                 return false
         }
 
-        let elements = ["docx", "pdf", "doc", "java", "js","txt","html","xlsx","xls"]
-        return  elements.contains(pathExtension)
+        let pathExtension = self.getDocumentDirectory(fileName: viewModel.filePath ?? "").pathExtension
+        let fileTypes = ["docx", "pdf", "doc", "java", "js","txt","html","xlsx","xls"]
+        return  fileTypes.contains(pathExtension)
     }
 
 }
