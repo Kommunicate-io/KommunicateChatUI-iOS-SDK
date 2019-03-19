@@ -428,10 +428,106 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
-            
-            
+        case .block:
+            guard
+                let indexPath = self.tableView.indexPath(for: cell),
+                let conversation = messageFor(indexPath: indexPath),
+                let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
+                else {
+                return
+            }
+            let alertFormat = localizedString(forKey: "BlockUser", withDefaultValue: SystemMessage.Block.BlockUser, fileName: localizedStringFileName)
+            let alertMessage = String(format: alertFormat, contact.getDisplayName())
+            let blockTitle = localizedString(forKey: "BlockTitle", withDefaultValue: SystemMessage.Block.BlockTitle, fileName: localizedStringFileName)
+            let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizedStringFileName)
+
+            let alert = UIAlertController(title: nil, message: alertMessage, preferredStyle: .alert)
+            let cancelButton = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+            let blockButton = UIAlertAction(title: blockTitle, style: .destructive, handler: { [weak self] (alert) in
+                guard let weakSelf = self else { return }
+                weakSelf.blockUser(in: conversation, at: indexPath)
+            })
+            alert.addAction(cancelButton)
+            alert.addAction(blockButton)
+            present(alert, animated: true, completion: nil)
+
+        case .unblock:
+            guard
+                let indexPath = self.tableView.indexPath(for: cell),
+                let conversation = messageFor(indexPath: indexPath),
+                let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
+                else {
+                    return
+            }
+            let alertFormat = localizedString(forKey: "UnblockUser", withDefaultValue: SystemMessage.Block.UnblockUser, fileName: localizedStringFileName)
+            let alertMessage = String(format: alertFormat, contact.getDisplayName())
+            let blockTitle = localizedString(forKey: "UnblockTitle", withDefaultValue: SystemMessage.Block.UnblockTitle, fileName: localizedStringFileName)
+            let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizedStringFileName)
+
+            let alert = UIAlertController(title: nil, message: alertMessage, preferredStyle: .alert)
+            let cancelButton = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+            let unblockButton = UIAlertAction(title: blockTitle, style: .destructive, handler: { [weak self] (alert) in
+                guard let weakSelf = self else { return }
+                weakSelf.unblockUser(in: conversation, at: indexPath)
+            })
+            alert.addAction(cancelButton)
+            alert.addAction(unblockButton)
+            present(alert, animated: true, completion: nil)
+
         default:
             print("not present")
+        }
+    }
+
+    private func confirmationAlert(with message: String) {
+        let okTitle = self.localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.Block.OkMessage, fileName: self.localizedStringFileName)
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let okButton = UIAlertAction(title: okTitle, style: .default, handler: nil)
+        alert.addAction(okButton)
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func unblockUser(in conversation: ALMessage, at indexPath: IndexPath) {
+        activityIndicator.startAnimating()
+        viewModel.unblock(conversation: conversation) { (error, response) in
+            self.activityIndicator.stopAnimating()
+            guard response == true else {
+                let errorMessage = self.localizedString(forKey: "ErrorMessage", withDefaultValue: SystemMessage.Block.ErrorMessage, fileName: self.localizedStringFileName)
+                self.confirmationAlert(with: errorMessage)
+                return
+            }
+            let successMessage = self.localizedString(forKey: "UnblockSuccess", withDefaultValue: SystemMessage.Block.UnblockSuccess, fileName: self.localizedStringFileName)
+            self.confirmationAlert(with: successMessage)
+            self.tableView.reloadRows(at: [indexPath], with: .none)
+        }
+    }
+
+    private func blockUser(in conversation: ALMessage, at indexPath: IndexPath) {
+        activityIndicator.startAnimating()
+        viewModel.block(conversation: conversation) { (error, response) in
+            self.activityIndicator.stopAnimating()
+            guard response == true else {
+                let errorMessage = self.localizedString(forKey: "ErrorMessage", withDefaultValue: SystemMessage.Block.ErrorMessage, fileName: self.localizedStringFileName)
+                self.confirmationAlert(with: errorMessage)
+                return
+            }
+            let successMessage = self.localizedString(forKey: "BlockSuccess", withDefaultValue: SystemMessage.Block.BlockSuccess, fileName: self.localizedStringFileName)
+            self.confirmationAlert(with: successMessage)
+            self.tableView.reloadRows(at: [indexPath], with: .none)
+        }
+    }
+
+    private func messageFor(indexPath: IndexPath) -> ALMessage? {
+        if searchActive {
+            guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
+                return nil
+            }
+            return conversation
+        } else {
+            guard let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage else {
+                return nil
+            }
+            return conversation
         }
     }
     
