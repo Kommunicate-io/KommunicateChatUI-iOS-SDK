@@ -212,6 +212,12 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         self.tableView.backgroundColor = UIColor.white
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.accessibilityIdentifier = "OuterChatScreenTableView"
+
+        activityIndicator.center = CGPoint(x: view.bounds.size.width/2,
+                                           y: view.bounds.size.height/2)
+        activityIndicator.color = UIColor.gray
+        view.addSubview(activityIndicator)
+        view.bringSubviewToFront(activityIndicator)
     }
     
 }
@@ -489,8 +495,10 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
     private func unblockUser(in conversation: ALMessage, at indexPath: IndexPath) {
         activityIndicator.startAnimating()
+        view.isUserInteractionEnabled = false
         viewModel.unblock(conversation: conversation) { (error, response) in
             self.activityIndicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
             guard response == true else {
                 let errorMessage = self.localizedString(forKey: "ErrorMessage", withDefaultValue: SystemMessage.Block.ErrorMessage, fileName: self.localizedStringFileName)
                 self.confirmationAlert(with: errorMessage)
@@ -504,8 +512,10 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
     private func blockUser(in conversation: ALMessage, at indexPath: IndexPath) {
         activityIndicator.startAnimating()
+        view.isUserInteractionEnabled = false
         viewModel.block(conversation: conversation) { (error, response) in
             self.activityIndicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
             guard response == true else {
                 let errorMessage = self.localizedString(forKey: "ErrorMessage", withDefaultValue: SystemMessage.Block.ErrorMessage, fileName: self.localizedStringFileName)
                 self.confirmationAlert(with: errorMessage)

@@ -766,6 +766,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
+        /// Don't show typing status when contact is blocked
+        guard
+            let contact = ALContactService().loadContact(byKey: "userId", value: userId),
+            !contact.block,
+            !contact.blockBy
+            else {
+            return
+        }
 
         if(status){
             timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)

@@ -982,6 +982,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let contact = contact, channel == nil else {
             return conversationProfile
         }
+        conversationProfile.isBlocked = contact.block || contact.blockBy
         conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
         return conversationProfile
     }

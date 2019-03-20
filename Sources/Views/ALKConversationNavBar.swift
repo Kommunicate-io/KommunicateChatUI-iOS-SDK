@@ -100,7 +100,7 @@ class ALKConversationNavBar: UIView, Localizable {
     func updateView(profile: ALKConversationProfile) {
         profileView.isHidden = false
         setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: (profile.status != nil))
-        guard let status = profile.status else {
+        guard let status = profile.status, !profile.isBlocked else {
             self.hideStatus(true)
             return
         }
