@@ -19,7 +19,7 @@ extension MGSwipeButton {
             right: (self.bounds.size.width - imageViewSize.width) / 2
         )
         self.titleEdgeInsets = UIEdgeInsets(
-            top: imageViewSize.height,
+            top: imageViewSize.height + padding,
             left: -imageViewSize.width,
             bottom: 0.0,
             right: 0.0
