@@ -106,7 +106,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
         
     public func addToWrapper(message: ALMessage) {
-        
+        guard !alMessageWrapper.contains(message: message) else { return }
         self.alMessageWrapper.addALMessage(toMessageArray: message)
         self.alMessages.append(message)
         self.messageModels.append(message.messageModel)
@@ -402,7 +402,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         }
 
-        var sortedArray = filteredArray
+        var sortedArray = filteredArray.filter {
+            return !self.alMessageWrapper.contains(message: $0)
+        }
         if filteredArray.count > 1 {
             sortedArray = filteredArray.sorted { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
         }
