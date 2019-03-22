@@ -2,6 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.3.1 (upcoming releases)
+---
+### Enhancements
+
+### Fixes
+- [AL-3302] Fix duplicate messages for open group.
+
 2.3.0
 ---
 ### Enhancments
