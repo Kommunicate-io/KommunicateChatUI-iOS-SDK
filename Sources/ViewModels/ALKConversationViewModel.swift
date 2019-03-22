@@ -584,7 +584,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
         let message = getLocationMessage(latLonString: jsonString)
         message.metadata = self.modfiedMessageMetadata(alMessage: message,metadata: metadata)
-        alMessageWrapper.addALMessage(toMessageArray: message)
         addToWrapper(message: message)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
         return (message, indexPath)
@@ -1241,7 +1240,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return nil
         }
         alMessage.fileMeta.size = String(format: "%lu", imageData.length)
-        alMessageWrapper.addALMessage(toMessageArray: alMessage)
 
         let dbHandler = ALDBHandler.sharedInstance()
         let messageService = ALMessageDBService()
