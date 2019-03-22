@@ -256,8 +256,8 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = 0
         }
 
-        leftSwippableButtons(viewModel)
-        rightSwippableButtons(viewModel)
+        setupLeftSwippableButtons(viewModel)
+        setupRightSwippableButtons(viewModel)
 
         // get unread count of message and set badgenumber
         let unreadMsgCount = viewModel.totalNumberOfUnreadMessages
@@ -289,13 +289,14 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         self.voipButton.isEnabled = !viewModel.isGroupChat
     }
 
-    private func leftSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
+    private func setupLeftSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
         leftSwipeSettings.transition = .static
 
         let deleteButton = MGSwipeButton.init(type: .system)
         deleteButton.backgroundColor = UIColor.mainRed()
         deleteButton.setImage(UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil), for: .normal)
         deleteButton.tintColor = .white
+        deleteButton.accessibilityIdentifier = "SwippableDeleteIcon"
         deleteButton.frame = CGRect.init(x: 0, y: 0, width: 69, height: 69)
         if !viewModel.isGroupChat {
             let leaveTitle = localizedString(forKey: "DeleteButtonName", withDefaultValue: SystemMessage.ButtonName.Delete, fileName: localizationFileName)
@@ -348,7 +349,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         })
     }
 
-    private func rightSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
+    private func setupRightSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
         let muteButton: MGSwipeButton = MGSwipeButton.init(type: .custom)
         muteButton.backgroundColor = UIColor.init(netHex: 0x999999)
         if isConversationMuted(viewModel: viewModel) {
