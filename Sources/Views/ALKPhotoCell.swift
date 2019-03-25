@@ -329,12 +329,16 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         guard let message = viewModel, let metadata = message.fileMetaInfo else {
             return
         }
+        guard (ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()) else {
+            self.photoView.kf.setImage(with: message.thumbnailURL)
+            return
+        }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().getImageThumbnailUrl(using: metadata.thumbnailBlobKey, and: metadata.thumbnailUrl) { (url, error) in
+            ALMessageClientService().getImageThumbnailUrl(using: metadata.thumbnailBlobKey) { (url, error) in
                 guard error == nil,
                     let url = url
                     else {
-                        print("Error downloading thumbnail url")
+                    print("Error downloading thumbnail url")
                     return
                 }
                 let httpManager = ALKHTTPManager()

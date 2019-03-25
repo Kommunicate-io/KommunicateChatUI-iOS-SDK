@@ -25,10 +25,9 @@ extension ALMessageClientService {
     }
 
     func getImageThumbnailUrl(using blobKey: String,
-                              and url: String,
                               with completion: @escaping (String?, Error?) -> ()) {
         guard let urlRequest = getURLRequestForThumbnail(using: blobKey) else {
-            completion(url, nil)
+            completion(nil, nil)
             return
         }
         ALResponseHandler.processRequest(urlRequest, andTag: "THUMBNAIL DOWNLOAD URL", withCompletionHandler: { json, error in
