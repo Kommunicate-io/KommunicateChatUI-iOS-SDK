@@ -19,6 +19,23 @@ protocol ALKHTTPManagerDownloadDelegate: class {
     func dataDownloadingFinished(task: ALKDownloadTask)
 }
 
+struct ThumbnailIdentifier {
+    static let prefix = "THUMBNAIL_"
+
+    static func hasPrefix(in identifier: String) -> Bool {
+        return identifier.hasPrefix(prefix)
+    }
+
+    static func addPrefix(to identifier: String) -> String {
+        return prefix + identifier
+    }
+
+    static func removePrefix(from identifier: String) -> String {
+        guard hasPrefix(in: identifier) else { return identifier }
+        return String(identifier.dropFirst(prefix.count))
+    }
+}
+
 class ALKHTTPManager: NSObject {
     static let shared = ALKHTTPManager()
     weak var downloadDelegate: ALKHTTPManagerDownloadDelegate?
@@ -32,6 +49,12 @@ class ALKHTTPManager: NSObject {
     var uploadTask: ALKUploadTask?
     var downloadTask: ALKDownloadTask?
 
+    struct Constants {
+        static let thumbnailSuffix = "thumbnail_local"
+        static let attachmentSuffix = "local"
+        static let paramForS3Storage = "file"
+        static let paramForDefaultStorage = "files[]"
+    }
 
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?)->()) {
 
@@ -73,7 +96,7 @@ class ALKHTTPManager: NSObject {
         guard let urlString = task.urlString, let fileName = task.fileName, let identifier = task.identifier else { return }
         let componentsArray = fileName.components(separatedBy: ".")
         let fileExtension = componentsArray.last
-        let filePath = String(format: "%@_local.%@", identifier, fileExtension!)
+        let filePath = getFilePath(using: identifier, with: fileExtension!)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
         if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil, let downloadTask = self.downloadTask {
@@ -81,8 +104,11 @@ class ALKHTTPManager: NSObject {
         } else {
             let configuration = URLSessionConfiguration.default
             guard !urlString.isEmpty else { return }
+            let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
+            guard let urlRequest = serviceEnabled ? ALRequestHandler.createGETRequest(withUrlStringWithoutHeader: urlString, paramString: nil) :
+                ALRequestHandler.createGETRequest(withUrlString: urlString, paramString: nil) else { return }
             session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
-            let dataTask = session?.dataTask(with: URLRequest(url: URL(string: urlString)!))
+            let dataTask = session?.dataTask(with: urlRequest as URLRequest)
             dataTask?.resume()
         }
     }
@@ -100,7 +126,7 @@ class ALKHTTPManager: NSObject {
             let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
             request.setValue(contentType, forHTTPHeaderField: "Content-Type")
             var body = Data()
-            let fileParamConstant = "files[]"
+            let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
             let imageData = NSData(contentsOfFile: filePath.path)
 
             if let data = imageData as Data? {
@@ -120,6 +146,12 @@ class ALKHTTPManager: NSObject {
             let dataTask = session?.dataTask(with: request)
             dataTask?.resume()
         }
+    }
+
+    fileprivate func getFilePath(using identifier: String, with fileExtension: String) -> String {
+        let format = ThumbnailIdentifier.hasPrefix(in: identifier) ? Constants.thumbnailSuffix : Constants.attachmentSuffix
+        let key = ThumbnailIdentifier.removePrefix(from: identifier)
+        return String(format: "%@_\(format).%@", key, fileExtension)
     }
 
     private func save(data: Data,to url: URL) -> String? {
@@ -194,7 +226,7 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let componentsArray = fileName.components(separatedBy: ".")
         let fileExtension = componentsArray.last
-        let filePath = String(format: "%@_local.%@", identifier, fileExtension!)
+        let filePath = getFilePath(using: identifier, with: fileExtension!)
         let path = documentsURL.appendingPathComponent(filePath).path
         buffer.write(toFile: path, atomically: true)
         DispatchQueue.main.async {
