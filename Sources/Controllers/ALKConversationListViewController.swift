@@ -280,6 +280,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     fileprivate func push(conversationVC: ALKConversationViewController, with viewModel: ALKConversationViewModel) {
         if let topVC = navigationController?.topViewController as? ALKConversationViewController {
             // Update the details and refresh
+            topVC.unsubscribingChannel()
             topVC.viewModel.contactId = viewModel.contactId
             topVC.viewModel.channelKey = viewModel.channelKey
             topVC.viewModel.conversationProxy = viewModel.conversationProxy

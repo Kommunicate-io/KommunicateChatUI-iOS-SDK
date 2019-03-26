@@ -356,7 +356,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             tableView.reloadData()
         }
         contentOffsetDictionary = Dictionary<NSObject,AnyObject>()
-        subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
@@ -755,8 +754,24 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         //Check for group left
         isChannelLeft()
         checkUserBlock()
+        subscribeChannelToMqtt()
 
         viewModel.prepareController()
+    }
+
+    /// Call this before changing viewModel contents
+    public func unsubscribingChannel() {
+        guard viewModel != nil else { return }
+        if !viewModel.isOpenGroup {
+            self.alMqttConversationService.sendTypingStatus(
+                ALUserDefaultsHandler.getApplicationKey(),
+                userID: viewModel.contactId,
+                andChannelKey: viewModel.channelKey,
+                typing: false)
+            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
+        } else {
+            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
+        }
     }
 
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
@@ -1104,15 +1119,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         }
 
-    }
-
-    private func unsubscribingChannel() {
-        if !viewModel.isOpenGroup {
-            self.alMqttConversationService.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: viewModel.contactId, andChannelKey: viewModel.channelKey, typing: false)
-            self.alMqttConversationService.unSubscribe(toChannelConversation: viewModel.channelKey)
-        } else {
-            self.alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
-        }
     }
 
     @objc private func showParticipantListChat() {
