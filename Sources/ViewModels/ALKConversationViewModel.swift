@@ -106,7 +106,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
         
     public func addToWrapper(message: ALMessage) {
-        
+        guard !alMessageWrapper.contains(message: message) else { return }
         self.alMessageWrapper.addALMessage(toMessageArray: message)
         self.alMessages.append(message)
         self.messageModels.append(message.messageModel)
@@ -402,7 +402,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         }
 
-        var sortedArray = filteredArray
+        var sortedArray = filteredArray.filter {
+            return !self.alMessageWrapper.contains(message: $0)
+        }
         if filteredArray.count > 1 {
             sortedArray = filteredArray.sorted { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
         }
@@ -582,7 +584,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
         let message = getLocationMessage(latLonString: jsonString)
         message.metadata = self.modfiedMessageMetadata(alMessage: message,metadata: metadata)
-        alMessageWrapper.addALMessage(toMessageArray: message)
         addToWrapper(message: message)
         let indexPath = IndexPath(row: 0, section: messageModels.count-1)
         return (message, indexPath)
@@ -1239,7 +1240,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return nil
         }
         alMessage.fileMeta.size = String(format: "%lu", imageData.length)
-        alMessageWrapper.addALMessage(toMessageArray: alMessage)
 
         let dbHandler = ALDBHandler.sharedInstance()
         let messageService = ALMessageDBService()
