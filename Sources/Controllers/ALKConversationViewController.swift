@@ -355,7 +355,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } else {
             tableView.reloadData()
         }
-        self.setupNavigation()
         contentOffsetDictionary = Dictionary<NSObject,AnyObject>()
         subscribeChannelToMqtt()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
@@ -417,14 +416,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         replyMessageView.closeButtonTapped = {[weak self] _ in
             self?.hideReplyMessageView()
         }
-        //Check for group left
-        isChannelLeft()
-
-        guard viewModel.isContextBasedChat else {
-            toggleVisibilityOfContextTitleView(false)
-            return
-        }
-        prepareContextView()
     }
 
     func isChannelLeft() {
@@ -443,6 +434,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func prepareContextView(){
+        guard viewModel.isContextBasedChat else {
+            toggleVisibilityOfContextTitleView(false)
+            return
+        }
         guard let topicDetail = viewModel.getContextTitleData() else {return }
         contextTitleView.configureWith(value: topicDetail)
         toggleVisibilityOfContextTitleView(true)
@@ -593,13 +588,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    private func prepareChatBar() {
-        // Update ChatBar's top view which contains send button and the text view.
-        chatBar.grayView.backgroundColor = configuration.backgroundColor
-
-        // Update background view's color which contains all the attachment options.
-        chatBar.bottomGrayView.backgroundColor = configuration.chatBarAttachmentViewBackgroundColor
-
+    private func configureChatBar() {
         if viewModel.isOpenGroup {
             hideMediaOptions()
             chatBar.hideMicButton()
@@ -607,6 +596,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             if configuration.hideAllOptionsInChatBar {hideMediaOptions()}
             else {showMediaOptions()}
         }
+    }
+
+    private func prepareChatBar() {
+        // Update ChatBar's top view which contains send button and the text view.
+        chatBar.grayView.backgroundColor = configuration.backgroundColor
+
+        // Update background view's color which contains all the attachment options.
+        chatBar.bottomGrayView.backgroundColor = configuration.chatBarAttachmentViewBackgroundColor
 
         chatBar.poweredByMessageLabel.attributedText =
             NSAttributedString(string: "Powered by Applozic")
@@ -743,6 +740,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func refreshViewController() {
         viewModel.clearViewModel()
         tableView.reloadData()
+
+        setupNavigation()
+        prepareContextView()
+        configureChatBar()
+        //Check for group left
+        isChannelLeft()
+
         viewModel.prepareController()
     }
 
