@@ -8,6 +8,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Fixes
 - [AL-3302] Fix duplicate messages for open group.
+- Fixed an issue where conversation details weren't getting refreshed when chat was opened from tapping on notification.
 
 2.3.0
 ---

@@ -101,10 +101,10 @@ class ALKConversationNavBar: UIView, Localizable {
         profileView.isHidden = false
         setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: (profile.status != nil))
         guard let status = profile.status else {
-            statusIconBackground.isHidden = true
-            onlineStatusText.isHidden = true
+            self.hideStatus(true)
             return
         }
+        self.hideStatus(false)
         updateStatus(isOnline: status.isOnline, lastSeenAt: status.lastSeenAt)
     }
 
@@ -161,6 +161,11 @@ class ALKConversationNavBar: UIView, Localizable {
         profileView.topAnchor.constraint(equalTo: profileImage.topAnchor).isActive = true
         profileView.bottomAnchor.constraint(equalTo: profileImage.bottomAnchor).isActive = true
         profileView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+    }
+
+    private func hideStatus(_ hide: Bool) {
+        statusIconBackground.isHidden = hide
+        onlineStatusText.isHidden = hide
     }
 
     private func setupStyle() {
