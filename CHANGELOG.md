@@ -11,6 +11,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3302] Fix duplicate messages for open group.
 - Fixed an issue where conversation details weren't getting refreshed when chat was opened from tapping on notification.
 - [AL-3307] Fixed an issue where typing indicator in 1-1 chat when user was typing in group.
+- [AL-3312] Fixed an issue where profile image of receiver wasn't visible for video cells.
+
 
 2.3.0
 ---

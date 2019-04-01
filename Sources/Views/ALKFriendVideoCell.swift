@@ -82,8 +82,16 @@ class ALKFriendVideoCell: ALKVideoCell {
 
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
-
         nameLabel.text = viewModel.displayName
+
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        guard let url = viewModel.avatarURL else {
+            self.avatarImageView.image = placeHolder
+            return
+        }
+        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+        self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+
     }
 
     @objc private func avatarTappedAction() {
