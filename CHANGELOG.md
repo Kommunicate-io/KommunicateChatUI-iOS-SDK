@@ -5,6 +5,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 2.3.1 (upcoming releases)
 ---
 ### Enhancements
+- [AL-3267] Added support for blocking/unblocking a user.
 
 ### Fixes
 - [AL-3302] Fix duplicate messages for open group.

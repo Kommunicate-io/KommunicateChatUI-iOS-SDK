@@ -43,6 +43,7 @@ struct SystemMessage : Localizable{
         static let FriendRemoved = localizedString(forKey: "FriendRemovedMessage")
         static let AppName = ""
         static let NotPartOfGroup = localizedString(forKey: "NotPartOfGroup")
+        static let UnblockToEnableChat = localizedString(forKey: "UnblockToEnableChat")
         static let ChatHere = localizedString(forKey: "ChatHere")
         static let LoadingIndicatorText = localizedString(forKey: "LoadingIndicatorText")
     }
@@ -89,6 +90,7 @@ struct SystemMessage : Localizable{
         static let Done = localizedString(forKey: "DoneButton")
         static let Invite = localizedString(forKey: "InviteButton")
         static let Confirm = localizedString(forKey: "ConfirmButton")
+        static let Delete = localizedString(forKey: "DeleteButtonName")
     }
 
     struct NoData {
@@ -172,5 +174,16 @@ struct SystemMessage : Localizable{
         static let JustNow = localizedString(forKey: "JustNow")
         static let MinutesAgo = localizedString(forKey: "MinutesAgo")
         static let HoursAgo = localizedString(forKey: "HoursAgo")
+    }
+
+    struct Block {
+        static let BlockTitle = localizedString(forKey: "BlockTitle")
+        static let UnblockTitle = localizedString(forKey: "UnblockTitle")
+        static let BlockUser = localizedString(forKey: "BlockUser")
+        static let UnblockUser = localizedString(forKey: "UnblockUser")
+        static let ErrorMessage = localizedString(forKey: "ErrorMessage")
+        static let OkMessage = localizedString(forKey: "OkMessage")
+        static let BlockSuccess = localizedString(forKey: "BlockSuccess")
+        static let UnblockSuccess = localizedString(forKey: "UnblockSuccess")
     }
 }

@@ -418,12 +418,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    func checkUserBlock() {
+        guard !viewModel.isGroup, let contactId = viewModel.contactId else { return }
+        ALUserService().getUserDetail(contactId) { (contact) in
+            guard let contact = contact, contact.block else { return }
+            self.chatBar.disableChat(message: self.localizedString(forKey: "UnblockToEnableChat", withDefaultValue: SystemMessage.Information.UnblockToEnableChat, fileName: self.configuration.localizedStringFileName))
+        }
+    }
+
     func isChannelLeft() {
         guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
         if  channel.type != 6 && channel.type != 10 && !ALChannelService().isLoginUser(inChannel: channelKey) {
-            chatBar.disableChat()
+            chatBar.disableChat(message: localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName))
             //Disable click on toolbar
             navigationBar.disableTitleAction = true
         } else {
@@ -746,6 +754,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         configureChatBar()
         //Check for group left
         isChannelLeft()
+        checkUserBlock()
 
         viewModel.prepareController()
     }
@@ -757,6 +766,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
+        /// Don't show typing status when contact is blocked
+        guard
+            let contact = ALContactService().loadContact(byKey: "userId", value: userId),
+            !contact.block,
+            !contact.blockBy
+            else {
+            return
+        }
 
         if(status){
             timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)

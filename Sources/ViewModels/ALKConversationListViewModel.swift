@@ -72,6 +72,20 @@ public protocol ALKConversationListViewModelProtocol: class {
      */
     func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> ())
 
+    /// This method is used to block a user whose conversation is present in chatlist.
+    ///
+    /// - Parameters:
+    ///   - conversation: Message with the user whom we are going to block
+    ///   - withCompletion: Escaping closure when block request is complete.
+    func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ())
+
+    /// This method is used to unblock a user whose conversation is present in chatlist.
+    ///
+    /// - Parameters:
+    ///   - conversation: Message with the user whom we are going to unblock
+    ///   - withCompletion: Escaping closure when unblock request is complete.
+    func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ())
+
 }
 
 
@@ -234,6 +248,30 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
             }
         }else {
             withCompletion(false)
+        }
+    }
+
+    public func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ()) {
+        ALUserService().blockUser(conversation.contactIds) { (error, response) in
+            guard let error = error else {
+                print("UserId \(String(describing: conversation.contactIds)) is successfully blocked")
+                withCompletion(nil, true)
+                return
+            }
+            print("Error while blocking userId \(String(describing: conversation.contactIds)) :: \(error)")
+            withCompletion(error, false)
+        }
+    }
+
+    public func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ()) {
+        ALUserService().unblockUser(conversation.contactIds) { (error, response) in
+            guard let error = error else {
+                print("UserId \(String(describing: conversation.contactIds)) is successfully unblocked")
+                withCompletion(nil, true)
+                return
+            }
+            print("Error while unblocking userId \(String(describing: conversation.contactIds)) :: \(error)")
+            withCompletion(error, false)
         }
     }
 

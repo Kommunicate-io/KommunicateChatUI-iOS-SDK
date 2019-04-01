@@ -204,7 +204,7 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         }
         
         outerChatScreen.cells.allElementsBoundByIndex.first?.swipeRight()
-        outerChatScreen/*@START_MENU_TOKEN@*/.buttons["icon delete white"]/*[[".cells.buttons[\"icon delete white\"]",".buttons[\"icon delete white\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        outerChatScreen.buttons["SwippableDeleteIcon"].tap()
         app.alerts.buttons["Remove"].tap()
         sleep(5) // This is to ensure that Conversation is deleted before closing the app
     }

@@ -13,6 +13,7 @@ import Foundation
 struct ALKConversationProfile {
     var name: String = ""
     var imageUrl: String?
+    var isBlocked: Bool = false
     var status: Status? // Required only for One-to-One chat.
 
     struct Status {

@@ -528,17 +528,13 @@ open class ALKChatBar: UIView, Localizable {
         textView.isUserInteractionEnabled = enabled
     }
 
-    func disableChat() {
+    func disableChat(message: String) {
         toggleUserInteractionForViews(enabled: false)
-
-        //change text from "chat here" to "you are not allowed to chat"
-        placeHolder.text = localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName)
+        placeHolder.text = message
     }
 
     func enableChat() {
         toggleUserInteractionForViews(enabled: true)
-
-        //change text from "you are not allowed to chat" to "chat here"
         placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
     }
 }
