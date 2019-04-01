@@ -1138,12 +1138,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func sendQuickReply(_ text: String, metadata: Dictionary<String, Any>?) {
-        guard let key = configuration.quickReplyMetadataKey, let metadata = metadata else {
-            viewModel.send(message: text, metadata: nil)
+        var customMetadata = metadata ?? [String: Any]()
+        guard let messageMetadata = configuration.messageMetadata as? [String: Any] else {
+            viewModel.send(message: text, metadata: customMetadata)
             return
         }
-        var customMetadata = [String: Any]()
-        customMetadata[key] = metadata
+        customMetadata.merge(messageMetadata) { $1 }
         viewModel.send(message: text, metadata: customMetadata)
     }
 
