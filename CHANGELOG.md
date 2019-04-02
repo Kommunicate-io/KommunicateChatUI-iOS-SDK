@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.3.1 (upcoming releases)
+2.4.0
 ---
 ### Enhancements
 - [AL-3267] Added support for blocking/unblocking a user.
