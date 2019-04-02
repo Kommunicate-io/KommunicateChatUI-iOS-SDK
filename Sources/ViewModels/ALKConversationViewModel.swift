@@ -944,6 +944,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return ALApplicationInfo().showPoweredByMessage()
     }
 
+    func updateUserDetail(_ userId: String) {
+        ALUserService.updateUserDetail(userId, withCompletion: {
+            userDetail in
+            guard let _ = userDetail else { return }
+            guard
+                !self.isGroup,
+                userId == self.contactId,
+                let contact = ALContactService().loadContact(byKey: "userId", value: userId)
+                else { return }
+            self.delegate?.updateDisplay(contact: contact, channel: nil)
+        })
+    }
+
     func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> ()) {
         if conversationId != nil {
             ALConversationService().fetchTopicDetails(conversationId) { (error, conversationProxy) in
@@ -970,6 +983,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     completion(nil)
                     return
                 }
+                self.updateUserDetail(contact.userId)
                 completion(self.conversationProfileFrom(contact: contact, channel: nil, conversation: nil))
             }
         }

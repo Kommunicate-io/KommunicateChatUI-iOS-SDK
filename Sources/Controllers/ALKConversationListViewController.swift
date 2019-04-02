@@ -134,8 +134,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             print("update user detail")
             ALUserService.updateUserDetail(userId, withCompletion: {
                 userDetail in
-                guard let detail = userDetail else { return }
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
+                guard let _ = userDetail else { return }
                 weakSelf.tableView?.reloadData()
             })
         })
