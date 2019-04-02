@@ -14,7 +14,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3312] Fixed an issue where profile image of receiver wasn't visible for video cells.
 -  Fixed an issue where video weren't being send after recording from the SDK.
 - Fixed an issue where changing the right nav bar conversation icon was still refreshing the view.
-
+-  Fixed issue where style was not used for text message sent and received.
 
 2.3.0
 ---
