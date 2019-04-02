@@ -1601,11 +1601,11 @@ extension ALKConversationViewController: UIImagePickerControllerDelegate, UINavi
         picker.dismiss(animated: true, completion: nil)
     }
 
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
         // Video attachment
-        if let mediaType = info[UIImagePickerController.InfoKey.mediaType.rawValue] as? String, mediaType == "public.movie" {
-            guard let url = info[UIImagePickerController.InfoKey.mediaURL.rawValue] as? URL else { return }
+        if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String, mediaType == "public.movie" {
+            guard let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL else { return }
             print("video path is: ", url.path)
             viewModel.encodeVideo(videoURL: url, completion: {
                 path in
