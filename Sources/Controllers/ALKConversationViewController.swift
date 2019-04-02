@@ -1335,23 +1335,48 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         navigationBar.updateView(profile: profile)
     }
 
-    private func addRefreshButton() {
+    func rightNavbarButton() -> UIBarButtonItem? {
         guard !configuration.hideRightNavBarButtonForConversationView else {
-            return
+            return nil
         }
         var button: UIBarButtonItem
+
+        let notificationSelector = #selector(ALKConversationViewController.sendRightNavBarButtonSelectionNotification(_:))
+
         if let image = configuration.rightNavBarImageForConversationView {
-            button = UIBarButtonItem(image: image, style: UIBarButtonItem.Style.plain, target: self,
-                                         action: #selector(ALKConversationViewController.refreshButtonAction(_:)))
+            button = UIBarButtonItem(
+                image: image,
+                style: UIBarButtonItem.Style.plain,
+                target: self,
+                action: notificationSelector)
         }else {
-            button = UIBarButtonItem(barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView, target: self,
-                                     action: #selector(ALKConversationViewController.refreshButtonAction(_:)))
+            var selector = notificationSelector
+            if configuration.rightNavBarSystemIconForConversationView == .refresh {
+                selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
+            }
+
+            button = UIBarButtonItem(
+                barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
+                target: self,
+                action: selector)
         }
-        self.navigationItem.rightBarButtonItem = button
+        return button
+    }
+
+    func addRefreshButton() {
+        self.navigationItem.rightBarButtonItem = rightNavbarButton()
     }
 
     @objc func refreshButtonAction(_ selector: UIBarButtonItem) {
         viewModel.refresh()
+    }
+
+    @objc func sendRightNavBarButtonSelectionNotification(_ selector: UIBarButtonItem) {
+        let channelId = (viewModel.channelKey != nil) ? String(describing: viewModel.channelKey!) : ""
+        let contactId = viewModel.contactId ?? ""
+        let info: [String: Any] = ["ChannelId": channelId, "ContactId": contactId, "ConversationVC": self]
+
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "RightNavBarConversationViewAction"), object: info)
     }
 
     public func willSendMessage() {

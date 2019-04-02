@@ -13,6 +13,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3307] Fixed an issue where typing indicator in 1-1 chat when user was typing in group.
 - [AL-3312] Fixed an issue where profile image of receiver wasn't visible for video cells.
 -  Fixed an issue where video weren't being send after recording from the SDK.
+- Fixed an issue where changing the right nav bar conversation icon was still refreshing the view.
 
 
 2.3.0

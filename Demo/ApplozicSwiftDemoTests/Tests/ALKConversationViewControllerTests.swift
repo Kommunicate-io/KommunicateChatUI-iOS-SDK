@@ -10,10 +10,13 @@ import XCTest
 @testable import ApplozicSwift
 
 class ALKConversationViewControllerTests: XCTestCase {
-    
+
+    var conversationVC: ALKConversationViewController!
+
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        conversationVC = ALKConversationViewController(
+            configuration: ALKConfiguration())
     }
 
     func testObserver_WhenInitializing() {
@@ -61,5 +64,28 @@ class ALKConversationViewControllerTests: XCTestCase {
         conversationVC.contactService = ALContactServiceMock()
         conversationVC.showTypingLabel(status: true, userId: "demoUserId")
         XCTAssertEqual("Somebody", conversationVC.testDisplayName)
+    }
+
+    func testRightNavBarButton_whenConfigIsDefault() {
+        let barButton = conversationVC.rightNavbarButton()
+        XCTAssertNotNil(barButton?.action)
+        XCTAssertEqual(barButton?.action, #selector(conversationVC.refreshButtonAction(_:)))
+    }
+
+    func testRightNavBarButton_whenConfigIsCustom() {
+        var configuration = ALKConfiguration()
+        configuration.rightNavBarSystemIconForConversationView = .action
+        conversationVC.configuration = configuration
+        let barButton = conversationVC.rightNavbarButton()
+        XCTAssertNotNil(barButton?.action)
+        XCTAssertEqual(barButton?.action, #selector(conversationVC.sendRightNavBarButtonSelectionNotification(_:)))
+    }
+
+    func testRightNavBarButton_whenButtonIsHidden() {
+        var configuration = ALKConfiguration()
+        configuration.hideRightNavBarButtonForConversationView = true
+        conversationVC.configuration = configuration
+        let barButton = conversationVC.rightNavbarButton()
+        XCTAssertNil(barButton)
     }
 }
