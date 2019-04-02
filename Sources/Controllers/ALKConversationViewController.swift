@@ -1580,19 +1580,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     public func updateUserDetail(_ userId: String!) {
         guard let userId = userId else { return }
         print("update user detail")
-
-        ALUserService.updateUserDetail(userId, withCompletion: {
-            userDetail in
-            guard let detail = userDetail else { return }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
-            guard
-                !self.viewModel.isGroup,
-                userId == self.viewModel.contactId,
-                let contact = ALContactService().loadContact(byKey: "userId", value: userId)
-            else { return }
-            let profile = self.viewModel.conversationProfileFrom(contact: contact, channel: nil, conversation: nil)
-            self.navigationBar.updateView(profile: profile)
-        })
+        viewModel.updateUserDetail(userId)
     }
 }
 
