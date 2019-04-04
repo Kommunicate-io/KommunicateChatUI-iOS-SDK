@@ -20,6 +20,7 @@
 		1A7129A821E71FD5007A7B78 /* ALKCurvedButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7129A721E71FD5007A7B78 /* ALKCurvedButtonSnapshotTests.swift */; };
 		1A7129AA21E72900007A7B78 /* ALKQuickReplyViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7129A921E72900007A7B78 /* ALKQuickReplyViewSnapshotTests.swift */; };
 		1A933D7E21CA2E81004C5191 /* ConversationListTableVCMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A933D7D21CA2E81004C5191 /* ConversationListTableVCMock.swift */; };
+		1A96DD4222549DF600335C72 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A96DD4122549DF600335C72 /* ContainerViewController.swift */; };
 		1ACB680421806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB680321806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift */; };
 		1ACB6806218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB6805218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift */; };
 		1ACD2A13217E5CB900B46BCC /* MuteConversationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */; };
@@ -106,6 +107,7 @@
 		1A7129A721E71FD5007A7B78 /* ALKCurvedButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKCurvedButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		1A7129A921E72900007A7B78 /* ALKQuickReplyViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKQuickReplyViewSnapshotTests.swift; sourceTree = "<group>"; };
 		1A933D7D21CA2E81004C5191 /* ConversationListTableVCMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListTableVCMock.swift; sourceTree = "<group>"; };
+		1A96DD4122549DF600335C72 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		1ACB680321806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		1ACB6805218068AD000EB0E8 /* ALKChatBarSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKChatBarSnapshotTests.swift; sourceTree = "<group>"; };
 		1ACD2A12217E5CB900B46BCC /* MuteConversationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteConversationViewControllerTests.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				8B36D0F01F3DC5E900FEFFD2 /* LaunchScreen.storyboard */,
 				8B36D0F31F3DC5E900FEFFD2 /* Info.plist */,
 				1A661EDD2241146600093559 /* PushNotificationHandler.swift */,
+				1A96DD4122549DF600335C72 /* ContainerViewController.swift */,
 			);
 			path = ApplozicSwiftDemo;
 			sourceTree = "<group>";
@@ -619,6 +622,7 @@
 				8BEF11AE1F619367000336AF /* LoginViewController.swift in Sources */,
 				8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */,
 				1A661EDE2241146600093559 /* PushNotificationHandler.swift in Sources */,
+				1A96DD4222549DF600335C72 /* ContainerViewController.swift in Sources */,
 				8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

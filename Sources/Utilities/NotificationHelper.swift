@@ -152,10 +152,11 @@ public class NotificationHelper {
             return
         }
         if vc.navigationController != nil {
-            //TODO: Find a better way to dismiss or pop.
-            vc.navigationController?.popViewController(animated: false)
-            vc.navigationController?.dismiss(animated: false) {
-                completion()
+            let isPopped = vc.navigationController?.popViewController(animated: false)
+            if isPopped == nil {
+                vc.dismiss(animated: false) {
+                    completion()
+                }
             }
         } else {
             completion()

@@ -111,8 +111,25 @@ class PushNotificationHandler {
             NotificationHelper().handleNotificationTap(notification)
         } else {
             print("Applozic Controller not on top. Launch chat using helper methods.")
-            let vc = NotificationHelper().getConversationVCToLaunch(notification: notification, configuration: configuration)
-            topVC.present(vc, animated: true, completion: nil)
+            /// Below code needs to be changed depending on how you are using SDK.
+            /// Currently it shows demonstration on how it can be used with container.
+            switch topVC {
+                case let vc as ConversationContainerViewController:
+                    NotificationHelper().openConversationFromListVC(vc.conversationVC, notification: notification)
+                case let vc as ContainerViewController:
+                    let listVC = NotificationHelper().getConversationVCToLaunch(notification: notification, configuration: AppDelegate.config)
+                    vc.openConversationFromNotification(listVC)
+                case let vc as MenuViewController:
+                    vc.dismiss(animated: true) {
+                        guard let top = pushAssistant.topViewController as? ContainerViewController else {
+                            return
+                        }
+                        let listVC = NotificationHelper().getConversationVCToLaunch(notification: notification, configuration: AppDelegate.config)
+                        top.openConversationFromNotification(listVC)
+                    }
+                default:
+                    print("Some other controller Handle yourself")
+            }
         }
     }
 
