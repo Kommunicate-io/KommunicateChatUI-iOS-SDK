@@ -11,9 +11,9 @@ public class NotificationHelper {
 
     /// Stores information about the notification that arrives
     public struct NotificationData {
-        let userId: String?
-        let groupId: NSNumber?
-        let conversationId: NSNumber?
+        public let userId: String?
+        public let groupId: NSNumber?
+        public let conversationId: NSNumber?
         public init(userId: String?, groupId: NSNumber?, conversationId: NSNumber?) {
             self.userId = userId
             self.groupId = groupId
@@ -24,6 +24,23 @@ public class NotificationHelper {
     public init() { }
 
     // MARK: - Public methods
+
+    /// Return information for incoming notification
+    ///
+    /// - Parameter notification: notification that arrived
+    /// - Returns: `NotificationData` containing information about userId, groupId or conversationId
+    ///             `String` which is the message for which notification came
+    public func notificationInfo(_ notification: Notification) -> (NotificationData?, String?) {
+        guard let object = notification.object as? String else { return (nil, nil) }
+        let notifData = notificationData(using: object)
+        guard
+            let userInfo = notification.userInfo,
+            let alertValue = userInfo["alertValue"] as? String
+            else {
+            return (notifData, nil)
+        }
+        return (notifData, alertValue)
+    }
 
     /// Checks if the incoming notification is for currently opened chat.
     ///
@@ -131,6 +148,27 @@ public class NotificationHelper {
     }
 
     // MARK:- Private helper methods
+
+    private func notificationData(using object: String) -> NotificationData? {
+        let components = object.components(separatedBy: ":")
+        switch components.count {
+            case 3:
+                guard let componentElement = Int(components[1]) else { return nil }
+                let groupId = NSNumber(integerLiteral: componentElement)
+                return NotificationData(userId: nil, groupId: groupId, conversationId: nil)
+            case 2:
+                guard let conversationComponent = Int(components[1]) else { return nil }
+                let conversationId = NSNumber(integerLiteral: conversationComponent)
+                let userId = components[0]
+                return NotificationData(userId: userId, groupId: nil, conversationId: conversationId)
+            case 1:
+                let userId = object
+                return NotificationData(userId: userId, groupId: nil, conversationId: nil)
+            default:
+                print("Not handled")
+                return nil
+        }
+    }
 
     private func findChatVC(_ notification: NotificationData) {
         guard let vc = ALPushAssist().topViewController else { return }

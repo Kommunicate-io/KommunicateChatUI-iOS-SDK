@@ -32,7 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         /// and comment ALKPushNotification line.
         /// - NOTE:
         ///      Before using, remove ALApplozicSetting.setListOfViewController from ALChatManager.
-        ///      In ViewController's launchChatList method uncomment the lines.
+        ///      If you are trying in our sample, ViewController's launchChatList method uncomment the lines.
+        /// Uncomment this line
         /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
         ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(AppDelegate.config)
         let alApplocalNotificationHnadler : ALAppLocalNotifications =  ALAppLocalNotifications.appLocalNotificationHandler()
