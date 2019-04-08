@@ -59,7 +59,7 @@ public class ALKQuickReplyView: UIView {
             }
             if width + currWidth > maxWidth {
                 totalHeight += prevHeight + 10 // 10 padding between buttons
-                width = currWidth
+                width = currWidth + 10
                 prevHeight = size.height
             } else {
                 width += currWidth + 10 // 10 padding between buttons
@@ -102,7 +102,7 @@ public class ALKQuickReplyView: UIView {
                 }
                 let hiddenView = hiddenViewUsing(currWidth: width - button.buttonWidth(), maxWidth: maxWidth, subViews: subviews)
                 alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
-                width = button.buttonWidth()
+                width = button.buttonWidth() + 10
                 let stackView = horizontalStackView(subviews: subviews)
                 mainStackView.addArrangedSubview(stackView)
                 subviews.removeAll()
