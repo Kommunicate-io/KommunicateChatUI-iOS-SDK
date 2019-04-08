@@ -96,6 +96,7 @@ public class NotificationHelper {
     ///   - viewController: An instance of `ALKConversationViewController` which is at top.
     ///   - notification: notification that is tapped.
     public func refreshConversation(_ viewController: ALKConversationViewController, with notification: NotificationData) {
+        viewController.unsubscribingChannel()
         viewController.viewModel.contactId = notification.userId
         viewController.viewModel.channelKey = notification.groupId
         var convProxy: ALConversationProxy?
@@ -120,6 +121,8 @@ public class NotificationHelper {
             case "WebViewController":
                 fallthrough
             case "SelectProfilePicViewController":
+                fallthrough
+            case "CAMImagePickerCameraViewController": /// Cannot find any alternative.
                 fallthrough
             case _ where vc.hasPrefix("ALK"):
                 return true
@@ -177,7 +180,7 @@ public class NotificationHelper {
                 self.handleNotificationTap(notification)
             }
         } else {
-            vc.dismiss(animated: true) {
+            vc.dismiss(animated: false) {
                 self.findChatVC(notification)
             }
         }
@@ -195,6 +198,8 @@ public class NotificationHelper {
                 vc.dismiss(animated: false) {
                     completion()
                 }
+            } else {
+                completion()
             }
         } else {
             completion()

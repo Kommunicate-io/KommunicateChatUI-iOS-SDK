@@ -41,19 +41,26 @@ class ContainerViewController: UIViewController {
             print("Simple")
         case .conversation:
             print("Conversation")
-            let vc = ConversationContainerViewController()
-            let navVC = UINavigationController(rootViewController: vc)
-            self.present(navVC, animated: true, completion: nil)
+            /// Use this to embed one more container.
+//            let vc = ConversationContainerViewController()
+//            let navVC = UINavigationController(rootViewController: vc)
+//            self.present(navVC, animated: true, completion: nil)
+            let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
+            let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            self.present(nav, animated: false, completion: nil)
         case .profile:
             print("Profile")
         }
     }
 
     func openConversationFromNotification(_ viewController: ALKConversationListViewController) {
-        let vc = ConversationContainerViewController()
-        vc.conversationVC = viewController
-        let navVC = UINavigationController(rootViewController: vc)
-        self.present(navVC, animated: true, completion: nil)
+        /// Use this if you'd used `ConversationContainerViewController` above.
+//        let vc = ConversationContainerViewController()
+//        vc.conversationVC = viewController
+//        let navVC = UINavigationController(rootViewController: vc)
+//        self.present(navVC, animated: true, completion: nil)
+        let nav = ALKBaseNavigationViewController(rootViewController: viewController)
+        self.present(nav, animated: false, completion: nil)
     }
 
 }
