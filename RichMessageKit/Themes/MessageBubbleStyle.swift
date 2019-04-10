@@ -9,9 +9,9 @@ import Foundation
 
 public struct MessageBubbleStyle {
 
-    let color: UIColor
-    let cornerRadius: CGFloat
-    let padding: Padding
+    public var color: UIColor
+    public var cornerRadius: CGFloat
+    public var padding: Padding
 
     /// Initializer for message bubble style
     ///

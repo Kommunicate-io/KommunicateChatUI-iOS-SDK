@@ -390,6 +390,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } catch {
             print("Error while loading restricted words file:", error)
         }
+        setRichMessageKitTheme()
     }
 
     override open func viewDidLayoutSubviews() {
@@ -630,6 +631,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKMyContactMessageCell.self)
         tableView.register(ALKFriendContactMessageCell.self)
+        tableView.register(ALKMyImageMessageCell.self)
+        tableView.register(ALKFriendImageMessageCell.self)
     }
 
 
@@ -1364,6 +1367,24 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
     }
+
+    func setRichMessageKitTheme() {
+        ImageBubbleTheme.sentMessage.bubble.color = ALKMessageStyle.sentBubble.color
+        ImageBubbleTheme.sentMessage.bubble.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        ImageBubbleTheme.receivedMessage.bubble.color = ALKMessageStyle.receivedBubble.color
+        ImageBubbleTheme.receivedMessage.bubble.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+
+        MessageTheme.sentMessage.message = ALKMessageStyle.sentMessage
+        MessageTheme.sentMessage.bubble.color = ALKMessageStyle.sentBubble.color
+        MessageTheme.sentMessage.bubble.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        MessageTheme.receivedMessage.message = ALKMessageStyle.receivedMessage
+        MessageTheme.receivedMessage.bubble.color = ALKMessageStyle.receivedBubble.color
+        MessageTheme.receivedMessage.bubble.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+
+        MessageTheme.receivedMessage.displayName = ALKMessageStyle.displayName
+        MessageTheme.receivedMessage.time = ALKMessageStyle.time
+        MessageTheme.sentMessage.time = ALKMessageStyle.time
+    }    
 }
 
 extension ALKConversationViewController: CNContactPickerDelegate {

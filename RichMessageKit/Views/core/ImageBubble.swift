@@ -123,7 +123,9 @@ public class ImageBubble: UIView, ViewInterface {
         guard let url = URL(string: model.url) else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
             guard let image = image else { return }
-            self?.imageView.image = image
+            DispatchQueue.main.async {
+                self?.imageView.image = image
+            }
         }
     }
 

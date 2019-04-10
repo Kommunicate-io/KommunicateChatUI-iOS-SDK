@@ -15,7 +15,7 @@ public class ReceivedMessageView: UIView, ViewInterface {
 
     // MARK: Public properties
 
-    /// Configuration to change width height and padding of views inside SentMessageView.
+    /// Configuration to change width height and padding of views inside ReceivedMessageView.
     public struct Config {
 
         public struct ProfileImage {
@@ -35,7 +35,7 @@ public class ReceivedMessageView: UIView, ViewInterface {
             public static var height: CGFloat = 16.0
 
             /// Left padding of `DisplayName` from `ProfileImage`
-            public static var leftPadding: CGFloat = 20.0
+            public static var leftPadding: CGFloat = 10.0
 
             /// Right padding of `DisplayName` from `ReceivedMessageView`. Used as lessThanOrEqualTo
             public static var rightPadding: CGFloat = 20.0
@@ -43,7 +43,7 @@ public class ReceivedMessageView: UIView, ViewInterface {
 
         public struct MessageView {
             /// Left padding of `MessageView` from `ProfileImage`
-            public static var leftPadding: CGFloat = 20.0
+            public static var leftPadding: CGFloat = 10.0
 
             /// Top padding of `MessageView` from `DisplayName`
             public static var topPadding: CGFloat = 2.0
@@ -136,7 +136,9 @@ public class ReceivedMessageView: UIView, ViewInterface {
         guard let url = model.imageURL else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
             guard let image = image else { return }
-            self?.avatarImageView.image = image
+            DispatchQueue.main.async {
+                self?.avatarImageView.image = image
+            }
         }
     }
 

@@ -336,6 +336,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return ALKFriendContactMessageCell.rowHeight()
             }
+        case .imageMessage:
+            if messageModel.isMyMessage {
+                return ALKMyImageMessageCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+            } else {
+                return ALKFriendImageMessageCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+            }
         }
     }
 
