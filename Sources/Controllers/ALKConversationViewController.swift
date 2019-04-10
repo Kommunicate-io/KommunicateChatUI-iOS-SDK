@@ -67,6 +67,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate var keyboardSize: CGRect?
 
     fileprivate var localizedStringFileName: String!
+    fileprivate var profanityFilter: ProfanityFilter?
 
     fileprivate enum ActionType: String {
         case link = "link"
@@ -365,6 +366,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
+        guard !configuration.restrictedWordsFileName.isEmpty else {
+            return
+        }
+        do {
+            profanityFilter = try ProfanityFilter(
+            fileName: configuration.restrictedWordsFileName)
+        } catch {
+            print("Error while loading restricted words file:", error)
+        }
     }
 
     override open func viewDidLayoutSubviews() {
@@ -656,12 +666,23 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 button.isUserInteractionEnabled = false
                 weakSelf.viewModel.sendKeyboardDoneTyping()
 
-                weakSelf.isJustSent = true
-
                 weakSelf.chatBar.clear()
 
-                NSLog("Sent: ", message)
-
+                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message) {
+                    let alert = UIAlertController(
+                        title: "Profane words",
+                        message: "Please avoid using profane words.",
+                        preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(
+                        title: "Ok",
+                        style: .cancel,
+                        handler: nil))
+                    weakSelf.present(alert, animated: false, completion: nil)
+                    button.isUserInteractionEnabled = true
+                    return
+                }
+                weakSelf.isJustSent = true
+                print("About to send this message: ", message)
                 weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup, metadata:self?.configuration.messageMetadata)
                 button.isUserInteractionEnabled = true
             case .chatBarTextChange(_):
