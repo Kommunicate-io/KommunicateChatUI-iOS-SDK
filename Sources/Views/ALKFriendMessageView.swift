@@ -143,7 +143,7 @@ class ALKFriendMessageView: UIView {
         }
         let font = ALKMessageStyle.receivedMessage.font
         let messageWidth = width - 64 // left padding 9 + 18 + 37
-        var messageHeight = message.heightWithConstrainedWidth(width: messageWidth, font: font)
+        var messageHeight = message.heightWithConstrainedWidth(messageWidth, font: font)
         messageHeight += 30 // 6 + 16 + 4 + 2 + 2
         return max(messageHeight, minimumHeight)
     }

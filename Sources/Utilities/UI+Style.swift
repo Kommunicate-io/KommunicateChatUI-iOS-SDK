@@ -47,12 +47,6 @@ extension CALayer {
 
 extension UILabel {
     
-    func setStyle(_ style: Style) {
-        setFont(style.font)
-        setTextColor(style.text)
-        setBackgroundColor(style.background)
-    }
-    
     func setTextColor(_ color: UIColor) {
         self.textColor = color
     }

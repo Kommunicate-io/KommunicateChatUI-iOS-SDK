@@ -8,13 +8,23 @@ Pod::Spec.new do |s|
   s.authors = { 'Applozic Inc.' => 'support@applozic.com' }
 
   s.source = { :git => 'https://github.com/AppLozic/ApplozicSwift.git', :tag => s.version }
-  s.source_files = 'Sources/**/*.swift'
-  s.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
 
   s.ios.deployment_target = '9.0'
   s.swift_version = '4.2'
 
-  s.dependency 'Kingfisher', '~> 4.7.0'
-  s.dependency 'MGSwipeTableCell', '~> 1.5.6'
-  s.dependency 'Applozic', '~> 6.9.0'
+  s.default_subspec = 'Complete'
+
+  s.subspec 'RichMessageKit' do |richMessage|
+    richMessage.source_files = 'RichMessageKit/**/*.swift'
+    richMessage.resources = 'RichMessageKit/**/*{xcassets}'
+  end
+
+  s.subspec 'Complete' do |complete|
+    complete.source_files = 'Sources/**/*.swift'
+    complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
+    complete.dependency 'Kingfisher', '~> 4.7.0'
+    complete.dependency 'MGSwipeTableCell', '~> 1.5.6'
+    complete.dependency 'Applozic', '~> 6.9.0'
+    complete.dependency 'ApplozicSwift/RichMessageKit'
+  end
 end
