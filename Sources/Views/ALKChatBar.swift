@@ -531,9 +531,17 @@ open class ALKChatBar: UIView, Localizable {
     func disableChat(message: String) {
         toggleUserInteractionForViews(enabled: false)
         placeHolder.text = message
+        if !soundRec.isHidden {
+            cancelAudioRecording()
+        }
+        if textView.text != nil {
+            textView.text = ""
+            clearTextInTextView()
+        }
     }
 
     func enableChat() {
+        guard soundRec.isHidden else { return }
         toggleUserInteractionForViews(enabled: true)
         placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
     }
