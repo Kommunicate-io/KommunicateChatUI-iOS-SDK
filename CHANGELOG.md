@@ -2,6 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.5.0(Upcoming release)
+---
+
+### Enhancements
+
+-[AL-3280]Added support for profanity filter. To enable this feature set the filename of the profane words list in the configuration.
+
 2.4.0
 ---
 ### Enhancements
