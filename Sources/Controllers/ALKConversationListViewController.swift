@@ -425,6 +425,13 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
     open func reloadData(forUserBlockNotification userId: String!, andBlockFlag flag: Bool) {
         print("reload data")
+        let userDetail = ALUserDetail()
+        userDetail.userId = userId
+        viewModel.updateStatusFor(userDetail: userDetail)
+        guard let viewController = self.navigationController?.visibleViewController as? ALKConversationViewController else {
+            return
+        }
+        viewController.checkUserBlock()
     }
 
     open func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
