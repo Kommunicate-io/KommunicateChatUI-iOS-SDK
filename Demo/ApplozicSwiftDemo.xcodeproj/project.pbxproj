@@ -28,6 +28,8 @@
 		1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A1D05B99581079D018089B /* CoreTelephony.framework */; };
 		220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA26913248851F7DE250BCB9 /* CoreText.framework */; };
 		66FE6F69B59539A69710B1AC /* Pods_ApplozicSwiftDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36B769514A685475E092248C /* Pods_ApplozicSwiftDemoTests.framework */; };
+		8B06E487225E353B00B7FA64 /* ProfanityFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */; };
+		8B06E489225E367D00B7FA64 /* restrictedWords.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8B06E488225E367D00B7FA64 /* restrictedWords.txt */; };
 		8B1BFF4E21D2728B00768400 /* ViewControllerTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1BFF4D21D2728B00768400 /* ViewControllerTestUtil.swift */; };
 		8B27B3D121B5858C003DA749 /* ConversationListDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B27B3D021B5858C003DA749 /* ConversationListDelegateMock.swift */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
@@ -115,6 +117,8 @@
 		79625550913F6B15C478A842 /* Pods-ApplozicSwiftDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo.release.xcconfig"; sourceTree = "<group>"; };
 		7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		81A1D05B99581079D018089B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfanityFilterTests.swift; sourceTree = "<group>"; };
+		8B06E488225E367D00B7FA64 /* restrictedWords.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = restrictedWords.txt; sourceTree = "<group>"; };
 		8B1BFF4D21D2728B00768400 /* ViewControllerTestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerTestUtil.swift; sourceTree = "<group>"; };
 		8B1E967220D679EC00A4EB34 /* ALKConversationViewControllerListSnapShotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewControllerListSnapShotTests.swift; sourceTree = "<group>"; };
 		8B27B3D021B5858C003DA749 /* ConversationListDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListDelegateMock.swift; sourceTree = "<group>"; };
@@ -262,6 +266,7 @@
 		8BC08E61206907A500259AEF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B06E488225E367D00B7FA64 /* restrictedWords.txt */,
 				8BC08E622069086300259AEF /* testImage.png */,
 			);
 			path = Resources;
@@ -306,6 +311,7 @@
 				1AE8248221BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift */,
 				1A7129A721E71FD5007A7B78 /* ALKCurvedButtonSnapshotTests.swift */,
 				1A7129A921E72900007A7B78 /* ALKQuickReplyViewSnapshotTests.swift */,
+				8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -472,6 +478,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B06E489225E367D00B7FA64 /* restrictedWords.txt in Resources */,
 				8BC08E632069086300259AEF /* testImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -620,6 +627,7 @@
 				8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */,
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
 				1AE8248321BA5CC7009C70FE /* ConversationListTableViewControllerTests.swift in Sources */,
+				8B06E487225E353B00B7FA64 /* ProfanityFilterTests.swift in Sources */,
 				8B4E9FFF215BC804001FD5F3 /* ALKConversationViewModelMock.swift in Sources */,
 				8BDDEA6D21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift in Sources */,
 				1ACD2A1A217F6C4700B46BCC /* MuteableMock.swift in Sources */,
