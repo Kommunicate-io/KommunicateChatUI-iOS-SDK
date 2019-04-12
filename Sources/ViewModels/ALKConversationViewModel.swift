@@ -229,50 +229,35 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func heightForRow(indexPath: IndexPath, cellFrame: CGRect,contentHeights: Dictionary<String,CGFloat>) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
+        if let height = HeightCache.shared.getHeight(for: messageModel.identifier) {
+            return height
+        }
         switch messageModel.messageType {
         case .text, .html:
             if messageModel.isMyMessage {
-
                 let heigh = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                //                cache?.setDouble(value: Double(heigh), forKey: identifier)
-                return heigh
-
+                return heigh.cached(with: messageModel.identifier)
             } else {
-
                 let heigh = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                //                cache?.setDouble(value: Double(heigh), forKey: identifier)
-                return heigh
-
+                return heigh.cached(with: messageModel.identifier)
             }
         case .photo:
             if messageModel.isMyMessage {
-
                 if messageModel.ratio < 1 {
-
                     let heigh = ALKMyPhotoPortalCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                    //                    cache?.setDouble(value: Double(heigh), forKey: identifier)
-                    return heigh
-
+                    return heigh.cached(with: messageModel.identifier)
                 } else {
                     let heigh = ALKMyPhotoLandscapeCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                    //                    cache?.setDouble(value: Double(heigh), forKey: identifier)
-                    return heigh
+                    return heigh.cached(with: messageModel.identifier)
                 }
-
             } else {
-
                 if messageModel.ratio < 1 {
-
                     let heigh = ALKFriendPhotoPortalCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                    //                    cache?.setDouble(value: Double(heigh), forKey: identifier)
-                    return heigh
-
+                    return heigh.cached(with: messageModel.identifier)
                 } else {
                     let heigh = ALKFriendPhotoLandscapeCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                    //                    cache?.setDouble(value: Double(heigh), forKey: identifier)
-                    return heigh
+                    return heigh.cached(with: messageModel.identifier)
                 }
-
             }
         case .voice:
             var height: CGFloat =  0
@@ -281,12 +266,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 height = ALKFriendVoiceCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
-            return height
+            return height.cached(with: messageModel.identifier)
         case .information:
             let height = ALKInformationCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-            return height
+            return height.cached(with: messageModel.identifier)
         case .location:
-            return (messageModel.isMyMessage ? ALKMyLocationCell.rowHeigh(viewModel: messageModel, width: maxWidth) : ALKFriendLocationCell.rowHeigh(viewModel: messageModel, width: maxWidth))
+            return (messageModel.isMyMessage ? ALKMyLocationCell.rowHeigh(viewModel: messageModel, width: maxWidth) : ALKFriendLocationCell.rowHeigh(viewModel: messageModel, width: maxWidth)).cached(with: messageModel.identifier)
         case .video:
             var height: CGFloat =  0
             if messageModel.isMyMessage {
@@ -294,62 +279,116 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 height = ALKFriendVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
-            return height
+            return height.cached(with: messageModel.identifier)
         case .genericCard, .cardTemplate:
             if messageModel.isMyMessage {
-                return ALKMyGenericCardCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return
+                    ALKMyGenericCardCell
+                    .rowHeigh(viewModel: messageModel, width: maxWidth)
+                    .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendGenericCardCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return
+                    ALKFriendGenericCardCell
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             }
         case .genericList:
             guard let template = genericTemplateFor(message: messageModel) as? [ALKGenericListTemplate] else {return 0}
             if messageModel.isMyMessage {
-                return ALKMyGenericListCell.rowHeightFor(template: template, viewModel: messageModel)
+                return
+                    ALKMyGenericListCell
+                        .rowHeightFor(template: template, viewModel: messageModel)
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendGenericListCell.rowHeightFor(template: template, viewModel: messageModel)
+                return
+                    ALKFriendGenericListCell
+                        .rowHeightFor(template: template, viewModel: messageModel)
+                        .cached(with: messageModel.identifier)
             }
         case .quickReply:
             if messageModel.isMyMessage {
-                return ALKMyQuickReplyCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                return
+                    ALKMyQuickReplyCell
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendQuickReplyCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                return
+                    ALKFriendQuickReplyCell
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             }
         case .button:
             if messageModel.isMyMessage {
-                return ALKMyMessageButtonCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                return
+                    ALKMyMessageButtonCell
+                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendMessageButtonCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                return
+                    ALKFriendMessageButtonCell
+                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             }
         case .listTemplate:
             if messageModel.isMyMessage {
-                return ALKMyListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                return
+                    ALKMyListTemplateCell
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendListTemplateCell.rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                return
+                    ALKFriendListTemplateCell
+                    .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                    .cached(with: messageModel.identifier)
             }
         case .email:
             if messageModel.isMyMessage {
-                return ALKMyEmailCell.rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
+                return
+                    ALKMyEmailCell
+                        .rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendEmailCell.rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
+                return
+                    ALKFriendEmailCell
+                        .rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
+                        .cached(with: messageModel.identifier)
             }
         case .document:
             if messageModel.isMyMessage {
-                return ALKMyDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return
+                    ALKMyDocumentCell
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return
+                    ALKFriendDocumentCell
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             }
         case .contact:
             if messageModel.isMyMessage {
-                return ALKMyContactMessageCell.rowHeight()
+                return
+                    ALKMyContactMessageCell
+                        .rowHeight()
+                        .cached(with: messageModel.identifier)
             } else {
-                return ALKFriendContactMessageCell.rowHeight()
+                return
+                    ALKFriendContactMessageCell
+                        .rowHeight()
+                        .cached(with: messageModel.identifier)
             }
         case .imageMessage:
             guard let imageMessage = messageModel.imageMessage() else { return 0 }
             if messageModel.isMyMessage {
-                return SentImageMessageCell.rowHeight(model: imageMessage)
+                return
+                    SentImageMessageCell
+                        .rowHeight(model: imageMessage)
+                        .cached(with: messageModel.identifier)
             } else {
-                return ReceivedImageMessageCell.rowHeight(model: imageMessage)
+                return
+                    ReceivedImageMessageCell
+                        .rowHeight(model: imageMessage)
+                        .cached(with: messageModel.identifier)
             }
         }
     }
