@@ -369,6 +369,7 @@
 				8B36D0E21F3DC5E900FEFFD2 /* Resources */,
 				8B0E0D051F3DEF44000D976A /* Embed Frameworks */,
 				3828CED10EB9E031E75666FD /* [CP] Embed Pods Frameworks */,
+				8B06E48A22618EC300B7FA64 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -572,6 +573,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		8B06E48A22618EC300B7FA64 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
 		};
 		B3760123390A22885DCA21C6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

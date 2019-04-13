@@ -1,0 +1,7 @@
+included: # paths to include during linting. `--path` is ignored if present.
+  - ../Sources
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Pods
+force_cast: warning # implicitly
+force_try:
+  severity: warning # explicitly

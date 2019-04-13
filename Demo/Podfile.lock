@@ -26,12 +26,14 @@ PODS:
   - SDWebImage (4.4.6):
     - SDWebImage/Core (= 4.4.6)
   - SDWebImage/Core (4.4.6)
+  - SwiftLint (0.31.0)
 
 DEPENDENCIES:
   - ApplozicSwift (from `../ApplozicSwift.podspec`)
   - Nimble
   - Nimble-Snapshots
   - Quick
+  - SwiftLint
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -43,6 +45,7 @@ SPEC REPOS:
     - Nimble-Snapshots
     - Quick
     - SDWebImage
+    - SwiftLint
 
 EXTERNAL SOURCES:
   ApplozicSwift:
@@ -58,7 +61,8 @@ SPEC CHECKSUMS:
   Nimble-Snapshots: bbd1ab264bacc24a9ce24a8363bc05aac783aeb0
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
+  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
 
-PODFILE CHECKSUM: 132ea2b243622fd1507bc328a3258f4b2f8d912e
+PODFILE CHECKSUM: dbde6947627e1eeb9a3494c38be1076a3f13bd21
 
 COCOAPODS: 1.6.0
