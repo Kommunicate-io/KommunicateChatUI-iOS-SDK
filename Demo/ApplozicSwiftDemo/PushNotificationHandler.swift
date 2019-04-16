@@ -11,19 +11,19 @@ import Applozic
 import ApplozicSwift
 
 /* Handle following cases for notification ::
-     /* 1. Detailed chat screen is at top.
-         and chat was happening for the user for whom notification came.
+     /* 1. Detailed chat screen is on top.
+         And chat was happening for the user for whom notification came.
          So, Don't show notification.
      */
-     /* 2. Detailed chat screen is at top.
-         and chat was happening with different user/group.
+     /* 2. Detailed chat screen is on top.
+         And chat was happening with different user/group.
          Here, refresh chat screen to show chat with the user for whom notification came.
      */
-     /* 3. Chat list screen is at top.
-        open detailed chat with the user/group.
+     /* 3. Chat list screen is on top.
+         Open detailed chat with the user/group.
      */
-     /* 4. Any other screen is at top.
-         push chat list screen and then push detailed chat.
+     /* 4. Any other screen is on top.
+         Push chat list screen and then push detailed chat.
          Or you can directly push chat list while setting contactId/groupId
          and it will open detailed chat automatically.
      */
@@ -51,6 +51,8 @@ class PushNotificationHandler {
             /// If app is inactive, then iOS notification will be shown, you only need to handle click.
             if UIApplication.shared.applicationState == .active {
                 /// Before showing notification check if it is for active conversation.
+                /// You can also check if notification came for muted or blocked conversation
+                /// using NotificationData and show notification accordingly.
                 /// - Note: This might not work if you added `ALKConversationViewController`
                 ///         inside container. If thats the case then handle accordingly.
                 guard !NotificationHelper().isNotificationForActiveThread(notificationData) else { return }
@@ -96,13 +98,13 @@ class PushNotificationHandler {
                 NotificationHelper().openConversationFromListVC(vc.conversationVC, notification: notificationData)
             case let vc as ContainerViewController:
                 /// This is the main container view for app.
-                /// It indicated that chat view is not visible.
+                /// It indicates that chat view is not visible.
                 /// Here call below helper method to get an instance of list VC which will open detail chat.
                 let listVC = NotificationHelper().getConversationVCToLaunch(notification: notificationData, configuration: configuration)
                 /// Navigate to the controller where list is added and use this instance there.
                 vc.openConversationFromNotification(listVC)
 
-                /// In below 2 cases some other view controller is opened.
+                /// In below 2 cases some other view controller is open.
                 /// Do same as above : Use helper method to get instance of listVC which will
                 /// open detail chat. And navigate to the controller where list is addded
             /// In that controller use the instance returned by helper method.

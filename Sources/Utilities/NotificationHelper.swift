@@ -14,10 +14,25 @@ public class NotificationHelper {
         public let userId: String?
         public let groupId: NSNumber?
         public let conversationId: NSNumber?
+        public var isBlocked: Bool = false
+        public var isMute: Bool = false
         public init(userId: String?, groupId: NSNumber?, conversationId: NSNumber?) {
             self.userId = userId
             self.groupId = groupId
             self.conversationId = conversationId
+
+            /// Check block and mute for 1-1 chat.
+            if groupId == nil, let userId = userId {
+                let contact = ALContactService().loadContact(byKey: "userId", value: userId)
+                isBlocked = contact?.block ?? false
+                isMute = contact?.isNotificationMuted() ?? false
+            }
+
+            /// For group check mute only.
+            if let groupId = groupId {
+                let group = ALChannelService().getChannelByKey(groupId)
+                isMute = group?.isNotificationMuted() ?? false
+            }
         }
     }
 
@@ -192,16 +207,14 @@ public class NotificationHelper {
             completion()
             return
         }
-        if vc.navigationController != nil {
-            let isPopped = vc.navigationController?.popViewController(animated: false)
-            if isPopped == nil {
-                vc.dismiss(animated: false) {
-                    completion()
-                }
-            } else {
-                completion()
-            }
-        } else {
+        guard
+            vc.navigationController != nil,
+            vc.navigationController?.popViewController(animated: false) == nil
+        else {
+            completion()
+            return
+        }
+        vc.dismiss(animated: false) {
             completion()
         }
     }
