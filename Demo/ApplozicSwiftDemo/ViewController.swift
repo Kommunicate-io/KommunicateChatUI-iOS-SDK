@@ -38,5 +38,9 @@ class ViewController: UIViewController {
         let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
         let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
         self.present(nav, animated: false, completion: nil)
+//        Use this to check sample for custom push notif. Comment above lines.
+//        let vc = ContainerViewController()
+//        let nav = ALKBaseNavigationViewController(rootViewController: vc)
+//        self.present(nav, animated: false, completion: nil)
     }
 }

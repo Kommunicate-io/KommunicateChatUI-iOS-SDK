@@ -27,7 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BuddyBuildSDK.setup()
 
         registerForNotification()
-    
+
+        /// Use this for Customizing notification.
+        /// - NOTE:
+        ///       Before using, comment ALKPushNotification line and remove
+        ///       ALApplozicSetting.setListOfViewController from ALChatManager.
+        ///       If you want to try this in our sample, then comment lines in ViewController's launchChatList method.
+        ///       Finally, Uncomment below line
+        /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
         ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(AppDelegate.config)
         let alApplocalNotificationHnadler : ALAppLocalNotifications =  ALAppLocalNotifications.appLocalNotificationHandler()
         alApplocalNotificationHnadler.dataConnectionNotificationHandler()
