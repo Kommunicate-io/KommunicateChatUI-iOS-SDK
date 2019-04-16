@@ -420,7 +420,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func checkUserBlock() {
         guard !viewModel.isGroup, let contactId = viewModel.contactId else { return }
         ALUserService().getUserDetail(contactId) { (contact) in
-            guard let contact = contact, contact.block else { return }
+            guard let contact = contact, contact.block else {
+                self.chatBar.enableChat()
+                return
+            }
             self.chatBar.disableChat(message: self.localizedString(forKey: "UnblockToEnableChat", withDefaultValue: SystemMessage.Information.UnblockToEnableChat, fileName: self.configuration.localizedStringFileName))
         }
     }
@@ -1600,6 +1603,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     public func reloadData(forUserBlockNotification userId: String!, andBlockFlag flag: Bool) {
         print("reload data")
+        checkUserBlock()
     }
 
     public func updateUserDetail(_ userId: String!) {
