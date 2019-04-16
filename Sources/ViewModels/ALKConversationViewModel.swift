@@ -315,9 +315,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         case .document:
             if messageModel.isMyMessage {
-                return ALKMyDocumentCell.rowHeight(viewModel: messageModel, width: maxWidth)
-              } else {
-                return ALKFriendDocumentCell.rowHeight(viewModel: messageModel, width: maxWidth)
+                return ALKMyDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+            } else {
+                return ALKFriendDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             } 
         }
     }

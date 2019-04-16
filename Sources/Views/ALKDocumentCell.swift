@@ -132,6 +132,7 @@ ALKReplyMenuItemProtocol{
     }
 
 
+
     override func setupViews() {
         super.setupViews()
 
@@ -187,6 +188,10 @@ ALKReplyMenuItemProtocol{
         progressView.heightAnchor.constraint(equalToConstant: 27).isActive = true
         progressView.widthAnchor.constraint(equalToConstant: 27).isActive = true
 
+    }
+
+    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+        return super.rowHeigh(viewModel: viewModel, width: width)
     }
 
     @objc func openWKWebView(gesture: UITapGestureRecognizer) {

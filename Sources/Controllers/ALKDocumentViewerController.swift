@@ -24,9 +24,13 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
- 
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+        activityIndicator.color = UIColor.gray
+        view.addSubview(activityIndicator)
+        self.view.bringSubviewToFront(activityIndicator)
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.navigationDelegate = self
@@ -39,13 +43,8 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.showShare(_:)))
-
         self.title =  fileName
-        activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
-        activityIndicator.color = UIColor.gray
-        view.addSubview(activityIndicator)
-        self.view.bringSubviewToFront(activityIndicator)
-      }
+    }
 
     @objc func showShare(_ sender: Any?)  {
         let vc = UIActivityViewController(activityItems: [fileUrl], applicationActivities: [])
