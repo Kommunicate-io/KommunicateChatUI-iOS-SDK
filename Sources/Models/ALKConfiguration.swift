@@ -112,5 +112,10 @@ public struct ALKConfiguration {
     /// of users and you want to disable the buttons for a particular type of users.
     public var disableRichMessageButtonAction = false
 
+    /// The name of the restricted words file. Only pass the
+    /// name of the file and file extension is not required.
+    /// File extension of this file will be txt.
+    public var restrictedWordsFileName = ""
+
     public init() { }
 }

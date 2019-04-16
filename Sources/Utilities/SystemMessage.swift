@@ -75,6 +75,8 @@ struct SystemMessage : Localizable{
         static let SignOut = localizedString(forKey: "SignOutMessage")
         static let FillGroupName = localizedString(forKey: "FillGroupName")
         static let DiscardChange = localizedString(forKey: "DiscardChangeMessage")
+        static let profaneWordsTitle = localizedString(forKey: "profaneWordsTitle")
+        static let profaneWordsMessage = localizedString(forKey: "profaneWordsMessage")
     }
 
     struct ButtonName {
@@ -91,6 +93,7 @@ struct SystemMessage : Localizable{
         static let Invite = localizedString(forKey: "InviteButton")
         static let Confirm = localizedString(forKey: "ConfirmButton")
         static let Delete = localizedString(forKey: "DeleteButtonName")
+        static let ok = localizedString(forKey: "OkMessage")
     }
 
     struct NoData {
