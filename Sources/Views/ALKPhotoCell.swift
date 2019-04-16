@@ -334,7 +334,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             return
         }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().getImageThumbnailUrl(using: metadata.thumbnailBlobKey) { (url, error) in
+            ALMessageClientService().downloadImageThumbnailUrl(metadata.thumbnailUrl, blobKey: metadata.thumbnailBlobKey) { (url, error) in
                 guard error == nil,
                     let url = url
                     else {
@@ -451,7 +451,9 @@ extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
             return
         }
         guard !ThumbnailIdentifier.hasPrefix(in: identifier) else {
-            self.setThumbnail(filePath)
+            DispatchQueue.main.async {
+                self.setThumbnail(filePath)
+            }
             self.updateThumbnailPath(identifier, filePath: filePath)
             return
         }
