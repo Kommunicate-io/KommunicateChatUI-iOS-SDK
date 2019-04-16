@@ -1,6 +1,6 @@
 //
 //  ALKConversationViewModel.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -22,7 +22,7 @@ public protocol ALKConversationViewModelDelegate: class {
 }
 
 open class ALKConversationViewModel: NSObject, Localizable {
-    
+
     fileprivate var localizedStringFileName: String!
 
     //MARK: - Inputs
@@ -104,14 +104,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadMessages()
         }
     }
-        
+
     public func addToWrapper(message: ALMessage) {
         guard !alMessageWrapper.contains(message: message) else { return }
         self.alMessageWrapper.addALMessage(toMessageArray: message)
         self.alMessages.append(message)
         self.messageModels.append(message.messageModel)
     }
-    
+
     func clearViewModel() {
         self.isFirstTime = true
         self.messageModels.removeAll()
@@ -167,25 +167,25 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func numberOfRows(section: Int) -> Int {
         return 1
-        
+
     }
 
     open func messageForRow(indexPath: IndexPath) -> ALKMessageViewModel? {
         guard indexPath.section < messageModels.count && indexPath.section >= 0 else { return nil }
         return messageModels[indexPath.section]
     }
-    
+
     open func quickReplyDictionary(message: ALKMessageViewModel?,indexRow row: Int) -> Dictionary<String,Any>? {
-        
+
         guard let metadata = message?.metadata else {
             return Dictionary<String,Any>()
         }
-        
+
         let payload = metadata["payload"] as? String
-        
+
         let data = payload?.data
         var jsonArray : [Dictionary<String,Any>]?
-        
+
         do {
             jsonArray = (try JSONSerialization.jsonObject(with: data!, options : .allowFragments) as? [Dictionary<String,Any>])
             return   jsonArray?[row]
@@ -194,9 +194,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         return Dictionary<String,Any>()
     }
-    
+
     open func getSizeForItemAt(row: Int,withData: Dictionary<String,Any>) -> CGSize {
-        
+
         let size = (withData["title"] as? String)?.size(withAttributes: [NSAttributedString.Key.font: Font.normal(size: 14.0).font()])
         let newSize = CGSize(width: (size?.width)!+46.0, height: 50.0)
         return newSize
@@ -313,6 +313,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return ALKFriendEmailCell.rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
             }
+        case .document:
+            if messageModel.isMyMessage {
+                return ALKMyDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+            } else {
+                return ALKFriendDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+            } 
         }
     }
 
@@ -321,7 +327,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadOpenGroupMessages()
             return
         }
-        var id = self.channelKey?.stringValue ?? self.contactId 
+        var id = self.channelKey?.stringValue ?? self.contactId
         if let convId = conversationId {
             id = convId.stringValue
         }
@@ -617,7 +623,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func uploadVideo(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
-        
+
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
@@ -1022,9 +1028,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessageWrapper.addObject(toMessageArray: messages)
             let models = self.alMessages.map { $0.messageModel }
             self.messageModels = models
-            
+
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
-        
+
             let id = self.contactId ?? self.channelKey?.stringValue
             if let convId = self.conversationId {
                 ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: convId.stringValue)
@@ -1304,7 +1310,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         })
     }
-    
+
     private func updateMessageStatus(filteredList: [ALMessage], status: Int32) {
         if filteredList.count > 0 {
             let message = filteredList.first
@@ -1314,7 +1320,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             delegate?.messageUpdated()
         }
     }
-    
+
     private func deleteFile(filePath:URL) {
         guard FileManager.default.fileExists(atPath: filePath.path) else {
             return

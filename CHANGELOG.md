@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 - [AL-3301] Added a way to use custom view for in-app notifications.
 - [AL-3280] Added support for profanity filter. To enable this feature set the filename of the profane words list in the configuration.
+- [AL-3012] Docs rendering and opening support.
 
 2.4.0
 ---

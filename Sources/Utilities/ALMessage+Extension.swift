@@ -110,8 +110,9 @@ extension ALMessage: ALKChatViewModelProtocol {
                 return message
             }
             return messageText as? String
+        case .document:
+            return "Document"
         }
-
     }
 
     public var hasUnreadMessages: Bool {
@@ -306,7 +307,7 @@ extension ALMessage {
         } else if fileMeta.contentType.hasPrefix("video") {
             return .video
         } else {
-            return nil
+            return .document
         }
     }
 
