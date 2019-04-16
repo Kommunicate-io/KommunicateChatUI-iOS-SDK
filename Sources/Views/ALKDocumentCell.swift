@@ -191,7 +191,7 @@ ALKReplyMenuItemProtocol{
 
     @objc func openWKWebView(gesture: UITapGestureRecognizer) {
 
-        guard  (self.viewModel?.filePath != nil) , let model = self.viewModel, ALKFileUtils().isSupportedFileType(viewModel: model) else {
+        guard  let filePath = self.viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath:filePath) else {
 
             let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded";
               print(errorMessage)
@@ -214,10 +214,11 @@ ALKReplyMenuItemProtocol{
         self.viewModel = viewModel
         timeLabel.text = viewModel.time
 
-        fileNameLabel.text = ALKFileUtils().getFileName(viewModel: viewModel)
+        fileNameLabel.text = ALKFileUtils().getFileName(filePath: viewModel.filePath, fileMeta: viewModel.fileMetaInfo)
 
-        let size = ALKFileUtils().getFileSize(viewModel: viewModel) ?? ""
-        let fileType =  ALKFileUtils().getFileExtenion(viewModel: viewModel)
+        let size = ALKFileUtils().getFileSize(filePath: viewModel.filePath, fileMetaInfo: viewModel.fileMetaInfo) ?? ""
+
+        let fileType =  ALKFileUtils().getFileExtenion(filePath: viewModel.filePath,fileMeta: viewModel.fileMetaInfo)
 
         if(!size.isEmpty){
             sizeAndFileType.text =  size + " \u{2022} " + fileType
