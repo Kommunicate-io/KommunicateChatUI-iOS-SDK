@@ -15,7 +15,6 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
     var filePath: String = ""
     var fileUrl : URL = URL(fileURLWithPath: "")
 
-
     let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
     required init(){
@@ -25,18 +24,20 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
  
     override func viewDidLoad() {
         super.viewDidLoad()
+        let webConfiguration = WKWebViewConfiguration()
+        webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.navigationDelegate = self
+        view = webView
+        self.fileUrl = ALKFileUtils().getDocumentDirectory(fileName: filePath)
+        activityIndicator.startAnimating()
+        webView.loadFileURL(self.fileUrl, allowingReadAccessTo: self.fileUrl)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let webConfiguration = WKWebViewConfiguration()
-        webView = WKWebView(frame: .zero, configuration: webConfiguration)
-        view = webView
-
         navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.showShare(_:)))
 
         self.title =  fileName
@@ -44,11 +45,7 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
         self.view.bringSubviewToFront(activityIndicator)
-        webView.navigationDelegate = self
-        self.fileUrl = ALKFileUtils().getDocumentDirectory(fileName: filePath)
-        activityIndicator.startAnimating()
-        webView.loadFileURL(self.fileUrl, allowingReadAccessTo: self.fileUrl)
-    }
+      }
 
     @objc func showShare(_ sender: Any?)  {
         let vc = UIActivityViewController(activityItems: [fileUrl], applicationActivities: [])

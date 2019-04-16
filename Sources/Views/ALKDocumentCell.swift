@@ -193,7 +193,8 @@ ALKReplyMenuItemProtocol{
 
         guard  (self.viewModel?.filePath != nil) , let model = self.viewModel, ALKFileUtils().isSupportedFileType(viewModel: model) else {
 
-            (self.viewModel?.filePath != nil)  ? print("File type is not supported") : print("File is not downloaded")
+            let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded";
+              print(errorMessage)
             return
         }
 

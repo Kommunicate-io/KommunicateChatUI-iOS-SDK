@@ -9,40 +9,32 @@ import Foundation
 import Applozic
 import UIKit
 import Kingfisher
-import Applozic
 
 class ALKMyDocumentCell: ALKDocumentCell{
-    
-    
+
     struct Padding {
-        
         struct  StateView{
             static let trailing: CGFloat = 2
             static let bottom: CGFloat = 1
             static let height: CGFloat = 9
             static let width: CGFloat = 17
         }
-        
         struct  AvatarImageView {
             static let top: CGFloat = 18
             static let leading: CGFloat = 9
             static let height: CGFloat = 37
         }
-        
         struct  TimeLabel{
             static let trailing: CGFloat = 2
             static let bottom: CGFloat = 0
         }
-        
         struct  BubbleView{
             static let top: CGFloat = 10
             static let leading: CGFloat = 57
             static let bottom: CGFloat = 7
             static let trailing: CGFloat = 14
         }
-        
     }
-    
     
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
@@ -98,7 +90,7 @@ class ALKMyDocumentCell: ALKDocumentCell{
     class func heightPadding() -> CGFloat {
         return commonHeightPadding()+Padding.BubbleView.bottom+Padding.BubbleView.top
     }
-    
+
     class func rowHeight(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let minimumHeight: CGFloat = 0 // 55 is avatar image... + padding
         var messageHeight : CGFloat = 0.0
@@ -114,7 +106,7 @@ class ALKMyDocumentCell: ALKDocumentCell{
         do {
             try alHandler?.managedObjectContext.save()
         } catch {
-            NSLog("Not saved due to error")
+            print("Not saved file path due to error")
         }
     }
 }
