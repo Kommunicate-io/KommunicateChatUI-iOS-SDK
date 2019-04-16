@@ -16,7 +16,7 @@ struct ProfanityFilter {
     let fileName: String
     var restrictedWords = Set<String>()
 
-    private let bundle: Bundle
+    let bundle: Bundle
 
     init(fileName: String, bundle: Bundle = .main) throws {
         self.fileName = fileName

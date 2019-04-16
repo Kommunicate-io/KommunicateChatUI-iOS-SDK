@@ -669,12 +669,24 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.chatBar.clear()
 
                 if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message) {
+                    let profanityTitle = weakSelf.localizedString(
+                        forKey: "profaneWordsTitle",
+                        withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
+                        fileName: weakSelf.localizedStringFileName)
+                    let profanityMessage = weakSelf.localizedString(
+                        forKey: "profaneWordsMessage",
+                        withDefaultValue: SystemMessage.Warning.profaneWordsMessage,
+                        fileName: weakSelf.localizedStringFileName)
+                    let okButtonTitle = weakSelf.localizedString(
+                        forKey: "OkMessage",
+                        withDefaultValue: SystemMessage.ButtonName.ok,
+                        fileName: weakSelf.localizedStringFileName)
                     let alert = UIAlertController(
-                        title: "Profane words",
-                        message: "Please avoid using profane words.",
+                        title: profanityTitle,
+                        message: profanityMessage,
                         preferredStyle: .alert)
                     alert.addAction(UIAlertAction(
-                        title: "Ok",
+                        title: okButtonTitle,
                         style: .cancel,
                         handler: nil))
                     weakSelf.present(alert, animated: false, completion: nil)
