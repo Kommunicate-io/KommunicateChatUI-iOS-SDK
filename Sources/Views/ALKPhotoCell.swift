@@ -297,8 +297,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             frontView.isUserInteractionEnabled = false
             activityIndicator.isHidden = true
             uploadButton.isHidden = true
-            let thumbnailUrl = viewModel?.thumbnailURL
-            photoView.kf.setImage(with: thumbnailUrl)
+            loadThumbnail()
         case .downloading:
             uploadButton.isHidden = true
             activityIndicator.isHidden = false
@@ -324,6 +323,33 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
         }
+    }
+
+    func loadThumbnail() {
+        guard let message = viewModel, let metadata = message.fileMetaInfo else {
+            return
+        }
+        guard (ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()) else {
+            self.photoView.kf.setImage(with: message.thumbnailURL)
+            return
+        }
+        guard let thumbnailPath = metadata.thumbnailFilePath else {
+            ALMessageClientService().downloadImageThumbnailUrl(metadata.thumbnailUrl, blobKey: metadata.thumbnailBlobKey) { (url, error) in
+                guard error == nil,
+                    let url = url
+                    else {
+                    print("Error downloading thumbnail url")
+                    return
+                }
+                let httpManager = ALKHTTPManager()
+                httpManager.downloadDelegate = self
+                let task = ALKDownloadTask(downloadUrl: url, fileName: metadata.name)
+                task.identifier = ThumbnailIdentifier.addPrefix(to: message.identifier)
+                httpManager.downloadAttachment(task: task)
+            }
+            return
+        }
+        setThumbnail(thumbnailPath)
     }
 
     func setImage(imageView: UIImageView, name: String) {
@@ -359,6 +385,25 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         }
     }
 
+    fileprivate func updateThumbnailPath(_ key: String, filePath: String) {
+        let messageKey = ThumbnailIdentifier.removePrefix(from: key)
+        let dbMessage = ALMessageDBService().getMessageByKey("key", value: messageKey) as! DB_Message
+        dbMessage.fileMetaInfo.thumbnailFilePath = filePath
+
+        let alHandler = ALDBHandler.sharedInstance()
+        do {
+            try alHandler?.managedObjectContext.save()
+        } catch {
+            NSLog("Not saved due to error")
+        }
+    }
+
+    fileprivate func setThumbnail(_ path: String) {
+        let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let path = docDirPath.appendingPathComponent(path)
+        photoView.kf.setImage(with: path)
+    }
+
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
     }
@@ -390,6 +435,12 @@ extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
 extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
     func dataDownloaded(task: ALKDownloadTask) {
         NSLog("Image Bytes downloaded: %i", task.totalBytesDownloaded)
+        guard
+            let identifier = task.identifier,
+            !ThumbnailIdentifier.hasPrefix(in: identifier)
+            else {
+            return
+        }
         DispatchQueue.main.async {
             self.updateView(for: .downloading)
         }
@@ -397,7 +448,13 @@ extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
 
     func dataDownloadingFinished(task: ALKDownloadTask) {
         guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
-            updateView(for: .download)
+            return
+        }
+        guard !ThumbnailIdentifier.hasPrefix(in: identifier) else {
+            DispatchQueue.main.async {
+                self.setThumbnail(filePath)
+            }
+            self.updateThumbnailPath(identifier, filePath: filePath)
             return
         }
         self.updateDbMessageWith(key: "key", value: identifier, filePath: filePath)

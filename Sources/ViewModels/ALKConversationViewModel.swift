@@ -382,13 +382,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
             notificationView.noDataConnectionNotificationView()
             return
         }
-        let httpManager = ALKHTTPManager()
-        httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
-        let urlString = (message.imageURL != nil) ? message.imageURL!.absoluteString:""
-        let task = ALKDownloadTask(downloadUrl: urlString, fileName: message.fileMetaInfo?.name)
-        task.identifier = message.identifier
-        task.totalBytesExpectedToDownload = message.size
-        httpManager.downloadAttachment(task: task)
+        ALMessageClientService().downloadImageUrl(message.fileMetaInfo?.blobKey) { (fileUrl, error) in
+            guard error == nil, let fileUrl = fileUrl else {
+                print("Error downloading attachment :: \(String(describing: error))")
+                return
+            }
+            let httpManager = ALKHTTPManager()
+            httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
+            let task = ALKDownloadTask(downloadUrl: fileUrl, fileName: message.fileMetaInfo?.name)
+            task.identifier = message.identifier
+            task.totalBytesExpectedToDownload = message.size
+            httpManager.downloadAttachment(task: task)
+        }
     }
 
     /// Received from notification
@@ -677,10 +682,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         } catch {
             NSLog("Message not found")
         }
-        guard let fileInfo = responseDict as? [String: Any], let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
-
         guard let dbMessagePresent = dbMessage, let message = messageService.createMessageEntity(dbMessagePresent) else { return }
-        message.fileMeta.populate(fileMeta)
+
+        guard let fileInfo = responseDict as? [String: Any] else { return }
+        if ALApplozicSettings.isS3StorageServiceEnabled() {
+            message.fileMeta.populate(fileInfo)
+        } else {
+            guard let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
+            message.fileMeta.populate(fileMeta)
+        }
         message.status = NSNumber(integerLiteral: Int(SENT.rawValue))
         do {
             try alHandler?.managedObjectContext.save()
