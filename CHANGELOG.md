@@ -2,18 +2,22 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.5.0(Upcoming release)
+2.5.0
 ---
 ### Enhancements
 - [AL-3301] Added a way to use custom view for in-app notifications.
 - [AL-3280] Added support for profanity filter. To enable this feature set the filename of the profane words list in the configuration.
-- [AL-3012] Docs rendering and opening support.
+- [AL-3012] Docs rendering and opening support. Added support for PDF, doc, txt and some other document sharing formats.
+- [AL-3303] Added support for different storage schemes.
+
+### Fixes
+- Fixed an issue where in some cases removed group member was able to send an audio message.
+- Resolved an issue where Block/Unblock was not reflecting in real-time.
 
 2.4.0
 ---
 ### Enhancements
 - [AL-3267] Added support for blocking/unblocking a user.
-- [AL-3303] Added support for different storage schemes.
 
 ### Fixes
 - [AL-3302] Fix duplicate messages for open group.
