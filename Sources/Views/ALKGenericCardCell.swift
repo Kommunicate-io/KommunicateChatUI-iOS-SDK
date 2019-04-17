@@ -240,13 +240,16 @@ open class ALKGenericCardCell: UICollectionViewCell {
             headerHt = headerHeight(header)
         }
         let titleConstraint = CGSize(width: maxWidth, height: Font.title.lineHeight)
-        let titleHeight = card.title.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up)
+        let titleHeight = !card.title.isEmpty ? card.title.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up) : 0
 
         let subtitleConstraint = CGSize(width: maxWidth, height: Font.subtitle.lineHeight)
-        let subtitleHeight = card.subtitle.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up)
+        let subtitleHeight = !card.subtitle.isEmpty ?  card.subtitle.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up) : 0
 
         let descriptionConstraint = CGSize(width: maxWidth, height: Font.description.lineHeight)
-        let descriptionHeight = (card.description?.rectWithConstrainedSize(descriptionConstraint, font: Font.description).height.rounded(.up) ?? CGFloat(0)) * CGFloat(3)
+        var descriptionHeight: CGFloat = 0
+        if let description = card.description, !description.isEmpty {
+            descriptionHeight = description.rectWithConstrainedSize(descriptionConstraint, font: Font.description).height.rounded(.up) * CGFloat(3)
+        }
 
         let totalButtonHeight = Config.buttonHeight * CGFloat(card.buttons?.count ?? 0)
 
@@ -279,6 +282,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private func setTitle(_ text: String) {
+        guard !text.isEmpty else {
+            self.titleStackView.constraint(withIdentifier: ConstraintIdentifier.titleView.rawValue)?.constant = 0
+            return
+        }
         titleLabel.text = text
         let titleConstraint = CGSize(width: 200, height: Font.title.lineHeight)
         let height = text.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up)
@@ -286,14 +293,18 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private func setSubtitle(_ text: String) {
-        subtitleLabel.text = card.subtitle
+        guard !text.isEmpty else {
+            self.subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = 0
+            return
+        }
+        subtitleLabel.text = text
         let subtitleConstraint = CGSize(width: 200, height: Font.subtitle.lineHeight)
         let height = text.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up)
         subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = height
     }
 
     private func setOverlayText(_ header: CardTemplate.Header?) {
-        guard let text = header?.overlayText, text.count > 0 else {
+        guard let text = header?.overlayText, !text.isEmpty else {
             self.overlayText.isHidden = true
             return
         }
@@ -320,7 +331,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private func setRatingLabel(_ card: CardTemplate) {
-        guard let rating = card.titleExt else {
+        guard let rating = card.titleExt, !rating.isEmpty else {
             self.ratingLabel.isHidden = true
             return
         }
@@ -329,7 +340,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private func setDescription(_ card: CardTemplate) {
-        guard let description = card.description else {
+        guard let description = card.description, !description.isEmpty else {
             descriptionLabel.constraint(withIdentifier: ConstraintIdentifier.descriptionView.rawValue)?.constant = 0
             descriptionLabel.isHidden = true
             return
