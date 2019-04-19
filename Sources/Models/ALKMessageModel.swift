@@ -26,6 +26,7 @@ public enum ALKMessageType: String {
     case cardTemplate = "CardTemplate"
     case email = "Email"
     case document = "Document"
+    case contact = "Contact"
 
     @available(*, deprecated, message: "Use `listTemplate`")
     case genericList = "List"
