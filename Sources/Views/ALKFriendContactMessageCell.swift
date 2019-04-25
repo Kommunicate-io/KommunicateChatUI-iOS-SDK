@@ -25,7 +25,7 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         struct Contact {
             static let left: CGFloat = 10
             static let top: CGFloat = 4
-            static let right: CGFloat = 95
+            static let multiplier: CGFloat = 0.5
             static let bottom: CGFloat = 2
         }
         struct Time {
@@ -106,7 +106,7 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
 
         contactView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.Contact.top).isActive = true
         contactView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Contact.left).isActive = true
-        contactView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -Padding.Contact.right).isActive = true
+        contactView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: Padding.Contact.multiplier).isActive = true
         contactView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Padding.Contact.bottom).isActive = true
 
         loadingIndicator.trailingAnchor.constraint(equalTo: contactView.trailingAnchor).isActive = true

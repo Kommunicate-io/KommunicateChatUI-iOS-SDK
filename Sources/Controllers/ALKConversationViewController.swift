@@ -773,10 +773,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 weakSelf.present(vc, animated: false, completion: nil)
                 button.isUserInteractionEnabled = true
+
+            case .shareContact():
+                weakSelf.shareContact()
             default:
                 print("Not available")
-//                Use Contact share button
-//                weakSelf.shareContact()
             }
         }
     }

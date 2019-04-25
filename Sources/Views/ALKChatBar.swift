@@ -34,6 +34,7 @@ open class ALKChatBar: UIView, Localizable {
         case mic(UIButton)
         case more(UIButton)
         case cameraButtonClicked(UIButton)
+        case shareContact()
     }
 
     public var action: ((ActionType) -> ())?
@@ -156,8 +157,11 @@ open class ALKChatBar: UIView, Localizable {
 
     open var chatButton: UIButton = {
         let button = UIButton(type: .custom)
-        var image = UIImage(named: "showKeyboard", in: Bundle.applozic, compatibleWith: nil)
+        var image = UIImage(named: "contactShare", in: Bundle.applozic, compatibleWith: nil)
+        image = image?.imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
+        button.contentHorizontalAlignment = .fill
+        button.contentVerticalAlignment = .fill
         return button
     }()
 
@@ -233,7 +237,7 @@ open class ALKChatBar: UIView, Localizable {
         case locationButton:
             action?(.showLocation())
         case chatButton:
-            textView.becomeFirstResponder()
+            action?(.shareContact())
 
         default: break
 
@@ -361,8 +365,8 @@ open class ALKChatBar: UIView, Localizable {
         headerView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.headerViewHeight.rawValue).isActive = true
 
         chatButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
-        chatButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        chatButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        chatButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        chatButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         chatButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
         photoButton.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: buttonSpacing).isActive = true
