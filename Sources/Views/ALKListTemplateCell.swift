@@ -126,7 +126,8 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
-        guard let template = viewModel.listTemplateFromMetadata() else {
+        guard let metadata = viewModel.metadata,
+            let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata) else {
             listTemplateView.isHidden = true
             self.layoutIfNeeded()
             return
@@ -138,7 +139,8 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
-        guard let template = viewModel.listTemplateFromMetadata() else {
+        guard let metadata = viewModel.metadata,
+            let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata) else {
             return CGFloat(0)
         }
         return ListTemplateView.rowHeight(template: template)

@@ -35,13 +35,12 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
     class func getCardTemplate(message: ALKMessageViewModel) -> [CardTemplate]? {
         guard
             let metadata = message.metadata,
-            let payload = metadata["payload"] as? String,
             let templateId = metadata["templateId"] as? String
-            else { return nil}
+            else { return nil }
         switch templateId {
             case ActionableMessageType.cardTemplate.rawValue:
                 do {
-                    let templates = try JSONDecoder().decode([CardTemplate].self, from: payload.data)
+                    let templates = try TemplateDecoder.decode([CardTemplate].self, from: metadata)
                     return templates
                 } catch(let error) {
                     print("\(error)")
@@ -49,7 +48,7 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
                 }
             case ActionableMessageType.genericCard.rawValue:
                 do {
-                    let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
+                    let cards = try TemplateDecoder.decode([ALKGenericCard].self, from: metadata)
                     var templates = [CardTemplate]()
                     for card in cards {
                         templates.append(Util().cardTemplate(from: card))

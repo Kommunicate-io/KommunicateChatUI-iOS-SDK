@@ -112,14 +112,3 @@ extension ALKMessageViewModel {
         return quickReplyArray
     }
 }
-
-extension ALKMessageViewModel {
-    func listTemplateFromMetadata() -> ListTemplate? {
-        guard let metadata = self.metadata,
-            let payload = metadata["payload"] as? String
-            else {
-                return nil
-        }
-        return try? JSONDecoder().decode(ListTemplate.self, from: payload.data)
-    }
-}

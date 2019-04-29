@@ -109,11 +109,11 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func update(viewModel: ALKMessageViewModel) {
         messageView.update(viewModel: viewModel)
-        guard let metadata = viewModel.metadata, let payload = metadata["payload"] as? String else {
+        guard let metadata = viewModel.metadata else {
             return
         }
         do {
-            let cardTemplate = try JSONDecoder().decode([ALKGenericListTemplate].self, from: payload.data)
+            let cardTemplate = try TemplateDecoder.decode([ALKGenericListTemplate].self, from: metadata)
             guard let title = metadata["headerText"] as? String else {
                 return
             }
