@@ -1378,7 +1378,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     public func updateMessageAt(indexPath: IndexPath) {
         DispatchQueue.main.async {
+            self.tableView.beginUpdates()
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+            self.tableView.endUpdates()
         }
     }
 
@@ -1399,8 +1401,18 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
+    func updateTableView() {
+        let oldCount = tableView.numberOfSections
+        let newCount = viewModel.numberOfSections()
+        let indexSet = IndexSet(integersIn: oldCount..<newCount)
+
+        tableView.beginUpdates()
+        tableView.insertSections(indexSet, with: .automatic)
+        tableView.endUpdates()
+    }
+
     @objc open func newMessagesAdded() {
-        tableView.reloadData()
+        updateTableView()
         //Check if current user is removed from the group
         isChannelLeft()
 
@@ -1423,7 +1435,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func messageSent(at indexPath: IndexPath) {
-        DispatchQueue.main.async {
             NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)
             guard indexPath.section >= self.tableView.numberOfSections else {
                 NSLog("rejected indexpath: %i and tableview and section %i", indexPath.section, self.tableView.numberOfSections)
@@ -1433,7 +1444,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             self.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
             self.tableView.endUpdates()
             self.tableView.scrollToBottom(animated: false)
-        }
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {

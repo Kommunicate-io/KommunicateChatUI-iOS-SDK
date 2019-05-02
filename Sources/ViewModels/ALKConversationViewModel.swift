@@ -534,7 +534,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 NSLog("No errors while sending the message in open group")
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
-                self.delegate?.messageUpdated()
+                self.delegate?.updateMessageAt(indexPath: indexPath)
                 return
             })
         } else {
@@ -545,7 +545,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 NSLog("No errors while sending the message")
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
-                self.delegate?.messageUpdated()
+                self.delegate?.updateMessageAt(indexPath: indexPath)
             })
         }
     }
