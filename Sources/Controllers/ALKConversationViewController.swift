@@ -1404,6 +1404,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     func updateTableView() {
         let oldCount = tableView.numberOfSections
         let newCount = viewModel.numberOfSections()
+        guard newCount >= oldCount else {
+            self.tableView.reloadData()
+            print("😱Tableview shouldn't have more number of sections than viewModel😱")
+            return
+        }
         let indexSet = IndexSet(integersIn: oldCount..<newCount)
 
         tableView.beginUpdates()
