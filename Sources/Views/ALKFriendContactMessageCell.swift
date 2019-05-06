@@ -87,7 +87,7 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
     }
 
     private func setupConstraints() {
-        contactView.setColorFor(
+        contactView.setColorIn(
             text: ALKMessageStyle.receivedMessage.text,
             background: ALKMessageStyle.receivedBubble.color)
         contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, contactView, timeLabel, loadingIndicator])

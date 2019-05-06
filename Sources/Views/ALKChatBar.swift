@@ -155,7 +155,7 @@ open class ALKChatBar: UIView, Localizable {
         return bt
     }()
 
-    open var chatButton: UIButton = {
+    open var contactButton: UIButton = {
         let button = UIButton(type: .custom)
         var image = UIImage(named: "contactShare", in: Bundle.applozic, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
@@ -236,7 +236,7 @@ open class ALKChatBar: UIView, Localizable {
             break
         case locationButton:
             action?(.showLocation())
-        case chatButton:
+        case contactButton:
             action?(.shareContact())
 
         default: break
@@ -273,7 +273,7 @@ open class ALKChatBar: UIView, Localizable {
         videoButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         galleryButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
-        chatButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
 
         setupConstraints()
 
@@ -312,7 +312,7 @@ open class ALKChatBar: UIView, Localizable {
         videoButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         galleryButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
-        chatButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        contactButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
     }
 
     private var isNeedInitText = true
@@ -352,7 +352,7 @@ open class ALKChatBar: UIView, Localizable {
 
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
-        addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, chatButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
+        addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, contactButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -364,12 +364,12 @@ open class ALKChatBar: UIView, Localizable {
         headerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         headerView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.headerViewHeight.rawValue).isActive = true
 
-        chatButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
-        chatButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        chatButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        chatButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
+        contactButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
+        contactButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        contactButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        contactButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
-        photoButton.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: buttonSpacing).isActive = true
+        photoButton.leadingAnchor.constraint(equalTo: contactButton.trailingAnchor, constant: buttonSpacing).isActive = true
         photoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         photoButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         photoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
@@ -468,7 +468,7 @@ open class ALKChatBar: UIView, Localizable {
         locationButton.isHidden = true
         hideAudioOptionInChatBar()
         photoButton.isHidden = true
-        chatButton.isHidden = true
+        contactButton.isHidden = true
         videoButton.isHidden = true
     }
 
@@ -478,7 +478,7 @@ open class ALKChatBar: UIView, Localizable {
         locationButton.isHidden = false
         hideAudioOptionInChatBar()
         photoButton.isHidden = false
-        chatButton.isHidden = false
+        contactButton.isHidden = false
         videoButton.isHidden = false
     }
 
@@ -533,7 +533,7 @@ open class ALKChatBar: UIView, Localizable {
         locationButton.isUserInteractionEnabled = enabled
         galleryButton.isUserInteractionEnabled = enabled
         plusButton.isUserInteractionEnabled = enabled
-        chatButton.isUserInteractionEnabled = enabled
+        contactButton.isUserInteractionEnabled = enabled
         textView.isUserInteractionEnabled = enabled
     }
 

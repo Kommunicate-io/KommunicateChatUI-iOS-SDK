@@ -77,7 +77,7 @@ class ContactView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setColorFor(text: UIColor, background: UIColor) {
+    func setColorIn(text: UIColor, background: UIColor) {
         contactName.textColor = text
         contactSaveIcon.tintColor = text
         backgroundColor = background
