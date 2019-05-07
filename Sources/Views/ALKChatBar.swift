@@ -198,6 +198,11 @@ open class ALKChatBar: UIView, Localizable {
         return button
     }()
 
+    /// Returns true if the textView is first responder.
+    open var isTextViewFirstResponder: Bool {
+        return textView.isFirstResponder
+    }
+
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
         case poweredByMessageHeight = "poweredByMessageHeight"

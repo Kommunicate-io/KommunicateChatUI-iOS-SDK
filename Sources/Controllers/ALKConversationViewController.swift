@@ -162,30 +162,33 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil, using: { [weak self]
             notification in
             print("keyboard will show")
-            guard let weakSelf = self else {return}
 
-                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardFrameValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+            guard
+                let weakSelf = self,
+                weakSelf.chatBar.isTextViewFirstResponder,
+                let keyboardSize = (keyboardFrameValue as? NSValue)?.cgRectValue else {
+                    return
+            }
 
-                weakSelf.keyboardSize = keyboardSize
+            weakSelf.keyboardSize = keyboardSize
 
-                let tableView = weakSelf.tableView
+            let tableView = weakSelf.tableView
 
-                var h = CGFloat(0)
-                h = keyboardSize.height-h
+            var h = CGFloat(0)
+            h = keyboardSize.height-h
 
-                let newH = -1*h
-                if weakSelf.bottomConstraint?.constant == newH {return}
+            let newH = -1*h
+            if weakSelf.bottomConstraint?.constant == newH {return}
 
-                weakSelf.bottomConstraint?.constant = newH
+            weakSelf.bottomConstraint?.constant = newH
 
-                weakSelf.view?.layoutIfNeeded()
+            weakSelf.view?.layoutIfNeeded()
 
-                if tableView.isCellVisible(section: weakSelf.viewModel.messageModels.count-1, row: 0) {
-                    tableView.scrollToBottomByOfset(animated: false)
-                } else if weakSelf.viewModel.messageModels.count > 1 {
-                    weakSelf.unreadScrollButton.isHidden = false
-                }
-
+            if tableView.isCellVisible(section: weakSelf.viewModel.messageModels.count-1, row: 0) {
+                tableView.scrollToBottomByOfset(animated: false)
+            } else if weakSelf.viewModel.messageModels.count > 1 {
+                weakSelf.unreadScrollButton.isHidden = false
             }
         })
 
