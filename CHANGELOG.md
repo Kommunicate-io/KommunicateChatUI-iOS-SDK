@@ -5,6 +5,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 2.5.1(Upcoming release)
 
 ### Enhancments
+- [AL-3490]Added support for Back button action in Conversation VC if the VC is presented not pushed.
 
 ### Fixes
 - [AL-3486]Fixed an issue where in some cases view was in an incorrect state if the keyboard is visible.
