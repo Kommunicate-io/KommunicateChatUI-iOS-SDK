@@ -2,6 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.5.1(Upcoming release)
+
+### Enhancments
+
+### Fixes
+- [AL-3486]Fixed an issue where in some cases view was in an incorrect state if the keyboard is visible.
+
 2.5.0
 ---
 ### Enhancements
