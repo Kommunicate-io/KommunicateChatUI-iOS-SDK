@@ -405,7 +405,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         print("back tapped")
         view.endEditing(true)
         self.viewModel.sendKeyboardDoneTyping()
-        _ = navigationController?.popToRootViewController(animated: true)
+        let popVC = navigationController?.popToRootViewController(animated: true)
+        if popVC == nil {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 
     override func showAccountSuspensionView() {
