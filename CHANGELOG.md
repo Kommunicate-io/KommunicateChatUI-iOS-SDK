@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.5.1(Upcoming release)
+2.5.1
 
 ### Enhancments
 - [AL-3490]Added support for Back button action in Conversation VC if the VC is presented not pushed.
