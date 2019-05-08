@@ -510,11 +510,11 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     func hideAudioOptionInChatBar(){
-        if isMicButtonHidden{
+        guard !isMicButtonHidden else {
             micButton.isHidden = true
-        }else{
-            micButton.isHidden = false
+            return
         }
+        micButton.isHidden = !textView.text.isEmpty
     }
 
     func toggleButtonInChatBar(hide: Bool){
