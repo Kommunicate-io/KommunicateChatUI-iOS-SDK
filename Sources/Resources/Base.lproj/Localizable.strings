@@ -139,3 +139,4 @@ MakeAdmin = "Make group admin";
 DismissAdmin = "Dismiss group admin";
 SendMessage = "Send message";
 RemoveFromGroup = "Remove %@ from %@ group?";
+Info = "Info";

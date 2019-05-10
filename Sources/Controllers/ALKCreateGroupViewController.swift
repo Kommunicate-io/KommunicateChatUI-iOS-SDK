@@ -72,7 +72,12 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         super.viewDidLoad()
         tblParticipants.register(ALKGroupMemberCell.self, forCellWithReuseIdentifier: cellId)
         tblParticipants.showsVerticalScrollIndicator = false
-        viewModel = ALKCreateGroupViewModel(groupName: groupName, groupId: groupId, delegate: self, localizationFileName: localizedStringFileName)
+        viewModel = ALKCreateGroupViewModel(
+            groupName: groupName,
+            groupId: groupId,
+            delegate: self,
+            localizationFileName: localizedStringFileName,
+            shouldShowInfoOption: configuration.showInfoOptionInGroupDetail)
         viewModel.fetchParticipants()
         setupUI()
         self.hideKeyboard()
@@ -323,6 +328,16 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
 }
 
 extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
+
+    func info(at index: Int) {
+        let member = viewModel.rowAt(index: index)
+        let info: [String: Any] =
+            ["Id": member.id,
+             "Name": member.name,
+             "Controller": self]
+
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UserInfoSelected"), object: info)
+    }
 
     func remove(at index: Int) {
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {

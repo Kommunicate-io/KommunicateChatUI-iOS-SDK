@@ -198,5 +198,6 @@ struct SystemMessage : Localizable{
         static let DismissAdmin = localizedString(forKey: "DismissAdmin")
         static let SendMessage = localizedString(forKey: "SendMessage")
         static let RemoveFromGroup = localizedString(forKey: "RemoveFromGroup")
+        static let Info = localizedString(forKey: "Info")
     }
 }

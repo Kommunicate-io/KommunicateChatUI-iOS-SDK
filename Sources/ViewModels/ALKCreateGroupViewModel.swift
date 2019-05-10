@@ -15,6 +15,7 @@ protocol ALKCreateGroupViewModelDelegate {
     func makeAdmin(at index: Int)
     func dismissAdmin(at index: Int)
     func sendMessage(at index: Int)
+    func info(at index: Int)
 }
 
 enum options: String, Localizable {
@@ -22,6 +23,7 @@ enum options: String, Localizable {
     case makeAdmin
     case dismissAdmin
     case sendMessage
+    case info
     case cancel
 
     func value(
@@ -49,6 +51,11 @@ enum options: String, Localizable {
             return UIAlertAction(title: title, style: .default, handler: { (action) in
                 delegate.sendMessage(at: index)
             })
+        case .info:
+            let title = localizedString(forKey: "Info", withDefaultValue: SystemMessage.GroupDetails.Info, fileName: localizationFileName)
+            return UIAlertAction(title: title, style: .default, handler: { (action) in
+                delegate.info(at: index)
+            })
         case .cancel:
             let title = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizationFileName)
             return UIAlertAction(title: title, style: .cancel)
@@ -75,17 +82,20 @@ class ALKCreateGroupViewModel: Localizable {
     }()
 
     let localizationFileName: String
+    let shouldShowInfoOption: Bool
 
     init(
         groupName name: String,
         groupId: NSNumber,
         delegate: ALKCreateGroupViewModelDelegate,
-        localizationFileName: String) {
+        localizationFileName: String,
+        shouldShowInfoOption: Bool = false) {
         groupName = name
         originalGroupName = name
         self.groupId = groupId
         self.delegate = delegate
         self.localizationFileName = localizationFileName
+        self.shouldShowInfoOption = shouldShowInfoOption
         membersInfo.append(GroupMemberInfo(name: "Add Participants"))
     }
 
@@ -172,15 +182,16 @@ class ALKCreateGroupViewModel: Localizable {
             return (false, nil)
         }
         /// Pressed on user
+        var options: [options] = shouldShowInfoOption ? [.info, .sendMessage] : [.sendMessage]
+
         if isAdmin(userId: ALUserDefaultsHandler.getUserId()) {
-            var options: [options] = [.sendMessage]
             membersInfo[index].isAdmin ? options.append(.dismissAdmin) : options.append(.makeAdmin)
             options.append(.remove)
             options.append(.cancel)
             return (false, options)
-        } else {
-            return (false, [.sendMessage, .cancel])
         }
+        options.append(.cancel)
+        return (false, options)
     }
 
     private func isAdmin(userId: String) -> Bool {

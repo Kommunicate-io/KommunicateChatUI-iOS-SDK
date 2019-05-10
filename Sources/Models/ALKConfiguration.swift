@@ -117,5 +117,11 @@ public struct ALKConfiguration {
     /// File extension of this file will be txt.
     public var restrictedWordsFileName = ""
 
+    /// This will show info option in action sheet
+    /// when a profile is tapped in group detail screen.
+    /// Clicking on the option will send a notification outside.
+    /// Nothing else will be done from our side.
+    public var showInfoOptionInGroupDetail: Bool = false
+
     public init() { }
 }
