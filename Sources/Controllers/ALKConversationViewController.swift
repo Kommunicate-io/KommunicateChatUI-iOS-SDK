@@ -1197,12 +1197,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if viewModel.isGroup {
             let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
             if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
-                vc.setCurrentGroupSelected(
-                    groupId: viewModel.channelKey!,
-                    groupName: viewModel.groupName(),
-                    groupProfile: viewModel.groupProfileImgUrl(),
-                    delegate: self)
                 vc.configuration = configuration
+                vc.setCurrentGroupSelected(
+                    groupId: self.viewModel.channelKey!,
+                    groupName: self.viewModel.groupName(),
+                    groupProfile: self.viewModel.groupProfileImgUrl(),
+                    delegate: self)
                 vc.addContactMode = .existingChat
                 navigationController?.pushViewController(vc, animated: true)
             }

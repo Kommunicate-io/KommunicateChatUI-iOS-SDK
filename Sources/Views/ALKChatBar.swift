@@ -552,6 +552,11 @@ open class ALKChatBar: UIView, Localizable {
     func enableChat() {
         guard soundRec.isHidden else { return }
         toggleUserInteractionForViews(enabled: true)
+//        if let text = textView.text, !text.isEmpty {
+//            micButton.isHidden = true
+//        } else {
+//            sendButton.isHidden = true
+//        }
         placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
     }
 }

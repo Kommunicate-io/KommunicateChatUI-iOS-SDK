@@ -13,7 +13,7 @@ struct GroupMemberInfo {
     let id: String
     let name: String
     let image: String?
-    let isAdmin: Bool
+    var isAdmin: Bool
     let addCell: Bool
     let adminText: String?
 
@@ -75,13 +75,16 @@ class ALKGroupMemberCell: UICollectionViewCell {
 
     let adminLabel: UILabel = {
         let label = UILabel()
-        label.text = "Admin"
         label.font = UIFont(name: "HelveticaNeue", size: 13)
         label.textColor = UIColor(red: 131, green: 128, blue: 128)
         label.numberOfLines = 1
         label.isHidden = true
         return label
     }()
+
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
+
+    var model: GroupMemberInfo?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -92,7 +95,13 @@ class ALKGroupMemberCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func showLoading() {
+        activityIndicator.startAnimating()
+        adminLabel.isHidden = true
+    }
+
     func updateView(model: GroupMemberInfo) {
+        self.model = model
         nameLabel.text = model.name
         adminLabel.isHidden = !model.isAdmin
 
@@ -117,7 +126,8 @@ class ALKGroupMemberCell: UICollectionViewCell {
     }
 
     private func setupConstraints() {
-        self.contentView.addViewsForAutolayout(views: [profile, adminLabel, nameLabel])
+        contentView.addViewsForAutolayout(views: [profile, adminLabel, nameLabel, activityIndicator])
+        contentView.bringSubviewToFront(activityIndicator)
 
         profile.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.Profile.left).isActive = true
         profile.widthAnchor.constraint(equalToConstant: Padding.Profile.width).isActive = true
@@ -127,6 +137,9 @@ class ALKGroupMemberCell: UICollectionViewCell {
 
         adminLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.Admin.right).isActive = true
         adminLabel.centerYAnchor.constraint(equalTo: profile.centerYAnchor).isActive = true
+
+        activityIndicator.centerXAnchor.constraint(equalTo: adminLabel.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: adminLabel.centerYAnchor).isActive = true
 
         nameLabel.leadingAnchor.constraint(equalTo: profile.trailingAnchor, constant: Padding.Name.left).isActive = true
         nameLabel.centerYAnchor.constraint(equalTo: profile.centerYAnchor).isActive = true
