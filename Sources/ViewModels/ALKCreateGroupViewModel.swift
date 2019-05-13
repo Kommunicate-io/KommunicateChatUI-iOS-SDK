@@ -104,32 +104,31 @@ class ALKCreateGroupViewModel: Localizable {
     }
 
     func fetchParticipants() {
-        DispatchQueue.global(qos: .background).async {
-            ALChannelDBService().fetchChannelMembersAsync(withChannelKey: self.groupId) { (members) in
-                guard let members = members as? [String], !members.isEmpty else {
-                    return
-                }
-                let alContactDbService = ALContactDBService()
-                let alContacts = members.map {
-                    alContactDbService.loadContact(byKey: "userId", value: $0)
-                }
-                self.membersInfo =
-                    alContacts
-                        .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
-                        .map {
-                            let user = $0!
-                            return GroupMemberInfo(
-                                id: user.userId!,
-                                name: user.getDisplayName()!,
-                                image: user.contactImageUrl,
-                                isAdmin: self.isAdmin(userId: user.userId!),
-                                addCell: false,
-                                adminText: self.adminText)
-                }
-                self.membersInfo.insert(self.getCurrentUserInfo(), at: 0)
-                DispatchQueue.main.async {
-                    self.delegate.membersFetched()
-                }
+        ALChannelDBService().fetchChannelMembersAsync(withChannelKey: self.groupId) { (members) in
+            guard let members = members as? [String], !members.isEmpty else {
+                return
+            }
+            let alContactDbService = ALContactDBService()
+            let alContacts = members.map {
+                alContactDbService.loadContact(byKey: "userId", value: $0)
+            }
+
+            self.membersInfo =
+                alContacts
+                    .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
+                    .map {
+                        let user = $0!
+                        return GroupMemberInfo(
+                            id: user.userId ?? "",
+                            name: user.getDisplayName() ?? "",
+                            image: user.contactImageUrl,
+                            isAdmin: self.isAdmin(userId: user.userId!),
+                            addCell: false,
+                            adminText: self.adminText)
+            }
+            self.membersInfo.insert(self.getCurrentUserInfo(), at: 0)
+            DispatchQueue.main.async {
+                self.delegate.membersFetched()
             }
         }
     }

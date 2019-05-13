@@ -39,7 +39,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
 
     var groupList = [ALKFriendViewModel]()
     var addedList = [ALKFriendViewModel]()
-    var addContactMode: ALKAddContactMode = ALKAddContactMode.newChat
+    var addContactMode: ALKAddContactMode = .newChat
 
     /// To be passed from outside for existing chat
     var groupDelegate: ALKCreateGroupChatAddFriendProtocol!
