@@ -133,17 +133,6 @@ class ALKCreateGroupViewModel: Localizable {
         }
     }
 
-    /// Listen to notification.... for real time updates
-    func updateGroupMembers(_ notification: NSNotification) {
-        guard
-            let channel = notification.object as? ALChannel,
-            channel.key == groupId
-        else {
-            return
-        }
-        fetchParticipants()
-    }
-
     func numberOfRows() -> Int {
         return membersInfo.count
     }

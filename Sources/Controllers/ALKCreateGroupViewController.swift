@@ -83,7 +83,25 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         setupUI()
         self.hideKeyboard()
     }
-    
+
+    override func addObserver() {
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name(rawValue: "Updated_Group_Members"),
+            object: nil,
+            queue: nil,
+            using: {
+                [weak self] notification in
+                guard
+                    let weakSelf = self,
+                    let channel = notification.object as? ALChannel,
+                    channel.key == weakSelf.groupId
+                else {
+                    return
+                }
+                weakSelf.viewModel?.fetchParticipants()
+        })
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         txtfGroupName.resignFirstResponder()
