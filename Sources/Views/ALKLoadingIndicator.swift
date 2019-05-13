@@ -21,9 +21,8 @@ public class ALKLoadingIndicator: UIStackView, Localizable {
 
     // MARK: - Initializer
 
-    public init(frame: CGRect, color: UIColor, localizationFileName: String) {
+    public init(frame: CGRect, color: UIColor) {
         super.init(frame: frame)
-        loadingLabel.text = localizedString(forKey: "LoadingIndicatorText", withDefaultValue: SystemMessage.Information.LoadingIndicatorText, fileName: localizationFileName)
         setupStyle(color)
         setupView()
         self.isHidden = true
@@ -35,7 +34,8 @@ public class ALKLoadingIndicator: UIStackView, Localizable {
 
     // MARK: - Public methods
 
-    public func startLoading() {
+    public func startLoading(localizationFileName: String) {
+        loadingLabel.text = localizedString(forKey: "LoadingIndicatorText", withDefaultValue: SystemMessage.Information.LoadingIndicatorText, fileName: localizationFileName)
         self.isHidden = false
         activityIndicator.startAnimating()
     }

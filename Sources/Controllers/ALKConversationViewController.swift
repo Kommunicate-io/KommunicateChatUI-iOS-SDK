@@ -34,7 +34,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contactService: ALContactService!
 
-    lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor, localizationFileName: self.configuration.localizedStringFileName)
+    lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor)
 
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
@@ -541,7 +541,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func setupNavigation() {
         self.navigationItem.titleView = loadingIndicator
-        loadingIndicator.startLoading()
+        loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
 
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
         viewModel.currentConversationProfile { (profile) in
@@ -605,6 +605,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKFriendDocumentCell.self)
         tableView.register(ALKMyDocumentCell.self)
+        tableView.register(ALKMyContactMessageCell.self)
+        tableView.register(ALKFriendContactMessageCell.self)
     }
 
 
@@ -771,6 +773,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 weakSelf.present(vc, animated: false, completion: nil)
                 button.isUserInteractionEnabled = true
+
+            case .shareContact():
+                weakSelf.shareContact()
             default:
                 print("Not available")
             }
@@ -1108,6 +1113,24 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    @objc func dismissContact() {
+        ALPushAssist().topViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func openContact(_ contact: CNContact) {
+        CNContactStore().requestAccess(for: .contacts) { (granted, error) in
+            if granted {
+                let vc = CNContactViewController(forUnknownContact: contact)
+                vc.contactStore = CNContactStore()
+                let nav = UINavigationController(rootViewController: vc)
+                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissContact))
+                self.present(nav, animated: true, completion: nil)
+            } else {
+                ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+            }
+        }
+    }
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
 
         let value = contentOffsetDictionary[index]
@@ -1281,6 +1304,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             request.addValue(contentType, forHTTPHeaderField: "Content-Type")
             submitButtonResponse(request: request)
         }
+    }
+
+    private func shareContact() {
+        CNContactStore().requestAccess(for: .contacts) { (granted, error) in
+            if granted {
+                let vc = CNContactPickerViewController()
+                vc.delegate = self
+                self.present(vc, animated: true, completion: nil)
+            } else {
+                ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+            }
+        }
+    }
+}
+
+extension ALKConversationViewController: CNContactPickerDelegate {
+    public func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
+        viewModel.send(contact: contact, metadata: configuration.messageMetadata)
+        /// Send contact using path viewModelsend(photo:
     }
 }
 

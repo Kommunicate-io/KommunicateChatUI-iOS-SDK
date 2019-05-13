@@ -209,7 +209,7 @@ extension ALKHTTPManager: URLSessionDataDelegate  {
                     self.uploadCompleted?(nil, uploadTask)
                     self.uploadDelegate?.dataUploadingFinished(task: uploadTask)
                 }
-            }   
+            }
         }
     }
 

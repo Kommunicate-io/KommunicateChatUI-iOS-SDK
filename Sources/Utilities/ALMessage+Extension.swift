@@ -112,6 +112,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return messageText as? String
         case .document:
             return "Document"
+        case .contact:
+            return "Contact"
         }
     }
 
@@ -195,6 +197,8 @@ extension ALMessage {
             return .information
         case ALMESSAGE_CONTENT_TEXT_HTML:
             return .html
+        case ALMESSAGE_CONTENT_VCARD:
+            return .contact
         default:
             guard let attachmentType = getAttachmentType() else {return .text}
             return attachmentType

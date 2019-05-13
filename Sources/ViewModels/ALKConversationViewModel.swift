@@ -318,7 +318,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return ALKMyDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             } else {
                 return ALKFriendDocumentCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-            } 
+            }
+        case .contact:
+            if messageModel.isMyMessage{
+                return ALKMyContactMessageCell.rowHeight()
+            } else {
+                return ALKFriendContactMessageCell.rowHeight()
+            }
         }
     }
 
@@ -570,6 +576,20 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return (alMessage, IndexPath(row: 0, section: self.messageModels.count-1))
 
 
+    }
+
+    open func send(contact: CNContact, metadata: [AnyHashable: Any]?) {
+        guard
+            let path = ALVCardClass().saveContact(toDocDirectory: contact),
+            let url = URL(string: path)
+        else {
+            print("Error while saving contact")
+            return
+        }
+        guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(ALMESSAGE_CONTENT_VCARD), metadata: metadata) else { return }
+        addToWrapper(message: alMessage)
+        delegate?.messageSent(at: IndexPath(row: 0, section: self.messageModels.count-1))
+        uploadAudio(alMessage: alMessage, indexPath: IndexPath(row: 0, section: self.messageModels.count-1))
     }
 
     open func send(voiceMessage: Data,metadata : [AnyHashable : Any]?) {
@@ -1265,6 +1285,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue()
         let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as String?
         alMessage.fileMeta.contentType = mimetype
+        if(contentType == ALMESSAGE_CONTENT_VCARD) {
+            alMessage.fileMeta.contentType = "text/x-vcard"
+        }
 
         guard let imageData = NSData(contentsOfFile: filePath.path) else {
             // Empty image.
