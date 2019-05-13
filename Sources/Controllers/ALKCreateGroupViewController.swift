@@ -226,12 +226,11 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     }
 
     func setCurrentGroupSelected(groupId: NSNumber,
-                                 groupName: String,
                                  groupProfile: String?,
                                  delegate: ALKCreateGroupChatAddFriendProtocol) {
-        self.groupName = groupName
         self.groupDelegate = delegate
         self.groupId = groupId
+        self.groupName = ALChannelService().getChannelByKey(groupId)?.name ?? ""
         guard let image = groupProfile else { return }
         groupProfileImgUrl = image
     }
@@ -262,7 +261,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             
             let selectParticipantViewController = segue.destination as? ALKSelectParticipantToAddViewController
             selectParticipantViewController?.selectParticipantDelegate = self
-            selectParticipantViewController?.friendsInGroup = self.groupList
+            selectParticipantViewController?.friendsInGroup = self.viewModel.membersInfo
             selectParticipantViewController?.configuration = configuration
         }
     }

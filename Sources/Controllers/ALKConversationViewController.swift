@@ -1200,7 +1200,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 vc.configuration = configuration
                 vc.setCurrentGroupSelected(
                     groupId: self.viewModel.channelKey!,
-                    groupName: self.viewModel.groupName(),
                     groupProfile: self.viewModel.groupProfileImgUrl(),
                     delegate: self)
                 vc.addContactMode = .existingChat
