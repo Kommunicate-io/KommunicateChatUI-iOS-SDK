@@ -6,10 +6,11 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Enhancments
 - [AL-3490] Added support for Back button action in Conversation VC if the VC is presented not pushed.
-- [AL-3397] Added support for sharing contacts
+- [AL-3397] Added support for sharing contacts.
 
 ### Fixes
 - [AL-3486]Fixed an issue where in some cases view was in an incorrect state if the keyboard is visible.
+- Fixed an issue where user was shown "Not part of group" which was happening because fetch request for group members was giving null.
 
 2.5.0
 ---

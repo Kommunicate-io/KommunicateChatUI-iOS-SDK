@@ -448,7 +448,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
-        if  channel.type != 6 && channel.type != 10 && !ALChannelService().isLoginUser(inChannel: channelKey) {
+        //TODO: This returns nil sometimes. Find a better way.
+        guard let members = ALChannelService().getListOfAllUsers(inChannel: channelKey) as? [String] else {
+            return
+        }
+        if  channel.type != 6 && channel.type != 10 && !members.contains(ALUserDefaultsHandler.getUserId()) {
             chatBar.disableChat(message: localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName))
             //Disable click on toolbar
             navigationBar.disableTitleAction = true
