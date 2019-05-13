@@ -96,7 +96,6 @@ class ALKCreateGroupViewModel: Localizable {
         self.delegate = delegate
         self.localizationFileName = localizationFileName
         self.shouldShowInfoOption = shouldShowInfoOption
-        membersInfo.append(GroupMemberInfo(name: "Add Participants"))
     }
 
     func isAddParticipantButtonEnabled() -> Bool {
@@ -128,10 +127,6 @@ class ALKCreateGroupViewModel: Localizable {
                                 adminText: self.adminText)
                 }
                 self.membersInfo.insert(self.getCurrentUserInfo(), at: 0)
-                if self.isAddAllowed {
-                    let addParticipantText = self.localizedString(forKey: "AddParticipant", withDefaultValue: SystemMessage.GroupDetails.AddParticipant, fileName: self.localizationFileName)
-                    self.membersInfo.insert(GroupMemberInfo(name: addParticipantText), at: 0)
-                }
                 DispatchQueue.main.async {
                     self.delegate.membersFetched()
                 }
@@ -168,18 +163,10 @@ class ALKCreateGroupViewModel: Localizable {
         membersInfo[index] = member
     }
 
-    /// Gives information about the action to be taken when cell at index is tapped.
-    ///
-    /// - Parameter index: index where cell is tapped
-    /// - Returns: Tuple having bool(for add participant cell) or alertOptions for cell.
-    func optionsForCell(at index: Int) -> (Bool, [options]?) {
-        /// Pressed on 'Add Participants'
-        if isAddAllowed && index == 0 {
-            return (true, nil)
-        }
+    func optionsForCell(at index: Int) -> [options]? {
         /// Pressed on 'You'
-        if index == 0 || (isAddAllowed && index == 1) {
-            return (false, nil)
+        if index == 0 {
+            return nil
         }
         /// Pressed on user
         var options: [options] = shouldShowInfoOption ? [.info, .sendMessage] : [.sendMessage]
@@ -188,10 +175,10 @@ class ALKCreateGroupViewModel: Localizable {
             membersInfo[index].isAdmin ? options.append(.dismissAdmin) : options.append(.makeAdmin)
             options.append(.remove)
             options.append(.cancel)
-            return (false, options)
+            return options
         }
         options.append(.cancel)
-        return (false, options)
+        return options
     }
 
     private func isAdmin(userId: String) -> Bool {

@@ -138,5 +138,5 @@ RemoveUser = "Remove user";
 MakeAdmin = "Make group admin";
 DismissAdmin = "Dismiss group admin";
 SendMessage = "Send message";
-RemoveFromGroup = "Remove %@ from %@ group?";
+RemoveFromGroup = "Remove %@ from the \"%@\" group?";
 Info = "Info";

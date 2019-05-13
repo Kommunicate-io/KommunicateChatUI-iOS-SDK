@@ -121,7 +121,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
         }
     }
 
-    func rowHeight() -> CGFloat {
+    class func rowHeight() -> CGFloat {
         return Padding.Profile.top + Padding.Profile.bottom + Padding.Profile.height
     }
 
