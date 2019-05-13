@@ -1781,7 +1781,27 @@ extension ALKConversationViewController: NavigationBarCallbacks {
     }
 
     func titleTapped() {
+        if let contact = contactDetails(), let contactId = contact.userId {
+            let info: [String: Any] =
+                ["Id": contactId,
+                 "Name": contact.getDisplayName() ?? "",
+                 "Controller": self]
+
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UserProfileSelected"), object: info)
+        }
         guard isGroupDetailActionEnabled else { return }
         showParticipantListChat()
     }
+
+    private func contactDetails() -> ALContact? {
+        guard viewModel != nil else { return nil }
+        guard
+            viewModel.channelKey == nil,
+            viewModel.conversationProxy == nil,
+            let contactId = viewModel.contactId else {
+                return nil
+        }
+        return ALContactService().loadContact(byKey: "userId", value: contactId)
+    }
+
 }

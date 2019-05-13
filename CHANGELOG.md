@@ -2,16 +2,24 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.6.0
+---
+### Enhancements
+- [AL-3397] Added support for sharing contacts.
+- [AL-3446] Added remove from group, make admin, dismiss admin features in group details page.
+- Now tapping on user title in navigation bar for 1-1 chat will fire a notification which can be handled from outside.
+
+### Fixes
+- Fixed an issue where user was shown "Not part of group" which was happening because fetch request for group members was giving null.
+
+
 2.5.1
 
 ### Enhancments
 - [AL-3490] Added support for Back button action in Conversation VC if the VC is presented not pushed.
-- [AL-3397] Added support for sharing contacts.
-- [AL-3446] Added remove from group, make admin, dismiss admin features in group details page.
 
 ### Fixes
 - [AL-3486]Fixed an issue where in some cases view was in an incorrect state if the keyboard is visible.
-- Fixed an issue where user was shown "Not part of group" which was happening because fetch request for group members was giving null.
 
 2.5.0
 ---
