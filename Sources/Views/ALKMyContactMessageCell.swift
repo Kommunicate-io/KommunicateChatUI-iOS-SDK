@@ -64,6 +64,13 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         }
     }
 
+    override func setupStyle() {
+        super.setupStyle()
+        contactView.setColorIn(
+            text: ALKMessageStyle.sentMessage.text,
+            background: ALKMessageStyle.sentBubble.color)
+    }
+
     class func rowHeight() -> CGFloat {
         var height = ContactView.height()
         height += max(Padding.StateView.bottom, Padding.TimeLabel.bottom)
@@ -71,9 +78,6 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
     }
 
     private func setupConstraints() {
-        contactView.setColorIn(
-            text: ALKMessageStyle.sentMessage.text,
-            background: ALKMessageStyle.sentBubble.color)
         contentView.addViewsForAutolayout(views: [contactView, timeLabel, stateView, loadingIndicator])
         contentView.bringSubviewToFront(loadingIndicator)
 

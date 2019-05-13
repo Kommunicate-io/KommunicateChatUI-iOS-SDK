@@ -415,6 +415,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKMyContactMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
+                if let filePath = message.filePath {
+                    cell.updateContactDetails(key: message.identifier, filePath: filePath)
+                }
                 if message.filePath == nil {
                     attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
@@ -427,6 +430,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendContactMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
+                if let filePath = message.filePath {
+                    cell.updateContactDetails(key: message.identifier, filePath: filePath)
+                }
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 if message.filePath == nil {
                     attachmentViewDidTapDownload(view: cell, indexPath: indexPath)

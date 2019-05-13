@@ -39,9 +39,8 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
         imv.clipsToBounds = true
-        let layer = imv.layer
-        layer.cornerRadius = 18.5
-        layer.masksToBounds = true
+        imv.layer.cornerRadius = 18.5
+        imv.layer.masksToBounds = true
         imv.isUserInteractionEnabled = true
         return imv
     }()
@@ -79,6 +78,13 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         nameLabel.setStyle(ALKMessageStyle.displayName)
     }
 
+    override func setupStyle() {
+        super.setupStyle()
+        contactView.setColorIn(
+            text: ALKMessageStyle.receivedMessage.text,
+            background: ALKMessageStyle.receivedBubble.color)
+    }
+
     class func rowHeight() -> CGFloat {
         var height = ContactView.height()
         height += Padding.Name.top + Padding.Name.height // Name height
@@ -87,9 +93,6 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
     }
 
     private func setupConstraints() {
-        contactView.setColorIn(
-            text: ALKMessageStyle.receivedMessage.text,
-            background: ALKMessageStyle.receivedBubble.color)
         contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, contactView, timeLabel, loadingIndicator])
         contentView.bringSubviewToFront(loadingIndicator)
 
