@@ -41,7 +41,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
 //    private var friendDataService: FriendDataService?
 
     // MARK: - Initially Setup
-    var friendsInGroup: [ALKFriendViewModel]?
+    var friendsInGroup: [GroupMemberInfo]?
     weak var selectParticipantDelegate: ALKSelectParticipantToAddProtocol?
     
     /*
@@ -278,7 +278,7 @@ class ALKSelectParticipantToAddViewController: ALKBaseViewController, Localizabl
     fileprivate func isInPreviousFriendGroup(fri: ALKFriendViewModel) -> Bool {
         guard let friendUUID = fri.friendUUID, let friendsInGroup = self.friendsInGroup else { return false }
         return friendsInGroup
-                    .filter { $0.friendUUID == friendUUID }
+                    .filter { $0.id == friendUUID }
                     .count > 0
     }
     

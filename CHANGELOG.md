@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancments
 - [AL-3490] Added support for Back button action in Conversation VC if the VC is presented not pushed.
 - [AL-3397] Added support for sharing contacts.
+- [AL-3446] Added remove from group, make admin, dismiss admin features in group details page.
 
 ### Fixes
 - [AL-3486]Fixed an issue where in some cases view was in an incorrect state if the keyboard is visible.

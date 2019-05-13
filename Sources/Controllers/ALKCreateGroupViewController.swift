@@ -35,13 +35,18 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    let cellId = "GroupMemberCell"
+
     var groupList = [ALKFriendViewModel]()
     var addedList = [ALKFriendViewModel]()
-    var groupProfileImgUrl = ""
+    var addContactMode: ALKAddContactMode = .newChat
+
+    /// To be passed from outside for existing chat
     var groupDelegate: ALKCreateGroupChatAddFriendProtocol!
     private var groupName:String = ""
-    var addContactMode: ALKAddContactMode = ALKAddContactMode.newChat
-    
+    var groupProfileImgUrl = ""
+    var groupId: NSNumber = 0
+
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var editLabel: UILabel!
     @IBOutlet fileprivate var btnCreateGroup: UIButton!
@@ -57,7 +62,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
     
-    var viewModel: ALKCreateGroupViewModel?
+    var viewModel: ALKCreateGroupViewModel!
     
     private var createGroupBGColor: UIColor {
         return btnCreateGroup.isEnabled ? UIColor.mainRed() : UIColor.disabledButton()
@@ -65,7 +70,16 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        tblParticipants.register(ALKGroupMemberCell.self)
+        tblParticipants.register(ALKGroupMemberCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: cellId)
+        tblParticipants.showsVerticalScrollIndicator = false
+        viewModel = ALKCreateGroupViewModel(
+            groupName: groupName,
+            groupId: groupId,
+            delegate: self,
+            localizationFileName: localizedStringFileName,
+            shouldShowInfoOption: configuration.showInfoOptionInGroupDetail)
+        viewModel.fetchParticipants()
         setupUI()
         self.hideKeyboard()
     }
@@ -135,7 +149,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                 groupDelegate.createGroupGetFriendInGroupList(friendsSelected:groupList, groupName: groupName, groupImgUrl: "", friendsAdded:addedList)
             }
 
-            }
+        }
     }
     
     fileprivate func setupUI() {
@@ -211,35 +225,18 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             self.present(vc, animated: false, completion: nil)
     }
 
-    private func getPictureFilename() -> String {
-        let name = ""
-
-        // Add user id
-//        if let userID = ChatManager.shared.userID {
-//            name = name + userID
-//        }
-
-        // Add time
-        let dateFormatter       = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd_HHmmss"
-        let dateString          = dateFormatter.string(from: Date())
-        return name + "_" + dateString + "_profile.png"
-    }
-    
-    func setCurrentGroupSelected(groupName: String, groupProfileImg: String?, groupSelected:[ALKFriendViewModel],delegate: ALKCreateGroupChatAddFriendProtocol) {
-        // TODO: Plan to use groupname from view model
-        viewModel = ALKCreateGroupViewModel(groupName: groupName)
-        self.groupName = groupName
+    func setCurrentGroupSelected(groupId: NSNumber,
+                                 groupProfile: String?,
+                                 delegate: ALKCreateGroupChatAddFriendProtocol) {
         self.groupDelegate = delegate
-        self.groupList = groupSelected
-        
-        guard let gImgUrl = groupProfileImg else {return}
-        groupProfileImgUrl = gImgUrl
-        
+        self.groupId = groupId
+        self.groupName = ALChannelService().getChannelByKey(groupId)?.name ?? ""
+        guard let image = groupProfile else { return }
+        groupProfileImgUrl = image
     }
-    
+
     private func isAtLeastOneContact(contactCount: Int) -> Bool {
-        return contactCount > 0
+        return viewModel.numberOfRows() != 0
     }
     
     private func changeCreateGroupButtonState(isEnabled: Bool) {
@@ -264,7 +261,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             
             let selectParticipantViewController = segue.destination as? ALKSelectParticipantToAddViewController
             selectParticipantViewController?.selectParticipantDelegate = self
-            selectParticipantViewController?.friendsInGroup = self.groupList
+            selectParticipantViewController?.friendsInGroup = self.viewModel.membersInfo
             selectParticipantViewController?.configuration = configuration
         }
     }
@@ -292,12 +289,137 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             _ = weakSelf.navigationController?.popViewController(animated: true)
         }
     }
+
+    private func changeUserRole(at index: Int, _ role: NSNumber) {
+        print()
+        guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
+            let notificationView = ALNotificationView()
+            notificationView.noDataConnectionNotificationView()
+            return
+        }
+        let member = viewModel.rowAt(index: index)
+        let channelUser = ALChannelUser()
+        channelUser.role = role
+        channelUser.userId = member.id
+        let indexPath = IndexPath(row: index, section: 0)
+        let cell = tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
+        cell?.showLoading()
+        ALChannelService().updateChannel(
+            self.groupId,
+            andNewName: nil,
+            andImageURL: nil,
+            orClientChannelKey: nil,
+            isUpdatingMetaData: false,
+            metadata: nil,
+            orChildKeys: nil,
+            orChannelUsers: [channelUser.dictionary()]) { error in
+                guard error == nil else {
+                    print("Error while making admin \(String(describing: error))")
+                    return
+                }
+                self.viewModel.updateRoleAt(index: index)
+                self.tblParticipants.performBatchUpdates({
+                    self.tblParticipants.reloadItems(at: [indexPath])
+                }, completion: { finished in
+                })
+        }
+    }
+
+}
+
+extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
+
+    func info(at index: Int) {
+        let member = viewModel.rowAt(index: index)
+        let info: [String: Any] =
+            ["Id": member.id,
+             "Name": member.name,
+             "Controller": self]
+
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UserInfoSelected"), object: info)
+    }
+
+    func remove(at index: Int) {
+        guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
+            let notificationView = ALNotificationView()
+            notificationView.noDataConnectionNotificationView()
+            return
+        }
+        let member = viewModel.rowAt(index: index)
+        let format =
+            localizedString(
+                forKey: "RemoveFromGroup",
+                withDefaultValue: SystemMessage.GroupDetails.RemoveFromGroup,
+                fileName: localizedStringFileName)
+        let message = String(format: format, member.name, groupName)
+        let optionMenu = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+        let removeButton =
+            localizedString(
+                forKey: "RemoveButtonName",
+                withDefaultValue: SystemMessage.ButtonName.Remove,
+                fileName: localizedStringFileName)
+        let removeAction = UIAlertAction(title: removeButton, style: .destructive, handler: { (action) in
+            let indexPath = IndexPath(row: index, section: 0)
+            let cell = self.tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
+            cell?.showLoading()
+            ALChannelService().removeMember(fromChannel: member.id, andChannelKey: self.groupId, orClientChannelKey: nil, withCompletion: { (error, response) in
+                guard response != nil, error == nil else {
+                    print("Error while removing member from group \(String(describing: error))")
+                    return
+                }
+                self.tblParticipants.performBatchUpdates({
+                    self.viewModel.removeAt(index: index)
+                    self.tblParticipants.deleteItems(at: [indexPath])
+                }, completion: { finished in
+                })
+            })
+        })
+        let cancelTitle = localizedString(forKey: "Cancel", withDefaultValue: SystemMessage.LabelName.Cancel, fileName: localizedStringFileName)
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel)
+        optionMenu.addAction(removeAction)
+        optionMenu.addAction(cancelAction)
+        self.present(optionMenu, animated: true, completion: nil)
+    }
+
+    func makeAdmin(at index: Int) {
+        changeUserRole(at: index, NSNumber(value: ADMIN.rawValue))
+    }
+
+    func dismissAdmin(at index: Int) {
+        changeUserRole(at: index, NSNumber(value: MEMBER.rawValue))
+    }
+
+    func sendMessage(at index: Int) {
+        let member = viewModel.rowAt(index: index)
+        let viewModel = ALKConversationViewModel(
+            contactId: member.id,
+            channelKey: nil,
+            localizedStringFileName: localizedStringFileName)
+
+        let conversationVC = ALKConversationViewController(configuration: configuration)
+        conversationVC.viewModel = viewModel
+        self.navigationController?.pushViewController(conversationVC, animated: true)
+    }
+
+    func membersFetched() {
+        tblParticipants.reloadData()
+        updateCreateGroupButtonUI(contactInGroup: groupList.count, groupname: viewModel!.groupName)
+    }
 }
 
 extension ALKCreateGroupViewController: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        guard
+            let viewModel = viewModel,
+            let options = viewModel.optionsForCell(at: indexPath.row)
+            else { return }
+        let memberInfo = viewModel.rowAt(index: indexPath.row)
+        let optionMenu = UIAlertController(title: nil, message: memberInfo.name, preferredStyle: .actionSheet)
+        options.forEach {
+            optionMenu.addAction($0.value(localizationFileName: localizedStringFileName, index: indexPath.row, delegate: self))
+        }
+        self.present(optionMenu, animated: true, completion: nil)
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -305,32 +427,73 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate,UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(self.groupList.count == 0) {
-            return 1//just an add button
-        } else {
-            return self.groupList.count + 1
-        }
+        return viewModel.numberOfRows()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = self.tblParticipants.dequeueReusableCell(withReuseIdentifier:"ALKAddParticipantCollectionCell", for: indexPath) as! ALKAddParticipantCollectionCell
-        
-        if(indexPath.row == self.groupList.count) {
-            //it's an added btn
-            cell.setDelegate(friend: nil, atIndex: indexPath, delegate: self)
-            
-            guard let viewModel = viewModel else { return cell }
-            cell.setStatus(isAddButtonEnabled: viewModel.isAddParticipantButtonEnabled())
-        } else if (self.groupList.count == 0) {
-            //it's an added btn
-            cell.setDelegate(friend: nil, atIndex: indexPath, delegate: self)
-            guard let viewModel = viewModel else { return cell }
-            cell.setStatus(isAddButtonEnabled: viewModel.isAddParticipantButtonEnabled())
-        } else {
-            let temp = self.groupList[indexPath.row]
-            cell.setDelegate(friend: temp, atIndex: indexPath, delegate: self)
-        }
+        let cell: ALKGroupMemberCell = tblParticipants.dequeueReusableCell(forIndexPath: indexPath)
+        guard let viewModel = viewModel else { return cell }
+        let member = viewModel.rowAt(index: indexPath.row)
+        cell.updateView(model: member)
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return cellHeight()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+        let header = tblParticipants.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: cellId,
+            for: indexPath) as! ALKGroupMemberCell
+        let addParticipantText = localizedString(
+            forKey: "AddParticipant",
+            withDefaultValue: SystemMessage.GroupDetails.AddParticipant,
+            fileName: localizedStringFileName)
+        header.updateView(model: GroupMemberInfo(name: addParticipantText))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addParticipant))
+        tapGesture.numberOfTapsRequired = 1
+        header.addGestureRecognizer(tapGesture)
+        return header
+    }
+
+    @objc func addParticipant() {
+        guard
+            let groupName = txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+            groupName.lengthOfBytes(using: .utf8) > 1
+        else {
+            let msg = localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, fileName: localizedStringFileName)
+            let alert = UIAlertController(title: nil, message: msg, preferredStyle: .alert)
+            let okButton = self.localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.ButtonName.ok, fileName: self.localizedStringFileName)
+            let action = UIAlertAction(title: okButton, style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+
+        self.performSegue(withIdentifier: "goToSelectFriendToAdd", sender: nil)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        guard let viewModel = viewModel, viewModel.isAddAllowed else {
+            return CGSize(width: 0, height: 0)
+        }
+        return cellHeight()
+    }
+
+    private func cellHeight() -> CGSize {
+        let height = ALKGroupMemberCell.rowHeight()
+        if #available(iOS 11.0, *) {
+            let safeAreaInsets = self.view.safeAreaInsets
+            return CGSize(width: UIScreen.main.bounds.width - (safeAreaInsets.left + safeAreaInsets.right), height: height)
+        } else {
+            // Fallback on earlier versions
+            return CGSize(width: UIScreen.main.bounds.width, height: height)
+        }
     }
 }
 
@@ -347,7 +510,7 @@ extension ALKCreateGroupViewController:ALKAddParticipantProtocol
         guard addContactMode == .existingChat,
             index.row < groupList.count else {return}
         let user = groupList[index.row]
-        let viewModel = ALKConversationViewModel(contactId: user.friendUUID, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
+        let viewModel = ALKConversationViewModel(contactId: user.friendUUID, channelKey: nil, localizedStringFileName: localizedStringFileName)
 
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
@@ -388,31 +551,7 @@ extension ALKCreateGroupViewController: ALKSelectParticipantToAddProtocol {
     func selectedParticipant(selectedList: [ALKFriendViewModel], addedList: [ALKFriendViewModel]) {
         self.groupList = selectedList
         self.addedList = addedList
-        
-        //createGroup()
         self.createGroupPress(btnCreateGroup)
-        
-        /*
-        self.tblParticipants.reloadData()
-        
-        updateCreateGroupButtonUI(contactInGroup: groupList.count, groupname: txtfGroupName.trimmedWhitespaceText())
-        */
-    }
-    
-    private func createGroup() {
-        guard let groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-            return
-        }
-        
-        if groupName.lengthOfBytes(using: .utf8) < 1 {
-            return
-        }
-        
-        if self.groupDelegate != nil {
-            self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList,
-                                                               groupName: groupName,groupImgUrl:"",
-                                                               friendsAdded: self.addedList)
-        }
     }
 }
 
@@ -422,7 +561,7 @@ extension ALKCreateGroupViewController
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(ALKCreateGroupViewController.dismissKeyboard))
-        
+        tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
     

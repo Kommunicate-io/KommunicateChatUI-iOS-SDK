@@ -153,6 +153,7 @@ struct SystemMessage : Localizable{
         static let Copy = localizedString(forKey: "Copy")
         static let Reply = localizedString(forKey: "Reply")
         static let You = localizedString(forKey: "You")
+        static let Admin = localizedString(forKey: "Admin")
     }
 
 
@@ -188,5 +189,15 @@ struct SystemMessage : Localizable{
         static let OkMessage = localizedString(forKey: "OkMessage")
         static let BlockSuccess = localizedString(forKey: "BlockSuccess")
         static let UnblockSuccess = localizedString(forKey: "UnblockSuccess")
+    }
+
+    struct GroupDetails {
+        static let AddParticipant = localizedString(forKey: "AddParticipant")
+        static let RemoveUser = localizedString(forKey: "RemoveUser")
+        static let MakeAdmin = localizedString(forKey: "MakeAdmin")
+        static let DismissAdmin = localizedString(forKey: "DismissAdmin")
+        static let SendMessage = localizedString(forKey: "SendMessage")
+        static let RemoveFromGroup = localizedString(forKey: "RemoveFromGroup")
+        static let Info = localizedString(forKey: "Info")
     }
 }

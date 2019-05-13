@@ -1194,19 +1194,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     @objc private func showParticipantListChat() {
-        if viewModel.isGroup {
-            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
-            if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
-
-                if viewModel.groupProfileImgUrl().isEmpty {
-                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:nil, groupSelected: viewModel.friends(), delegate: self)
-                } else {
-                    vc.setCurrentGroupSelected(groupName: viewModel.groupName(),groupProfileImg:viewModel.groupProfileImgUrl(), groupSelected: viewModel.friends(), delegate: self)
-                }
-                vc.configuration = configuration
-                vc.addContactMode = .existingChat
-                navigationController?.pushViewController(vc, animated: true)
-            }
+        guard let channelKey = viewModel.channelKey else { return }
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
+        if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
+            vc.configuration = configuration
+            vc.setCurrentGroupSelected(
+                groupId: channelKey,
+                groupProfile: self.viewModel.groupProfileImgUrl(),
+                delegate: self)
+            vc.addContactMode = .existingChat
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 
