@@ -10,7 +10,7 @@ import UIKit
 /// It shows image and caption over a bubble with a fixed width that is passed to it.
 ///
 /// - NOTE: To change configurations like font color etc, change `ImageBubbleStyle`
-public class ImageBubble: UIView, ViewInterface {
+public class ImageContainer: UIView {
 
     fileprivate let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -39,7 +39,9 @@ public class ImageBubble: UIView, ViewInterface {
     fileprivate let padding: Padding
     fileprivate let maxWidth: CGFloat
 
-    static let captionTopPadding: CGFloat = 4.0
+    public static var captionTopPadding: CGFloat = 4.0
+
+    //MARK:- Initializer
 
     public init(frame: CGRect, maxWidth: CGFloat, isMyMessage: Bool) {
         self.maxWidth = maxWidth
@@ -54,16 +56,18 @@ public class ImageBubble: UIView, ViewInterface {
         fatalError("init(coder:) has not been implemented")
     }
 
+    //MARK:- Public methods
+
     /// It sets image and caption in `ImageMessageView`
     ///
     /// - Parameter model: object that conforms to `ImageModel` to update the view.
-    public func update(model: ImageModel) {
+    public func update(model: ImageMessage) {
         updateImage(model)
         updateCaption(model)
         /// Set frame
         let widthRatio = isMyMessage ? ImageBubbleTheme.sentMessage.widthRatio : ImageBubbleTheme.receivedMessage.widthRatio
         let width = maxWidth * widthRatio
-        let height = ImageBubble.rowHeight(model: model, maxWidth: width)
+        let height = ImageContainer.rowHeight(model: model, maxWidth: width)
         self.frame.size = CGSize(width: width, height: height)
     }
 
@@ -75,35 +79,38 @@ public class ImageBubble: UIView, ViewInterface {
     ///   - model: model that conforms to `ImageModel`
     ///   - width: width of the view. Use same which is passed in initialization.
     /// - Returns: Height of view based on width and model
-    public static func rowHeight(model: ImageModel,
+    public static func rowHeight(model: ImageMessage,
                                  maxWidth: CGFloat,
-                                 font: UIFont = UIFont(),
-                                 padding: Padding? = nil) -> CGFloat {
+                                 font: UIFont = UIFont()) -> CGFloat {
         return ImageBubbleSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
+
+    //MARK:- Private helper methods
 
     private func setupConstraints() {
         self.addViewsForAutolayout(views: [imageView, caption, bubbleView])
         self.bringSubviewToFront(imageView)
         self.bringSubviewToFront(caption)
 
-        bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        bubbleView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-
-        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top).isActive = true
-        imageView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: padding.left).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -1 * padding.right).isActive = true
-        /// Set Image Height
         let heightRatio = isMyMessage ? ImageBubbleTheme.sentMessage.heightRatio : ImageBubbleTheme.receivedMessage.heightRatio
         let imageHeight = maxWidth * heightRatio
-        imageView.heightAnchor.constraint(equalToConstant: imageHeight).isActive = true
 
-        caption.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: ImageBubble.captionTopPadding).isActive = true
-        caption.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: padding.left).isActive = true
-        caption.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -1 * padding.right).isActive = true
-        caption.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * padding.bottom).isActive = true
+        NSLayoutConstraint.activate([
+            bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            bubbleView.topAnchor.constraint(equalTo: self.topAnchor),
+            bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+
+            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
+            imageView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: padding.left),
+            imageView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -1 * padding.right),
+            imageView.heightAnchor.constraint(equalToConstant: imageHeight),
+
+            caption.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: ImageContainer.captionTopPadding),
+            caption.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: padding.left),
+            caption.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -1 * padding.right),
+            caption.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * padding.bottom)
+            ])
     }
 
     private func setupStyle() {
@@ -119,7 +126,7 @@ public class ImageBubble: UIView, ViewInterface {
         }
     }
 
-    private func updateImage(_ model: ImageModel) {
+    private func updateImage(_ model: ImageMessage) {
         guard let url = URL(string: model.url) else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
             guard let image = image else { return }
@@ -129,7 +136,7 @@ public class ImageBubble: UIView, ViewInterface {
         }
     }
 
-    private func updateCaption(_ model: ImageModel) {
+    private func updateCaption(_ model: ImageMessage) {
         guard let text = model.caption else {
             caption.isHidden = true
             return

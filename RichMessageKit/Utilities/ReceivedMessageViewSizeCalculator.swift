@@ -9,8 +9,8 @@ import Foundation
 
 class ReceivedMessageViewSizeCalculator {
 
-    func rowHeight(messageModel: MessageModel, maxWidth: CGFloat, padding: Padding) -> CGFloat {
-        guard let message = messageModel.message else {
+    func rowHeight(messageModel: Message, maxWidth: CGFloat, padding: Padding) -> CGFloat {
+        guard let message = messageModel.text else {
             return 0
         }
         let config = ReceivedMessageView.Config.self
@@ -20,10 +20,12 @@ class ReceivedMessageViewSizeCalculator {
         let timeLabelWidth = messageModel.time.rectWithConstrainedWidth(config.TimeLabel.maxWidth, font: MessageTheme.receivedMessage.time.font).width.rounded(.up)
 
         let messageWidth = maxWidth - (totalWidthPadding + config.ProfileImage.width + timeLabelWidth)
-        let messageHeight = MessageBubbleSizeCalculator().rowHeight(text: message,
-                                                       font: MessageTheme.receivedMessage.message.font,
-                                                       maxWidth: messageWidth,
-                                                       padding: MessageTheme.receivedMessage.bubble.padding)
+        let messageHeight = MessageViewSizeCalculator().rowHeight(
+            text: message,
+            font: MessageTheme.receivedMessage.message.font,
+            maxWidth: messageWidth,
+            padding: MessageTheme.receivedMessage.bubble.padding)
+
         let totalHeightPadding = padding.top + padding.bottom + config.MessageView.topPadding + config.MessageView.bottomPadding
         let calculatedHeight = messageHeight + totalHeightPadding + config.DisplayName.height
         return max(calculatedHeight, minimumHeight)

@@ -8,7 +8,7 @@
 import UIKit
 
 /// Its a view that displays text on top of a bubble.
-public class MessageBubble: UIView, ViewInterface {
+public class MessageView: UIView {
 
     // MARK: Internal Properties
 
@@ -39,7 +39,9 @@ public class MessageBubble: UIView, ViewInterface {
     ///   - bubbleStyle: Configuration for message bubble like color and corner radius.
     ///   - messageStyle: Configuration for message text.
     ///   - maxWidth: Maximum width to constrain current view.
-    public init(bubbleStyle: MessageBubbleStyle, messageStyle: Style, maxWidth: CGFloat = UIScreen.main.bounds.width) {
+    public init(bubbleStyle: MessageBubbleStyle,
+                messageStyle: Style,
+                maxWidth: CGFloat) {
         self.bubbleStyle = bubbleStyle
         self.padding = bubbleStyle.padding
         self.messageStyle = messageStyle
@@ -60,7 +62,7 @@ public class MessageBubble: UIView, ViewInterface {
     /// - Parameter text: Text to be displayed in the view.
     public func update(model: String) {
         /// Set frame size.
-        let height = MessageBubble.rowHeight(model: model, maxWidth: maxWidth, font: messageStyle.font, padding: bubbleStyle.padding)
+        let height = MessageView.rowHeight(model: model, maxWidth: maxWidth, font: messageStyle.font, padding: bubbleStyle.padding)
         self.frame.size = CGSize(width: maxWidth, height: height)
 
         messageLabel.text = model
@@ -76,7 +78,10 @@ public class MessageBubble: UIView, ViewInterface {
     ///   - font: message text font. Use same as passed while initialization in `messageStyle`.
     ///   - padding: message bubble padding. Use the same passed while initialization in `bubbleStyle`.
     /// - Returns: Height for `MessageView` based on passed parameters
-    public static func rowHeight(model: String, maxWidth: CGFloat, font: UIFont, padding: Padding?) -> CGFloat {
+    public static func rowHeight(model: String,
+                                 maxWidth: CGFloat,
+                                 font: UIFont,
+                                 padding: Padding?) -> CGFloat {
         guard let padding = padding else {
             print("❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌")
             print("😱😱😱😱😱😱😱😱 Padding is not passed from outside.")
@@ -84,7 +89,10 @@ public class MessageBubble: UIView, ViewInterface {
             print("❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌")
             return 0
         }
-        return MessageBubbleSizeCalculator().rowHeight(text: model, font: font, maxWidth: maxWidth, padding: padding)
+        return MessageViewSizeCalculator().rowHeight(text: model,
+                                                       font: font,
+                                                       maxWidth: maxWidth,
+                                                       padding: padding)
     }
 
     // MARK: Private methods
@@ -99,15 +107,16 @@ public class MessageBubble: UIView, ViewInterface {
         self.addViewsForAutolayout(views: [messageLabel, bubbleView])
         self.bringSubviewToFront(messageLabel)
 
-        bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        bubbleView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-
-        messageLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top).isActive = true
-        messageLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom).isActive = true
-        messageLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left).isActive = true
-        messageLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right).isActive = true
+        NSLayoutConstraint.activate([
+            bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            bubbleView.topAnchor.constraint(equalTo: self.topAnchor),
+            bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            messageLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
+            messageLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
+            messageLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left),
+            messageLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right)
+            ])
     }
 
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MessageBubbleSizeCalculator {
+class MessageViewSizeCalculator {
 
     func rowHeight(text: String, font: UIFont, maxWidth: CGFloat, padding: Padding) -> CGFloat {
         let messageWidth = maxWidth - (padding.left + padding.right)

@@ -9,6 +9,6 @@ import Foundation
 
 extension Bundle {
     static var richMessageKit: Bundle {
-        return Bundle(for: QuickReplyView.self)
+        return Bundle(for: SuggestedReplyView.self)
     }
 }

@@ -12,7 +12,7 @@ import UIKit
 /// It contains `MessageView`, time and message status(pending/sent/delivered).
 /// It also contains `Config` which is used to configure views properties. It can be changed from outside.
 /// - NOTE: Padding for message will be passed from outside. Time and status will be shown to the left of view with default padding.
-public class SentMessageView: UIView, ViewInterface {
+public class SentMessageView: UIView {
 
     // MARK: Public properties
 
@@ -41,7 +41,10 @@ public class SentMessageView: UIView, ViewInterface {
 
     // MARK: Fileprivate Properties
 
-    fileprivate lazy var messageView = MessageBubble(bubbleStyle: MessageTheme.sentMessage.bubble, messageStyle: MessageTheme.sentMessage.message, maxWidth: maxWidth)
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.sentMessage.bubble,
+        messageStyle: MessageTheme.sentMessage.message,
+        maxWidth: maxWidth)
 
     fileprivate var timeLabel: UILabel = {
         let lb = UILabel()
@@ -87,8 +90,8 @@ public class SentMessageView: UIView, ViewInterface {
     ///
     /// - Parameters:
     ///   - model: Model containing information to update view.
-    public func update(model: MessageModel) {
-        guard let message = model.message else { return }
+    public func update(model: Message) {
+        guard let message = model.text else { return }
         /// Set frame
         let height = SentMessageView.rowHeight(model: model, maxWidth: maxWidth, padding: padding)
         self.frame.size = CGSize(width: maxWidth, height: height)
@@ -127,7 +130,7 @@ public class SentMessageView: UIView, ViewInterface {
     ///   - maxWidth: maxmimum allowable width for view.
     ///   - padding: padding for view. Use the same passsed while initializing.
     /// - Returns: Exact height of view.
-    public static func rowHeight(model: MessageModel, maxWidth: CGFloat, font: UIFont = UIFont(), padding: Padding?) -> CGFloat {
+    public static func rowHeight(model: Message, maxWidth: CGFloat, font: UIFont = UIFont(), padding: Padding?) -> CGFloat {
         guard let padding = padding else {
             print("❌❌❌ Padding is not passed from outside. Use same passed in initialization. ❌❌❌")
             return 0
@@ -139,22 +142,24 @@ public class SentMessageView: UIView, ViewInterface {
     private func setupConstraints() {
         self.addViewsForAutolayout(views: [messageView, timeLabel, stateView])
 
-        stateView.widthAnchor.constraint(equalToConstant: Config.StateView.width).isActive = true
-        stateView.heightAnchor.constraint(equalToConstant: Config.StateView.height).isActive = true
-        stateView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom).isActive = true
-        stateView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: padding.left).isActive = true
-        stateView.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -1 * Config.TimeLabel.leftPadding).isActive = true
+        NSLayoutConstraint.activate([
+            stateView.widthAnchor.constraint(equalToConstant: Config.StateView.width),
+            stateView.heightAnchor.constraint(equalToConstant: Config.StateView.height),
+            stateView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
+            stateView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: padding.left),
+            stateView.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -1 * Config.TimeLabel.leftPadding),
 
-        timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom).isActive = true
-        timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: stateView.trailingAnchor, constant: Config.TimeLabel.leftPadding).isActive = true
-        timeLabelWidth.isActive = true
-        timeLabelHeight.isActive = true
-        timeLabel.trailingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -1 * Config.MessageView.leftPadding).isActive = true
+            timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
+            timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: stateView.trailingAnchor, constant: Config.TimeLabel.leftPadding),
+            timeLabelWidth,
+            timeLabelHeight,
+            timeLabel.trailingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -1 * Config.MessageView.leftPadding),
 
-        messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right).isActive = true
-        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: timeLabel.trailingAnchor, constant: Config.MessageView.leftPadding).isActive = true
-        messageView.bottomAnchor.constraint(equalTo: stateView.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding).isActive = true
+            messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
+            messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
+            messageView.leadingAnchor.constraint(greaterThanOrEqualTo: timeLabel.trailingAnchor, constant: Config.MessageView.leftPadding),
+            messageView.bottomAnchor.constraint(equalTo: stateView.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding)
+            ])
     }
 
 }

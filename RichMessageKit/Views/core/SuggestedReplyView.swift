@@ -1,5 +1,5 @@
 //
-//  QuickReplyView.swift
+//  SuggestedReplyView.swift
 //  RichMessageKit
 //
 //  Created by Shivam Pokhriyal on 18/01/19.
@@ -11,15 +11,15 @@ import UIKit
 ///
 /// Use `alignLeft` property to align the buttons to left or right side.
 /// Use `maxWidth` property if view has to be constrained with some maximum width.
-/// Pass custom `QuickReplyConfig` to modify font and color of view.
+/// Pass custom `SuggestedReplyConfig` to modify font and color of view.
 /// - NOTE: It uses an array of dictionary where each dictionary should have `title` key which will be used as button text.
-public class QuickReplyView: UIView, ViewInterface {
+public class SuggestedReplyView: UIView {
 
     // MARK: Public properties
 
-    /// Configuration for QuickReplyView.
-    /// It will configure font and color of quick reply buttons.
-    public struct QuickReplyConfig {
+    /// Configuration for SuggestedReplyView.
+    /// It will configure font and color of suggested reply buttons.
+    public struct SuggestedReplyConfig {
         public var font = UIFont.systemFont(ofSize: 14)
         public var color = UIColor(red: 85, green: 83, blue: 183)
         public init() { }
@@ -27,11 +27,15 @@ public class QuickReplyView: UIView, ViewInterface {
 
     // MARK: Internal properties
 
-    let alignLeft: Bool
+    // This is used to align the view to left or right. Gets value from message.isMyMessage
+    var alignLeft: Bool = true
+
     let maxWidth: CGFloat
     let font: UIFont
     let color: UIColor
     let delegate: Tappable?
+
+    var model: SuggestedReplyMessage?
 
     let mainStackView: UIStackView = {
         let stackView = UIStackView()
@@ -44,18 +48,16 @@ public class QuickReplyView: UIView, ViewInterface {
 
     // MARK: Initializers
 
-    /// Initializer for `QuickReplyView`
+    /// Initializer for `SuggestedReplyView`
     ///
     /// - Parameters:
     ///   - maxWidth: Max Width to constrain view.
-    ///   - alignLeft: Use this to align the view to left or right.
-    ///   - delegate: It is used to inform the delegate when quick reply is selected. Gives information about the title and index of quick reply selected. Indexing starts from 1.
+    ///   - delegate: It is used to inform the delegate when suggested reply is selected.
+    /// Gives information about the title and index of quick reply selected. Indexing starts from 1.
     public init(maxWidth: CGFloat = UIScreen.main.bounds.width,
-                alignLeft: Bool = true,
-                config: QuickReplyConfig = QuickReplyConfig(),
+                config: SuggestedReplyConfig = SuggestedReplyConfig(),
                 delegate: Tappable) {
         self.maxWidth = maxWidth
-        self.alignLeft = alignLeft
         self.font = config.font
         self.color = config.color
         self.delegate = delegate
@@ -69,45 +71,49 @@ public class QuickReplyView: UIView, ViewInterface {
 
     // MARK: Public methods
 
-    /// Creates Quick reply buttons using dictionary.
+    /// Creates Suggested reply buttons using dictionary.
     ///
-    /// - Parameter - model: Object that conforms to `QuickReplyModel`.
-    public func update(model: QuickReplyModel) {
+    /// - Parameter - model: Object that conforms to `SuggestedReplyMessage`.
+    public func update(model: SuggestedReplyMessage) {
+        self.model = model
         /// Set frame size.
         let width = maxWidth
-        let height = QuickReplyView.rowHeight(model: model, maxWidth: width, font: font)
+        let height = SuggestedReplyView.rowHeight(model: model, maxWidth: width, font: font)
         let size = CGSize(width: width, height: height)
         self.frame.size = size
 
-        setupQuickReplyButtons(model)
+        alignLeft = !model.message.isMyMessage
+
+        setupSuggestedReplyButtons(model)
     }
 
-    /// It calculates height of `QuickReplyView` based on the dictionary passed.
+    /// It calculates height of `SuggestedReplyView` based on the dictionary passed.
     ///
     /// - NOTE: Padding is not used.
     /// - Parameters:
-    ///   - model: Object that conforms to `QuickReplyModel`.
+    ///   - model: Object that conforms to `SuggestedReplyModel`.
     ///   - maxWidth: MaxWidth to constrain view. pass same value used while initialization.
-    ///   - font: Font for quick replies. Pass the custom QuickReplyConfig font used while initialization.
+    ///   - font: Font for suggested replies. Pass the custom SuggestedReplyConfig font used while initialization.
     /// - Returns: Returns height of view based on passed parameters.
-    public static func rowHeight(model: QuickReplyModel,
+    public static func rowHeight(model: SuggestedReplyMessage,
                                 maxWidth: CGFloat = UIScreen.main.bounds.width,
-                                font: UIFont = QuickReplyConfig().font,
-                                padding: Padding? = nil) -> CGFloat {
-        return QuickReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth, font: font)
+                                font: UIFont = SuggestedReplyConfig().font) -> CGFloat {
+        return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth, font: font)
     }
 
     // MARK: Private methods
 
     private func setupConstraints() {
         self.addViewsForAutolayout(views: [mainStackView])
-        mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        mainStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            mainStackView.topAnchor.constraint(equalTo: self.topAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            ])
     }
 
-    private func setupQuickReplyButtons(_ model: QuickReplyModel) {
+    private func setupSuggestedReplyButtons(_ model: SuggestedReplyMessage) {
         mainStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
@@ -127,7 +133,7 @@ public class QuickReplyView: UIView, ViewInterface {
                 }
                 let hiddenView = hiddenViewUsing(currWidth: width - button.buttonWidth(), maxWidth: maxWidth, subViews: subviews)
                 alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
-                width = button.buttonWidth()
+                width = button.buttonWidth() + 10
                 let stackView = horizontalStackView(subviews: subviews)
                 mainStackView.addArrangedSubview(stackView)
                 subviews.removeAll()
@@ -170,8 +176,10 @@ public class QuickReplyView: UIView, ViewInterface {
     }
 }
 
-extension QuickReplyView: Tappable {
+extension SuggestedReplyView: Tappable {
     public func didTap(index: Int?, title: String) {
-        delegate?.didTap(index: index, title: title)
+        guard let model = model, let index = index else { return }
+        let replyToBeSend = model.reply[index] ?? title
+        delegate?.didTap(index: index, title: replyToBeSend)
     }
 }

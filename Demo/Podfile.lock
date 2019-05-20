@@ -1,14 +1,14 @@
 PODS:
-  - Applozic (6.9.0):
+  - Applozic (6.9.5):
     - SDWebImage (~> 4.4)
-  - ApplozicSwift (2.4.0):
-    - ApplozicSwift/Complete (= 2.4.0)
-  - ApplozicSwift/Complete (2.4.0):
-    - Applozic (~> 6.8.2)
+  - ApplozicSwift (2.6.0):
+    - ApplozicSwift/Complete (= 2.6.0)
+  - ApplozicSwift/Complete (2.6.0):
+    - Applozic (~> 6.9.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 4.7.0)
     - MGSwipeTableCell (~> 1.5.6)
-  - ApplozicSwift/RichMessageKit (2.4.0)
+  - ApplozicSwift/RichMessageKit (2.6.0)
   - iOSSnapshotTestCase (5.0.2):
     - iOSSnapshotTestCase/SwiftSupport (= 5.0.2)
   - iOSSnapshotTestCase/Core (5.0.2)
@@ -22,7 +22,7 @@ PODS:
   - Nimble-Snapshots/Core (6.9.1):
     - iOSSnapshotTestCase (~> 5.0)
     - Nimble (~> 7.0)
-  - Quick (2.0.0)
+  - Quick (2.1.0)
   - SDWebImage (4.4.6):
     - SDWebImage/Core (= 4.4.6)
   - SDWebImage/Core (4.4.6)
@@ -49,19 +49,14 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-<<<<<<< HEAD
-  Applozic: e7ca1b4c8b981562d60ab412f2b5b821c213ed09
-  ApplozicSwift: 4cca9f8cee04ba0113eda9d72d8d9420280cd335
-=======
-  Applozic: d16300c97171523445827e8f28cb382049146c7e
-  ApplozicSwift: 42b96836d93faf6034bcc97bdcbb4519f666adf7
->>>>>>> Integrate RichMessage Kit
+  Applozic: 66f290fb909df071709ee5539495d66abe6ea85a
+  ApplozicSwift: b0d03467f8e48eedc16e3596a12c40742ed5b78c
   iOSSnapshotTestCase: 2d51aa06775e95cecb0a1fb9c5c159ccd1dd4596
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   MGSwipeTableCell: 616700eb0ffd1c611ba909066cb7fd739790a0a7
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Nimble-Snapshots: bbd1ab264bacc24a9ce24a8363bc05aac783aeb0
-  Quick: ce1276c7c27ba2da3cb2fd0cde053c3648b3b22d
+  Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
 
 PODFILE CHECKSUM: 132ea2b243622fd1507bc328a3258f4b2f8d912e

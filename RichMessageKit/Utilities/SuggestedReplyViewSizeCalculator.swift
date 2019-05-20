@@ -7,9 +7,9 @@
 
 import Foundation
 
-class QuickReplyViewSizeCalculator {
+class SuggestedReplyViewSizeCalculator {
 
-    func rowHeight(model: QuickReplyModel, maxWidth: CGFloat, font: UIFont) -> CGFloat {
+    func rowHeight(model: SuggestedReplyMessage, maxWidth: CGFloat, font: UIFont) -> CGFloat {
         var width: CGFloat = 0
         var totalHeight: CGFloat = 0
         var size = CGSize(width: 0, height: 0)
@@ -26,7 +26,7 @@ class QuickReplyViewSizeCalculator {
             }
             if width + currWidth > maxWidth {
                 totalHeight += prevHeight + 10 // 10 padding between buttons
-                width = currWidth
+                width = currWidth + 10
                 prevHeight = size.height
             } else {
                 width += currWidth + 10 // 10 padding between buttons

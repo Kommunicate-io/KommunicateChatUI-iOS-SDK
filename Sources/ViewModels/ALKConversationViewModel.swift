@@ -337,10 +337,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return ALKFriendContactMessageCell.rowHeight()
             }
         case .imageMessage:
+            guard let imageMessage = messageModel.imageMessage() else { return 0 }
             if messageModel.isMyMessage {
-                return ALKMyImageMessageCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                return SentImageMessageCell.rowHeight(model: imageMessage)
             } else {
-                return ALKFriendImageMessageCell.rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                return ReceivedImageMessageCell.rowHeight(model: imageMessage)
             }
         }
     }

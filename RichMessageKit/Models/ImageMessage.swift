@@ -7,12 +7,12 @@
 
 import Foundation
 
-public protocol ImageModel {
+public struct ImageMessage {
 
-    var caption: String? { get }
+    public var caption: String?
 
-    var url: String { get }
+    public var url: String
 
-    var isMyMessage: Bool { get }
+    public var message: Message
     
 }

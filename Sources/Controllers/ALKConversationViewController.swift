@@ -631,8 +631,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKMyContactMessageCell.self)
         tableView.register(ALKFriendContactMessageCell.self)
-        tableView.register(ALKMyImageMessageCell.self)
-        tableView.register(ALKFriendImageMessageCell.self)
+        tableView.register(SentImageMessageCell.self)
+        tableView.register(ReceivedImageMessageCell.self)
     }
 
 
@@ -1384,7 +1384,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         MessageTheme.receivedMessage.displayName = ALKMessageStyle.displayName
         MessageTheme.receivedMessage.time = ALKMessageStyle.time
         MessageTheme.sentMessage.time = ALKMessageStyle.time
-    }    
+    }
 }
 
 extension ALKConversationViewController: CNContactPickerDelegate {

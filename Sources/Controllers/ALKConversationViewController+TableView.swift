@@ -444,13 +444,14 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             }
         case .imageMessage:
+            guard let imageMessage = message.imageMessage() else { return UITableViewCell() }
             if message.isMyMessage {
-                let cell: ALKMyImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.update(viewModel: message)
+                let cell: SentImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: imageMessage)
                 return cell
             } else {
-                let cell: ALKFriendImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.update(viewModel: message)
+                let cell: ReceivedImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: imageMessage)
                 return cell
             }
         }

@@ -16,41 +16,30 @@ public enum MessageStatus {
 }
 
 /// It defines the properties that are used by cells to render views.
-public protocol MessageModel {
+public struct Message {
 
     /// Text to be displayed as message.
-    var message: String? { get }
+    public var text: String?
 
     /// Indicates whether this method is at sender side or receiver side.
     ///
     /// Value For sender: 'true'. For receiver: 'false'.
-    var isMyMessage: Bool { get }
+    public var isMyMessage: Bool
 
     /// Time of message.
-    var time: String { get }
+    public var time: String
 
     /// Display name of sender.
     ///
     /// - Important: Mandatory for received message.
-    var displayName: String? { get }
+    public var displayName: String?
 
     /// Status of message whether it is in pending/sent/delivered/read state.
     ///
     /// - Important: Mandatory for sent message.
-    var status: MessageStatus? { get }
+    public var status: MessageStatus?
 
     /// Image url of sender.
-    var imageURL: URL? { get }
-
-    /// True, if current message is a reply to some other message.
-    var isReplyMessage: Bool { get }
-
-    /// This is the original message for which the current one is a reply.
-    var originalMessage: MessageModel? { get }
-
-    /// Metadata for message. It basically contains additional information if message is of differnet type.
-    ///
-    /// - Important: Pass json array as string in `payload` field.
-    var metadata: Dictionary<String, Any>? { get }
+    public var imageURL: URL?
 
 }
