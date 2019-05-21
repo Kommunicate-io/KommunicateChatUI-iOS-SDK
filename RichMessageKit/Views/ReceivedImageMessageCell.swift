@@ -16,7 +16,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
 
     public struct Config {
         public static var imageBubbleTopPadding: CGFloat = 4
-        public static var padding = Padding(left: 60, right: 10, top: 10, bottom: 10)
+        public static var padding = Padding(left: 10, right: 60, top: 10, bottom: 10)
         public static var maxWidth = UIScreen.main.bounds.width
     }
 
@@ -42,6 +42,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
         setupGesture()
+        self.backgroundColor = .clear
     }
 
     required init?(coder aDecoder: NSCoder) {

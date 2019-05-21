@@ -380,6 +380,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         setupConstraints()
         autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         chatBar.setup(autocompletionView, withPrefex: "/")
+        setRichMessageKitTheme()
 
         guard !configuration.restrictedWordsFileName.isEmpty else {
             return
@@ -390,7 +391,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } catch {
             print("Error while loading restricted words file:", error)
         }
-        setRichMessageKitTheme()
     }
 
     override open func viewDidLayoutSubviews() {

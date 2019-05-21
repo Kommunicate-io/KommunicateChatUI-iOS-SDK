@@ -106,7 +106,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         case .cardTemplate:
             return message
         case .imageMessage:
-            return message
+            return message ?? "Photo"
         case .email:
             guard let channelMetadata = alChannel?.metadata, let messageText = channelMetadata[CONVERSATION_SUBJECT]  else {
                 return message

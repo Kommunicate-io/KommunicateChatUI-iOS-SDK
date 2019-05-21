@@ -91,7 +91,7 @@ public class SentMessageView: UIView {
     /// - Parameters:
     ///   - model: Model containing information to update view.
     public func update(model: Message) {
-        guard let message = model.text else { return }
+        let message = model.text ?? ""
         /// Set frame
         let height = SentMessageView.rowHeight(model: model, maxWidth: maxWidth, padding: padding)
         self.frame.size = CGSize(width: maxWidth, height: height)

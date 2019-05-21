@@ -44,6 +44,7 @@ public class SentImageMessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
         setupGesture()
+        self.backgroundColor = .clear
     }
 
     required init?(coder aDecoder: NSCoder) {

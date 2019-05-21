@@ -117,7 +117,7 @@ public class ReceivedMessageView: UIView {
     /// - Parameters:
     ///   - model: Model containing information to update view.
     public func update(model: Message) {
-        guard let message = model.text else { return }
+        let message = model.text ?? "" /// Don't support nil right now
         /// Set frame
         let height = ReceivedMessageView.rowHeight(model: model, maxWidth: maxWidth, padding: padding)
         self.frame.size = CGSize(width: maxWidth, height: height)
