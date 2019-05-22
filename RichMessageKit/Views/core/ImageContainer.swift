@@ -129,8 +129,11 @@ public class ImageContainer: UIView {
     private func updateImage(_ model: ImageMessage) {
         guard let url = URL(string: model.url) else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
-            guard let image = image else { return }
             DispatchQueue.main.async {
+                guard let image = image else {
+                    self?.imageView.image = UIImage(named: "placeholder", in: Bundle.richMessageKit, compatibleWith: nil)
+                    return
+                }
                 self?.imageView.image = image
             }
         }

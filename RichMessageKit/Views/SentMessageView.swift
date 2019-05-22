@@ -109,16 +109,20 @@ public class SentMessageView: UIView {
 
         guard let status = model.status else { return }
         // Set status
-        let statusImage = MessageTheme.sentMessage.status
+        var statusImage = MessageTheme.sentMessage.status
         switch status {
             case .pending:
+                statusImage.pending = statusImage.pending?.withRenderingMode(.alwaysTemplate)
                 stateView.image = statusImage.pending
+                stateView.tintColor = UIColor.red
             case .sent:
                 stateView.image = statusImage.sent
             case .delivered:
                 stateView.image = statusImage.delivered
             case .read:
+                statusImage.read = statusImage.read?.withRenderingMode(.alwaysTemplate)
                 stateView.image = statusImage.read
+                stateView.tintColor = UIColor(netHex: 0x0578FF)
         }
     }
 
