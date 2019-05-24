@@ -104,21 +104,21 @@ class ALKGroupMemberCell: UICollectionViewCell {
         self.model = model
         nameLabel.text = model.name
         adminLabel.isHidden = !model.isAdmin
+        adminLabel.text = model.adminText
 
-        if model.addCell {
+        guard !model.addCell else {
             let image = UIImage(named: "icon_add_people-1", in: Bundle.applozic, compatibleWith: nil)
             profile.image = image
+            return
         }
 
-        if let urlString = model.image, let url = URL(string: urlString) {
-            let placeHolder = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
-            let resource = ImageResource(downloadURL: url, cacheKey:url.absoluteString)
-            profile.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+        let placeHolder = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
+        guard let urlString = model.image, let url = URL(string: urlString) else {
+            profile.image = placeHolder
+            return
         }
-
-        if let text = model.adminText {
-            adminLabel.text = text
-        }
+        let resource = ImageResource(downloadURL: url, cacheKey:url.absoluteString)
+        profile.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
     }
 
     class func rowHeight() -> CGFloat {
