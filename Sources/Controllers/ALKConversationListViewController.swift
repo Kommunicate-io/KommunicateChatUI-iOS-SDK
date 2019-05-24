@@ -26,7 +26,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     public var conversationViewController: ALKConversationViewController?
     public var conversationViewModelType = ALKConversationViewModel.self
     public weak var delegate: ALKConversationListDelegate?
-    public lazy var conversationListTableViewController = ALKConversationListTableViewController(viewModel: self.viewModel, dbService: self.dbService, configuration: self.configuration, delegate: self, showSearch: false)
+    public var conversationListTableViewController: ALKConversationListTableViewController
 
     var dbService = ALMessageDBService()
     var viewModel = ALKConversationListViewModel()
@@ -36,7 +36,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     var channelKey: NSNumber?
     var conversationId: NSNumber?
 
-    lazy var tableView = self.conversationListTableViewController.tableView
+    var tableView: UITableView
 
     lazy var rightBarButtonItem: UIBarButtonItem = {
         let barButton = UIBarButtonItem(
@@ -51,14 +51,21 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate var localizedStringFileName: String!
 
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     required public init(configuration: ALKConfiguration) {
+        conversationListTableViewController = ALKConversationListTableViewController(
+            viewModel: viewModel,
+            dbService: dbService,
+            configuration: configuration,
+            showSearch: false)
+        tableView = conversationListTableViewController.tableView
         super.init(configuration: configuration)
+        conversationListTableViewController.delegate = self
         self.localizedStringFileName = configuration.localizedStringFileName
         viewModel.localizationFileName = configuration.localizedStringFileName
+    }
+
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     deinit {
@@ -135,7 +142,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             ALUserService.updateUserDetail(userId, withCompletion: {
                 userDetail in
                 guard let _ = userDetail else { return }
-                weakSelf.tableView?.reloadData()
+                weakSelf.tableView.reloadData()
             })
         })
 
@@ -143,7 +150,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             NSLog("update group name notification received")
             guard let weakSelf = self, (weakSelf.view.window != nil) else { return }
             print("update group detail")
-            weakSelf.tableView?.reloadData()
+            weakSelf.tableView.reloadData()
         })
 
     }
@@ -317,21 +324,21 @@ extension ALKConversationListViewController: ALKConversationListViewModelDelegat
     open func startedLoading() {
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
-            self.tableView?.isUserInteractionEnabled = false
+            self.tableView.isUserInteractionEnabled = false
         }
     }
 
     open func listUpdated() {
         DispatchQueue.main.async {
-            print("Number of rows \(self.tableView?.numberOfRows(inSection: 0))")
-            self.tableView?.reloadData()
+            print("Number of rows \(self.tableView.numberOfRows(inSection: 0))")
+            self.tableView.reloadData()
             self.activityIndicator.stopAnimating()
-            self.tableView?.isUserInteractionEnabled = true
+            self.tableView.isUserInteractionEnabled = true
         }
     }
 
     open func rowUpdatedAt(position: Int) {
-        tableView?.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
+        tableView.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
     }
 }
 
@@ -349,7 +356,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             userDetail in
             guard let detail = userDetail else { return }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
-            self.tableView?.reloadData()
+            self.tableView.reloadData()
         })
     }
 
