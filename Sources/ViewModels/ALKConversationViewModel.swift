@@ -44,8 +44,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return true
     }
     open var isContextBasedChat: Bool {
-        return (conversationProxy != nil)
+        guard conversationProxy == nil else { return true }
+        guard
+            let channelKey = channelKey,
+            let alChannel = ALChannelService().getChannelByKey(channelKey),
+            let metadata = alChannel.metadata,
+            let contextBased = metadata["AL_CONTEXT_BASED_CHAT"] as? String
+        else {
+            return false
+        }
+        return contextBased.lowercased() == "true"
     }
+
     open var messageModels: [ALKMessageModel] = []
 
     open var richMessages: [String: Any] = [:]
@@ -344,12 +354,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func getContextTitleData() -> ALKContextTitleDataType? {
-        guard isContextBasedChat, let proxy = conversationProxy,
-            let alTopicDetail = proxy.getTopicDetail()
-            else {
-                return nil
+        guard isContextBasedChat else { return nil }
+        if let proxy = conversationProxy, let topicDetail = proxy.getTopicDetail() {
+            return topicDetail
+        } else {
+            guard let metadata = ALChannelService().getChannelByKey(channelKey)?.metadata else { return nil }
+            let topicDetail = ALTopicDetail()
+            topicDetail.title = metadata["title"] as? String
+            topicDetail.subtitle = metadata["price"] as? String
+            topicDetail.link = metadata["link"] as? String
+            return topicDetail
         }
-        return alTopicDetail
     }
 
     open func getMessageTemplates() -> [ALKTemplateMessageModel]? {

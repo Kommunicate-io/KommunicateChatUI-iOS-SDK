@@ -5,7 +5,7 @@
 //  Created by Mukesh Thawani on 05/12/17.
 //
 
-import Foundation
+import Applozic
 
 public protocol ALKContextTitleDataType {
     var titleText: String {get}
@@ -54,4 +54,5 @@ open class ALKContextTitleViewModel: ALKContextTitleViewModelType {
     public init(data: ALKContextTitleDataType) {
         self.contextViewData = data
     }
+
 }

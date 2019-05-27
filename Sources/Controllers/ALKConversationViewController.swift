@@ -480,7 +480,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             toggleVisibilityOfContextTitleView(false)
             return
         }
-        guard let topicDetail = viewModel.getContextTitleData() else {return }
+        guard let topicDetail = viewModel.getContextTitleData() else {
+            toggleVisibilityOfContextTitleView(false)
+            return
+        }
         contextTitleView.configureWith(value: topicDetail)
         toggleVisibilityOfContextTitleView(true)
     }

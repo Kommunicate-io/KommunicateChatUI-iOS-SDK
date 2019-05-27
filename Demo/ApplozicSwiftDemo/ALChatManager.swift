@@ -125,6 +125,15 @@ class ALChatManager: NSObject {
         viewController.present(navVC, animated: false, completion: nil)
     }
 
+    func launch(viewController: UIViewController, from vc: UIViewController) {
+        let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
+        guard vc.navigationController != nil else {
+            vc.present(navVC, animated: false, completion: nil)
+            return
+        }
+        vc.navigationController?.pushViewController(viewController, animated: false)
+    }
+
     func launchChatWith(contactId: String, from viewController: UIViewController, configuration: ALKConfiguration) {
         let alContactDbService = ALContactDBService()
         var title = ""
@@ -135,7 +144,7 @@ class ALChatManager: NSObject {
         let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
         let conversationViewController = ALKConversationViewController(configuration: configuration)
         conversationViewController.viewModel = convViewModel
-        viewController.navigationController?.pushViewController(conversationViewController, animated: false)
+        launch(viewController: conversationViewController, from: viewController)
     }
 
     func launchGroupWith(clientGroupId: String, from viewController: UIViewController, configuration: ALKConfiguration) {
@@ -145,10 +154,11 @@ class ALChatManager: NSObject {
             let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key, localizedStringFileName: configuration.localizedStringFileName)
             let conversationViewController = ALKConversationViewController(configuration: configuration)
             conversationViewController.viewModel = convViewModel
-            viewController.navigationController?.pushViewController(conversationViewController, animated: false)
+            self.launch(viewController: conversationViewController, from: viewController)
         }
     }
 
+    /// Use [launchGroupOfTwo](x-source-tag://GroupOfTwo) method instead.
     func launchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration: ALKConfiguration) {
         let userId = conversationProxy.userId
         let groupId = conversationProxy.groupId
@@ -156,9 +166,10 @@ class ALChatManager: NSObject {
         let convViewModel = ALKConversationViewModel(contactId: userId, channelKey: groupId, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
         let conversationViewController = ALKConversationViewController(configuration: configuration)
         conversationViewController.viewModel = convViewModel
-        viewController.navigationController?.pushViewController(conversationViewController, animated: false)
+        launch(viewController: conversationViewController, from: viewController)
     }
 
+    /// Use [launchGroupOfTwo](x-source-tag://GroupOfTwo) method instead.
     func createAndLaunchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration: ALKConfiguration) {
         let conversationService = ALConversationService()
         conversationService.createConversation(conversationProxy) { (error, response) in
@@ -168,6 +179,55 @@ class ALChatManager: NSObject {
             }
             let alConversationProxy = self.conversationProxyFrom(original: conversationProxy, generated: proxy)
             self.launchChatWith(conversationProxy: alConversationProxy, from: viewController, configuration: configuration)
+        }
+    }
+
+    /// Use this to launch context based Group of two.
+    ///
+    /// - Parameters:
+    ///   - userId: UserId of the user with whom you want to start conversation.
+    ///   - metadata: Dictionary that contains details about contextual chat.
+    ///   - topic: A unique topic to identify conversation.
+    ///   - viewController: ViewController from where chat will be pushed
+    ///   - configuration: `ALKConfiguration` to configure chat settings.
+    /// - Tag: GroupOfTwo
+    /// - Usage:
+    ///
+    /// let metadata = NSMutableDictionary()
+    /// metadata["title"] = "<ITEM_TITLE>"
+    /// metadata["price"] = "<ITEM_PRICE>"
+    /// metadata["link"] = "<IMAGE_URL>"
+    /// metadata["AL_CONTEXT_BASED_CHAT"] = "true"
+    /// launchGroupOfTwo(with: "<RECEIVER_USER_ID>", metadata: metadata, topic: "<UNIQUE_TOPIC_ID>", from: self, configuration: AppDelegate.config)
+    func launchGroupOfTwo(
+        with userId: String,
+        metadata: NSMutableDictionary,
+        topic: String,
+        from viewController: UIViewController,
+        configuration: ALKConfiguration) {
+
+        let clientGroupId = String(format: "%@_%@_%@", topic, ALUserDefaultsHandler.getUserId(), userId)
+        let channelService = ALChannelService()
+        channelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) {
+            channel in
+            guard let channel = channel else {
+                channelService.createChannel(userId, orClientChannelKey: clientGroupId, andMembersList: [userId], andImageLink: nil, channelType: Int16(GROUP_OF_TWO.rawValue), andMetaData: metadata, withCompletion: { channel, error in
+                    guard error == nil else {
+                        print("Error while creating channel : \(String(describing: error))")
+                        return
+                    }
+                    self.launchGroupWith(clientGroupId: clientGroupId, from: viewController, configuration: configuration)
+                })
+                return
+            }
+            if channel.metadata == metadata {
+                self.launchGroupWith(clientGroupId: clientGroupId, from: viewController, configuration: configuration)
+            } else {
+                channelService.updateChannelMetaData(channel.key, orClientChannelKey: nil, metadata: metadata, withCompletion: { error in
+                    print("Failed to update channel metadata: \(String(describing: error))")
+                    self.launchGroupWith(clientGroupId: clientGroupId, from: viewController, configuration: configuration)
+                })
+            }
         }
     }
 
