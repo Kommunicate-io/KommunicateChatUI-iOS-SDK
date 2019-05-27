@@ -1377,7 +1377,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
         tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
+            let sectionCount = self.tableView.numberOfSections
+            if indexPath.section <= sectionCount {
+                self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
+            }
         }
     }
 
