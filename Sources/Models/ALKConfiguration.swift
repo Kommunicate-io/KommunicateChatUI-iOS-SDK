@@ -123,5 +123,8 @@ public struct ALKConfiguration {
     /// Nothing else will be done from our side.
     public var showInfoOptionInGroupDetail: Bool = false
 
+    /// If true, contact share option in chatbar will be hidden.ß
+    public var hideContactInChatBar: Bool = false
+
     public init() { }
 }
