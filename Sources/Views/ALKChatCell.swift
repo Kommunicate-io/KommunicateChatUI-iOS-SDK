@@ -225,7 +225,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     var viewModel: ALKChatViewModelProtocol?
 
-    public func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
+    public func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?, placeholder: UIImage? = nil, disableSwipe: Bool) {
 
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
@@ -256,8 +256,10 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = 0
         }
 
-        setupLeftSwippableButtons(viewModel)
-        setupRightSwippableButtons(viewModel)
+        if !disableSwipe {
+            setupLeftSwippableButtons(viewModel)
+            setupRightSwippableButtons(viewModel)
+        }
 
         // get unread count of message and set badgenumber
         let unreadMsgCount = viewModel.totalNumberOfUnreadMessages
