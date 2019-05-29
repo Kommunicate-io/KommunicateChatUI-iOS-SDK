@@ -22,7 +22,7 @@ class ConversationListTableViewControllerTests: XCTestCase {
     }
     
     func testMuteConversationCalledFromDelegate() {
-        let conversationListTableVCMock = ConversationListTableVCMock(viewModel: ALKConversationListViewModel(), dbService: ALMessageDBService(), configuration: ALKConfiguration(), delegate: ConversationListTableViewDelegateMock(), showSearch: false)
+        let conversationListTableVCMock = ConversationListTableVCMock(viewModel: ALKConversationListViewModel(), dbService: ALMessageDBService(), configuration: ALKConfiguration(), showSearch: false)
         
         let muteConversationVC = MuteConversationViewController(delegate: conversationListTableVCMock.self, conversation: MockMessage().message, atIndexPath: IndexPath(row: 0, section: 0), configuration: ALKConfiguration())
         

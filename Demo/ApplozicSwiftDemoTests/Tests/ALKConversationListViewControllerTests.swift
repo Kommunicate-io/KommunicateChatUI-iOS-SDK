@@ -53,7 +53,6 @@ class ALKConversationListViewControllerTests: XCTestCase {
         conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000, localizedStringFileName: ALKConfiguration().localizedStringFileName)
 
         // Pass all mocks
-        conversationListVC.viewModel = conversationListVM
         conversationListVC.delegate = conversation
         conversationListVC.dbService = ALMessageDBServiceMock()
         conversationListVC.conversationViewController = conversationVC
@@ -62,9 +61,7 @@ class ALKConversationListViewControllerTests: XCTestCase {
         conversationListVC.viewWillAppear(false)
         let firstIndex = IndexPath(row: 0, section: 0)
         XCTAssertNotNil(conversationListVC.tableView)
-        guard let tableView = conversationListVC.tableView else {
-            return
-        }
+        let tableView = conversationListVC.tableView
         tableView.delegate?.tableView?(tableView, didSelectRowAt: firstIndex)
         
         wait(for: [selectItemExpectation], timeout: 2)
