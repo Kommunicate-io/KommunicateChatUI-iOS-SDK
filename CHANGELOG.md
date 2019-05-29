@@ -2,6 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.6.1
+---
+### Fixes
+- [AL-3533] Fixed an issue where scrolling in group detail screen would cause inconsistency in profile images of participants.
+- [AL-3533] Fixed an issue where app was crashing while removing table viewcontroller.
+- [AL-3548] Fixed an issue where app was crashing after tapping on notification.
+
 2.6.0
 ---
 ### Enhancements

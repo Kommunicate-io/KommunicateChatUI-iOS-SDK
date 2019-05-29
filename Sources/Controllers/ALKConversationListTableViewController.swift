@@ -40,7 +40,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     })
 
     //MARK: - PRIVATE PROPERTIES
-    fileprivate weak var delegate: ALKConversationListTableViewDelegate?
+    weak var delegate: ALKConversationListTableViewDelegate?
     fileprivate var configuration: ALKConfiguration
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
@@ -64,13 +64,15 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         - configuration: A configuration to be used by this controller to configure different settings.
         - delegate: A delegate used to receive callbacks when chat cell is tapped.
      */
-    public init(viewModel: ALKConversationListViewModelProtocol, dbService: ALMessageDBService, configuration: ALKConfiguration, delegate: ALKConversationListTableViewDelegate, showSearch: Bool) {
+    public init(viewModel: ALKConversationListViewModelProtocol,
+                dbService: ALMessageDBService,
+                configuration: ALKConfiguration,
+                showSearch: Bool) {
         self.viewModel = viewModel
         self.configuration = configuration
         self.showSearch = showSearch
         self.localizedStringFileName = configuration.localizedStringFileName
         self.dbService = dbService
-        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
     
