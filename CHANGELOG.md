@@ -12,6 +12,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3533] Fixed an issue where scrolling in group detail screen would cause inconsistency in profile images of participants.
 - [AL-3533] Fixed an issue where app was crashing while removing table viewcontroller.
 - [AL-3548] Fixed an issue where app was crashing after tapping on notification.
+- Now, group title action will be disabled for support group(GroupType = 10) as well.
 
 2.6.0
 ---
