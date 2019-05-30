@@ -32,6 +32,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
 
+    public let autocompletionView: UITableView = {
+        let tableview = UITableView(frame: CGRect.zero, style: .plain)
+        tableview.backgroundColor = .white
+        tableview.estimatedRowHeight = 50
+        tableview.rowHeight = UITableView.automaticDimension
+        tableview.separatorStyle = .none
+        return tableview
+    }()
+
     var contactService: ALContactService!
 
     lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor)
@@ -369,6 +378,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
+        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
+        chatBar.setup(autocompletionView, withPrefex: "/")
+
         guard !configuration.restrictedWordsFileName.isEmpty else {
             return
         }
@@ -482,7 +494,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func setupConstraints() {
 
-        var allViews = [backgroundView, contextTitleView, tableView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView]
+        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -508,6 +520,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: (templateView != nil) ? templateView!.topAnchor:typingNoticeView.topAnchor).isActive = true
 
+        autocompletionView.bottomAnchor
+            .constraint(equalTo: typingNoticeView.topAnchor).isActive = true
+        autocompletionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        autocompletionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
 
         typingNoticeViewHeighConstaint = typingNoticeView.heightAnchor.constraint(equalToConstant: 0)
         typingNoticeViewHeighConstaint?.isActive = true
@@ -520,7 +536,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomConstraint?.isActive = true
-
 
         replyMessageView.leadingAnchor.constraint(
             equalTo: view.leadingAnchor).isActive = true

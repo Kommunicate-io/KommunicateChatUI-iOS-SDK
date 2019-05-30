@@ -10,6 +10,16 @@ import Foundation
 import UIKit
 import Applozic
 
+public struct AutoCompleteItem {
+    var key: String
+    var content: String
+
+    public init(key: String, content: String) {
+        self.key = key
+        self.content = content
+    }
+}
+
 open class ALKChatBar: UIView, Localizable {
 
     var configuration: ALKConfiguration!
@@ -48,6 +58,8 @@ open class ALKChatBar: UIView, Localizable {
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
+
+    public var autocompletionView: UITableView!
 
     lazy open var soundRec: ALKAudioRecorderView = {
         let view = ALKAudioRecorderView(frame: CGRect.zero, configuration: self.configuration)
@@ -282,6 +294,15 @@ open class ALKChatBar: UIView, Localizable {
         }
     }
 
+    func setup(_ tableview: UITableView, withPrefex prefix: String) {
+        autocompletionView = tableview
+        autocompletionView.dataSource = self
+        autocompletionView.delegate = self
+        autoCompletionViewHeightConstraint = autocompletionView.heightAnchor.constraint(equalToConstant: 0)
+        autoCompletionViewHeightConstraint?.isActive = true
+        self.prefix = prefix
+    }
+
     func setComingSoonDelegate(delegate: UIView) {
         comingSoonDelegate = delegate
     }
@@ -290,6 +311,7 @@ open class ALKChatBar: UIView, Localizable {
         textView.text = ""
         clearTextInTextView()
         toggleKeyboardType(textView: textView)
+        hideAutoCompletionView()
     }
 
     func hideMicButton() {
@@ -337,6 +359,12 @@ open class ALKChatBar: UIView, Localizable {
 
     fileprivate var textViewTrailingWithSend: NSLayoutConstraint?
     fileprivate var textViewTrailingWithMic: NSLayoutConstraint?
+    fileprivate var autoCompletionViewHeightConstraint: NSLayoutConstraint?
+
+    public var autoCompletionItems = [AutoCompleteItem]()
+    var filteredAutocompletionItems = [AutoCompleteItem]()
+
+    public var prefix: String? = nil
 
     private func setupConstraints(
         maxLength: CGFloat = max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)) {
@@ -352,6 +380,7 @@ open class ALKChatBar: UIView, Localizable {
 
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
+
         addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, contactButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
@@ -399,7 +428,7 @@ open class ALKChatBar: UIView, Localizable {
         lineImageView.topAnchor.constraint(equalTo: textView.topAnchor, constant: 10).isActive = true
         lineImageView.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
 
-        
+
         sendButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
@@ -554,23 +583,14 @@ open class ALKChatBar: UIView, Localizable {
         toggleUserInteractionForViews(enabled: true)
         placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
     }
-}
 
-extension ALKChatBar: UITextViewDelegate {
-
-    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
-        guard var text = textView.text as NSString? else {
-            return true
-        }
-
-        text = text.replacingCharacters(in: range, with: string) as NSString
-
+    func updateTextViewHeight(textView: UITextView, text: String) {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
         let font = textView.font ?? UIFont.font(.normal(size: 14.0))
         let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
         let tv = UITextView(frame: textView.frame)
-        tv.attributedText = NSAttributedString(string: text as String, attributes:attributes)
+        tv.attributedText = NSAttributedString(string: text, attributes:attributes)
 
         let fixedWidth = textView.frame.size.width
         let size = tv.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -585,7 +605,18 @@ extension ALKChatBar: UITextViewDelegate {
 
             textView.layoutIfNeeded()
         }
+    }
+}
 
+extension ALKChatBar: UITextViewDelegate {
+
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
+        guard var text = textView.text as NSString? else {
+            return true
+        }
+
+        text = text.replacingCharacters(in: range, with: string) as NSString
+        updateTextViewHeight(textView: textView, text: text as String)
         return true
     }
 
@@ -594,6 +625,11 @@ extension ALKChatBar: UITextViewDelegate {
         self.placeHolder.alpha = textView.text.isEmpty ? 1.0 : 0.0
 
         toggleButtonInChatBar(hide: textView.text.isEmpty)
+        if showAutosuggestionsForText(textView.text, withPrefix: prefix ?? "") {
+            updateAutocompletionFor(text: String(textView.text.dropFirst()))
+        } else {
+            hideAutoCompletionView()
+        }
         if let selectedTextRange = textView.selectedTextRange {
             let line = textView.caretRect(for: selectedTextRange.start)
             let overflow = line.origin.y + line.size.height  - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top )
@@ -650,6 +686,24 @@ extension ALKChatBar: UITextViewDelegate {
         textView.inputView = nil
         textView.reloadInputViews()
     }
+
+    func showAutoCompletionView() {
+        let contentHeight = autocompletionView.contentSize.height
+
+        let bottomPadding: CGFloat = contentHeight > 0 ? 25:0
+        let maxheight: CGFloat = 200
+        autoCompletionViewHeightConstraint?.constant = contentHeight < maxheight ? contentHeight+bottomPadding : maxheight
+    }
+
+    func hideAutoCompletionView() {
+        autoCompletionViewHeightConstraint?.constant = 0
+    }
+
+    func showAutosuggestionsForText(_ text: String, withPrefix prefix: String) -> Bool {
+        guard !prefix.isEmpty, text.starts(with: prefix) else { return false }
+        if text.count > 1, text[1] == " " { return false }
+        return true
+    }
 }
 
 extension ALKChatBar: ALKAudioRecorderProtocol {
@@ -679,7 +733,6 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
     public func moveButton(location: CGPoint) {
         soundRec.moveView(location: location)
     }
-
 }
 
 extension ALKChatBar: ALKAudioRecorderViewProtocol {
