@@ -761,36 +761,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: self.contactId, andChannelKey: channelKey, typing: false)
     }
 
-    open func sync(message: ALMessage) {
-        guard !isOpenGroup else {
-            syncOpenGroup(message: message)
-            return
-        }
-        guard message.conversationId != conversationId else { return }
-        if let groupId = message.groupId, groupId != self.channelKey {
-            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
-            notificationView?.showNativeNotificationWithcompletionHandler({
-                response in
-                self.contactId = nil
-                self.channelKey = groupId
-                self.isFirstTime = true
-                self.delegate?.updateDisplay(contact: nil, channel: ALChannelService().getChannelByKey(groupId))
-                self.prepareController()
-            })
-        } else if let contactId = message.contactId, contactId != self.contactId {
-            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
-            notificationView?.showNativeNotificationWithcompletionHandler({
-                response in
-                self.contactId = contactId
-                self.channelKey = nil
-                self.isFirstTime = true
-                let messageName = message.name.count > 0 ? message.name : self.localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: self.localizedStringFileName)
-                self.delegate?.updateDisplay(contact: ALContactService().loadContact(byKey: "userId", value: contactId), channel: nil)
-                self.prepareController()
-            })
-        }
-    }
-
     func syncOpenGroup(message: ALMessage) {
         guard let groupId = message.groupId,
             groupId == self.channelKey,

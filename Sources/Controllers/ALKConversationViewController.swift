@@ -891,7 +891,34 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func sync(message: ALMessage) {
-        viewModel.sync(message: message)
+        /// Return if message is sent by loggedin user
+        guard !message.isSentMessage() else { return }
+        guard !viewModel.isOpenGroup else {
+            viewModel.syncOpenGroup(message: message)
+            return
+        }
+        guard (message.conversationId == nil || message.conversationId != viewModel.conversationProxy?.id) else {
+            return
+        }
+        if let groupId = message.groupId, groupId != viewModel.channelKey {
+            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
+            notificationView?.showNativeNotificationWithcompletionHandler({
+                response in
+                self.viewModel.contactId = nil
+                self.viewModel.channelKey = groupId
+                self.viewModel.isFirstTime = true
+                self.refreshViewController()
+            })
+        } else if message.groupId == nil, let contactId = message.contactId, contactId != viewModel.contactId {
+            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
+            notificationView?.showNativeNotificationWithcompletionHandler({
+                response in
+                self.viewModel.contactId = contactId
+                self.viewModel.channelKey = nil
+                self.viewModel.isFirstTime = true
+                self.refreshViewController()
+            })
+        }
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
