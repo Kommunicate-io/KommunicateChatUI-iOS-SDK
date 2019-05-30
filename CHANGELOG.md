@@ -7,6 +7,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Enhancments
 - [AL-3391] Add support for autosuggestions.
+- Added setting to hide contact-share option in chatbar.
+- Added setting to disable swipe action in chat list.
 
 ### Fixes
 - [AL-3533] Fixed an issue where scrolling in group detail screen would cause inconsistency in profile images of participants.

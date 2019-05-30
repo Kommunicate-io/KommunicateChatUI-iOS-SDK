@@ -35,7 +35,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     public var dbService: ALMessageDBService!
     public lazy var dataSource = ConversationListTableViewDataSource(viewModel: self.viewModel, cellConfigurator: { (message, tableCell) in
         let cell = tableCell as! ALKChatCell
-        cell.update(viewModel: message, identity: nil)
+        cell.update(viewModel: message, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
         cell.chatCellDelegate = self
     })
 
@@ -126,7 +126,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                 return UITableViewCell()
             }
             let cell: ALKChatCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ALKChatCell
-            cell.update(viewModel: chat, identity: nil)
+            cell.update(viewModel: chat, identity: nil, disableSwipe: configuration.disableSwipeInChatCell)
             cell.chatCellDelegate = self
             return cell
         }
@@ -594,7 +594,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
                     return
                 }
-                cell.update(viewModel: chat, identity: nil)
+                cell.update(viewModel: chat, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
             }
         })
     }
@@ -662,7 +662,7 @@ extension ALKConversationListTableViewController: Muteable {
                 guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
                     return
                 }
-                cell.update(viewModel: chat, identity: nil)
+                cell.update(viewModel: chat, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
             }
         }
     }

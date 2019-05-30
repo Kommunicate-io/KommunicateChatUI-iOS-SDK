@@ -394,11 +394,20 @@ open class ALKChatBar: UIView, Localizable {
         headerView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.headerViewHeight.rawValue).isActive = true
 
         contactButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
-        contactButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        let photoLeadingSpace: CGFloat!
+        if configuration.hideContactInChatBar {
+            contactButton.widthAnchor.constraint(equalToConstant: 0).isActive = true
+            contactButton.isHidden = true
+            photoLeadingSpace = 0
+        } else {
+            contactButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+            contactButton.isHidden = false
+            photoLeadingSpace = buttonSpacing
+        }
         contactButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         contactButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
-        photoButton.leadingAnchor.constraint(equalTo: contactButton.trailingAnchor, constant: buttonSpacing).isActive = true
+        photoButton.leadingAnchor.constraint(equalTo: contactButton.trailingAnchor, constant: photoLeadingSpace).isActive = true
         photoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         photoButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         photoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
