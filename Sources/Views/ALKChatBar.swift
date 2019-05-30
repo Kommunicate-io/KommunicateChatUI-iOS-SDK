@@ -311,6 +311,7 @@ open class ALKChatBar: UIView, Localizable {
         textView.text = ""
         clearTextInTextView()
         toggleKeyboardType(textView: textView)
+        hideAutoCompletionView()
     }
 
     func hideMicButton() {

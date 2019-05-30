@@ -378,6 +378,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
+        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
+        chatBar.setup(autocompletionView, withPrefex: "/")
+
         guard !configuration.restrictedWordsFileName.isEmpty else {
             return
         }
@@ -628,8 +631,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func prepareMoreBar() {
 
-        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
-        chatBar.setup(autocompletionView, withPrefex: "/")
         moreBar.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
         moreBar.isHidden = true
         moreBar.setHandleAction { [weak self] (actionType) in
