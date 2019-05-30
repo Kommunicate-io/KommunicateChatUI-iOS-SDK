@@ -979,23 +979,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> ()) {
-        if conversationId != nil {
-            ALConversationService().fetchTopicDetails(conversationId) { (error, conversationProxy) in
-                guard error == nil, let conversationProxy = conversationProxy else {
-                    print("Error while fetching conversation details \(String(describing: error))")
-                    completion(nil)
-                    return
-                }
-                completion(self.conversationProfileFrom(contact: nil, channel: nil, conversation: conversationProxy))
-            }
-        } else if channelKey != nil {
+        if channelKey != nil {
             ALChannelService().getChannelInformation(channelKey, orClientChannelKey: nil) { (channel) in
                 guard let channel = channel else {
                     print("Error while fetching channel details")
                     completion(nil)
                     return
                 }
-                completion(self.conversationProfileFrom(contact: nil, channel: channel, conversation: nil))
+                completion(self.conversationProfileFrom(contact: nil, channel: channel))
             }
         } else if contactId != nil {
             ALUserService().getUserDetail(contactId) { (contact) in
@@ -1005,14 +996,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     return
                 }
                 self.updateUserDetail(contact.userId)
-                completion(self.conversationProfileFrom(contact: contact, channel: nil, conversation: nil))
+                completion(self.conversationProfileFrom(contact: contact, channel: nil))
             }
         }
     }
 
-    func conversationProfileFrom(contact: ALContact?, channel: ALChannel?, conversation: ALConversationProxy?) -> ALKConversationProfile {
+    func conversationProfileFrom(contact: ALContact?, channel: ALChannel?) -> ALKConversationProfile {
         var conversationProfile = ALKConversationProfile()
-        conversationProfile.name = conversation?.topicId ?? channel?.name ?? contact?.getDisplayName() ?? ""
+        conversationProfile.name = channel?.name ?? contact?.getDisplayName() ?? ""
         conversationProfile.imageUrl = channel?.channelImageURL ?? contact?.contactImageUrl
         guard let contact = contact, channel == nil else {
             return conversationProfile

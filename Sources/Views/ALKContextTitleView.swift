@@ -91,26 +91,26 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
         contextImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         contextImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         contextImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
-        contextImageView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.2).isActive = true
+        contextImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2).isActive = true
 
         titleLabel.leadingAnchor.constraint(equalTo: contextImageView.trailingAnchor, constant: 10).isActive = true
         titleLabel.topAnchor.constraint(equalTo: contextImageView.topAnchor).isActive = true
-        titleLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: topRightInfoLabel.leadingAnchor, constant: -10).isActive = true
         titleLabel.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.3).isActive = true
 
         subtitleLabel.leadingAnchor.constraint(equalTo: contextImageView.trailingAnchor, constant: 10).isActive = true
         subtitleLabel.bottomAnchor.constraint(equalTo: contextImageView.bottomAnchor).isActive = true
-        subtitleLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        subtitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: bottomRightInfoLabel.leadingAnchor, constant: -10).isActive = true
         subtitleLabel.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor, constant: 10).isActive = true
 
         topRightInfoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 10).isActive = true
         topRightInfoLabel.topAnchor.constraint(equalTo: contextImageView.topAnchor).isActive = true
-        topRightInfoLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        topRightInfoLabel.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.4).isActive = true
         topRightInfoLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
 
         bottomRightInfoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 10).isActive = true
         bottomRightInfoLabel.bottomAnchor.constraint(equalTo: contextImageView.bottomAnchor).isActive = true
-        bottomRightInfoLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        bottomRightInfoLabel.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.4).isActive = true
         bottomRightInfoLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
         view.layoutIfNeeded()
     }

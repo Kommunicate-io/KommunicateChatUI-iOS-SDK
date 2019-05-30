@@ -297,7 +297,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
-            let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel, conversation: nil)
+            let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel)
             weakSelf.navigationBar.updateView(profile: profile)
             weakSelf.newMessagesAdded()
         })
@@ -489,6 +489,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
+        contextTitleView.isHidden = !show
         let height: CGFloat = show ? Padding.ContextView.height : 0
         contextTitleView.constraint(
             withIdentifier: ConstraintIdentifier.contextTitleView)?
@@ -1467,7 +1468,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
-        let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel, conversation: nil)
+        let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel)
         navigationBar.updateView(profile: profile)
     }
 
