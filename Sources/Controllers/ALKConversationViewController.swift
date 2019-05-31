@@ -310,6 +310,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             })
 
         }
+
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APP_ENTER_IN_BACKGROUND"), object: nil, queue: nil) { [weak self] notification in
+            guard let weakSelf = self, weakSelf.viewModel != nil else { return }
+            weakSelf.viewModel.sendKeyboardDoneTyping()
+        }
     }
 
     override func removeObserver() {
@@ -325,6 +330,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "APP_ENTER_IN_BACKGROUND"), object: nil)
     }
 
     override open func viewWillAppear(_ animated: Bool) {
