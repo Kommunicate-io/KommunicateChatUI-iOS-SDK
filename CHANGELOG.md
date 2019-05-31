@@ -2,13 +2,14 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.6.1
+2.7.0
 ---
 
 ### Enhancments
 - [AL-3391] Add support for autosuggestions.
 - Added setting to hide contact-share option in chatbar.
 - Added setting to disable swipe action in chat list.
+- [AL-3253] Added support for Image rich message. Which means an image message can be rendered by passing image URL and the caption in JSON format.
 - [AL-3396] Added support for context-based group_of_two conversation.
 
 ### Fixes
