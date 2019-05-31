@@ -121,6 +121,7 @@
 		7241323527E97D02A00DAD03 /* Pods-ApplozicSwiftDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemoTests/Pods-ApplozicSwiftDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		79625550913F6B15C478A842 /* Pods-ApplozicSwiftDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSwiftDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSwiftDemo/Pods-ApplozicSwiftDemo.release.xcconfig"; sourceTree = "<group>"; };
 		7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		81527840898A19B9776EB9C6 /* Pods_ApplozicSwiftDemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplozicSwiftDemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81A1D05B99581079D018089B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfanityFilterTests.swift; sourceTree = "<group>"; };
 		8B06E488225E367D00B7FA64 /* restrictedWords.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = restrictedWords.txt; sourceTree = "<group>"; };
@@ -339,6 +340,7 @@
 				7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */,
 				52E9BDA1BBF0F3C431D1B022 /* Pods_ApplozicSwiftDemo.framework */,
 				36B769514A685475E092248C /* Pods_ApplozicSwiftDemoTests.framework */,
+				81527840898A19B9776EB9C6 /* Pods_ApplozicSwiftDemoUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

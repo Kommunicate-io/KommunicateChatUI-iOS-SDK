@@ -443,6 +443,17 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+        case .imageMessage:
+            guard let imageMessage = message.imageMessage() else { return UITableViewCell() }
+            if message.isMyMessage {
+                let cell: SentImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: imageMessage)
+                return cell
+            } else {
+                let cell: ReceivedImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: imageMessage)
+                return cell
+            }
         }
     }
 

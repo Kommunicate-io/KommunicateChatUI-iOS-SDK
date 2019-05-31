@@ -137,26 +137,6 @@ public enum Color {
     }
 }
 
-public struct Style {
-    
-    public let font: UIFont
-    public let text: UIColor
-    public let background: UIColor
-    
-    public init(font: UIFont, text: UIColor, background: UIColor) {
-        self.font = font
-        self.text = text
-        self.background = background
-    }
-    
-    public init(font: UIFont, text: UIColor) {
-        self.font = font
-        self.text = text
-        self.background = .color(.none)
-    }
-    
-}
-
 extension UIFont {
     public static func font(_ font: Font) -> UIFont {
         return font.font()

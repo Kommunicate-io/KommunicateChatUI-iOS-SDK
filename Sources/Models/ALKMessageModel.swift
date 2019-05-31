@@ -32,6 +32,8 @@ public enum ALKMessageType: String {
     case genericList = "List"
     @available(*, deprecated, message: "Use `cardTemplate`.")
     case genericCard = "Card"
+
+    case imageMessage = "ImageMessage"
 }
 
 // MARK: - MessageViewModel

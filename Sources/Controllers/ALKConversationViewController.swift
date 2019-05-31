@@ -380,6 +380,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         setupConstraints()
         autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         chatBar.setup(autocompletionView, withPrefex: "/")
+        setRichMessageKitTheme()
 
         guard !configuration.restrictedWordsFileName.isEmpty else {
             return
@@ -628,6 +629,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKMyContactMessageCell.self)
         tableView.register(ALKFriendContactMessageCell.self)
+        tableView.register(SentImageMessageCell.self)
+        tableView.register(ReceivedImageMessageCell.self)
     }
 
 
@@ -1361,6 +1364,24 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
             }
         }
+    }
+
+    func setRichMessageKitTheme() {
+        ImageBubbleTheme.sentMessage.bubble.color = ALKMessageStyle.sentBubble.color
+        ImageBubbleTheme.sentMessage.bubble.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        ImageBubbleTheme.receivedMessage.bubble.color = ALKMessageStyle.receivedBubble.color
+        ImageBubbleTheme.receivedMessage.bubble.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+
+        MessageTheme.sentMessage.message = ALKMessageStyle.sentMessage
+        MessageTheme.sentMessage.bubble.color = ALKMessageStyle.sentBubble.color
+        MessageTheme.sentMessage.bubble.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
+        MessageTheme.receivedMessage.message = ALKMessageStyle.receivedMessage
+        MessageTheme.receivedMessage.bubble.color = ALKMessageStyle.receivedBubble.color
+        MessageTheme.receivedMessage.bubble.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
+
+        MessageTheme.receivedMessage.displayName = ALKMessageStyle.displayName
+        MessageTheme.receivedMessage.time = ALKMessageStyle.time
+        MessageTheme.sentMessage.time = ALKMessageStyle.time
     }
 }
 

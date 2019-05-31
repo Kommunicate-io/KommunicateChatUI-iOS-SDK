@@ -39,16 +39,6 @@ extension String {
 
 //get w h
 extension String {
-    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
-        return self.rectWithConstrainedWidth(width, font: font).height
-    }
-
-    func rectWithConstrainedWidth(_ width: CGFloat, font: UIFont) -> CGRect {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
-        return boundingBox
-    }
-
     func rectWithConstrainedSize(_ size: CGSize, font: UIFont) -> CGRect {
         let boundingBox = self.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
         return boundingBox
