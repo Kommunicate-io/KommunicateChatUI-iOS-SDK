@@ -466,13 +466,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         if  channel.type != 6 && channel.type != 10 && !members.contains(ALUserDefaultsHandler.getUserId()) {
             chatBar.disableChat(message: localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName))
-            //Disable click on toolbar
-            navigationBar.disableTitleAction = true
         } else {
             chatBar.enableChat()
-            //Enable Click on toolbar
-            navigationBar.disableTitleAction = false
         }
+        // Disable group details for support group, open group and when user is not a member.
+        navigationBar.disableTitleAction = channel.type == 10 || channel.type == 6 || !members.contains(ALUserDefaultsHandler.getUserId())
     }
 
     func prepareContextView(){
