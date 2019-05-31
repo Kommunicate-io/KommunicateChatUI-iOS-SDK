@@ -297,7 +297,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
-            let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel, conversation: nil)
+            let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel)
             weakSelf.navigationBar.updateView(profile: profile)
             weakSelf.newMessagesAdded()
         })
@@ -480,12 +480,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             toggleVisibilityOfContextTitleView(false)
             return
         }
-        guard let topicDetail = viewModel.getContextTitleData() else {return }
+        guard let topicDetail = viewModel.getContextTitleData() else {
+            toggleVisibilityOfContextTitleView(false)
+            return
+        }
         contextTitleView.configureWith(value: topicDetail)
         toggleVisibilityOfContextTitleView(true)
     }
 
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
+        contextTitleView.isHidden = !show
         let height: CGFloat = show ? Padding.ContextView.height : 0
         contextTitleView.constraint(
             withIdentifier: ConstraintIdentifier.contextTitleView)?
@@ -888,7 +892,34 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func sync(message: ALMessage) {
-        viewModel.sync(message: message)
+        /// Return if message is sent by loggedin user
+        guard !message.isSentMessage() else { return }
+        guard !viewModel.isOpenGroup else {
+            viewModel.syncOpenGroup(message: message)
+            return
+        }
+        guard (message.conversationId == nil || message.conversationId != viewModel.conversationProxy?.id) else {
+            return
+        }
+        if let groupId = message.groupId, groupId != viewModel.channelKey {
+            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
+            notificationView?.showNativeNotificationWithcompletionHandler({
+                response in
+                self.viewModel.contactId = nil
+                self.viewModel.channelKey = groupId
+                self.viewModel.isFirstTime = true
+                self.refreshViewController()
+            })
+        } else if message.groupId == nil, let contactId = message.contactId, contactId != viewModel.contactId {
+            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
+            notificationView?.showNativeNotificationWithcompletionHandler({
+                response in
+                self.viewModel.contactId = contactId
+                self.viewModel.channelKey = nil
+                self.viewModel.isFirstTime = true
+                self.refreshViewController()
+            })
+        }
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId: String?, status: Int32?) {
@@ -1452,7 +1483,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
-        let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel, conversation: nil)
+        let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel)
         navigationBar.updateView(profile: profile)
     }
 

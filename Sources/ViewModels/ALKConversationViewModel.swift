@@ -44,8 +44,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return true
     }
     open var isContextBasedChat: Bool {
-        return (conversationProxy != nil)
+        guard conversationProxy == nil else { return true }
+        guard
+            let channelKey = channelKey,
+            let alChannel = ALChannelService().getChannelByKey(channelKey),
+            let metadata = alChannel.metadata,
+            let contextBased = metadata["AL_CONTEXT_BASED_CHAT"] as? String
+        else {
+            return false
+        }
+        return contextBased.lowercased() == "true"
     }
+
     open var messageModels: [ALKMessageModel] = []
 
     open var richMessages: [String: Any] = [:]
@@ -341,12 +351,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func getContextTitleData() -> ALKContextTitleDataType? {
-        guard isContextBasedChat, let proxy = conversationProxy,
-            let alTopicDetail = proxy.getTopicDetail()
-            else {
-                return nil
+        guard isContextBasedChat else { return nil }
+        if let proxy = conversationProxy, let topicDetail = proxy.getTopicDetail() {
+            return topicDetail
+        } else {
+            guard let metadata = ALChannelService().getChannelByKey(channelKey)?.metadata else { return nil }
+            let topicDetail = ALTopicDetail()
+            topicDetail.title = metadata["title"] as? String
+            topicDetail.subtitle = metadata["price"] as? String
+            topicDetail.link = metadata["link"] as? String
+            return topicDetail
         }
-        return alTopicDetail
     }
 
     open func getMessageTemplates() -> [ALKTemplateMessageModel]? {
@@ -743,36 +758,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: self.contactId, andChannelKey: channelKey, typing: false)
     }
 
-    open func sync(message: ALMessage) {
-        guard !isOpenGroup else {
-            syncOpenGroup(message: message)
-            return
-        }
-        guard message.conversationId != conversationId else { return }
-        if let groupId = message.groupId, groupId != self.channelKey {
-            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
-            notificationView?.showNativeNotificationWithcompletionHandler({
-                response in
-                self.contactId = nil
-                self.channelKey = groupId
-                self.isFirstTime = true
-                self.delegate?.updateDisplay(contact: nil, channel: ALChannelService().getChannelByKey(groupId))
-                self.prepareController()
-            })
-        } else if let contactId = message.contactId, contactId != self.contactId {
-            let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
-            notificationView?.showNativeNotificationWithcompletionHandler({
-                response in
-                self.contactId = contactId
-                self.channelKey = nil
-                self.isFirstTime = true
-                let messageName = message.name.count > 0 ? message.name : self.localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: self.localizedStringFileName)
-                self.delegate?.updateDisplay(contact: ALContactService().loadContact(byKey: "userId", value: contactId), channel: nil)
-                self.prepareController()
-            })
-        }
-    }
-
     func syncOpenGroup(message: ALMessage) {
         guard let groupId = message.groupId,
             groupId == self.channelKey,
@@ -991,23 +976,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> ()) {
-        if conversationId != nil {
-            ALConversationService().fetchTopicDetails(conversationId) { (error, conversationProxy) in
-                guard error == nil, let conversationProxy = conversationProxy else {
-                    print("Error while fetching conversation details \(String(describing: error))")
-                    completion(nil)
-                    return
-                }
-                completion(self.conversationProfileFrom(contact: nil, channel: nil, conversation: conversationProxy))
-            }
-        } else if channelKey != nil {
+        if channelKey != nil {
             ALChannelService().getChannelInformation(channelKey, orClientChannelKey: nil) { (channel) in
                 guard let channel = channel else {
                     print("Error while fetching channel details")
                     completion(nil)
                     return
                 }
-                completion(self.conversationProfileFrom(contact: nil, channel: channel, conversation: nil))
+                completion(self.conversationProfileFrom(contact: nil, channel: channel))
             }
         } else if contactId != nil {
             ALUserService().getUserDetail(contactId) { (contact) in
@@ -1017,14 +993,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     return
                 }
                 self.updateUserDetail(contact.userId)
-                completion(self.conversationProfileFrom(contact: contact, channel: nil, conversation: nil))
+                completion(self.conversationProfileFrom(contact: contact, channel: nil))
             }
         }
     }
 
-    func conversationProfileFrom(contact: ALContact?, channel: ALChannel?, conversation: ALConversationProxy?) -> ALKConversationProfile {
+    func conversationProfileFrom(contact: ALContact?, channel: ALChannel?) -> ALKConversationProfile {
         var conversationProfile = ALKConversationProfile()
-        conversationProfile.name = conversation?.topicId ?? channel?.name ?? contact?.getDisplayName() ?? ""
+        conversationProfile.name = channel?.name ?? contact?.getDisplayName() ?? ""
         conversationProfile.imageUrl = channel?.channelImageURL ?? contact?.contactImageUrl
         guard let contact = contact, channel == nil else {
             return conversationProfile
