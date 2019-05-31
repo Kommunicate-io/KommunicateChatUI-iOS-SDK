@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
     complete.dependency 'Kingfisher', '~> 4.7.0'
     complete.dependency 'MGSwipeTableCell', '~> 1.5.6'
-    complete.dependency 'Applozic', '~> 6.9.0'
+    complete.dependency 'Applozic', '~> 6.10.0'
     complete.dependency 'ApplozicSwift/RichMessageKit'
   end
 end
