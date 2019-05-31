@@ -75,6 +75,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
     /// Message on which reply was tapped.
     private var selectedMessageForReply: ALKMessageViewModel?
 
+    private var shouldSendTyping: Bool = true
+
+    private var typingTimerTask = Timer()
+
     //MARK: - Initializer
     public required init(contactId: String?,
                 channelKey: NSNumber?,
@@ -734,12 +738,20 @@ open class ALKConversationViewModel: NSObject, Localizable {
         delegate?.updateMessageAt(indexPath: indexPath)
     }
 
-    open func sendKeyboardBeginTyping() {
-
+    @objc func sendTypingStatus() {
         self.mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: self.contactId, andChannelKey: channelKey, typing: true)
     }
 
+    open func sendKeyboardBeginTyping() {
+        guard shouldSendTyping else { return }
+        shouldSendTyping = false
+        sendTypingStatus()
+        typingTimerTask = Timer.scheduledTimer(timeInterval: 25.0, target: self, selector: #selector(sendTypingStatus), userInfo: nil, repeats: true)
+    }
+
     open func sendKeyboardDoneTyping() {
+        shouldSendTyping = true
+        typingTimerTask.invalidate()
         self.mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: self.contactId, andChannelKey: channelKey, typing: false)
     }
 
