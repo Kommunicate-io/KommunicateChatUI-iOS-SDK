@@ -16,7 +16,7 @@ extension String {
     }
 
     func heightWithConstrainedWidth(_ width: CGFloat, font: UIFont) -> CGFloat {
-        return self.rectWithConstrainedWidth(width, font: font).height
+        return self.rectWithConstrainedWidth(width, font: font).height.rounded(.up)
     }
 
 }
