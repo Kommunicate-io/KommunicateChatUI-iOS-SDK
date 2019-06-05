@@ -5,7 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 2.8.0 (upcoming releases)
 ---
 ### Enhancements
-- [AL-3603] Now calculated height of message cell will be cached. 
+- [AL-3603] Now calculated height of message cell will be cached.
+- [AL-2918] Added support for FAQ Template rich message and removed Generic List rich message.
 
 ### Fixes
 - Fixed a crash when video isn't exported properly.
@@ -13,7 +14,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 2.7.0
 ---
 
-### Enhancments
+### Enhancements
 - [AL-3391] Add support for autosuggestions.
 - Added setting to hide contact-share option in chatbar.
 - Added setting to disable swipe action in chat list.
