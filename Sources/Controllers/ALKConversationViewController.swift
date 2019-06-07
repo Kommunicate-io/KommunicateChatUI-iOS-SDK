@@ -190,13 +190,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             let tableView = weakSelf.tableView
 
-            var h = CGFloat(0)
-            h = keyboardSize.height-h
+            let keyboardHeight = -1*keyboardSize.height
+            if weakSelf.bottomConstraint?.constant == keyboardHeight {return}
 
-            let newH = -1*h
-            if weakSelf.bottomConstraint?.constant == newH {return}
-
-            weakSelf.bottomConstraint?.constant = newH
+            weakSelf.bottomConstraint?.constant = keyboardHeight
 
             weakSelf.view?.layoutIfNeeded()
 
@@ -207,23 +204,26 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         })
 
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil, using: {[weak self]
-            (notification) in
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillHideNotification,
+            object: nil,
+            queue: nil,
+            using: {[weak self] (notification) in
+                guard let weakSelf = self else {return}
+                let view = weakSelf.view
 
-            guard let weakSelf = self else {return}
-            let view = weakSelf.view
+                weakSelf.bottomConstraint?.constant = 0
 
-            weakSelf.bottomConstraint?.constant = 0
+                let duration = (notification
+                    .userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?
+                    .doubleValue ?? 0.05
 
-            let duration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.05
-
-            UIView.animate(withDuration: duration, animations: {
-                view?.layoutIfNeeded()
-            }, completion: { (_) in
-                guard let vm = weakSelf.viewModel else { return }
-                vm.sendKeyboardDoneTyping()
-            })
-
+                UIView.animate(withDuration: duration, animations: {
+                    view?.layoutIfNeeded()
+                }, completion: { (_) in
+                    guard let viewModel = weakSelf.viewModel else { return }
+                    viewModel.sendKeyboardDoneTyping()
+                })
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: { [weak self]
@@ -464,7 +464,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 self.chatBar.enableChat()
                 return
             }
-            self.chatBar.disableChat(message: self.localizedString(forKey: "UnblockToEnableChat", withDefaultValue: SystemMessage.Information.UnblockToEnableChat, fileName: self.configuration.localizedStringFileName))
+            self.chatBar.disableChat(
+                message: self.localizedString(
+                    forKey: "UnblockToEnableChat",
+                    withDefaultValue: SystemMessage.Information.UnblockToEnableChat,
+                    fileName: self.configuration.localizedStringFileName))
         }
     }
 
@@ -662,7 +666,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
         // Update ChatBar's top view which contains send button and the text view.
         chatBar.grayView.backgroundColor = configuration.backgroundColor
@@ -760,7 +764,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 })
             case .sendVoice(let voice):
                 weakSelf.viewModel.send(voiceMessage: voice as Data, metadata:self?.configuration.messageMetadata)
-                break
 
             case .startVideoRecord:
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -775,7 +778,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                                 imagePicker.mediaTypes = [kUTTypeMovie as String]
                                 UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
                             } else {
-                                let msg = weakSelf.localizedString(forKey: "EnableCameraPermissionMessage", withDefaultValue: SystemMessage.Camera.cameraPermission, fileName: weakSelf.localizedStringFileName)
+                                let msg = weakSelf.localizedString(
+                                    forKey: "EnableCameraPermissionMessage",
+                                    withDefaultValue: SystemMessage.Camera.cameraPermission,
+                                    fileName: weakSelf.localizedStringFileName)
                                 ALUtilityClass.permissionPopUp(withMessage: msg, andViewController: self)
                             }
                         }
@@ -1824,12 +1830,14 @@ extension ALKConversationViewController: UIImagePickerControllerDelegate, UINavi
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {
     func filesSelected(images: [UIImage], videos: [String]) {
-        let count = images.count + videos.count
-        for i in 0..<count {
-            if i < images.count {
-                let image = images[i]
-                let (message, indexPath) =  self.viewModel.send(photo: image, metadata : self.configuration.messageMetadata)
-                guard let _ = message, let newIndexPath = indexPath else { return }
+        let fileCount = images.count + videos.count
+        for index in 0..<fileCount {
+            if index < images.count {
+                let image = images[index]
+                let (message, indexPath) = self.viewModel.send(
+                    photo: image,
+                    metadata: self.configuration.messageMetadata)
+                guard message != nil, let newIndexPath = indexPath else { return }
                 //            DispatchQueue.main.async {
                 self.tableView.beginUpdates()
                 self.tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
@@ -1844,7 +1852,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 }
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
-                let path = videos[i - images.count]
+                let path = videos[index - images.count]
                 let (_, indexPath) = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary, metadata : self.configuration.messageMetadata)
                 self.tableView.beginUpdates()
                 self.tableView.insertSections(IndexSet(integer: (indexPath?.section)!), with: .automatic)

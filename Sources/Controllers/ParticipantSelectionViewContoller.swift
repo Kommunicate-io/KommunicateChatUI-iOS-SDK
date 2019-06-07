@@ -1,5 +1,5 @@
 //
-//  ALKSelectParticipantToAddViewController.swift
+//  ParticipantSelectionViewContoller.swift
 //  
 //
 //  Created by Mukesh Thawani on 04/05/17.
@@ -398,11 +398,14 @@ extension ParticipantSelectionViewContoller: UISearchResultsUpdating, UISearchBa
 
 extension ParticipantSelectionViewContoller: ALKInviteButtonProtocol {
 
-    func getButtonAppearance(invitedFriendCount count: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool) {
-        let isEnabled = (count > 0) ? true: false
+    func getButtonAppearance(invitedFriendCount friendCount: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool) {
+        let isEnabled = (friendCount > 0) ? true: false
         let background = (isEnabled ? UIColor.mainRed() : UIColor.disabledButton())
-        let newMember = count > 0 ? " (\(count))" : ""
-        let inviteMessage = localizedString(forKey: "InviteMessage", withDefaultValue: SystemMessage.LabelName.InviteMessage, fileName: localizedStringFileName)
+        let newMember = friendCount > 0 ? " (\(friendCount))" : ""
+        let inviteMessage = localizedString(
+            forKey: "InviteMessage",
+            withDefaultValue: SystemMessage.LabelName.InviteMessage,
+            fileName: localizedStringFileName)
         let title = "\(inviteMessage) \(newMember)"
         return (title, background, isEnabled)
     }
@@ -420,17 +423,8 @@ class ParticipantStore {
         participants.remove(object: idString)
     }
 
-    func contain(participantID: String) -> Bool {
-        for each in participants {
-            if participantID == each {
-                return true
-            }
-        }
-        return false
-    }
-
     func hasAtLeastOneMember() -> Bool {
-        return participants.count > 0
+        return !participants.isEmpty
     }
 }
 

@@ -20,7 +20,7 @@ class ALKMapViewController: UIViewController, Localizable {
 
     @IBOutlet weak var mapView: MKMapView!
 
-    @IBOutlet weak var ShareLocationButton: UIButton!
+    @IBOutlet weak var shareLocationButton: UIButton!
 
     var locationManager = CLLocationManager()
     var region = MKCoordinateRegion()
@@ -34,8 +34,8 @@ class ALKMapViewController: UIViewController, Localizable {
     override func viewWillAppear(_ animated: Bool) {
         self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
         let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
-        ShareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)
-        ShareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.selected)
+        shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)
+        shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.selected)
     }
 
     override func viewDidAppear(_ animated: Bool) {

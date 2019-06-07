@@ -255,7 +255,10 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     func sync(message: ALMessage) {
 
-        if let viewController = conversationViewController, viewController.viewModel != nil, viewController.viewModel.contactId == message.contactId,viewController.viewModel.channelKey == message.groupId {
+        if let viewController = conversationViewController,
+            viewController.viewModel != nil,
+            viewController.viewModel.contactId == message.contactId,
+            viewController.viewModel.channelKey == message.groupId {
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
@@ -264,8 +267,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     @objc func customBackAction() {
         guard let nav = self.navigationController else { return }
-        let dd = nav.popViewController(animated: true)
-        if dd == nil {
+        let poppedVC = nav.popViewController(animated: true)
+        if poppedVC == nil {
             self.dismiss(animated: true, completion: nil)
         }
     }
