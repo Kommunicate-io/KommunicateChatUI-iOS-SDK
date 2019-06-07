@@ -89,7 +89,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         }
     }
 
-    var url: URL? = nil
+    var url: URL?
     enum state {
         case upload(filePath: String)
         case uploading(filePath: String)
@@ -99,11 +99,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case downloaded(filePath: String)
     }
 
-    var uploadTapped:((Bool) ->())?
-    var uploadCompleted: ((_ responseDict: Any?) ->())?
+    var uploadTapped:((Bool) ->Void)?
+    var uploadCompleted: ((_ responseDict: Any?) ->Void)?
 
-    var downloadTapped:((Bool) ->())?
-
+    var downloadTapped:((Bool) ->Void)?
 
     class func topPadding() -> CGFloat {
         return 12
@@ -220,7 +219,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         bubbleView.bottomAnchor.constraint(equalTo: captionLabel.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
-        
+
         fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         activityIndicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
         activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
@@ -277,18 +276,18 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             photoView.kf.setImage(with: path)
             uploadButton.isHidden = false
         case .uploaded:
-            if activityIndicator.isAnimating{
+            if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
             frontView.isUserInteractionEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
-        case .uploading( _):
+        case .uploading:
             uploadButton.isHidden = true
             frontView.isUserInteractionEnabled = false
             activityIndicator.isHidden = false
-            if !activityIndicator.isAnimating{
+            if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
@@ -301,17 +300,17 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case .downloading:
             uploadButton.isHidden = true
             activityIndicator.isHidden = false
-            if !activityIndicator.isAnimating{
+            if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
             frontView.isUserInteractionEnabled = false
         case .downloaded(let filePath):
             activityIndicator.isHidden = false
-            if !activityIndicator.isAnimating{
+            if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
             }
-            if activityIndicator.isAnimating{
+            if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
             viewModel?.filePath = filePath

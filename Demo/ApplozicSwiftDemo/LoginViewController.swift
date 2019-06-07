@@ -65,7 +65,7 @@ class LoginViewController: UIViewController {
         let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
         alChatManager.connectUser(alUser, completion: {response, error in
             if error == nil {
-                NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(response?.isRegisteredSuccessfully())")
+                NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")
 
                 self.present(vc!, animated: false, completion: nil)

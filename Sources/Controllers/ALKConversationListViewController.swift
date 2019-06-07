@@ -84,14 +84,13 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
         })
 
-
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "pushNotification"), object: nil, queue: nil, using: {[weak self] notification in
             print("push notification received: ", notification.object ?? "")
             guard let weakSelf = self, let object = notification.object as? String else { return }
             let components = object.components(separatedBy: ":")
-            var groupId: NSNumber? = nil
-            var contactId: String? = nil
-            var conversationId: NSNumber? = nil
+            var groupId: NSNumber?
+            var contactId: String?
+            var conversationId: NSNumber?
 
             if components.count > 2 {
                 let groupComponent = Int(components[1])
@@ -146,7 +145,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             })
         })
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: {[weak self] notification in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: {[weak self] _ in
             NSLog("update group name notification received")
             guard let weakSelf = self, (weakSelf.view.window != nil) else { return }
             print("update group detail")
@@ -282,7 +281,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         }
     }
 
-
     fileprivate func push(conversationVC: ALKConversationViewController, with viewModel: ALKConversationViewModel) {
         if let topVC = navigationController?.topViewController as? ALKConversationViewController {
             // Update the details and refresh
@@ -304,7 +302,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 }
 
-//MARK: ALMessagesDelegate
+// MARK: ALMessagesDelegate
 extension ALKConversationListViewController: ALMessagesDelegate {
     public func getMessagesArray(_ messagesArray: NSMutableArray!) {
         guard let messages = messagesArray as? [Any] else {
@@ -360,10 +358,10 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         })
     }
 
-    func isNewMessageForActiveThread(alMessage: ALMessage, vm: ALKConversationViewModel) -> Bool{
+    func isNewMessageForActiveThread(alMessage: ALMessage, vm: ALKConversationViewModel) -> Bool {
         let isGroupMessage = alMessage.groupId != nil && alMessage.groupId == vm.channelKey
         let isOneToOneMessage = alMessage.groupId == nil && vm.channelKey == nil && alMessage.contactId == vm.contactId
-        if ( isGroupMessage || isOneToOneMessage){
+        if ( isGroupMessage || isOneToOneMessage) {
             return true
         }
         return false
@@ -376,7 +374,6 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         return false
     }
 
-
     open func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
         print("sync call: ", alMessage.message)
         guard let message = alMessage else { return }
@@ -387,10 +384,10 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
                 viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
-        } else if !isMessageSentByLoggedInUser(alMessage: alMessage){
+        } else if !isMessageSentByLoggedInUser(alMessage: alMessage) {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler({
-                response in
+                _ in
                 self.launchChat(contactId: message.contactId, groupId: message.groupId, conversationId: message.conversationId)
             })
         }
@@ -456,7 +453,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationListViewController: ALKConversationListTableViewDelegate {
-    
+
     public func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
         delegate?.conversation(
             chat,
@@ -472,11 +469,11 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         viewController.viewModel = convViewModel
         self.navigationController?.pushViewController(viewController, animated: false)
     }
-    
+
     public func emptyChatCellTapped() {
         self.compose()
     }
-    
+
     public func scrolledToBottom() {
         viewModel.fetchMoreMessages(dbService: dbService)
     }

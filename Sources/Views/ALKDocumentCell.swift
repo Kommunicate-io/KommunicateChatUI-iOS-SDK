@@ -11,7 +11,7 @@ import Kingfisher
 import Applozic
 
 class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel>,
-ALKReplyMenuItemProtocol{
+ALKReplyMenuItemProtocol {
 
     struct CommonPadding {
         struct FrameUIView {
@@ -44,7 +44,6 @@ ALKReplyMenuItemProtocol{
         }
     }
 
-    
     enum state {
         case download
         case downloading(progress: Double, totalCount: Int64)
@@ -52,9 +51,9 @@ ALKReplyMenuItemProtocol{
         case upload
     }
 
-    var uploadTapped:((Bool) ->())?
-    var uploadCompleted: ((_ responseDict: Any?) ->())?
-    var downloadTapped:((Bool) ->())?
+    var uploadTapped:((Bool) ->Void)?
+    var uploadCompleted: ((_ responseDict: Any?) ->Void)?
+    var downloadTapped:((Bool) ->Void)?
 
     var docImageView: UIImageView = {
         let imv = UIImageView()
@@ -107,7 +106,6 @@ ALKReplyMenuItemProtocol{
         return uiView
     }()
 
-
     var progressView: KDCircularProgress = {
         let view = KDCircularProgress(frame: .zero)
         view.startAngle = -90
@@ -121,7 +119,7 @@ ALKReplyMenuItemProtocol{
         view.backgroundColor = .clear
         return view
     }()
-    
+
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
     }
@@ -131,8 +129,6 @@ ALKReplyMenuItemProtocol{
         timeLabel.setStyle(ALKMessageStyle.time)
     }
 
-
-
     override func setupViews() {
         super.setupViews()
 
@@ -141,7 +137,6 @@ ALKReplyMenuItemProtocol{
         contentView.bringSubviewToFront(downloadButton)
         contentView.bringSubviewToFront(progressView)
         frontView.addGestureRecognizer(longPressGesture)
-
 
         let topToOpen = UITapGestureRecognizer(target: self, action: #selector(self.openWKWebView(gesture:)))
 
@@ -198,7 +193,7 @@ ALKReplyMenuItemProtocol{
 
         guard  let filePath = self.viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath:filePath) else {
 
-            let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded";
+            let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded"
               print(errorMessage)
             return
         }
@@ -210,7 +205,7 @@ ALKReplyMenuItemProtocol{
         pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: false)
     }
 
-    class func commonHeightPadding() ->  CGFloat {
+    class func commonHeightPadding() -> CGFloat {
         return CommonPadding.FrameUIView.height + CommonPadding.FrameUIView.top
             + CommonPadding.FileTypeView.height
     }
@@ -225,7 +220,7 @@ ALKReplyMenuItemProtocol{
 
         let fileType =  ALKFileUtils().getFileExtenion(filePath: viewModel.filePath,fileMeta: viewModel.fileMetaInfo)
 
-        if(!size.isEmpty){
+        if(!size.isEmpty) {
             sizeAndFileType.text =  size + " \u{2022} " + fileType
         }
 
@@ -247,7 +242,6 @@ ALKReplyMenuItemProtocol{
             }
         }
     }
-
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
         downloadTapped?(true)
@@ -337,4 +331,3 @@ extension ALKDocumentCell: ALKHTTPManagerDownloadDelegate {
         }
     }
 }
-

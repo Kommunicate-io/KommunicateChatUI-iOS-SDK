@@ -11,7 +11,6 @@ import Foundation
 //import AlamofireObjectMapper
 //import Alamofire
 
-
 //final class ALKAPI: NSObject {
 //    static func requestForItems<T: Mappable>(request: ALKAPIRequest,
 //                                completionHandler: @escaping (_ items: [T]?, _ isCache: Bool, _ error: Error?) -> Void) {

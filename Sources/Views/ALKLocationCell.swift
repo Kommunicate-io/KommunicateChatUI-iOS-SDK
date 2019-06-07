@@ -16,7 +16,7 @@ protocol ALKLocationCellDelegate: class {
 
 class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
                         ALKReplyMenuItemProtocol {
-    
+
     weak var delegate:ALKLocationCellDelegate?
 
     // MARK: - Declare Variables or Types
@@ -152,7 +152,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     func openMap(withLocation geocode: Geocode, completion: ((_ isSuccess: Bool) -> Swift.Void)? = nil) {
-        if let locDelegate = delegate , locationPreviewViewModel().isReady{
+        if let locDelegate = delegate , locationPreviewViewModel().isReady {
             locDelegate.displayLocation(location: locationPreviewViewModel())
         }
     }

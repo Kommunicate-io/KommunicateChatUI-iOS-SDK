@@ -67,10 +67,10 @@ class ALKMyVideoCell: ALKVideoCell {
 
     override func setupStyle() {
         super.setupStyle()
-        if(ALKMessageStyle.sentBubble.style == .edge){
+        if(ALKMessageStyle.sentBubble.style == .edge) {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-        }else{
+        } else {
             photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         }

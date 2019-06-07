@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIView {
-    
+
     func setBottomBorderColor(color: UIColor, height: CGFloat) {
         let bottomBorderRect = CGRect(x: 0, y: frame.height, width: frame.width, height: height)
         let bottomBorderView = UIView(frame: bottomBorderRect)
@@ -19,6 +19,6 @@ extension UIView {
     }
 
     func constraint(withIdentifier:String) -> NSLayoutConstraint? {
-        return self.constraints.filter{ $0.identifier == withIdentifier }.first
+        return self.constraints.filter { $0.identifier == withIdentifier }.first
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 extension AVCaptureVideoOrientation {
-    
+
     var uiInterfaceOrientation: UIInterfaceOrientation {
         get {
             switch self {
@@ -21,7 +21,7 @@ extension AVCaptureVideoOrientation {
             }
         }
     }
-    
+
     init(ui:UIInterfaceOrientation) {
         switch ui {
         case .landscapeRight:       self = .landscapeRight
@@ -31,7 +31,7 @@ extension AVCaptureVideoOrientation {
         default:                    self = .portrait
         }
     }
-    
+
     init?(orientation:UIDeviceOrientation) {
         switch orientation {
         case .landscapeRight:       self = .landscapeLeft
@@ -43,5 +43,3 @@ extension AVCaptureVideoOrientation {
         }
     }
 }
-
-

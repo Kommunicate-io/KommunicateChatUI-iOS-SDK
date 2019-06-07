@@ -14,14 +14,14 @@ protocol ALKMediaViewerViewModelDelegate: class {
 }
 
 final class ALKMediaViewerViewModel: NSObject, Localizable {
-    
-    var localizedStringFileName: String!
-    
-    private var savingImagesuccessBlock: (() -> ())?
-    private var savingImagefailBlock: ((Error) -> ())?
 
-    fileprivate var downloadImageSuccessBlock: (() -> ())?
-    fileprivate var downloadImageFailBlock: ((String) -> ())?
+    var localizedStringFileName: String!
+
+    private var savingImagesuccessBlock: (() -> Void)?
+    private var savingImagefailBlock: ((Error) -> Void)?
+
+    fileprivate var downloadImageSuccessBlock: (() -> Void)?
+    fileprivate var downloadImageFailBlock: ((String) -> Void)?
 
     fileprivate lazy var loadingFailErrorMessage: String = {
         let text = localizedString(forKey: "DownloadOriginalImageFail", withDefaultValue: SystemMessage.Warning.DownloadOriginalImageFail, fileName: localizedStringFileName)
@@ -45,8 +45,7 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
         checkCurrent(index: currentIndex)
     }
 
-
-    func saveImage(image: UIImage?, successBlock: @escaping () -> (), failBlock: @escaping (Error) -> ()) {
+    func saveImage(image: UIImage?, successBlock: @escaping () -> Void, failBlock: @escaping (Error) -> Void) {
 
         self.savingImagesuccessBlock   = successBlock
         self.savingImagefailBlock      = failBlock
@@ -85,7 +84,7 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
         currentIndex = newIndex
     }
 
-    func getURLFor(name: String) -> URL{
+    func getURLFor(name: String) -> URL {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return docDirPath.appendingPathComponent(name)
     }
@@ -104,7 +103,7 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
         }
     }
 
-    func isAutoPlayTrueForCurrentIndex() -> Bool{
+    func isAutoPlayTrueForCurrentIndex() -> Bool {
         return isFirstIndexAudioVideo
     }
 

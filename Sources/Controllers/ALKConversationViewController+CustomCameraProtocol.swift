@@ -8,7 +8,6 @@
 import Foundation
 import Applozic
 
-
 extension ALKConversationViewController: ALKCustomCameraProtocol {
 
     func customCameraDidTakePicture(cropedImage: UIImage) {

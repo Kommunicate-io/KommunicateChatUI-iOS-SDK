@@ -8,10 +8,9 @@
 
 import Foundation
 
-
 enum ALKDatasourceState {
     case full, filtered
-    
+
     init(isInUsed: Bool) {
         if isInUsed {
             self = .filtered
@@ -32,7 +31,7 @@ protocol ALKFriendDatasourceProtocol: class {
 final class ALKFriendDatasource: ALKFriendDatasourceProtocol {
     private var filteredList = [ALKFriendViewModel]()
     private var friendList = [ALKFriendViewModel]()
-    
+
     func getDatasource(state: ALKDatasourceState) -> [ALKFriendViewModel] {
         switch state {
         case .full:
@@ -41,7 +40,7 @@ final class ALKFriendDatasource: ALKFriendDatasourceProtocol {
             return filteredList
         }
     }
-    
+
     func count(state: ALKDatasourceState) -> Int {
         switch state {
         case .full:
@@ -50,7 +49,7 @@ final class ALKFriendDatasource: ALKFriendDatasourceProtocol {
             return filteredList.count
         }
     }
-    
+
     func getItem(atIndex: Int, state: ALKDatasourceState) -> ALKFriendViewModel? {
         let count = self.count(state: state)
         if count > atIndex {
@@ -63,7 +62,7 @@ final class ALKFriendDatasource: ALKFriendDatasourceProtocol {
         }
         return nil
     }
-    
+
     func updateItem(item: ALKFriendViewModel, atIndex: Int, state: ALKDatasourceState) {
         let count = self.count(state: state)
         if count > atIndex {
@@ -75,7 +74,7 @@ final class ALKFriendDatasource: ALKFriendDatasourceProtocol {
             }
         }
     }
-    
+
     func update(datasource: [ALKFriendViewModel], state: ALKDatasourceState) {
         switch state {
         case .full:

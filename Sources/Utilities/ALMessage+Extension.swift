@@ -13,7 +13,10 @@ let friendsMessage = "4"
 let myMessage = "5"
 
 let imageBaseUrl = ALUserDefaultsHandler.getFILEURL() + "/rest/ws/aws/file/"
-let CONVERSATION_SUBJECT = "KM_CONVERSATION_SUBJECT"
+
+enum ChannelMetadataKey {
+    static let conversationSubject = "KM_CONVERSATION_SUBJECT"
+}
 
 let emailSourceType = 7
 
@@ -108,8 +111,10 @@ extension ALMessage: ALKChatViewModelProtocol {
         case .imageMessage:
             return message ?? "Photo"
         case .email:
-            guard let channelMetadata = alChannel?.metadata, let messageText = channelMetadata[CONVERSATION_SUBJECT]  else {
-                return message
+            guard let channelMetadata = alChannel?.metadata,
+                let messageText = channelMetadata[ChannelMetadataKey.conversationSubject]
+                else {
+                    return message
             }
             return messageText as? String
         case .document:
@@ -281,16 +286,21 @@ extension ALMessage {
         guard messageType == .location else {
             return nil
         }
-        if let message = message {
-            let jsonObject = try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!, options: .mutableContainers) as! [String: Any]
+        if let message = message,
+            let jsonObject = try? JSONSerialization.jsonObject(
+                with: message.data(using: .utf8)!,
+                options: .mutableContainers) as! [String: Any] {
 
             // Check if type is double or string
-            if let lat = jsonObject["lat"] as? Double, let lon = jsonObject["lon"] as? Double {
+            if let lat = jsonObject["lat"] as? Double,
+                let lon = jsonObject["lon"] as? Double {
                 let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                 return Geocode(coordinates: location)
             } else {
                 guard let latString = jsonObject["lat"] as? String,
-                    let lonString = jsonObject["lon"] as? String,let lat = Double(latString), let lon = Double(lonString) else {
+                    let lonString = jsonObject["lon"] as? String,
+                    let lat = Double(latString),
+                    let lon = Double(lonString) else {
                         return nil
                 }
                 let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)

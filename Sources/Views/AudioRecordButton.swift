@@ -16,9 +16,9 @@ public protocol ALKAudioRecorderProtocol: class {
     func permissionNotGrant()
 }
 
-open class AudioRecordButton: UIButton{
+open class AudioRecordButton: UIButton {
 
-    public enum ALKSoundRecorderState{
+    public enum ALKSoundRecorderState {
         case Recording
         case None
     }
@@ -45,7 +45,7 @@ open class AudioRecordButton: UIButton{
         delegate = recorderDelegate
     }
 
-    func setupRecordButton(){
+    func setupRecordButton() {
         recordButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(recordButton)
 
@@ -91,7 +91,7 @@ open class AudioRecordButton: UIButton{
         }
     }
 
-    //MARK: - Function
+    // MARK: - Function
     private func checkMicrophonePermission() -> Bool {
 
         let soundSession = AVAudioSession.sharedInstance()
@@ -103,8 +103,7 @@ open class AudioRecordButton: UIButton{
             soundSession.requestRecordPermission({ (isGrant) in
                 if (isGrant) {
                     isAllow = true
-                }
-                else {
+                } else {
                     isAllow = false
                 }
             })
@@ -112,18 +111,17 @@ open class AudioRecordButton: UIButton{
         case AVAudioSession.RecordPermission.denied:
             // direct to settings...
             isAllow = false
-            break;
+            break
         case AVAudioSession.RecordPermission.granted:
             // mic access ok...
             isAllow = true
-            break;
+            break
         }
 
         return isAllow
     }
 
-    @objc fileprivate func startAudioRecord()
-    {
+    @objc fileprivate func startAudioRecord() {
         recordingSession = AVAudioSession.sharedInstance()
         audioFilename = URL(fileURLWithPath: NSTemporaryDirectory().appending("tempRecording.m4a"))
         let settings = [
@@ -151,22 +149,20 @@ open class AudioRecordButton: UIButton{
     }
 
     @objc func cancelAudioRecord() {
-        if states == .Recording{
+        if states == .Recording {
             audioRecorder.stop()
             audioRecorder = nil
             states = .None
         }
     }
 
-    @objc fileprivate func stopAudioRecord()
-    {
-        if states == .Recording{
+    @objc fileprivate func stopAudioRecord() {
+        if states == .Recording {
             audioRecorder.stop()
             audioRecorder = nil
             states = .None
             //play back?
-            if audioFilename.isFileURL
-            {
+            if audioFilename.isFileURL {
                 guard let soundData = NSData(contentsOf: audioFilename) else {return}
                 delegate.finishRecordingAudio(soundData: soundData)
             }
@@ -192,7 +188,7 @@ open class AudioRecordButton: UIButton{
                 }
 
             case .changed:
-                if location.y < -10 || location.y > height+10{
+                if location.y < -10 || location.y > height+10 {
                     if states == .Recording {
                         delegate.cancelRecordingAudio()
                         cancelAudioRecord()
@@ -217,8 +213,7 @@ open class AudioRecordButton: UIButton{
     }
 }
 
-extension AudioRecordButton: AVAudioRecorderDelegate
-{
+extension AudioRecordButton: AVAudioRecorderDelegate {
     public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if !flag {
             stopAudioRecord()

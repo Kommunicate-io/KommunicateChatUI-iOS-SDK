@@ -25,7 +25,7 @@ public class ALKQuickReplyView: UIView {
 
     public var alignLeft: Bool = true
     public var maxWidth: CGFloat = UIScreen.main.bounds.width // Need default value otherwise crash if someone don't change from outside
-    public var quickReplySelected: ((_ index: Int?, _ name: String, _ dict: Dictionary<String, Any>?) -> ())?
+    public var quickReplySelected: ((_ index: Int?, _ name: String, _ dict: Dictionary<String, Any>?) -> Void)?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)

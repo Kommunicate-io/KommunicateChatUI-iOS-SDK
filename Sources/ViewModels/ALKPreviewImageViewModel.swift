@@ -9,18 +9,21 @@
 import Foundation
 
 final class ALKPreviewImageViewModel: NSObject, Localizable {
-    
-    var localizedStringFileName: String
-    
-    var imageUrl: URL
-    private var savingImagesuccessBlock: (() -> ())?
-    private var savingImagefailBlock: ((Error) -> ())?
 
-    fileprivate var downloadImageSuccessBlock: (() -> ())?
-    fileprivate var downloadImageFailBlock: ((String) -> ())?
+    var localizedStringFileName: String
+
+    var imageUrl: URL
+    private var savingImagesuccessBlock: (() -> Void)?
+    private var savingImagefailBlock: ((Error) -> Void)?
+
+    fileprivate var downloadImageSuccessBlock: (() -> Void)?
+    fileprivate var downloadImageFailBlock: ((String) -> Void)?
 
     fileprivate lazy var loadingFailErrorMessage: String = {
-        let text = localizedString(forKey: "DownloadOriginalImageFail", withDefaultValue: SystemMessage.Warning.DownloadOriginalImageFail, fileName: localizedStringFileName)
+        let text = localizedString(
+            forKey: "DownloadOriginalImageFail",
+            withDefaultValue: SystemMessage.Warning.DownloadOriginalImageFail,
+            fileName: localizedStringFileName)
         return text
     }()
 
@@ -29,8 +32,7 @@ final class ALKPreviewImageViewModel: NSObject, Localizable {
         self.imageUrl = imageUrl
     }
 
-
-    func saveImage(image: UIImage?, successBlock: @escaping () -> (), failBlock: @escaping (Error) -> ()) {
+    func saveImage(image: UIImage?, successBlock: @escaping () -> Void, failBlock: @escaping (Error) -> Void) {
 
         self.savingImagesuccessBlock   = successBlock
         self.savingImagefailBlock      = failBlock
@@ -40,7 +42,11 @@ final class ALKPreviewImageViewModel: NSObject, Localizable {
             return
         }
 
-        UIImageWriteToSavedPhotosAlbum(image, self, #selector(ALKPreviewImageViewModel.image(_:didFinishSavingWithError:contextInfo:)), nil)
+        UIImageWriteToSavedPhotosAlbum(
+            image,
+            self,
+            #selector(ALKPreviewImageViewModel.image(_:didFinishSavingWithError:contextInfo:)),
+            nil)
     }
 
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {

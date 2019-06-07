@@ -9,10 +9,16 @@
 import Foundation
 import CoreLocation
 
+let defaultMapZoomLevel: Float  = 16
+let defaultLatitude             = 13.765221
+let defaultLongitude            = 100.538338
+let minimumMapZoomLevel: Float  = 3
+let maxmimumMapZoomLevel: Float = 34
+
 struct ALKLocationPreviewViewModel: Localizable {
 
     fileprivate var localizedStringFileName: String!
-    
+
     private var address: String
     private var coor: CLLocationCoordinate2D
 
@@ -45,4 +51,3 @@ struct ALKLocationPreviewViewModel: Localizable {
         self.localizedStringFileName = localizedStringFileName
     }
 }
-

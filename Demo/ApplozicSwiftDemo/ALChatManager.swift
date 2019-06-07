@@ -162,7 +162,6 @@ class ALChatManager: NSObject {
     func launchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration: ALKConfiguration) {
         let userId = conversationProxy.userId
         let groupId = conversationProxy.groupId
-        let title: String = chatTitleUsing(userId: userId, groupId: groupId)
         let convViewModel = ALKConversationViewModel(contactId: userId, channelKey: groupId, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
         let conversationViewController = ALKConversationViewController(configuration: configuration)
         conversationViewController.viewModel = convViewModel

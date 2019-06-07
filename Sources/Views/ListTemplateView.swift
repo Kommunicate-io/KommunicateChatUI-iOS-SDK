@@ -203,8 +203,7 @@ class ListTemplateView: UIView {
             print("Number of buttons are >8. Only first 8 will be shown")
         }
         actionButtons.enumerated().forEach {
-            if $0 >= buttons.count { $1.isHidden = true }
-            else {
+            if $0 >= buttons.count { $1.isHidden = true } else {
                 $1.isHidden = false
                 $1.setTitle(buttons[$0].name, for: .normal)
             }
@@ -220,8 +219,7 @@ class ListTemplateView: UIView {
             print("Number of elements are >8. Only first 8 will be shown")
         }
         listItems.enumerated().forEach {
-            if $0 >= elements.count { $1.isHidden = true }
-            else {
+            if $0 >= elements.count { $1.isHidden = true } else {
                 $1.isHidden = false
                 $1.update(item: elements[$0])
             }

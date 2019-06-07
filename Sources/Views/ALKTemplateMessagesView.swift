@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 /*
  It's responsible to display the template message buttons.
  Currently only textual messages are supported.
@@ -16,7 +15,7 @@ import UIKit
 open class ALKTemplateMessagesView: UIView {
 
     // MARK: Public properties
-    
+
     open var viewModel: ALKTemplateMessagesViewModel!
 
     open var collectionView: UICollectionView = {
@@ -29,9 +28,9 @@ open class ALKTemplateMessagesView: UIView {
     }()
 
     /// Closure to be executed when a template message is selected
-    open var messageSelected:((ALKTemplateMessageModel)->())?
+    open var messageSelected:((ALKTemplateMessageModel)->Void)?
 
-    //MARK: Intialization
+    // MARK: Intialization
 
     public init(frame: CGRect, viewModel: ALKTemplateMessagesViewModel) {
         super.init(frame: frame)
@@ -43,7 +42,7 @@ open class ALKTemplateMessagesView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: Private methods
+    // MARK: Private methods
 
     private func setupViews() {
         setupCollectionView()

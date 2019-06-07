@@ -14,14 +14,14 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
 
     //delegate
     var customCamDelegate:ALKCustomCameraProtocol!
-    var camera = ALKCameraType.Back
+    var camera = ALKCameraType.back
     var videoFileOutput = AVCaptureMovieFileOutput()
     var filePath: URL?
     //photo library
     var asset: PHAsset!
     var allPhotos: PHFetchResult<PHAsset>!
     var selectedImage:UIImage!
-    var cameraMode:ALKCameraPhotoType = .NoCropOption
+    var cameraMode:ALKCameraPhotoType = .noCropOption
     let option = PHImageRequestOptions()
 
     @IBOutlet private var previewView: UIView!
@@ -35,12 +35,12 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
     private var captureDevice : AVCaptureDevice?
     private var captureDeviceInput: AVCaptureDeviceInput?
     fileprivate var isUserControlEnable = true
-    
+
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, fileName: localizedStringFileName)
         btnSwitchCam.isHidden = true
         reloadCamera()
@@ -74,7 +74,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
                 }
                 if UIApplication.shared.canOpenURL(settingsUrl) {
                     if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(settingsUrl, completionHandler: {(success) in
+                        UIApplication.shared.open(settingsUrl, completionHandler: {(_) in
                             //
                         })
                     } else {
@@ -97,9 +97,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         return .lightContent
     }
 
-
-    override func viewDidLayoutSubviews()
-    {
+    override func viewDidLayoutSubviews() {
         //set frame
         self.previewLayer?.frame = self.previewView.frame
     }
@@ -109,14 +107,13 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         // Dispose of any resources that can be recreated.
     }
 
-    //MARK: - Set protocol and Observer
-    func setCustomCamDelegate(camMode:ALKCameraPhotoType, camDelegate:ALKCustomCameraProtocol)
-    {
+    // MARK: - Set protocol and Observer
+    func setCustomCamDelegate(camMode:ALKCameraPhotoType, camDelegate:ALKCustomCameraProtocol) {
         self.cameraMode = camMode
         self.customCamDelegate = camDelegate
     }
 
-    //MARK: - UI control
+    // MARK: - UI control
     private func setupNavigation() {
         self.navigationController?.title = title
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(color: .main, alpha: 0.6), for: .default)
@@ -125,12 +122,11 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         navVC.navigationBar.isTranslucent = true
     }
 
-    private func reloadCamera()
-    {
+    private func reloadCamera() {
         //stop previous capture session
         captureSession.stopRunning()
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        
+
         previewLayer.removeFromSuperlayer()
         self.previewLayer?.removeFromSuperlayer()
 
@@ -141,17 +137,14 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         for device in devices {
             // Make sure this particular device supports video
             if (device.hasMediaType(AVMediaType.video)) {
-                if(camera == .Back)
-                {
+                if(camera == .back) {
                     if(device.position == AVCaptureDevice.Position.back) {
                         captureDevice = device
                         if captureDevice != nil {
                             checkCameraPermission()
                         }
                     }
-                }
-                else
-                {
+                } else {
                     if(device.position == AVCaptureDevice.Position.front) {
                         captureDevice = device
                         if captureDevice != nil {
@@ -163,10 +156,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         }
     }
 
-
-
-    private func checkCameraPermission()
-    {
+    private func checkCameraPermission() {
         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
         case .authorized:
@@ -185,7 +175,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
 
                 if UIApplication.shared.canOpenURL(settingsUrl) {
                     if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(settingsUrl, completionHandler: {(success) in
+                        UIApplication.shared.open(settingsUrl, completionHandler: {(_) in
                             //
                         })
                     } else {
@@ -202,7 +192,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         case .notDetermined:
             // ask for permissions
             AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { [weak self] (isGrant) in
-                guard let weakSelf = self else{return}
+                guard let weakSelf = self else {return}
                 if isGrant {
                     DispatchQueue.main.async {
                         weakSelf.btnSwitchCam.isHidden = false
@@ -228,11 +218,10 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
             if captureSession.canAddOutput(stillImageOutput) {
                 captureSession.addOutput(stillImageOutput)
             }
-        }
-        catch {
+        } catch {
         }
 
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession) 
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
 
         //orientation of video
         let statusBarOrientation    = UIApplication.shared.statusBarOrientation
@@ -266,19 +255,15 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         }
     }
 
-
     @IBAction private func switchCamPress(_ sender: Any) {
 
         if isUserControlEnable {
             isUserControlEnable = false
 
-            if(camera == .Back)
-            {
-                camera = .Front
-            }
-            else
-            {
-                camera = .Back
+            if(camera == .back) {
+                camera = .front
+            } else {
+                camera = .back
             }
 
             let devices = AVCaptureDevice.devices()
@@ -286,13 +271,13 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
                 if (device.hasMediaType(AVMediaType.video)) {
 
                     let newCamera: AVCaptureDevice?
-                    if(camera == .Front){
+                    if(camera == .front) {
                         newCamera = self.cameraWithPosition(position: AVCaptureDevice.Position.front)
                     } else {
                         newCamera = self.cameraWithPosition(position: AVCaptureDevice.Position.back)
                     }
                     guard let newCam = newCamera else {return}
-                    
+
                     let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
                     captureSession.removeInput(currentCameraInput)
 
@@ -302,8 +287,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
                         if captureSession.canAddOutput(stillImageOutput) {
                             captureSession.addOutput(stillImageOutput)
                         }
-                    }
-                    catch let error{
+                    } catch let error {
                         print("Error while adding camera input: \(error)")
                     }
                     captureSession.commitConfiguration()
@@ -318,27 +302,25 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
     private func cameraWithPosition(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = AVCaptureDevice.devices()
         for device in devices {
-            if((device as AnyObject).position == position){
-                return device 
+            if((device as AnyObject).position == position) {
+                return device
             }
         }
         return AVCaptureDevice(uniqueID: "")
     }
 
-
     @IBAction private func dismissCameraPress(_ sender: Any) {
         self.navigationController?.dismiss(animated: false, completion:nil)
     }
 
-    private func enableCameraControl(inSec:Double)
-    {
+    private func enableCameraControl(inSec:Double) {
         let disT:DispatchTime = DispatchTime.now() + inSec
         DispatchQueue.main.asyncAfter(deadline: disT, execute: {
             self.isUserControlEnable = true
         })
     }
 
-    //MARK: - Access to gallery images
+    // MARK: - Access to gallery images
     private func getAllImage(completion: (_ success: Bool) -> Void) {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.includeHiddenAssets = false

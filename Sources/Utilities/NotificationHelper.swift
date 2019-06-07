@@ -129,20 +129,17 @@ public class NotificationHelper {
     /// - Returns: Bool value indicating whether Applozic view is at top.
     public func isApplozicVCAtTop() -> Bool {
         guard let topVC = ALPushAssist().topViewController else { return false }
-        let vc = String(describing: topVC.classForCoder)
-        switch vc {
-            case "MuteConversationViewController":
-                fallthrough
-            case "WebViewController":
-                fallthrough
-            case "SelectProfilePicViewController":
-                fallthrough
-            case "CAMImagePickerCameraViewController": /// Cannot find any alternative.
-                fallthrough
-            case _ where vc.hasPrefix("ALK"):
-                return true
-            default:
-                return false
+        let topVCName = String(describing: topVC.classForCoder)
+        switch topVCName {
+        case "MuteConversationViewController",
+             "WebViewController",
+             "SelectProfilePicViewController",
+             "CAMImagePickerCameraViewController":
+            return true
+        case _ where topVCName.hasPrefix("ALK"):
+            return true
+        default:
+            return false
         }
     }
 
@@ -165,7 +162,7 @@ public class NotificationHelper {
         }
     }
 
-    // MARK:- Private helper methods
+    // MARK: - Private helper methods
 
     private func notificationData(using object: String) -> NotificationData? {
         let components = object.components(separatedBy: ":")

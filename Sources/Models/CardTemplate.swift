@@ -62,7 +62,13 @@ public class Util {
             }
         }
 
-        let template = CardTemplate(title: genericCard.title, titleExt: String(describing: genericCard.rating), subtitle: genericCard.subtitle, description: genericCard.description, header: header, buttons: buttons)
+        let template = CardTemplate(
+            title: genericCard.title,
+            titleExt: String(describing: genericCard.rating),
+            subtitle: genericCard.subtitle,
+            description: genericCard.description,
+            header: header,
+            buttons: buttons)
         return template
     }
 }

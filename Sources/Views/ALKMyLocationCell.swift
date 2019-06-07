@@ -9,7 +9,7 @@
 import Foundation
 
 final class ALKMyLocationCell: ALKLocationCell {
-    
+
     // MARK: - Declare Variables or Types
     // MARK: Environment in chat
     fileprivate var stateView: UIImageView = {
@@ -33,11 +33,11 @@ final class ALKMyLocationCell: ALKLocationCell {
         stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -2.0).isActive = true
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
-        
+
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
-    
+
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
@@ -58,10 +58,10 @@ final class ALKMyLocationCell: ALKLocationCell {
 
     override func setupStyle() {
         super.setupStyle()
-        if(ALKMessageStyle.sentBubble.style == .edge){
+        if(ALKMessageStyle.sentBubble.style == .edge) {
             bubbleView.backgroundColor = UIColor.background(.redC0)
             bubbleView.layer.cornerRadius = 12
-        }else{
+        } else {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color

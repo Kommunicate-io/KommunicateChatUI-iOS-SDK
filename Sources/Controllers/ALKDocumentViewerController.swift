@@ -8,8 +8,8 @@
 import Foundation
 import WebKit
 
-class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
-    
+class ALKDocumentViewerController : UIViewController,WKNavigationDelegate {
+
     var webView: WKWebView = WKWebView()
     var fileName: String = ""
     var filePath: String = ""
@@ -17,7 +17,7 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
 
     let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
-    required init(){
+    required init() {
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -46,11 +46,10 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
         self.title =  fileName
     }
 
-    @objc func showShare(_ sender: Any?)  {
+    @objc func showShare(_ sender: Any?) {
         let vc = UIActivityViewController(activityItems: [fileUrl], applicationActivities: [])
         self.present(vc, animated: true)
     }
-
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         activityIndicator.stopAnimating()
@@ -61,5 +60,3 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate{
     }
 
 }
-
-

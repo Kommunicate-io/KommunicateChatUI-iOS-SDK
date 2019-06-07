@@ -7,7 +7,7 @@
 
 import Foundation
 
- class  ALKEmptyView : UIView{
+ class  ALKEmptyView : UIView {
 
     @IBOutlet weak var startNewConversationButtonIcon: UIButton!
     @IBOutlet weak var conversationLabel: UILabel!

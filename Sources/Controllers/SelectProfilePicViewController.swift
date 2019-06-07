@@ -11,8 +11,7 @@ import Kingfisher
 import Applozic
 //import VoxeetConferenceKit
 
-
-typealias SaveProfileCompletion = (Bool, Bool?) -> ()
+typealias SaveProfileCompletion = (Bool, Bool?) -> Void
 
 class SelectProfilePicViewController: ALKBaseViewController {
 

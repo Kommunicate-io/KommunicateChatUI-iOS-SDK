@@ -39,7 +39,6 @@ public class ALKPushNotificationHandler: Localizable {
         return alChannel
     }
 
-
     public func dataConnectionNotificationHandlerWith(_ configuration: ALKConfiguration) {
 
         self.configuration = configuration
@@ -55,9 +54,9 @@ public class ALKPushNotificationHandler: Localizable {
 
             guard let weakSelf = self, let object = notification.object as? String else { return }
             let components = object.components(separatedBy: ":")
-            
+
             let noNameMessage = weakSelf.localizedString(forKey: "NoNameMessage", withDefaultValue: SystemMessage.NoData.NoName, fileName: configuration.localizedStringFileName)
-            
+
             if components.count > 2 {
                 guard let componentElement = Int(components[1]) else { return }
                 let id = NSNumber(integerLiteral: componentElement)
@@ -76,7 +75,7 @@ public class ALKPushNotificationHandler: Localizable {
                 let displayName = alContact.getDisplayName() ?? noNameMessage
                 weakSelf.title = displayName
             }
-            
+
             if UIApplication.shared.applicationState == .active {
                 guard let userInfo = notification.userInfo, let alertValue = userInfo["alertValue"] as? String else {
                         return
@@ -102,7 +101,7 @@ public class ALKPushNotificationHandler: Localizable {
         messagesVC.contactId = userId
         messagesVC.channelKey = groupId
         messagesVC.conversationId = self.conversationId
-        
+
         let pushAssistant = ALPushAssist()
         let topVC =  pushAssistant.topViewController
         let nav = ALKBaseNavigationViewController(rootViewController: messagesVC)

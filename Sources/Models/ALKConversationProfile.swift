@@ -17,7 +17,7 @@ struct ALKConversationProfile {
     var status: Status? // Required only for One-to-One chat.
 
     struct Status {
-        let lastSeenAt: NSNumber? 
+        let lastSeenAt: NSNumber?
         let isOnline: Bool
 
         init(isOnline: Bool, lastSeenAt: NSNumber?) {

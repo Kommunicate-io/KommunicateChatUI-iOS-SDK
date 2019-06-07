@@ -9,15 +9,14 @@
 import Foundation
 
 public protocol ALKContactProtocol {
-    
+
     var friendUUID: String? { get }
     var friendMood: String? { get }
     var friendProfileName: String? { get }
     var friendDisplayImgURL: URL? { get }
 }
 
-open class ALKFriendViewModel
-{
+open class ALKFriendViewModel {
     var friendUUID:String?
     var friendProfileName:String?
     var friendFirstName:String?
@@ -30,7 +29,7 @@ open class ALKFriendViewModel
     var isSelected:Bool = false
 
     init(identity:ALKContactProtocol) {
-        
+
         self.friendUUID = identity.friendUUID
         self.friendProfileName = identity.friendProfileName
         if let friendDisplayImgURL = identity.friendDisplayImgURL {
@@ -38,33 +37,28 @@ open class ALKFriendViewModel
         } else {
             self.friendDisplayImgURL = URL(fileURLWithPath: "placeholder")
         }
-        
+
     }
-    
-    //MARK: - Get
-    func getFriendDisplayName() -> String
-    {
+
+    // MARK: - Get
+    func getFriendDisplayName() -> String {
         return friendProfileName ?? "No Name"
     }
-    
-    func getFriendID() -> String
-    {
+
+    func getFriendID() -> String {
         return friendUUID!
     }
-    
-    func getFriendDisplayImgURL() -> URL
-    {
+
+    func getFriendDisplayImgURL() -> URL {
         return friendDisplayImgURL!
     }
 
-    func getIsSelected() -> Bool
-    {
+    func getIsSelected() -> Bool {
         return isSelected
     }
-    
-    //MARK: - Set
-    func setIsSelected(select:Bool)
-    {
+
+    // MARK: - Set
+    func setIsSelected(select:Bool) {
         isSelected = select
     }
 }

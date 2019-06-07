@@ -12,7 +12,7 @@ import AVKit
 
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
                     ALKReplyMenuItemProtocol {
-    
+
     enum state {
         case download
         case downloading(progress: Double, totalCount: Int64)
@@ -70,7 +70,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     var bubbleView: UIView = {
         let bv = UIView()
-        bv.clipsToBounds = true;
+        bv.clipsToBounds = true
         bv.isUserInteractionEnabled = false
         return bv
     }()
@@ -90,12 +90,12 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return view
     }()
 
-    var url: URL? = nil
+    var url: URL?
 
-    var uploadTapped:((Bool) ->())?
-    var uploadCompleted: ((_ responseDict: Any?) ->())?
+    var uploadTapped:((Bool) ->Void)?
+    var uploadCompleted: ((_ responseDict: Any?) ->Void)?
 
-    var downloadTapped:((Bool) ->())?
+    var downloadTapped:((Bool) ->Void)?
 
     class func topPadding() -> CGFloat {
         return 12
@@ -207,7 +207,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
-    
+
     deinit {
         actionButton.removeTarget(self, action: #selector(actionTapped), for: .touchUpInside)
     }
@@ -215,7 +215,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
     }
-
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
         downloadTapped?(true)

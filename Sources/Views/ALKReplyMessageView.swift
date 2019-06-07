@@ -13,9 +13,9 @@ import Applozic
  to a message */
 
 open class ALKReplyMessageView: UIView, Localizable {
-    
+
     var configuration: ALKConfiguration!
-    
+
     open var nameLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.text = "Name"
@@ -47,8 +47,8 @@ open class ALKReplyMessageView: UIView, Localizable {
         let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, fileName: configuration.localizedStringFileName)
         return text
     }()
-    
-    public var closeButtonTapped: ((Bool)->())?
+
+    public var closeButtonTapped: ((Bool)->Void)?
 
     private var message: ALKMessageViewModel?
 
@@ -110,7 +110,7 @@ open class ALKReplyMessageView: UIView, Localizable {
         }
     }
 
-    //MARK: - Internal methods
+    // MARK: - Internal methods
 
     private func setUpViews() {
         setUpConstraints()
@@ -224,7 +224,7 @@ open class ALKReplyMessageView: UIView, Localizable {
         return nil
     }
 
-    private func getMapImageURL(for message: ALKMessageViewModel) -> URL?  {
+    private func getMapImageURL(for message: ALKMessageViewModel) -> URL? {
         guard message.messageType == .location else {return nil}
         guard let lat = message.geocode?.location.latitude,
             let lon = message.geocode?.location.longitude

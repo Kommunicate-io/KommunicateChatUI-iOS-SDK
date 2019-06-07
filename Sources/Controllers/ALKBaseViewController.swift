@@ -18,13 +18,13 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         super.init(nibName: nil, bundle: nil)
         self.addObserver()
     }
-    
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         NSLog("🐸 \(#function) 🍀🍀 \(self) 🐥🐥🐥🐥")
         self.addObserver()
     }
-    
+
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barTintColor = configuration.navigationBarBackgroundColor
@@ -46,27 +46,27 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         super.viewDidLoad()
         checkPricingPackage()
     }
-    
+
     @objc func backTapped() {
         _ = self.navigationController?.popViewController(animated: true)
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         NSLog("🐸 \(#function) 🍀🍀 \(self) 🐥🐥🐥🐥")
         self.addObserver()
     }
-    
+
     func addObserver() {
-        
+
     }
-    
+
     func removeObserver() {
-        
+
     }
-    
+
     deinit {
-        
+
         removeObserver()
         NSLog("💩 \(#function) ❌❌ \(self)‼️‼️‼️‼️")
     }

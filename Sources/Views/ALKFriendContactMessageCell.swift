@@ -106,7 +106,6 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.Name.right).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: Padding.Name.height).isActive = true
 
-
         contactView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.Contact.top).isActive = true
         contactView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Contact.left).isActive = true
         contactView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: Padding.Contact.multiplier).isActive = true

@@ -74,7 +74,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     open var actionButtons = [UIButton]()
 
     open var template: ALKGenericListTemplate!
-    open var buttonSelected: ((_ index: Int, _ name: String) -> ())?
+    open var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
 
     private var items = [ALKGenericListTemplate]()
 
@@ -158,7 +158,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
         messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
-        
+
         /// TODO: Find alternative to layoutIfNeeded
         messageView.layoutIfNeeded()
 
@@ -184,8 +184,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     private func updateViewFor(_ buttons: [ALKGenericListTemplate]) {
         // Hide3 extra buttons
         actionButtons.enumerated().forEach {
-            if $0 >= buttons.count { $1.isHidden = true }
-            else { $1.isHidden = false; $1.setTitle(buttons[$0].title, for: .normal) }
+            if $0 >= buttons.count { $1.isHidden = true } else { $1.isHidden = false; $1.setTitle(buttons[$0].title, for: .normal) }
         }
     }
 

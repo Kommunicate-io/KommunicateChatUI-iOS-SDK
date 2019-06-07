@@ -62,7 +62,7 @@ public protocol ALKConversationListViewModelProtocol: class {
         - tillTime: NSNumber determining the amount of time conversation is to be muted.
         - withCompletion: Escaping Closure when the mute request is complete.
     */
-    func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->())
+    func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->Void)
 
     /**
      This method is used to unmute a particular conversation thread.
@@ -70,24 +70,23 @@ public protocol ALKConversationListViewModelProtocol: class {
      - message: The message object whose conversation is to be unmuted.
      - withCompletion: Escaping Closure when the unmute request is complete.
      */
-    func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> ())
+    func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> Void)
 
     /// This method is used to block a user whose conversation is present in chatlist.
     ///
     /// - Parameters:
     ///   - conversation: Message with the user whom we are going to block
     ///   - withCompletion: Escaping closure when block request is complete.
-    func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ())
+    func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void)
 
     /// This method is used to unblock a user whose conversation is present in chatlist.
     ///
     /// - Parameters:
     ///   - conversation: Message with the user whom we are going to unblock
     ///   - withCompletion: Escaping closure when unblock request is complete.
-    func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ())
+    func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void)
 
 }
-
 
 final public class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol, Localizable {
 
@@ -178,7 +177,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
                 }
             }
 
-            if let firstElement = messagePresent.first, let index = allMessages.index(of: firstElement)  {
+            if let firstElement = messagePresent.first, let index = allMessages.index(of: firstElement) {
                 allMessages[index] = currentMessage
                 self.allMessages[index] = currentMessage
             } else {
@@ -215,7 +214,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         })
     }
 
-    public func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> ()) {
+    public func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> Void) {
 
         let time = (Int(Date().timeIntervalSince1970) * 1000)
         sendMuteRequestFor(message: message, tillTime: time as NSNumber) { (success) in
@@ -223,36 +222,36 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         }
     }
 
-    public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->()) {
+    public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->Void) {
         if message.isGroupChat, let channel = ALChannelService().getChannelByKey(message.groupId) {
             // Unmute channel
             let muteRequest = ALMuteRequest()
             muteRequest.id = channel.key
             muteRequest.notificationAfterTime = tillTime as NSNumber
-            ALChannelService().muteChannel(muteRequest) { (response, error) in
+            ALChannelService().muteChannel(muteRequest) { (_, error) in
                 if error != nil {
                     withCompletion(false)
                 }
                 withCompletion(true)
             }
-        } else if let contact = ALContactService().loadContact(byKey: "userId", value: message.contactId){
+        } else if let contact = ALContactService().loadContact(byKey: "userId", value: message.contactId) {
             // Unmute Contact
             let muteRequest = ALMuteRequest()
             muteRequest.userId = contact.userId
             muteRequest.notificationAfterTime = tillTime as NSNumber
-            ALUserService().muteUser(muteRequest) { (response, error) in
+            ALUserService().muteUser(muteRequest) { (_, error) in
                 if error != nil {
                     withCompletion(false)
                 }
                 withCompletion(true)
             }
-        }else {
+        } else {
             withCompletion(false)
         }
     }
 
-    public func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ()) {
-        ALUserService().blockUser(conversation.contactIds) { (error, response) in
+    public func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
+        ALUserService().blockUser(conversation.contactIds) { (error, _) in
             guard let error = error else {
                 print("UserId \(String(describing: conversation.contactIds)) is successfully blocked")
                 withCompletion(nil, true)
@@ -263,8 +262,8 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         }
     }
 
-    public func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> ()) {
-        ALUserService().unblockUser(conversation.contactIds) { (error, response) in
+    public func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
+        ALUserService().unblockUser(conversation.contactIds) { (error, _) in
             guard let error = error else {
                 print("UserId \(String(describing: conversation.contactIds)) is successfully unblocked")
                 withCompletion(nil, true)

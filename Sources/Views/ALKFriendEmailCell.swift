@@ -12,14 +12,14 @@ import Kingfisher
 open class ALKFriendEmailCell: UITableViewCell {
 
     struct Padding {
-        struct NameLabel{
+        struct NameLabel {
             static let top: CGFloat =  6
             static let leading: CGFloat =  57
             static let trailing: CGFloat =  57
             static let height: CGFloat =  16
         }
 
-        struct AvatarImageView{
+        struct AvatarImageView {
             static let top: CGFloat =  18
             static let leading: CGFloat =  9
             static let width: CGFloat =  37
@@ -104,7 +104,7 @@ open class ALKFriendEmailCell: UITableViewCell {
         emailViewHeight.constant = ALKEmailView.rowHeight(height)
     }
 
-    class func rowHeight(viewModel: ALKMessageViewModel, height: CGFloat?) ->  CGFloat {
+    class func rowHeight(viewModel: ALKMessageViewModel, height: CGFloat?) -> CGFloat {
         var totalHeight: CGFloat = 0
         totalHeight += Padding.NameLabel.height + Padding.NameLabel.top
         totalHeight += Padding.TimeLabel.height + Padding.TimeLabel.top  /// time height
@@ -145,4 +145,3 @@ open class ALKFriendEmailCell: UITableViewCell {
     }
 
 }
-

@@ -123,7 +123,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         imageView.contentMode = .scaleToFill
         return imageView
     }()
-    
+
     open var overlayText: UILabel = {
         let label = UILabel(frame: .zero)
         label.backgroundColor = UIColor.white
@@ -139,7 +139,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         label.layer.shadowOffset = .zero
         return label
     }()
-    
+
     open var ratingLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -175,7 +175,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         label.textColor = UIColor(red: 121, green: 116, blue: 116)
         return label
     }()
-    
+
     open var titleStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -201,7 +201,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open var actionButtons = [UIButton]()
     open var card: CardTemplate!
-    open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplate)->())?
+    open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplate)->Void)?
 
     override open func awakeFromNib() {
         super.awakeFromNib()
@@ -258,7 +258,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         if let count = card.buttons?.count {
             stackViewSpacing += CGFloat(count) - Config.buttonStackViewSpacing // 1 space between 2 buttons.
         }
-        
+
         return headerHt + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
     }
 
@@ -355,8 +355,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         guard let buttons = buttons else { return }
         // Hide extra buttons
         actionButtons.enumerated().forEach {
-            if $0 >= buttons.count {$1.isHidden = true}
-            else {$1.isHidden = false; $1.setTitle(buttons[$0].name, for: .normal)}
+            if $0 >= buttons.count {$1.isHidden = true} else {$1.isHidden = false; $1.setTitle(buttons[$0].name, for: .normal)}
         }
         let count = CGFloat(min(buttons.count, actionButtons.count))
         buttonStackView.constraint(withIdentifier: ConstraintIdentifier.buttonsView.rawValue)?.constant = count * Config.buttonHeight
@@ -497,7 +496,7 @@ public class InsetLabel: UILabel {
         super.drawText(in: self.frame.inset(by: insets))
     }
 
-    override public var intrinsicContentSize: CGSize  {
+    override public var intrinsicContentSize: CGSize {
         var size = super.intrinsicContentSize
         size.width += insets.left + insets.right
         size.height += insets.top + insets.bottom

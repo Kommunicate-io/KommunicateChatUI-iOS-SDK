@@ -18,7 +18,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     var asset: PHAsset!
     var allPhotos: PHFetchResult<PHAsset>!
     var selectedImage:UIImage!
-    var cameraMode:ALKCameraPhotoType = .NoCropOption
+    var cameraMode:ALKCameraPhotoType = .noCropOption
     let option = PHImageRequestOptions()
     var selectedRows = [Int]()
     var selectedImages = [Int: UIImage]()
@@ -30,7 +30,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     @IBOutlet weak var previewGallery: UICollectionView!
 
     private lazy var localizedStringFileName: String = configuration.localizedStringFileName
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -59,7 +59,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         return vc
     }
 
-    //MARK: - UI control
+    // MARK: - UI control
     private func setupNavigation() {
         self.navigationController?.title = title
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
@@ -88,7 +88,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         //handle denied status
         case .notDetermined:
             // ask for permissions
-            PHPhotoLibrary.requestAuthorization() { status in
+            PHPhotoLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
                     self.getAllImage(completion: {[weak self] (isGrant) in
@@ -106,7 +106,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    //MARK: - Access to gallery images
+    // MARK: - Access to gallery images
     private func getAllImage(completion: (_ success: Bool) -> Void) {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.includeHiddenAssets = false
@@ -120,8 +120,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     }
 
     private func createScrollGallery(isGrant:Bool) {
-        if isGrant
-        {
+        if isGrant {
             self.selectedRows = Array(repeating: 0, count: (self.allPhotos != nil) ? self.allPhotos.count:0)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                 self.previewGallery.reloadData()
@@ -139,7 +138,6 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         print("exporting video to ", fileurl)
         fileurl = fileurl.standardizedFileURL
 
-
         let options = PHVideoRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.isNetworkAccessAllowed = true
@@ -147,8 +145,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         // remove any existing file at that location
         do {
             try FileManager.default.removeItem(at: fileurl)
-        }
-        catch {
+        } catch {
             // most likely, the file didn't exist.  Don't sweat it
         }
 
@@ -164,7 +161,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             exportSession!.outputFileType = AVFileType.mp4 //file type encode goes here, you can change it for other types
 
             print("GOT EXPORT SESSION")
-            exportSession!.exportAsynchronously() {
+            exportSession!.exportAsynchronously {
                 print("EXPORT DONE")
                 self.selectedVideos[indexPath.row] = fileurl.path
             }
@@ -184,14 +181,12 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
 
     }
 
-
     @IBAction func dismissAction(_ sender: UIBarButtonItem) {
         self.navigationController?.dismiss(animated: false, completion: nil)
     }
 }
 
-extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
-{
+extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: CollectionViewEnvironment
     private class CollectionViewEnvironment {
         struct Spacing {
@@ -229,12 +224,9 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
 
     // MARK: UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(allPhotos == nil)
-        {
+        if(allPhotos == nil) {
             return 0
-        }
-        else
-        {
+        } else {
             return allPhotos.count
         }
 
@@ -242,7 +234,7 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ALKPhotoCollectionCell", for: indexPath) as! ALKPhotoCollectionCell
-        
+
 //        cell.selectedIcon.isHidden = true
         cell.videoIcon.isHidden = true
         cell.selectedIcon.isHidden = true
@@ -282,5 +274,3 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
         return CollectionViewEnvironment.Spacing.inset
     }
 }
-
-

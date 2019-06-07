@@ -18,7 +18,7 @@ protocol ALKCreateGroupViewModelDelegate {
     func info(at index: Int)
 }
 
-enum options: String, Localizable {
+enum Options: String, Localizable {
     case remove
     case makeAdmin
     case dismissAdmin
@@ -33,27 +33,27 @@ enum options: String, Localizable {
         switch self {
         case .remove:
             let title = localizedString(forKey: "RemoveUser", withDefaultValue: SystemMessage.GroupDetails.RemoveUser, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .destructive, handler: { (action) in
+            return UIAlertAction(title: title, style: .destructive, handler: { (_) in
                 delegate.remove(at: index)
             })
         case .makeAdmin:
             let title = localizedString(forKey: "MakeAdmin", withDefaultValue: SystemMessage.GroupDetails.MakeAdmin, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (action) in
+            return UIAlertAction(title: title, style: .default, handler: { (_) in
                 delegate.makeAdmin(at: index)
             })
         case .dismissAdmin:
             let title = localizedString(forKey: "DismissAdmin", withDefaultValue: SystemMessage.GroupDetails.DismissAdmin, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (action) in
+            return UIAlertAction(title: title, style: .default, handler: { (_) in
                 delegate.dismissAdmin(at: index)
             })
         case .sendMessage:
             let title = localizedString(forKey: "SendMessage", withDefaultValue: SystemMessage.GroupDetails.SendMessage, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (action) in
+            return UIAlertAction(title: title, style: .default, handler: { (_) in
                 delegate.sendMessage(at: index)
             })
         case .info:
             let title = localizedString(forKey: "Info", withDefaultValue: SystemMessage.GroupDetails.Info, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (action) in
+            return UIAlertAction(title: title, style: .default, handler: { (_) in
                 delegate.info(at: index)
             })
         case .cancel:
@@ -64,7 +64,7 @@ enum options: String, Localizable {
 }
 
 class ALKCreateGroupViewModel: Localizable {
-    
+
     var groupName: String = ""
     var originalGroupName: String = ""
     var groupId: NSNumber
@@ -151,13 +151,13 @@ class ALKCreateGroupViewModel: Localizable {
         membersInfo[index] = member
     }
 
-    func optionsForCell(at index: Int) -> [options]? {
+    func optionsForCell(at index: Int) -> [Options]? {
         /// Pressed on 'You'
         if index == 0 {
             return nil
         }
         /// Pressed on user
-        var options: [options] = shouldShowInfoOption ? [.info, .sendMessage] : [.sendMessage]
+        var options: [Options] = shouldShowInfoOption ? [.info, .sendMessage] : [.sendMessage]
 
         if isAdmin(userId: ALUserDefaultsHandler.getUserId()) {
             membersInfo[index].isAdmin ? options.append(.dismissAdmin) : options.append(.makeAdmin)

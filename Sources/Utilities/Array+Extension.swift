@@ -9,7 +9,7 @@
 import Foundation
 
 extension Array {
-    
+
     func group<U: Hashable>(by key: (Iterator.Element) -> U) -> [U:[Iterator.Element]] {
         var categories: [U: [Iterator.Element]] = [:]
         for element in self {
@@ -20,16 +20,16 @@ extension Array {
         }
         return categories
     }
-    
+
 }
 
 extension Array where Element: Equatable {
-    
+
     // Remove first collection element that is equal to the given `object`:
     mutating func remove(object: Element) {
         if let index = index(of: object) {
             remove(at: index)
         }
     }
-    
+
 }

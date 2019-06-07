@@ -18,7 +18,7 @@ class ALKDateSectionHeaderView: UIView {
             dateView.layer.cornerRadius = dateView.frame.size.height / 2.0
         }
     }
-    
+
     // MARK: - Lifecycle
     class func instanceFromNib() -> ALKDateSectionHeaderView {
         guard let view = UINib(nibName: ALKDateSectionHeaderView.nibName, bundle: Bundle.applozic).instantiate(withOwner: nil, options: nil).first as? ALKDateSectionHeaderView else {
@@ -26,7 +26,7 @@ class ALKDateSectionHeaderView: UIView {
         }
         return view
     }
-    
+
     // MARK: - Methods of class
     // MARK: ChatDate
     func setupDate(withDateFormat date: String) {

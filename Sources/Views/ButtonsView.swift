@@ -39,7 +39,7 @@ public class ButtonsView: UIView {
             mainStackView.alignment = stackViewAlignment
         }
     }
-    public var buttonSelected: ((_ index: Int, _ name: String) -> ())?
+    public var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -115,4 +115,3 @@ public class ButtonsView: UIView {
         return button
     }
 }
-
