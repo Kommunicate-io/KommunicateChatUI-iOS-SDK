@@ -1871,18 +1871,18 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
                 let path = videos[index - images.count]
-                let (_, indexPath) = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary, metadata : self.configuration.messageMetadata)
+                guard let indexPath = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary, metadata : self.configuration.messageMetadata).1 else { continue }
                 self.tableView.beginUpdates()
-                self.tableView.insertSections(IndexSet(integer: (indexPath?.section)!), with: .automatic)
+                self.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
                 self.tableView.endUpdates()
                 self.tableView.scrollToBottom(animated: false)
-                guard let newIndexPath = indexPath, let cell = tableView.cellForRow(at: newIndexPath) as? ALKMyVideoCell else { return }
+                guard let cell = tableView.cellForRow(at: indexPath) as? ALKMyVideoCell else { return }
                 guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
                     let notificationView = ALNotificationView()
                     notificationView.noDataConnectionNotificationView()
                     return
                 }
-                self.viewModel.uploadVideo(view: cell, indexPath: newIndexPath)
+                self.viewModel.uploadVideo(view: cell, indexPath: indexPath)
             }
 
         }

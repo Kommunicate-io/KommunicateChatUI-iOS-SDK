@@ -160,15 +160,18 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             exportSession!.outputURL = fileurl
             exportSession!.outputFileType = AVFileType.mp4 //file type encode goes here, you can change it for other types
 
-            print("GOT EXPORT SESSION")
-            exportSession!.exportAsynchronously {
-                print("EXPORT DONE")
-                self.selectedVideos[indexPath.row] = fileurl.path
+            exportSession!.exportAsynchronously() {
+                switch exportSession!.status {
+                case .completed:
+                    print("Video exported successfully")
+                    self.selectedVideos[indexPath.row] = fileurl.path
+                case .failed, .cancelled:
+                    print("Error while selecting video \(String(describing: exportSession?.error))")
+                default:
+                    print("Video exporting status \(String(describing: exportSession?.status))")
+                    break
+                }
             }
-
-            print("progress: \(exportSession!.progress)")
-            print("error: \(String(describing: exportSession?.error))")
-            print("status: \(exportSession!.status.rawValue)")
         }
     }
 
