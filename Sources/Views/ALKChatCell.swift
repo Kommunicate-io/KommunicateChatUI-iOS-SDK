@@ -490,8 +490,8 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     private func getRandomColor() -> UIColor {
         let colors = [0x19A5E4, 0x0EB04B, 0xF3B618, 0xE4E9EC]
-        let x = randomInt(min: 0, max: 3)
-        return UIColor.init(netHex: colors[x])
+        let randomNum = randomInt(min: 0, max: 3)
+        return UIColor.init(netHex: colors[randomNum])
     }
 
     func randomInt(min: Int, max:Int) -> Int {

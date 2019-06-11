@@ -20,6 +20,7 @@ public struct AutoCompleteItem {
     }
 }
 
+// swiftlint:disable:next type_body_length
 open class ALKChatBar: UIView, Localizable {
 
     var configuration: ALKConfiguration!
@@ -366,6 +367,7 @@ open class ALKChatBar: UIView, Localizable {
 
     public var prefix: String?
 
+    // swiftlint:disable:next function_body_length
     private func setupConstraints(
         maxLength: CGFloat = max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)) {
         plusButton.isHidden = true
@@ -381,7 +383,25 @@ open class ALKChatBar: UIView, Localizable {
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
 
-        addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, contactButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
+        addViewsForAutolayout(views: [
+            headerView,
+            bottomGrayView,
+            plusButton,
+            photoButton,
+            grayView,
+            textView,
+            sendButton,
+            micButton,
+            lineImageView,
+            videoButton,
+            galleryButton,
+            locationButton,
+            contactButton,
+            lineView,
+            frameView,
+            placeHolder,
+            soundRec,
+            poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

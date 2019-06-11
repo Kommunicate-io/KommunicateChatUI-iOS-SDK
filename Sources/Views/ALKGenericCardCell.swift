@@ -222,13 +222,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
             let urlString = header.imgSrc,
             let _ = URL(string: urlString)
         else {
-            if let text = header.overlayText, text.count > 0 {
+            if let text = header.overlayText, !text.isEmpty {
                 return Config.OverlayText.height
             } else {
                 return CGFloat(0)
             }
-
-            return (header.overlayText != nil && header.overlayText!.count > 0) ? Config.OverlayText.height : CGFloat(0)
         }
         return Config.imageHeight
     }
@@ -473,8 +471,8 @@ public class VerticalAlignLabel: UILabel {
     }
 
     override public func drawText(in rect: CGRect) {
-        let r = self.textRect(forBounds: rect, limitedToNumberOfLines: self.numberOfLines)
-        super.drawText(in: r)
+        let textRect = self.textRect(forBounds: rect, limitedToNumberOfLines: self.numberOfLines)
+        super.drawText(in: textRect)
     }
 }
 

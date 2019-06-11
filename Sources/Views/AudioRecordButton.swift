@@ -19,11 +19,11 @@ public protocol ALKAudioRecorderProtocol: class {
 open class AudioRecordButton: UIButton {
 
     public enum ALKSoundRecorderState {
-        case Recording
-        case None
+        case recording
+        case none
     }
 
-    public var states : ALKSoundRecorderState = .None {
+    public var states : ALKSoundRecorderState = .none {
         didSet {
             self.invalidateIntrinsicContentSize()
             self.setNeedsLayout()
@@ -142,25 +142,25 @@ open class AudioRecordButton: UIButton {
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
             audioRecorder.delegate = self
             audioRecorder.record()
-            states = .Recording
+            states = .recording
         } catch {
             stopAudioRecord()
         }
     }
 
     @objc func cancelAudioRecord() {
-        if states == .Recording {
+        if states == .recording {
             audioRecorder.stop()
             audioRecorder = nil
-            states = .None
+            states = .none
         }
     }
 
     @objc fileprivate func stopAudioRecord() {
-        if states == .Recording {
+        if states == .recording {
             audioRecorder.stop()
             audioRecorder = nil
-            states = .None
+            states = .none
             //play back?
             if audioFilename.isFileURL {
                 guard let soundData = NSData(contentsOf: audioFilename) else {return}
@@ -189,7 +189,7 @@ open class AudioRecordButton: UIButton {
 
             case .changed:
                 if location.y < -10 || location.y > height+10 {
-                    if states == .Recording {
+                    if states == .recording {
                         delegate.cancelRecordingAudio()
                         cancelAudioRecord()
                     }
@@ -203,7 +203,7 @@ open class AudioRecordButton: UIButton {
                 stopAudioRecord()
 
             case .failed, .possible ,.cancelled :
-                if states == .Recording {
+                if states == .recording {
                     stopAudioRecord()
                 } else {
                     delegate.cancelRecordingAudio()

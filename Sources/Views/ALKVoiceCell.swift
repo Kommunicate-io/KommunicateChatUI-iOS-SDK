@@ -262,7 +262,10 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
         let dbService = ALMessageDBService()
-        guard let messages = dbService.getAllMessagesWithAttachment(forContact: viewModel?.contactId, andChannelKey: viewModel?.channelKey, onlyDownloadedAttachments: true) as? [ALMessage] else { return }
+        guard let messages = dbService.getAllMessagesWithAttachment(
+            forContact: viewModel?.contactId,
+            andChannelKey: viewModel?.channelKey,
+            onlyDownloadedAttachments: true) as? [ALMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages )

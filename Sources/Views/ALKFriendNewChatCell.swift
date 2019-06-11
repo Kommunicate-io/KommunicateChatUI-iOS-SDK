@@ -74,9 +74,9 @@ class ALKFriendNewChatCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    func setFriendCellDelegate(cellDelegate:ALKFriendCellProtocol,IndexPath:IndexPath) {
+    func setFriendCellDelegate(cellDelegate:ALKFriendCellProtocol, indexPath:IndexPath) {
         self.delegate = cellDelegate
-        self.indexPath = IndexPath
+        self.indexPath = indexPath
     }
 
     func update(friend: ALKContactProtocol) {

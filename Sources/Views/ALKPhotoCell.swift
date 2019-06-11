@@ -90,7 +90,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     var url: URL?
-    enum state {
+    enum State {
         case upload(filePath: String)
         case uploading(filePath: String)
         case uploaded
@@ -136,9 +136,9 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         if viewModel.isMyMessage {
             if viewModel.isSent || viewModel.isAllRead || viewModel.isAllReceived {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
-                    updateView(for: state.downloaded(filePath: filePath))
+                    updateView(for: State.downloaded(filePath: filePath))
                 } else {
-                    updateView(for: state.download)
+                    updateView(for: State.download)
                 }
             } else {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
@@ -147,9 +147,9 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             }
         } else {
             if let filePath = viewModel.filePath, !filePath.isEmpty {
-                updateView(for: state.downloaded(filePath: filePath))
+                updateView(for: State.downloaded(filePath: filePath))
             } else {
-                updateView(for: state.download)
+                updateView(for: State.download)
             }
         }
         timeLabel.text   = viewModel.time
@@ -163,7 +163,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
         let dbService = ALMessageDBService()
-        guard let messages = dbService.getAllMessagesWithAttachment(forContact: viewModel?.contactId, andChannelKey: viewModel?.channelKey, onlyDownloadedAttachments: true) as? [ALMessage] else { return }
+        guard let messages = dbService.getAllMessagesWithAttachment(
+            forContact: viewModel?.contactId,
+            andChannelKey: viewModel?.channelKey,
+            onlyDownloadedAttachments: true) as? [ALMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages )
@@ -259,13 +262,13 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         downloadTapped?(true)
     }
 
-    func updateView(for state: state) {
+    func updateView(for state: State) {
         DispatchQueue.main.async {
             self.updateView(state: state)
         }
     }
 
-    private func updateView(state: state) {
+    private func updateView(state: State) {
         switch state {
         case .upload(let filePath):
             frontView.isUserInteractionEnabled = false
@@ -421,7 +424,7 @@ extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
         if task.uploadError == nil && task.completed == true && task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: state.uploaded)
+                self.updateView(for: State.uploaded)
             }
         } else {
             DispatchQueue.main.async {

@@ -52,7 +52,11 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
             var (r1, g1, b1, a1) = (zero, zero, zero, zero)
             minMax.1.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
 
-            return UIColor(red: lerp(value: clampedValue, minMax: (r0, r1)), green: lerp(value: clampedValue, minMax: (g0, g1)), blue: lerp(value: clampedValue, minMax: (b0, b1)), alpha: lerp(value: clampedValue, minMax: (a0, a1)))
+            return UIColor(
+                red: lerp(value: clampedValue, minMax: (r0, r1)),
+                green: lerp(value: clampedValue, minMax: (g0, g1)),
+                blue: lerp(value: clampedValue, minMax: (b0, b1)),
+                alpha: lerp(value: clampedValue, minMax: (a0, a1)))
         }
 
         static func mod(value: Double, range: Double, minMax: (Double, Double)) -> Double {
@@ -414,6 +418,7 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
             super.init(coder: aDecoder)
         }
 
+        // swiftlint:disable:next function_body_length
         override func draw(in ctx: CGContext) {
             UIGraphicsPushContext(ctx)
 
@@ -485,14 +490,15 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
                     color = colorsArray[0]
                 } else {
                     // lerpColorMode is true
+                    // swiftlint:disable:next identifier_name
                     let t = CGFloat(reducedAngle) / 360
                     let steps = colorsArray.count - 1
                     let step = 1 / CGFloat(steps)
-                    for i in 1...steps {
-                        let fi = CGFloat(i)
-                        if (t <= fi * step || i == steps) {
+                    for index in 1...steps {
+                        let fi = CGFloat(index)
+                        if (t <= fi * step || index == steps) {
                             let colorT = Utility.inverseLerp(value: t, minMax: ((fi - 1) * step, fi * step))
-                            color = Utility.colorLerp(value: colorT, minMax: (colorsArray[i - 1], colorsArray[i]))
+                            color = Utility.colorLerp(value: colorT, minMax: (colorsArray[index - 1], colorsArray[index]))
                             break
                         }
                     }

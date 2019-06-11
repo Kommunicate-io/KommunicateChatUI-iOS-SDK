@@ -788,6 +788,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         let latLonArgument = String(format: "%f,%f", lat, lon)
         guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey()
             else { return nil }
+        // swiftlint:disable:next line_length
         let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
         return URL(string: urlString)
 

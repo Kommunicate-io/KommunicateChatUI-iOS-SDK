@@ -11,7 +11,7 @@ import Foundation
 // MARK: - ALKMyPhotoPortalCell
 final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
-    enum state {
+    enum State {
         case upload
         case uploading
         case uploaded

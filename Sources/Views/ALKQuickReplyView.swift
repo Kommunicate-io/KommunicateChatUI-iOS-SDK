@@ -94,7 +94,7 @@ public class ALKQuickReplyView: UIView {
             width += button.buttonWidth()
 
             if width >= maxWidth {
-                guard subviews.count > 0 else {
+                guard !subviews.isEmpty else {
                     let stackView = horizontalStackView(subviews: [button])
                     mainStackView.addArrangedSubview(stackView)
                     width = 0

@@ -125,10 +125,10 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
             let viewFrame = view.frame
 
             let location = tap.location(in: view)
-            let w = viewFrame.size.width/2.0
-            let h = viewFrame.size.height/2.0
+            let viewWidth = viewFrame.size.width/2.0
+            let viewHeight = viewFrame.size.height/2.0
 
-            let rect = CGRect(x: location.x - (w/2), y: location.y - (h/2), width: w, height: h)
+            let rect = CGRect(x: location.x - (viewWidth/2), y: location.y - (viewHeight/2), width: viewWidth, height: viewHeight)
 
             if self.scrollView.minimumZoomScale == self.scrollView.zoomScale {
                 self.scrollView.zoom(to: rect, animated: false)
