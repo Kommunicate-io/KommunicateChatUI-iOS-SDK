@@ -38,9 +38,9 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         cell.update(viewModel: message, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
         cell.chatCellDelegate = self
     })
+    public weak var delegate: ALKConversationListTableViewDelegate?
 
     //MARK: - PRIVATE PROPERTIES
-    weak var delegate: ALKConversationListTableViewDelegate?
     fileprivate var configuration: ALKConfiguration
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
