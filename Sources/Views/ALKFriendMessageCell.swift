@@ -261,9 +261,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
-        /// We add 5 for spacing between cell
-        let spacing: CGFloat = 5
-        let minimumHeight = Padding.AvatarImage.top + Padding.AvatarImage.height + spacing
+        let minimumHeight = Padding.AvatarImage.top + Padding.AvatarImage.height + 5
 
         /// Calculating available width for messageView
         let leftSpacing = Padding.AvatarImage.left + Padding.AvatarImage.width + Padding.BubbleView.left + bubbleViewLeftPadding

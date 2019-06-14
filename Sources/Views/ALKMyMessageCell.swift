@@ -229,18 +229,6 @@ open class ALKMyMessageCell: ALKMessageCell {
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
-
-        // TODO: need to find a better way to calculate the
-        // minimum height based on font set and other params.
-        // Maybe create a sample viewModel and pass a couple of words
-        // as a message.
-        var minimumHeight: CGFloat = 0.0
-        if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.edge{
-            minimumHeight = 45.0
-        }else if ALKMessageStyle.sentBubble.style == ALKMessageStyle.BubbleStyle.round{
-            minimumHeight = 75.0
-        }
-
         /// Calculating messageHeight
         let leftSpacing = Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
         let rightSpacing = Padding.BubbleView.right + bubbleViewRightPadding
@@ -251,7 +239,7 @@ open class ALKMyMessageCell: ALKMessageCell {
 
         let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
 
-        let totalHeight = max((messageHeight + heightPadding), minimumHeight)
+        let totalHeight = messageHeight + heightPadding
         guard
             let metadata = viewModel.metadata,
             let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
