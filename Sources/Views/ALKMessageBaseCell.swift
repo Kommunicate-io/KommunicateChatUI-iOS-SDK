@@ -21,8 +21,28 @@ class ALKImageView: UIImageView {
 
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
-    /// Dummy view required to calculate exact height.
+    /// Dummy view required to calculate height for normal text.
     fileprivate static var dummyMessageView: ALKTextView = {
+        let textView = ALKTextView.init(frame: .zero)
+        textView.isUserInteractionEnabled = true
+        textView.isSelectable = true
+        textView.isEditable = false
+        textView.dataDetectorTypes = .link
+        textView.linkTextAttributes = [.foregroundColor: UIColor.blue,
+                                       .underlineStyle: NSUnderlineStyle.single.rawValue]
+        textView.isScrollEnabled = false
+        textView.delaysContentTouches = false
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.contentInset = .zero
+        return textView
+    }()
+
+    /// Dummy view required to calculate height for attributed text.
+    /// Required because we are using static textview which doesn't clear attributes
+    /// once attributed string is used.
+    /// See this question https://stackoverflow.com/q/21731207/6671572
+    fileprivate static var dummyAttributedMessageView: ALKTextView = {
         let textView = ALKTextView.init(frame: .zero)
         textView.isUserInteractionEnabled = true
         textView.isSelectable = true
@@ -190,7 +210,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         let attributes: [NSAttributedString.Key : Any]
             = [.paragraphStyle: ALKMessageCell.paragraphStyle]
         mutableText.addAttributes(attributes, range: NSMakeRange(0, mutableText.length))
-        return messageHeight + TextViewSizeCalculator.height(dummyMessageView, attributedText: mutableText, maxWidth: width)
+        return messageHeight + TextViewSizeCalculator.height(dummyAttributedMessageView, attributedText: mutableText, maxWidth: width)
     }
 
     func menuCopy(_ sender: Any) {

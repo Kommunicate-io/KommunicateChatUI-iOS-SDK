@@ -7,6 +7,8 @@
 
 import UIKit
 
+/// This is used since boundingRect method doesn't give accurate size for TextView.
+/// Here we use sizeThatFits of textView.
 struct TextViewSizeCalculator {
 
     static func height(_ textView: UITextView,
