@@ -32,7 +32,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
-        textView.textContainerInset = .zero
+        textView.textContainerInset = MessageInsets.normal
         textView.textContainer.lineFragmentPadding = 0
         textView.contentInset = .zero
         return textView
@@ -52,7 +52,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
-        textView.textContainerInset = .zero
+        textView.textContainerInset = MessageInsets.html
         textView.textContainer.lineFragmentPadding = 0
         textView.contentInset = .zero
         return textView
@@ -68,11 +68,16 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
-        textView.textContainerInset = .zero
+        textView.textContainerInset = MessageInsets.normal
         textView.textContainer.lineFragmentPadding = 0
         textView.contentInset = .zero
         return textView
     }()
+
+    struct MessageInsets {
+        static let normal = UIEdgeInsets.zero
+        static let html = UIEdgeInsets(top: 5, left: 0, bottom: -15, right: 0)
+    }
 
     var timeLabel: UILabel = {
         let lb = UILabel()
@@ -162,8 +167,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
         switch viewModel.messageType {
         case .text, .quickReply:
+            self.messageView.textContainerInset = MessageInsets.normal
             self.messageView.text = message
         case .html:
+            self.messageView.textContainerInset = MessageInsets.html
             let attributes: [NSAttributedString.Key : Any] =
                 [.paragraphStyle: ALKMessageCell.paragraphStyle]
             guard let htmlText = message.data.attributedString else { return }

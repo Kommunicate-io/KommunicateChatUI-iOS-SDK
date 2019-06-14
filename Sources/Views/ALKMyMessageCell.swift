@@ -124,7 +124,7 @@ open class ALKMyMessageCell: ALKMessageCell {
                 constant: Padding.PreviewImageView.top),
             previewImageView.trailingAnchor.constraint(
                 equalTo: replyView.trailingAnchor,
-                constant: Padding.PreviewImageView.right),
+                constant: -Padding.PreviewImageView.right),
             previewImageView.heightAnchor.constraintEqualToAnchor(
                 constant: 0,
                 identifier: ConstraintIdentifier.PreviewImage.height),
