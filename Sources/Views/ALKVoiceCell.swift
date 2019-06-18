@@ -140,7 +140,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
         if viewModel.voiceCurrentState == .pause && viewModel.voiceCurrentDuration > 0 {
             actionButton.isSelected = false
-            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+            playTimeLabel.text = getTimeString(secLeft: viewModel.voiceTotalDuration)
         } else if viewModel.voiceCurrentState == .playing {
             print("identifier: ", viewModel.identifier)
             actionButton.isSelected = true

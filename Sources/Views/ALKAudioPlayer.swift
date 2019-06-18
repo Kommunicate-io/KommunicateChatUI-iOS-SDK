@@ -13,7 +13,7 @@ import Applozic
 protocol ALKAudioPlayerProtocol: class {
     func audioPlaying(maxDuratation:CGFloat,atSec:CGFloat,lastPlayTrack:String)
     func audioStop(maxDuratation:CGFloat,lastPlayTrack:String)
-    //func audioPause(maxDuratation:CGFloat,atSec:CGFloat)
+    func audioPause(maxDuration:CGFloat, atSec:CGFloat, identifier: String)
 }
 
 final class ALKAudioPlayer {
@@ -84,7 +84,9 @@ final class ALKAudioPlayer {
         if audioData != nil,secLeft > 0 {
             timer.invalidate()
             audioPlayer.pause()
-        } else {
+            audiDelegate?.audioPause(maxDuration: maxDuration, atSec: secLeft, identifier: audioLastPlay)
+        }
+        else {
 
             timer.invalidate()
             audioPlayer.stop()

@@ -1652,12 +1652,15 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
             }
             NSLog("now it will be played")
             //now play
-            guard var currentVoice =  weakSelf.viewModel.messageForRow(identifier: identifier) else {return}
+            guard
+                var currentVoice =  weakSelf.viewModel.messageForRow(identifier: identifier),
+                let section = weakSelf.viewModel.sectionFor(identifier: identifier)
+            else { return }
             if currentVoice.voiceCurrentState == .playing {
                 currentVoice.voiceCurrentState = .pause
                 currentVoice.voiceCurrentDuration = weakSelf.audioPlayer.secLeft
                 weakSelf.audioPlayer.pauseAudio()
-                weakSelf.tableView.reloadData()
+                weakSelf.tableView.reloadSections([section], with: .none)
             } else {
                 NSLog("reset time to total duration")
                 //reset time to total duration
@@ -1672,7 +1675,7 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
                     NSLog("Start playing")
                     weakSelf.audioPlayer.setAudioFile(data: voice, delegate: weakSelf, playFrom: currentVoice.voiceCurrentDuration,lastPlayTrack:currentVoice.identifier)
                     currentVoice.voiceCurrentState = .playing
-                    weakSelf.tableView.reloadData()
+                    weakSelf.tableView.reloadSections([section], with: .none)
                 }
             }
         }
@@ -1713,7 +1716,22 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
                     currentVoice.voiceCurrentDuration = 0.0
                 }
             }
-            weakSelf.reloadVoiceCell()
+            guard let section = weakSelf.viewModel.sectionFor(identifier: lastPlayTrack) else { return }
+            weakSelf.tableView.reloadSections([section], with: .none)
+        }
+    }
+
+    func audioPause(maxDuration: CGFloat, atSec: CGFloat, identifier: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard
+                let weakSelf = self,
+                var currentVoice =  weakSelf.viewModel.messageForRow(identifier: identifier),
+                currentVoice.messageType == .voice,
+                let section = weakSelf.viewModel.sectionFor(identifier: identifier)
+            else { return }
+            currentVoice.voiceCurrentState = .pause
+            currentVoice.voiceCurrentDuration = atSec
+            weakSelf.tableView.reloadSections([section], with: .none)
         }
     }
 

@@ -223,11 +223,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return messageModel
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    open func heightForRow(
-        indexPath: IndexPath,
-        cellFrame: CGRect,
-        contentHeights: [String: CGFloat]) -> CGFloat {
+    func sectionFor(identifier: String) -> Int? {
+        return messageModels.firstIndex { $0.identifier == identifier }
+    }
+
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect,contentHeights: Dictionary<String,CGFloat>) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         switch messageModel.messageType {
         case .text, .html:
