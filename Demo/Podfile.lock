@@ -53,7 +53,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Applozic: 6bf1a748c69ca5197e7524b095c0f8837d6be4f3
-  ApplozicSwift: 40c908ab501accb5aff1f80b93c24ce8aac7673d
+  ApplozicSwift: cd7e7be52db40c7b8c9b8dbaae14a579801e386c
   iOSSnapshotTestCase: 2d51aa06775e95cecb0a1fb9c5c159ccd1dd4596
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   MGSwipeTableCell: 616700eb0ffd1c611ba909066cb7fd739790a0a7
@@ -65,4 +65,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: dbde6947627e1eeb9a3494c38be1076a3f13bd21
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.7.2

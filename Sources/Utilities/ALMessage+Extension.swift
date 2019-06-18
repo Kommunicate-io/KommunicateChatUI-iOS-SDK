@@ -286,28 +286,42 @@ extension ALMessage {
         guard messageType == .location else {
             return nil
         }
-        if let message = message,
-            let jsonObject = try? JSONSerialization.jsonObject(
-                with: message.data(using: .utf8)!,
-                options: .mutableContainers) as! [String: Any] {
 
-            // Check if type is double or string
-            if let lat = jsonObject["lat"] as? Double,
-                let lon = jsonObject["lon"] as? Double {
-                let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                return Geocode(coordinates: location)
-            } else {
-                guard let latString = jsonObject["lat"] as? String,
-                    let lonString = jsonObject["lon"] as? String,
-                    let lat = Double(latString),
-                    let lon = Double(lonString) else {
-                        return nil
-                }
-                let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                return Geocode(coordinates: location)
+        // Returns lat, long
+        func getCoordinates(from message: String) -> (Any, Any)? {
+            guard let messageData = message.data(using: .utf8),
+                let jsonObject = try? JSONSerialization.jsonObject(
+                with: messageData,
+                options: .mutableContainers),
+                let messageJSON = jsonObject as? [String: Any] else {
+                    return nil
             }
+            guard let lat = messageJSON["lat"],
+                let lon = messageJSON["lon"] else {
+                return nil
+            }
+            return (lat, lon)
         }
-        return nil
+
+        guard let message = message,
+            let (lat, lon) = getCoordinates(from: message) else {
+                return nil
+        }
+        // Check if type is double or string
+        if let lat = lat as? Double,
+            let lon = lon as? Double {
+            let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            return Geocode(coordinates: location)
+        } else {
+            guard let latString = lat as? String,
+                let lonString = lon as? String,
+                let lat = Double(latString),
+                let lon = Double(lonString) else {
+                    return nil
+            }
+            let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            return Geocode(coordinates: location)
+        }
     }
 
     var fileMetaInfo: ALFileMetaInfo? {

@@ -1,5 +1,5 @@
 //
-//  ParticipantSelectionViewContoller.swift
+//  ALKParticipantSelectionViewContoller.swift
 //  
 //
 //  Created by Mukesh Thawani on 04/05/17.
@@ -17,8 +17,8 @@ protocol ALKInviteButtonProtocol: class {
     func getButtonAppearance(invitedFriendCount count: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool)
 }
 
-
-class ParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
+// swiftlint:disable:next type_name
+class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
     // MARK: - UI Stuff
     @IBOutlet private var btnInvite: UIButton!
@@ -276,7 +276,7 @@ class ParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
 }
 
-extension ParticipantSelectionViewContoller: UITableViewDelegate, UITableViewDataSource {
+extension ALKParticipantSelectionViewContoller: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -370,7 +370,7 @@ extension ParticipantSelectionViewContoller: UITableViewDelegate, UITableViewDat
     */
 }
 
-extension ParticipantSelectionViewContoller: UISearchResultsUpdating, UISearchBarDelegate {
+extension ALKParticipantSelectionViewContoller: UISearchResultsUpdating, UISearchBarDelegate {
 
     func updateSearchResults(for searchController: UISearchController) {
         filterContentForSearchText(searchText: searchController.searchBar.text!)
@@ -396,7 +396,7 @@ extension ParticipantSelectionViewContoller: UISearchResultsUpdating, UISearchBa
     }
 }
 
-extension ParticipantSelectionViewContoller: ALKInviteButtonProtocol {
+extension ALKParticipantSelectionViewContoller: ALKInviteButtonProtocol {
 
     func getButtonAppearance(invitedFriendCount friendCount: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool) {
         let isEnabled = (friendCount > 0) ? true: false
