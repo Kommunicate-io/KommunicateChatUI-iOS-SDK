@@ -7,14 +7,17 @@
 
 import UIKit
 
-class TopAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
+class TopAlignedFlowLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let attributes = super.layoutAttributesForElements(in: rect)?
             .map { $0.copy() } as? [UICollectionViewLayoutAttributes]
 
         attributes?
-            .filter { $0.representedElementCategory == .cell } /// Filter collectionView cells, not header,footer etc.
-            .reduce([:]) { /// combine attributes to dictionary [CGFloat : Attribute], where $0 is center y position and $1 is attribute.
+            // Filter collectionView cells, not header,footer etc.
+            .filter { $0.representedElementCategory == .cell }
+            .reduce([:]) {
+                // combine attributes to dictionary [CGFloat : Attribute],
+                // where $0 is center y position and $1 is attribute.
                 $0.merging([ceil($1.center.y): [$1]]) {
                     $0 + $1
                 }
@@ -37,8 +40,7 @@ class TopAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
     }
 }
 
-
-class TopRightAlignedCollectionViewFlowLayout: TopAlignedCollectionViewFlowLayout {
+class TopRightAlignedFlowLayout: TopAlignedFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let attributes = super.layoutAttributesForElements(in: rect)?
             .map { $0.copy() } as? [UICollectionViewLayoutAttributes]

@@ -8,7 +8,7 @@
 import Foundation
 import Applozic
 
-class ALKFileUtils: NSObject{
+class ALKFileUtils: NSObject {
 
     func getFileName(filePath:String?,fileMeta: ALFileMetaInfo?) -> String {
         guard let fileMetaInfo = fileMeta, let fileName = fileMetaInfo.name else {
@@ -37,12 +37,12 @@ class ALKFileUtils: NSObject{
             return String(format: "%.1f KB", floatSize)
         }
 
-        floatSize = floatSize / 1024
+        floatSize /= 1024
         if floatSize < 1023 {
             return String(format: "%.1f MB", floatSize)
         }
 
-        floatSize = floatSize / 1024
+        floatSize /= 1024
         return String(format: "%.1f GB", floatSize)
     }
 
@@ -61,8 +61,7 @@ class ALKFileUtils: NSObject{
         return docDirPath.appendingPathComponent(fileName)
     }
 
-
-    func isSupportedFileType(filePath: String?) -> Bool{
+    func isSupportedFileType(filePath: String?) -> Bool {
         guard filePath != nil else {
             return false
         }

@@ -12,8 +12,8 @@ import AVKit
 
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
                     ALKReplyMenuItemProtocol {
-    
-    enum state {
+
+    enum State {
         case download
         case downloading(progress: Double, totalCount: Int64)
         case downloaded(filePath: String)
@@ -21,11 +21,11 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     var photoView: UIImageView = {
-        let mv = UIImageView()
-        mv.backgroundColor = .clear
-        mv.contentMode = .scaleAspectFill
-        mv.clipsToBounds = true
-        return mv
+        let imageView = UIImageView()
+        imageView.backgroundColor = .clear
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
     }()
 
     var timeLabel: UILabel = {
@@ -70,7 +70,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     var bubbleView: UIView = {
         let bv = UIView()
-        bv.clipsToBounds = true;
+        bv.clipsToBounds = true
         bv.isUserInteractionEnabled = false
         return bv
     }()
@@ -90,12 +90,12 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return view
     }()
 
-    var url: URL? = nil
+    var url: URL?
 
-    var uploadTapped:((Bool) ->())?
-    var uploadCompleted: ((_ responseDict: Any?) ->())?
+    var uploadTapped:((Bool) ->Void)?
+    var uploadCompleted: ((_ responseDict: Any?) ->Void)?
 
-    var downloadTapped:((Bool) ->())?
+    var downloadTapped:((Bool) ->Void)?
 
     class func topPadding() -> CGFloat {
         return 12
@@ -126,18 +126,18 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         if viewModel.isMyMessage {
             if viewModel.isSent || viewModel.isAllRead || viewModel.isAllReceived {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
-                    updateView(for: state.downloaded(filePath: filePath))
+                    updateView(for: State.downloaded(filePath: filePath))
                 } else {
-                    updateView(for: state.download)
+                    updateView(for: State.download)
                 }
             } else {
                 updateView(for: .upload)
             }
         } else {
             if let filePath = viewModel.filePath, !filePath.isEmpty {
-                updateView(for: state.downloaded(filePath: filePath))
+                updateView(for: State.downloaded(filePath: filePath))
             } else {
-                updateView(for: state.download)
+                updateView(for: State.download)
             }
         }
 
@@ -207,7 +207,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
-    
+
     deinit {
         actionButton.removeTarget(self, action: #selector(actionTapped), for: .touchUpInside)
     }
@@ -215,7 +215,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
     }
-
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
         downloadTapped?(true)
@@ -227,7 +226,10 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
         let dbService = ALMessageDBService()
-        guard let messages = dbService.getAllMessagesWithAttachment(forContact: viewModel?.contactId, andChannelKey: viewModel?.channelKey, onlyDownloadedAttachments: true) as? [ALMessage] else { return }
+        guard let messages = dbService.getAllMessagesWithAttachment(
+            forContact: viewModel?.contactId,
+            andChannelKey: viewModel?.channelKey,
+            onlyDownloadedAttachments: true) as? [ALMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages )
@@ -244,7 +246,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         uploadTapped?(true)
     }
 
-    fileprivate func updateView(for state: state) {
+    fileprivate func updateView(for state: State) {
         switch state {
         case .download:
             uploadButton.isHidden = true
@@ -324,7 +326,7 @@ extension ALKVideoCell: ALKHTTPManagerUploadDelegate {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
         if task.uploadError == nil && task.completed == true && task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: state.downloaded(filePath: task.filePath ?? ""))
+                self.updateView(for: State.downloaded(filePath: task.filePath ?? ""))
             }
         } else {
             DispatchQueue.main.async {

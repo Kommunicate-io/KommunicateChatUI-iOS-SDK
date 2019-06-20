@@ -1,4 +1,3 @@
-
 //  FriendLandscapeCell.swift
 //  ApplozicSwift
 //
@@ -10,7 +9,7 @@ import Foundation
 
 // MARK: - FriendPhotoLandscapeCell
 final class ALKFriendPhotoLandscapeCell: ALKFriendPhotoCell {
-    
+
     override func setupViews() {
         super.setupViews()
         let width = UIScreen.main.bounds.width

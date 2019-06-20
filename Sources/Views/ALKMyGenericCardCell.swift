@@ -58,7 +58,7 @@ open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
     }
 
     private func setupCollectionView() {
-        let layout: TopRightAlignedCollectionViewFlowLayout = TopRightAlignedCollectionViewFlowLayout()
+        let layout: TopRightAlignedFlowLayout = TopRightAlignedFlowLayout()
         layout.minimumInteritemSpacing = 10
         layout.scrollDirection = .horizontal
         collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
@@ -66,7 +66,6 @@ open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
         collectionView.backgroundColor = .clear
     }
 }
-
 
 open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
     open var collectionView: ALKGenericCardCollectionView!

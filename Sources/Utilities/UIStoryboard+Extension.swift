@@ -19,7 +19,7 @@ extension StoryboardIdentifiable where Self: UIViewController {
 }
 
 extension UIViewController: StoryboardIdentifiable {
-    
+
 }
 
 extension UIStoryboard {
@@ -44,24 +44,24 @@ extension UIStoryboard {
         case video = "CustomVideoCapture"
         case picker = "CustomPicker"
         case mediaViewer = "MediaViewer"
-        case MapView = "MapView"
+        case mapView = "MapView"
     }
-    
+
     convenience init(storyboard: Storyboard, bundle: Bundle? = nil) {
         self.init(name: storyboard.rawValue, bundle: bundle)
     }
-    
+
     class func name(storyboard: Storyboard, bundle: Bundle? = nil) -> UIStoryboard {
         return UIStoryboard(name: storyboard.rawValue, bundle: bundle)
     }
-    
+
     func instantiateViewController<T: UIViewController>() -> T where T: StoryboardIdentifiable {
         let optionalVC = self.instantiateViewController(withIdentifier: T.storyboardIdentifier)
-        
+
         guard let vc = optionalVC as? T else {
             fatalError("Couldn't instantiate view controller with identifier \(T.storyboardIdentifier)")
         }
-        
+
         return vc
     }
 }

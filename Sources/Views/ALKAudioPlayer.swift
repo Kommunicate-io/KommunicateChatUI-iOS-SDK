@@ -28,8 +28,7 @@ final class ALKAudioPlayer {
     var maxDuration:CGFloat = 0.0
     weak var audiDelegate: ALKAudioPlayerProtocol?
 
-    func playAudio()
-    {
+    func playAudio() {
         if audioData != nil && maxDuration > 0 {
 
             if secLeft == 0 {
@@ -46,8 +45,7 @@ final class ALKAudioPlayer {
                     // Fallback on earlier versions
                    ALAudioSession().getWithPlayback(true)
                 }
-            }
-            catch {
+            } catch {
             }
 
             audioPlayer.stop()
@@ -56,8 +54,7 @@ final class ALKAudioPlayer {
         }
     }
 
-    func playAudioFrom(atTime:CGFloat)
-    {
+    func playAudioFrom(atTime:CGFloat) {
         if audioData != nil  && maxDuration > 0 {
 
             if secLeft <= 0 {
@@ -73,8 +70,7 @@ final class ALKAudioPlayer {
                     // Fallback on earlier versions
                     ALAudioSession().getWithPlayback(true)
                 }
-            }
-            catch {
+            } catch {
             }
 
             audioPlayer.currentTime = TimeInterval.init(atTime)
@@ -88,8 +84,7 @@ final class ALKAudioPlayer {
         if audioData != nil,secLeft > 0 {
             timer.invalidate()
             audioPlayer.pause()
-        }
-        else {
+        } else {
 
             timer.invalidate()
             audioPlayer.stop()
@@ -100,8 +95,7 @@ final class ALKAudioPlayer {
         }
     }
 
-    func stopAudio()
-    {
+    func stopAudio() {
         if audioData != nil {
 
             if secLeft > 0 {
@@ -117,15 +111,13 @@ final class ALKAudioPlayer {
         }
     }
 
-    func getCurrentAudioTrack() -> String
-    {
+    func getCurrentAudioTrack() -> String {
         return audioLastPlay
     }
 
     @objc fileprivate func updateCounter() {
 
-        if secLeft <= 0
-        {
+        if secLeft <= 0 {
             secLeft = 0
             timer.invalidate()
             audioPlayer.stop()
@@ -133,9 +125,7 @@ final class ALKAudioPlayer {
             if audiDelegate != nil {
                 audiDelegate?.audioStop(maxDuratation: maxDuration,lastPlayTrack:audioLastPlay)
             }
-        }
-        else
-        {
+        } else {
             secLeft -= 1
             if audiDelegate != nil {
                 let timeLeft = audioPlayer.duration-audioPlayer.currentTime
@@ -144,8 +134,7 @@ final class ALKAudioPlayer {
         }
     }
 
-    func setAudioFile(data:NSData,delegate:ALKAudioPlayerProtocol,playFrom:CGFloat,lastPlayTrack:String)
-    {
+    func setAudioFile(data:NSData,delegate:ALKAudioPlayerProtocol,playFrom:CGFloat,lastPlayTrack:String) {
         //setup player
         do {
             audioData = data
@@ -164,8 +153,7 @@ final class ALKAudioPlayer {
                 let startFrom = maxDuration - playFrom
                 if playFrom <= 0 {
                     playAudio()
-                }
-                else  {
+                } else {
                     playAudioFrom(atTime: startFrom)
                 }
             }

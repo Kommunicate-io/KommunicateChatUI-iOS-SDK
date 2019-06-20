@@ -88,7 +88,7 @@ open class ALKMyEmailCell: UITableViewCell {
         emailViewHeight.constant = ALKEmailView.rowHeight(height)
     }
 
-    class func rowHeight(viewModel: ALKMessageViewModel, height: CGFloat?) ->  CGFloat {
+    class func rowHeight(viewModel: ALKMessageViewModel, height: CGFloat?) -> CGFloat {
         var totalHeight: CGFloat = 0
         totalHeight += Padding.TimeLabel.height + Padding.TimeLabel.top  /// time height
         totalHeight += ALKEmailView.rowHeight(height)
@@ -121,4 +121,3 @@ open class ALKMyEmailCell: UITableViewCell {
     }
 
 }
-

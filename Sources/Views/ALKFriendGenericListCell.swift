@@ -64,7 +64,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     }()
 
     public enum Padding {
-        enum mainStackView {
+        enum MainStackView {
             static var bottom: CGFloat = -10.0
             static var left: CGFloat = 10
             static var right: CGFloat = -95
@@ -74,7 +74,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     open var actionButtons = [UIButton]()
 
     open var template: ALKGenericListTemplate!
-    open var buttonSelected: ((_ index: Int, _ name: String) -> ())?
+    open var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
 
     private var items = [ALKGenericListTemplate]()
 
@@ -158,14 +158,14 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
         messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
-        
+
         /// TODO: Find alternative to layoutIfNeeded
         messageView.layoutIfNeeded()
 
-        mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true
-        mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
+        mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.MainStackView.left).isActive = true
+        mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.MainStackView.right).isActive = true
         mainStackView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 5).isActive = true
-        mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Padding.mainStackView.bottom).isActive = true
+        mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Padding.MainStackView.bottom).isActive = true
 
         itemTitleLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
         itemTitleLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: 0).isActive = true
@@ -184,8 +184,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     private func updateViewFor(_ buttons: [ALKGenericListTemplate]) {
         // Hide3 extra buttons
         actionButtons.enumerated().forEach {
-            if $0 >= buttons.count { $1.isHidden = true }
-            else { $1.isHidden = false; $1.setTitle(buttons[$0].title, for: .normal) }
+            if $0 >= buttons.count { $1.isHidden = true } else { $1.isHidden = false; $1.setTitle(buttons[$0].title, for: .normal) }
         }
     }
 

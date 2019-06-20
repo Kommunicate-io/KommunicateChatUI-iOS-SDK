@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - ALKFriendPhotoPortalCell
 final class ALKFriendPhotoPortalCell: ALKFriendPhotoCell {
-    
+
     override func setupViews() {
         super.setupViews()
         let width = UIScreen.main.bounds.width

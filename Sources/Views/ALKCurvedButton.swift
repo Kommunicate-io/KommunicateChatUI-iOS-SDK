@@ -26,7 +26,7 @@ public class ALKCurvedButton: UIButton {
     }
 
     public var index: Int?
-    public var buttonSelected: ((_ index: Int?, _ name: String)->())?
+    public var buttonSelected: ((_ index: Int?, _ name: String)->Void)?
 
     // MARK: - Initializers
     /// Initializer for curved button.

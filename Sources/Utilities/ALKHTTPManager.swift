@@ -40,8 +40,8 @@ class ALKHTTPManager: NSObject {
     static let shared = ALKHTTPManager()
     weak var downloadDelegate: ALKHTTPManagerDownloadDelegate?
     weak var uploadDelegate: ALKHTTPManagerUploadDelegate?
-    var uploadCompleted: ((_ responseDict: Any?, _ task: ALKUploadTask) ->())?
-    var downloadCompleted: ((_ task: ALKDownloadTask) ->())?
+    var uploadCompleted: ((_ responseDict: Any?, _ task: ALKUploadTask) ->Void)?
+    var downloadCompleted: ((_ task: ALKDownloadTask) ->Void)?
 
     var length: Int64 = 0
     var buffer:NSMutableData = NSMutableData()
@@ -56,7 +56,7 @@ class ALKHTTPManager: NSObject {
         static let paramForDefaultStorage = "files[]"
     }
 
-    func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?)->()) {
+    func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?)->Void) {
 
         guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.path, paramString: nil) as URLRequest? else { return }
 
@@ -81,7 +81,7 @@ class ALKHTTPManager: NSObject {
         request.url = uploadURL
 
         let task = URLSession.shared.dataTask(with: request) {
-            data, response, error in
+            data, _, error in
             if error == nil {
                 completion(data)
             } else {
@@ -169,7 +169,7 @@ class ALKHTTPManager: NSObject {
     }
 }
 
-extension ALKHTTPManager: URLSessionDataDelegate  {
+extension ALKHTTPManager: URLSessionDataDelegate {
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
         completionHandler(URLSession.ResponseDisposition.allow)

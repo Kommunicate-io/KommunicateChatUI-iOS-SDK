@@ -111,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         {
             let alRegisterUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
             alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { (response, error) in
-                print ("REGISTRATION_RESPONSE :: \(response)")
+                print ("REGISTRATION_RESPONSE :: \(String(describing: response))")
             })
         }
     }

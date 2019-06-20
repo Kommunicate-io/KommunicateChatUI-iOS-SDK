@@ -8,12 +8,11 @@
 
 import Foundation
 
-
 struct ALKAlertText {
     struct Title {
         static let Discard = NSLocalizedString("DiscardChangeTitle", value: SystemMessage.LabelName.DiscardChangeTitle, comment: "")
     }
-    
+
     struct Message {
         static let Discard = NSLocalizedString("DiscardChangeMessage", value: SystemMessage.Warning.DiscardChange, comment: "")
     }
@@ -21,7 +20,7 @@ struct ALKAlertText {
 
 enum ALKAlertInformation {
     case discardChange
-    
+
     var title: String {
         get {
             switch self {
@@ -30,7 +29,7 @@ enum ALKAlertInformation {
             }
         }
     }
-    
+
     var message: String {
         get {
             switch self {

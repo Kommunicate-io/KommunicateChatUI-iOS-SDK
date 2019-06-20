@@ -1,4 +1,3 @@
-
 //
 //  UIViewController+Extension.swift
 //  ApplozicSwift
@@ -10,31 +9,28 @@
 import Foundation
 import UIKit
 
-extension UIViewController
-{
-    @objc func hideKeyboard()
-    {
+extension UIViewController {
+    @objc func hideKeyboard() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(UIViewController.dismissKeyboard))
-        
+
         view.addGestureRecognizer(tap)
     }
-    
-    @objc func dismissKeyboard()
-    {
+
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    
+
     func alert(msg: String) {
     }
-    
+
     class func topViewController() -> UIViewController? {
         return self.topViewControllerWithRootViewController(rootViewController: UIApplication.shared.keyWindow?.rootViewController)
     }
-    
+
     class func topViewControllerWithRootViewController(rootViewController: UIViewController?) -> UIViewController? {
-        
+
         if rootViewController is UITabBarController {
             let control = rootViewController as! UITabBarController
             return self.topViewControllerWithRootViewController(rootViewController: control.selectedViewController)
@@ -44,17 +40,17 @@ extension UIViewController
         } else if let control = rootViewController?.presentedViewController {
             return self.topViewControllerWithRootViewController(rootViewController: control)
         }
-        
+
         return rootViewController
-        
+
     }
-    
+
     func add(_ child: UIViewController) {
         addChild(child)
         view.addSubview(child.view)
         child.didMove(toParent: self)
     }
-    
+
     func remove() {
         guard parent != nil else { return }
         willMove(toParent: nil)
@@ -62,4 +58,3 @@ extension UIViewController
         removeFromParent()
     }
 }
-

@@ -16,7 +16,7 @@ protocol ALKLocationCellDelegate: class {
 
 class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
                         ALKReplyMenuItemProtocol {
-    
+
     weak var delegate:ALKLocationCellDelegate?
 
     // MARK: - Declare Variables or Types
@@ -130,8 +130,18 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
         }
         let latLonArgument = String(format: "%f,%f", lat, lon)
         guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else { return }
+
+        // swiftlint:disable:next line_length
         let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
-        locationImageView.kf.setImage(with: URL(string: urlString), placeholder: UIImage(named: "map_no_data", in: Bundle.applozic, compatibleWith: nil), options: nil, progressBlock: nil, completionHandler: nil)
+        locationImageView.kf.setImage(
+            with: URL(string: urlString),
+            placeholder: UIImage(
+                named: "map_no_data",
+                in: Bundle.applozic,
+                compatibleWith: nil),
+            options: nil,
+            progressBlock: nil,
+            completionHandler: nil)
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
@@ -152,7 +162,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     func openMap(withLocation geocode: Geocode, completion: ((_ isSuccess: Bool) -> Swift.Void)? = nil) {
-        if let locDelegate = delegate , locationPreviewViewModel().isReady{
+        if let locDelegate = delegate , locationPreviewViewModel().isReady {
             locDelegate.displayLocation(location: locationPreviewViewModel())
         }
     }

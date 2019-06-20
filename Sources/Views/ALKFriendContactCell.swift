@@ -6,7 +6,6 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-
 import UIKit
 import Kingfisher
 
@@ -16,28 +15,28 @@ final class ALKFriendContactCell: UITableViewCell {
     @IBOutlet private var lblName: UILabel!
     @IBOutlet private var lblMood: UILabel!
     @IBOutlet private var imgFriendIcon: UIImageView!
-    
+
     private var placeHolder: UIImage? = {
         return UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
     }()
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         setupUI()
     }
-    
+
     private func setupUI() {
         imgFriendIcon.makeCircle()
     }
-    
+
     func update(viewModel: ALKFriendViewModel, isExistingFriend: Bool = false) {
         setupAlpha(isGrayOut: isExistingFriend)
         setupSelectionStyle(isSelectable: isExistingFriend)
         setFriendName(name: viewModel.getFriendDisplayName())
-        
+
         if let mood = viewModel.friendMood, !mood.isEmpty, let expireDate = viewModel.friendMoodExpiredAt {
-            
+
             let currentDate = Date()
             let expireDate = Date(timeIntervalSince1970: TimeInterval(truncating: expireDate))
             if currentDate < expireDate {
@@ -45,15 +44,15 @@ final class ALKFriendContactCell: UITableViewCell {
             } else {
                 setMood(text: "")
             }
-            
+
         } else {
             setMood(text: "")
         }
-        
+
         setupFriendProfilePhoto(imgURL: viewModel.getFriendDisplayImgURL())
         setupCheckmark(isSelect: viewModel.getIsSelected())
     }
-    
+
     private func setupAlpha(isGrayOut: Bool) {
         if isGrayOut {
             imgFriendIcon.alpha = 0.3
@@ -67,26 +66,26 @@ final class ALKFriendContactCell: UITableViewCell {
             lblMood.alpha       = 1.0
         }
     }
-    
+
     private func setupSelectionStyle(isSelectable: Bool) {
         selectionStyle = isSelectable ? .none : .default
     }
-    
+
     private func setFriendName(name: String) {
         lblName.text = name
     }
-    
+
     private func setMood(text: String?) {
         lblMood.text = text ?? ""
     }
-    
+
     private func setupFriendProfilePhoto(imgURL: URL) {
         let resource = ImageResource(downloadURL: imgURL, cacheKey:imgURL.absoluteString)
         imgFriendIcon.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
     }
-    
+
     private func setupCheckmark(isSelect: Bool) {
         imgView.image = isSelect ? UIImage(named: "icon_checked", in: Bundle.applozic, compatibleWith: nil): nil
     }
-    
+
 }

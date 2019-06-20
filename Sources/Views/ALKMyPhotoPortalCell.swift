@@ -11,12 +11,12 @@ import Foundation
 // MARK: - ALKMyPhotoPortalCell
 final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
-    enum state {
+    enum State {
         case upload
         case uploading
         case uploaded
     }
-    
+
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
@@ -37,9 +37,9 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
     override func setupViews() {
         super.setupViews()
-        
+
         contentView.addViewsForAutolayout(views: [stateView])
-        
+
         photoView.topAnchor
             .constraint(equalTo: contentView.topAnchor, constant: Padding.PhotoView.top)
             .isActive = true
@@ -56,18 +56,18 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
             .isActive = true
 
         bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
-        
+
         fileSizeLabel.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0).isActive = true
-        
+
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
         stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1.0).isActive = true
         stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -2.0).isActive = true
-        
+
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
-    
+
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
@@ -85,7 +85,7 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
             stateView.tintColor = UIColor.red
         }
     }
-    
+
     override class func bottomPadding() -> CGFloat {
         return 6
     }
@@ -94,11 +94,11 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
         super.setupStyle()
         captionLabel.font = ALKMessageStyle.sentMessage.font
         captionLabel.textColor = ALKMessageStyle.sentMessage.text
-        if(ALKMessageStyle.sentBubble.style == .edge){
+        if(ALKMessageStyle.sentBubble.style == .edge) {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
             photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-        }else{
+        } else {
             photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         }

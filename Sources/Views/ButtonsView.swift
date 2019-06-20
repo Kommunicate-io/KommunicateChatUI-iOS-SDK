@@ -39,7 +39,7 @@ public class ButtonsView: UIView {
             mainStackView.alignment = stackViewAlignment
         }
     }
-    public var buttonSelected: ((_ index: Int, _ name: String) -> ())?
+    public var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,27 +50,27 @@ public class ButtonsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func update(payload: [Dictionary<String, Any>]) {
+    public func update(payload: [[String: Any]]) {
         mainStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
-        for i in 0 ..< payload.count {
-            let dict = payload[i]
+        for index in 0 ..< payload.count {
+            let dict = payload[index]
             guard let type = dict["type"] as? String, type == "link" else {
                 // Submit button
                 let name = dict["name"] as? String ?? ""
-                let button = submitButton(title: name, index: i)
+                let button = submitButton(title: name, index: index)
                 mainStackView.addArrangedSubview(button)
                 continue
             }
             // Link Button
             let name = dict["name"] as? String ?? ""
-            let button = linkButton(title: name, index: i)
+            let button = linkButton(title: name, index: index)
             mainStackView.addArrangedSubview(button)
         }
     }
 
-    public class func rowHeight(payload: [Dictionary<String, Any>], maxWidth: CGFloat) -> CGFloat {
+    public class func rowHeight(payload: [[String: Any]], maxWidth: CGFloat) -> CGFloat {
         var height: CGFloat = 0
         for dict in payload {
             let title = dict["name"] as? String ?? ""
@@ -115,4 +115,3 @@ public class ButtonsView: UIView {
         return button
     }
 }
-

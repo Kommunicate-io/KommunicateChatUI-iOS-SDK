@@ -188,7 +188,7 @@
         <!--Add to Group-->
         <scene sceneID="EyI-b1-1uh">
             <objects>
-                <viewController storyboardIdentifier="ALKSelectParticipantToAddViewController" title="Add to Group" id="CaI-s3-0mh" customClass="ALKSelectParticipantToAddViewController" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKParticipantSelectionViewContoller" title="Add to Group" id="CaI-s3-0mh" customClass="ALKParticipantSelectionViewContoller" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="r6k-zf-CN6"/>
                         <viewControllerLayoutGuide type="bottom" id="Xom-uE-T49"/>
@@ -217,26 +217,26 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tc-xr-GQn">
-                                                    <rect key="frame" x="72" y="13" width="243.5" height="17"/>
+                                                    <rect key="frame" x="72" y="13" width="282.5" height="17"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mood" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oh2-lZ-Yzu">
-                                                    <rect key="frame" x="72" y="30" width="243.5" height="17"/>
+                                                    <rect key="frame" x="72" y="30" width="282.5" height="17"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="14"/>
                                                     <color key="textColor" red="0.8784313725490196" green="0.035294117647058823" blue="0.035294117647058823" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bp0-ap-FNI">
-                                                    <rect key="frame" x="325.5" y="23" width="23" height="23"/>
+                                                    <rect key="frame" x="364.5" y="23" width="23" height="23"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="23" id="3GV-2R-NVF"/>
                                                         <constraint firstAttribute="width" constant="23" id="f5d-6T-Pon"/>
                                                     </constraints>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lxb-mL-eoC" userLabel="Separator">
-                                                    <rect key="frame" x="0.0" y="68" width="375" height="1"/>
+                                                    <rect key="frame" x="0.0" y="68" width="414" height="1"/>
                                                     <color key="backgroundColor" red="0.94509803920000002" green="0.94509803920000002" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="frx-5k-BOJ"/>

@@ -9,7 +9,7 @@
 import UIKit
 
 class TypingNotice: UIView, Localizable {
-    
+
     fileprivate var localizedStringFileName: String!
     /*
      // Only override draw() if you perform custom drawing.
@@ -18,82 +18,77 @@ class TypingNotice: UIView, Localizable {
      // Drawing code
      }
      */
-    
+
     lazy private var lblIsTyping:UILabel = {
         let isTypingString = localizedString(forKey: "IsTyping", withDefaultValue: SystemMessage.Message.isTyping, fileName: localizedStringFileName)
         let isTypingWidth:CGFloat = isTypingString.evaluateStringWidth(textToEvaluate:isTypingString, fontSize: 12)
-        
+
         let lblIsTyping = UILabel.init(frame: .zero)
 
         lblIsTyping.font =  UIFont(name: "HelveticaNeue-Italic", size: 12)!
         lblIsTyping.textColor = UIColor.lightGray
         lblIsTyping.text = isTypingString
         return lblIsTyping
-        
+
     }()
-    
+
     private var imgAnimate:UIImageView = {
-        
+
         var animationImages = [UIImage]()
         for index in 0...31 {
             var numStr = ""
-            if(index < 10)
-            {
+            if(index < 10) {
                 numStr = "0"
             }
-            
-            if let img = UIImage(named: "animate-typing00\(numStr)\(index)", in: Bundle.applozic, compatibleWith: nil)
-            {
+
+            if let img = UIImage(named: "animate-typing00\(numStr)\(index)", in: Bundle.applozic, compatibleWith: nil) {
                 animationImages.append(img)
             }
         }
-        
+
         let imgAnimate = UIImageView.init(frame: .zero)
         imgAnimate.contentMode = .scaleAspectFit
-        imgAnimate.animationImages = animationImages;
-        imgAnimate.animationDuration = TimeInterval(1.3);
+        imgAnimate.animationImages = animationImages
+        imgAnimate.animationDuration = TimeInterval(1.3)
         imgAnimate.animationRepeatCount = 0
         imgAnimate.startAnimating()
         return imgAnimate
-        
+
     }()
-    
+
     init(localizedStringFileName: String) {
         super.init(frame: .zero)
         self.localizedStringFileName = localizedStringFileName
         createUI()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func createUI()
-    {
 
+    func createUI() {
 
         self.clipsToBounds = false
         self.backgroundColor = UIColor.white
-        
+
         self.addViewsForAutolayout(views: [lblIsTyping,imgAnimate])
-        
+
         lblIsTyping.topAnchor.constraint(equalTo: topAnchor).isActive = true
         lblIsTyping.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
+
         lblIsTyping.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         lblIsTyping.widthAnchor.constraint(greaterThanOrEqualToConstant: 56).isActive = true
-        
+
         imgAnimate.topAnchor.constraint(equalTo: topAnchor).isActive = true
         imgAnimate.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
+
         imgAnimate.leadingAnchor.constraint(equalTo: lblIsTyping.trailingAnchor).isActive = true
         imgAnimate.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: 0).isActive = true
         imgAnimate.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        
+
     }
-    
-    func setDisplayName(displayName:String)
-    {
+
+    func setDisplayName(displayName:String) {
         guard !displayName.isEmpty else {
             return
         }
@@ -105,19 +100,17 @@ class TypingNotice: UIView, Localizable {
             populateTypingStatus(isTyping: isTyping, displayName: displayName)
         }
     }
-    
+
     func populateTypingStatus(isTyping: String, displayName: String) {
-        if isTyping.contains("%@"){
+        if isTyping.contains("%@") {
             lblIsTyping.text = String(format: isTyping, displayName)
-        }else {
+        } else {
             lblIsTyping.text = displayName + " " + isTyping
         }
     }
 
-    func setDisplayGroupTyping(number:Int)
-    {
-        if( number > 1)
-        {
+    func setDisplayGroupTyping(number:Int) {
+        if( number > 1) {
             let displayName = "\(number) people"
             let isTyping = localizedString(forKey: "AreTyping", withDefaultValue: SystemMessage.Message.areTyping, fileName: localizedStringFileName)
             populateTypingStatus(isTyping: isTyping, displayName: displayName)

@@ -10,14 +10,18 @@ import MapKit
 import Applozic
 import Kingfisher
 
+protocol ALKShareLocationViewControllerDelegate: class {
+    func locationDidSelected(geocode: Geocode, image: UIImage)
+}
+
 class ALKMapViewController: UIViewController, Localizable {
 
     var configuration: ALKConfiguration!
-    
+
     @IBOutlet weak var mapView: MKMapView!
 
-    @IBOutlet weak var ShareLocationButton: UIButton!
-    
+    @IBOutlet weak var shareLocationButton: UIButton!
+
     var locationManager = CLLocationManager()
     var region = MKCoordinateRegion()
     var isInitialized = false
@@ -30,16 +34,15 @@ class ALKMapViewController: UIViewController, Localizable {
     override func viewWillAppear(_ animated: Bool) {
         self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
         let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
-        ShareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)
-        ShareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.selected)
+        shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)
+        shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.selected)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         determineCurrentLocation()
     }
 
-    func determineCurrentLocation()
-    {
+    func determineCurrentLocation() {
 //        mapView.delegate = self
         mapView.showsUserLocation = true
         locationManager = CLLocationManager()
@@ -65,8 +68,8 @@ class ALKMapViewController: UIViewController, Localizable {
     }
 
     private func createStaticMap(position: CLLocationCoordinate2D,
-                                 success: @escaping (UIImage) -> (),
-                                 failure: @escaping (Error?) -> ()) {
+                                 success: @escaping (UIImage) -> Void,
+                                 failure: @escaping (Error?) -> Void) {
         guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else {
             failure(nil)
             return
@@ -80,8 +83,7 @@ class ALKMapViewController: UIViewController, Localizable {
 
         if let urlString = urlString, let url = URL(string: urlString) {
 
-            KingfisherManager.shared.retrieveImage(with: url, options: nil, progressBlock: nil) { (image: Image?, error: NSError?, cacheType: CacheType, url: URL?) in
-
+            KingfisherManager.shared.retrieveImage(with: url, options: nil, progressBlock: nil) { (image: Image?, error: NSError?, _: CacheType, _: URL?) in
 
                 guard let image = image else {
                     failure(error)
@@ -91,7 +93,7 @@ class ALKMapViewController: UIViewController, Localizable {
             }
         }
     }
-    
+
     public func setConfiguration(_ configuration: ALKConfiguration) {
         self.configuration = configuration
     }

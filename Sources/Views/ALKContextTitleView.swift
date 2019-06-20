@@ -56,7 +56,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
         return label
     }()
 
-    //MARK: - Initialization
+    // MARK: - Initialization
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,7 +67,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK: - Public Methods
+    // MARK: - Public Methods
 
     public func configureWith(value data: ALKContextTitleDataType) {
         self.viewModel = ALKContextTitleViewModel(data: data)
@@ -83,7 +83,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
         bottomRightInfoLabel.text = viewModel?.getSecondKeyValuePairText
     }
 
-    //MARK: - Private Methods
+    // MARK: - Private Methods
 
     private func setupConstraints() {
         let view = self

@@ -67,11 +67,11 @@ class ALKMyMessageView: UIView {
     }
 
     func setupStyle() {
-        if(ALKMessageStyle.sentBubble.style == .edge){
+        if(ALKMessageStyle.sentBubble.style == .edge) {
             let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
             bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
             bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
-        }else{
+        } else {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
@@ -113,7 +113,7 @@ class ALKMyMessageView: UIView {
         messageHeight += 20 // (6 + 4) + 10 for extra padding
         return max(messageHeight, minimumHeight)
     }
-    
+
     private func setupConstraints() {
         self.addViewsForAutolayout(views: [messageView, bubbleView, stateView, timeLabel])
         self.bringSubviewToFront(messageView)

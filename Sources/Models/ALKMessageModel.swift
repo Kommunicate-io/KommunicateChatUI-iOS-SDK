@@ -9,8 +9,6 @@
 import Foundation
 import Applozic
 
-let MessageProgressKey = "Message.ProgressKey"
-
 // MARK: - MessageType
 public enum ALKMessageType: String {
     case text = "Text"

@@ -10,20 +10,20 @@ import Foundation
 public class ALKBaseNavigationViewController: UINavigationController {
 
     static var statusBarStyle: UIStatusBarStyle = .lightContent
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setNeedsStatusBarAppearanceUpdate()
     }
-    
+
     override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     override public var preferredStatusBarStyle: UIStatusBarStyle {
         return ALKBaseNavigationViewController.statusBarStyle
     }
-    
+
 }

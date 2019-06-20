@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-//MARK: - Extension for String
+// MARK: - Extension for String
 //get char at index
 extension String {
     subscript(idx: Int) -> Character {
@@ -43,8 +43,8 @@ extension String {
         let boundingBox = self.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
         return boundingBox
     }
-    
-    func evaluateStringWidth (textToEvaluate: String,fontSize:CGFloat) -> CGFloat{
+
+    func evaluateStringWidth (textToEvaluate: String,fontSize:CGFloat) -> CGFloat {
         let font = UIFont.systemFont(ofSize: fontSize)
         let attributes = NSDictionary(object: font, forKey:NSAttributedString.Key.font as NSCopying)
         let sizeOfText = textToEvaluate.size(withAttributes: (attributes as! [NSAttributedString.Key : Any] as [NSAttributedString.Key : Any]))
@@ -53,11 +53,11 @@ extension String {
 }
 
 extension String {
-    
+
     func stripHTML() -> String {
         return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
     }
-    
+
     func trim() -> String {
         return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }

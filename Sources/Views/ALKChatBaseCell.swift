@@ -9,20 +9,20 @@
 import UIKit
 
 open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
-    
+
     var localizedStringFileName: String!
-    
+
     public func setLocalizedStringFileName(_ localizedStringFileName: String) {
         self.localizedStringFileName = localizedStringFileName
     }
-    
+
     fileprivate weak var chatBar: ALKChatBar?
-    
+
     lazy var longPressGesture: UILongPressGestureRecognizer = {
         return UILongPressGestureRecognizer(target: self, action: #selector(showMenuController(withLongPress:)))
     }()
 
-    var avatarTapped:(() -> ())?
+    var avatarTapped:(() -> Void)?
 
     /// Actions available on menu where callbacks
     /// needs to be send are defined here.
@@ -32,33 +32,33 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
 
     /// It will be invoked when one of the actions
     /// is selected.
-    var menuAction: ((MenuActionType) -> ())?
+    var menuAction: ((MenuActionType) -> Void)?
 
     func update(chatBar: ALKChatBar) {
         self.chatBar = chatBar
     }
-    
+
     @objc func menuWillShow(_ sender: Any) {
         NotificationCenter.default.removeObserver(self, name: UIMenuController.willShowMenuNotification, object: nil)
     }
-    
+
     @objc func menuWillHide(_ sender: Any) {
         NotificationCenter.default.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
-        
+
         if let chatBar = self.chatBar {
             chatBar.textView.overrideNextResponder = nil
         }
     }
-    
+
     @objc func showMenuController(withLongPress sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
-            
+
             if let chatBar = self.chatBar, chatBar.textView.isFirstResponder {
                 chatBar.textView.overrideNextResponder = self.contentView
             } else {
-                let _ = self.canBecomeFirstResponder
+                _ = self.canBecomeFirstResponder
             }
 
             guard let gestureView = sender.view, let superView = sender.view?.superview else {
@@ -87,11 +87,11 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             menuController.setMenuVisible(true, animated: true)
         }
     }
-    
+
     override open var canBecomeFirstResponder: Bool {
         return true
     }
-    
+
     override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         switch self {
         case let menuItem as ALKCopyMenuItemProtocol where action == menuItem.selector:
@@ -113,7 +113,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     }
 
     private func getReplyMenuItem(replyItem: Any) -> UIMenuItem? {
-        guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else{
+        guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else {
             return nil
         }
         let title = localizedString(forKey: "Reply", withDefaultValue: SystemMessage.LabelName.Reply, fileName: localizedStringFileName)

@@ -9,20 +9,19 @@
 import Foundation
 import CoreLocation
 
-
 extension CLLocationManager {
-    
+
     static func initializeLocationManager(delegate: CLLocationManagerDelegate) -> CLLocationManager {
         let manager = CLLocationManager()
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.delegate = delegate
         return manager
     }
-    
+
     static func showLocationPermissionAlert(vc: UIViewController) {
-        
+
         switch CLLocationManager.authorizationStatus() {
-            
+
         case .restricted, .denied, .notDetermined:
             let alertTitle = NSLocalizedString("TurnOnLocationService", value: SystemMessage.Map.TurnOnLocationService, comment: "")
             let alertMessage = NSLocalizedString("LocationAlertMessage", value: SystemMessage.Map.LocationAlertMessage, comment: "")
@@ -30,19 +29,19 @@ extension CLLocationManager {
                 title: alertTitle,
                 message: alertMessage,
                 preferredStyle: .alert)
-            
+
             let notNowTitle = NSLocalizedString("NotNow", value: SystemMessage.LabelName.NotNow, comment: "")
             let notNowAction = UIAlertAction(title: notNowTitle,
                                              style: .cancel,
                                              handler: nil)
-            
+
             let settingsTitle = NSLocalizedString("Settings", value: SystemMessage.LabelName.Settings, comment: "")
-            let openSettingAction = UIAlertAction(title: settingsTitle, style: .default) { (action) in
+            let openSettingAction = UIAlertAction(title: settingsTitle, style: .default) { (_) in
                 if let url = NSURL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.openURL(url as URL)
                 }
             }
-            
+
             alertController.addAction(notNowAction)
             alertController.addAction(openSettingAction)
             vc.present(alertController, animated: true, completion: nil)
@@ -50,7 +49,7 @@ extension CLLocationManager {
             break
         }
     }
-    
+
     func requestMyLocation() {
         if #available(iOS 9.0, *) {
             self.requestLocation()
@@ -58,7 +57,7 @@ extension CLLocationManager {
             self.startUpdatingLocation()
         }
     }
-    
+
     func stopMyLocationRequest() {
         self.stopUpdatingLocation()
     }

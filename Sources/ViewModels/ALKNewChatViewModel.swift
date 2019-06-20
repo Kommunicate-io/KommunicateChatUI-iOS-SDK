@@ -10,9 +10,9 @@ import Foundation
 import Applozic
 
 final public class ALKNewChatViewModel {
-    
+
     fileprivate var localizedStringFileName: String!
-    
+
     var friendList = [ALKContactProtocol]()    // For UI presentation
     var bufferFriendList = [ALKContactProtocol]() {
         didSet {
@@ -22,13 +22,13 @@ final public class ALKNewChatViewModel {
 
     var applozicSettings: ALApplozicSettings.Type = ALApplozicSettings.self
 
-    //MARK: - Intialization
+    // MARK: - Intialization
 
     public init(localizedStringFileName: String) {
         self.localizedStringFileName = localizedStringFileName
     }
 
-    //MARK: Internal
+    // MARK: Internal
     func filter(keyword: String) {
         if keyword.isEmpty {
             self.friendList = self.bufferFriendList
@@ -37,13 +37,11 @@ final public class ALKNewChatViewModel {
         }
     }
 
+    func getContacts(userService: ALUserService = ALUserService(), completion: @escaping () -> Void) {
 
-    func getContacts(userService: ALUserService = ALUserService(), completion: @escaping () -> ()) {
+        if(ALApplozicSettings.isContactsGroupEnabled()) {
+            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (_, channel) in
 
-        if(ALApplozicSettings.isContactsGroupEnabled())
-        {
-            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (error, channel) in
-                
                 guard let alChannel = channel  else {
                     completion()
                     return
@@ -54,7 +52,7 @@ final public class ALKNewChatViewModel {
 
         } else {
             if applozicSettings.getFilterContactsStatus() {
-                userService.getListOfRegisteredUsers(completion: { error in
+                userService.getListOfRegisteredUsers(completion: { _ in
                     self.bufferFriendList = self.fetchContactsFromDB() ?? []
                     completion()
                 })
@@ -65,37 +63,35 @@ final public class ALKNewChatViewModel {
         }
 
     }
-    
-    
+
     func addCategorizeContacts(channel:ALChannel?) {
-        
+
         guard let alChannel = channel  else {
             return
         }
-        
+
         var friendList = [ALKContactProtocol]()
         let contactService = ALContactService()
         let savedLoginUserId = ALUserDefaultsHandler.getUserId() as String
-        
+
         for memberId in alChannel.membersId {
-            
+
             if let memberIdStr = memberId as? String, memberIdStr != savedLoginUserId {
-                
+
                 let contact: ALContact? = contactService.loadContact(byKey: "userId", value: memberIdStr)
-                
+
                 if(contact?.deletedAtTime == nil) {
                     friendList.append(contact!)
                 }
-                
+
             }
         }
-        
-        self.bufferFriendList = friendList;
-    
+
+        self.bufferFriendList = friendList
+
     }
 
-
-    func fetchContactsFromDB() -> [ALKContactProtocol]?{
+    func fetchContactsFromDB() -> [ALKContactProtocol]? {
         let dbHandler = ALDBHandler.sharedInstance()
         let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
         var predicate = NSPredicate()
@@ -129,39 +125,39 @@ final public class ALKNewChatViewModel {
         }
         return nil
     }
-    
+
     func numberOfSection() -> Int {
         return 2
     }
-    
+
     func numberOfRowsInSection(section: Int) -> Int {
-        
+
         return self.friendList.count
     }
-    
+
     func friendForRow(indexPath: IndexPath) -> ALKContactProtocol {
         return self.friendList[indexPath.row]
     }
-    
+
     // Internal class
     final class CreateGroup: ALKContactProtocol, Localizable {
-        
+
         var localizedStringFileName: String!
-        
+
         lazy var friendProfileName: String? = {
             let text = localizedString(forKey: "CreateGroupTitle", withDefaultValue: SystemMessage.NavbarTitle.createGroupTitle, fileName: localizedStringFileName)
             return text
         }()
         var friendUUID: String? = ""
         var friendMood: String? = ""
-        var friendDisplayImgURL: URL? = nil
-        
+        var friendDisplayImgURL: URL?
+
         init(localizedStringFileName: String) {
             self.localizedStringFileName = localizedStringFileName
         }
-        
+
     }
-    
+
     func createGroupCell() -> ALKContactProtocol {
         return CreateGroup(localizedStringFileName: localizedStringFileName)
     }

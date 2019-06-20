@@ -10,100 +10,100 @@ import Foundation
 import UIKit
 
 extension UIView {
-    
+
     func setBackgroundColor(_ color: UIColor) {
         self.backgroundColor = color
     }
-    
+
     func setTintColor(_ color: UIColor) {
         self.tintColor = color
     }
 }
 
 extension UINavigationBar {
-    
+
     func setBarTinColor(_ color: UIColor) {
         self.barTintColor = color
     }
 }
 
 extension UITableView {
-    
+
     func setSeparatorColor(_ color: UIColor) {
         self.separatorColor = color
     }
 }
 
 extension CALayer {
-    
+
     func setBorderColor(_ color: UIColor) {
         self.borderColor = color.cgColor
     }
-    
+
     func setBackgroundColor(_ color: UIColor) {
         self.backgroundColor = color.cgColor
     }
 }
 
 extension UILabel {
-    
+
     func setTextColor(_ color: UIColor) {
         self.textColor = color
     }
-    
+
     func setFont(_ font: UIFont) {
         self.font = font
     }
 }
 
 extension UITextView {
-    
+
     func setStyle(_ style: Style) {
         setFont(style.font)
         setTextColor(style.text)
         setBackgroundColor(style.background)
     }
-    
+
     func setTextColor(_ color: UIColor) {
         self.textColor = color
     }
-    
+
     func setFont(_ font: UIFont) {
         self.font = font
     }
 }
 
 extension UITextField {
-    
+
     func setStyle(_ style: Style) {
         setFont(style.font)
         setTextColor(style.text)
         setBackgroundColor(style.background)
     }
-    
+
     func setTextColor(_ color: UIColor) {
         self.textColor = color
     }
-    
+
     func setFont(_ font: UIFont) {
         self.font = font
     }
 }
 
 extension UIButton {
-    
+
     func setStyle(style: Style, forState state: UIControl.State) {
         setFont(font: style.font)
         setTextColor(color: style.text, forState: state)
         setBackgroundColor(style.background)
     }
-    
+
     func setTextColor(color: UIColor, forState state: UIControl.State) {
         setTitleColor(color, for: state)
     }
-    
+
     func setFont(font: UIFont) {
         titleLabel?.font = font
     }
-    
+
 }

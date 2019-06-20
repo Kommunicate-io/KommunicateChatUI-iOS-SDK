@@ -20,13 +20,13 @@ extension Date {
         let fromDate: Date = calendar.startOfDay(for: self)
         let unitFlags: Set<Calendar.Component> = [.day]
         let differenceDateComponent: DateComponents = calendar.dateComponents(unitFlags, from: fromDate, to: toDate)
-        
+
         guard let day = differenceDateComponent.day else {
-            return "";
+            return ""
         }
-        
+
         let dateFormatter = DateFormatter()
-        
+
         if showTodayTime && day == 0 {
             let dateFormat = DateFormatter.dateFormat(fromTemplate: "HH:mm", options: 0, locale: Locale.current)
             dateFormatter.dateFormat = dateFormat
@@ -38,8 +38,8 @@ extension Date {
             let dateFormat = DateFormatter.dateFormat(fromTemplate: fromTemplate, options: 0, locale: Locale.current)
             dateFormatter.dateFormat = dateFormat
         }
-        
+
         return dateFormatter.string(from: self)
     }
-    
+
 }

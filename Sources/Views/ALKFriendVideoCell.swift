@@ -38,10 +38,10 @@ class ALKFriendVideoCell: ALKVideoCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        if(ALKMessageStyle.receivedBubble.style == .edge){
+        if(ALKMessageStyle.receivedBubble.style == .edge) {
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
-        }else{
+        } else {
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         }

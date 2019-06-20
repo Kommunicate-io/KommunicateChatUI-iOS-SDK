@@ -45,7 +45,7 @@ struct ProfanityFilter {
         return words
     }
 
-    func containsRestrictedWords(text: String) -> Bool{
+    func containsRestrictedWords(text: String) -> Bool {
         let wordsInText = text.lowercased().components(separatedBy: " ")
         var isPresent = false
         for word in wordsInText {

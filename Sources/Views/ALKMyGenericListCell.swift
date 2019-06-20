@@ -6,7 +6,7 @@
 //
 
 class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
-    
+
     var itemTitleLabel: InsetLabel = {
         let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         label.text = "title"
@@ -15,30 +15,30 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         label.textColor = UIColor.black
         return label
     }()
-    
+
     var height: CGFloat!
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
-    
+
     fileprivate lazy var messageView: ALKHyperLabel = {
         let label = ALKHyperLabel.init(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label
     }()
-    
+
     fileprivate var timeLabel: UILabel = {
         let lb = UILabel()
         lb.isOpaque = true
         return lb
     }()
-    
+
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
         sv.contentMode = .center
         return sv
     }()
-    
+
     fileprivate var bubbleView: UIImageView = {
         let bv = UIImageView()
         bv.clipsToBounds = true
@@ -46,7 +46,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         bv.isOpaque = true
         return bv
     }()
-    
+
     var mainBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 5
@@ -54,7 +54,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         view.layer.borderWidth = 1
         return view
     }()
-    
+
     let buttonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -62,7 +62,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         stackView.distribution = .fillEqually
         return stackView
     }()
-    
+
     let mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -71,39 +71,39 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         stackView.spacing = 0
         return stackView
     }()
-    
+
     public enum Padding {
-        enum mainStackView {
+        enum MainStackView {
             static var bottom: CGFloat = -20.0
             static var left: CGFloat = 95
             static var right: CGFloat = -10
         }
     }
-    
+
     open var actionButtons = [UIButton]()
-    
+
     open var template: ALKGenericListTemplate!
-    open var buttonSelected: ((_ index: Int, _ name: String) -> ())?
-    
+    open var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
+
     private var items = [ALKGenericListTemplate]()
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
     }
-    
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+
         // Configure the view for the selected state
     }
-    
+
     override func setupViews() {
         super.setupViews()
         setUpButtons()
         setUpViews()
     }
-    
+
     open class func rowHeightFor(template: [ALKGenericListTemplate], viewModel: ALKMessageViewModel) -> CGFloat {
         let buttonHeight = 35
         let baseHeight: CGFloat = 10
@@ -111,11 +111,11 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
         return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
-    
+
     @objc func buttonSelected(_ action: UIButton) {
         self.buttonSelected?(action.tag, action.currentTitle ?? "")
     }
-    
+
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
         self.updateMessageView(viewModel)
@@ -133,7 +133,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             print("\(error)")
         }
     }
-    
+
     private func setUpButtons() {
         actionButtons = (0...7).map {
             let button = UIButton()
@@ -147,7 +147,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             return button
         }
     }
-    
+
     private func setUpViews() {
         setupConstraints()
         backgroundColor = .clear
@@ -155,20 +155,20 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func setupStyle() {
         super.setupStyle()
-        if(ALKMessageStyle.sentBubble.style == .edge){
+        if(ALKMessageStyle.sentBubble.style == .edge) {
             let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
             bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
             bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
-        }else{
+        } else {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
         }
      }
-    
+
     private func setupConstraints() {
         let view = contentView
-        
+
         actionButtons.forEach {
             buttonStackView.addArrangedSubview($0)
             $0.heightAnchor.constraint(equalToConstant: 35).isActive = true
@@ -177,51 +177,51 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         mainStackView.addArrangedSubview(buttonStackView)
         view.addViewsForAutolayout(views: [mainBackgroundView, mainStackView, self.messageView, self.bubbleView, timeLabel, stateView])
         view.bringSubviewToFront(messageView)
-        
+
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 95).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25).isActive = true
         messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
         messageView.layoutIfNeeded()
-        
+
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
         bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 2).isActive = true
-        
+
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
         stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1.0).isActive = true
         stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -2.0).isActive = true
-        
+
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
-        
-        mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.mainStackView.left).isActive = true
-        mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.mainStackView.right).isActive = true
+
+        mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.MainStackView.left).isActive = true
+        mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Padding.MainStackView.right).isActive = true
         mainStackView.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 5).isActive = true
-        mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Padding.mainStackView.bottom).isActive = true
-        
+        mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Padding.MainStackView.bottom).isActive = true
+
         itemTitleLabel.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
         itemTitleLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: 0).isActive = true
         itemTitleLabel.topAnchor.constraint(equalTo: mainStackView.topAnchor, constant: 0).isActive = true
         itemTitleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         itemTitleLabel.backgroundColor = UIColor.lightGray
-        
+
         mainBackgroundView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor).isActive = true
         mainBackgroundView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
         mainBackgroundView.topAnchor.constraint(equalTo: mainStackView.topAnchor).isActive = true
         mainBackgroundView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor).isActive = true
-        
+
         buttonStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 0).isActive = true
     }
-    
+
     private func updateMessageView(_ viewModel: ALKMessageViewModel) {
         messageView.text = viewModel.message ?? ""
         messageView.setStyle(ALKMessageStyle.sentMessage)
         timeLabel.text = viewModel.time
         timeLabel.setStyle(ALKMessageStyle.time)
-        
+
         if viewModel.isAllRead {
             stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
             stateView.tintColor = UIColor(netHex: 0x0578FF)
@@ -236,12 +236,11 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             stateView.tintColor = UIColor.red
         }
     }
-    
+
     private func updateViewFor(_ buttons: [ALKGenericListTemplate]) {
         // Hide3 extra buttons
         actionButtons.enumerated().forEach {
-            if $0 >= buttons.count { $1.isHidden = true }
-            else { $1.isHidden = false; $1.setTitle(buttons[$0].title, for: .normal) }
+            if $0 >= buttons.count { $1.isHidden = true } else { $1.isHidden = false; $1.setTitle(buttons[$0].title, for: .normal) }
         }
     }
 
@@ -252,5 +251,5 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
         itemTitleLabel.text = text
     }
-    
+
 }

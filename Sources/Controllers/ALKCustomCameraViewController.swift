@@ -10,18 +10,17 @@ import UIKit
 import AVFoundation
 import Photos
 
-
 enum ALKCameraPhotoType {
-    case NoCropOption
-    case CropOption
+    case noCropOption
+    case cropOption
 }
 
 enum ALKCameraType {
-    case Front
-    case Back
+    case front
+    case back
 }
 
-var camera = ALKCameraType.Back
+var camera = ALKCameraType.back
 
 protocol ALKCustomCameraProtocol {
     func customCameraDidTakePicture(cropedImage: UIImage)
@@ -31,13 +30,13 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
     //delegate
     var customCamDelegate: ALKCustomCameraProtocol!
-    var camera = ALKCameraType.Back
+    var camera = ALKCameraType.back
 
     //photo library
     var asset: PHAsset!
     var allPhotos: PHFetchResult<PHAsset>!
     var selectedImage: UIImage!
-    var cameraMode: ALKCameraPhotoType = .NoCropOption
+    var cameraMode: ALKCameraPhotoType = .noCropOption
     let option = PHImageRequestOptions()
 
     var cameraOutput: Any? = {
@@ -59,7 +58,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     private var captureDevice: AVCaptureDevice?
     private var captureDeviceInput: AVCaptureDeviceInput?
     fileprivate var isUserControlEnable = true
-    
+
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
 
     override func viewDidLoad() {
@@ -86,7 +85,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         switch authStatus {
         case .denied:
             // ask for permissions
-            
+
             let camNotAvailable = localizedString(forKey: "CamNotAvaiable", withDefaultValue: SystemMessage.Warning.CamNotAvaiable, fileName: localizedStringFileName)
             let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, fileName: localizedStringFileName)
             let alertController = UIAlertController(title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
@@ -97,7 +96,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 }
                 if UIApplication.shared.canOpenURL(settingsUrl) {
                     if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                        UIApplication.shared.open(settingsUrl, completionHandler: { (_) in
                             //
                         })
                     } else {
@@ -122,7 +121,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
             let vc = storyboard.instantiateViewController(withIdentifier: "CustomCameraNavigationController")
                 as? ALKBaseNavigationViewController,
             let cameraVC = vc.viewControllers.first as? ALKCustomCameraViewController else { return nil }
-        cameraVC.setCustomCamDelegate(camMode: .NoCropOption, camDelegate: delegate)
+        cameraVC.setCustomCamDelegate(camMode: .noCropOption, camDelegate: delegate)
         cameraVC.configuration = configuration
         return vc
     }
@@ -156,19 +155,26 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
     }
 
-
     @available(iOS 10.0, *)
-    public func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
-        resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Swift.Error?) {
+    public func photoOutput(
+        _ captureOutput: AVCapturePhotoOutput,
+        didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
+        previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
+        resolvedSettings: AVCaptureResolvedPhotoSettings,
+        bracketSettings: AVCaptureBracketedStillImageSettings?,
+        error: Swift.Error?) {
 
         if let error = error { print(error) }
-
-        else if let buffer = photoSampleBuffer, let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: buffer, previewPhotoSampleBuffer: nil),
-
+        else if
+            let buffer = photoSampleBuffer,
+            let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(
+                forJPEGSampleBuffer: buffer,
+                previewPhotoSampleBuffer: nil),
             let image = UIImage(data: data) {
+
             self.selectedImage = image
             switch self.cameraMode {
-            case .CropOption:
+            case .cropOption:
                 self.performSegue(withIdentifier: "goToCropImageView", sender: nil)
             default:
                 self.performSegue(withIdentifier: "pushToALKCustomCameraPreviewViewController", sender: nil)
@@ -181,9 +187,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         return .lightContent
     }
 
-
-    override func viewDidLayoutSubviews()
-    {
+    override func viewDidLayoutSubviews() {
         //set frame
         self.previewLayer?.frame = self.previewView.frame
     }
@@ -193,16 +197,15 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         // Dispose of any resources that can be recreated.
     }
 
-    //MARK: - Set protocol and Observer
-    func setCustomCamDelegate(camMode: ALKCameraPhotoType, camDelegate: ALKCustomCameraProtocol)
-    {
+    // MARK: - Set protocol and Observer
+    func setCustomCamDelegate(camMode: ALKCameraPhotoType, camDelegate: ALKCustomCameraProtocol) {
         self.cameraMode = camMode
         self.customCamDelegate = camDelegate
     }
 
-    //MARK: - UI control
+    // MARK: - UI control
     private func setupNavigation() {
-        
+
         let title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, fileName: localizedStringFileName)
         self.navigationItem.title = title
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
@@ -220,8 +223,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         btnSwitchCam.imageView?.tintColor = UIColor.white
     }
 
-    private func reloadCamera()
-    {
+    private func reloadCamera() {
         //stop previous capture session
         captureSession.stopRunning()
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -235,17 +237,14 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         for device in devices {
             // Make sure this particular device supports video
             if (device.hasMediaType(AVMediaType.video)) {
-                if(camera == .Back)
-                {
+                if(camera == .back) {
                     if(device.position == AVCaptureDevice.Position.back) {
                         captureDevice = device
                         if captureDevice != nil {
                             checkCameraPermission()
                         }
                     }
-                }
-                else
-                {
+                } else {
                     if(device.position == AVCaptureDevice.Position.front) {
                         captureDevice = device
                         if captureDevice != nil {
@@ -272,7 +271,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
             //handle denied status
         case .notDetermined:
             // ask for permissions
-            PHPhotoLibrary.requestAuthorization() { status in
+            PHPhotoLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
                     self.getAllImage(completion: { [weak self] (isGrant) in
@@ -290,8 +289,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         }
     }
 
-    private func checkCameraPermission()
-    {
+    private func checkCameraPermission() {
         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
         case .authorized:
@@ -312,7 +310,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
                 if UIApplication.shared.canOpenURL(settingsUrl) {
                     if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                        UIApplication.shared.open(settingsUrl, completionHandler: { (_) in
                             //
                         })
                     } else {
@@ -367,8 +365,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 }
 
             } else { return }
-        }
-        catch let error {
+        } catch let error {
             print("Error while adding camera input: \(error)")
         }
 
@@ -407,13 +404,13 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                         videoConnection.videoOrientation = orientation
                     }
 
-                    stillImageOutput.captureStillImageAsynchronously(from: videoConnection, completionHandler: { (CMSampleBuffer, Error) in
+                    stillImageOutput.captureStillImageAsynchronously(from: videoConnection, completionHandler: { (CMSampleBuffer, _) in
                         if let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(CMSampleBuffer!) {
 
                             if let cameraImage = UIImage(data: imageData) {
                                 self.selectedImage = cameraImage
                                 switch self.cameraMode {
-                                case .CropOption:
+                                case .cropOption:
                                     self.performSegue(withIdentifier: "goToCropImageView", sender: nil)
                                 default:
                                     self.performSegue(withIdentifier: "pushToALKCustomCameraPreviewViewController", sender: nil)
@@ -438,13 +435,10 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         if isUserControlEnable {
             isUserControlEnable = false
 
-            if(camera == .Back)
-            {
-                camera = .Front
-            }
-            else
-            {
-                camera = .Back
+            if(camera == .back) {
+                camera = .front
+            } else {
+                camera = .back
             }
 
             let devices = AVCaptureDevice.devices()
@@ -452,7 +446,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 if (device.hasMediaType(AVMediaType.video)) {
 
                     let newCamera: AVCaptureDevice?
-                    if(camera == .Front) {
+                    if(camera == .front) {
                         newCamera = self.cameraWithPosition(position: AVCaptureDevice.Position.front)
                     } else {
                         newCamera = self.cameraWithPosition(position: AVCaptureDevice.Position.back)
@@ -483,8 +477,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                             }
                         }
 
-                    }
-                    catch let error {
+                    } catch let error {
                         print("Error while adding camera input: \(error)")
                     }
                     captureSession.commitConfiguration()
@@ -506,20 +499,18 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         return AVCaptureDevice(uniqueID: "")
     }
 
-
     @IBAction private func dismissCameraPress(_ sender: Any) {
         self.navigationController?.dismiss(animated: false, completion: nil)
     }
 
-    private func enableCameraControl(inSec: Double)
-    {
+    private func enableCameraControl(inSec: Double) {
         let disT: DispatchTime = DispatchTime.now() + inSec
         DispatchQueue.main.asyncAfter(deadline: disT, execute: {
             self.isUserControlEnable = true
         })
     }
 
-    //MARK: - Access to gallery images
+    // MARK: - Access to gallery images
     private func getAllImage(completion: (_ success: Bool) -> Void) {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.includeHiddenAssets = false
@@ -530,8 +521,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     }
 
     private func createScrollGallery(isGrant: Bool) {
-        if isGrant
-            {
+        if isGrant {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                     self.previewGallery.reloadData()
                 })
@@ -557,8 +547,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     }
 }
 
-extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
-{
+extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: CollectionViewEnvironment
     private class CollectionViewEnvironment {
         struct Spacing {
@@ -577,7 +566,7 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
             self.selectedImage = image
 
             switch self.cameraMode {
-            case .CropOption:
+            case .cropOption:
                 self.performSegue(withIdentifier: "goToCropImageView", sender: nil)
             default:
                 self.performSegue(withIdentifier: "pushToALKCustomCameraPreviewViewController", sender: nil)
@@ -587,12 +576,9 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
 
     // MARK: UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(allPhotos == nil)
-        {
+        if(allPhotos == nil) {
             return 0
-        }
-        else
-        {
+        } else {
             return allPhotos.count//horizontal
         }
 

@@ -11,7 +11,7 @@ import Kingfisher
 import Applozic
 
 class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel>,
-ALKReplyMenuItemProtocol{
+ALKReplyMenuItemProtocol {
 
     struct CommonPadding {
         struct FrameUIView {
@@ -44,17 +44,16 @@ ALKReplyMenuItemProtocol{
         }
     }
 
-    
-    enum state {
+    enum State {
         case download
         case downloading(progress: Double, totalCount: Int64)
         case downloaded(filePath: String)
         case upload
     }
 
-    var uploadTapped:((Bool) ->())?
-    var uploadCompleted: ((_ responseDict: Any?) ->())?
-    var downloadTapped:((Bool) ->())?
+    var uploadTapped:((Bool)->Void)?
+    var uploadCompleted: ((_ responseDict: Any?)->Void)?
+    var downloadTapped:((Bool)->Void)?
 
     var docImageView: UIImageView = {
         let imv = UIImageView()
@@ -107,7 +106,6 @@ ALKReplyMenuItemProtocol{
         return uiView
     }()
 
-
     var progressView: KDCircularProgress = {
         let view = KDCircularProgress(frame: .zero)
         view.startAngle = -90
@@ -121,7 +119,7 @@ ALKReplyMenuItemProtocol{
         view.backgroundColor = .clear
         return view
     }()
-    
+
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
     }
@@ -131,8 +129,6 @@ ALKReplyMenuItemProtocol{
         timeLabel.setStyle(ALKMessageStyle.time)
     }
 
-
-
     override func setupViews() {
         super.setupViews()
 
@@ -141,7 +137,6 @@ ALKReplyMenuItemProtocol{
         contentView.bringSubviewToFront(downloadButton)
         contentView.bringSubviewToFront(progressView)
         frontView.addGestureRecognizer(longPressGesture)
-
 
         let topToOpen = UITapGestureRecognizer(target: self, action: #selector(self.openWKWebView(gesture:)))
 
@@ -198,7 +193,7 @@ ALKReplyMenuItemProtocol{
 
         guard  let filePath = self.viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath:filePath) else {
 
-            let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded";
+            let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded"
               print(errorMessage)
             return
         }
@@ -210,7 +205,7 @@ ALKReplyMenuItemProtocol{
         pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: false)
     }
 
-    class func commonHeightPadding() ->  CGFloat {
+    class func commonHeightPadding() -> CGFloat {
         return CommonPadding.FrameUIView.height + CommonPadding.FrameUIView.top
             + CommonPadding.FileTypeView.height
     }
@@ -225,35 +220,34 @@ ALKReplyMenuItemProtocol{
 
         let fileType =  ALKFileUtils().getFileExtenion(filePath: viewModel.filePath,fileMeta: viewModel.fileMetaInfo)
 
-        if(!size.isEmpty){
+        if(!size.isEmpty) {
             sizeAndFileType.text =  size + " \u{2022} " + fileType
         }
 
         if viewModel.isMyMessage {
             if viewModel.isSent || viewModel.isAllRead || viewModel.isAllReceived {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
-                    updateView(for: state.downloaded(filePath: filePath))
+                    updateView(for: State.downloaded(filePath: filePath))
                 } else {
-                    updateView(for: state.download)
+                    updateView(for: State.download)
                 }
             } else {
                 updateView(for: .upload)
             }
         } else {
             if let filePath = viewModel.filePath, !filePath.isEmpty {
-                updateView(for: state.downloaded(filePath: filePath))
+                updateView(for: State.downloaded(filePath: filePath))
             } else {
-                updateView(for: state.download)
+                updateView(for: State.download)
             }
         }
     }
-
 
     @objc private func downloadButtonAction(_ selector: UIButton) {
         downloadTapped?(true)
     }
 
-    func updateView(for state: state) {
+    func updateView(for state: State) {
         switch state {
         case .download:
             downloadButton.isHidden = false
@@ -306,7 +300,7 @@ extension ALKDocumentCell: ALKHTTPManagerUploadDelegate {
         print("Document CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
         if task.uploadError == nil && task.completed == true && task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: state.downloaded(filePath: task.filePath ?? ""))
+                self.updateView(for: State.downloaded(filePath: task.filePath ?? ""))
             }
         } else {
             DispatchQueue.main.async {
@@ -337,4 +331,3 @@ extension ALKDocumentCell: ALKHTTPManagerDownloadDelegate {
         }
     }
 }
-

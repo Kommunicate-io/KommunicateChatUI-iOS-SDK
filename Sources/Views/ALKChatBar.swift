@@ -20,6 +20,7 @@ public struct AutoCompleteItem {
     }
 }
 
+// swiftlint:disable:next type_body_length
 open class ALKChatBar: UIView, Localizable {
 
     var configuration: ALKConfiguration!
@@ -47,7 +48,7 @@ open class ALKChatBar: UIView, Localizable {
         case shareContact()
     }
 
-    public var action: ((ActionType) -> ())?
+    public var action: ((ActionType) -> Void)?
 
     open var poweredByMessageLabel: ALKHyperLabel = {
         let label = ALKHyperLabel(frame: CGRect.zero)
@@ -260,7 +261,7 @@ open class ALKChatBar: UIView, Localizable {
 
         textView.keyboardType = .asciiCapable
         textView.reloadInputViews()
-        textView.keyboardType = .default;
+        textView.keyboardType = .default
         textView.reloadInputViews()
     }
 
@@ -268,7 +269,7 @@ open class ALKChatBar: UIView, Localizable {
 
     var chatIdentifier: String?
 
-    private func initializeView(){
+    private func initializeView() {
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }
@@ -320,7 +321,7 @@ open class ALKChatBar: UIView, Localizable {
         self.sendButton.isHidden = false
     }
 
-    required public init(frame: CGRect, configuration: ALKConfiguration){
+    required public init(frame: CGRect, configuration: ALKConfiguration) {
         super.init(frame: frame)
         self.configuration = configuration
         self.isMicButtonHidden = configuration.hideAudioOptionInChatBar
@@ -364,8 +365,9 @@ open class ALKChatBar: UIView, Localizable {
     public var autoCompletionItems = [AutoCompleteItem]()
     var filteredAutocompletionItems = [AutoCompleteItem]()
 
-    public var prefix: String? = nil
+    public var prefix: String?
 
+    // swiftlint:disable:next function_body_length
     private func setupConstraints(
         maxLength: CGFloat = max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)) {
         plusButton.isHidden = true
@@ -381,7 +383,25 @@ open class ALKChatBar: UIView, Localizable {
         var buttonSpacing: CGFloat = 30
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
 
-        addViewsForAutolayout(views: [headerView, bottomGrayView, plusButton, photoButton, grayView,  textView, sendButton, micButton, lineImageView, videoButton, galleryButton,locationButton, contactButton, lineView, frameView, placeHolder,soundRec, poweredByMessageLabel])
+        addViewsForAutolayout(views: [
+            headerView,
+            bottomGrayView,
+            plusButton,
+            photoButton,
+            grayView,
+            textView,
+            sendButton,
+            micButton,
+            lineImageView,
+            videoButton,
+            galleryButton,
+            locationButton,
+            contactButton,
+            lineView,
+            frameView,
+            placeHolder,
+            soundRec,
+            poweredByMessageLabel])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -437,7 +457,6 @@ open class ALKChatBar: UIView, Localizable {
         lineImageView.topAnchor.constraint(equalTo: textView.topAnchor, constant: 10).isActive = true
         lineImageView.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
 
-
         sendButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
@@ -450,7 +469,7 @@ open class ALKChatBar: UIView, Localizable {
 
         if isMicButtonHidden {
             micButton.isHidden = true
-        }else{
+        } else {
             sendButton.isHidden = true
         }
 
@@ -524,7 +543,7 @@ open class ALKChatBar: UIView, Localizable {
         poweredByMessageLabel.constraint(withIdentifier: ConstraintIdentifier.poweredByMessageHeight.rawValue)?.constant = 20
     }
 
-    private func changeButton(){
+    private func changeButton() {
         if soundRec.isHidden {
             soundRec.isHidden = false
             placeHolder.text = nil
@@ -547,7 +566,7 @@ open class ALKChatBar: UIView, Localizable {
         placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
     }
 
-    func hideAudioOptionInChatBar(){
+    func hideAudioOptionInChatBar() {
         guard !isMicButtonHidden else {
             micButton.isHidden = true
             return
@@ -555,14 +574,14 @@ open class ALKChatBar: UIView, Localizable {
         micButton.isHidden = !textView.text.isEmpty
     }
 
-    func toggleButtonInChatBar(hide: Bool){
-        if !isMicButtonHidden{
+    func toggleButtonInChatBar(hide: Bool) {
+        if !isMicButtonHidden {
             self.sendButton.isHidden = hide
             self.micButton.isHidden = !hide
         }
     }
 
-    func toggleUserInteractionForViews(enabled: Bool){
+    func toggleUserInteractionForViews(enabled: Bool) {
         micButton.isUserInteractionEnabled = enabled
         sendButton.isUserInteractionEnabled = enabled
         soundRec.isUserInteractionEnabled = enabled
@@ -604,7 +623,7 @@ open class ALKChatBar: UIView, Localizable {
         let fixedWidth = textView.frame.size.width
         let size = tv.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
 
-        if let textViewHeighConstrain = self.textViewHeighConstrain, size.height != textViewHeighConstrain.constant  {
+        if let textViewHeighConstrain = self.textViewHeighConstrain, size.height != textViewHeighConstrain.constant {
 
             if size.height < self.textViewHeighMax {
                 textViewHeighConstrain.constant = size.height > self.textViewHeigh ? size.height : self.textViewHeigh
@@ -644,7 +663,7 @@ extension ALKChatBar: UITextViewDelegate {
             let overflow = line.origin.y + line.size.height  - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top )
 
             if overflow > 0 {
-                var offset = textView.contentOffset;
+                var offset = textView.contentOffset
                 offset.y += overflow + 8.2 // leave 8.2 pixels margin
 
                 textView.setContentOffset(offset, animated: false)
@@ -725,7 +744,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
 
     public func finishRecordingAudio(soundData: NSData) {
         textView.resignFirstResponder()
-        if soundRec.isRecordingTimeSufficient(){
+        if soundRec.isRecordingTimeSufficient() {
             action?(.sendVoice(soundData))
         }
         stopRecording()

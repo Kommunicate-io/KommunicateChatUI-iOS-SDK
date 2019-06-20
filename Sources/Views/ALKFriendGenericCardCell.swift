@@ -17,11 +17,11 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override open func update(viewModel: ALKMessageViewModel, width: CGFloat) {
         messageView.update(viewModel: viewModel)
         let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
@@ -32,10 +32,10 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
 
         super.update(viewModel: viewModel, width: width)
     }
-    
+
     override func setupViews() {
         setupCollectionView()
-        
+
         contentView.addViewsForAutolayout(views: [self.collectionView, self.messageView])
         contentView.bringSubviewToFront(messageView)
 
@@ -64,7 +64,7 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
     }
 
     private func setupCollectionView() {
-        let layout: TopAlignedCollectionViewFlowLayout = TopAlignedCollectionViewFlowLayout()
+        let layout: TopAlignedFlowLayout = TopAlignedFlowLayout()
         layout.minimumInteritemSpacing = 10
         layout.scrollDirection = .horizontal
         collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
@@ -73,4 +73,3 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
     }
 
 }
-

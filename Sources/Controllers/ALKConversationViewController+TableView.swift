@@ -22,8 +22,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         return viewModel.numberOfRows(section: section)
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard var message = viewModel.messageForRow(indexPath: indexPath) else {
+        guard let message = viewModel.messageForRow(indexPath: indexPath) else {
             return UITableViewCell()
         }
         print("Cell updated at row: ", indexPath.row, "and type is: ", message.messageType)
@@ -390,7 +391,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
 
                 return cell
-            }else{
+            } else {
                 let cell: ALKFriendDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
@@ -456,7 +457,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         }
     }
-
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
@@ -527,7 +527,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
                 let index = cell.collectionView.tag
                 cell.collectionView.setContentOffset(CGPoint(x: collectionViewOffsetFromIndex(index), y: 0), animated: false)
-            }else{
+            } else {
                 guard let cell =  cell as? ALKFriendGenericCardCell else {
                     return
                 }
@@ -538,7 +538,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         }
     }
 
-    //MARK: Paging
+    // MARK: Paging
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if (decelerate) {return}
@@ -579,7 +579,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
 }
 
-extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+extension ALKConversationViewController: UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
@@ -619,7 +619,6 @@ extension ALKConversationViewController: UICollectionViewDataSource,UICollection
             strongSelf.cardTemplateSelected(tag: tag, title: title, template: card, message: message)
         }
         return cell
-
 
     }
 
@@ -677,7 +676,7 @@ extension ALTopicDetail: ALKContextTitleDataType {
 }
 
 // MARK: - WKNavigationDelegate
-extension ALKConversationViewController:WKNavigationDelegate{
+extension ALKConversationViewController:WKNavigationDelegate {
 
     func updateEmailCell(_ cell: UITableViewCell, withHeight height: CGFloat) {
         tableView.beginUpdates()

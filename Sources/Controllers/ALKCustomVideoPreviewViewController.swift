@@ -36,7 +36,7 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController, Localiza
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
+
         self.title = localizedString(forKey: "SendVideo", withDefaultValue: SystemMessage.LabelName.SendVideo, fileName: configuration.localizedStringFileName)
     }
 

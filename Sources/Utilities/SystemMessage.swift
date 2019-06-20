@@ -9,7 +9,7 @@
 import Foundation
 
 //handle all in app's display messages
-struct SystemMessage : Localizable{
+struct SystemMessage : Localizable {
 
     struct Camera {
         static let cameraPermission = localizedString(forKey: "EnableCameraPermissionMessage")
@@ -155,7 +155,6 @@ struct SystemMessage : Localizable{
         static let You = localizedString(forKey: "You")
         static let Admin = localizedString(forKey: "Admin")
     }
-
 
     struct Mute {
         static let MuteUser = localizedString(forKey: "MuteUser")

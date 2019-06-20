@@ -18,8 +18,6 @@ public final class Geocode: CustomStringConvertible {
     var location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     var addressComponents           = [[String: AnyObject]]()
 
-    
-
     required public init(coordinates: CLLocationCoordinate2D) {
         location.latitude = coordinates.latitude
         location.longitude  = coordinates.longitude
@@ -29,4 +27,3 @@ public final class Geocode: CustomStringConvertible {
         return "Geocode: \n displayName: \(displayName), \n formatted address: \(formattedAddress), \n placeIdentifier: \(placeIdentifier),  \n location: \(location)"
     }
 }
-

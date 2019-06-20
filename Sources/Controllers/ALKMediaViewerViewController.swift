@@ -25,7 +25,6 @@ final class ALKMediaViewerViewController: UIViewController {
         return sv
     }()
 
-
     fileprivate let imageView: UIImageView = {
         let mv = UIImageView(frame: .zero)
         mv.contentMode = .scaleAspectFit
@@ -60,14 +59,12 @@ final class ALKMediaViewerViewController: UIViewController {
     private weak var imageViewTrailingConstraint: NSLayoutConstraint?
     private weak var imageViewLeadingConstraint: NSLayoutConstraint?
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         guard let message = viewModel?.getMessageForCurrentIndex() else { return }
         updateView(message: message)
     }
-
 
     private func setupNavigation() {
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
@@ -120,11 +117,9 @@ final class ALKMediaViewerViewController: UIViewController {
         view.layoutIfNeeded()
     }
 
-
     @IBAction private func dismissPress(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
-
 
     @objc private func swipeRightAction() {
         viewModel?.updateCurrentIndex(by: -1)

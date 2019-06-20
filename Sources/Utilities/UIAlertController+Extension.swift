@@ -9,21 +9,21 @@
 import Foundation
 
 extension UIAlertController {
-    
-    static func makeCancelDiscardAlert(title: String, message: String, cancelTitle: String, discardTitle: String, discardAction: @escaping ()->()) -> UIAlertController {
+
+    static func makeCancelDiscardAlert(title: String, message: String, cancelTitle: String, discardTitle: String, discardAction: @escaping ()->Void) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let cancelButton = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
         let discardButton = UIAlertAction(title: discardTitle,
                                           style: .destructive,
-                                          handler: { (alert) in
+                                          handler: { (_) in
                                             discardAction()
         })
         alert.addAction(cancelButton)
         alert.addAction(discardButton)
         return alert
     }
-    
-    static func presentDiscardAlert(onPresenter presenter: UIViewController, alertTitle: String, alertMessage: String, cancelTitle: String, discardTitle: String, onlyForCondition condition: () -> Bool, lastAction: @escaping () -> ()) {
+
+    static func presentDiscardAlert(onPresenter presenter: UIViewController, alertTitle: String, alertMessage: String, cancelTitle: String, discardTitle: String, onlyForCondition condition: () -> Bool, lastAction: @escaping () -> Void) {
         if (condition()) {
                 let alert = makeCancelDiscardAlert(title: alertTitle,
                                                    message: alertMessage,

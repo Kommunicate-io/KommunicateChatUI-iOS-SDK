@@ -89,8 +89,8 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         }
     }
 
-    var url: URL? = nil
-    enum state {
+    var url: URL?
+    enum State {
         case upload(filePath: String)
         case uploading(filePath: String)
         case uploaded
@@ -99,11 +99,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case downloaded(filePath: String)
     }
 
-    var uploadTapped:((Bool) ->())?
-    var uploadCompleted: ((_ responseDict: Any?) ->())?
+    var uploadTapped:((Bool) ->Void)?
+    var uploadCompleted: ((_ responseDict: Any?) ->Void)?
 
-    var downloadTapped:((Bool) ->())?
-
+    var downloadTapped:((Bool) ->Void)?
 
     class func topPadding() -> CGFloat {
         return 12
@@ -137,9 +136,9 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         if viewModel.isMyMessage {
             if viewModel.isSent || viewModel.isAllRead || viewModel.isAllReceived {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
-                    updateView(for: state.downloaded(filePath: filePath))
+                    updateView(for: State.downloaded(filePath: filePath))
                 } else {
-                    updateView(for: state.download)
+                    updateView(for: State.download)
                 }
             } else {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
@@ -148,9 +147,9 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             }
         } else {
             if let filePath = viewModel.filePath, !filePath.isEmpty {
-                updateView(for: state.downloaded(filePath: filePath))
+                updateView(for: State.downloaded(filePath: filePath))
             } else {
-                updateView(for: state.download)
+                updateView(for: State.download)
             }
         }
         timeLabel.text   = viewModel.time
@@ -164,7 +163,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
         let dbService = ALMessageDBService()
-        guard let messages = dbService.getAllMessagesWithAttachment(forContact: viewModel?.contactId, andChannelKey: viewModel?.channelKey, onlyDownloadedAttachments: true) as? [ALMessage] else { return }
+        guard let messages = dbService.getAllMessagesWithAttachment(
+            forContact: viewModel?.contactId,
+            andChannelKey: viewModel?.channelKey,
+            onlyDownloadedAttachments: true) as? [ALMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages )
@@ -220,7 +222,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         bubbleView.bottomAnchor.constraint(equalTo: captionLabel.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
-        
+
         fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
         activityIndicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
         activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
@@ -260,13 +262,13 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         downloadTapped?(true)
     }
 
-    func updateView(for state: state) {
+    func updateView(for state: State) {
         DispatchQueue.main.async {
             self.updateView(state: state)
         }
     }
 
-    private func updateView(state: state) {
+    private func updateView(state: State) {
         switch state {
         case .upload(let filePath):
             frontView.isUserInteractionEnabled = false
@@ -277,18 +279,18 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             photoView.kf.setImage(with: path)
             uploadButton.isHidden = false
         case .uploaded:
-            if activityIndicator.isAnimating{
+            if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
             frontView.isUserInteractionEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
-        case .uploading( _):
+        case .uploading:
             uploadButton.isHidden = true
             frontView.isUserInteractionEnabled = false
             activityIndicator.isHidden = false
-            if !activityIndicator.isAnimating{
+            if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
@@ -301,17 +303,17 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case .downloading:
             uploadButton.isHidden = true
             activityIndicator.isHidden = false
-            if !activityIndicator.isAnimating{
+            if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
             frontView.isUserInteractionEnabled = false
         case .downloaded(let filePath):
             activityIndicator.isHidden = false
-            if !activityIndicator.isAnimating{
+            if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
             }
-            if activityIndicator.isAnimating{
+            if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
             viewModel?.filePath = filePath
@@ -422,7 +424,7 @@ extension ALKPhotoCell: ALKHTTPManagerUploadDelegate {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
         if task.uploadError == nil && task.completed == true && task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: state.uploaded)
+                self.updateView(for: State.uploaded)
             }
         } else {
             DispatchQueue.main.async {

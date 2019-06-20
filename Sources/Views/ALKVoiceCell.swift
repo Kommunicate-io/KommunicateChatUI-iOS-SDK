@@ -26,26 +26,26 @@ public enum ALKVoiceCellState {
 
 class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
                     ALKReplyMenuItemProtocol {
-    
+
     var soundPlayerView: UIView = {
         let mv = UIView()
         mv.contentMode = .scaleAspectFill
         mv.clipsToBounds = true
         return mv
     }()
-    
+
     fileprivate let frameView: ALKTappableView = {
         let view = ALKTappableView()
         view.backgroundColor = .clear
         view.isUserInteractionEnabled = true
         return view
     }()
-    
+
     var playTimeLabel: UILabel = {
         let lb = UILabel()
         return lb
     }()
-    
+
     var progressBar: UIProgressView = {
         let progress = UIProgressView()
         progress.trackTintColor = UIColor.clear
@@ -54,24 +54,24 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         progress.layer.cornerRadius = 12
         return progress
     }()
-    
+
     var timeLabel: UILabel = {
         let lb = UILabel()
         return lb
     }()
-    
+
     var actionButton: UIButton = {
         let button = UIButton(type: .custom)
         button.backgroundColor = .clear
         return button
     }()
-    
+
     var clearButton: UIButton = {
         let button = UIButton(type: .custom)
         button.backgroundColor = .clear
         return button
     }()
-    
+
     var bubbleView: UIView = {
         let bv = UIView()
         bv.backgroundColor = .gray
@@ -80,45 +80,45 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         return bv
     }()
 
-    var downloadTapped:((Bool)->())?
-    
+    var downloadTapped:((Bool)->Void)?
+
     class func topPadding() -> CGFloat {
         return 12
     }
-    
+
     class func bottomPadding() -> CGFloat {
         return 12
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-    
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+
         // Configure the view for the selected state
     }
-    
+
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
-        
+
         let heigh: CGFloat
         heigh = 37
         return topPadding()+heigh+bottomPadding()
     }
-    
+
     func getTimeString(secLeft:CGFloat) -> String {
-        
+
         let min = (Int(secLeft) / 60) % 60
         let sec = (Int(secLeft) % 60)
         let minStr = String(min)
         var secStr = String(sec)
         if sec < 10 {secStr = "0\(secStr)"}
-        
+
         return "\(minStr):\(secStr)"
     }
-    
+
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
@@ -135,54 +135,52 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         let timeLeft = Int(viewModel.voiceTotalDuration)-Int(viewModel.voiceCurrentDuration)
         let totalTime = Int(viewModel.voiceTotalDuration)
         let percent = viewModel.voiceTotalDuration == 0 ? 0 : Float(timeLeft)/Float(totalTime)
-        
+
         let currentPlayTime = CGFloat(timeLeft)
-        
-        if viewModel.voiceCurrentState == .pause && viewModel.voiceCurrentDuration > 0{
+
+        if viewModel.voiceCurrentState == .pause && viewModel.voiceCurrentDuration > 0 {
             actionButton.isSelected = false
             playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
         } else if viewModel.voiceCurrentState == .playing {
             print("identifier: ", viewModel.identifier)
             actionButton.isSelected = true
             playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
-        }
-        else if viewModel.voiceCurrentState == .stop {
+        } else if viewModel.voiceCurrentState == .stop {
             actionButton.isSelected = false
             playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
         } else {
             actionButton.isSelected = false
             playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
         }
-        
+
         if viewModel.voiceCurrentState == .stop || viewModel.voiceCurrentDuration == 0 {
             progressBar.setProgress(0, animated: false)
-        }
-        else {
+        } else {
             progressBar.setProgress(Float(percent), animated: false)
         }
         timeLabel.text   = viewModel.time
     }
-    
+
     weak var voiceDelegate: ALKVoiceCellProtocol?
-    
+
     func setCellDelegate(delegate:ALKVoiceCellProtocol) {
         voiceDelegate = delegate
     }
-    
+
     @objc func actionTapped() {
         guard let identifier = viewModel?.identifier else {return}
         voiceDelegate?.playAudioPress(identifier: identifier)
     }
-    
+
     override func setupStyle() {
         super.setupStyle()
         timeLabel.setStyle(ALKMessageStyle.time)
         playTimeLabel.setStyle(ALKMessageStyle.playTime)
     }
-    
+
     override func setupViews() {
         super.setupViews()
-        
+
         self.accessibilityIdentifier = "audioCell"
 
         actionButton.setImage(UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil), for: .normal)
@@ -199,7 +197,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         contentView.bringSubviewToFront(clearButton)
         contentView.bringSubviewToFront(frameView)
         contentView.bringSubviewToFront(actionButton)
-        
+
         bubbleView.topAnchor.constraint(equalTo: soundPlayerView.topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
@@ -209,29 +207,29 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         progressBar.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
         progressBar.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
         progressBar.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor, constant: -2).isActive = true
-        
+
         frameView.topAnchor.constraint(equalTo: soundPlayerView.topAnchor, constant: 0).isActive = true
         frameView.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor, constant: 0).isActive = true
         frameView.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor, constant: 0).isActive = true
         frameView.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor, constant: 0).isActive = true
-        
+
         clearButton.topAnchor.constraint(equalTo: soundPlayerView.topAnchor).isActive = true
         clearButton.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
         clearButton.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
         clearButton.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor).isActive = true
-        
+
         actionButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
         actionButton.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor,constant:0).isActive = true
         actionButton.widthAnchor.constraint(equalToConstant: 45).isActive = true
         actionButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        
+
         playTimeLabel.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
         playTimeLabel.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
         playTimeLabel.leftAnchor.constraint(greaterThanOrEqualTo: actionButton.leftAnchor,constant:25).isActive = true
         playTimeLabel.rightAnchor.constraint(greaterThanOrEqualTo: actionButton.rightAnchor,constant:25).isActive = true
-        
+
     }
-    
+
     deinit {
         clearButton.removeTarget(self, action: #selector(ALKVoiceCell.soundPlayerAction), for: .touchUpInside)
         actionButton.removeTarget(self, action: #selector(actionTapped), for: .touchUpInside)
@@ -243,8 +241,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
             viewModel?.voiceData = data
             viewModel?.voiceTotalDuration = CGFloat(player.duration)
             playTimeLabel.text = getTimeString(secLeft:viewModel!.voiceTotalDuration)
-        }
-        catch(let error) {
+        } catch(let error) {
             print(error)
         }
     }
@@ -265,7 +262,10 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
         let dbService = ALMessageDBService()
-        guard let messages = dbService.getAllMessagesWithAttachment(forContact: viewModel?.contactId, andChannelKey: viewModel?.channelKey, onlyDownloadedAttachments: true) as? [ALMessage] else { return }
+        guard let messages = dbService.getAllMessagesWithAttachment(
+            forContact: viewModel?.contactId,
+            andChannelKey: viewModel?.channelKey,
+            onlyDownloadedAttachments: true) as? [ALMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages )
@@ -296,7 +296,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
 extension ALKVoiceCell: ALKHTTPManagerDownloadDelegate {
     func dataDownloaded(task: ALKDownloadTask) {
-        
+
     }
 
     func dataDownloadingFinished(task: ALKDownloadTask) {

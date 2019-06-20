@@ -17,7 +17,7 @@ extension UISearchBar {
 //        self.layer.borderColor        = SearchBarStyle.borderColor
         self.backgroundImage          = nil
     }
-    
+
     static func createAXSearchBar(placeholder: String) -> UISearchBar {
         let searchBar = UISearchBar()
         searchBar.applySearchBarStyle()
@@ -32,14 +32,13 @@ extension UISearchBar {
                 print("checking \(subview)")
                 if let textField = subview as? UITextField {
                     return textField
-                }
-                else if let v = findInView(subview) {
-                    return v
+                } else if let viewPresent = findInView(subview) {
+                    return viewPresent
                 }
             }
             return nil
         }
-        
+
         return findInView(self)
     }
 }
