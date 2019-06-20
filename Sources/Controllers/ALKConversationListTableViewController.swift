@@ -44,7 +44,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     public weak var delegate: ALKConversationListTableViewDelegate?
 
     // MARK: - PRIVATE PROPERTIES
-    weak var delegate: ALKConversationListTableViewDelegate?
     fileprivate var configuration: ALKConfiguration
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
