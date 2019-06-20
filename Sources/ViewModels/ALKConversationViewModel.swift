@@ -525,10 +525,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 mesg.status = status as NSNumber
                 self.alMessages[index] = mesg
                 self.messageModels[index] = mesg.messageModel
+                delegate?.updateMessageAt(indexPath: IndexPath(row: 0, section: index))
             }
             guard index < messageModels.count else { return }
         }
-        delegate?.messageUpdated()
     }
 
     open func updateSendStatus(message: ALMessage) {
@@ -1357,7 +1357,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             message?.status = status as NSNumber
             guard let model = message?.messageModel, let index = messageModels.index(of: model) else { return }
             messageModels[index] = model
-            delegate?.messageUpdated()
+            delegate?.updateMessageAt(indexPath: IndexPath(row: 0, section: index))
         }
     }
 
