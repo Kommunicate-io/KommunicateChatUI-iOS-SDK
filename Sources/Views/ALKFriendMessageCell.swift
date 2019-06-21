@@ -46,7 +46,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
         }
 
         struct BubbleView {
-            static let left: CGFloat = 10.0
+            static let left: CGFloat = 5.0
             static let right: CGFloat = 95.0
             static let bottom: CGFloat = 5.0
         }
