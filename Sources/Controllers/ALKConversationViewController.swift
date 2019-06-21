@@ -1871,7 +1871,11 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
                 let path = videos[index - images.count]
-                guard let indexPath = viewModel.sendVideo(atPath: path, sourceType: .photoLibrary, metadata : self.configuration.messageMetadata).1 else { continue }
+                guard let indexPath = viewModel.sendVideo(
+                    atPath: path,
+                    sourceType: .photoLibrary,
+                    metadata : self.configuration.messageMetadata).1
+                    else { continue }
                 self.tableView.beginUpdates()
                 self.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
                 self.tableView.endUpdates()

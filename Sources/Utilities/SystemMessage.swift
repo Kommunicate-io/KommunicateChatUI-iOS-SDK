@@ -77,6 +77,7 @@ struct SystemMessage : Localizable {
         static let DiscardChange = localizedString(forKey: "DiscardChangeMessage")
         static let profaneWordsTitle = localizedString(forKey: "profaneWordsTitle")
         static let profaneWordsMessage = localizedString(forKey: "profaneWordsMessage")
+        static let videoExportError = localizedString(forKey: "VideoExportError")
     }
 
     struct ButtonName {

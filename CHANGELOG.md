@@ -2,6 +2,11 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+2.8.0 (upcoming releases)
+---
+### Fixes
+- Fixed a crash when video isn't exported properly.
+
 2.7.0
 ---
 

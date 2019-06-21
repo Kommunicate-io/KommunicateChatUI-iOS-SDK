@@ -21,8 +21,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     var cameraMode:ALKCameraPhotoType = .noCropOption
     let option = PHImageRequestOptions()
     var selectedRows = [Int]()
-    var selectedImages = [Int: UIImage]()
-    var selectedVideos = [Int: String]()
+    var selectedFiles = [IndexPath]()
 
     @IBOutlet weak var doneButton: UIBarButtonItem!
     weak var delegate: ALKCustomPickerDelegate?
@@ -30,6 +29,9 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     @IBOutlet weak var previewGallery: UICollectionView!
 
     private lazy var localizedStringFileName: String = configuration.localizedStringFileName
+
+    fileprivate let indicatorSize = ALKActivityIndicator.Size(width: 50, height: 50)
+    fileprivate lazy var activityIndicator = ALKActivityIndicator(frame: .zero, backgroundColor: .lightGray, indicatorColor: .white, size: indicatorSize)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,12 +42,18 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         previewGallery.delegate = self
         previewGallery.dataSource = self
         previewGallery.allowsMultipleSelection = true
+
+        view.addViewsForAutolayout(views: [activityIndicator])
+        view.bringSubviewToFront(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: indicatorSize.width).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: indicatorSize.height).isActive = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavigation()
-
     }
 
     static func makeInstanceWith(delegate: ALKCustomPickerDelegate, and configuration: ALKConfiguration) -> ALKBaseNavigationViewController? {
@@ -129,12 +137,11 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
 
     }
 
-    func exportVideoAsset(indexPath: IndexPath, _ asset: PHAsset) {
+    func exportVideoAsset(_ asset: PHAsset, _ completion: @escaping ((_ video: String?) -> Void)) {
         let filename = String(format: "VID-%f.mp4", Date().timeIntervalSince1970*1000)
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 
-        let filePath = documentsUrl.absoluteString.appending(filename)
-        guard var fileurl = URL(string: filePath) else { return }
+        var fileurl = URL(fileURLWithPath: documentsUrl.absoluteString).appendingPathComponent(filename)
         print("exporting video to ", fileurl)
         fileurl = fileurl.standardizedFileURL
 
@@ -154,6 +161,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
 
             if exportSession == nil {
                 print("COULD NOT CREATE EXPORT SESSION")
+                completion(nil)
                 return
             }
 
@@ -164,11 +172,13 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                 switch exportSession!.status {
                 case .completed:
                     print("Video exported successfully")
-                    self.selectedVideos[indexPath.row] = fileurl.path
+                    completion(fileurl.path)
                 case .failed, .cancelled:
                     print("Error while selecting video \(String(describing: exportSession?.error))")
+                    completion(nil)
                 default:
                     print("Video exporting status \(String(describing: exportSession?.status))")
+                    completion(nil)
                     break
                 }
             }
@@ -176,12 +186,76 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     }
 
     @IBAction func doneButtonAction(_ sender: UIBarButtonItem) {
+        activityIndicator.startAnimating()
+        export { (images, videos, error) in
+            self.activityIndicator.stopAnimating()
+            if error {
+                let alertTitle = self.localizedString(
+                    forKey: "PhotoAlbumFailureTitle",
+                    withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle,
+                    fileName: self.localizedStringFileName)
+                let alertMessage = self.localizedString(
+                    forKey: "VideoExportError",
+                    withDefaultValue: SystemMessage.Warning.videoExportError,
+                    fileName: self.localizedStringFileName)
+                let buttonTitle = self.localizedString(
+                    forKey: "OkMessage",
+                    withDefaultValue: SystemMessage.ButtonName.ok,
+                    fileName: self.localizedStringFileName)
+                let alert = UIAlertController(
+                    title: alertTitle,
+                    message: alertMessage,
+                    preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: buttonTitle, style: UIAlertAction.Style.default, handler: { _ in
+                    self.delegate?.filesSelected(images: images, videos: videos)
+                    self.navigationController?.dismiss(animated: false, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                self.delegate?.filesSelected(images: images, videos: videos)
+                self.navigationController?.dismiss(animated: false, completion: nil)
+            }
+        }
 
-        let videos = Array(selectedVideos.values)
-        let images = Array(selectedImages.values)
-        delegate?.filesSelected(images: images, videos: videos)
-        self.navigationController?.dismiss(animated: false, completion: nil)
+    }
 
+    func export(_ completion: @escaping ((_ images: [UIImage], _ videos: [String], _ error: Bool) -> Void)) {
+        var selectedImages = [UIImage]()
+        var selectedVideos = [String]()
+        var error: Bool = false
+        let group = DispatchGroup()
+        DispatchQueue.global(qos: .background).async {
+            for indexPath in self.selectedFiles {
+                group.wait()
+                group.enter()
+                let asset = self.allPhotos.object(at: indexPath.item)
+                if asset.mediaType == .video {
+                    self.exportVideoAsset(asset) { (video) in
+                        guard let video = video else {
+                            error = true
+                            group.leave()
+                            return
+                        }
+                        selectedVideos.append(video)
+                        group.leave()
+                    }
+                } else {
+                    PHCachingImageManager.default().requestImageData(for: asset, options:nil) { (imageData, _, _, _) in
+                        guard let imageData = imageData, let image = UIImage(data: imageData) else {
+                            error = true
+                            group.leave()
+                            return
+                        }
+                        selectedImages.append(image)
+                        group.leave()
+                    }
+                }
+            }
+            group.wait()
+            DispatchQueue.main.async {
+                completion(selectedImages, selectedVideos, error)
+            }
+        }
     }
 
     @IBAction func dismissAction(_ sender: UIBarButtonItem) {
@@ -204,22 +278,11 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
         //grab all the images
         let asset = allPhotos.object(at: indexPath.item)
         if selectedRows[indexPath.row] == 1 {
+            selectedFiles.remove(object: indexPath)
             selectedRows[indexPath.row] = 0
-            if asset.mediaType == .video {
-                selectedVideos.removeValue(forKey: indexPath.row)
-            } else {
-                selectedImages.removeValue(forKey: indexPath.row)
-            }
         } else {
+            selectedFiles.append(indexPath)
             selectedRows[indexPath.row] = 1
-            if asset.mediaType == .video {
-                exportVideoAsset(indexPath: indexPath, asset)
-            } else {
-                PHCachingImageManager.default().requestImageData(for: asset, options:nil) { (imageData, _, _, _) in
-                    let image = UIImage(data: imageData!)
-                    self.selectedImages[indexPath.row] = image
-                }
-            }
         }
 
         previewGallery.reloadItems(at: [indexPath])
