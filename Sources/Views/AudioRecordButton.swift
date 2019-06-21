@@ -181,10 +181,10 @@ open class AudioRecordButton: UIButton {
                         delegate.permissionNotGrant()
                     }
                 } else {
+                    startAudioRecord()
                     if delegate != nil {
                         delegate.startRecordingAudio()
                     }
-                    startAudioRecord()
                 }
 
             case .changed:
