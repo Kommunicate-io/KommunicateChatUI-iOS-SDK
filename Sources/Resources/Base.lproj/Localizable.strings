@@ -140,3 +140,4 @@ DismissAdmin = "Dismiss group admin";
 SendMessage = "Send message";
 RemoveFromGroup = "Remove %@ from the \"%@\" group?";
 Info = "Info";
+VideoExportError = "Some error occured while exporting files";
