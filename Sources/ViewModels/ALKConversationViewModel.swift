@@ -233,7 +233,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return height
         }
         switch messageModel.messageType {
-        case .text, .html:
+        case .text, .html, .email:
             if messageModel.isMyMessage {
                 let heigh = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
                 return heigh.cached(with: messageModel.identifier)
@@ -334,18 +334,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     ALKFriendListTemplateCell
                     .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                     .cached(with: messageModel.identifier)
-            }
-        case .email:
-            if messageModel.isMyMessage {
-                return
-                    ALKMyEmailCell
-                        .rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
-                        .cached(with: messageModel.identifier)
-            } else {
-                return
-                    ALKFriendEmailCell
-                        .rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
-                        .cached(with: messageModel.identifier)
             }
         case .document:
             if messageModel.isMyMessage {

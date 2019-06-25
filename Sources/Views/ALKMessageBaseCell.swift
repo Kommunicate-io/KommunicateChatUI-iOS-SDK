@@ -32,7 +32,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
-        textView.textContainerInset = MessageInsets.normal
+        textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.contentInset = .zero
         return textView
@@ -52,7 +52,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
-        textView.textContainerInset = MessageInsets.html
+        textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.contentInset = .zero
         return textView
@@ -68,16 +68,11 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
-        textView.textContainerInset = MessageInsets.normal
+        textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.contentInset = .zero
         return textView
     }()
-
-    struct MessageInsets {
-        static let normal = UIEdgeInsets.zero
-        static let html = UIEdgeInsets(top: 5, left: 0, bottom: -15, right: 0)
-    }
 
     var timeLabel: UILabel = {
         let lb = UILabel()
@@ -117,6 +112,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         imageView.backgroundColor = .clear
         return imageView
     }()
+
+    let emailTopView = ALKEmailTopView(frame: .zero)
+
+    lazy var emailTopHeight = emailTopView.heightAnchor.constraint(equalToConstant: 0)
 
     fileprivate static let paragraphStyle: NSMutableParagraphStyle = {
         let style = NSMutableParagraphStyle.init()
@@ -166,26 +165,42 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         guard let message = viewModel.message else { return }
 
         switch viewModel.messageType {
-        case .text, .quickReply:
-            self.messageView.textContainerInset = MessageInsets.normal
-            self.messageView.text = message
+        case .text:
+            emailTopHeight.constant = 0
+            messageView.text = message
+            return
         case .html:
-            self.messageView.textContainerInset = MessageInsets.html
-            let attributes: [NSAttributedString.Key : Any] =
-                [.paragraphStyle: ALKMessageCell.paragraphStyle]
-            guard let htmlText = message.data.attributedString else { return }
-            let mutableText = NSMutableAttributedString(attributedString: htmlText)
-            mutableText.addAttributes(attributes, range: NSMakeRange(0,mutableText.length))
-            self.messageView.attributedText = mutableText
+            emailTopHeight.constant = 0
+            emailTopView.show(false)
+        case .email:
+            emailTopHeight.constant = ALKEmailTopView.height
+            emailTopView.show(true)
         default:
-            print("Not possible")
+            print("😱😱😱Shouldn't come here.😱😱😱")
+            return
+        }
+        /// Comes here for html and email
+        DispatchQueue.global().async {
+            let attributedText = ALKMessageCell.attributedStringFrom(message)
+            DispatchQueue.main.async {
+                self.messageView.attributedText = attributedText
+            }
         }
     }
 
     override func setupViews() {
         super.setupViews()
-        contentView.addViewsForAutolayout(views: [messageView,bubbleView,replyView, replyNameLabel, replyMessageLabel,previewImageView,timeLabel])
+        contentView.addViewsForAutolayout(views:
+            [messageView,
+             bubbleView,
+             emailTopView,
+             replyView,
+             replyNameLabel,
+             replyMessageLabel,
+             previewImageView,
+             timeLabel])
         contentView.bringSubviewToFront(messageView)
+        contentView.bringSubviewToFront(emailTopView)
 
         bubbleView.addGestureRecognizer(longPressGesture)
         let replyTapGesture = UITapGestureRecognizer(target: self, action: #selector(replyViewTapped))
@@ -200,24 +215,42 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     class func messageHeight(viewModel: ALKMessageViewModel,
                              width: CGFloat,
                              font: UIFont) -> CGFloat {
-        let messageHeight: CGFloat = 0
         dummyMessageView.font = font
 
         /// Check if message is nil
-        guard let message = viewModel.message else { return messageHeight }
+        guard let message = viewModel.message else { return 0 }
 
         /// Check if messagetype is text or html
         guard viewModel.messageType == .html else {
-            return messageHeight + TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
+            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
         }
 
-        /// Check if html message is correct or not.
-        guard let htmlText = message.data.attributedString else { return 30 }
-        let mutableText = NSMutableAttributedString(attributedString: htmlText)
-        let attributes: [NSAttributedString.Key : Any]
-            = [.paragraphStyle: ALKMessageCell.paragraphStyle]
-        mutableText.addAttributes(attributes, range: NSMakeRange(0, mutableText.length))
-        return messageHeight + TextViewSizeCalculator.height(dummyAttributedMessageView, attributedText: mutableText, maxWidth: width)
+        switch viewModel.messageType {
+        case .text:
+            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
+        case .html:
+            guard let attributedText = attributedStringFrom(message) else {
+                return 0
+            }
+            dummyAttributedMessageView.font = font
+            return TextViewSizeCalculator.height(
+                dummyAttributedMessageView,
+                attributedText: attributedText,
+                maxWidth: width)
+        case .email:
+            guard let attributedText = attributedStringFrom(message) else {
+                return ALKEmailTopView.height
+            }
+            dummyAttributedMessageView.font = font
+            return ALKEmailTopView.height +
+                TextViewSizeCalculator.height(
+                    dummyAttributedMessageView,
+                    attributedText: attributedText,
+                    maxWidth: width)
+        default:
+            print("😱😱😱Shouldn't come here.😱😱😱")
+            return 0
+        }
     }
 
     func menuCopy(_ sender: Any) {
@@ -253,6 +286,26 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         let modifier = FlipsForRightToLeftLayoutDirectionImageModifier()
         return modifier.modify(bubbleImage)
 
+    }
+
+    // MARK: - Private helper methods
+
+    private class func attributedStringFrom(_ text: String) -> NSAttributedString? {
+        guard let htmlText = text.data(using: .utf8, allowLossyConversion: false) else {
+            print("🤯🤯🤯Could not create UTF8 formatted data from \(text)")
+            return nil
+        }
+        do {
+            return try NSAttributedString(
+                data: htmlText,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue],
+                documentAttributes: nil)
+        } catch {
+            print("😢😢😢 Error \(error) while creating attributed string")
+            return nil
+        }
     }
 
     private func getMessageTextFrom(viewModel: ALKMessageViewModel) -> String? {

@@ -191,9 +191,19 @@ open class ALKFriendMessageCell: ALKMessageCell {
                 constant: 0,
                 identifier: ConstraintIdentifier.replyMessageHeight),
 
-            messageView.topAnchor.constraint(
+            emailTopView.topAnchor.constraint(
                 equalTo: replyView.bottomAnchor,
                 constant: Padding.MessageView.top),
+            emailTopView.trailingAnchor.constraint(
+                equalTo: bubbleView.trailingAnchor,
+                constant: -ALKMessageStyle.receivedBubble.widthPadding),
+            emailTopView.leadingAnchor.constraint(
+                equalTo: bubbleView.leadingAnchor,
+                constant: ALKFriendMessageCell.bubbleViewLeftPadding),
+            emailTopHeight,
+
+            messageView.topAnchor.constraint(
+                equalTo: emailTopView.bottomAnchor),
             messageView.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
                 constant: -Padding.MessageView.bottom),
