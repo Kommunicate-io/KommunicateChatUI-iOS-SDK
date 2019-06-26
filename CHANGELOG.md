@@ -4,6 +4,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 2.8.0 (upcoming releases)
 ---
+### Enhancements
+- [AL-3603] Now calculated height of message cell will be cached. 
+
 ### Fixes
 - Fixed a crash when video isn't exported properly.
 
