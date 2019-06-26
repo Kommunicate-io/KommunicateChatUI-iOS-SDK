@@ -135,7 +135,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     var replyViewAction: (()->())? = nil
 
-    override func update(viewModel: ALKMessageViewModel) {
+    func update(viewModel: ALKMessageViewModel, style: Style) {
         self.viewModel = viewModel
 
         if viewModel.isReplyMessage {
@@ -160,8 +160,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         }
 
         self.timeLabel.text   = viewModel.time
-        self.messageView.attributedText = nil
-        self.messageView.text = nil
+        resetTextView(style)
         guard let message = viewModel.message else { return }
 
         switch viewModel.messageType {
@@ -400,5 +399,15 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
             print("*** Error generating thumbnail: \(error.localizedDescription)")
             return nil
         }
+    }
+
+
+    /// This hack is required cuz textView won't clear its attributes.
+    /// See this: https://stackoverflow.com/q/21731207/6671572
+    private func resetTextView(_ style: Style) {
+        messageView.attributedText = nil
+        messageView.text = nil
+        messageView.typingAttributes = [:]
+        messageView.setStyle(style)
     }
 }

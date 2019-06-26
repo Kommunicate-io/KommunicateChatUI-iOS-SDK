@@ -241,7 +241,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
     }
 
     override func update(viewModel: ALKMessageViewModel) {
-        super.update(viewModel: viewModel)
+        super.update(viewModel: viewModel, style: ALKMessageStyle.receivedMessage)
 
         if viewModel.isReplyMessage {
             guard
