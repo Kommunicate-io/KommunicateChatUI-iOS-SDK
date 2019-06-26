@@ -7,7 +7,19 @@
 
 import UIKit
 
+/// Its a view that displays a title with description on a bubble
+/// alongwith optional buttons at the bottom.
 public class FAQMessageView: UIView {
+
+    // MARK: - Public properties
+
+    /// Use this to adjust the spacing between title-description and description-buttons.
+    public static var verticalSpacing: CGFloat = 5
+
+    /// Use this to handle callbacks when buttons are clicked.
+    public var faqSelected: ((_ index: Int?, _ title: String) -> Void)?
+
+    // MARK: - Private properties
 
     fileprivate let titleLabel: UILabel = {
         let label = UILabel()
@@ -47,10 +59,15 @@ public class FAQMessageView: UIView {
     fileprivate lazy var descriptionHeight = descriptionLabel.heightAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var buttonLabelHeight = buttonLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    public static var verticalSpacing: CGFloat = 5
+    // MARK: - Initializers
 
-    public var faqSelected: ((_ index: Int?, _ title: String) -> Void)?
-
+    /// Initializer for `FAQMessageView`
+    ///
+    /// - Parameters:
+    ///   - frame: The frame rectangle for the view
+    ///   - faqStyle: `FAQMessageStyle` used to configure view's style
+    ///   - alignLeft: Used to align buttons, if any, to left or right.
+    ///                For sender, use false. For receiver, use true.
     public init(frame: CGRect, faqStyle: FAQMessageStyle, alignLeft: Bool) {
         style = faqStyle
         self.alignLeft = alignLeft
@@ -63,6 +80,13 @@ public class FAQMessageView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Public methods
+
+    /// It updates the `FAQMessageView` using `FAQMessage`. Sets title, description and buttons.
+    ///
+    /// - Parameters:
+    ///   - model: `FAQMessage` containing information to update view.
+    ///   - maxWidth: maximum allowable width for the view.
     public func update(model: FAQMessage, maxWidth: CGFloat) {
         let width = maxWidth - (style.bubble.padding.left + style.bubble.padding.right)
         titleLabel.text = model.title
@@ -74,6 +98,13 @@ public class FAQMessageView: UIView {
         buttons.update(model: SuggestedReplyMessage(title: model.buttons, reply: model.buttons, message: model.message))
     }
 
+    /// It's used to get exact height for `FAQMessageView`
+    ///
+    /// - Parameters:
+    ///   - model: Model used to update the view.
+    ///   - maxWidth: maximum allowable width for the view.
+    ///   - style: style used to configure view, use the same value passed while initialization.
+    /// - Returns: Exact height of the view.
     public class func rowHeight(model: FAQMessage, maxWidth: CGFloat, style: FAQMessageStyle) -> CGFloat {
         let padding = style.bubble.padding
         let width = maxWidth - (padding.left + padding.right)
@@ -84,6 +115,8 @@ public class FAQMessageView: UIView {
         let buttonLabelHeight = (model.buttonLabel?.heightWithConstrainedWidth(maxWidth, font: style.buttonLabel.font) ?? 0) + verticalSpacing
         return buttonHeight + titleHeight + descriptionHeight + buttonLabelHeight
     }
+
+    // MARK: - Private helper methods
 
     private func setupStyle() {
         titleLabel.setStyle(style.title)
@@ -135,7 +168,6 @@ public class FAQMessageView: UIView {
 extension FAQMessageView: Tappable {
     public func didTap(index: Int?, title: String) {
         guard let faqSelected = faqSelected else {
-            print("❌❌❌ To handle faq click please use faqSelected.❌❌❌")
             return
         }
         faqSelected(index, title)

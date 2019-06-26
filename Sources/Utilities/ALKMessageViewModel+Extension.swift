@@ -9,7 +9,7 @@ import Foundation
 
 extension ALKMessageViewModel {
 
-    private func richMessage() -> Message {
+    private func messageDetails() -> Message {
         return Message(
             text: self.message,
             isMyMessage: self.isMyMessage,
@@ -29,7 +29,7 @@ extension ALKMessageViewModel {
         return ImageMessage(
             caption: imageData["caption"] as? String,
             url: url,
-            message: richMessage())
+            message: messageDetails())
     }
 
     func faqMessage() -> FAQMessage? {
@@ -51,7 +51,7 @@ extension ALKMessageViewModel {
         }
 
         return FAQMessage(
-            message: richMessage(),
+            message: messageDetails(),
             title: msg["title"] as? String,
             description: msg["description"] as? String,
             buttonLabel: msg["buttonLabel"] as? String,

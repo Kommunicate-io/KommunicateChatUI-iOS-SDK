@@ -7,8 +7,15 @@
 
 import UIKit
 
+/// FAQMessageCell for sender side.
+///
+/// It contains `FAQMessageView` and `SentMessageView`
+/// It also contains `Config` which is used to configure views properties. Values can be changed for customizations.
 public class SentFAQMessageCell: UITableViewCell {
 
+    // MARK: Public properties
+
+    /// Configuration to adjust padding and maxWidth for the view.
     public struct Config {
         public static var padding = Padding(left: 60, right: 10, top: 10, bottom: 10)
         public static var maxWidth = UIScreen.main.bounds.width
@@ -34,6 +41,8 @@ public class SentFAQMessageCell: UITableViewCell {
 
     static let faqWidth = Config.maxWidth - Config.faqLeftPadding - Config.padding.right
 
+    // MARK: Initializer
+
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         messageViewPadding = Padding(left: Config.padding.left,
                                      right: Config.padding.right,
@@ -50,6 +59,9 @@ public class SentFAQMessageCell: UITableViewCell {
 
     //MARK:- Public methods
 
+    /// It updates `SentFAQMessageCell`. Sets FAQmessage, text message, time, status.
+    ///
+    /// - Parameter model: `FAQMessage` used to update the cell.
     public func update(model: FAQMessage) {
         guard model.message.isMyMessage else {
             print("😱😱😱Inconsistent information passed to the view.😱😱😱")
@@ -65,6 +77,10 @@ public class SentFAQMessageCell: UITableViewCell {
         self.frame.size = CGSize(width: Config.maxWidth, height: height)
     }
 
+    /// It's used to get the exact height of cell.
+    ///
+    /// - Parameter model: `FAQMessage` used for updating the cell.
+    /// - Returns: Exact height of cell.
     public class func rowHeight(model: FAQMessage) -> CGFloat {
         return FAQMessageSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth, padding: Config.padding)
     }
