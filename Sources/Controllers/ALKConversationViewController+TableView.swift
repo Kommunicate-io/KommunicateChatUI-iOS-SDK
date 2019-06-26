@@ -441,7 +441,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        return viewModel.heightForRow(indexPath: indexPath, cellFrame: self.view.frame,contentHeights: contentHeights)
+        return viewModel.heightForRow(indexPath: indexPath, cellFrame: self.view.frame)
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

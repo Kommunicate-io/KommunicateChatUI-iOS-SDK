@@ -18,6 +18,9 @@ class ALKImageView: UIImageView {
     }
 }
 
+protocol MessageHeightDelegate {
+    func calculated(height: CGFloat, for identifier: String)
+}
 
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
@@ -57,6 +60,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         textView.contentInset = .zero
         return textView
     }()
+
+    fileprivate static var attributedStringCache: [String: NSAttributedString?] = [:]
 
     let messageView: ALKTextView = {
         let textView = ALKTextView.init(frame: .zero)
@@ -180,7 +185,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         }
         /// Comes here for html and email
         DispatchQueue.global().async {
-            let attributedText = ALKMessageCell.attributedStringFrom(message)
+            let attributedText = ALKMessageCell.attributedStringFrom(message, for: viewModel.identifier)
             DispatchQueue.main.async {
                 self.messageView.attributedText = attributedText
             }
@@ -213,42 +218,53 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     class func messageHeight(viewModel: ALKMessageViewModel,
                              width: CGFloat,
-                             font: UIFont) -> CGFloat {
+                             font: UIFont,
+                             completion: @escaping ((_ height: CGFloat) -> Void)) {
         dummyMessageView.font = font
 
         /// Check if message is nil
-        guard let message = viewModel.message else { return 0 }
-
-        /// Check if messagetype is text or html
-        guard viewModel.messageType == .html else {
-            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
+        guard let message = viewModel.message else {
+            completion(0)
+            return
         }
 
         switch viewModel.messageType {
         case .text:
-            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
+            completion(TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width))
         case .html:
-            guard let attributedText = attributedStringFrom(message) else {
-                return 0
+            DispatchQueue.global().async {
+                guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
+                    completion(0)
+                    return
+                }
+                DispatchQueue.main.async {
+                    dummyAttributedMessageView.font = font
+                    let height = TextViewSizeCalculator.height(
+                        dummyAttributedMessageView,
+                        attributedText: attributedText,
+                        maxWidth: width)
+                    completion(height)
+                }
             }
-            dummyAttributedMessageView.font = font
-            return TextViewSizeCalculator.height(
-                dummyAttributedMessageView,
-                attributedText: attributedText,
-                maxWidth: width)
         case .email:
-            guard let attributedText = attributedStringFrom(message) else {
-                return ALKEmailTopView.height
+            DispatchQueue.global().async {
+                guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
+                    completion(ALKEmailTopView.height)
+                    return
+                }
+                DispatchQueue.main.async {
+                    dummyAttributedMessageView.font = font
+                    let height = ALKEmailTopView.height +
+                        TextViewSizeCalculator.height(
+                            dummyAttributedMessageView,
+                            attributedText: attributedText,
+                            maxWidth: width)
+                    completion(height)
+                }
             }
-            dummyAttributedMessageView.font = font
-            return ALKEmailTopView.height +
-                TextViewSizeCalculator.height(
-                    dummyAttributedMessageView,
-                    attributedText: attributedText,
-                    maxWidth: width)
         default:
             print("😱😱😱Shouldn't come here.😱😱😱")
-            return 0
+            completion(0)
         }
     }
 
@@ -289,18 +305,23 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     // MARK: - Private helper methods
 
-    private class func attributedStringFrom(_ text: String) -> NSAttributedString? {
+    private class func attributedStringFrom(_ text: String, for id: String) -> NSAttributedString? {
+        if let attributedString = attributedStringCache[id] {
+            return attributedString
+        }
         guard let htmlText = text.data(using: .utf8, allowLossyConversion: false) else {
             print("🤯🤯🤯Could not create UTF8 formatted data from \(text)")
             return nil
         }
         do {
-            return try NSAttributedString(
+            let attributedString = try NSAttributedString(
                 data: htmlText,
                 options: [
                     .documentType: NSAttributedString.DocumentType.html,
                     .characterEncoding: String.Encoding.utf8.rawValue],
                 documentAttributes: nil)
+            self.attributedStringCache[id] = attributedString
+            return attributedString
         } catch {
             print("😢😢😢 Error \(error) while creating attributed string")
             return nil

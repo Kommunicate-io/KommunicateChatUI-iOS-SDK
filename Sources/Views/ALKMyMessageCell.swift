@@ -238,26 +238,29 @@ open class ALKMyMessageCell: ALKMessageCell {
         }
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    class func rowHeigh(viewModel: ALKMessageViewModel,
+                                 width: CGFloat,
+                                 completion: @escaping ((CGFloat) -> Void)) -> CGFloat {
         /// Calculating messageHeight
         let leftSpacing = Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
         let rightSpacing = Padding.BubbleView.right + bubbleViewRightPadding
         let messageWidth = width - (leftSpacing + rightSpacing)
-        let messageHeight = super.messageHeight(viewModel: viewModel,
-                                                width: messageWidth,
-                                                font: ALKMessageStyle.sentMessage.font)
+        super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.sentMessage.font) { (messageHeight) in
+            let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
 
-        let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
-
-        let totalHeight = messageHeight + heightPadding
-        guard
-            let metadata = viewModel.metadata,
-            let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
-            let _ = ALMessageService().getALMessage(byKey: replyId)?.messageModel
-            else {
-                return totalHeight
+            let totalHeight = messageHeight + heightPadding
+            guard
+                let metadata = viewModel.metadata,
+                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
+                let _ = ALMessageService().getALMessage(byKey: replyId)?.messageModel
+                else {
+                    completion(totalHeight)
+                    return
+            }
+            completion(totalHeight + Padding.ReplyView.height)
+            return
         }
-        return totalHeight + Padding.ReplyView.height
+        return 0
     }
 
     fileprivate func showReplyView(_ show: Bool) {

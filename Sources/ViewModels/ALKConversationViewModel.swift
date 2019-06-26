@@ -227,7 +227,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return messageModels.firstIndex { $0.identifier == identifier }
     }
 
-    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect,contentHeights: Dictionary<String,CGFloat>) -> CGFloat {
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         if let height = HeightCache.shared.getHeight(for: messageModel.identifier) {
             return height
@@ -235,11 +235,20 @@ open class ALKConversationViewModel: NSObject, Localizable {
         switch messageModel.messageType {
         case .text, .html, .email:
             if messageModel.isMyMessage {
-                let heigh = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh.cached(with: messageModel.identifier)
+                let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth) { [weak self] height in
+                    height.cached(with: messageModel.identifier)
+                    self?.delegate?.updateMessageAt(indexPath: indexPath)
+                    return
+                }
+                return height
             } else {
-                let heigh = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh.cached(with: messageModel.identifier)
+                let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth) { [weak self] height in
+                    height.cached(with: messageModel.identifier)
+                    self?.delegate?.updateMessageAt(indexPath: indexPath)
+                    return
+                }
+                return height
+
             }
         case .photo:
             if messageModel.isMyMessage {
@@ -1437,5 +1446,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
             print("\(error)")
             return nil
         }
+    }
+}
+
+extension ALKConversationViewModel: MessageHeightDelegate {
+    func calculated(height: CGFloat, for identifier: String) {
     }
 }

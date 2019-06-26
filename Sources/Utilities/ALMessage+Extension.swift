@@ -193,6 +193,10 @@ extension ALMessage {
 
     public var messageType: ALKMessageType {
         guard source != emailSourceType else {
+            /// Attachments come as separate message.
+            if message == nil, let type = getAttachmentType() {
+                return type
+            }
             return .email
         }
         switch Int32(contentType) {

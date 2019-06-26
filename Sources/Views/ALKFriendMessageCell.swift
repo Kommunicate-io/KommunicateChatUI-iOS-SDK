@@ -270,7 +270,9 @@ open class ALKFriendMessageCell: ALKMessageCell {
         nameLabel.text = viewModel.displayName
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    class func rowHeigh(viewModel: ALKMessageViewModel,
+                                 width: CGFloat,
+                                 completion: @escaping ((CGFloat) -> Void)) -> CGFloat {
         let minimumHeight = Padding.AvatarImage.top + Padding.AvatarImage.height + 5
 
         /// Calculating available width for messageView
@@ -279,22 +281,23 @@ open class ALKFriendMessageCell: ALKMessageCell {
         let messageWidth = width - (leftSpacing + rightSpacing)
 
         /// Calculating messageHeight
-        let messageHeight = super.messageHeight(viewModel: viewModel,
-                            width: messageWidth,
-                            font: ALKMessageStyle.receivedMessage.font)
+        super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.receivedMessage.font) { messageHeight in
+            let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom
 
-        let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom
+            let totalHeight = max((messageHeight + heightPadding), minimumHeight)
 
-        let totalHeight = max((messageHeight + heightPadding), minimumHeight)
-
-        guard
-            let metadata = viewModel.metadata,
-            let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
-            let _ = ALMessageService().getALMessage(byKey: replyId)?.messageModel
-        else {
-            return totalHeight
+            guard
+                let metadata = viewModel.metadata,
+                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
+                let _ = ALMessageService().getALMessage(byKey: replyId)?.messageModel
+                else {
+                    completion(totalHeight)
+                    return
+            }
+            completion(totalHeight + Padding.ReplyView.height)
+            return
         }
-        return totalHeight + Padding.ReplyView.height
+        return minimumHeight
     }
 
     @objc private func avatarTappedAction() {

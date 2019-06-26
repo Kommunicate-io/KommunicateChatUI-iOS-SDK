@@ -150,8 +150,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contentOffsetDictionary: Dictionary<AnyHashable,AnyObject>!
 
-    var contentHeights = Dictionary<String,CGFloat>()
-
     required public init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
         self.localizedStringFileName = configuration.localizedStringFileName
@@ -416,7 +414,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording()
-        contentHeights = [:]
         if individualLaunch {
             if let _ = alMqttConversationService {
                 alMqttConversationService.unsubscribeToConversation()
