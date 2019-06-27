@@ -445,6 +445,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
             notificationView.noDataConnectionNotificationView()
             return
         }
+        /// For email attachments url is to be used directly
+        if ALMessageDBService().getMessageByKey(message.identifier).source == emailSourceType,
+            let url = message.fileMetaInfo?.url {
+            let httpManager = ALKHTTPManager()
+            httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
+            let task = ALKDownloadTask(downloadUrl: url, fileName: message.fileMetaInfo?.name)
+            task.identifier = message.identifier
+            task.totalBytesExpectedToDownload = message.size
+            httpManager.downloadImage(task: task)
+            return
+        }
         ALMessageClientService().downloadImageUrl(message.fileMetaInfo?.blobKey) { (fileUrl, error) in
             guard error == nil, let fileUrl = fileUrl else {
                 print("Error downloading attachment :: \(String(describing: error))")
