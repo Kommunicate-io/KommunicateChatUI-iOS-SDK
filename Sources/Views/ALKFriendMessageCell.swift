@@ -270,9 +270,8 @@ open class ALKFriendMessageCell: ALKMessageCell {
         nameLabel.text = viewModel.displayName
     }
 
-    class func rowHeigh(viewModel: ALKMessageViewModel,
-                                 width: CGFloat,
-                                 completion: @escaping ((CGFloat) -> Void)) -> CGFloat {
+    override class func rowHeigh(viewModel: ALKMessageViewModel,
+                                 width: CGFloat) -> CGFloat {
         let minimumHeight = Padding.AvatarImage.top + Padding.AvatarImage.height + 5
 
         /// Calculating available width for messageView
@@ -281,22 +280,18 @@ open class ALKFriendMessageCell: ALKMessageCell {
         let messageWidth = width - (leftSpacing + rightSpacing)
 
         /// Calculating messageHeight
-        super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.receivedMessage.font) { messageHeight in
-            let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom
+        let messageHeight = super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.receivedMessage.font)
+        let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom
 
-            let totalHeight = max((messageHeight + heightPadding), minimumHeight)
+        let totalHeight = max((messageHeight + heightPadding), minimumHeight)
 
-            guard
-                let metadata = viewModel.metadata,
-                let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
-                else {
-                    completion(totalHeight)
-                    return
-            }
-            completion(totalHeight + Padding.ReplyView.height)
-            return
+        guard
+            let metadata = viewModel.metadata,
+            let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
+            else {
+                return totalHeight
         }
-        return minimumHeight
+        return totalHeight + Padding.ReplyView.height
     }
 
     @objc private func avatarTappedAction() {

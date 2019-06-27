@@ -237,29 +237,25 @@ open class ALKMyMessageCell: ALKMessageCell {
         }
     }
 
-    class func rowHeigh(viewModel: ALKMessageViewModel,
-                                 width: CGFloat,
-                                 completion: @escaping ((CGFloat) -> Void)) -> CGFloat {
+    override class func rowHeigh(viewModel: ALKMessageViewModel,
+                                 width: CGFloat) -> CGFloat {
         /// Calculating messageHeight
         let leftSpacing = Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
         let rightSpacing = Padding.BubbleView.right + bubbleViewRightPadding
         let messageWidth = width - (leftSpacing + rightSpacing)
-        super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.sentMessage.font) { (messageHeight) in
-            let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
+        let messageHeight = super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.sentMessage.font)
+        let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
 
-            let totalHeight = messageHeight + heightPadding
-            guard
-                let metadata = viewModel.metadata,
-                let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
-                else {
-                    completion(totalHeight)
-                    return
-            }
-            completion(totalHeight + Padding.ReplyView.height)
-            return
+        let totalHeight = messageHeight + heightPadding
+        guard
+            let metadata = viewModel.metadata,
+            let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
+            else {
+                return totalHeight
         }
-        return 0
+        return totalHeight + Padding.ReplyView.height
     }
+
 
     fileprivate func showReplyView(_ show: Bool) {
         replyView
