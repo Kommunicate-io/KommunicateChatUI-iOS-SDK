@@ -55,13 +55,13 @@ class ALMessageTests: XCTestCase {
         XCTAssert(message.messageType == .genericCard)
     }
 
-    func testMessageType_WhenGenericList() {
+    func testMessageType_WhenFAQTemplate() {
         let message = MockMessage().message
         let mockMetaData = NSMutableDictionary()
         mockMetaData["contentType"] = "300"
         mockMetaData["templateId"] = "8"
         message.metadata = mockMetaData
-        XCTAssert(message.messageType == .genericList)
+        XCTAssert(message.messageType == .faqTemplate)
     }
 
     func testMessageType_WhenSourceIsEmail() {
