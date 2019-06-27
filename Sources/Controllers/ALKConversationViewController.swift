@@ -1452,11 +1452,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         guard indexPath.section >= 0 else {
             return
         }
-        tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let sectionCount = self.tableView.numberOfSections
             if indexPath.section <= sectionCount {
-                self.tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
             }
         }
     }
@@ -1500,15 +1500,15 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func messageSent(at indexPath: IndexPath) {
-            NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)
-            guard indexPath.section >= self.tableView.numberOfSections else {
-                NSLog("rejected indexpath: %i and tableview and section %i", indexPath.section, self.tableView.numberOfSections)
-                return
-            }
-            self.tableView.beginUpdates()
-            self.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
-            self.tableView.endUpdates()
-            self.tableView.scrollToBottom(animated: false)
+        NSLog("current indexpath: %i and tableview section %i", indexPath.section, self.tableView.numberOfSections)
+        guard indexPath.section >= self.tableView.numberOfSections else {
+            NSLog("rejected indexpath: %i and tableview and section %i", indexPath.section, self.tableView.numberOfSections)
+            return
+        }
+        tableView.beginUpdates()
+        tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
+        tableView.endUpdates()
+        moveTableViewToBottom(indexPath: indexPath)
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
