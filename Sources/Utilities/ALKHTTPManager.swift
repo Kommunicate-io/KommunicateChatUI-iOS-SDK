@@ -117,6 +117,33 @@ class ALKHTTPManager: NSObject {
         }
     }
 
+
+    /// Used to download image directly using the url in `task`.
+    ///
+    /// No headers are sent with the call.
+    func downloadImage(task: ALKDownloadTask) {
+        self.downloadTask = task
+        guard let urlString = task.urlString, let fileName = task.fileName, let identifier = task.identifier else { return }
+        let componentsArray = fileName.components(separatedBy: ".")
+        let fileExtension = componentsArray.last
+        let filePath = getFilePath(using: identifier, with: fileExtension!)
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+
+        if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil, let downloadTask = self.downloadTask {
+            downloadTask.filePath = filePath
+            downloadTask.completed = true
+            downloadTask.isDownloading = false
+            self.downloadCompleted?(downloadTask)
+            downloadDelegate?.dataDownloadingFinished(task: downloadTask)
+        } else {
+            let configuration = URLSessionConfiguration.default
+            guard !urlString.isEmpty, let url = URL(string: urlString) else { return }
+            session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
+            let dataTask = session?.dataTask(with: URLRequest(url: url))
+            dataTask?.resume()
+        }
+    }
+
     func uploadAttachment(task: ALKUploadTask) {
         self.uploadTask = task
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

@@ -193,6 +193,10 @@ extension ALMessage {
 
     public var messageType: ALKMessageType {
         guard source != emailSourceType else {
+            /// Attachments come as separate message.
+            if message == nil, let type = getAttachmentType() {
+                return type
+            }
             return .email
         }
         switch Int32(contentType) {
@@ -398,6 +402,7 @@ extension ALMessage {
         messageModel.receiverId = to
         messageModel.isReplyMessage = isAReplyMessage()
         messageModel.metadata = metadata as? Dictionary<String, Any>
+        messageModel.source = source
         return messageModel
     }
 }

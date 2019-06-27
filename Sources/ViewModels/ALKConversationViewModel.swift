@@ -227,19 +227,28 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return messageModels.firstIndex { $0.identifier == identifier }
     }
 
-    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect,contentHeights: Dictionary<String,CGFloat>) -> CGFloat {
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         if let height = HeightCache.shared.getHeight(for: messageModel.identifier) {
             return height
         }
         switch messageModel.messageType {
-        case .text, .html:
+        case .text, .html, .email:
             if messageModel.isMyMessage {
-                let heigh = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh.cached(with: messageModel.identifier)
+                let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth) { [weak self] height in
+                    height.cached(with: messageModel.identifier)
+                    self?.delegate?.updateMessageAt(indexPath: indexPath)
+                    return
+                }
+                return height
             } else {
-                let heigh = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-                return heigh.cached(with: messageModel.identifier)
+                let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth) { [weak self] height in
+                    height.cached(with: messageModel.identifier)
+                    self?.delegate?.updateMessageAt(indexPath: indexPath)
+                    return
+                }
+                return height
+
             }
         case .photo:
             if messageModel.isMyMessage {
@@ -334,18 +343,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     ALKFriendListTemplateCell
                     .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                     .cached(with: messageModel.identifier)
-            }
-        case .email:
-            if messageModel.isMyMessage {
-                return
-                    ALKMyEmailCell
-                        .rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
-                        .cached(with: messageModel.identifier)
-            } else {
-                return
-                    ALKFriendEmailCell
-                        .rowHeight(viewModel: messageModel, height: contentHeights[messageModel.identifier])
-                        .cached(with: messageModel.identifier)
             }
         case .document:
             if messageModel.isMyMessage {
@@ -446,6 +443,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()
             notificationView.noDataConnectionNotificationView()
+            return
+        }
+        /// For email attachments url is to be used directly
+        if message.source == emailSourceType, let url = message.fileMetaInfo?.url {
+            let httpManager = ALKHTTPManager()
+            httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
+            let task = ALKDownloadTask(downloadUrl: url, fileName: message.fileMetaInfo?.name)
+            task.identifier = message.identifier
+            task.totalBytesExpectedToDownload = message.size
+            httpManager.downloadImage(task: task)
             return
         }
         ALMessageClientService().downloadImageUrl(message.fileMetaInfo?.blobKey) { (fileUrl, error) in
