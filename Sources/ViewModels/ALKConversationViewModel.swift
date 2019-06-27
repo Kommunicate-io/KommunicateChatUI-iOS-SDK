@@ -235,20 +235,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         switch messageModel.messageType {
         case .text, .html, .email:
             if messageModel.isMyMessage {
-                let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth) { [weak self] height in
-                    height.cached(with: messageModel.identifier)
-                    self?.delegate?.updateMessageAt(indexPath: indexPath)
-                    return
-                }
-                return height
+                let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return height.cached(with: messageModel.identifier)
             } else {
-                let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth) { [weak self] height in
-                    height.cached(with: messageModel.identifier)
-                    self?.delegate?.updateMessageAt(indexPath: indexPath)
-                    return
-                }
-                return height
-
+                let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                return height.cached(with: messageModel.identifier)
             }
         case .photo:
             if messageModel.isMyMessage {

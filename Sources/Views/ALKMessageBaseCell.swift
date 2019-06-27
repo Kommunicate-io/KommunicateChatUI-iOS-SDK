@@ -57,7 +57,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         return textView
     }()
 
-    fileprivate static var attributedStringCache: [String: NSAttributedString?] = [:]
+    fileprivate static var attributedStringCache = NSCache<NSString, NSAttributedString>()
 
     let messageView: ALKTextView = {
         let textView = ALKTextView.init(frame: .zero)
@@ -214,53 +214,41 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     class func messageHeight(viewModel: ALKMessageViewModel,
                              width: CGFloat,
-                             font: UIFont,
-                             completion: @escaping ((_ height: CGFloat) -> Void)) {
+                             font: UIFont) -> CGFloat {
         dummyMessageView.font = font
 
         /// Check if message is nil
         guard let message = viewModel.message else {
-            completion(0)
-            return
+            return 0
         }
 
         switch viewModel.messageType {
         case .text:
-            completion(TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width))
+            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
         case .html:
-            DispatchQueue.global().async {
+            guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
+                return 0
+            }
+            dummyAttributedMessageView.font = font
+            let height = TextViewSizeCalculator.height(
+                dummyAttributedMessageView,
+                attributedText: attributedText,
+                maxWidth: width)
+            return height
+        case .email:
                 guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
-                    completion(0)
-                    return
+                    return ALKEmailTopView.height
                 }
-                DispatchQueue.main.async {
-                    dummyAttributedMessageView.font = font
-                    let height = TextViewSizeCalculator.height(
+                dummyAttributedMessageView.font = font
+                let height = ALKEmailTopView.height +
+                    TextViewSizeCalculator.height(
                         dummyAttributedMessageView,
                         attributedText: attributedText,
                         maxWidth: width)
-                    completion(height)
-                }
-            }
-        case .email:
-            DispatchQueue.global().async {
-                guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
-                    completion(ALKEmailTopView.height)
-                    return
-                }
-                DispatchQueue.main.async {
-                    dummyAttributedMessageView.font = font
-                    let height = ALKEmailTopView.height +
-                        TextViewSizeCalculator.height(
-                            dummyAttributedMessageView,
-                            attributedText: attributedText,
-                            maxWidth: width)
-                    completion(height)
-                }
-            }
+                return height
         default:
             print("😱😱😱Shouldn't come here.😱😱😱")
-            completion(0)
+            return 0
         }
     }
 
@@ -302,7 +290,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     // MARK: - Private helper methods
 
     private class func attributedStringFrom(_ text: String, for id: String) -> NSAttributedString? {
-        if let attributedString = attributedStringCache[id] {
+        if let attributedString = attributedStringCache.object(forKey: id as NSString) {
             return attributedString
         }
         guard let htmlText = text.data(using: .utf8, allowLossyConversion: false) else {
@@ -316,7 +304,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                     .documentType: NSAttributedString.DocumentType.html,
                     .characterEncoding: String.Encoding.utf8.rawValue],
                 documentAttributes: nil)
-            self.attributedStringCache[id] = attributedString
+            self.attributedStringCache.setObject(attributedString, forKey: id as NSString)
             return attributedString
         } catch {
             print("😢😢😢 Error \(error) while creating attributed string")
