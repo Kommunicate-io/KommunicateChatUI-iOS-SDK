@@ -292,18 +292,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
                         .rowHeigh(viewModel: messageModel, width: maxWidth)
                         .cached(with: messageModel.identifier)
             }
-        case .genericList:
-            guard let template = genericTemplateFor(message: messageModel) as? [ALKGenericListTemplate] else {return 0}
+        case .faqTemplate:
+            guard let faqMessage = messageModel.faqMessage() else { return 0 }
             if messageModel.isMyMessage {
-                return
-                    ALKMyGenericListCell
-                        .rowHeightFor(template: template, viewModel: messageModel)
-                        .cached(with: messageModel.identifier)
+                return SentFAQMessageCell.rowHeight(model: faqMessage).cached(with: messageModel.identifier)
             } else {
-                return
-                    ALKFriendGenericListCell
-                        .rowHeightFor(template: template, viewModel: messageModel)
-                        .cached(with: messageModel.identifier)
+                return ReceivedFAQMessageCell.rowHeight(model: faqMessage).cached(with: messageModel.identifier)
             }
         case .quickReply:
             if messageModel.isMyMessage {

@@ -264,23 +264,20 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self?.menuItemSelected(action: action, message: message) }
                 return cell
             }
-        case .genericList:
+        case .faqTemplate:
             if message.isMyMessage {
-                let cell: ALKMyGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
-                cell.update(viewModel: message)
-                cell.buttonSelected = {[unowned self] tag, title in
-                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template, key: message.identifier)
-                }
+                let cell: SentFAQMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                guard let faqMessage = message.faqMessage() else { return UITableViewCell() }
+                cell.update(model: faqMessage)
                 return cell
             } else {
-                let cell: ALKFriendGenericListCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                guard let template = viewModel.genericTemplateFor(message: message) as? [ALKGenericListTemplate] else { return UITableViewCell() }
-                cell.update(viewModel: message)
-                cell.buttonSelected = {[unowned self] tag, title in
-                    self.postGenericListButtonTapNotification(tag: tag, title: title, template: template, key: message.identifier)
+                let cell: ReceivedFAQMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                guard let faqMessage = message.faqMessage() else { return UITableViewCell() }
+                cell.update(model: faqMessage)
+                cell.faqSelected = {
+                    [weak self] index, title in
+                    guard let weakSelf = self, let viewModel = weakSelf.viewModel else { return }
+                    viewModel.send(message: title, metadata: weakSelf.configuration.messageMetadata)
                 }
                 return cell
             }
