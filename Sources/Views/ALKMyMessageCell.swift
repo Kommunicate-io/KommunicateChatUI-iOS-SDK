@@ -11,7 +11,6 @@ import UIKit
 import Kingfisher
 import Applozic
 
-//TODO: Handle padding for reply name and reply message when preview image isn't visible.
 // MARK: - ALKMyMessageCell
 open class ALKMyMessageCell: ALKMessageCell {
 
@@ -251,8 +250,7 @@ open class ALKMyMessageCell: ALKMessageCell {
             let totalHeight = messageHeight + heightPadding
             guard
                 let metadata = viewModel.metadata,
-                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
-                let _ = ALMessageService().getALMessage(byKey: replyId)?.messageModel
+                let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
                 else {
                     completion(totalHeight)
                     return

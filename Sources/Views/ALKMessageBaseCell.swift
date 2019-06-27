@@ -18,10 +18,6 @@ class ALKImageView: UIImageView {
     }
 }
 
-protocol MessageHeightDelegate {
-    func calculated(height: CGFloat, for identifier: String)
-}
-
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol {
 
     /// Dummy view required to calculate height for normal text.

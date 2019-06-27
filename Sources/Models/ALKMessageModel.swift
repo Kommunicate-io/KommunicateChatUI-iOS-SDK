@@ -63,6 +63,7 @@ public protocol ALKMessageViewModel {
     var receiverId: String? { get }
     var isReplyMessage: Bool { get }
     var metadata: Dictionary<String, Any>? { get }
+    var source: Int16 { get }
 }
 
 public class ALKMessageModel: ALKMessageViewModel {
@@ -95,6 +96,7 @@ public class ALKMessageModel: ALKMessageViewModel {
     public var receiverId: String?
     public var isReplyMessage: Bool = false
     public var metadata: Dictionary<String, Any>?
+    public var source: Int16 = 0
 }
 
 extension ALKMessageModel: Equatable {

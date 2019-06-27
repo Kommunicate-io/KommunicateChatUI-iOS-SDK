@@ -446,8 +446,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
         /// For email attachments url is to be used directly
-        if ALMessageDBService().getMessageByKey(message.identifier).source == emailSourceType,
-            let url = message.fileMetaInfo?.url {
+        if message.source == emailSourceType, let url = message.fileMetaInfo?.url {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
             let task = ALKDownloadTask(downloadUrl: url, fileName: message.fileMetaInfo?.name)
@@ -1457,10 +1456,5 @@ open class ALKConversationViewModel: NSObject, Localizable {
             print("\(error)")
             return nil
         }
-    }
-}
-
-extension ALKConversationViewModel: MessageHeightDelegate {
-    func calculated(height: CGFloat, for identifier: String) {
     }
 }

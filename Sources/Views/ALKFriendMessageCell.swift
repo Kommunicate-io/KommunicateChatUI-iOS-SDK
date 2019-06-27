@@ -288,8 +288,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
             guard
                 let metadata = viewModel.metadata,
-                let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
-                let _ = ALMessageService().getALMessage(byKey: replyId)?.messageModel
+                let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
                 else {
                     completion(totalHeight)
                     return

@@ -402,6 +402,7 @@ extension ALMessage {
         messageModel.receiverId = to
         messageModel.isReplyMessage = isAReplyMessage()
         messageModel.metadata = metadata as? Dictionary<String, Any>
+        messageModel.source = source
         return messageModel
     }
 }
