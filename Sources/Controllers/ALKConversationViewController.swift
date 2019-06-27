@@ -847,7 +847,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// Call this before changing viewModel contents
     public func unsubscribingChannel() {
-        guard viewModel != nil else { return }
+        guard viewModel != nil, alMqttConversationService != nil else { return }
         if !viewModel.isOpenGroup {
             self.alMqttConversationService.sendTypingStatus(
                 ALUserDefaultsHandler.getApplicationKey(),
