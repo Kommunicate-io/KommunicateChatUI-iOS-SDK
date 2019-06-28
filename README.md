@@ -81,11 +81,9 @@ Check out our detailed documentation [here](https://docs.applozic.com/docs/ios-c
 
 ## Requirements
 
-* iOS 9.0+
-* Xcode 10.0+
-* Swift versions:
-Swift version < 4.0 -> Use framework version below 1.1.0.
-Swift version >= 4.0 -> Use framework version starting from 1.1.0.
+* iOS 10.0+
+* Xcode 10.2+
+* Swift: 4.2+
 
 ## Contributing
 
