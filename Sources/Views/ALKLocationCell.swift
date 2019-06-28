@@ -138,10 +138,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
             placeholder: UIImage(
                 named: "map_no_data",
                 in: Bundle.applozic,
-                compatibleWith: nil),
-            options: nil,
-            progressBlock: nil,
-            completionHandler: nil)
+                compatibleWith: nil))
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {

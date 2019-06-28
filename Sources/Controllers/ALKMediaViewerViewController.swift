@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import Kingfisher
 import AVKit
 
 final class ALKMediaViewerViewController: UIViewController {
@@ -130,9 +131,13 @@ final class ALKMediaViewerViewController: UIViewController {
     }
 
     func showPhotoView(message: ALKMessageViewModel) {
-        guard let filePath = message.filePath else { return }
-        let url = viewModel?.getURLFor(name: filePath)
-        imageView.kf.setImage(with: url)
+        guard let filePath = message.filePath,
+            let url = viewModel?.getURLFor(name: filePath) else {
+                return
+        }
+
+        let provider = LocalFileImageDataProvider(fileURL: url)
+        imageView.kf.setImage(with: provider)
         imageView.sizeToFit()
         playButton.isHidden = true
         audioPlayButton.isHidden = true

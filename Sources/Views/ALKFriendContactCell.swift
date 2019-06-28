@@ -81,7 +81,7 @@ final class ALKFriendContactCell: UITableViewCell {
 
     private func setupFriendProfilePhoto(imgURL: URL) {
         let resource = ImageResource(downloadURL: imgURL, cacheKey:imgURL.absoluteString)
-        imgFriendIcon.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+        imgFriendIcon.kf.setImage(with: resource, placeholder: placeHolder)
     }
 
     private func setupCheckmark(isSelect: Bool) {

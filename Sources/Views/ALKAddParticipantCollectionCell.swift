@@ -66,7 +66,7 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
             let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
             let tempURL:URL = self.currentFriendViewModel!.friendDisplayImgURL!
             let resource = ImageResource(downloadURL: tempURL, cacheKey:tempURL.absoluteString)
-            imgView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+            imgView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             //an add button
             self.lblName.isHidden = true

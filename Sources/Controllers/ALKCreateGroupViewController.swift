@@ -209,9 +209,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         if let url = URL.init(string: groupProfileImgUrl) {
             let placeHolder = UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil)
             let resource = ImageResource(downloadURL: url, cacheKey:groupProfileImgUrl)
-            imgGroupProfile.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
-//            imgGroupProfile.cropRedProfile()
-
+            imgGroupProfile.kf.setImage(with: resource, placeholder: placeHolder)
         }
 
     }

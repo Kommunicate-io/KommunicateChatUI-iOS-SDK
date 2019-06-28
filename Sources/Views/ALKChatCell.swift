@@ -232,13 +232,13 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         if let avatarImage = viewModel.avatarImage {
             if let imgStr = viewModel.avatarGroupImageUrl,let imgURL = URL.init(string: imgStr) {
                 let resource = ImageResource(downloadURL: imgURL, cacheKey: imgStr)
-                avatarImageView.kf.setImage(with: resource, placeholder: avatarImage, options: nil, progressBlock: nil, completionHandler: nil)
+                avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
             } else {
                 avatarImageView.image = placeHolder
             }
         } else if let avatar = viewModel.avatar {
             let resource = ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
-            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             avatarImageView.image = placeHolder
         }
