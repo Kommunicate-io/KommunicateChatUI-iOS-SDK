@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.8.0
+2.8.0 (upcoming releases)
 ---
 ### Enhancements
 - [AL-3603] Now calculated height of message cell will be cached.
