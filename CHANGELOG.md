@@ -2,7 +2,7 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-3.0.0 (upcoming releases)
+3.0.0
 ---
 ### Enhancements
 - [AL-3623] Now iOS 10 is the minimum version supported.
