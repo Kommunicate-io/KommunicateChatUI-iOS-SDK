@@ -336,7 +336,9 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }
 
     private func setImageFrom(url: URL?, to imageView: UIImageView) {
-        imageView.kf.setImage(with: url)
+        guard let url = url else { return }
+        let provider = LocalFileImageDataProvider(fileURL: url)
+        imageView.kf.setImage(with: provider)
     }
 
     private func getURLForPreviewImage(message: ALKMessageViewModel) -> URL? {

@@ -110,7 +110,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         if let url = viewModel.avatarURL {
 
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
 
             self.avatarImageView.image = placeHolder

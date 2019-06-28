@@ -2,9 +2,10 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-2.8.0 (upcoming releases)
+3.0.0 (upcoming releases)
 ---
 ### Enhancements
+- [AL-3623] Now iOS 10 is the minimum version supported.
 - [AL-3603] Now calculated height of message cell will be cached.
 - [AL-2918] Added support for FAQ Template rich message and removed Generic List rich message.
 - [AL-3395] Added support to detect links in message.

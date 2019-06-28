@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
 
   s.source = { :git => 'https://github.com/AppLozic/ApplozicSwift.git', :tag => s.version }
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.swift_version = '4.2'
 
   s.default_subspec = 'Complete'
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.subspec 'Complete' do |complete|
     complete.source_files = 'Sources/**/*.swift'
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
-    complete.dependency 'Kingfisher', '~> 4.7.0'
+    complete.dependency 'Kingfisher', '~> 5.6.0'
     complete.dependency 'MGSwipeTableCell', '~> 1.5.6'
     complete.dependency 'Applozic', '~> 6.10.0'
     complete.dependency 'ApplozicSwift/RichMessageKit'

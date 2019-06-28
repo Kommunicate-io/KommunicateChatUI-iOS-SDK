@@ -276,7 +276,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             downloadButton.isHidden = true
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
-            photoView.kf.setImage(with: path)
+            setPhotoViewImageFromFileURL(path)
             uploadButton.isHidden = false
         case .uploaded:
             if activityIndicator.isAnimating {
@@ -319,7 +319,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             viewModel?.filePath = filePath
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
-            photoView.kf.setImage(with: path)
+            setPhotoViewImageFromFileURL(path)
             frontView.isUserInteractionEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
@@ -403,11 +403,16 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     fileprivate func setThumbnail(_ path: String) {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let path = docDirPath.appendingPathComponent(path)
-        photoView.kf.setImage(with: path)
+        setPhotoViewImageFromFileURL(path)
     }
 
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
+    }
+
+    func setPhotoViewImageFromFileURL(_ fileURL: URL) {
+        let provider = LocalFileImageDataProvider(fileURL: fileURL)
+        photoView.kf.setImage(with: provider)
     }
 }
 

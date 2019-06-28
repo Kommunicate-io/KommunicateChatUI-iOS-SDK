@@ -67,7 +67,7 @@ class ALKFriendCell: MGSwipeTableCell {
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         if let tempURL: URL = friend.displayPhoto {
             let resource = ImageResource(downloadURL: tempURL)
-            imgDisplay.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+            imgDisplay.kf.setImage(with: resource, placeholder: placeHolder)
 
         } else {
             imgDisplay.image = placeHolder

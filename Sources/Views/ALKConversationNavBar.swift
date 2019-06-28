@@ -195,7 +195,7 @@ class ALKConversationNavBar: UIView, Localizable {
                 return
         }
         let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-        profileImage.kf.setImage(with: resource, placeholder: placeholder, options: nil, progressBlock: nil, completionHandler: nil)
+        profileImage.kf.setImage(with: resource, placeholder: placeholder)
     }
 
     private func showLastSeen(_ lastSeenAt: NSNumber?) {

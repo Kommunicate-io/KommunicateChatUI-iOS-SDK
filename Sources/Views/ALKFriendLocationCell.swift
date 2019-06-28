@@ -80,7 +80,7 @@ final class ALKFriendLocationCell: ALKLocationCell {
 
         if let url = viewModel.avatarURL {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder, options: nil, progressBlock: nil, completionHandler: nil)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             avatarImageView.image = placeHolder
         }
