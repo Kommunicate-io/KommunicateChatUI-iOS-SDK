@@ -31,6 +31,9 @@ class ALChatManager: NSObject {
 
     init(applicationKey: NSString) {
         super.init()
+        if(applicationKey.length == 0 ){
+            fatalError("Please pass your applicationId in the ALChatManager file.")
+        }
         ALUserDefaultsHandler.setApplicationKey(applicationKey as String)
         self.defaultChatViewSettings()
     }
@@ -89,7 +92,7 @@ class ALChatManager: NSObject {
 
     func getApplicationKey() -> NSString {
         let appKey = ALUserDefaultsHandler.getApplicationKey() as NSString?
-        let applicationKey = appKey
+        let applicationKey = (appKey != nil) ? appKey : ALChatManager.applicationId as NSString?
         return applicationKey!;
     }
 
