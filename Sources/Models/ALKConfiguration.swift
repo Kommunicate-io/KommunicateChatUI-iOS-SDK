@@ -43,9 +43,6 @@ public struct ALKConfiguration {
     /// all the attachment and other options.
     public var chatBarAttachmentViewBackgroundColor = UIColor.background(.grayEF)
 
-    /// If true then all the media options in Chat bar will be hidden.
-    public var hideAllOptionsInChatBar = false
-
     /// If true then audio option in chat bar will be hidden.
     public var hideAudioOptionInChatBar = false
 
@@ -123,11 +120,30 @@ public struct ALKConfiguration {
     /// Nothing else will be done from our side.
     public var showInfoOptionInGroupDetail: Bool = false
 
-    /// If true, contact share option in chatbar will be hidden.
-    public var hideContactInChatBar: Bool = false
-
     /// If true, swipe action in chatcell to delete/mute conversation will be disabled.
     public var disableSwipeInChatCell: Bool = false
+
+    /// Use this to customize chat input bar items like attachment
+    /// button icons or their visibility.
+    public var chatBar = ALKChatBarConfiguration()
+
+    /// If true, contact share option in chatbar will be hidden.
+    @available(*,deprecated, message: "Use .chatBar.optionsToShow instead")
+    public var hideContactInChatBar: Bool = false {
+        didSet {
+            guard hideContactInChatBar else { return }
+            chatBar.optionsToShow = .some([.gallery, .location, .camera, .video])
+        }
+    }
+
+    /// If true then all the media options in Chat bar will be hidden.
+    @available(*,deprecated, message: "Use .chatBar.optionsToShow instead")
+    public var hideAllOptionsInChatBar = false {
+        didSet {
+            guard hideAllOptionsInChatBar else { return }
+            chatBar.optionsToShow = .none
+        }
+    }
 
     public init() { }
 }

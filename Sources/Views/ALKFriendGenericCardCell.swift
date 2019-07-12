@@ -52,7 +52,7 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
         collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: templateLeftPadding).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKFriendGenericCardCell.cardTopPadding).isActive = true
-        collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue)?.isActive = true
+        collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue).isActive = true
     }
 
     override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {

@@ -25,6 +25,9 @@ open class ALKChatBar: UIView, Localizable {
 
     var configuration: ALKConfiguration!
 
+    public var chatBarConfiguration: ALKChatBarConfiguration {
+        return configuration.chatBar
+    }
     public var isMicButtonHidden: Bool!
 
     public enum ButtonMode {
@@ -34,18 +37,18 @@ open class ALKChatBar: UIView, Localizable {
 
     public enum ActionType {
         case sendText(UIButton,String)
-        case chatBarTextBeginEdit()
+        case chatBarTextBeginEdit
         case chatBarTextChange(UIButton)
         case sendVoice(NSData)
-        case startVideoRecord()
-        case startVoiceRecord()
-        case showImagePicker()
-        case showLocation()
-        case noVoiceRecordPermission()
+        case startVideoRecord
+        case startVoiceRecord
+        case showImagePicker
+        case showLocation
+        case noVoiceRecordPermission
         case mic(UIButton)
         case more(UIButton)
         case cameraButtonClicked(UIButton)
-        case shareContact()
+        case shareContact
     }
 
     public var action: ((ActionType) -> Void)?
@@ -85,7 +88,7 @@ open class ALKChatBar: UIView, Localizable {
         }
     }
 
-    open let textView: ALKChatBarTextView = {
+    public let textView: ALKChatBarTextView = {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4.0
         let tv = ALKChatBarTextView()
@@ -134,19 +137,12 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     open var photoButton: UIButton = {
-
         let bt = UIButton(type: .custom)
-        var image = UIImage(named: "photo", in: Bundle.applozic, compatibleWith: nil)
-        image = image?.imageFlippedForRightToLeftLayoutDirection()
-        bt.setImage(image, for: .normal)
         return bt
     }()
 
     open var galleryButton: UIButton = {
         let button = UIButton(type: .custom)
-        var image = UIImage(named: "gallery", in: Bundle.applozic, compatibleWith: nil)
-        image = image?.imageFlippedForRightToLeftLayoutDirection()
-        button.setImage(image, for: .normal)
         return button
     }()
 
@@ -162,17 +158,11 @@ open class ALKChatBar: UIView, Localizable {
     open var locationButton: UIButton = {
 
         let bt = UIButton(type: .custom)
-        var image = UIImage(named: "location_new", in: Bundle.applozic, compatibleWith: nil)
-        image = image?.imageFlippedForRightToLeftLayoutDirection()
-        bt.setImage(image, for: .normal)
         return bt
     }()
 
     open var contactButton: UIButton = {
         let button = UIButton(type: .custom)
-        var image = UIImage(named: "contactShare", in: Bundle.applozic, compatibleWith: nil)
-        image = image?.imageFlippedForRightToLeftLayoutDirection()
-        button.setImage(image, for: .normal)
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
         return button
@@ -209,9 +199,6 @@ open class ALKChatBar: UIView, Localizable {
 
     open var videoButton: UIButton = {
         let button = UIButton(type: .custom)
-        var image = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
-        image = image?.imageFlippedForRightToLeftLayoutDirection()
-        button.setImage(image, for: .normal)
         return button
     }()
 
@@ -220,10 +207,29 @@ open class ALKChatBar: UIView, Localizable {
         return textView.isFirstResponder
     }
 
+    var isMediaViewHidden = false {
+        didSet {
+            if isMediaViewHidden {
+                bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 0
+                attachmentButtonStackView.constraint(withIdentifier: ConstraintIdentifier.mediaStackViewHeight.rawValue)?.constant = 0
+
+            } else {
+                bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 45
+                attachmentButtonStackView.constraint(withIdentifier: ConstraintIdentifier.mediaStackViewHeight.rawValue)?.constant = 25
+            }
+        }
+    }
+
+    private var attachmentButtonStackView: UIStackView = {
+        let attachmentStack = UIStackView(frame: CGRect.zero)
+        return attachmentStack
+    }()
+
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight = "mediaBackgroudViewHeight"
         case poweredByMessageHeight = "poweredByMessageHeight"
         case headerViewHeight = "headerViewHeight"
+        case mediaStackViewHeight = "mediaStackViewHeight"
     }
 
     @objc func tapped(button: UIButton) {
@@ -240,20 +246,17 @@ open class ALKChatBar: UIView, Localizable {
         case photoButton:
             action?(.cameraButtonClicked(button))
             break
-
         case videoButton:
-            action?(.startVideoRecord())
+            action?(.startVideoRecord)
             break
         case galleryButton:
-            action?(.showImagePicker())
+            action?(.showImagePicker)
             break
         case locationButton:
-            action?(.showLocation())
+            action?(.showLocation)
         case contactButton:
-            action?(.shareContact())
-
+            action?(.shareContact)
         default: break
-
         }
     }
 
@@ -288,11 +291,13 @@ open class ALKChatBar: UIView, Localizable {
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
 
+        setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons)
         setupConstraints()
 
         if configuration.hideLineImageFromChatBar {
             lineImageView.isHidden = true
         }
+        updateMediaViewVisibility()
     }
 
     func setup(_ tableview: UITableView, withPrefex prefix: String) {
@@ -380,23 +385,57 @@ open class ALKChatBar: UIView, Localizable {
             }
         }
 
-        var buttonSpacing: CGFloat = 30
+        var buttonSpacing: CGFloat = 25
         if maxLength <= 568.0 { buttonSpacing = 20 } // For iPhone 5
+
+        func buttonsForOptions(_ options: ALKChatBarConfiguration.AttachmentOptions) -> [UIButton] {
+            var buttons: [UIButton] = []
+            switch options {
+            case .all:
+                for option in AttachmentType.allCases {
+                    buttons.append(buttonForAttachmentType(option))
+                }
+            case .some(let options):
+                for option in options {
+                    buttons.append(buttonForAttachmentType(option))
+                }
+            case .none:
+                print("Nothing to add")
+            }
+            return buttons
+        }
+
+        func buttonForAttachmentType(
+            _ type: AttachmentType) -> UIButton {
+            switch type {
+            case .contact:
+                return contactButton
+            case .gallery:
+                return galleryButton
+            case .location:
+                return locationButton
+            case .camera:
+                return photoButton
+            case .video:
+                return videoButton
+            }
+        }
+
+        let buttonSize = CGSize(width: 25, height: 25)
+        let attachmentButtons = buttonsForOptions(chatBarConfiguration.optionsToShow)
+        attachmentButtons.forEach { attachmentButtonStackView.addArrangedSubview($0) }
+        attachmentButtonStackView.spacing = buttonSpacing
 
         addViewsForAutolayout(views: [
             headerView,
             bottomGrayView,
             plusButton,
-            photoButton,
+            attachmentButtonStackView,
             grayView,
             textView,
             sendButton,
             micButton,
             lineImageView,
-            videoButton,
-            galleryButton,
-            locationButton,
-            contactButton,
             lineView,
             frameView,
             placeHolder,
@@ -413,44 +452,23 @@ open class ALKChatBar: UIView, Localizable {
         headerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         headerView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.headerViewHeight.rawValue).isActive = true
 
-        contactButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
-        let photoLeadingSpace: CGFloat!
-        if configuration.hideContactInChatBar {
-            contactButton.widthAnchor.constraint(equalToConstant: 0).isActive = true
-            contactButton.isHidden = true
-            photoLeadingSpace = 0
-        } else {
-            contactButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-            contactButton.isHidden = false
-            photoLeadingSpace = buttonSpacing
-        }
-        contactButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        contactButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
+        let buttonheightConstraints = attachmentButtonStackView.subviews
+            .map { $0.widthAnchor.constraint(equalToConstant: buttonSize.width)}
 
-        photoButton.leadingAnchor.constraint(equalTo: contactButton.trailingAnchor, constant: photoLeadingSpace).isActive = true
-        photoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        photoButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        photoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
+        var stackViewConstraints = [
+            attachmentButtonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            attachmentButtonStackView.heightAnchor.constraintEqualToAnchor(
+                constant: buttonSize.height,
+                identifier: ConstraintIdentifier.mediaStackViewHeight.rawValue),
+            attachmentButtonStackView.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor)
+        ]
+        stackViewConstraints.append(contentsOf: buttonheightConstraints)
+        NSLayoutConstraint.activate(stackViewConstraints)
 
         plusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
         plusButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         plusButton.widthAnchor.constraint(equalToConstant: 38).isActive = true
         plusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-
-        videoButton.leadingAnchor.constraint(equalTo: galleryButton.trailingAnchor, constant: buttonSpacing).isActive = true
-        videoButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        videoButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        videoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
-
-        galleryButton.leadingAnchor.constraint(equalTo: photoButton.trailingAnchor, constant: buttonSpacing).isActive = true
-        galleryButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        galleryButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        galleryButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
-
-        locationButton.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: buttonSpacing).isActive = true
-        locationButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        locationButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        locationButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
 
         lineImageView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -15).isActive = true
         lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
@@ -519,28 +537,22 @@ open class ALKChatBar: UIView, Localizable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func hideMediaView() {
-        bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 0
-        galleryButton.isHidden = true
-        locationButton.isHidden = true
-        hideAudioOptionInChatBar()
-        photoButton.isHidden = true
-        contactButton.isHidden = true
-        videoButton.isHidden = true
-    }
-
-    public func showMediaView() {
-        bottomGrayView.constraint(withIdentifier: ConstraintIdentifier.mediaBackgroudViewHeight.rawValue)?.constant = 45
-        galleryButton.isHidden = false
-        locationButton.isHidden = false
-        hideAudioOptionInChatBar()
-        photoButton.isHidden = false
-        contactButton.isHidden = false
-        videoButton.isHidden = false
-    }
-
     public func showPoweredByMessage() {
         poweredByMessageLabel.constraint(withIdentifier: ConstraintIdentifier.poweredByMessageHeight.rawValue)?.constant = 20
+    }
+
+    /// Use this to update the visibilty of attachment options
+    /// after the view has been set up.
+    ///
+    /// Note: If hide is false then view's visibility will be
+    /// changed based on `ALKChatBarConfiguration`s `optionsToShow`
+    /// value.
+    public func updateMediaViewVisibility(hide: Bool = false) {
+        if hide {
+            isMediaViewHidden = true
+        } else if configuration.chatBar.optionsToShow != .none {
+            isMediaViewHidden = false
+        }
     }
 
     private func changeButton() {
@@ -634,6 +646,34 @@ open class ALKChatBar: UIView, Localizable {
             textView.layoutIfNeeded()
         }
     }
+
+    func setupAttachment(buttonIcons: [AttachmentType: UIImage?]) {
+
+        func setup(
+            image: UIImage?,
+            to button: UIButton,
+            withSize size: CGSize = CGSize(width: 25, height: 25)) {
+
+            var image = image?.imageFlippedForRightToLeftLayoutDirection()
+            image = image?.scale(with: size)
+            button.setImage(image, for: .normal)
+        }
+
+        for option in AttachmentType.allCases {
+            switch option {
+            case .contact:
+                setup(image: buttonIcons[AttachmentType.contact] ?? nil, to: contactButton)
+            case .camera:
+                setup(image: buttonIcons[AttachmentType.camera] ?? nil, to: photoButton)
+            case .gallery:
+                setup(image: buttonIcons[AttachmentType.gallery] ?? nil, to: galleryButton)
+            case .video:
+                setup(image: buttonIcons[AttachmentType.video] ?? nil, to: videoButton)
+            case .location:
+                setup(image: buttonIcons[AttachmentType.location] ?? nil, to: locationButton)
+            }
+        }
+    }
 }
 
 extension ALKChatBar: UITextViewDelegate {
@@ -673,7 +713,7 @@ extension ALKChatBar: UITextViewDelegate {
     }
 
     public func textViewDidBeginEditing(_ textView: UITextView) {
-        action?(.chatBarTextBeginEdit())
+        action?(.chatBarTextBeginEdit)
     }
 
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -738,7 +778,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
 
     public func startRecordingAudio() {
         changeButton()
-        action?(.startVoiceRecord())
+        action?(.startVoiceRecord)
         soundRec.userDidStartRecording()
     }
 
@@ -755,7 +795,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
     }
 
     public func permissionNotGrant() {
-        action?(.noVoiceRecordPermission())
+        action?(.noVoiceRecordPermission)
     }
 
     public func moveButton(location: CGPoint) {

@@ -8,7 +8,7 @@
 import Foundation
 
 extension NSLayoutDimension {
-    func constraintEqualToAnchor(constant:CGFloat, identifier:String) -> NSLayoutConstraint! {
+    func constraintEqualToAnchor(constant:CGFloat, identifier:String) -> NSLayoutConstraint {
         let constraint = self.constraint(equalToConstant: constant)
         constraint.identifier = identifier
         return constraint

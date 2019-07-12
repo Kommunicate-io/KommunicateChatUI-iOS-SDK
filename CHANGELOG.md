@@ -2,6 +2,12 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+
+3.1.0(Upcoming release)
+---
+### Enhancements
+- [AL-3580] Added separate config options for the chat bar items.
+
 3.0.0
 ---
 ### Enhancements

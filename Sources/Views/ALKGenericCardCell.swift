@@ -403,7 +403,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         titleStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         titleStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         titleStackView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Config.spacing).isActive = true
-        titleStackView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.titleView.rawValue)?.isActive = true
+        titleStackView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.titleView.rawValue).isActive = true
 
         ratingLabel.trailingAnchor.constraint(equalTo: titleStackView.trailingAnchor, constant: -10).isActive = true
         ratingLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 40).isActive = true
@@ -413,17 +413,17 @@ open class ALKGenericCardCell: UICollectionViewCell {
         subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         subtitleLabel.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: Config.spacing).isActive = true
-        subtitleLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.subtitleView.rawValue)?.isActive = true
+        subtitleLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.subtitleView.rawValue).isActive = true
 
         descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         descriptionLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: Config.spacing).isActive = true
-        descriptionLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.descriptionView.rawValue)?.isActive = true
+        descriptionLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.descriptionView.rawValue).isActive = true
 
         buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         buttonStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Config.spacing).isActive = true
-        buttonStackView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.buttonsView.rawValue)?.isActive = true
+        buttonStackView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.buttonsView.rawValue).isActive = true
 
         buttonsBackground.leadingAnchor.constraint(equalTo: buttonStackView.leadingAnchor).isActive = true
         buttonsBackground.trailingAnchor.constraint(equalTo: buttonStackView.trailingAnchor).isActive = true

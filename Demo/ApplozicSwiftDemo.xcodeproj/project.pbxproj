@@ -51,6 +51,8 @@
 		8BDDEA6B21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDDEA6A21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift */; };
 		8BDDEA6D21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDDEA6C21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift */; };
 		8BDDEA6F21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDDEA6E21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift */; };
+		8BE8B3A722D4AC100001BDC2 /* ALKChatBarConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE8B3A622D4AC100001BDC2 /* ALKChatBarConfigurationTests.swift */; };
+		8BE8B3A922D4B1370001BDC2 /* play_icon_test.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BE8B3A822D4B1370001BDC2 /* play_icon_test.png */; };
 		8BEF11AC1F618669000336AF /* ALChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEF11AB1F618669000336AF /* ALChatManager.swift */; };
 		8BEF11AE1F619367000336AF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEF11AD1F619367000336AF /* LoginViewController.swift */; };
 		8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */; };
@@ -151,6 +153,8 @@
 		8BDDEA6A21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationVCMemoryLeakTests.swift; sourceTree = "<group>"; };
 		8BDDEA6C21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationListVCMemoryLeakTests.swift; sourceTree = "<group>"; };
 		8BDDEA6E21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationListViewControllerMock.swift; sourceTree = "<group>"; };
+		8BE8B3A622D4AC100001BDC2 /* ALKChatBarConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKChatBarConfigurationTests.swift; sourceTree = "<group>"; };
+		8BE8B3A822D4B1370001BDC2 /* play_icon_test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play_icon_test.png; sourceTree = "<group>"; };
 		8BEF11AB1F618669000336AF /* ALChatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALChatManager.swift; sourceTree = "<group>"; };
 		8BEF11AD1F619367000336AF /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		8BF8D8581FBDC2CF00804824 /* ALKNewChatViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKNewChatViewModelTests.swift; sourceTree = "<group>"; };
@@ -275,6 +279,7 @@
 		8BC08E61206907A500259AEF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8BE8B3A822D4B1370001BDC2 /* play_icon_test.png */,
 				8B06E488225E367D00B7FA64 /* restrictedWords.txt */,
 				8BC08E622069086300259AEF /* testImage.png */,
 			);
@@ -322,6 +327,7 @@
 				1A7129A921E72900007A7B78 /* ALKQuickReplyViewSnapshotTests.swift */,
 				8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */,
 				8B68A9B32276DFAB0021638A /* TemplateDecoderTests.swift */,
+				8BE8B3A622D4AC100001BDC2 /* ALKChatBarConfigurationTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -493,6 +499,7 @@
 			files = (
 				8B06E489225E367D00B7FA64 /* restrictedWords.txt in Resources */,
 				8BC08E632069086300259AEF /* testImage.png in Resources */,
+				8BE8B3A922D4B1370001BDC2 /* play_icon_test.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,6 +667,7 @@
 				1A6D3A542180C9A300BB7538 /* ALKConversationViewControllerTests.swift in Sources */,
 				8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */,
 				1A5503FE22366BD700F642A9 /* MockMessage.swift in Sources */,
+				8BE8B3A722D4AC100001BDC2 /* ALKChatBarConfigurationTests.swift in Sources */,
 				1ACB680421806744000EB0E8 /* ALKConversationViewControllerSnapshotTests.swift in Sources */,
 				8B4E9FFC215A31B2001FD5F3 /* ALMessageDBServiceMock.swift in Sources */,
 				1AE8248821BA633D009C70FE /* ConversationListTableViewDelegateMock.swift in Sources */,

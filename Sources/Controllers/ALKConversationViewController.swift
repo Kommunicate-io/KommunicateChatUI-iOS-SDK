@@ -656,10 +656,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func configureChatBar() {
         if viewModel.isOpenGroup {
-            hideMediaOptions()
+            chatBar.updateMediaViewVisibility(hide: true)
             chatBar.hideMicButton()
         } else {
-            if configuration.hideAllOptionsInChatBar {hideMediaOptions()} else {showMediaOptions()}
+            chatBar.updateMediaViewVisibility()
         }
     }
 
@@ -1198,14 +1198,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)
         return horizontalOffset
-    }
-
-    fileprivate func hideMediaOptions() {
-        chatBar.hideMediaView()
-    }
-
-    fileprivate func showMediaOptions() {
-        chatBar.showMediaView()
     }
 
     private func showMoreBar() {
