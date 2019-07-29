@@ -11,7 +11,7 @@ import Applozic
 import AVKit
 
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
-                    ALKReplyMenuItemProtocol {
+                    ALKReplyMenuItemProtocol,ALKReportMessageMenuItemProtocol {
 
     enum State {
         case download
@@ -214,6 +214,10 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
+    }
+
+    func menuReport(_ sender: Any) {
+        menuAction?(.reportMessage)
     }
 
     @objc private func downloadButtonAction(_ selector: UIButton) {

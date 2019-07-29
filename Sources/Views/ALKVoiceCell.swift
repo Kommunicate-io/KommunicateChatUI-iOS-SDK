@@ -25,7 +25,7 @@ public enum ALKVoiceCellState {
 }
 
 class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
-                    ALKReplyMenuItemProtocol {
+                    ALKReplyMenuItemProtocol,ALKReportMessageMenuItemProtocol {
 
     var soundPlayerView: UIView = {
         let mv = UIView()
@@ -291,6 +291,10 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
+    }
+
+    func menuReport(_ sender: Any) {
+        menuAction?(.reportMessage)
     }
 }
 

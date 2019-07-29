@@ -11,6 +11,7 @@ import UIKit
 open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
 
     var localizedStringFileName: String!
+    var showReport : Bool = false
 
     public func setLocalizedStringFileName(_ localizedStringFileName: String) {
         self.localizedStringFileName = localizedStringFileName
@@ -28,6 +29,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     /// needs to be send are defined here.
     enum MenuActionType {
         case reply
+        case reportMessage
     }
 
     /// It will be invoked when one of the actions
@@ -78,13 +80,19 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             if let copyMenu = getCopyMenuItem(copyItem: self) {
                 menus.append(copyMenu)
             }
+
             if let replyMenu = getReplyMenuItem(replyItem: self) {
                 menus.append(replyMenu)
+            }
+
+            if showReport, let reportMessageMenu = getReportMessageItem(reportMessageItem: self) {
+                menus.append(reportMessageMenu)
             }
 
             menuController.menuItems = menus
             menuController.setTargetRect(gestureView.frame, in: superView)
             menuController.setMenuVisible(true, animated: true)
+
         }
     }
 
@@ -98,12 +106,14 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             return true
         case let menuItem as ALKReplyMenuItemProtocol where action == menuItem.selector:
             return true
+        case let menuItem as ALKReportMessageMenuItemProtocol where action == menuItem.selector:
+            return true
         default:
             return false
         }
     }
 
-    private func getCopyMenuItem(copyItem: Any) -> UIMenuItem? {
+     func getCopyMenuItem(copyItem: Any) -> UIMenuItem? {
         guard let copyMenuItem = copyItem as? ALKCopyMenuItemProtocol else {
             return nil
         }
@@ -112,13 +122,22 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
         return copyMenu
     }
 
-    private func getReplyMenuItem(replyItem: Any) -> UIMenuItem? {
+     func getReplyMenuItem(replyItem: Any) -> UIMenuItem? {
         guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else {
             return nil
         }
         let title = localizedString(forKey: "Reply", withDefaultValue: SystemMessage.LabelName.Reply, fileName: localizedStringFileName)
         let replyMenu = UIMenuItem(title: title, action: replyMenuItem.selector)
         return replyMenu
+    }
+
+     func getReportMessageItem(reportMessageItem: Any) -> UIMenuItem? {
+        guard let reportMessageMenuItem = reportMessageItem as? ALKReportMessageMenuItemProtocol else {
+            return nil
+        }
+        let title = localizedString(forKey: "Report", withDefaultValue: SystemMessage.LabelName.Report, fileName: localizedStringFileName)
+        let reportMessageMenu = UIMenuItem(title: title, action: reportMessageMenuItem.selector)
+        return reportMessageMenu
     }
 }
 
@@ -144,3 +163,17 @@ extension ALKReplyMenuItemProtocol {
         return #selector(menuReply(_:))
     }
 }
+
+// MARK: - ALKReportMessageMenuItemProtocol
+
+@objc protocol ALKReportMessageMenuItemProtocol {
+    func menuReport(_ sender: Any)
+
+}
+
+extension ALKReportMessageMenuItemProtocol {
+    var selector: Selector {
+        return #selector(menuReport(_:))
+    }
+}
+

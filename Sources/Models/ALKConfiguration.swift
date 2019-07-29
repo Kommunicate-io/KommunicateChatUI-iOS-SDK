@@ -123,6 +123,9 @@ public struct ALKConfiguration {
     /// If true, swipe action in chatcell to delete/mute conversation will be disabled.
     public var disableSwipeInChatCell: Bool = false
 
+    /// If true, then the message report option will be visible.
+    public var isReportMessageEnabled = false
+
     /// Use this to customize chat input bar items like attachment
     /// button icons or their visibility.
     public var chatBar = ALKChatBarConfiguration()

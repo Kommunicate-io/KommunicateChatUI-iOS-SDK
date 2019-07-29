@@ -10,8 +10,7 @@ import UIKit
 import Kingfisher
 import Applozic
 
-class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel>,
-ALKReplyMenuItemProtocol {
+class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
 
     struct CommonPadding {
         struct FrameUIView {
@@ -119,10 +118,6 @@ ALKReplyMenuItemProtocol {
         view.backgroundColor = .clear
         return view
     }()
-
-    func menuReply(_ sender: Any) {
-        menuAction?(.reply)
-    }
 
     override func setupStyle() {
         super.setupStyle()

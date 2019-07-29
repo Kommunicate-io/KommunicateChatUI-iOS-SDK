@@ -15,7 +15,7 @@ protocol ALKLocationCellDelegate: class {
 }
 
 class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
-                        ALKReplyMenuItemProtocol {
+                        ALKReplyMenuItemProtocol,ALKReportMessageMenuItemProtocol {
 
     weak var delegate:ALKLocationCellDelegate?
 
@@ -175,6 +175,10 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     func menuReply(_ sender: Any) {
         menuAction?(.reply)
+    }
+
+    func menuReport(_ sender: Any) {
+        menuAction?(.reportMessage)
     }
 
 }

@@ -34,6 +34,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
 
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
@@ -47,6 +48,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.avatarTapped = {[weak self] in
@@ -66,6 +68,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
 
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
@@ -76,6 +79,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.avatarTapped = {[weak self] in
@@ -95,6 +99,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     // Set the value to nil so that previous image gets removed before reuse
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                     cell.photoView.image = nil
+                    cell.showReport = false
                     cell.update(viewModel: message)
                     cell.uploadTapped = {[weak self]
                         value in
@@ -115,12 +120,15 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                 } else {
                     let cell: ALKMyPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.showReport = false
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                     cell.update(viewModel: message)
                     cell.uploadCompleted = {[weak self]
                         responseDict in
                         self?.attachmentUploadDidCompleteWith(response: responseDict, indexPath: indexPath)
                     }
+                    cell.menuAction = {[weak self] action in
+                        self?.menuItemSelected(action: action, message: message) }
                     return cell
                 }
 
@@ -129,6 +137,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                     let cell: ALKFriendPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                    cell.showReport = configuration.isReportMessageEnabled
                     cell.update(viewModel: message)
                     cell.downloadTapped = {[weak self]
                         value in
@@ -144,6 +153,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                 } else {
                     let cell: ALKFriendPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.menuAction = {[weak self] action in
+                        self?.menuItemSelected(action: action, message: message) }
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                     cell.update(viewModel: message)
                     return cell
@@ -156,6 +168,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             if message.isMyMessage {
                 let cell: ALKMyVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.downloadTapped = {[weak self] value in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
@@ -167,6 +180,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.downloadTapped = {[weak self] value in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
@@ -184,6 +198,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .location:
             if message.isMyMessage {
                 let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
@@ -194,6 +209,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
                 cell.avatarTapped = {[weak self] in
@@ -212,6 +228,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .video:
             if message.isMyMessage {
                 let cell: ALKMyVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.uploadTapped = {[weak self]
@@ -233,6 +250,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.update(viewModel: message)
                 cell.downloadTapped = {[weak self]
                     value in
@@ -249,6 +267,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .genericCard, .cardTemplate:
             if message.isMyMessage {
                 let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
                 cell.update(viewModel: message, width: UIScreen.main.bounds.width)
@@ -257,6 +276,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
                 cell.update(viewModel: message, width: UIScreen.main.bounds.width)
@@ -354,7 +374,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
                 let cell: ALKMyDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-
+                cell.showReport = false
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)
                 cell.uploadTapped = {[weak self]
@@ -374,6 +394,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.showReport = configuration.isReportMessageEnabled
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.update(chatBar: self.chatBar)

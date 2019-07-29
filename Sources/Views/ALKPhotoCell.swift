@@ -1,6 +1,6 @@
 //
 //  ALKPhotoCell.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -13,7 +13,7 @@ import Applozic
 
 // MARK: - ALKPhotoCell
 class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
-                    ALKReplyMenuItemProtocol {
+                    ALKReplyMenuItemProtocol,ALKReportMessageMenuItemProtocol {
 
     var photoView: UIImageView = {
         let mv = UIImageView()
@@ -413,6 +413,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     func setPhotoViewImageFromFileURL(_ fileURL: URL) {
         let provider = LocalFileImageDataProvider(fileURL: fileURL)
         photoView.kf.setImage(with: provider)
+    }
+
+    func menuReport(_ sender: Any) {
+        menuAction?(.reportMessage)
     }
 }
 
