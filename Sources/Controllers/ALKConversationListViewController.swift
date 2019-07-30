@@ -198,11 +198,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     private func setupView() {
 
+        setUpNavigationRightButtons()
         title = localizedString(forKey: "ConversationListVCTitle", withDefaultValue: SystemMessage.ChatList.title, fileName: localizedStringFileName)
-
-        if !configuration.hideStartChatButton {
-            navigationItem.rightBarButtonItem = rightBarButtonItem
-        }
 
         let back = localizedString(forKey: "Back", withDefaultValue: SystemMessage.ChatList.leftBarBackButton, fileName: localizedStringFileName)
         let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
@@ -212,19 +209,38 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         }
 
         #if DEVELOPMENT
-            let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
-            indicator.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-            indicator.hidesWhenStopped = true
-            indicator.stopAnimating()
-            let indicatorButton = UIBarButtonItem(customView: indicator)
+        let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+        indicator.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        indicator.hidesWhenStopped = true
+        indicator.stopAnimating()
+        let indicatorButton = UIBarButtonItem(customView: indicator)
 
-            navigationItem.leftBarButtonItem = indicatorButton
+        navigationItem.leftBarButtonItem = indicatorButton
         #endif
 
         add(conversationListTableViewController)
         conversationListTableViewController.view.frame = self.view.bounds
         conversationListTableViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         conversationListTableViewController.view.translatesAutoresizingMaskIntoConstraints = true
+    }
+
+    func setUpNavigationRightButtons() {
+        let navigationItems =   configuration.navigationItemsForConversationList
+        var rightBarButtonItems : [UIBarButtonItem] = []
+
+        if !configuration.hideStartChatButton {
+            rightBarButtonItems.append(rightBarButtonItem)
+        }
+        for item in navigationItems {
+            let uiBarButtonItem =  item.barButton(target: self, action: #selector(customButtonEvent(_:)))
+
+            if let barButtonItem = uiBarButtonItem {
+                rightBarButtonItems.append(barButtonItem)
+            }
+        }
+        if(!rightBarButtonItems.isEmpty){
+            navigationItem.rightBarButtonItems =  rightBarButtonItems
+        }
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
@@ -251,6 +267,14 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         }
         let newChatVC = ALKNewChatViewController(configuration: configuration, viewModel: ALKNewChatViewModel(localizedStringFileName: configuration.localizedStringFileName))
         navigationController?.pushViewController(newChatVC, animated: true)
+    }
+
+
+    @objc func customButtonEvent(_ sender: AnyObject) {
+        guard let identifier = sender.tag  else {
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: self,userInfo:["identifier":identifier])
     }
 
     func sync(message: ALMessage) {

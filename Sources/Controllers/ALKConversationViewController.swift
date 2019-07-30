@@ -346,8 +346,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
-        addRefreshButton()
-        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch {
+        setUpRightNavigationButtons()
+        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch  {
             individualLaunch = false
         }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
@@ -1526,8 +1526,31 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         return button
     }
 
-    func addRefreshButton() {
-        self.navigationItem.rightBarButtonItem = rightNavbarButton()
+    func setUpRightNavigationButtons()  {
+
+        let navigationItems =   configuration.navigationItemsForConversationView
+        var rightBarButtonItems : [UIBarButtonItem] = []
+        
+        if configuration.isRefreshButtonEnabled, let refreshButton = rightNavbarButton() {
+            rightBarButtonItems.append(refreshButton)
+        }
+        for item in navigationItems {
+            let uiBarButtonItem =  item.barButton(target: self, action: #selector(customButtonEvent(_:)))
+
+            if let barButtonItem = uiBarButtonItem {
+                rightBarButtonItems.append(barButtonItem)
+            }
+        }
+        if(!rightBarButtonItems.isEmpty){
+            navigationItem.rightBarButtonItems =  rightBarButtonItems
+        }
+    }
+
+    @objc func customButtonEvent(_ sender: AnyObject) {
+        guard let identifier = sender.tag  else {
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationViewNavigationTap), object: self,userInfo: ["identifier":identifier])
     }
 
     @objc func refreshButtonAction(_ selector: UIBarButtonItem) {

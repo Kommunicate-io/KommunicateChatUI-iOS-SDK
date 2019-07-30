@@ -56,6 +56,7 @@ public struct ALKConfiguration {
     public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
 
     /// Image for navigation bar right side icon in conversation view.
+    @available(*,deprecated, message: "Use navigationItemsForConversationView instead")
     public var rightNavBarImageForConversationView: UIImage?
 
     /// System icon for right side navigation bar in conversation view.
@@ -67,15 +68,6 @@ public struct ALKConfiguration {
     /// If true then back  navigation icon in conversation list will be hidden.
     public var hideBackButtonInConversationList = false
 
-    /// conversationlist view navigation icon for right side.
-    /// By default, create group icon image will be used.
-    public var rightNavBarImageForConversationListView = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
-
-    /// If true then click action on navigation icon in conversation list view will be handled from outside
-    public var handleNavIconClickOnConversationListView = false
-
-    /// Notification name for navigation icon click in conversation list
-    public var nsNotificationNameForNavIconClick = "handleNavigationItemClick"
 
     /// If true then line between send button and text view will be hidden.
     public var hideLineImageFromChatBar = false
@@ -130,6 +122,27 @@ public struct ALKConfiguration {
     /// button icons or their visibility.
     public var chatBar = ALKChatBarConfiguration()
 
+    /// Right  Navigation bar items in conversation list view
+    public var navigationItemsForConversationList: [ALKNavigationItem] = [ALKNavigationItem](){
+        didSet{
+            let prefixArray =  navigationItemsForConversationList.prefix(2)
+            navigationItemsForConversationList = Array(prefixArray)
+            print("Two navigation buttons are supported in Conversation List")
+        }
+    }
+
+    /// Right  Navigation bar items in conversation  view controller
+    public var navigationItemsForConversationView: [ALKNavigationItem] = [ALKNavigationItem](){
+        didSet{
+            let prefixArray =  navigationItemsForConversationView.prefix(2)
+            navigationItemsForConversationView =  Array(prefixArray)
+            print("Two navigation buttons are supported in Conversation View")
+        }
+    }
+
+    // If false, Then  you can disable the default refresh button in chat view
+    public var isRefreshButtonEnabled : Bool = true
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*,deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {
@@ -147,6 +160,19 @@ public struct ALKConfiguration {
             chatBar.optionsToShow = .none
         }
     }
+
+    /// conversationlist view navigation icon for right side.
+    /// By default, create group icon image will be used.
+    @available(*,deprecated, message: "Use navigationItemsForConversationList instead")
+    public var rightNavBarImageForConversationListView = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
+
+    /// If true then click action on navigation icon in conversation list view will be handled from outside
+    @available(*,deprecated, message: "Use navigationItemsForConversationList instead")
+    public var handleNavIconClickOnConversationListView = false
+
+    /// Notification name for navigation icon click in conversation list
+    @available(*,deprecated, message: "Use navigationItemsForConversationList instead it has identifier in ALKNavigationItem")
+    public var nsNotificationNameForNavIconClick = "handleNavigationItemClick"
 
     public init() { }
 }
