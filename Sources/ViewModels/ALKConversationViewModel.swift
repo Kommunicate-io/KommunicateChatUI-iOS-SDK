@@ -29,6 +29,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // MARK: - Inputs
     open var contactId: String?
     open var channelKey: NSNumber?
+    open var isSearch: Bool = false
 
     // For topic based chat
     open var conversationProxy: ALConversationProxy?
@@ -104,7 +105,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     // MARK: - Public methods
     public func prepareController() {
-
+        if isSearch {
+            loadSearchMessages()
+        }
         // Load messages from server in case of open group
         guard !isOpenGroup else {
             delegate?.loadingStarted()
@@ -376,6 +379,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func nextPage() {
+        if isSearch {
+            loadSearchMessages()
+        }
         guard !isOpenGroup else {
             loadOpenGroupMessages()
             return
@@ -1102,6 +1108,44 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
 
+    func loadSearchMessages() {
+        var time: NSNumber? = nil
+        if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
+            time = (messageList.firstObject as! ALMessage).createdAtTime
+        }
+        let messageListRequest = MessageListRequest()
+        messageListRequest.userId = contactId
+        messageListRequest.channelKey = channelKey
+        messageListRequest.conversationId = conversationId
+        messageListRequest.endTimeStamp = time
+        ALMessageClientService().getMessageList(forUser: messageListRequest, isSearch: true) { (messages, error) in
+            guard error == nil, let messages = messages else {
+                self.delegate?.loadingFinished(error: error)
+                return
+            }
+            if let list = self.alMessageWrapper.getUpdatedMessageArray(), list.count > 1, let newMessages = messages as? [ALMessage] {
+                for mesg in newMessages {
+                    guard let msg = self.alMessages.first, let time = Double(msg.createdAtTime.stringValue) else { continue }
+                    if let msgTime = Double(mesg.createdAtTime.stringValue), time <= msgTime {
+                        continue
+                    }
+                    self.alMessageWrapper
+                        .getUpdatedMessageArray()
+                        .insert(mesg, at: 0)
+                    self.alMessages.insert(mesg, at: 0)
+                    self.messageModels.insert(mesg.messageModel, at: 0)
+                }
+                self.delegate?.loadingFinished(error: nil)
+                return
+            }
+            self.alMessages = messages.reversed() as! [ALMessage]
+            self.alMessageWrapper.addObject(toMessageArray: messages)
+            let models = self.alMessages.map { $0.messageModel }
+            self.messageModels = models
+            self.delegate?.loadingFinished(error: nil)
+        }
+    }
+
     func loadMessagesFromDB(isFirstTime: Bool = true) {
         ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, withCompletion: {
             messages in
@@ -1261,14 +1305,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private func updateDbMessageWith(key: String, value: String, filePath: String) {
         let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
-        let dbMessage: DB_Message = messageService.getMessageByKey(key, value: value) as! DB_Message
-        dbMessage.filePath = filePath
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            NSLog("Not saved due to error")
-        }
+        messageService.updateDbMessageWith(key: key, value: value, filePath: filePath)
     }
 
     private func getMessageToPost(isTextMessage: Bool = false) -> ALMessage {

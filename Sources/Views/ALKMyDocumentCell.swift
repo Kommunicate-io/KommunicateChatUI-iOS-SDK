@@ -97,15 +97,4 @@ class ALKMyDocumentCell: ALKDocumentCell {
         return max(messageHeight, minimumHeight)
     }
 
-    fileprivate func updateDbMessageWith(key: String, value: String, filePath: String) {
-        let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
-        let dbMessage: DB_Message = messageService.getMessageByKey(key, value: value) as! DB_Message
-        dbMessage.filePath = filePath
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            print("Not saved file path due to error")
-        }
-    }
 }

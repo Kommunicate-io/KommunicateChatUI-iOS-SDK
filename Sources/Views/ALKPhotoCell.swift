@@ -375,18 +375,6 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         uploadTapped?(true)
     }
 
-    fileprivate func updateDbMessageWith(key: String, value: String, filePath: String) {
-        let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
-        let dbMessage: DB_Message = messageService.getMessageByKey(key, value: value) as! DB_Message
-        dbMessage.filePath = filePath
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            NSLog("Not saved due to error")
-        }
-    }
-
     fileprivate func updateThumbnailPath(_ key: String, filePath: String) {
         let messageKey = ThumbnailIdentifier.removePrefix(from: key)
         let dbMessage = ALMessageDBService().getMessageByKey("key", value: messageKey) as! DB_Message
@@ -468,7 +456,7 @@ extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
             self.updateThumbnailPath(identifier, filePath: filePath)
             return
         }
-        self.updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
+        ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         DispatchQueue.main.async {
             self.updateView(for: .downloaded(filePath: filePath))
         }
