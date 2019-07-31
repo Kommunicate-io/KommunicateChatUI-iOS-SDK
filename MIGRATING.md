@@ -17,62 +17,51 @@
 ####  Navigation button Configuration
 
   -  ConversationList configuration
-   `ALKConfiguration.rightNavBarImageForConversationListView', has been deprecated. Use `ALKConfiguration.navigationItemsForConversationList` to add buttons in navigation
-
-    ```swift
-    /// ConversationList
+   `ALKConfiguration.rightNavBarImageForConversationListView`, has been deprecated. Use `ALKConfiguration.navigationItemsForConversationList` to add buttons in the navigation bar
+   
+  ```swift
+    // ConversationList
     var navigationItemsForConversationList = [ALKNavigationItem]()
 
     // Example for button with text
     let buttonOne = ALKNavigationItem(identifier: 1234, text: "FAQ")
 
-    // Adding button item in array
+    // Adding an item in the list
     navigationItemsForConversationList.append(buttonOne)
 
     // Example for button with icon
     let buttonTwo = ALKNavigationItem(identifier:23456, icon: UIImage(named: "icon_download", in: Bundle(for: ALKConversationListViewController.self), compatibleWith: nil)!)
 
-    // Adding another item in array
+    // Adding an item in the list
     navigationItemsForConversationList.append(buttonTwo)
-
+    
     config.navigationItemsForConversationList = navigationItemsForConversationList
 
-    /// Add Observer to button click event callback
+    // Add an Observer to get the event callback
+    NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: nil, queue: nil, using: { notification in
 
-    NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: nil, queue: nil, using: {
-    notification in
-
-    guard let notificationUserInfo =  notification.userInfo else
-    {
-      return
-    }
-
-    let identifier =   notificationUserInfo["identifier"] as! Int
-
-    print("Navigation button click for identifier in ConversationList is : ",identifier)
-
+        guard let notificationUserInfo = notification.userInfo else { return }
+        let identifier =   notificationUserInfo["identifier"] as! Int
+        print("Navigation button click for identifier in ConversationList is : ",identifier)
     })
-
-    ```
-
-    -  ConversationView configuration
-
-    ```swift
+  ```
+  
+  -  ConversationView configuration
+    
+  ```swift
     // ConversationView
-     var navigationItemsForConversationView = [ALKNavigationItem]()
+    var navigationItemsForConversationView = [ALKNavigationItem]()
 
-     let buttonOne = ALKNavigationItem(identifier: 1234, text: "FAQ")
+    let buttonOne = ALKNavigationItem(identifier: 1234, text: "FAQ")
 
-     //Adding button item in array
-      navigationItemsForConversationView.append(buttonOne)
+    // Adding an item in the list
+    navigationItemsForConversationView.append(buttonOne)
 
-     // Example for button with icon
+    // Example for button with icon
+    let buttonTwo = ALKNavigationItem(identifier:23456, icon: UIImage(named: "icon_download", in: Bundle(for: ALKConversationListViewController.self), compatibleWith: nil)!)
 
-     let buttonTwo = ALKNavigationItem(identifier:23456, icon: UIImage(named: "icon_download", in: Bundle(for: ALKConversationListViewController.self), compatibleWith: nil)!)
+    // Adding an item in the list
+    navigationItemsForConversationView.append(buttonOne)
 
-     // Adding item in array
-     navigationItemsForConversationView.append(buttonOne)
-
-     config.navigationItemsForConversationView = navigationItemsForConversationView
-
-      ```
+    config.navigationItemsForConversationView = navigationItemsForConversationView
+  ```
