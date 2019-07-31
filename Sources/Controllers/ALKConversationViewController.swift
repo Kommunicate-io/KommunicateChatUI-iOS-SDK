@@ -390,16 +390,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         chatBar.setup(autocompletionView, withPrefex: "/")
         setRichMessageKitTheme()
-
-        guard !configuration.restrictedWordsFileName.isEmpty else {
-            return
-        }
-        do {
-            profanityFilter = try ProfanityFilter(
-            fileName: configuration.restrictedWordsFileName)
-        } catch {
-            print("Error while loading restricted words file:", error)
-        }
+        setupProfanityFilter()
     }
 
     override open func viewDidLayoutSubviews() {
@@ -816,6 +807,31 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             default:
                 print("Not available")
             }
+        }
+    }
+
+    private func setupProfanityFilter() {
+        func makeProfanityFilter(
+            withRegexPattern pattern: String,
+            andFileName filename: String) throws -> ProfanityFilter? {
+            switch (pattern, filename) {
+            case ("",""):
+                return nil
+            case (let pattern, ""):
+                return(try ProfanityFilter(restrictedMessageRegex: pattern))
+            case ("", let filename):
+                return(try ProfanityFilter(fileName: filename))
+            case (let pattern, let filename):
+                return(try ProfanityFilter(fileName: filename, restrictedMessageRegex: pattern))
+            }
+        }
+
+        do {
+            profanityFilter = try makeProfanityFilter(
+                withRegexPattern: configuration.restrictedMessageRegexPattern,
+                andFileName: configuration.restrictedWordsFileName)
+        } catch {
+            print("Error while setting up profanity filter: \(error.localizedDescription)")
         }
     }
 

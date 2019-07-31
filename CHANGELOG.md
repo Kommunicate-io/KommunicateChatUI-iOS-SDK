@@ -10,6 +10,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3577] Added Option to report a message;
 - [AL-3540]Add custom button in navigation bar
 - [AL-3210] Added RTL support.
+- [AL-3624] Added support for passing regular expression pattern to restrict certain messages.
 
 3.0.0
 ---

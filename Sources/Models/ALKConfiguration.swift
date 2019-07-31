@@ -106,6 +106,17 @@ public struct ALKConfiguration {
     /// File extension of this file will be txt.
     public var restrictedWordsFileName = ""
 
+    /// The regular expression pattern that will be used to
+    /// match the text that the user is sending. By default, it's empty.
+    ///
+    /// This will be combined with the restricted words config option,
+    /// which means if the text is matched with the restricted words or
+    /// through this pattern, then an alert will be shown.
+    ///
+    /// NOTE: Make sure you verify this pattern before setting
+    /// up here.
+    public var restrictedMessageRegexPattern = ""
+
     /// This will show info option in action sheet
     /// when a profile is tapped in group detail screen.
     /// Clicking on the option will send a notification outside.

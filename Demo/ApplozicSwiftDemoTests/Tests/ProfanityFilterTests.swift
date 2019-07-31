@@ -15,27 +15,64 @@ class ProfanityFilterTests: XCTestCase {
         fileName: "restrictedWords",
         bundle: Bundle(for: ProfanityFilterTests.self))
 
-    override func setUp() {
-    }
-
-    func testUppercaseText() {
+    func test_whenUppercaseText() {
         XCTAssertTrue(profanityFilter.containsRestrictedWords(text: "BADWORD"))
     }
 
-    func testAllLowercaseText() {
+    func test_whenAllLowercaseText() {
         XCTAssertTrue(profanityFilter.containsRestrictedWords(text: "badword here"))
     }
 
-    func testUppercaseAndLowercaseTextCombination() {
+    func test_whenUppercaseAndLowercaseTextCombination() {
         XCTAssertTrue(profanityFilter.containsRestrictedWords(text: "badWOrd here"))
     }
 
-    func testUppercaseInFileWithLowerCaseInText() {
+    func test_whenUppercaseInFileWithLowerCaseInText() {
         // In file it is: bestBadWord
         XCTAssertTrue(profanityFilter.containsRestrictedWords(text: "bestbadword"))
     }
 
-    func testWhenWordContainsExtraCharacters() {
+    func test_whenWordContainsExtraCharacters() {
         XCTAssertFalse(profanityFilter.containsRestrictedWords(text: "--badWord"))
+    }
+
+    func test_whenMatchingWordIsInTheEnd() {
+        XCTAssertTrue(profanityFilter.containsRestrictedWords(text: "hello badWord"))
+    }
+
+    func test_whenMatchIsPresent() {
+        let profanityFilterWithRegex = try! ProfanityFilter(
+            restrictedMessageRegex: "\\d{10}",
+            bundle: Bundle(for: ProfanityFilterTests.self))
+        XCTAssertTrue(profanityFilterWithRegex
+            .containsRestrictedWords(text: "hello 9299999999"))
+    }
+
+    func test_whenMatchIsNotPresent() {
+        let profanityFilterWithRegex = try! ProfanityFilter(
+            restrictedMessageRegex: "\\d{10}",
+            bundle: Bundle(for: ProfanityFilterTests.self))
+        XCTAssertFalse(profanityFilterWithRegex
+            .containsRestrictedWords(text: "hello 929999"))
+    }
+
+    func test_whenMatchesAndRestrictedWordsBothArePresent() {
+        let profanityFilterWithRegex = try! ProfanityFilter(
+            fileName: "restrictedWords",
+            restrictedMessageRegex: "\\d{10}",
+            bundle: Bundle(for: ProfanityFilterTests.self))
+        XCTAssertTrue(profanityFilterWithRegex
+            .containsRestrictedWords(text: "hello 929999999 badword"))
+    }
+
+    func test_whenRegexPatternIsInvalid() {
+
+        // "}" is missing in the end
+        let invalidPattern = "\\d{10"
+        let profanityFilterWithRegex = try! ProfanityFilter(
+            restrictedMessageRegex: invalidPattern,
+            bundle: Bundle(for: ProfanityFilterTests.self))
+        XCTAssertFalse(profanityFilterWithRegex
+            .containsRestrictedWords(text: "hello 9299999999"))
     }
 }
