@@ -402,13 +402,13 @@ extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
 
     func sendMessage(at index: Int) {
         let member = viewModel.rowAt(index: index)
-        let viewModel = ALKConversationViewModel(
+        let conversationViewModel = ALKConversationViewModel(
             contactId: member.id,
             channelKey: nil,
             localizedStringFileName: localizedStringFileName)
 
         let conversationVC = ALKConversationViewController(configuration: configuration)
-        conversationVC.viewModel = viewModel
+        conversationVC.viewModel = conversationViewModel
         self.navigationController?.pushViewController(conversationVC, animated: true)
     }
 
