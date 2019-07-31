@@ -3,12 +3,12 @@
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
 
-3.1.0(Upcoming release)
+3.1.0
 ---
 ### Enhancements
 - [AL-3580] Added separate config options for the chat bar items.
 - [AL-3577] Added Option to report a message;
-- [AL-3540]Add custom button in navigation bar
+- [AL-3540] Added custom button in the navigation bar
 - [AL-3210] Added RTL support.
 - [AL-3624] Added support for passing regular expression pattern to restrict certain messages.
 
