@@ -11,7 +11,7 @@ import Applozic
 import ApplozicSwift
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BuddyBuildSDK.setup()
 
-        registerForNotification()
 
         /// Use this for Customizing notification.
         /// - NOTE:
@@ -47,25 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController!.present(viewController, animated:true, completion: nil)
 
         }
-        if (launchOptions != nil)
-        {
-            //let dictionary = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? NSDictionary
-            let dictionary = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? NSDictionary
-
-            if (dictionary != nil)
-            {
-                print("launched from push notification")
-                let alPushNotificationService: ALPushNotificationService = ALPushNotificationService()
-
-                let appState: NSNumber = NSNumber(value: 0 as Int32)
-                let applozicProcessed = alPushNotificationService.processPushNotification(launchOptions,updateUI:appState)
-                if (!applozicProcessed)
-                {
-
-                }
-            }
-        }
-
+        UNUserNotificationCenter.current().delegate = self
+        registerForNotification()
         return true
     }
 
@@ -121,40 +103,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("Couldn’t register: \(error)")
     }
 
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any])
-    {
-        print("Received notification :: \(userInfo.description)")
-        let alPushNotificationService: ALPushNotificationService = ALPushNotificationService()
-        alPushNotificationService.notificationArrived(to: application, with: userInfo)
-    }
-
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler
-        completionHandler: @escaping (UIBackgroundFetchResult) -> Void)
-    {
-        print("Received notification With Completion :: \(userInfo.description)")
-        let alPushNotificationService: ALPushNotificationService = ALPushNotificationService()
-        alPushNotificationService.notificationArrived(to: application, with: userInfo)
-        completionHandler(UIBackgroundFetchResult.newData)
-    }
-
-
     func registerForNotification() {
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
-
-                if granted {
-                    DispatchQueue.main.async {
-                        UIApplication.shared.registerForRemoteNotifications()
-                    }
-                }
-            }
-        } else {
-            // Fallback on earlier versions
-            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(settings)
-            UIApplication.shared.registerForRemoteNotifications()
-
+        UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
         }
+        UIApplication.shared.registerForRemoteNotifications()
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let service = ALPushNotificationService()
+        guard !service.isApplozicNotification(notification.request.content.userInfo) else {
+            return
+        }
+        completionHandler([.sound, .badge, .alert])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let service = ALPushNotificationService()
+        let dict = response.notification.request.content.userInfo
+        guard !service.isApplozicNotification(dict) else {
+            switch UIApplication.shared.applicationState {
+            case .active:
+                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_ACTIVE.rawValue))
+            case .background:
+                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_BACKGROUND.rawValue))
+            case .inactive:
+                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_INACTIVE.rawValue))
+            }
+            completionHandler()
+            return
+        }
+        completionHandler()
     }
 }
 

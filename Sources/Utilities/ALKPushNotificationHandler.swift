@@ -76,21 +76,23 @@ public class ALKPushNotificationHandler: Localizable {
                 weakSelf.title = displayName
             }
 
-            if UIApplication.shared.applicationState == .active {
+            guard let userInfo = notification.userInfo as? [String: Any], let state = userInfo["updateUI"] as? NSNumber else { return }
+
+            switch state {
+            case NSNumber(value: APP_STATE_ACTIVE.rawValue):
                 guard let userInfo = notification.userInfo, let alertValue = userInfo["alertValue"] as? String else {
-                        return
+                    return
                 }
-                ///TODO: FIX HERE. USE conversationId also. 
+                ///TODO: FIX HERE. USE conversationId also.
                 ALUtilityClass.thirdDisplayNotificationTS(alertValue, andForContactId: weakSelf.contactId, withGroupId: weakSelf.groupId, completionHandler: {
 
                     _ in
                     weakSelf.notificationTapped(userId: weakSelf.contactId, groupId: weakSelf.groupId)
 
                 })
-            } else {
+            default:
                 weakSelf.launchIndividualChatWith(userId: weakSelf.contactId, groupId: weakSelf.groupId)
             }
-
         })
     }
 
