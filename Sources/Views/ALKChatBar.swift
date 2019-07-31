@@ -117,7 +117,6 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     lazy open var placeHolder: UITextView = {
-
         let view = UITextView()
         view.setFont(UIFont.font(.normal(size: 14)))
         view.setTextColor(.color(Color.Text.gray9B))
@@ -125,6 +124,7 @@ open class ALKChatBar: UIView, Localizable {
         view.isUserInteractionEnabled = false
         view.isScrollEnabled = false
         view.scrollsToTop = false
+        view.changeTextDirection()
         view.setBackgroundColor(.color(.none))
         return view
     }()
@@ -714,6 +714,9 @@ extension ALKChatBar: UITextViewDelegate {
 
     public func textViewDidBeginEditing(_ textView: UITextView) {
         action?(.chatBarTextBeginEdit)
+        guard (textView.text == nil || textView.text.isEmpty) else { return }
+        textView.changeTextDirection()
+        placeHolder.changeTextDirection()
     }
 
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -738,6 +741,9 @@ extension ALKChatBar: UITextViewDelegate {
         //clear inputview of textview
         textView.inputView = nil
         textView.reloadInputViews()
+        guard (textView.text == nil || textView.text.isEmpty) else { return }
+        textView.changeTextDirection()
+        placeHolder.changeTextDirection()
     }
 
     fileprivate func clearTextInTextView() {

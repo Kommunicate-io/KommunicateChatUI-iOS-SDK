@@ -86,6 +86,20 @@ open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
         collectionView.constraint(withIdentifier: ConstraintIdentifier.collectionView.rawValue)?.constant = collectionViewHeight
     }
 
+    open override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft else {
+            return
+        }
+        scrollToBeginning()
+    }
+
+    private func scrollToBeginning() {
+        guard collectionView.numberOfItems(inSection: 0) > 0 else { return }
+        let indexPath = IndexPath(item: 0, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .left, animated: false)
+    }
+
     public class func cardHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let cardHeight = ALKGenericCardCollectionView.rowHeightFor(message:message, width:width)
         return cardHeight + cardTopPadding

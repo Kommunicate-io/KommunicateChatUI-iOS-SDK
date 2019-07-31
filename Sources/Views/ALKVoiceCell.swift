@@ -183,8 +183,14 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
         self.accessibilityIdentifier = "audioCell"
 
-        actionButton.setImage(UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-        actionButton.setImage(UIImage(named: "icon_pause", in: Bundle.applozic, compatibleWith: nil), for: .selected)
+        var playIcon = UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil)
+        playIcon = playIcon?.imageFlippedForRightToLeftLayoutDirection()
+
+        var pauseIcon = UIImage(named: "icon_pause", in: Bundle.applozic, compatibleWith: nil)
+        pauseIcon = pauseIcon?.imageFlippedForRightToLeftLayoutDirection()
+
+        actionButton.setImage(playIcon, for: .normal)
+        actionButton.setImage(pauseIcon, for: .selected)
 
         frameView.addGestureRecognizer(longPressGesture)
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
@@ -200,33 +206,33 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
 
         bubbleView.topAnchor.constraint(equalTo: soundPlayerView.topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
-        bubbleView.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
-        bubbleView.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor).isActive = true
+        bubbleView.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor).isActive = true
+        bubbleView.trailingAnchor.constraint(equalTo: soundPlayerView.trailingAnchor).isActive = true
 
         progressBar.topAnchor.constraint(equalTo: soundPlayerView.topAnchor).isActive = true
         progressBar.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
-        progressBar.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
-        progressBar.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor, constant: -2).isActive = true
+        progressBar.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor).isActive = true
+        progressBar.trailingAnchor.constraint(equalTo: soundPlayerView.trailingAnchor, constant: -2).isActive = true
 
         frameView.topAnchor.constraint(equalTo: soundPlayerView.topAnchor, constant: 0).isActive = true
         frameView.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor, constant: 0).isActive = true
-        frameView.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor, constant: 0).isActive = true
-        frameView.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor, constant: 0).isActive = true
+        frameView.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor, constant: 0).isActive = true
+        frameView.trailingAnchor.constraint(equalTo: soundPlayerView.trailingAnchor, constant: 0).isActive = true
 
         clearButton.topAnchor.constraint(equalTo: soundPlayerView.topAnchor).isActive = true
         clearButton.bottomAnchor.constraint(equalTo: soundPlayerView.bottomAnchor).isActive = true
-        clearButton.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor).isActive = true
-        clearButton.rightAnchor.constraint(equalTo: soundPlayerView.rightAnchor).isActive = true
+        clearButton.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor).isActive = true
+        clearButton.trailingAnchor.constraint(equalTo: soundPlayerView.trailingAnchor).isActive = true
 
         actionButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-        actionButton.leftAnchor.constraint(equalTo: soundPlayerView.leftAnchor,constant:0).isActive = true
+        actionButton.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor,constant:0).isActive = true
         actionButton.widthAnchor.constraint(equalToConstant: 45).isActive = true
         actionButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         playTimeLabel.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
         playTimeLabel.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-        playTimeLabel.leftAnchor.constraint(greaterThanOrEqualTo: actionButton.leftAnchor,constant:25).isActive = true
-        playTimeLabel.rightAnchor.constraint(greaterThanOrEqualTo: actionButton.rightAnchor,constant:25).isActive = true
+        playTimeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: actionButton.leadingAnchor,constant:25).isActive = true
+        playTimeLabel.trailingAnchor.constraint(greaterThanOrEqualTo: actionButton.trailingAnchor,constant:25).isActive = true
 
     }
 

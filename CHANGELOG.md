@@ -9,6 +9,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3580] Added separate config options for the chat bar items.
 - [AL-3577] Added Option to report a message;
 - [AL-3540]Add custom button in navigation bar
+- [AL-3210] Added RTL support.
 
 3.0.0
 ---

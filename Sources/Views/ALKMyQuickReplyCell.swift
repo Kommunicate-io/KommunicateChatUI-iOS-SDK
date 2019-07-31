@@ -67,7 +67,12 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         quickReplyView.update(quickReplyArray: quickReplyArray)
         let quickReplyViewHeight = ALKQuickReplyView.rowHeight(quickReplyArray: quickReplyArray, maxWidth: width)
 
-        quickReplyView.frame = CGRect(x: ChatCellPadding.SentMessage.QuickReply.left,
+        var xPos = ChatCellPadding.SentMessage.QuickReply.left
+        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+            xPos = ChatCellPadding.SentMessage.QuickReply.right
+        }
+
+        quickReplyView.frame = CGRect(x: xPos,
                                       y: height + ChatCellPadding.SentMessage.QuickReply.top,
                                       width: width,
                                       height: quickReplyViewHeight)

@@ -29,7 +29,9 @@ open class ALKConversationNavBar: UIView, Localizable {
 
     let backImage: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "back", in: Bundle.applozic, compatibleWith: nil)
+        var backImage = UIImage(named: "back", in: Bundle.applozic, compatibleWith: nil)
+        backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
+        view.image = backImage
         view.isUserInteractionEnabled = false
         return view
     }()

@@ -71,6 +71,17 @@ extension UITextView {
     func setFont(_ font: UIFont) {
         self.font = font
     }
+
+    func changeTextDirection() {
+        var lang = textInputMode?.primaryLanguage
+        if lang == nil {
+            lang = UIApplication.shared.textInputMode?.primaryLanguage
+        }
+        /// Still no language is detected then simply return
+        guard let language = lang else { return }
+        let isRTL = NSLocale.characterDirection(forLanguage: language) == .rightToLeft
+        self.textAlignment = isRTL ? .right : .left
+    }
 }
 
 extension UITextField {

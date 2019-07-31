@@ -146,6 +146,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         label.numberOfLines = 1
         label.font = Font.normal(size: 14.0).font()
         label.textColor = UIColor(netHex: 0x9B9B9B)
+        label.textAlignment = UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft ? .left : .right
         return label
     }()
 
@@ -455,6 +456,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         timeLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 0).isActive  = true
 
         onlineStatusView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
+        onlineStatusView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         onlineStatusView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         onlineStatusView.widthAnchor.constraint(equalToConstant: 6).isActive = true
 

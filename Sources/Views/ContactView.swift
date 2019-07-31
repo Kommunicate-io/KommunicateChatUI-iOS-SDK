@@ -54,11 +54,12 @@ class ContactView: UIView {
 
     let contactSaveIcon: UIButton = {
         let button = UIButton()
-        let image = UIImage(
+        var image = UIImage(
             named: "icon_arrow",
             in: Bundle.applozic,
             compatibleWith: nil)?
             .withRenderingMode(.alwaysTemplate)
+        image = image?.imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
         return button
     }()
