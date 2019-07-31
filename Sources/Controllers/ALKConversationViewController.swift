@@ -43,6 +43,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return tableview
     }()
 
+    open lazy var navigationBar = ALKConversationNavBar(configuration: self.configuration, delegate: self)
+
     var contactService: ALContactService!
 
     lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor)
@@ -72,8 +74,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate lazy var typingNoticeView = TypingNotice(localizedStringFileName : configuration.localizedStringFileName)
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
-
-    fileprivate lazy var navigationBar = ALKConversationNavBar(configuration: self.configuration, delegate: self)
 
     fileprivate var keyboardSize: CGRect?
 
@@ -469,7 +469,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    func isChannelLeft() {
+    open func isChannelLeft() {
         guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
             return
         }
@@ -1897,11 +1897,11 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
 }
 
 extension ALKConversationViewController: NavigationBarCallbacks {
-    func backButtonTapped() {
+    open func backButtonTapped() {
         backTapped()
     }
 
-    func titleTapped() {
+    open func titleTapped() {
         if let contact = contactDetails(), let contactId = contact.userId {
             let info: [String: Any] =
                 ["Id": contactId,

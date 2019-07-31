@@ -7,18 +7,33 @@
 
 import UIKit
 
-class ALKActivityIndicator: UIView {
+/// Custom ActivityIndicator view which will present a white large styled UIActivityIndicator
+/// on top a rectangular background.
+public class ALKActivityIndicator: UIView {
 
-    struct Size {
-        let width: CGFloat
-        let height: CGFloat
+    public struct Size {
+        public let width: CGFloat
+        public let height: CGFloat
+        public init(width: CGFloat, height: CGFloat) {
+            self.width = width
+            self.height = height
+        }
     }
 
     let size: Size
 
     fileprivate var indicator = UIActivityIndicatorView(style: .whiteLarge)
 
-    init(frame: CGRect, backgroundColor: UIColor, indicatorColor: UIColor, size: Size) {
+    /// Initializers
+    ///
+    /// - Parameters:
+    ///   - frame: Used to set view's frame.
+    ///   - backgroundColor: Color of rectangular background.
+    ///   - indicatorColor: Color of ActivityIndicator.
+    ///   - size: Size of activity indicator.
+    ///
+    /// - Note: Make sure you use the same size passed here to set constraints to this view.
+    public init(frame: CGRect, backgroundColor: UIColor, indicatorColor: UIColor, size: Size) {
         self.size = size
         super.init(frame: frame)
         self.backgroundColor = backgroundColor
@@ -31,12 +46,12 @@ class ALKActivityIndicator: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func startAnimating() {
+    public func startAnimating() {
         self.isHidden = false
         indicator.startAnimating()
     }
 
-    func stopAnimating() {
+    public func stopAnimating() {
         self.isHidden = true
         indicator.stopAnimating()
     }

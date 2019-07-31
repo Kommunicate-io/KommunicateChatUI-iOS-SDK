@@ -8,17 +8,17 @@
 import Foundation
 import Kingfisher
 
-protocol NavigationBarCallbacks: class {
+@objc public protocol NavigationBarCallbacks: class {
     func backButtonTapped()
-    func titleTapped()
+    @objc func titleTapped()
 }
 
-class ALKConversationNavBar: UIView, Localizable {
+open class ALKConversationNavBar: UIView, Localizable {
 
     let navigationBarBackgroundColor: UIColor
     let configuration: ALKConfiguration
     weak var delegate: NavigationBarCallbacks?
-    var disableTitleAction: Bool = false
+    open var disableTitleAction: Bool = false
 
     let backButton: UIButton = {
         let view = UIButton()
@@ -83,7 +83,7 @@ class ALKConversationNavBar: UIView, Localizable {
         return stackView
     }()
 
-    required init(configuration: ALKConfiguration, delegate: NavigationBarCallbacks) {
+    required public init(configuration: ALKConfiguration, delegate: NavigationBarCallbacks) {
         self.navigationBarBackgroundColor = configuration.navigationBarBackgroundColor
         self.configuration = configuration
         self.delegate = delegate
@@ -93,7 +93,7 @@ class ALKConversationNavBar: UIView, Localizable {
         setupActions()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -234,3 +234,4 @@ class ALKConversationNavBar: UIView, Localizable {
     }
 
 }
+
