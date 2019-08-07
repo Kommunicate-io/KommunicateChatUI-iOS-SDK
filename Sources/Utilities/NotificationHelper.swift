@@ -132,7 +132,7 @@ public class NotificationHelper {
         let topVCName = String(describing: topVC.classForCoder)
         switch topVCName {
         case "MuteConversationViewController",
-             "WebViewController",
+             "ALKWebViewController",
              "SelectProfilePicViewController",
              "CAMImagePickerCameraViewController":
             return true

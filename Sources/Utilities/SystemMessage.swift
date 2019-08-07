@@ -139,6 +139,7 @@ struct SystemMessage : Localizable {
     struct NavbarTitle {
         static let createGroupTitle = localizedString(forKey: "CreateGroupTitle")
         static let editGroupTitle = localizedString(forKey: "EditGroupTitle")
+        static let emailWebViewTitle = localizedString(forKey: "EmailWebViewTitle")
     }
 
     struct LabelName {

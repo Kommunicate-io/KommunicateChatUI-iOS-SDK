@@ -85,6 +85,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
             static let bottom: CGFloat = 2
             static let left: CGFloat = 10
         }
+
     }
 
     struct ConstraintIdentifier {
@@ -133,10 +134,18 @@ open class ALKFriendMessageCell: ALKMessageCell {
             avatarImageView.heightAnchor.constraint(equalToConstant: Padding.AvatarImage.height),
             avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImage.width),
 
+            emailBottomView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor),
+            emailBottomViewHeight,
+            emailBottomView.trailingAnchor.constraint(
+                lessThanOrEqualTo:contentView.trailingAnchor),
+            emailBottomView.leadingAnchor.constraint(
+                equalTo: bubbleView.leadingAnchor,
+                constant: ALKFriendMessageCell.bubbleViewLeftPadding),
 
             bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             bubbleView.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor,
+                equalTo: emailBottomView.topAnchor,
                 constant: -Padding.BubbleView.bottom),
             bubbleView.leadingAnchor.constraint(
                 equalTo: avatarImageView.trailingAnchor,
@@ -222,7 +231,9 @@ open class ALKFriendMessageCell: ALKMessageCell {
                 constant: Padding.TimeLabel.bottom)
             ])
 
-        messageView.addGestureRecognizer(tapGesture)
+        let linktapGesture = UITapGestureRecognizer(target: self, action: #selector(viewEmailTappedAction))
+        emailBottomView.emailLinkLabel.addGestureRecognizer(linktapGesture)
+
     }
 
     override func setupStyle() {
@@ -296,6 +307,15 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
     @objc private func avatarTappedAction() {
         avatarTapped?()
+    }
+
+    @objc private func viewEmailTappedAction() {
+
+        let text = localizedString(forKey: "EmailWebViewTitle", withDefaultValue: SystemMessage.NavbarTitle.emailWebViewTitle, fileName: localizedStringFileName)
+
+        let emailWebViewController = ALKWebViewController(htmlString: self.viewModel?.message ?? "", url: nil,title:text)
+        let pushAssist = ALPushAssist()
+        pushAssist.topViewController.navigationController?.pushViewController(emailWebViewController, animated: false)
     }
 
     // MARK: - ChatMenuCell

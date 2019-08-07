@@ -115,8 +115,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }()
 
     let emailTopView = ALKEmailTopView(frame: .zero)
+    let emailBottomView = ALKEmailBottomView(frame: .zero)
 
     lazy var emailTopHeight = emailTopView.heightAnchor.constraint(equalToConstant: 0)
+    lazy var emailBottomViewHeight = emailBottomView.heightAnchor.constraint(equalToConstant: 0)
 
     fileprivate static let paragraphStyle: NSMutableParagraphStyle = {
         let style = NSMutableParagraphStyle.init()
@@ -167,14 +169,19 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         switch viewModel.messageType {
         case .text:
             emailTopHeight.constant = 0
+            emailBottomViewHeight.constant = 0
             messageView.text = message
             return
         case .html:
             emailTopHeight.constant = 0
+            emailBottomViewHeight.constant = 0
             emailTopView.show(false)
+            emailBottomView.show(false)
         case .email:
             emailTopHeight.constant = ALKEmailTopView.height
+            emailBottomViewHeight.constant = ALKEmailBottomView.Padding.View.height
             emailTopView.show(true)
+            emailBottomView.show(true)
         default:
             print("😱😱😱Shouldn't come here.😱😱😱")
             return
@@ -194,6 +201,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
             [messageView,
              bubbleView,
              emailTopView,
+             emailBottomView,
              replyView,
              replyNameLabel,
              replyMessageLabel,
@@ -201,6 +209,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
              timeLabel])
         contentView.bringSubviewToFront(messageView)
         contentView.bringSubviewToFront(emailTopView)
+        contentView.bringSubviewToFront(emailBottomView)
 
         bubbleView.addGestureRecognizer(longPressGesture)
         let replyTapGesture = UITapGestureRecognizer(target: self, action: #selector(replyViewTapped))
@@ -240,7 +249,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
                     return ALKEmailTopView.height
                 }
                 dummyAttributedMessageView.font = font
-                let height = ALKEmailTopView.height +
+                let height = ALKEmailTopView.height + ALKEmailBottomView.Padding.View.height  +
                     TextViewSizeCalculator.height(
                         dummyAttributedMessageView,
                         attributedText: attributedText,

@@ -148,4 +148,4 @@ ReportMessageSuccess = "Message has been reported";
 ReportMessageError = "Failed to report the message";
 NetworkAccessFailedMessage = "No internet access";
 CapitalLetterCancelText = "CANCEL";
-
+EmailWebViewTitle =  "Email";

@@ -1337,7 +1337,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let data = responseData, let url = responseUrl else {
                 return
             }
-            let vc = WebViewController(htmlString: data, url: url)
+            let vc = ALKWebViewController(htmlString: data, url: url,title: "")
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

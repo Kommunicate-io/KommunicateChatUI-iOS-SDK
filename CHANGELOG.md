@@ -5,7 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 3.2.0
 ---
 ### Enhancements
--[AL-3647 ]Send notification for mute, block and add member click
+- [AL-3647 ]Send notification for mute, block and add member click
+- [AL-3620] Add option to open it in browser option for email messages.
 
 3.1.0
 ---
