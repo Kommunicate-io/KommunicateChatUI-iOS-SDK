@@ -5,8 +5,11 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 3.2.0
 ---
 ### Enhancements
-- [AL-3647 ]Send notification for mute, block and add member click
-- [AL-3620] Add option to open it in browser option for email messages.
+- [AL-3647] Send notification for mute, block and add member click
+- [AL-3620] Added an option to open message in browser option for email messages.
+
+### Fixes
+- Fixed an issue where duplicate messages were getting added in the chat thread from notifications.
 
 3.1.0
 ---
