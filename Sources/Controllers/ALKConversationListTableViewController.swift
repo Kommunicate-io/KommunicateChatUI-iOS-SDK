@@ -21,6 +21,10 @@ public protocol ALKConversationListTableViewDelegate: class {
 
     /// Tells the delegate that the tableview is scrolled to bottom.
     func scrolledToBottom()
+
+    func muteNotification(conversation: ALMessage,isMuted : Bool)
+
+    func userBlockNotification(userId:String, isBlocked: Bool)
 }
 
 /**
@@ -526,6 +530,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 self.confirmationAlert(with: errorMessage)
                 return
             }
+            self.delegate?.userBlockNotification(userId: conversation.contactIds, isBlocked: false)
             let successMessage = self.localizedString(forKey: "UnblockSuccess", withDefaultValue: SystemMessage.Block.UnblockSuccess, fileName: self.localizedStringFileName)
             self.confirmationAlert(with: successMessage)
             self.tableView.reloadRows(at: [indexPath], with: .none)
@@ -543,6 +548,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 self.confirmationAlert(with: errorMessage)
                 return
             }
+            self.delegate?.userBlockNotification(userId: conversation.contactIds, isBlocked: true)
             let successMessage = self.localizedString(forKey: "BlockSuccess", withDefaultValue: SystemMessage.Block.BlockSuccess, fileName: self.localizedStringFileName)
             self.confirmationAlert(with: successMessage)
             self.tableView.reloadRows(at: [indexPath], with: .none)
@@ -635,6 +641,8 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             guard success == true else {
                 return
             }
+
+            self.delegate?.muteNotification(conversation: conversation, isMuted: false)
             //Update UI
             if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell {
                 guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
@@ -703,6 +711,9 @@ extension ALKConversationListTableViewController: Muteable {
             guard success == true else {
                 return
             }
+
+            self.delegate?.muteNotification(conversation: conversation, isMuted: true)
+
             if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell {
                 guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
                     return
@@ -711,6 +722,7 @@ extension ALKConversationListTableViewController: Muteable {
             }
         }
     }
+
 }
 
 // MARK: - SCROLL VIEW DELEGATE

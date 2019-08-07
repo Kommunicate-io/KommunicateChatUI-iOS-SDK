@@ -185,5 +185,9 @@ public struct ALKConfiguration {
     @available(*,deprecated, message: "Use navigationItemsForConversationList instead it has identifier in ALKNavigationItem")
     public var nsNotificationNameForNavIconClick = "handleNavigationItemClick"
 
+    /// If true then click action on Add Participant in group will disabled.
+    /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
+    public var disableAddParticipantButton = false
+
     public init() { }
 }

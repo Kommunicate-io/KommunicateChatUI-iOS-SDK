@@ -508,4 +508,24 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
     public func scrolledToBottom() {
         viewModel.fetchMoreMessages(dbService: dbService)
     }
+
+    public func userBlockNotification(userId: String, isBlocked: Bool) {
+        var dic =  [AnyHashable : Any]()
+        dic["UserId"] = userId
+        dic["Controller"] = self
+        dic["Blocked"] = isBlocked
+        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self,userInfo: dic)
+    }
+
+    public func muteNotification(conversation: ALMessage, isMuted: Bool) {
+        var dic =  [AnyHashable : Any]()
+        dic["Muted"] = isMuted
+        dic["Controller"] = self
+        if(conversation.isGroupChat){
+            dic["ChannelKey"] = conversation.groupId
+        }else{
+            dic["UserId"] = conversation.contactIds
+        }
+        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self,userInfo: dic)
+    }
 }

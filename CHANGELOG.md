@@ -2,6 +2,10 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+3.2.0
+---
+### Enhancements
+-[AL-3647 ]Send notification for mute, block and add member click
 
 3.1.0
 ---
