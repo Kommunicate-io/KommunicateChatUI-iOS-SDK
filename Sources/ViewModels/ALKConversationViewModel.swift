@@ -485,8 +485,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var sortedArray = filteredArray.filter {
             return !self.alMessageWrapper.contains(message: $0)
         }
-        if filteredArray.count > 1 {
-            sortedArray = filteredArray.sorted { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
+        if sortedArray.count > 1 {
+            sortedArray.sort { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
         }
         guard !sortedArray.isEmpty else { return }
 
