@@ -15,8 +15,8 @@ extension CNContact {
             let data = try? Data(contentsOf: fullPath),
             let contacts = try? CNContactVCardSerialization.contacts(with: data),
             !contacts.isEmpty
-            else {
-                return nil
+        else {
+            return nil
         }
         return contacts[0]
     }

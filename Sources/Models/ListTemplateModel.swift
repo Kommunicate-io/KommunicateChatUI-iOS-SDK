@@ -9,7 +9,6 @@ import Foundation
 
 /// Use this instead of `ALKGenericListTemplate`
 public struct ListTemplate: Codable {
-
     public let headerImgSrc: String?
     public let headerText: String?
     public let elements: [Element]?
@@ -32,5 +31,4 @@ public struct ListTemplate: Codable {
         public let type: String?
         public let text: String?
     }
-
 }

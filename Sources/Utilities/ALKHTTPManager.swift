@@ -6,15 +6,15 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
-protocol ALKHTTPManagerUploadDelegate: class {
+protocol ALKHTTPManagerUploadDelegate: AnyObject {
     func dataUploaded(task: ALKUploadTask)
     func dataUploadingFinished(task: ALKUploadTask)
 }
 
-protocol ALKHTTPManagerDownloadDelegate: class {
+protocol ALKHTTPManagerDownloadDelegate: AnyObject {
     func dataDownloaded(task: ALKDownloadTask)
     func dataDownloadingFinished(task: ALKDownloadTask)
 }
@@ -40,12 +40,12 @@ class ALKHTTPManager: NSObject {
     static let shared = ALKHTTPManager()
     weak var downloadDelegate: ALKHTTPManagerDownloadDelegate?
     weak var uploadDelegate: ALKHTTPManagerUploadDelegate?
-    var uploadCompleted: ((_ responseDict: Any?, _ task: ALKUploadTask) ->Void)?
-    var downloadCompleted: ((_ task: ALKDownloadTask) ->Void)?
+    var uploadCompleted: ((_ responseDict: Any?, _ task: ALKUploadTask) -> Void)?
+    var downloadCompleted: ((_ task: ALKDownloadTask) -> Void)?
 
     var length: Int64 = 0
-    var buffer:NSMutableData = NSMutableData()
-    var session:URLSession?
+    var buffer: NSMutableData = NSMutableData()
+    var session: URLSession?
     var uploadTask: ALKUploadTask?
     var downloadTask: ALKDownloadTask?
 
@@ -56,8 +56,7 @@ class ALKHTTPManager: NSObject {
         static let paramForDefaultStorage = "files[]"
     }
 
-    func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?)->Void) {
-
+    func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?) -> Void) {
         guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.path, paramString: nil) as URLRequest? else { return }
 
         let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
@@ -70,7 +69,7 @@ class ALKHTTPManager: NSObject {
         if let data = imageData as Data? {
             print("data present")
             body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-            body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant,"imge_123_profile").data(using: .utf8)!)
+            body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, "imge_123_profile").data(using: .utf8)!)
             body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
             body.append(data)
             body.append(String(format: "\r\n").data(using: .utf8)!)
@@ -92,18 +91,18 @@ class ALKHTTPManager: NSObject {
     }
 
     func downloadAttachment(task: ALKDownloadTask) {
-        self.downloadTask = task
+        downloadTask = task
         guard let urlString = task.urlString, let fileName = task.fileName, let identifier = task.identifier else { return }
         let componentsArray = fileName.components(separatedBy: ".")
         let fileExtension = componentsArray.last
         let filePath = getFilePath(using: identifier, with: fileExtension!)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-        if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil, let downloadTask = self.downloadTask {
+        if NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) != nil, let downloadTask = self.downloadTask {
             downloadTask.filePath = filePath
             downloadTask.completed = true
             downloadTask.isDownloading = false
-            self.downloadCompleted?(downloadTask)
+            downloadCompleted?(downloadTask)
             downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         } else {
             let configuration = URLSessionConfiguration.default
@@ -111,48 +110,46 @@ class ALKHTTPManager: NSObject {
             let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
             guard let urlRequest = serviceEnabled ? ALRequestHandler.createGETRequest(withUrlStringWithoutHeader: urlString, paramString: nil) :
                 ALRequestHandler.createGETRequest(withUrlString: urlString, paramString: nil) else { return }
-            session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
+            session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
             let dataTask = session?.dataTask(with: urlRequest as URLRequest)
             dataTask?.resume()
         }
     }
 
-
     /// Used to download image directly using the url in `task`.
     ///
     /// No headers are sent with the call.
     func downloadImage(task: ALKDownloadTask) {
-        self.downloadTask = task
+        downloadTask = task
         guard let urlString = task.urlString, let fileName = task.fileName, let identifier = task.identifier else { return }
         let componentsArray = fileName.components(separatedBy: ".")
         let fileExtension = componentsArray.last
         let filePath = getFilePath(using: identifier, with: fileExtension!)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-        if NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) != nil, let downloadTask = self.downloadTask {
+        if NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) != nil, let downloadTask = self.downloadTask {
             downloadTask.filePath = filePath
             downloadTask.completed = true
             downloadTask.isDownloading = false
-            self.downloadCompleted?(downloadTask)
+            downloadCompleted?(downloadTask)
             downloadDelegate?.dataDownloadingFinished(task: downloadTask)
         } else {
             let configuration = URLSessionConfiguration.default
             guard !urlString.isEmpty, let url = URL(string: urlString) else { return }
-            session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
+            session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
             let dataTask = session?.dataTask(with: URLRequest(url: url))
             dataTask?.resume()
         }
     }
 
     func uploadAttachment(task: ALKUploadTask) {
-        self.uploadTask = task
+        uploadTask = task
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
 
         guard var request = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as URLRequest? else { return }
         if FileManager.default.fileExists(atPath: filePath.path) {
-
             let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
             let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
             request.setValue(contentType, forHTTPHeaderField: "Content-Type")
@@ -163,7 +160,7 @@ class ALKHTTPManager: NSObject {
             if let data = imageData as Data? {
                 print("data present")
                 body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-                body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant,task.fileName ?? "").data(using: .utf8)!)
+                body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, task.fileName ?? "").data(using: .utf8)!)
                 body.append(String(format: "Content-Type:%@\r\n\r\n", task.contentType ?? "").data(using: .utf8)!)
                 body.append(data)
                 body.append(String(format: "\r\n").data(using: .utf8)!)
@@ -173,7 +170,7 @@ class ALKHTTPManager: NSObject {
             request.httpBody = body
             request.url = task.url
             let configuration = URLSessionConfiguration.default
-            session = URLSession(configuration: configuration, delegate:self, delegateQueue: nil)
+            session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
             let dataTask = session?.dataTask(with: request)
             dataTask?.resume()
         }
@@ -185,11 +182,11 @@ class ALKHTTPManager: NSObject {
         return String(format: "%@_\(format).%@", key, fileExtension)
     }
 
-    private func save(data: Data,to url: URL) -> String? {
+    private func save(data: Data, to url: URL) -> String? {
         do {
             try data.write(to: url)
             return url.path
-        } catch let error {
+        } catch {
             print(error)
             return nil
         }
@@ -197,12 +194,11 @@ class ALKHTTPManager: NSObject {
 }
 
 extension ALKHTTPManager: URLSessionDataDelegate {
-
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
+    func urlSession(_: URLSession, dataTask _: URLSessionDataTask, didReceive _: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
         completionHandler(URLSession.ResponseDisposition.allow)
     }
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    func urlSession(_: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         if let downloadTask = downloadTask {
             buffer.append(data)
             DispatchQueue.main.async {
@@ -226,7 +222,7 @@ extension ALKHTTPManager: URLSessionDataDelegate {
                     self.uploadCompleted?(responseDictionary, uploadTask)
                     self.uploadDelegate?.dataUploadingFinished(task: uploadTask)
                 }
-            } catch(let error) {
+            } catch {
                 print(error)
                 let responseString = String(data: data, encoding: .utf8)
                 print("responseString = \(String(describing: responseString))")
@@ -240,8 +236,7 @@ extension ALKHTTPManager: URLSessionDataDelegate {
         }
     }
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-
+    func urlSession(_: URLSession, task _: URLSessionTask, didCompleteWithError error: Error?) {
         guard let downloadTask = self.downloadTask, let fileName = downloadTask.fileName, let identifier = downloadTask.identifier else { return }
         guard error == nil else {
             DispatchQueue.main.async {
@@ -269,7 +264,7 @@ extension ALKHTTPManager: URLSessionDataDelegate {
         }
     }
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+    func urlSession(_: URLSession, task _: URLSessionTask, didSendBodyData _: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         length += totalBytesSent
         guard let uploadTask = self.uploadTask else { return }
         NSLog("Did send data: \(totalBytesSent) out of total: \(totalBytesExpectedToSend)")

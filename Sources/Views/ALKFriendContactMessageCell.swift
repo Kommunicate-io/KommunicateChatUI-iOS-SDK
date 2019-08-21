@@ -8,7 +8,6 @@
 import Kingfisher
 
 class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
-
     struct Padding {
         struct Name {
             static let left: CGFloat = 10
@@ -16,18 +15,21 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
             static let top: CGFloat = 6
             static let height: CGFloat = 16
         }
+
         struct Image {
             static let left: CGFloat = 9
             static let top: CGFloat = 18
             static let width: CGFloat = 37
             static let height: CGFloat = 37
         }
+
         struct Contact {
             static let left: CGFloat = 10
             static let top: CGFloat = 4
             static let multiplier: CGFloat = 0.5
             static let bottom: CGFloat = 2
         }
+
         struct Time {
             static let left: CGFloat = 10
         }
@@ -69,9 +71,9 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
 
         if let url = viewModel.avatarURL {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
-            self.avatarImageView.image = placeHolder
+            avatarImageView.image = placeHolder
         }
 
         nameLabel.text = viewModel.displayName
@@ -82,7 +84,8 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         super.setupStyle()
         contactView.setColorIn(
             text: ALKMessageStyle.receivedMessage.text,
-            background: ALKMessageStyle.receivedBubble.color)
+            background: ALKMessageStyle.receivedBubble.color
+        )
     }
 
     class func rowHeight() -> CGFloat {
@@ -108,7 +111,7 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
 
         contactView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.Contact.top).isActive = true
         contactView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Contact.left).isActive = true
-        contactView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: Padding.Contact.multiplier).isActive = true
+        contactView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: Padding.Contact.multiplier).isActive = true
         contactView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Padding.Contact.bottom).isActive = true
 
         loadingIndicator.trailingAnchor.constraint(equalTo: contactView.trailingAnchor).isActive = true
@@ -119,5 +122,4 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         timeLabel.leadingAnchor.constraint(equalTo: contactView.trailingAnchor, constant: Padding.Time.left).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: contactView.bottomAnchor, constant: Padding.Contact.bottom).isActive = true
     }
-
 }

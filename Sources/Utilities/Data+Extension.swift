@@ -13,10 +13,12 @@ extension Data {
         do {
             return try NSAttributedString(
                 data: self,
-                options:[
+                options: [
                     NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html,
-                    NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue],
-                documentAttributes: nil)
+                    NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue,
+                ],
+                documentAttributes: nil
+            )
         } catch {
             print(error)
         }

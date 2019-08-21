@@ -5,15 +5,14 @@
 //  Created by Mukesh Thawani on 07/02/18.
 //
 
-import UIKit
 import Applozic
+import UIKit
 
 /* Reply message view to be used in the
  bottom (above chat bar) when replying
  to a message */
 
 open class ALKReplyMessageView: UIView, Localizable {
-
     var configuration: ALKConfiguration!
 
     open var nameLabel: UILabel = {
@@ -43,17 +42,16 @@ open class ALKReplyMessageView: UIView, Localizable {
         return imageView
     }()
 
-    lazy open var selfNameText: String = {
+    open lazy var selfNameText: String = {
         let text = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, fileName: configuration.localizedStringFileName)
         return text
     }()
 
-    public var closeButtonTapped: ((Bool)->Void)?
+    public var closeButtonTapped: ((Bool) -> Void)?
 
     private var message: ALKMessageViewModel?
 
     private enum Padding {
-
         enum NameLabel {
             static let height: CGFloat = 30.0
             static let left: CGFloat = 10.0
@@ -84,7 +82,6 @@ open class ALKReplyMessageView: UIView, Localizable {
             static let top: CGFloat = 5.0
             static let bottom: CGFloat = -5.0
         }
-
     }
 
     init(frame: CGRect, configuration: ALKConfiguration) {
@@ -93,14 +90,14 @@ open class ALKReplyMessageView: UIView, Localizable {
         setUpViews()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     open func update(message: ALKMessageViewModel) {
         self.message = message
         nameLabel.text = message.isMyMessage ?
-            selfNameText:message.displayName
+            selfNameText : message.displayName
         messageLabel.text = getMessageText()
 
         if let imageURL = getURLForPreviewImage(message: message) {
@@ -118,77 +115,95 @@ open class ALKReplyMessageView: UIView, Localizable {
     }
 
     private func setUpConstraints() {
-        self.addViewsForAutolayout(views: [nameLabel, messageLabel, closeButton, previewImageView])
+        addViewsForAutolayout(views: [nameLabel, messageLabel, closeButton, previewImageView])
 
         let view = self
 
         nameLabel.heightAnchor.constraint(
-            lessThanOrEqualToConstant: Padding.NameLabel.height)
-            .isActive = true
+            lessThanOrEqualToConstant: Padding.NameLabel.height
+        )
+        .isActive = true
         nameLabel.leadingAnchor.constraint(
             equalTo: view.leadingAnchor,
-            constant: Padding.NameLabel.left).isActive = true
+            constant: Padding.NameLabel.left
+        ).isActive = true
         nameLabel.trailingAnchor.constraint(
             equalTo: previewImageView.leadingAnchor,
-            constant: Padding.NameLabel.right).isActive = true
+            constant: Padding.NameLabel.right
+        ).isActive = true
         nameLabel.topAnchor.constraint(
             equalTo: view.topAnchor,
-            constant: Padding.NameLabel.top).isActive = true
+            constant: Padding.NameLabel.top
+        ).isActive = true
 
         messageLabel.heightAnchor.constraint(
-            lessThanOrEqualToConstant: Padding.MessageLabel.height)
-            .isActive = true
+            lessThanOrEqualToConstant: Padding.MessageLabel.height
+        )
+        .isActive = true
         messageLabel.leadingAnchor.constraint(
             equalTo: view.leadingAnchor,
-            constant: Padding.MessageLabel.left).isActive = true
+            constant: Padding.MessageLabel.left
+        ).isActive = true
         messageLabel.trailingAnchor.constraint(
             equalTo: previewImageView.leadingAnchor,
-            constant: Padding.MessageLabel.right).isActive = true
+            constant: Padding.MessageLabel.right
+        ).isActive = true
         messageLabel.topAnchor.constraint(
             equalTo: nameLabel.bottomAnchor,
-            constant: Padding.MessageLabel.top).isActive = true
+            constant: Padding.MessageLabel.top
+        ).isActive = true
         messageLabel.bottomAnchor.constraint(
             equalTo: view.bottomAnchor,
-            constant: Padding.MessageLabel.bottom).isActive = true
+            constant: Padding.MessageLabel.bottom
+        ).isActive = true
 
         closeButton.heightAnchor.constraint(
-            lessThanOrEqualToConstant: Padding.CloseButton.height)
-            .isActive = true
+            lessThanOrEqualToConstant: Padding.CloseButton.height
+        )
+        .isActive = true
         closeButton.widthAnchor.constraint(
-            equalToConstant: Padding.CloseButton.width).isActive = true
+            equalToConstant: Padding.CloseButton.width
+        ).isActive = true
         closeButton.trailingAnchor.constraint(
             equalTo: view.trailingAnchor,
-            constant: Padding.CloseButton.right).isActive = true
+            constant: Padding.CloseButton.right
+        ).isActive = true
         closeButton.topAnchor.constraint(
             equalTo: view.topAnchor,
-            constant: Padding.CloseButton.top).isActive = true
+            constant: Padding.CloseButton.top
+        ).isActive = true
         closeButton.bottomAnchor.constraint(
             equalTo: messageLabel.topAnchor,
-            constant: Padding.CloseButton.bottom).isActive = true
+            constant: Padding.CloseButton.bottom
+        ).isActive = true
 
         previewImageView.heightAnchor.constraint(
-            lessThanOrEqualToConstant: Padding.PreviewImageView.height)
-            .isActive = true
+            lessThanOrEqualToConstant: Padding.PreviewImageView.height
+        )
+        .isActive = true
         previewImageView.widthAnchor.constraint(
-            equalToConstant: Padding.PreviewImageView.width).isActive = true
+            equalToConstant: Padding.PreviewImageView.width
+        ).isActive = true
         previewImageView.trailingAnchor.constraint(
             equalTo: closeButton.leadingAnchor,
-            constant: Padding.PreviewImageView.right).isActive = true
+            constant: Padding.PreviewImageView.right
+        ).isActive = true
         previewImageView.topAnchor.constraint(
             equalTo: nameLabel.topAnchor,
-            constant: Padding.PreviewImageView.top).isActive = true
+            constant: Padding.PreviewImageView.top
+        ).isActive = true
         previewImageView.bottomAnchor.constraint(
             equalTo: messageLabel.bottomAnchor,
-            constant: 0).isActive = true
-
+            constant: 0
+        ).isActive = true
     }
 
-    @objc private func closeButtonTapped(_ sender: UIButton) {
+    @objc private func closeButtonTapped(_: UIButton) {
         closeButtonTapped?(true)
     }
 
     private func getMessageText() -> String? {
-        guard let message = message else {return nil}
+        guard let message = message else { return nil }
         switch message.messageType {
         case .text, .html:
             return message.message
@@ -213,7 +228,7 @@ open class ALKReplyMessageView: UIView, Localizable {
     }
 
     private func getImageURL(for message: ALKMessageViewModel) -> URL? {
-        guard message.messageType == .photo else {return nil}
+        guard message.messageType == .photo else { return nil }
         if let filePath = message.filePath {
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
@@ -225,18 +240,17 @@ open class ALKReplyMessageView: UIView, Localizable {
     }
 
     private func getMapImageURL(for message: ALKMessageViewModel) -> URL? {
-        guard message.messageType == .location else {return nil}
+        guard message.messageType == .location else { return nil }
         guard let lat = message.geocode?.location.latitude,
             let lon = message.geocode?.location.longitude
-            else { return nil }
+        else { return nil }
 
         let latLonArgument = String(format: "%f,%f", lat, lon)
         guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey()
-            else { return nil }
+        else { return nil }
         // swiftlint:disable:next line_length
         let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
         return URL(string: urlString)
-
     }
 
     private func placeholderForPreviewImage(message: ALKMessageViewModel) -> UIImage? {
@@ -257,13 +271,13 @@ open class ALKReplyMessageView: UIView, Localizable {
 
     private func getThumbnail(filePath: URL) -> UIImage? {
         do {
-            let asset = AVURLAsset(url: filePath , options: nil)
+            let asset = AVURLAsset(url: filePath, options: nil)
             let imgGenerator = AVAssetImageGenerator(asset: asset)
             imgGenerator.appliesPreferredTrackTransform = true
             let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             return UIImage(cgImage: cgImage)
 
-        } catch let error {
+        } catch {
             print("*** Error generating thumbnail: \(error.localizedDescription)")
             return nil
         }

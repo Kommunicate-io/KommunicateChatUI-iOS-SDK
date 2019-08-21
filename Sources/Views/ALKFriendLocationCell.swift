@@ -1,18 +1,19 @@
 //
 //  ALKFriendLocationCell.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 final class ALKFriendLocationCell: ALKLocationCell {
-
     // MARK: - Declare Variables or Types
+
     // MARK: Environment in chat
+
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -33,11 +34,12 @@ final class ALKFriendLocationCell: ALKLocationCell {
     }()
 
     // MARK: - Lifecycle
+
     override func setupViews() {
         super.setupViews()
 
         // add view to contenview and setup constraint
-        contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6.0).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57.0).isActive = true
@@ -61,7 +63,7 @@ final class ALKFriendLocationCell: ALKLocationCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        if(ALKMessageStyle.receivedBubble.style == .edge) {
+        if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         } else {
@@ -86,8 +88,7 @@ final class ALKFriendLocationCell: ALKLocationCell {
         }
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         return super.rowHeigh(viewModel: viewModel, width: width) + 34.0
     }
-
 }

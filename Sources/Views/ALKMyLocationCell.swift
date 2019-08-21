@@ -9,9 +9,10 @@
 import Foundation
 
 final class ALKMyLocationCell: ALKLocationCell {
-
     // MARK: - Declare Variables or Types
+
     // MARK: Environment in chat
+
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
@@ -20,6 +21,7 @@ final class ALKMyLocationCell: ALKLocationCell {
     }()
 
     // MARK: - Lifecycle
+
     override func setupViews() {
         super.setupViews()
         // add view to contenview and setup constraint
@@ -58,7 +60,7 @@ final class ALKMyLocationCell: ALKLocationCell {
 
     override func setupStyle() {
         super.setupStyle()
-        if(ALKMessageStyle.sentBubble.style == .edge) {
+        if ALKMessageStyle.sentBubble.style == .edge {
             bubbleView.backgroundColor = UIColor.background(.redC0)
             bubbleView.layer.cornerRadius = 12
         } else {
@@ -68,8 +70,7 @@ final class ALKMyLocationCell: ALKLocationCell {
         }
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         return super.rowHeigh(viewModel: viewModel, width: width) + 12.0
     }
-
 }

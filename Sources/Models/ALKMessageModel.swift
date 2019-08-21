@@ -6,10 +6,11 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 // MARK: - MessageType
+
 public enum ALKMessageType: String {
     case text = "Text"
     case photo = "Photo"
@@ -34,6 +35,7 @@ public enum ALKMessageType: String {
 }
 
 // MARK: - MessageViewModel
+
 public protocol ALKMessageViewModel {
     var message: String? { get }
     var isMyMessage: Bool { get }
@@ -62,12 +64,11 @@ public protocol ALKMessageViewModel {
     var fileMetaInfo: ALFileMetaInfo? { get }
     var receiverId: String? { get }
     var isReplyMessage: Bool { get }
-    var metadata: Dictionary<String, Any>? { get }
+    var metadata: [String: Any]? { get }
     var source: Int16 { get }
 }
 
 public class ALKMessageModel: ALKMessageViewModel {
-
     public var message: String? = ""
     public var isMyMessage: Bool = false
     public var messageType: ALKMessageType = .text
@@ -95,22 +96,22 @@ public class ALKMessageModel: ALKMessageViewModel {
     public var fileMetaInfo: ALFileMetaInfo?
     public var receiverId: String?
     public var isReplyMessage: Bool = false
-    public var metadata: Dictionary<String, Any>?
+    public var metadata: [String: Any]?
     public var source: Int16 = 0
 }
 
 extension ALKMessageModel: Equatable {
-    public static func ==(lhs: ALKMessageModel, rhs: ALKMessageModel) -> Bool {
+    public static func == (lhs: ALKMessageModel, rhs: ALKMessageModel) -> Bool {
         return lhs.identifier == rhs.identifier
     }
 }
 
 extension ALKMessageViewModel {
-    func payloadFromMetadata() -> [Dictionary<String,Any>]? {
+    func payloadFromMetadata() -> [[String: Any]]? {
         guard let metadata = self.metadata, let payload = metadata["payload"] as? String else { return nil }
         let data = payload.data
-        let jsonArray = try? JSONSerialization.jsonObject(with: data, options : .allowFragments)
-        guard let quickReplyArray = jsonArray as? [Dictionary<String,Any>] else { return nil }
+        let jsonArray = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        guard let quickReplyArray = jsonArray as? [[String: Any]] else { return nil }
         return quickReplyArray
     }
 }

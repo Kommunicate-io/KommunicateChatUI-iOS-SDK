@@ -9,9 +9,8 @@
 import UIKit
 
 class ALKPhotoCollectionCell: UICollectionViewCell {
-
-    @IBOutlet weak var videoIcon: UIImageView!
+    @IBOutlet var videoIcon: UIImageView!
     @IBOutlet var imgPreview: UIImageView!
 
-    @IBOutlet weak var selectedIcon: UIImageView!
+    @IBOutlet var selectedIcon: UIImageView!
 }

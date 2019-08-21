@@ -9,8 +9,8 @@
 import Foundation
 
 // MARK: - ALKMyPhotoPortalCell
-final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
+final class ALKMyPhotoPortalCell: ALKPhotoCell {
     enum State {
         case upload
         case uploading
@@ -49,10 +49,10 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
             .isActive = true
 
         photoView.widthAnchor
-            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.widthPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth * ALKPhotoCell.widthPercentage)
             .isActive = true
         photoView.heightAnchor
-            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.heightPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth * ALKPhotoCell.heightPercentage)
             .isActive = true
 
         bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
@@ -94,7 +94,7 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
         super.setupStyle()
         captionLabel.font = ALKMessageStyle.sentMessage.font
         captionLabel.textColor = ALKMessageStyle.sentMessage.text
-        if(ALKMessageStyle.sentBubble.style == .edge) {
+        if ALKMessageStyle.sentBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
             photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius

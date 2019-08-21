@@ -8,7 +8,6 @@
 import Foundation
 
 public struct ImageBubbleStyle {
-
     /// Style for caption text
     public var captionStyle = Style(
         font: UIFont.systemFont(ofSize: 12),
@@ -17,8 +16,8 @@ public struct ImageBubbleStyle {
 
     /// Style for image bubble
     public var bubble = MessageBubbleStyle(color: UIColor.lightGray,
-                                                  cornerRadius: 5,
-                                                  padding: Padding(left: 8, right: 8, top: 8, bottom: 8))
+                                           cornerRadius: 5,
+                                           padding: Padding(left: 8, right: 8, top: 8, bottom: 8))
 
     /// This is used to calculate image width.
     ///
@@ -32,16 +31,13 @@ public struct ImageBubbleStyle {
     /// - Warning: Use value between 0 and 1.
     public var heightRatio: CGFloat = 0.50
 
-    public init() { }
-
+    public init() {}
 }
 
 public struct ImageBubbleTheme {
-
     /// `ImageBubbleStyle` for sent message
     public static var sentMessage: ImageBubbleStyle = ImageBubbleStyle()
 
     /// `ImageBubbleStyle` for received message
     public static var receivedMessage: ImageBubbleStyle = ImageBubbleStyle()
-
 }

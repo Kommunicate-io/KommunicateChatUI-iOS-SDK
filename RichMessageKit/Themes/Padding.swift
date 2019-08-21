@@ -9,7 +9,6 @@ import Foundation
 
 /// It is used to set padding for a view
 public struct Padding {
-
     let left: CGFloat
     let right: CGFloat
     let top: CGFloat
@@ -21,5 +20,4 @@ public struct Padding {
         self.top = top
         self.bottom = bottom
     }
-    
 }

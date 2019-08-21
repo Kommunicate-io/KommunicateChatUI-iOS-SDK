@@ -6,7 +6,6 @@
 //
 
 class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
-
     var itemTitleLabel: InsetLabel = {
         let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         label.text = "title"
@@ -20,7 +19,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
     private var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
 
     fileprivate lazy var messageView: ALKHyperLabel = {
-        let label = ALKHyperLabel.init(frame: .zero)
+        let label = ALKHyperLabel(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         return label
@@ -89,7 +88,6 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -108,17 +106,17 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         let buttonHeight = 35
         let baseHeight: CGFloat = 10
         let padding: CGFloat = 10
-        let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
+        let totalButtonHeight: CGFloat = CGFloat(buttonHeight * template.count)
         return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
 
     @objc func buttonSelected(_ action: UIButton) {
-        self.buttonSelected?(action.tag, action.currentTitle ?? "")
+        buttonSelected?(action.tag, action.currentTitle ?? "")
     }
 
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
-        self.updateMessageView(viewModel)
+        updateMessageView(viewModel)
         guard let metadata = viewModel.metadata, let payload = metadata["payload"] as? String else {
             return
         }
@@ -127,17 +125,17 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             guard let title = metadata["headerText"] as? String else {
                 return
             }
-            self.updateTitle(title)
-            self.updateViewFor(cardTemplate)
-        } catch(let error) {
+            updateTitle(title)
+            updateViewFor(cardTemplate)
+        } catch {
             print("\(error)")
         }
     }
 
     private func setUpButtons() {
-        actionButtons = (0...7).map {
+        actionButtons = (0 ... 7).map {
             let button = UIButton()
-            button.setTitleColor(UIColor(netHex: 0x5c5aa7), for: .normal)
+            button.setTitleColor(UIColor(netHex: 0x5C5AA7), for: .normal)
             button.setFont(font: UIFont.font(.bold(size: 16.0)))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
@@ -155,8 +153,8 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func setupStyle() {
         super.setupStyle()
-        if(ALKMessageStyle.sentBubble.style == .edge) {
-            let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
+        if ALKMessageStyle.sentBubble.style == .edge {
+            let image = UIImage(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
             bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
             bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
         } else {
@@ -164,7 +162,7 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
         }
-     }
+    }
 
     private func setupConstraints() {
         let view = contentView
@@ -251,5 +249,4 @@ class ALKMyGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
         itemTitleLabel.text = text
     }
-
 }

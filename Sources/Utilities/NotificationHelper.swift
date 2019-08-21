@@ -8,7 +8,6 @@
 import Applozic
 
 public class NotificationHelper {
-
     /// Stores information about the notification that arrives
     public struct NotificationData {
         public let userId: String?
@@ -36,7 +35,7 @@ public class NotificationHelper {
         }
     }
 
-    public init() { }
+    public init() {}
 
     // MARK: - Public methods
 
@@ -51,7 +50,7 @@ public class NotificationHelper {
         guard
             let userInfo = notification.userInfo,
             let alertValue = userInfo["alertValue"] as? String
-            else {
+        else {
             return (notifData, nil)
         }
         return (notifData, alertValue)
@@ -150,15 +149,15 @@ public class NotificationHelper {
     public func handleNotificationTap(_ notification: NotificationData) {
         guard let topVC = ALPushAssist().topViewController else { return }
         switch topVC {
-            case let vc as ALKConversationListViewController:
-                print("ConversationListViewController on top")
-                openConversationFromListVC(vc, notification: notification)
-            case let vc as ALKConversationViewController:
-                print("ConversationViewController on top")
-                refreshConversation(vc, with: notification)
-            default:
-                print("Some other view controller need to find chat vc")
-                findChatVC(notification)
+        case let vc as ALKConversationListViewController:
+            print("ConversationListViewController on top")
+            openConversationFromListVC(vc, notification: notification)
+        case let vc as ALKConversationViewController:
+            print("ConversationViewController on top")
+            refreshConversation(vc, with: notification)
+        default:
+            print("Some other view controller need to find chat vc")
+            findChatVC(notification)
         }
     }
 
@@ -167,21 +166,21 @@ public class NotificationHelper {
     private func notificationData(using object: String) -> NotificationData? {
         let components = object.components(separatedBy: ":")
         switch components.count {
-            case 3:
-                guard let componentElement = Int(components[1]) else { return nil }
-                let groupId = NSNumber(integerLiteral: componentElement)
-                return NotificationData(userId: nil, groupId: groupId, conversationId: nil)
-            case 2:
-                guard let conversationComponent = Int(components[1]) else { return nil }
-                let conversationId = NSNumber(integerLiteral: conversationComponent)
-                let userId = components[0]
-                return NotificationData(userId: userId, groupId: nil, conversationId: conversationId)
-            case 1:
-                let userId = object
-                return NotificationData(userId: userId, groupId: nil, conversationId: nil)
-            default:
-                print("Not handled")
-                return nil
+        case 3:
+            guard let componentElement = Int(components[1]) else { return nil }
+            let groupId = NSNumber(integerLiteral: componentElement)
+            return NotificationData(userId: nil, groupId: groupId, conversationId: nil)
+        case 2:
+            guard let conversationComponent = Int(components[1]) else { return nil }
+            let conversationId = NSNumber(integerLiteral: conversationComponent)
+            let userId = components[0]
+            return NotificationData(userId: userId, groupId: nil, conversationId: conversationId)
+        case 1:
+            let userId = object
+            return NotificationData(userId: userId, groupId: nil, conversationId: nil)
+        default:
+            print("Not handled")
+            return nil
         }
     }
 

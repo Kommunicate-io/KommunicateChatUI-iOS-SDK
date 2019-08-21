@@ -1,19 +1,19 @@
 //
 //  ALKMessageCell.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Kingfisher
 import Applozic
+import Foundation
+import Kingfisher
+import UIKit
 
 // MARK: - ALKMyMessageCell
-open class ALKMyMessageCell: ALKMessageCell {
 
+open class ALKMyMessageCell: ALKMessageCell {
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
@@ -55,6 +55,7 @@ open class ALKMyMessageCell: ALKMessageCell {
             static let top: CGFloat = 5.0
             static let bottom: CGFloat = 5.0
         }
+
         struct MessageView {
             static let top: CGFloat = 5
             static let bottom: CGFloat = 10.0
@@ -73,18 +74,20 @@ open class ALKMyMessageCell: ALKMessageCell {
         }
     }
 
-
     struct ConstraintIdentifier {
         struct ReplyNameLabel {
             static let height = "ReplyNameHeight"
         }
+
         struct ReplyMessageLabel {
             static let height = "ReplyMessageHeight"
         }
+
         struct PreviewImage {
             static let height = "ReplyPreviewImageHeight"
             static let width = "ReplyPreviewImageWidth"
         }
+
         static let replyViewHeightIdentifier = "ReplyViewHeight"
     }
 
@@ -97,113 +100,139 @@ open class ALKMyMessageCell: ALKMessageCell {
             bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor),
             bubbleView.bottomAnchor.constraint(
                 equalTo: contentView.bottomAnchor,
-                constant: -Padding.BubbleView.bottom),
+                constant: -Padding.BubbleView.bottom
+            ),
             bubbleView.leadingAnchor.constraint(
                 greaterThanOrEqualTo: contentView.leadingAnchor,
-                constant: Padding.BubbleView.left),
+                constant: Padding.BubbleView.left
+            ),
             bubbleView.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor,
-                constant: -Padding.BubbleView.right),
+                constant: -Padding.BubbleView.right
+            ),
 
             replyView.topAnchor.constraint(
                 equalTo: bubbleView.topAnchor,
-                constant: Padding.ReplyView.top),
+                constant: Padding.ReplyView.top
+            ),
             replyView.heightAnchor.constraintEqualToAnchor(
                 constant: 0,
-                identifier: ConstraintIdentifier.replyViewHeightIdentifier),
+                identifier: ConstraintIdentifier.replyViewHeightIdentifier
+            ),
             replyView.leadingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
-                constant: Padding.ReplyView.left),
+                constant: Padding.ReplyView.left
+            ),
             replyView.trailingAnchor.constraint(
                 equalTo: bubbleView.trailingAnchor,
-                constant: -Padding.ReplyView.right),
+                constant: -Padding.ReplyView.right
+            ),
 
             previewImageView.topAnchor.constraint(
                 equalTo: replyNameLabel.topAnchor,
-                constant: Padding.PreviewImageView.top),
+                constant: Padding.PreviewImageView.top
+            ),
             previewImageView.trailingAnchor.constraint(
                 equalTo: replyView.trailingAnchor,
-                constant: -Padding.PreviewImageView.right),
+                constant: -Padding.PreviewImageView.right
+            ),
             previewImageView.heightAnchor.constraintEqualToAnchor(
                 constant: 0,
-                identifier: ConstraintIdentifier.PreviewImage.height),
+                identifier: ConstraintIdentifier.PreviewImage.height
+            ),
             previewImageView.widthAnchor.constraintEqualToAnchor(
                 constant: 0,
-                identifier: ConstraintIdentifier.PreviewImage.width),
+                identifier: ConstraintIdentifier.PreviewImage.width
+            ),
 
             replyNameLabel.leadingAnchor.constraint(equalTo: replyView.leadingAnchor),
             replyNameLabel.topAnchor.constraint(equalTo: replyView.topAnchor),
             replyNameLabel.trailingAnchor.constraint(
                 lessThanOrEqualTo: previewImageView.leadingAnchor,
-                constant: -Padding.ReplyNameLabel.right),
+                constant: -Padding.ReplyNameLabel.right
+            ),
             replyNameLabel.heightAnchor.constraintEqualToAnchor(
                 constant: 0,
-                identifier: ConstraintIdentifier.ReplyNameLabel.height),
+                identifier: ConstraintIdentifier.ReplyNameLabel.height
+            ),
 
             replyMessageLabel.leadingAnchor.constraint(equalTo: replyView.leadingAnchor),
             replyMessageLabel.topAnchor.constraint(
                 equalTo: replyNameLabel.bottomAnchor,
-                constant: Padding.ReplyMessageLabel.top),
+                constant: Padding.ReplyMessageLabel.top
+            ),
             replyMessageLabel.trailingAnchor.constraint(
                 lessThanOrEqualTo: previewImageView.leadingAnchor,
-                constant: -Padding.ReplyMessageLabel.right),
+                constant: -Padding.ReplyMessageLabel.right
+            ),
             replyMessageLabel.heightAnchor.constraintEqualToAnchor(
                 constant: 0,
-                identifier: ConstraintIdentifier.ReplyMessageLabel.height),
+                identifier: ConstraintIdentifier.ReplyMessageLabel.height
+            ),
 
             emailTopView.topAnchor.constraint(
                 equalTo: replyView.bottomAnchor,
-                constant: Padding.MessageView.top),
+                constant: Padding.MessageView.top
+            ),
             emailTopView.leadingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
-                constant: ALKMessageStyle.sentBubble.widthPadding),
+                constant: ALKMessageStyle.sentBubble.widthPadding
+            ),
             emailTopView.trailingAnchor.constraint(
                 equalTo: bubbleView.trailingAnchor,
-                constant: -ALKMyMessageCell.bubbleViewRightPadding),
+                constant: -ALKMyMessageCell.bubbleViewRightPadding
+            ),
             emailTopHeight,
 
             messageView.topAnchor.constraint(
-                equalTo: emailTopView.bottomAnchor),
+                equalTo: emailTopView.bottomAnchor
+            ),
             messageView.leadingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
-                constant: ALKMessageStyle.sentBubble.widthPadding),
+                constant: ALKMessageStyle.sentBubble.widthPadding
+            ),
             messageView.trailingAnchor.constraint(
                 equalTo: bubbleView.trailingAnchor,
-                constant: -ALKMyMessageCell.bubbleViewRightPadding),
+                constant: -ALKMyMessageCell.bubbleViewRightPadding
+            ),
             messageView.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
-                constant: -Padding.MessageView.bottom),
+                constant: -Padding.MessageView.bottom
+            ),
 
             stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor),
             stateView.trailingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
-                constant: -Padding.StateView.right),
+                constant: -Padding.StateView.right
+            ),
             stateView.widthAnchor.constraint(equalToConstant: Padding.StateView.width),
             stateView.heightAnchor.constraint(equalToConstant: Padding.StateView.height),
 
             timeLabel.trailingAnchor.constraint(
                 equalTo: stateView.leadingAnchor,
-                constant: -2.0),
+                constant: -2.0
+            ),
             timeLabel.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
-                constant: 2)
-            ])
+                constant: 2
+            ),
+        ])
     }
 
-    open  override func setupStyle() {
+    open override func setupStyle() {
         super.setupStyle()
         messageView.setStyle(ALKMessageStyle.sentMessage)
         if ALKMessageStyle.sentBubble.style == .edge {
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false,showHangOverImage: false)
-        }else{
+            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: false)
+        } else {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
         }
     }
 
-   open override func update(viewModel: ALKMessageViewModel) {
+    open override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel, style: ALKMessageStyle.sentMessage)
 
         if viewModel.isReplyMessage {
@@ -211,7 +240,7 @@ open class ALKMyMessageCell: ALKMessageCell {
                 let metadata = viewModel.metadata,
                 let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
                 let actualMessage = getMessageFor(key: replyId)
-                else {return}
+            else { return }
             showReplyView(true)
             if actualMessage.messageType == .text || actualMessage.messageType == .html {
                 previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = 0
@@ -250,12 +279,11 @@ open class ALKMyMessageCell: ALKMessageCell {
         guard
             let metadata = viewModel.metadata,
             let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
-            else {
-                return totalHeight
+        else {
+            return totalHeight
         }
         return totalHeight + Padding.ReplyView.height
     }
-
 
     fileprivate func showReplyView(_ show: Bool) {
         replyView
@@ -281,17 +309,18 @@ open class ALKMyMessageCell: ALKMessageCell {
     }
 
     // MARK: - ChatMenuCell
+
     override func menuWillShow(_ sender: Any) {
         super.menuWillShow(sender)
-        if(ALKMessageStyle.sentBubble.style == .edge){
-            self.bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide:false,showHangOverImage: true)
+        if ALKMessageStyle.sentBubble.style == .edge {
+            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: true)
         }
     }
 
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
-        if(ALKMessageStyle.sentBubble.style == .edge){
-            self.bubbleView.image =  bubbleViewImage(for: ALKMessageStyle.sentBubble.style,isReceiverSide: false,showHangOverImage: false)
+        if ALKMessageStyle.sentBubble.style == .edge {
+            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: false)
         }
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 
 public struct FAQMessage {
-
     public var message: Message
 
     public var title: String?

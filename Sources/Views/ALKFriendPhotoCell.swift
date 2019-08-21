@@ -10,8 +10,8 @@ import Foundation
 import Kingfisher
 
 // MARK: - FriendPhotoCell
-class ALKFriendPhotoCell: ALKPhotoCell {
 
+class ALKFriendPhotoCell: ALKPhotoCell {
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -51,7 +51,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         nameLabel.setStyle(ALKMessageStyle.displayName)
         captionLabel.font = ALKMessageStyle.receivedMessage.font
         captionLabel.textColor = ALKMessageStyle.receivedMessage.text
-        if(ALKMessageStyle.receivedBubble.style == .edge) {
+        if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
@@ -67,7 +67,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
-        contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
 
@@ -88,10 +88,10 @@ class ALKFriendPhotoCell: ALKPhotoCell {
             .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
             .isActive = true
         photoView.widthAnchor
-            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.widthPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth * ALKPhotoCell.widthPercentage)
             .isActive = true
         photoView.heightAnchor
-            .constraint(equalToConstant: ALKPhotoCell.maxWidth*ALKPhotoCell.heightPercentage)
+            .constraint(equalToConstant: ALKPhotoCell.maxWidth * ALKPhotoCell.heightPercentage)
             .isActive = true
 
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2).isActive = true
@@ -108,12 +108,10 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
 
         if let url = viewModel.avatarURL {
-
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
-
-            self.avatarImageView.image = placeHolder
+            avatarImageView.image = placeHolder
         }
     }
 

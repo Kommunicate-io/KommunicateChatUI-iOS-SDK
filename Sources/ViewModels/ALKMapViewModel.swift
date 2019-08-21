@@ -7,4 +7,4 @@
 
 import Foundation
 
-final class ALKMapViewModel: NSObject { }
+final class ALKMapViewModel: NSObject {}

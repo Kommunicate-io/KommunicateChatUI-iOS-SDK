@@ -8,24 +8,23 @@
 import Applozic
 
 public protocol ALKContextTitleDataType {
-    var titleText: String {get}
-    var subtitleText: String {get}
-    var imageURL: URL? {get}
-    var infoLabel1Text: String? {get}
-    var infoLabel2Text: String? {get}
+    var titleText: String { get }
+    var subtitleText: String { get }
+    var imageURL: URL? { get }
+    var infoLabel1Text: String? { get }
+    var infoLabel2Text: String? { get }
 }
 
 public protocol ALKContextTitleViewModelType {
-    var contextViewData: ALKContextTitleDataType {get set}
-    var getTitleImageURL: URL? {get}
-    var getTitleText: String? {get}
-    var getSubtitleText: String? {get}
-    var getFirstKeyValuePairText: String? {get}
-    var getSecondKeyValuePairText: String? {get}
+    var contextViewData: ALKContextTitleDataType { get set }
+    var getTitleImageURL: URL? { get }
+    var getTitleText: String? { get }
+    var getSubtitleText: String? { get }
+    var getFirstKeyValuePairText: String? { get }
+    var getSecondKeyValuePairText: String? { get }
 }
 
 open class ALKContextTitleViewModel: ALKContextTitleViewModelType {
-
     public var contextViewData: ALKContextTitleDataType
 
     public var getTitleImageURL: URL? {
@@ -52,7 +51,6 @@ open class ALKContextTitleViewModel: ALKContextTitleViewModelType {
     }
 
     public init(data: ALKContextTitleDataType) {
-        self.contextViewData = data
+        contextViewData = data
     }
-
 }

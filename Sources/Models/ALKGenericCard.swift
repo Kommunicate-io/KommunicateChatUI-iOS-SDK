@@ -26,6 +26,7 @@ public struct ALKGenericCard: Codable {
         public let name: String
         public let action: String
     }
+
     public let buttons: [Button]?
     private enum CodingKeys: String, CodingKey {
         case title

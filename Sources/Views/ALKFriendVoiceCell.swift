@@ -6,12 +6,11 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
-import Kingfisher
 import AVFoundation
+import Kingfisher
+import UIKit
 
 class ALKFriendVoiceCell: ALKVoiceCell {
-
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -36,16 +35,16 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         return 28
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(viewModel _: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
         let heigh: CGFloat
         heigh = 40
-        return topPadding()+heigh+bottomPadding()
+        return topPadding() + heigh + bottomPadding()
     }
 
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        if(ALKMessageStyle.receivedBubble.style == .edge) {
+        if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         } else {
@@ -63,14 +62,14 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
-        contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
 
         bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
 
         let width = UIScreen.main.bounds.width
 
         soundPlayerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
-        soundPlayerView.widthAnchor.constraint(equalToConstant: width*0.48).isActive = true
+        soundPlayerView.widthAnchor.constraint(equalToConstant: width * 0.48).isActive = true
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
@@ -98,12 +97,10 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
 
         if let url = viewModel.avatarURL {
-
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
-
-            self.avatarImageView.image = placeHolder
+            avatarImageView.image = placeHolder
         }
         nameLabel.text = viewModel.displayName
     }

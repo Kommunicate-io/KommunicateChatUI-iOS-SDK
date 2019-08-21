@@ -9,7 +9,6 @@ import UIKit
 
 /// Its a view that displays text on top of a bubble.
 public class MessageView: UIView {
-
     // MARK: Internal Properties
 
     let maxWidth: CGFloat
@@ -43,7 +42,7 @@ public class MessageView: UIView {
                 messageStyle: Style,
                 maxWidth: CGFloat) {
         self.bubbleStyle = bubbleStyle
-        self.padding = bubbleStyle.padding
+        padding = bubbleStyle.padding
         self.messageStyle = messageStyle
         self.maxWidth = maxWidth
         super.init(frame: .zero)
@@ -51,7 +50,7 @@ public class MessageView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -63,11 +62,11 @@ public class MessageView: UIView {
     public func update(model: String) {
         /// Set frame size.
         let height = MessageView.rowHeight(model: model, maxWidth: maxWidth, font: messageStyle.font, padding: bubbleStyle.padding)
-        self.frame.size = CGSize(width: maxWidth, height: height)
+        frame.size = CGSize(width: maxWidth, height: height)
 
         messageLabel.text = model
         messageLabel.setStyle(messageStyle)
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     /// It calculates height for `MessageView` based on the text passed and maximum width allowed for the view.
@@ -90,9 +89,9 @@ public class MessageView: UIView {
             return 0
         }
         return MessageViewSizeCalculator().rowHeight(text: model,
-                                                       font: font,
-                                                       maxWidth: maxWidth,
-                                                       padding: padding)
+                                                     font: font,
+                                                     maxWidth: maxWidth,
+                                                     padding: padding)
     }
 
     // MARK: Private methods
@@ -104,8 +103,8 @@ public class MessageView: UIView {
     }
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageLabel, bubbleView])
-        self.bringSubviewToFront(messageLabel)
+        addViewsForAutolayout(views: [messageLabel, bubbleView])
+        bringSubviewToFront(messageLabel)
 
         NSLayoutConstraint.activate([
             bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -115,8 +114,7 @@ public class MessageView: UIView {
             messageLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
             messageLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
             messageLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left),
-            messageLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right)
-            ])
+            messageLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
+        ])
     }
-
 }

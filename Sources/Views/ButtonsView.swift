@@ -8,7 +8,6 @@
 import Foundation
 
 public struct MessageButtonConfig {
-
     public static var font = UIFont(name: "HelveticaNeue", size: 14) ?? UIFont.systemFont(ofSize: 14)
 
     public struct SubmitButton {
@@ -21,7 +20,6 @@ public struct MessageButtonConfig {
 }
 
 public class ButtonsView: UIView {
-
     let font = MessageButtonConfig.font
 
     lazy var mainStackView: UIStackView = {
@@ -39,6 +37,7 @@ public class ButtonsView: UIView {
             mainStackView.alignment = stackViewAlignment
         }
     }
+
     public var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
 
     override init(frame: CGRect) {
@@ -46,7 +45,7 @@ public class ButtonsView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -75,17 +74,17 @@ public class ButtonsView: UIView {
         for dict in payload {
             let title = dict["name"] as? String ?? ""
             let currHeight = ALKCurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: MessageButtonConfig.font).height
-            height += currHeight + 2  // StackView spacing
+            height += currHeight + 2 // StackView spacing
         }
         return height
     }
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [mainStackView])
-        mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        mainStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        addViewsForAutolayout(views: [mainStackView])
+        mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        mainStackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
     private func submitButton(title: String, index: Int) -> ALKCurvedButton {
@@ -104,9 +103,9 @@ public class ButtonsView: UIView {
         button.index = index
         button.layer.borderWidth = 0
 
-        let attributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: font,
-                                                          NSAttributedString.Key.foregroundColor : color,
-                                                          NSAttributedString.Key.underlineStyle: 1]
+        let attributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font,
+                                                         NSAttributedString.Key.foregroundColor: color,
+                                                         NSAttributedString.Key.underlineStyle: 1]
         let attributedTitle = NSAttributedString(string: title, attributes: attributes)
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.buttonSelected = { [weak self] tag, title in

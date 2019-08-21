@@ -16,7 +16,6 @@ extension Double {
 }
 
 extension UIImage {
-
     convenience init?(color: Color.Text, alpha: CGFloat = 1.0, size: CGSize = CGSize(width: 1, height: 1)) {
         let rect = CGRect(origin: .zero, size: size)
 
@@ -32,7 +31,7 @@ extension UIImage {
     }
 
     func resizeNotMoreThan(_ maximumSize: CGSize, aspectRatio: Bool) -> UIImage {
-        let imageSize = self.size
+        let imageSize = size
         var newImage: UIImage!
 
         if maximumSize.width < imageSize.width || maximumSize.height < imageSize.height {
@@ -56,7 +55,7 @@ extension UIImage {
         guard let cgImage = self.cgImage else { return nil }
 
         let transform = CGAffineTransform(rotationAngle: degrees.toRadians())
-        var rect = CGRect(origin: .zero, size: self.size).applying(transform)
+        var rect = CGRect(origin: .zero, size: size).applying(transform)
         rect.origin = .zero
 
         if #available(iOS 10.0, *) {
@@ -67,7 +66,7 @@ extension UIImage {
                 renderContext.cgContext.rotate(by: degrees.toRadians())
                 renderContext.cgContext.scaleBy(x: flipped ? -1.0 : 1.0, y: -1.0)
 
-                let drawRect = CGRect(origin: CGPoint(x: -self.size.width/2, y: -self.size.height/2), size: self.size)
+                let drawRect = CGRect(origin: CGPoint(x: -self.size.width / 2, y: -self.size.height / 2), size: self.size)
                 renderContext.cgContext.draw(cgImage, in: drawRect)
             }
         } else {
@@ -82,11 +81,11 @@ extension UIImage {
         UIGraphicsBeginImageContext(size)
 
         let bitmap: CGContext = UIGraphicsGetCurrentContext()!
-        //Move the origin to the middle of the image so we will rotate and scale around the center.
+        // Move the origin to the middle of the image so we will rotate and scale around the center.
         bitmap.translateBy(x: size.width / 2, y: size.height / 2)
-        //Rotate the image context
-        bitmap.rotate(by: (degrees * CGFloat(Double.pi / 180)))
-        //Now, draw the rotated/scaled image into the context
+        // Rotate the image context
+        bitmap.rotate(by: degrees * CGFloat(Double.pi / 180))
+        // Now, draw the rotated/scaled image into the context
         bitmap.scaleBy(x: 1.0, y: -1.0)
 
         let origin = CGPoint(x: -size.width / 2, y: -size.width / 2)
@@ -103,9 +102,9 @@ extension UIImage {
     func scale(with size: CGSize) -> UIImage? {
         var scaledImageRect = CGRect.zero
 
-        let aspectWidth:CGFloat = size.width / self.size.width
-        let aspectHeight:CGFloat = size.height / self.size.height
-        let aspectRatio:CGFloat = min(aspectWidth, aspectHeight)
+        let aspectWidth: CGFloat = size.width / self.size.width
+        let aspectHeight: CGFloat = size.height / self.size.height
+        let aspectRatio: CGFloat = min(aspectWidth, aspectHeight)
 
         scaledImageRect.size.width = self.size.width * aspectRatio
         scaledImageRect.size.height = self.size.height * aspectRatio
@@ -114,7 +113,7 @@ extension UIImage {
 
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
 
-        self.draw(in: scaledImageRect)
+        draw(in: scaledImageRect)
 
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

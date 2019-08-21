@@ -17,7 +17,6 @@ public enum MessageStatus {
 
 /// It defines the properties that are used by cells to render views.
 public struct Message {
-
     /// Text to be displayed as message.
     public var text: String?
 
@@ -41,5 +40,4 @@ public struct Message {
 
     /// Image url of sender.
     public var imageURL: URL?
-
 }

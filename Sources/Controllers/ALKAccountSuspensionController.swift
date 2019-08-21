@@ -8,7 +8,6 @@
 import UIKit
 
 public class ALKAccountSuspensionController: UIViewController {
-
     /// When the close button is tapped this will be called.
     public var closePressed: (() -> Void)?
 

@@ -9,7 +9,6 @@ import Applozic
 import Contacts
 
 class ALKContactMessageBaseCell: ALKChatBaseCell<ALKMessageViewModel>, ALKHTTPManagerDownloadDelegate {
-
     let contactView = ContactView(frame: .zero)
     let loadingIndicator = ALKLoadingIndicator(frame: .zero, color: UIColor.red)
 
@@ -18,7 +17,8 @@ class ALKContactMessageBaseCell: ALKChatBaseCell<ALKMessageViewModel>, ALKHTTPMa
         loadingIndicator.stopLoading()
         let contactModel = ContactModel(
             identifier: key,
-            contact: contact)
+            contact: contact
+        )
         contactView.update(contactModel: contactModel)
         contactView.isHidden = false
     }

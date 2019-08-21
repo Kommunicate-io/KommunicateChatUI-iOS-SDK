@@ -9,7 +9,6 @@ import Foundation
 
 /// Image for all cases of `MessageStatus`
 public struct StatusImage {
-
     public var pending = UIImage(named: "pending", in: Bundle.richMessageKit, compatibleWith: nil)
 
     public var sent = UIImage(named: "sent", in: Bundle.richMessageKit, compatibleWith: nil)
@@ -18,12 +17,10 @@ public struct StatusImage {
 
     public var read = UIImage(named: "read", in: Bundle.richMessageKit, compatibleWith: nil)
 
-    public init() { }
-
+    public init() {}
 }
 
 public struct MessageStyle {
-
     /// Style for display name
     public var displayName = Style(
         font: UIFont.systemFont(ofSize: 14),
@@ -48,13 +45,11 @@ public struct MessageStyle {
     /// Image for all cases of `MessageStatus`
     public var status = StatusImage()
 
-    public init() { }
-
+    public init() {}
 }
 
 /// Message view theme.
 public struct MessageTheme {
-
     /// Message style for sent message
     public static var sentMessage: MessageStyle = MessageStyle()
 

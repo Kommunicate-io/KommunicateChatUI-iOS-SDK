@@ -1,17 +1,17 @@
 //
 //  API.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
-//import ObjectMapper
-//import AlamofireObjectMapper
-//import Alamofire
+// import ObjectMapper
+// import AlamofireObjectMapper
+// import Alamofire
 
-//final class ALKAPI: NSObject {
+// final class ALKAPI: NSObject {
 //    static func requestForItems<T: Mappable>(request: ALKAPIRequest,
 //                                completionHandler: @escaping (_ items: [T]?, _ isCache: Bool, _ error: Error?) -> Void) {
 //
@@ -56,4 +56,4 @@ import Foundation
 //        return encoding
 //
 //    }
-//}
+// }

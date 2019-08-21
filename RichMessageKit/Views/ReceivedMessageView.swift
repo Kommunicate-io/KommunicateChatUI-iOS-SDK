@@ -12,12 +12,10 @@ import UIKit
 /// It contains `MessageView`, time, display name and image of receiver.
 /// - NOTE: Padding for message will be passed from outside. Time will be shown to the right of view.
 public class ReceivedMessageView: UIView {
-
     // MARK: Public properties
 
     /// Configuration to change width height and padding of views inside ReceivedMessageView.
     public struct Config {
-
         public struct ProfileImage {
             public static var width: CGFloat = 37.0
             public static var height: CGFloat = 37.0
@@ -51,14 +49,15 @@ public class ReceivedMessageView: UIView {
             /// Bottom padding of `MessageView` from `TimeLabel`'s bottom
             public static var bottomPadding: CGFloat = 2.0
         }
-
     }
 
     // MARK: Fileprivate properties
+
     fileprivate lazy var messageView = MessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
-        maxWidth: maxWidth)
+        maxWidth: maxWidth
+    )
 
     fileprivate var timeLabel: UILabel = {
         let lb = UILabel()
@@ -106,7 +105,7 @@ public class ReceivedMessageView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -120,7 +119,7 @@ public class ReceivedMessageView: UIView {
         let message = model.text ?? "" /// Don't support nil right now
         /// Set frame
         let height = ReceivedMessageView.rowHeight(model: model, maxWidth: maxWidth, padding: padding)
-        self.frame.size = CGSize(width: maxWidth, height: height)
+        frame.size = CGSize(width: maxWidth, height: height)
 
         // Set message
         messageView.update(model: message)
@@ -129,7 +128,8 @@ public class ReceivedMessageView: UIView {
         timeLabel.text = model.time
         let timeLabelSize = model.time.rectWithConstrainedWidth(
             Config.TimeLabel.maxWidth,
-            font: MessageTheme.receivedMessage.time.font)
+            font: MessageTheme.receivedMessage.time.font
+        )
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
 
@@ -153,17 +153,18 @@ public class ReceivedMessageView: UIView {
     ///   - maxWidth: maxmimum allowable width for view.
     ///   - padding: padding for view. Use the same passsed while initializing.
     /// - Returns: Exact height of view.
-    public static func rowHeight(model: Message, maxWidth: CGFloat, font: UIFont = UIFont(), padding: Padding?) -> CGFloat {
+    public static func rowHeight(model: Message, maxWidth: CGFloat, font _: UIFont = UIFont(), padding: Padding?) -> CGFloat {
         guard let padding = padding else {
             print("❌❌❌ Padding is not passed from outside. Use same passed in initialization. ❌❌❌")
             return 0
         }
-        return ReceivedMessageViewSizeCalculator().rowHeight(messageModel:model, maxWidth: maxWidth, padding:padding)
+        return ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: maxWidth, padding: padding)
     }
 
     // MARK: Private methods
+
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageView, timeLabel])
+        addViewsForAutolayout(views: [avatarImageView, nameLabel, messageView, timeLabel])
         let nameRightPadding = max(padding.right, Config.DisplayName.rightPadding)
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Config.ProfileImage.topPadding),
@@ -179,13 +180,13 @@ public class ReceivedMessageView: UIView {
             messageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Config.MessageView.topPadding),
             messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Config.MessageView.leftPadding),
             messageView.bottomAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding),
-            messageView.trailingAnchor.constraint(lessThanOrEqualTo: timeLabel.leadingAnchor, constant: -1 *  Config.TimeLabel.leftPadding),
+            messageView.trailingAnchor.constraint(lessThanOrEqualTo: timeLabel.leadingAnchor, constant: -1 * Config.TimeLabel.leftPadding),
 
             timeLabel.leadingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: Config.TimeLabel.leftPadding),
             timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
             timeLabelWidth,
             timeLabelHeight,
-            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -1 * padding.right)
-            ])
+            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -1 * padding.right),
+        ])
     }
 }

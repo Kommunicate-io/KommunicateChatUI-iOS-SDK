@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol ReusableView: class {
+protocol ReusableView: AnyObject {
     static var reuseIdentifier: String { get }
     static var heightForView: CGFloat { get }
 }
@@ -19,34 +19,28 @@ extension ReusableView where Self: UIView {
         let name = NSStringFromClass(self).components(separatedBy: ".").last!
         return name
     }
+
     static var heightForView: CGFloat {
         return 44.0
     }
 }
 
-extension UICollectionViewCell: ReusableView {
+extension UICollectionViewCell: ReusableView {}
 
-}
+extension UITableViewCell: ReusableView {}
 
-extension UITableViewCell: ReusableView {
-
-}
-
-protocol NibLoadableView: class {
+protocol NibLoadableView: AnyObject {
     static var nibName: String { get }
 }
 
 extension UIView: NibLoadableView {
-
     static var nibName: String {
         let name = NSStringFromClass(self).components(separatedBy: ".").last!
         return name
     }
-
 }
 
 extension UITableView {
-
     func register<T: UITableViewCell>(_: T.Type) {
         register(T.self, forCellReuseIdentifier: T.reuseIdentifier)
     }
@@ -65,7 +59,6 @@ extension UITableView {
 }
 
 extension UICollectionView {
-
     func register<T: UICollectionViewCell>(_: T.Type) {
         register(T.self, forCellWithReuseIdentifier: T.reuseIdentifier)
     }

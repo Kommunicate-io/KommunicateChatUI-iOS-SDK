@@ -10,7 +10,6 @@ import UIKit
 /// Custom ActivityIndicator view which will present a white large styled UIActivityIndicator
 /// on top a rectangular background.
 public class ALKActivityIndicator: UIView {
-
     public struct Size {
         public let width: CGFloat
         public let height: CGFloat
@@ -39,20 +38,20 @@ public class ALKActivityIndicator: UIView {
         self.backgroundColor = backgroundColor
         indicator.color = indicatorColor
         setupView()
-        self.isHidden = true
+        isHidden = true
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     public func startAnimating() {
-        self.isHidden = false
+        isHidden = false
         indicator.startAnimating()
     }
 
     public func stopAnimating() {
-        self.isHidden = true
+        isHidden = true
         indicator.stopAnimating()
     }
 
@@ -67,7 +66,7 @@ public class ALKActivityIndicator: UIView {
             indicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             indicator.widthAnchor.constraint(equalToConstant: size.width / 2),
-            indicator.heightAnchor.constraint(equalToConstant: size.height / 2)
-            ])
+            indicator.heightAnchor.constraint(equalToConstant: size.height / 2),
+        ])
     }
 }

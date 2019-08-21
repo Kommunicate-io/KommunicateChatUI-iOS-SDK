@@ -8,12 +8,11 @@
 import Foundation
 import WebKit
 
-class ALKDocumentViewerController : UIViewController,WKNavigationDelegate {
-
+class ALKDocumentViewerController: UIViewController, WKNavigationDelegate {
     var webView: WKWebView = WKWebView()
     var fileName: String = ""
     var filePath: String = ""
-    var fileUrl : URL = URL(fileURLWithPath: "")
+    var fileUrl: URL = URL(fileURLWithPath: "")
 
     let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
@@ -21,42 +20,41 @@ class ALKDocumentViewerController : UIViewController,WKNavigationDelegate {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+        activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
-        self.view.bringSubviewToFront(activityIndicator)
+        view.bringSubviewToFront(activityIndicator)
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.navigationDelegate = self
         view = webView
-        self.fileUrl = ALKFileUtils().getDocumentDirectory(fileName: filePath)
+        fileUrl = ALKFileUtils().getDocumentDirectory(fileName: filePath)
         activityIndicator.startAnimating()
-        webView.loadFileURL(self.fileUrl, allowingReadAccessTo: self.fileUrl)
+        webView.loadFileURL(fileUrl, allowingReadAccessTo: fileUrl)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.showShare(_:)))
-        self.title =  fileName
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(showShare(_:)))
+        title = fileName
     }
 
-    @objc func showShare(_ sender: Any?) {
+    @objc func showShare(_: Any?) {
         let vc = UIActivityViewController(activityItems: [fileUrl], applicationActivities: [])
-        self.present(vc, animated: true)
+        present(vc, animated: true)
     }
 
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    func webView(_: WKWebView, didFail _: WKNavigation!, withError _: Error) {
         activityIndicator.stopAnimating()
     }
 
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_: WKWebView, didFinish _: WKNavigation!) {
         activityIndicator.stopAnimating()
     }
-
 }

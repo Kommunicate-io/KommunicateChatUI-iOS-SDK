@@ -6,7 +6,6 @@
 //
 
 open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
-
     var messageView = ALKMyMessageView()
     var buttonView = ButtonsView(frame: .zero)
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
@@ -25,12 +24,12 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.update(viewModel: viewModel)
 
         guard let dict = viewModel.payloadFromMetadata() else {
-            self.layoutIfNeeded()
+            layoutIfNeeded()
             return
         }
         let buttonWidth = maxWidth - (ChatCellPadding.SentMessage.MessageButton.left + ChatCellPadding.SentMessage.MessageButton.right)
         updateMessageButtonView(payload: dict, width: buttonWidth, heightOffset: height)
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -47,8 +46,8 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     private func setupConstraints() {
-        self.contentView.addSubview(messageView)
-        self.contentView.addSubview(buttonView)
+        contentView.addSubview(messageView)
+        contentView.addSubview(buttonView)
         messageView.translatesAutoresizingMaskIntoConstraints = false
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.SentMessage.Message.left).isActive = true
@@ -56,21 +55,19 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageViewHeight.isActive = true
     }
 
-    private func updateMessageButtonView(payload: [Dictionary<String, Any>], width: CGFloat, heightOffset: CGFloat) {
+    private func updateMessageButtonView(payload: [[String: Any]], width: CGFloat, heightOffset: CGFloat) {
         buttonView.maxWidth = width
         buttonView.stackViewAlignment = .trailing
         buttonView.update(payload: payload)
 
         buttonView.frame = CGRect(x: ChatCellPadding.SentMessage.MessageButton.left,
-                                         y: heightOffset + ChatCellPadding.SentMessage.MessageButton.top,
-                                         width: width,
-                                         height: ButtonsView.rowHeight(payload: payload, maxWidth: width))
+                                  y: heightOffset + ChatCellPadding.SentMessage.MessageButton.top,
+                                  width: width,
+                                  height: ButtonsView.rowHeight(payload: payload, maxWidth: width))
     }
-
 }
 
 class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
-
     var messageView = ALKFriendMessageView()
     var buttonView = ButtonsView(frame: .zero)
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
@@ -89,12 +86,12 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.update(viewModel: viewModel)
 
         guard let dict = viewModel.payloadFromMetadata() else {
-            self.layoutIfNeeded()
+            layoutIfNeeded()
             return
         }
         let buttonWidth = maxWidth - (ChatCellPadding.ReceivedMessage.MessageButton.left + ChatCellPadding.ReceivedMessage.MessageButton.right)
         updateMessageButtonView(payload: dict, width: buttonWidth, heightOffset: height)
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -111,8 +108,8 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     private func setupConstraints() {
-        self.contentView.addSubview(messageView)
-        self.contentView.addSubview(buttonView)
+        contentView.addSubview(messageView)
+        contentView.addSubview(buttonView)
         messageView.translatesAutoresizingMaskIntoConstraints = false
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.ReceivedMessage.Message.left).isActive = true
@@ -120,15 +117,14 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageViewHeight.isActive = true
     }
 
-    private func updateMessageButtonView(payload: [Dictionary<String, Any>], width: CGFloat, heightOffset: CGFloat) {
+    private func updateMessageButtonView(payload: [[String: Any]], width: CGFloat, heightOffset: CGFloat) {
         buttonView.maxWidth = width
         buttonView.stackViewAlignment = .leading
         buttonView.update(payload: payload)
 
         buttonView.frame = CGRect(x: ChatCellPadding.ReceivedMessage.MessageButton.left,
-                                         y: heightOffset + ChatCellPadding.ReceivedMessage.MessageButton.top,
-                                         width: width,
-                                         height: ButtonsView.rowHeight(payload: payload, maxWidth: width))
+                                  y: heightOffset + ChatCellPadding.ReceivedMessage.MessageButton.top,
+                                  width: width,
+                                  height: ButtonsView.rowHeight(payload: payload, maxWidth: width))
     }
-
 }

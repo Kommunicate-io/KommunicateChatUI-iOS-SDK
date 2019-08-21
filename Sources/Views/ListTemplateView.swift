@@ -5,11 +5,10 @@
 //  Created by Shivam Pokhriyal on 18/02/19.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class ListTemplateElementView: UIView {
-
     static let font = UIFont(name: "Helvetica", size: 14) ?? UIFont.systemFont(ofSize: 14)
 
     let thumbnail: UIImageView = {
@@ -47,7 +46,7 @@ class ListTemplateElementView: UIView {
         setupAction()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -57,12 +56,12 @@ class ListTemplateElementView: UIView {
         subtitle.text = item.description
         guard let urlString = item.imgSrc, let url = URL(string: urlString) else {
             thumbnail.isHidden = true
-            self.layoutIfNeeded()
+            layoutIfNeeded()
             return
         }
         thumbnail.isHidden = false
         thumbnail.kf.setImage(with: url)
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     static func height() -> CGFloat {
@@ -74,18 +73,18 @@ class ListTemplateElementView: UIView {
     }
 
     private func setupView() {
-        self.addViewsForAutolayout(views: [thumbnail, title, subtitle])
-        thumbnail.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
-        thumbnail.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        addViewsForAutolayout(views: [thumbnail, title, subtitle])
+        thumbnail.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        thumbnail.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         thumbnail.widthAnchor.constraint(equalToConstant: 35).isActive = true
         thumbnail.heightAnchor.constraint(equalToConstant: 35).isActive = true
 
         title.leadingAnchor.constraint(equalTo: thumbnail.trailingAnchor, constant: 10).isActive = true
-        title.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -10).isActive = true
+        title.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -10).isActive = true
         title.topAnchor.constraint(equalTo: thumbnail.topAnchor).isActive = true
 
         subtitle.leadingAnchor.constraint(equalTo: title.leadingAnchor).isActive = true
-        subtitle.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -10).isActive = true
+        subtitle.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -10).isActive = true
         subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
     }
 
@@ -101,12 +100,11 @@ class ListTemplateElementView: UIView {
     private func setupAction() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
         tapGesture.numberOfTapsRequired = 1
-        self.addGestureRecognizer(tapGesture)
+        addGestureRecognizer(tapGesture)
     }
 }
 
 class ListTemplateView: UIView {
-
     static var headerFont = UIFont(name: "Helvetica", size: 15) ?? UIFont.systemFont(ofSize: 15)
     static var imageHeight: CGFloat = 100
     static var textHeight: CGFloat = 30
@@ -163,7 +161,7 @@ class ListTemplateView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -173,7 +171,7 @@ class ListTemplateView: UIView {
         updateButtons(item.buttons)
         updateListItems(item.elements)
         self.item = item
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     private func updateHeaderImage(_ urlString: String?) {
@@ -252,7 +250,7 @@ class ListTemplateView: UIView {
     }
 
     private func setupButtons() {
-        actionButtons = (0...7).map {
+        actionButtons = (0 ... 7).map {
             let button = UIButton()
             button.setTitleColor(UIColor(red: 85, green: 83, blue: 183), for: .normal)
             button.setFont(font: UIFont.font(.bold(size: 15.0)))
@@ -267,7 +265,7 @@ class ListTemplateView: UIView {
     }
 
     private func setupElements() {
-        listItems = (0...7).map {
+        listItems = (0 ... 7).map {
             let item = ListTemplateElementView()
             item.tag = $0
             item.backgroundColor = .white
@@ -288,26 +286,26 @@ class ListTemplateView: UIView {
             elementStackView.addArrangedSubview($0)
             $0.heightAnchor.constraint(equalToConstant: ListTemplateElementView.height()).isActive = true
         }
-        self.backgroundColor = .lightGray
-        self.addViewsForAutolayout(views: [headerImage, headerText, elementStackView, buttonStackView])
+        backgroundColor = .lightGray
+        addViewsForAutolayout(views: [headerImage, headerText, elementStackView, buttonStackView])
 
-        headerImage.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        headerImage.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        headerImage.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        headerImage.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        headerImage.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        headerImage.topAnchor.constraint(equalTo: topAnchor).isActive = true
         headerImageHeight.isActive = true
 
-        headerText.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        headerText.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         headerText.topAnchor.constraint(equalTo: headerImage.bottomAnchor).isActive = true
-        headerText.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        headerText.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        headerText.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        headerText.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         headerTextHeight.isActive = true
 
-        elementStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        elementStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        elementStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        elementStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         elementStackView.topAnchor.constraint(equalTo: headerText.bottomAnchor, constant: 1).isActive = true
 
-        buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        buttonStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        buttonStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         buttonStackView.topAnchor.constraint(equalTo: elementStackView.bottomAnchor, constant: 1).isActive = true
     }
 }

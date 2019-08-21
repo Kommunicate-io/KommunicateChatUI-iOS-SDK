@@ -8,7 +8,6 @@
 import Applozic
 
 class ALKMyContactMessageCell: ALKContactMessageBaseCell {
-
     struct Padding {
         struct StateView {
             static let width: CGFloat = 17.0
@@ -16,10 +15,12 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
             static let bottom: CGFloat = 1
             static let right: CGFloat = 2
         }
+
         struct TimeLabel {
             static let right: CGFloat = 2
             static let bottom: CGFloat = 2
         }
+
         struct ContactView {
             static let multiplier: CGFloat = 0.5
             static let right: CGFloat = 10
@@ -68,7 +69,8 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         super.setupStyle()
         contactView.setColorIn(
             text: ALKMessageStyle.sentMessage.text,
-            background: ALKMessageStyle.sentBubble.color)
+            background: ALKMessageStyle.sentBubble.color
+        )
     }
 
     class func rowHeight() -> CGFloat {
@@ -82,7 +84,7 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         contentView.bringSubviewToFront(loadingIndicator)
 
         contactView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.ContactView.right).isActive = true
-        contactView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: Padding.ContactView.multiplier).isActive = true
+        contactView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: Padding.ContactView.multiplier).isActive = true
         contactView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         contactView.heightAnchor.constraint(equalToConstant: ContactView.height()).isActive = true
 
@@ -99,5 +101,4 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: contactView.bottomAnchor, constant: Padding.TimeLabel.bottom).isActive = true
     }
-
 }

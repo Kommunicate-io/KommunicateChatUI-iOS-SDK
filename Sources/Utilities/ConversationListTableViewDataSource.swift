@@ -5,11 +5,10 @@
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 public class ConversationListTableViewDataSource: NSObject, UITableViewDataSource {
-
     /// A closure to configure tableview cell with the message object
     public typealias CellConfigurator = (ALKChatViewModelProtocol, UITableViewCell) -> Void
     public var cellConfigurator: CellConfigurator
@@ -21,11 +20,11 @@ public class ConversationListTableViewDataSource: NSObject, UITableViewDataSourc
         self.cellConfigurator = cellConfigurator
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in _: UITableView) -> Int {
         return viewModel.numberOfSections()
     }
 
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRowsInSection(section)
     }
 
@@ -37,5 +36,4 @@ public class ConversationListTableViewDataSource: NSObject, UITableViewDataSourc
         cellConfigurator(message, cell)
         return cell
     }
-
 }

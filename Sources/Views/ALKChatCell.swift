@@ -6,11 +6,11 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
+import Applozic
 import Foundation
-import UIKit
 import Kingfisher
 import MGSwipeTableCell
-import Applozic
+import UIKit
 
 public protocol ALKChatViewModelProtocol {
     var avatar: URL? { get }
@@ -24,7 +24,7 @@ public protocol ALKChatViewModelProtocol {
     var isGroupChat: Bool { get }
     var contactId: String? { get }
     var channelKey: NSNumber? { get }
-    var conversationId: NSNumber! {get set}
+    var conversationId: NSNumber! { get set }
     var createdAt: String? { get }
     var messageType: ALKMessageType { get }
 }
@@ -40,12 +40,11 @@ public enum ALKChatCellAction {
     case unblock
 }
 
-public protocol ALKChatCellDelegate: class {
+public protocol ALKChatCellDelegate: AnyObject {
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol)
 }
 
 public final class ALKChatCell: MGSwipeTableCell, Localizable {
-
     enum ConstraintIdentifier: String {
         case iconWidthIdentifier = "iconViewWidth"
     }
@@ -93,7 +92,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     private var lineView: UIView = {
         let view = UIView()
         let layer = view.layer
-        view.backgroundColor = UIColor.init(red: 200.0/255.0, green: 199.0/255.0, blue: 204.0/255.0, alpha: 0.33)
+        view.backgroundColor = UIColor(red: 200.0 / 255.0, green: 199.0 / 255.0, blue: 204.0 / 255.0, alpha: 0.33)
         return view
     }()
 
@@ -124,6 +123,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     }()
 
     // MARK: BadgeNumber
+
     private lazy var badgeNumberView: UIView = {
         let view = UIView(frame: .zero)
         view.setBackgroundColor(.background(.main))
@@ -166,11 +166,11 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     }
 
     deinit {
-        voipButton.removeTarget(self, action:  #selector(callTapped(button:)), for: .touchUpInside)
-        //favoriteButton.removeTarget(self, action:  #selector(favoriteTapped(button:)), for: .touchUpInside)
+        voipButton.removeTarget(self, action: #selector(callTapped(button:)), for: .touchUpInside)
+        // favoriteButton.removeTarget(self, action:  #selector(favoriteTapped(button:)), for: .touchUpInside)
     }
 
-    override public func setHighlighted(_ highlighted: Bool, animated: Bool) {
+    public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
 
         guard let _ = viewModel else {
@@ -179,14 +179,14 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
         lineView.backgroundColor = UIColor(netHex: 0xF1F1F1)
 
-        backgroundColor = highlighted ? UIColor.init(netHex: 0xECECEC) : UIColor.white
+        backgroundColor = highlighted ? UIColor(netHex: 0xECECEC) : UIColor.white
         contentView.backgroundColor = backgroundColor
 
         // set backgroundColor of badgeNumber
         badgeNumberView.setBackgroundColor(.background(.main))
     }
 
-    override public func setSelected(_ selected: Bool, animated: Bool) {
+    public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         guard let _ = viewModel else {
@@ -195,7 +195,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
         lineView.backgroundColor = UIColor(netHex: 0xF1F1F1)
 
-        backgroundColor = selected ? UIColor.init(netHex: 0xECECEC) : UIColor.white
+        backgroundColor = selected ? UIColor(netHex: 0xECECEC) : UIColor.white
         contentView.backgroundColor = backgroundColor
 
         // set backgroundColor of badgeNumber
@@ -225,13 +225,12 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     var viewModel: ALKChatViewModelProtocol?
 
-    public func update(viewModel: ALKChatViewModelProtocol, identity: ALKIdentityProtocol?, placeholder: UIImage? = nil, disableSwipe: Bool) {
-
+    public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil, disableSwipe: Bool) {
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
 
         if let avatarImage = viewModel.avatarImage {
-            if let imgStr = viewModel.avatarGroupImageUrl,let imgURL = URL.init(string: imgStr) {
+            if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
                 let resource = ImageResource(downloadURL: imgURL, cacheKey: imgStr)
                 avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
             } else {
@@ -244,11 +243,11 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             avatarImageView.image = placeHolder
         }
 
-        let name = viewModel.isGroupChat ? viewModel.groupName:viewModel.name
+        let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
         nameLabel.text = name
         locationLabel.text = viewModel.theLastMessage
 
-        if(viewModel.messageType == .email) {
+        if viewModel.messageType == .email {
             emailIcon.isHidden = false
             emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = Padding.Email.width
         } else {
@@ -273,10 +272,9 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         onlineStatusView.isHidden = true
 
         if !viewModel.isGroupChat {
-
             let contactService = ALContactService()
             guard let contactId = viewModel.contactId,
-            let contact = contactService.loadContact(byKey: "userId", value: contactId) else {
+                let contact = contactService.loadContact(byKey: "userId", value: contactId) else {
                 return
             }
 
@@ -288,19 +286,19 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             onlineStatusView.isHidden = !contact.connected
         }
 
-        self.voipButton.isEnabled = !viewModel.isGroupChat
+        voipButton.isEnabled = !viewModel.isGroupChat
     }
 
     private func setupLeftSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
         leftSwipeSettings.transition = .static
 
-        let deleteButton = MGSwipeButton.init(type: .system)
+        let deleteButton = MGSwipeButton(type: .system)
         deleteButton.backgroundColor = UIColor.mainRed()
         deleteButton.setImage(UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil), for: .normal)
         deleteButton.tintColor = .white
         deleteButton.accessibilityIdentifier = "SwippableDeleteIcon"
-        deleteButton.frame = CGRect.init(x: 0, y: 0, width: 69, height: 69)
-        if (!viewModel.isGroupChat || (viewModel.channelKey != nil && ALChannelService().isChannelLeft(viewModel.channelKey))) {
+        deleteButton.frame = CGRect(x: 0, y: 0, width: 69, height: 69)
+        if !viewModel.isGroupChat || (viewModel.channelKey != nil && ALChannelService().isChannelLeft(viewModel.channelKey)) {
             let leaveTitle = localizedString(forKey: "DeleteButtonName", withDefaultValue: SystemMessage.ButtonName.Delete, fileName: localizationFileName)
             deleteButton.setTitle(leaveTitle, for: .normal)
         } else {
@@ -308,26 +306,26 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             deleteButton.setTitle(leaveTitle, for: .normal)
         }
         deleteButton.alignVertically()
-        deleteButton.callback = { [weak self] (button) in
-            guard let strongSelf = self else {return true}
-            guard let viewModel = strongSelf.viewModel else {return true}
+        deleteButton.callback = { [weak self] _ in
+            guard let strongSelf = self else { return true }
+            guard let viewModel = strongSelf.viewModel else { return true }
             strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: .delete, viewModel: viewModel)
             return true
         }
 
         guard !viewModel.isGroupChat else {
-            self.leftButtons = [deleteButton]
+            leftButtons = [deleteButton]
             return
         }
-        ALUserService().getUserDetail(viewModel.contactId, withCompletion: { (contact) in
+        ALUserService().getUserDetail(viewModel.contactId, withCompletion: { contact in
             guard let contact = contact else {
                 self.leftButtons = [deleteButton]
                 return
             }
-            let blockButton = MGSwipeButton.init(type: .system)
+            let blockButton = MGSwipeButton(type: .system)
             blockButton.setImage(UIImage(named: "icon_block", in: Bundle.applozic, compatibleWith: nil), for: .normal)
             blockButton.tintColor = .white
-            blockButton.frame = CGRect.init(x: 70, y: 0, width: 69, height: 69)
+            blockButton.frame = CGRect(x: 70, y: 0, width: 69, height: 69)
             if !contact.block {
                 blockButton.backgroundColor = UIColor(red: 248, green: 139, blue: 139)
                 let block = self.localizedString(forKey: "BlockTitle", withDefaultValue: SystemMessage.Block.BlockTitle, fileName: self.localizationFileName)
@@ -339,11 +337,11 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             }
             blockButton.alignVertically()
             let action: ALKChatCellAction = contact.block ? .unblock : .block
-            blockButton.callback = { [weak self] (button) in
+            blockButton.callback = { [weak self] _ in
                 guard
                     let strongSelf = self,
                     let viewModel = strongSelf.viewModel
-                    else { return true }
+                else { return true }
                 strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: action, viewModel: viewModel)
                 return true
             }
@@ -352,22 +350,22 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     }
 
     private func setupRightSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
-        let muteButton: MGSwipeButton = MGSwipeButton.init(type: .custom)
-        muteButton.backgroundColor = UIColor.init(netHex: 0x999999)
+        let muteButton: MGSwipeButton = MGSwipeButton(type: .custom)
+        muteButton.backgroundColor = UIColor(netHex: 0x999999)
         if isConversationMuted(viewModel: viewModel) {
             muteButton.setImage(UIImage(named: "icon_mute_inactive", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-            let unmute = self.localizedString(forKey: "UnmuteButton", withDefaultValue: SystemMessage.Mute.UnmuteButton, fileName: self.localizationFileName)
+            let unmute = localizedString(forKey: "UnmuteButton", withDefaultValue: SystemMessage.Mute.UnmuteButton, fileName: localizationFileName)
             muteButton.setTitle(unmute, for: .normal)
         } else {
             muteButton.setImage(UIImage(named: "icon_mute_active", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-            let mute = self.localizedString(forKey: "MuteButton", withDefaultValue: SystemMessage.Mute.MuteButton, fileName: self.localizationFileName)
+            let mute = localizedString(forKey: "MuteButton", withDefaultValue: SystemMessage.Mute.MuteButton, fileName: localizationFileName)
             muteButton.setTitle(mute, for: .normal)
         }
-        muteButton.frame = CGRect.init(x: 0, y: 0, width: 69, height: 69)
+        muteButton.frame = CGRect(x: 0, y: 0, width: 69, height: 69)
         muteButton.alignVertically()
-        muteButton.callback = { [weak self] (buttnon) in
-            guard let strongSelf = self else {return true}
-            guard let viewModel = strongSelf.viewModel else {return true}
+        muteButton.callback = { [weak self] _ in
+            guard let strongSelf = self else { return true }
+            guard let viewModel = strongSelf.viewModel else { return true }
             if strongSelf.isConversationMuted(viewModel: viewModel) {
                 strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: .unmute, viewModel: viewModel)
             } else {
@@ -375,8 +373,8 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             }
             return true
         }
-        self.rightButtons = [muteButton]
-        self.rightSwipeSettings.transition = .static
+        rightButtons = [muteButton]
+        rightSwipeSettings.transition = .static
     }
 
     private func placeholderImage(_ placeholderImage: UIImage? = nil, viewModel: ALKChatViewModelProtocol) -> UIImage? {
@@ -388,8 +386,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     }
 
     private func setupConstraints() {
-
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel,lineView,voipButton,/*favoriteButton,*/badgeNumberView, timeLabel, onlineStatusView,emailIcon])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel, lineView, voipButton, /* favoriteButton, */ badgeNumberView, timeLabel, onlineStatusView, emailIcon])
 
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
@@ -406,7 +403,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         emailIcon.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Padding.Email.top).isActive = true
         emailIcon.heightAnchor.constraint(equalToConstant: Padding.Email.height).isActive = true
         emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
-        emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0,identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
+        emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
 
         // setup constraint of mood
         locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
@@ -429,7 +426,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
          */
 
         // setup constraint of VOIP button
-        //voipButton.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor, constant: -25.0).isActive = true
+        // voipButton.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor, constant: -25.0).isActive = true
         voipButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -23).isActive = true
         voipButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         voipButton.widthAnchor.constraint(equalToConstant: 24.0).isActive = true
@@ -453,7 +450,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         timeLabel.heightAnchor.constraint(equalToConstant: 15).isActive = true
         timeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        timeLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 0).isActive  = true
+        timeLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 0).isActive = true
 
         onlineStatusView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         onlineStatusView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -466,7 +463,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         badgeNumberView.layer.cornerRadius = badgeNumberView.frame.size.height / 2.0
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -476,28 +473,26 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         comingSoonDelegate = delegate
     }
 
-    @objc func callTapped(button: UIButton) {
-
-        guard let viewModel = self.viewModel else {return}
-        self.chatCellDelegate?.chatCell(cell: self, action: .call, viewModel:viewModel)
+    @objc func callTapped(button _: UIButton) {
+        guard let viewModel = self.viewModel else { return }
+        chatCellDelegate?.chatCell(cell: self, action: .call, viewModel: viewModel)
     }
 
-    @objc func favoriteTapped(button: UIButton) {
+    @objc func favoriteTapped(button _: UIButton) {
 //        comingSoonDelegate?.makeToast(SystemMessage.ComingSoon.Favorite, duration: 1.0, position: .center)
     }
 
-    override public func setEditing(_ editing: Bool, animated: Bool) {
+    public override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
     }
 
     private func getRandomColor() -> UIColor {
         let colors = [0x19A5E4, 0x0EB04B, 0xF3B618, 0xE4E9EC]
         let randomNum = randomInt(min: 0, max: 3)
-        return UIColor.init(netHex: colors[randomNum])
+        return UIColor(netHex: colors[randomNum])
     }
 
-    func randomInt(min: Int, max:Int) -> Int {
+    func randomInt(min: Int, max: Int) -> Int {
         return min + Int(arc4random_uniform(UInt32(max - min + 1)))
     }
-
 }

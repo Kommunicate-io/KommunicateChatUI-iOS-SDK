@@ -5,29 +5,28 @@
 //  Created by Mukesh Thawani on 28/03/18.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
-
     open var cardTemplate: [CardTemplate]?
 
-    override open func setMessage(viewModel: ALKMessageViewModel) {
+    open override func setMessage(viewModel: ALKMessageViewModel) {
         super.setMessage(viewModel: viewModel)
         // set card template
-        guard let templates = ALKGenericCardCollectionView.getCardTemplate(message: viewModel) else { return}
+        guard let templates = ALKGenericCardCollectionView.getCardTemplate(message: viewModel) else { return }
         cardTemplate = templates
     }
 
-    override open class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    open override class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         guard let template = getCardTemplate(message: message),
             let card = template.first
-            else {
-                return 0
+        else {
+            return 0
         }
         let maxHeight = template
-                        .map { ALKGenericCardCell.rowHeight(card: $0, maxWidth: width) }
-                        .max { $0 < $1 }
+            .map { ALKGenericCardCell.rowHeight(card: $0, maxWidth: width) }
+            .max { $0 < $1 }
         let defaultHeight = ALKGenericCardCell.rowHeight(card: card, maxWidth: width)
         return maxHeight ?? defaultHeight
     }
@@ -36,40 +35,37 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
         guard
             let metadata = message.metadata,
             let templateId = metadata["templateId"] as? String
-            else { return nil }
+        else { return nil }
         switch templateId {
-            case ActionableMessageType.cardTemplate.rawValue:
-                do {
-                    let templates = try TemplateDecoder.decode([CardTemplate].self, from: metadata)
-                    return templates
-                } catch(let error) {
-                    print("\(error)")
-                    return nil
-                }
-            case ActionableMessageType.genericCard.rawValue:
-                do {
-                    let cards = try TemplateDecoder.decode([ALKGenericCard].self, from: metadata)
-                    var templates = [CardTemplate]()
-                    for card in cards {
-                        templates.append(Util().cardTemplate(from: card))
-                    }
-                    return templates
-                } catch(let error) {
-                    print("\(error)")
-                    return nil
-                }
-            default:
-                print("Do nothing")
+        case ActionableMessageType.cardTemplate.rawValue:
+            do {
+                let templates = try TemplateDecoder.decode([CardTemplate].self, from: metadata)
+                return templates
+            } catch {
+                print("\(error)")
                 return nil
+            }
+        case ActionableMessageType.genericCard.rawValue:
+            do {
+                let cards = try TemplateDecoder.decode([ALKGenericCard].self, from: metadata)
+                var templates = [CardTemplate]()
+                for card in cards {
+                    templates.append(Util().cardTemplate(from: card))
+                }
+                return templates
+            } catch {
+                print("\(error)")
+                return nil
+            }
+        default:
+            print("Do nothing")
+            return nil
         }
     }
-
 }
 
 open class ALKGenericCardCell: UICollectionViewCell {
-
     public struct Font {
-
         public static var overlayText = UIFont(name: "HelveticaNeue-Medium", size: 16) ??
             UIFont.systemFont(ofSize: 16)
 
@@ -86,11 +82,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
             UIFont.systemFont(ofSize: 14)
 
         public static var button = UIFont.systemFont(ofSize: 15, weight: .medium)
-
     }
 
     public struct Config {
-
         public static let buttonHeight: CGFloat = 40
 
         public static let imageHeight: CGFloat = 100
@@ -103,14 +97,13 @@ open class ALKGenericCardCell: UICollectionViewCell {
             public static let width: CGFloat = 80
             public static let height: CGFloat = 35
         }
-
     }
 
     enum ConstraintIdentifier: String {
-        case titleView = "titleView"
-        case subtitleView = "subtitleView"
-        case descriptionView = "descriptionView"
-        case buttonsView = "buttonsView"
+        case titleView
+        case subtitleView
+        case descriptionView
+        case buttonsView
     }
 
     let maxButtonCount = 8
@@ -201,9 +194,9 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open var actionButtons = [UIButton]()
     open var card: CardTemplate!
-    open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplate)->Void)?
+    open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplate) -> Void)?
 
-    override open func awakeFromNib() {
+    open override func awakeFromNib() {
         super.awakeFromNib()
     }
 
@@ -213,7 +206,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         setupConstraints()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -240,7 +233,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         let titleHeight = !card.title.isEmpty ? card.title.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up) : 0
 
         let subtitleConstraint = CGSize(width: maxWidth, height: Font.subtitle.lineHeight)
-        let subtitleHeight = !card.subtitle.isEmpty ?  card.subtitle.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up) : 0
+        let subtitleHeight = !card.subtitle.isEmpty ? card.subtitle.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up) : 0
 
         let descriptionConstraint = CGSize(width: maxWidth, height: Font.description.lineHeight)
         var descriptionHeight: CGFloat = 0
@@ -261,7 +254,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     @objc func buttonSelected(_ action: UIButton) {
-        self.buttonSelected?(action.tag, action.currentTitle ?? "", card)
+        buttonSelected?(action.tag, action.currentTitle ?? "", card)
     }
 
     open func update(card: CardTemplate) {
@@ -272,15 +265,15 @@ open class ALKGenericCardCell: UICollectionViewCell {
         setRatingLabel(card)
         setOverlayText(card.header)
         setCoverImage(card.header)
-        self.contentView.layoutIfNeeded()
-        guard let buttons = card.buttons, !buttons.isEmpty else {return}
+        contentView.layoutIfNeeded()
+        guard let buttons = card.buttons, !buttons.isEmpty else { return }
         updateViewFor(buttons)
-        self.contentView.layoutIfNeeded()
+        contentView.layoutIfNeeded()
     }
 
     private func setTitle(_ text: String) {
         guard !text.isEmpty else {
-            self.titleStackView.constraint(withIdentifier: ConstraintIdentifier.titleView.rawValue)?.constant = 0
+            titleStackView.constraint(withIdentifier: ConstraintIdentifier.titleView.rawValue)?.constant = 0
             return
         }
         titleLabel.text = text
@@ -291,7 +284,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     private func setSubtitle(_ text: String) {
         guard !text.isEmpty else {
-            self.subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = 0
+            subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = 0
             return
         }
         subtitleLabel.text = text
@@ -302,11 +295,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     private func setOverlayText(_ header: CardTemplate.Header?) {
         guard let text = header?.overlayText, !text.isEmpty else {
-            self.overlayText.isHidden = true
+            overlayText.isHidden = true
             return
         }
-        self.overlayText.isHidden = false
-        self.overlayText.text = text
+        overlayText.isHidden = false
+        overlayText.text = text
     }
 
     private func setCoverImage(_ header: CardTemplate.Header?) {
@@ -324,12 +317,12 @@ open class ALKGenericCardCell: UICollectionViewCell {
             return
         }
         coverImageView.isHidden = false
-        self.coverImageView.kf.setImage(with: url)
+        coverImageView.kf.setImage(with: url)
     }
 
     private func setRatingLabel(_ card: CardTemplate) {
         guard let rating = card.titleExt, !rating.isEmpty else {
-            self.ratingLabel.isHidden = true
+            ratingLabel.isHidden = true
             return
         }
         ratingLabel.isHidden = false
@@ -353,16 +346,16 @@ open class ALKGenericCardCell: UICollectionViewCell {
         guard let buttons = buttons else { return }
         // Hide extra buttons
         actionButtons.enumerated().forEach {
-            if $0 >= buttons.count {$1.isHidden = true} else {$1.isHidden = false; $1.setTitle(buttons[$0].name, for: .normal)}
+            if $0 >= buttons.count { $1.isHidden = true } else { $1.isHidden = false; $1.setTitle(buttons[$0].name, for: .normal) }
         }
         let count = CGFloat(min(buttons.count, actionButtons.count))
         buttonStackView.constraint(withIdentifier: ConstraintIdentifier.buttonsView.rawValue)?.constant = count * Config.buttonHeight
     }
 
     private func setUpButtons() {
-        actionButtons = (0..<maxButtonCount).map {
+        actionButtons = (0 ..< maxButtonCount).map {
             let button = UIButton()
-            button.setTitleColor(UIColor(netHex: 0x5c5aa7), for: .normal)
+            button.setTitleColor(UIColor(netHex: 0x5C5AA7), for: .normal)
             button.setFont(font: Font.button)
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
@@ -430,7 +423,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
         buttonsBackground.topAnchor.constraint(equalTo: buttonStackView.topAnchor, constant: -1).isActive = true
         buttonsBackground.bottomAnchor.constraint(equalTo: buttonStackView.bottomAnchor).isActive = true
     }
-
 }
 
 public class VerticalAlignLabel: UILabel {
@@ -440,13 +432,13 @@ public class VerticalAlignLabel: UILabel {
         case bottom
     }
 
-    var verticalAlignment : VerticalAlignment = .top {
+    var verticalAlignment: VerticalAlignment = .top {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    override public func textRect(forBounds bounds: CGRect, limitedToNumberOfLines: Int) -> CGRect {
+    public override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines: Int) -> CGRect {
         let rect = super.textRect(forBounds: bounds, limitedToNumberOfLines: limitedToNumberOfLines)
 
         if UIView.userInterfaceLayoutDirection(for: .unspecified) == .rightToLeft {
@@ -470,14 +462,13 @@ public class VerticalAlignLabel: UILabel {
         }
     }
 
-    override public func drawText(in rect: CGRect) {
-        let textRect = self.textRect(forBounds: rect, limitedToNumberOfLines: self.numberOfLines)
+    public override func drawText(in rect: CGRect) {
+        let textRect = self.textRect(forBounds: rect, limitedToNumberOfLines: numberOfLines)
         super.drawText(in: textRect)
     }
 }
 
 public class InsetLabel: UILabel {
-
     var insets = UIEdgeInsets()
 
     convenience init(insets: UIEdgeInsets) {
@@ -490,11 +481,11 @@ public class InsetLabel: UILabel {
         self.init(insets: insets)
     }
 
-    override public func drawText(in rect: CGRect) {
-        super.drawText(in: self.frame.inset(by: insets))
+    public override func drawText(in _: CGRect) {
+        super.drawText(in: frame.inset(by: insets))
     }
 
-    override public var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         var size = super.intrinsicContentSize
         size.width += insets.left + insets.right
         size.height += insets.top + insets.bottom

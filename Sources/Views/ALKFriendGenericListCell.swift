@@ -8,11 +8,10 @@
 import UIKit
 
 class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
-
     open var itemTitleLabel: InsetLabel = {
         let label = InsetLabel(insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         label.text = "title"
-        /// TODO: Make number of lines to 3.
+        // TODO: Make number of lines to 3.
         label.numberOfLines = 1
         label.font = Font.bold(size: 16.0).font()
         label.textColor = UIColor.black
@@ -80,7 +79,6 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -99,12 +97,12 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         let buttonHeight = 35
         let baseHeight: CGFloat = 20
         let padding: CGFloat = 10
-        let totalButtonHeight: CGFloat = CGFloat(buttonHeight * (template.count))
-        return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel,  widthNoPadding: UIScreen.main.bounds.width - 200) + 40
+        let totalButtonHeight: CGFloat = CGFloat(buttonHeight * template.count)
+        return baseHeight + totalButtonHeight + padding + ALKFriendMessageView.rowHeigh(viewModel: viewModel, widthNoPadding: UIScreen.main.bounds.width - 200) + 40
     }
 
     @objc func buttonSelected(_ action: UIButton) {
-        self.buttonSelected?(action.tag, action.currentTitle ?? "")
+        buttonSelected?(action.tag, action.currentTitle ?? "")
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -117,17 +115,17 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
             guard let title = metadata["headerText"] as? String else {
                 return
             }
-            self.updateTitle(title)
-            self.updateViewFor(cardTemplate)
-        } catch(let error) {
+            updateTitle(title)
+            updateViewFor(cardTemplate)
+        } catch {
             print("\(error)")
         }
     }
 
     private func setUpButtons() {
-        actionButtons = (0...7).map {
+        actionButtons = (0 ... 7).map {
             let button = UIButton()
-            button.setTitleColor(UIColor(netHex: 0x5c5aa7), for: .normal)
+            button.setTitleColor(UIColor(netHex: 0x5C5AA7), for: .normal)
             button.setFont(font: UIFont.font(.bold(size: 16.0)))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
@@ -159,7 +157,7 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -95).isActive = true
         messageView.heightAnchor.constraint(lessThanOrEqualToConstant: 1000).isActive = true
 
-        /// TODO: Find alternative to layoutIfNeeded
+        // TODO: Find alternative to layoutIfNeeded
         messageView.layoutIfNeeded()
 
         mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.MainStackView.left).isActive = true
@@ -195,5 +193,4 @@ class ALKFriendGenericListCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
         itemTitleLabel.text = text
     }
-
 }

@@ -9,7 +9,6 @@
 import UIKit
 
 final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
-
     var localizedStringFileName: String!
 
     required init(configuration: ALKConfiguration) {
@@ -17,14 +16,14 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
         localizedStringFileName = configuration.localizedStringFileName
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // to be injected
     var viewModel: ALKPreviewImageViewModel?
 
-    @IBOutlet private weak var fakeView: UIView!
+    @IBOutlet private var fakeView: UIView!
 
     fileprivate let scrollView: UIScrollView = {
         let sv = UIScrollView(frame: .zero)
@@ -54,24 +53,24 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
 //            guard let weakSelf = self else { return }
 //            MBProgressHUD.showAdded(to: weakSelf.fakeView, animated: true)
 //        }
-//        
+//
 //        viewModel?.prepareActualImage(successBlock: { [weak self] in
 //            guard let weakSelf = self else { return }
-//            
+//
 //            DispatchQueue.main.async {
 //                weakSelf.setupView()
 //                weakSelf.updateMinZoomScaleForSize(size: weakSelf.view.bounds.size)
 //                weakSelf.updateConstraintsForSize(size: weakSelf.view.bounds.size)
-//                
+//
 //                MBProgressHUD.hide(for: weakSelf.fakeView, animated: true)
 //            }
-//            
+//
 //            }, failBlock: { [weak self] (errorMessage)  in
 //                guard let weakSelf = self else { return }
-//                
+//
 //                DispatchQueue.main.async {
 //                    MBProgressHUD.hide(for: weakSelf.fakeView, animated: true)
-//                    
+//
 //                    weakSelf.view.makeToast(errorMessage, duration: 3.0, position: .center)
 //                    weakSelf.perform(#selector(weakSelf.dismissPress(_:)), with: nil, afterDelay: 3)
 //                }
@@ -79,8 +78,8 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupNavigation() {
-        self.navigationController?.navigationBar.backgroundColor = UIColor.white
-        guard let navVC = self.navigationController else {return}
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+        guard let navVC = self.navigationController else { return }
         navVC.navigationBar.shadowImage = UIImage()
         navVC.navigationBar.isTranslucent = true
     }
@@ -134,9 +133,9 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
     }
 
     private func updateMinZoomScaleForSize(size: CGSize) {
-        let widthScale  = size.width / imageView.bounds.width
+        let widthScale = size.width / imageView.bounds.width
         let heightScale = size.height / imageView.bounds.height
-        let minScale    = min(widthScale, heightScale)
+        let minScale = min(widthScale, heightScale)
 
         scrollView.minimumZoomScale = minScale
         scrollView.zoomScale = minScale
@@ -148,19 +147,19 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
         updateConstraintsXY(xOffset: xOffset, yOffset: yOffset)
     }
 
-    fileprivate func updateConstraintsXY(xOffset: CGFloat,yOffset: CGFloat) {
-        imageViewTopConstraint?.constant        = yOffset
-        imageViewBottomConstraint?.constant     = yOffset
+    fileprivate func updateConstraintsXY(xOffset: CGFloat, yOffset: CGFloat) {
+        imageViewTopConstraint?.constant = yOffset
+        imageViewBottomConstraint?.constant = yOffset
 
-        imageViewLeadingConstraint?.constant    = xOffset
-        imageViewTrailingConstraint?.constant   = xOffset
+        imageViewLeadingConstraint?.constant = xOffset
+        imageViewTrailingConstraint?.constant = xOffset
     }
 
-    @IBAction private func dismissPress(_ sender: Any) {
+    @IBAction private func dismissPress(_: Any) {
         dismiss(animated: true, completion: nil)
     }
 
-    @IBAction private func downlaodImgPress(_ sender: Any) {
+    @IBAction private func downlaodImgPress(_: Any) {
         guard let viewModel = viewModel else { return }
         viewModel.saveImage(image: imageView.image, successBlock: {
             let photoAlbumSuccessTitleMsg = self.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: self.localizedStringFileName)
@@ -169,7 +168,7 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
             let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: self.localizedStringFileName)
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-        }) { (_) in
+        }) { _ in
             let photoAlbumFailureTitleMsg = self.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: self.localizedStringFileName)
             let photoAlbumFailMsg = self.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: self.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertController.Style.alert)
@@ -180,18 +179,16 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
     }
 
     @objc private func doubleTapped(tap: UITapGestureRecognizer) {
-
         UIView.animate(withDuration: 0.5, animations: {
-
             let view = self.imageView
 
             let viewFrame = view.frame
 
             let location = tap.location(in: view)
-            let viewWidth = viewFrame.size.width/2.0
-            let viewHeight = viewFrame.size.height/2.0
+            let viewWidth = viewFrame.size.width / 2.0
+            let viewHeight = viewFrame.size.height / 2.0
 
-            let rect = CGRect(x: location.x - (viewWidth/2), y: location.y - (viewHeight/2), width: viewWidth, height: viewHeight)
+            let rect = CGRect(x: location.x - (viewWidth / 2), y: location.y - (viewHeight / 2), width: viewWidth, height: viewHeight)
 
             if self.scrollView.minimumZoomScale == self.scrollView.zoomScale {
                 self.scrollView.zoom(to: rect, animated: false)
@@ -202,7 +199,7 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
         }, completion: nil)
     }
 
-    @objc private func singleTapped(tap: UITapGestureRecognizer) {
+    @objc private func singleTapped(tap _: UITapGestureRecognizer) {
         if scrollView.minimumZoomScale == scrollView.zoomScale {
             dismiss(animated: true, completion: nil)
         }
@@ -210,14 +207,12 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
 }
 
 extension ALKPreviewImageViewController: UIScrollViewDelegate {
-
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-
+    func scrollViewDidZoom(_: UIScrollView) {
         updateConstraintsForSize(size: view.bounds.size)
         view.layoutIfNeeded()
     }
 
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    func viewForZooming(in _: UIScrollView) -> UIView? {
         return imageView
     }
 }

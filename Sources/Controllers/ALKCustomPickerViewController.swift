@@ -6,27 +6,27 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
 import Photos
+import UIKit
 
-protocol ALKCustomPickerDelegate: class {
+protocol ALKCustomPickerDelegate: AnyObject {
     func filesSelected(images: [UIImage], videos: [String])
 }
 
 class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
-    //photo library
+    // photo library
     var asset: PHAsset!
     var allPhotos: PHFetchResult<PHAsset>!
-    var selectedImage:UIImage!
-    var cameraMode:ALKCameraPhotoType = .noCropOption
+    var selectedImage: UIImage!
+    var cameraMode: ALKCameraPhotoType = .noCropOption
     let option = PHImageRequestOptions()
     var selectedRows = [Int]()
     var selectedFiles = [IndexPath]()
 
-    @IBOutlet weak var doneButton: UIBarButtonItem!
+    @IBOutlet var doneButton: UIBarButtonItem!
     weak var delegate: ALKCustomPickerDelegate?
 
-    @IBOutlet weak var previewGallery: UICollectionView!
+    @IBOutlet var previewGallery: UICollectionView!
 
     private lazy var localizedStringFileName: String = configuration.localizedStringFileName
 
@@ -37,7 +37,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         super.viewDidLoad()
 
         doneButton.title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done, fileName: localizedStringFileName)
-        self.title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
+        title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
         checkPhotoLibraryPermission()
         previewGallery.delegate = self
         previewGallery.dataSource = self
@@ -60,7 +60,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.picker, bundle: Bundle.applozic)
         guard
             let vc = storyboard.instantiateViewController(withIdentifier: "CustomPickerNavigationViewController")
-                as? ALKBaseNavigationViewController,
+            as? ALKBaseNavigationViewController,
             let cameraVC = vc.viewControllers.first as? ALKCustomPickerViewController else { return nil }
         cameraVC.delegate = delegate
         cameraVC.configuration = configuration
@@ -68,53 +68,52 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     }
 
     // MARK: - UI control
+
     private func setupNavigation() {
-        self.navigationController?.title = title
-        self.navigationController?.navigationBar.backgroundColor = UIColor.white
-        guard let navVC = self.navigationController else {return}
+        navigationController?.title = title
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+        guard let navVC = self.navigationController else { return }
         navVC.navigationBar.shadowImage = UIImage()
         navVC.navigationBar.isTranslucent = true
-        var backImage = UIImage.init(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: backImage, style: .plain, target: self , action: #selector(dismissAction(_:)))
-        self.navigationController?.navigationBar.tintColor = UIColor.black
-
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissAction(_:)))
+        navigationController?.navigationBar.tintColor = UIColor.black
     }
 
     private func checkPhotoLibraryPermission() {
         let status = PHPhotoLibrary.authorizationStatus()
         switch status {
         case .authorized:
-            self.getAllImage(completion: { [weak self] (isGrant) in
-                guard let weakSelf = self else {return}
-                weakSelf.createScrollGallery(isGrant:isGrant)
+            getAllImage(completion: { [weak self] isGrant in
+                guard let weakSelf = self else { return }
+                weakSelf.createScrollGallery(isGrant: isGrant)
             })
+        // handle authorized status
+        case .denied, .restricted:
             break
-        //handle authorized status
-        case .denied, .restricted :
-            break
-        //handle denied status
+        // handle denied status
         case .notDetermined:
             // ask for permissions
             PHPhotoLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
-                    self.getAllImage(completion: {[weak self] (isGrant) in
-                        guard let weakSelf = self else {return}
-                        weakSelf.createScrollGallery(isGrant:isGrant)
+                    self.getAllImage(completion: { [weak self] isGrant in
+                        guard let weakSelf = self else { return }
+                        weakSelf.createScrollGallery(isGrant: isGrant)
                     })
-                    break
                 // as above
                 case .denied, .restricted:
                     break
                 default: break
-                    //whatever
+                    // whatever
                 }
             }
         }
     }
 
     // MARK: - Access to gallery images
+
     private func getAllImage(completion: (_ success: Bool) -> Void) {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.includeHiddenAssets = false
@@ -124,21 +123,20 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         allPhotosOptions.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [p1, p2])
         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
-        (allPhotos != nil) ? completion(true) :  completion(false)
+        (allPhotos != nil) ? completion(true) : completion(false)
     }
 
-    private func createScrollGallery(isGrant:Bool) {
+    private func createScrollGallery(isGrant: Bool) {
         if isGrant {
-            self.selectedRows = Array(repeating: 0, count: (self.allPhotos != nil) ? self.allPhotos.count:0)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+            selectedRows = Array(repeating: 0, count: (allPhotos != nil) ? allPhotos.count : 0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.previewGallery.reloadData()
-            })
+            }
         }
-
     }
 
     func exportVideoAsset(_ asset: PHAsset, _ completion: @escaping ((_ video: String?) -> Void)) {
-        let filename = String(format: "VID-%f.mp4", Date().timeIntervalSince1970*1000)
+        let filename = String(format: "VID-%f.mp4", Date().timeIntervalSince1970 * 1000)
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 
         var fileurl = URL(fileURLWithPath: documentsUrl.absoluteString).appendingPathComponent(filename)
@@ -166,7 +164,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             }
 
             exportSession!.outputURL = fileurl
-            exportSession!.outputFileType = AVFileType.mp4 //file type encode goes here, you can change it for other types
+            exportSession!.outputFileType = AVFileType.mp4 // file type encode goes here, you can change it for other types
 
             exportSession!.exportAsynchronously() {
                 switch exportSession!.status {
@@ -179,33 +177,36 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                 default:
                     print("Video exporting status \(String(describing: exportSession?.status))")
                     completion(nil)
-                    break
                 }
             }
         }
     }
 
-    @IBAction func doneButtonAction(_ sender: UIBarButtonItem) {
+    @IBAction func doneButtonAction(_: UIBarButtonItem) {
         activityIndicator.startAnimating()
-        export { (images, videos, error) in
+        export { images, videos, error in
             self.activityIndicator.stopAnimating()
             if error {
                 let alertTitle = self.localizedString(
                     forKey: "PhotoAlbumFailureTitle",
                     withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle,
-                    fileName: self.localizedStringFileName)
+                    fileName: self.localizedStringFileName
+                )
                 let alertMessage = self.localizedString(
                     forKey: "VideoExportError",
                     withDefaultValue: SystemMessage.Warning.videoExportError,
-                    fileName: self.localizedStringFileName)
+                    fileName: self.localizedStringFileName
+                )
                 let buttonTitle = self.localizedString(
                     forKey: "OkMessage",
                     withDefaultValue: SystemMessage.ButtonName.ok,
-                    fileName: self.localizedStringFileName)
+                    fileName: self.localizedStringFileName
+                )
                 let alert = UIAlertController(
                     title: alertTitle,
                     message: alertMessage,
-                    preferredStyle: UIAlertController.Style.alert)
+                    preferredStyle: UIAlertController.Style.alert
+                )
                 alert.addAction(UIAlertAction(title: buttonTitle, style: UIAlertAction.Style.default, handler: { _ in
                     self.delegate?.filesSelected(images: images, videos: videos)
                     self.navigationController?.dismiss(animated: false, completion: nil)
@@ -216,7 +217,6 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                 self.navigationController?.dismiss(animated: false, completion: nil)
             }
         }
-
     }
 
     func export(_ completion: @escaping ((_ images: [UIImage], _ videos: [String], _ error: Bool) -> Void)) {
@@ -230,7 +230,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                 group.enter()
                 let asset = self.allPhotos.object(at: indexPath.item)
                 if asset.mediaType == .video {
-                    self.exportVideoAsset(asset) { (video) in
+                    self.exportVideoAsset(asset) { video in
                         guard let video = video else {
                             error = true
                             group.leave()
@@ -240,7 +240,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                         group.leave()
                     }
                 } else {
-                    PHCachingImageManager.default().requestImageData(for: asset, options:nil) { (imageData, _, _, _) in
+                    PHCachingImageManager.default().requestImageData(for: asset, options: nil) { imageData, _, _, _ in
                         guard let imageData = imageData, let image = UIImage(data: imageData) else {
                             error = true
                             group.leave()
@@ -258,13 +258,14 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    @IBAction func dismissAction(_ sender: UIBarButtonItem) {
-        self.navigationController?.dismiss(animated: false, completion: nil)
+    @IBAction func dismissAction(_: UIBarButtonItem) {
+        navigationController?.dismiss(animated: false, completion: nil)
     }
 }
 
 extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: CollectionViewEnvironment
+
     private class CollectionViewEnvironment {
         struct Spacing {
             static let lineitem: CGFloat = 5.0
@@ -274,8 +275,9 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
     }
 
     // MARK: UICollectionViewDelegate
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //grab all the images
+
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // grab all the images
         let asset = allPhotos.object(at: indexPath.item)
         if selectedRows[indexPath.row] == 1 {
             selectedFiles.remove(object: indexPath)
@@ -289,13 +291,13 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
     }
 
     // MARK: UICollectionViewDataSource
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(allPhotos == nil) {
+
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+        if allPhotos == nil {
             return 0
         } else {
             return allPhotos.count
         }
-
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -312,7 +314,7 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
         if asset.mediaType == .video {
             cell.videoIcon.isHidden = false
         }
-        let thumbnailSize:CGSize = CGSize(width: 200, height: 200)
+        let thumbnailSize: CGSize = CGSize(width: 200, height: 200)
         option.isSynchronous = true
         PHCachingImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: option, resultHandler: { image, _ in
             cell.imgPreview.image = image
@@ -323,20 +325,21 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
         return cell
     }
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in _: UICollectionView) -> Int {
         return 1
     }
 
     // MARK: UICollectionViewDelegateFlowLayout
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+
+    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, minimumLineSpacingForSectionAt _: Int) -> CGFloat {
         return CollectionViewEnvironment.Spacing.lineitem
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, minimumInteritemSpacingForSectionAt _: Int) -> CGFloat {
         return CollectionViewEnvironment.Spacing.interitem
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, insetForSectionAt _: Int) -> UIEdgeInsets {
         return CollectionViewEnvironment.Spacing.inset
     }
 }

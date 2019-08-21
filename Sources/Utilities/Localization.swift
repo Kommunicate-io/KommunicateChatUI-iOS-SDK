@@ -13,7 +13,6 @@ protocol Localizable {
 }
 
 extension Localizable {
-
     static func localizedString(forKey: String) -> String {
         // ApplozicSwift bundle
         let bundle = Bundle.applozic
@@ -24,5 +23,4 @@ extension Localizable {
     func localizedString(forKey: String, withDefaultValue: String, fileName: String) -> String {
         return NSLocalizedString(forKey, tableName: fileName, bundle: Bundle.main, value: withDefaultValue, comment: "")
     }
-
 }

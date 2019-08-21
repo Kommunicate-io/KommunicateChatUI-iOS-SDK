@@ -5,13 +5,12 @@
 //  Created by Sunil on 05/03/19.
 //
 
-import Foundation
-import UIKit
-import Kingfisher
 import Applozic
+import Foundation
+import Kingfisher
+import UIKit
 
-class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
-
+class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
     struct CommonPadding {
         struct FrameUIView {
             static let top: CGFloat = 5
@@ -38,6 +37,7 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
             static let height: CGFloat = 27
             static let width: CGFloat = 27
         }
+
         struct FileTypeView {
             static let height: CGFloat = 20
         }
@@ -50,13 +50,13 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
         case upload
     }
 
-    var uploadTapped:((Bool)->Void)?
-    var uploadCompleted: ((_ responseDict: Any?)->Void)?
-    var downloadTapped:((Bool)->Void)?
+    var uploadTapped: ((Bool) -> Void)?
+    var uploadCompleted: ((_ responseDict: Any?) -> Void)?
+    var downloadTapped: ((Bool) -> Void)?
 
     var docImageView: UIImageView = {
         let imv = UIImageView()
-        imv.image =  UIImage(named: "ic_alk_document", in: Bundle.applozic, compatibleWith: nil)
+        imv.image = UIImage(named: "ic_alk_document", in: Bundle.applozic, compatibleWith: nil)
         imv.backgroundColor = .clear
         imv.clipsToBounds = true
         return imv
@@ -101,7 +101,7 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
 
     var frameUIView: UIView = {
         let uiView = UIView()
-        uiView.backgroundColor = UIColor.init(231, green: 231, blue: 232)
+        uiView.backgroundColor = UIColor(231, green: 231, blue: 232)
         return uiView
     }()
 
@@ -127,18 +127,18 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
     override func setupViews() {
         super.setupViews()
 
-        contentView.addViewsForAutolayout(views: [bubbleView, frameUIView,downloadButton,fileNameLabel,docImageView,sizeAndFileType,frontView,progressView])
+        contentView.addViewsForAutolayout(views: [bubbleView, frameUIView, downloadButton, fileNameLabel, docImageView, sizeAndFileType, frontView, progressView])
 
         contentView.bringSubviewToFront(downloadButton)
         contentView.bringSubviewToFront(progressView)
         frontView.addGestureRecognizer(longPressGesture)
 
-        let topToOpen = UITapGestureRecognizer(target: self, action: #selector(self.openWKWebView(gesture:)))
+        let topToOpen = UITapGestureRecognizer(target: self, action: #selector(openWKWebView(gesture:)))
 
         frontView.isUserInteractionEnabled = true
         frontView.addGestureRecognizer(topToOpen)
 
-        downloadButton.addTarget(self, action: #selector(self.downloadButtonAction(_:)), for: UIControl.Event.touchUpInside)
+        downloadButton.addTarget(self, action: #selector(downloadButtonAction(_:)), for: UIControl.Event.touchUpInside)
 
         frameUIView.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: CommonPadding.FrameUIView.top).isActive = true
 
@@ -177,25 +177,22 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
         progressView.trailingAnchor.constraint(equalTo: downloadButton.trailingAnchor).isActive = true
         progressView.heightAnchor.constraint(equalToConstant: 27).isActive = true
         progressView.widthAnchor.constraint(equalToConstant: 27).isActive = true
-
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         return super.rowHeigh(viewModel: viewModel, width: width)
     }
 
-    @objc func openWKWebView(gesture: UITapGestureRecognizer) {
-
-        guard  let filePath = self.viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath:filePath) else {
-
-            let errorMessage = (self.viewModel?.filePath != nil) ? "File type is not supported":"File is not downloaded"
-              print(errorMessage)
+    @objc func openWKWebView(gesture _: UITapGestureRecognizer) {
+        guard let filePath = self.viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath: filePath) else {
+            let errorMessage = (viewModel?.filePath != nil) ? "File type is not supported" : "File is not downloaded"
+            print(errorMessage)
             return
         }
 
         let docViewController = ALKDocumentViewerController()
-        docViewController.filePath = self.viewModel?.filePath ?? ""
-        docViewController.fileName = self.viewModel?.fileMetaInfo?.name ?? ""
+        docViewController.filePath = viewModel?.filePath ?? ""
+        docViewController.fileName = viewModel?.fileMetaInfo?.name ?? ""
         let pushAssist = ALPushAssist()
         pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: false)
     }
@@ -213,10 +210,10 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
 
         let size = ALKFileUtils().getFileSize(filePath: viewModel.filePath, fileMetaInfo: viewModel.fileMetaInfo) ?? ""
 
-        let fileType =  ALKFileUtils().getFileExtenion(filePath: viewModel.filePath,fileMeta: viewModel.fileMetaInfo)
+        let fileType = ALKFileUtils().getFileExtenion(filePath: viewModel.filePath, fileMeta: viewModel.fileMetaInfo)
 
-        if(!size.isEmpty) {
-            sizeAndFileType.text =  size + " \u{2022} " + fileType
+        if !size.isEmpty {
+            sizeAndFileType.text = size + " \u{2022} " + fileType
         }
 
         if viewModel.isMyMessage {
@@ -238,7 +235,7 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
         }
     }
 
-    @objc private func downloadButtonAction(_ selector: UIButton) {
+    @objc private func downloadButtonAction(_: UIButton) {
         downloadTapped?(true)
     }
 
@@ -247,7 +244,7 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
         case .download:
             downloadButton.isHidden = false
             progressView.isHidden = true
-        case .downloaded(let filePath):
+        case let .downloaded(filePath):
             downloadButton.isHidden = true
             progressView.isHidden = true
             viewModel?.filePath = filePath
@@ -263,25 +260,22 @@ class ALKDocumentCell:ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     fileprivate func convertToDegree(total: Int64, written: Int64) -> Double {
-        let divergence = Double(total)/360.0
-        let degree = Double(written)/divergence
+        let divergence = Double(total) / 360.0
+        let degree = Double(written) / divergence
         return degree
-
     }
-
 }
 
 extension ALKDocumentCell: ALKHTTPManagerUploadDelegate {
-
     func dataUploaded(task: ALKUploadTask) {
         print("Data uploaded: \(task.totalBytesUploaded) out of total: \(task.totalBytesExpectedToUpload)")
-        let progress = self.convertToDegree(total: task.totalBytesExpectedToUpload, written: task.totalBytesUploaded)
-        self.updateView(for: .downloading(progress: progress, totalCount: task.totalBytesExpectedToUpload))
+        let progress = convertToDegree(total: task.totalBytesExpectedToUpload, written: task.totalBytesUploaded)
+        updateView(for: .downloading(progress: progress, totalCount: task.totalBytesExpectedToUpload))
     }
 
     func dataUploadingFinished(task: ALKUploadTask) {
         print("Document CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
-        if task.uploadError == nil && task.completed == true && task.filePath != nil {
+        if task.uploadError == nil, task.completed == true, task.filePath != nil {
             DispatchQueue.main.async {
                 self.updateView(for: State.downloaded(filePath: task.filePath ?? ""))
             }
@@ -297,8 +291,8 @@ extension ALKDocumentCell: ALKHTTPManagerDownloadDelegate {
     func dataDownloaded(task: ALKDownloadTask) {
         print("Document CELL DATA UPDATED AND FILEPATH IS", viewModel?.filePath ?? "")
         let total = task.totalBytesExpectedToDownload
-        let progress = self.convertToDegree(total: total, written: task.totalBytesDownloaded)
-        self.updateView(for: .downloading(progress: progress, totalCount: total))
+        let progress = convertToDegree(total: total, written: task.totalBytesDownloaded)
+        updateView(for: .downloading(progress: progress, totalCount: total))
     }
 
     func dataDownloadingFinished(task: ALKDownloadTask) {

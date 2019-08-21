@@ -13,7 +13,6 @@ import UIKit
 /// It also contains `Config` which is used to configure views properties. Values can be changed for customizations.
 /// For handling button clicks of FAQMessage, use faqSelected property.
 public class ReceivedFAQMessageCell: UITableViewCell {
-
     // MARK: Public properties
 
     /// Configuration to adjust padding and maxWidth for the view.
@@ -36,12 +35,14 @@ public class ReceivedFAQMessageCell: UITableViewCell {
     fileprivate lazy var messageView = ReceivedMessageView(
         frame: .zero,
         padding: messageViewPadding,
-        maxWidth: Config.maxWidth)
+        maxWidth: Config.maxWidth
+    )
 
     fileprivate lazy var faqView = FAQMessageView(
         frame: .zero,
         faqStyle: FAQMessageTheme.receivedMessage,
-        alignLeft: true)
+        alignLeft: true
+    )
 
     fileprivate var messageViewPadding: Padding
 
@@ -49,8 +50,8 @@ public class ReceivedFAQMessageCell: UITableViewCell {
 
     static var faqWidth = Config.maxWidth - Config.faqRightPadding
         - (Config.padding.left
-        + ReceivedMessageView.Config.ProfileImage.width
-        + ReceivedMessageView.Config.MessageView.leftPadding)
+            + ReceivedMessageView.Config.ProfileImage.width
+            + ReceivedMessageView.Config.MessageView.leftPadding)
 
     // MARK: Initializer
 
@@ -60,15 +61,15 @@ public class ReceivedFAQMessageCell: UITableViewCell {
                                      top: Config.padding.top,
                                      bottom: Config.faqTopPadding)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = .clear
+        backgroundColor = .clear
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK:- Public methods
+    // MARK: - Public methods
 
     /// It updates `SentFAQMessageCell`.
     /// Sets FAQmessage, text message, time, name, profile image.
@@ -86,7 +87,7 @@ public class ReceivedFAQMessageCell: UITableViewCell {
         faqView.update(model: model, maxWidth: ReceivedFAQMessageCell.faqWidth)
         /// Set frame
         let height = ReceivedFAQMessageCell.rowHeight(model: model)
-        self.frame.size = CGSize(width: Config.maxWidth, height: height)
+        frame.size = CGSize(width: Config.maxWidth, height: height)
     }
 
     /// It's used to get the exact height of cell.
@@ -97,14 +98,14 @@ public class ReceivedFAQMessageCell: UITableViewCell {
         return FAQMessageSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth, padding: Config.padding)
     }
 
-    //MARK:- Private helper methods
+    // MARK: - Private helper methods
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageView, faqView])
+        addViewsForAutolayout(views: [messageView, faqView])
         let leadingMargin =
             Config.padding.left
-                + ReceivedMessageView.Config.ProfileImage.width
-                + ReceivedMessageView.Config.MessageView.leftPadding
+            + ReceivedMessageView.Config.ProfileImage.width
+            + ReceivedMessageView.Config.MessageView.leftPadding
         NSLayoutConstraint.activate([
             messageView.topAnchor.constraint(equalTo: self.topAnchor),
             messageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -114,8 +115,7 @@ public class ReceivedFAQMessageCell: UITableViewCell {
             faqView.topAnchor.constraint(equalTo: messageView.bottomAnchor),
             faqView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leadingMargin),
             faqView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Config.faqRightPadding),
-            faqView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom)
-            ])
+            faqView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+        ])
     }
-
 }

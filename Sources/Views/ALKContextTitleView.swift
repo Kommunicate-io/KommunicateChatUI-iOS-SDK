@@ -5,8 +5,8 @@
 //  Created by Mukesh Thawani on 04/12/17.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 public protocol ALKContextTitleViewType {
     func configureWith(value: ALKContextTitleDataType)
@@ -14,7 +14,6 @@ public protocol ALKContextTitleViewType {
 }
 
 open class ALKContextTitleView: UIView, ALKContextTitleViewType {
-
     private var viewModel: ALKContextTitleViewModelType?
 
     public let contextImageView: UIImageView = {
@@ -58,19 +57,19 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
 
     // MARK: - Initialization
 
-    override public init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setupConstraints()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Public Methods
 
     public func configureWith(value data: ALKContextTitleDataType) {
-        self.viewModel = ALKContextTitleViewModel(data: data)
+        viewModel = ALKContextTitleViewModel(data: data)
         setupUI()
     }
 
@@ -114,5 +113,4 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
         bottomRightInfoLabel.heightAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.3).isActive = true
         view.layoutIfNeeded()
     }
-
 }

@@ -8,11 +8,9 @@
 import Foundation
 
 public struct ImageMessage {
-
     public var caption: String?
 
     public var url: String
 
     public var message: Message
-    
 }

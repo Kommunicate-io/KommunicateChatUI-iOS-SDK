@@ -11,7 +11,6 @@ import UIKit
 ///
 /// - NOTE: To change configurations like font color etc, change `ImageBubbleStyle`
 public class ImageContainer: UIView {
-
     fileprivate let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "placeholder", in: Bundle.richMessageKit, compatibleWith: nil)
@@ -41,7 +40,7 @@ public class ImageContainer: UIView {
 
     public static var captionTopPadding: CGFloat = 4.0
 
-    //MARK:- Initializer
+    // MARK: - Initializer
 
     public init(frame: CGRect, maxWidth: CGFloat, isMyMessage: Bool) {
         self.maxWidth = maxWidth
@@ -52,11 +51,11 @@ public class ImageContainer: UIView {
         setupStyle()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK:- Public methods
+    // MARK: - Public methods
 
     /// It sets image and caption in `ImageMessageView`
     ///
@@ -68,7 +67,7 @@ public class ImageContainer: UIView {
         let widthRatio = isMyMessage ? ImageBubbleTheme.sentMessage.widthRatio : ImageBubbleTheme.receivedMessage.widthRatio
         let width = maxWidth * widthRatio
         let height = ImageContainer.rowHeight(model: model, maxWidth: width)
-        self.frame.size = CGSize(width: width, height: height)
+        frame.size = CGSize(width: width, height: height)
     }
 
     /// It calculates height of `ImageMessageView` with given width and model
@@ -81,16 +80,16 @@ public class ImageContainer: UIView {
     /// - Returns: Height of view based on width and model
     public static func rowHeight(model: ImageMessage,
                                  maxWidth: CGFloat,
-                                 font: UIFont = UIFont()) -> CGFloat {
+                                 font _: UIFont = UIFont()) -> CGFloat {
         return ImageBubbleSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
 
-    //MARK:- Private helper methods
+    // MARK: - Private helper methods
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [imageView, caption, bubbleView])
-        self.bringSubviewToFront(imageView)
-        self.bringSubviewToFront(caption)
+        addViewsForAutolayout(views: [imageView, caption, bubbleView])
+        bringSubviewToFront(imageView)
+        bringSubviewToFront(caption)
 
         let heightRatio = isMyMessage ? ImageBubbleTheme.sentMessage.heightRatio : ImageBubbleTheme.receivedMessage.heightRatio
         let imageHeight = maxWidth * heightRatio
@@ -109,8 +108,8 @@ public class ImageContainer: UIView {
             caption.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: ImageContainer.captionTopPadding),
             caption.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: padding.left),
             caption.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -1 * padding.right),
-            caption.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * padding.bottom)
-            ])
+            caption.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * padding.bottom),
+        ])
     }
 
     private func setupStyle() {
@@ -147,5 +146,4 @@ public class ImageContainer: UIView {
         caption.isHidden = false
         caption.text = text
     }
-
 }

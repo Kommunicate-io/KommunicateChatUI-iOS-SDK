@@ -12,7 +12,6 @@ import UIKit
 /// It contains `FAQMessageView` and `SentMessageView`
 /// It also contains `Config` which is used to configure views properties. Values can be changed for customizations.
 public class SentFAQMessageCell: UITableViewCell {
-
     // MARK: Public properties
 
     /// Configuration to adjust padding and maxWidth for the view.
@@ -28,12 +27,14 @@ public class SentFAQMessageCell: UITableViewCell {
     fileprivate lazy var messageView = SentMessageView(
         frame: .zero,
         padding: messageViewPadding,
-        maxWidth: Config.maxWidth)
+        maxWidth: Config.maxWidth
+    )
 
     fileprivate lazy var faqView = FAQMessageView(
         frame: .zero,
         faqStyle: FAQMessageTheme.sentMessage,
-        alignLeft: false)
+        alignLeft: false
+    )
 
     fileprivate var messageViewPadding: Padding
 
@@ -49,15 +50,15 @@ public class SentFAQMessageCell: UITableViewCell {
                                      top: Config.padding.top,
                                      bottom: Config.faqTopPadding)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = .clear
+        backgroundColor = .clear
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    //MARK:- Public methods
+    // MARK: - Public methods
 
     /// It updates `SentFAQMessageCell`. Sets FAQmessage, text message, time, status.
     ///
@@ -74,7 +75,7 @@ public class SentFAQMessageCell: UITableViewCell {
         faqView.update(model: model, maxWidth: SentFAQMessageCell.faqWidth)
         /// Set frame
         let height = SentFAQMessageCell.rowHeight(model: model)
-        self.frame.size = CGSize(width: Config.maxWidth, height: height)
+        frame.size = CGSize(width: Config.maxWidth, height: height)
     }
 
     /// It's used to get the exact height of cell.
@@ -85,10 +86,10 @@ public class SentFAQMessageCell: UITableViewCell {
         return FAQMessageSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth, padding: Config.padding)
     }
 
-    //MARK:- Private helper methods
+    // MARK: - Private helper methods
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageView, faqView])
+        addViewsForAutolayout(views: [messageView, faqView])
 
         NSLayoutConstraint.activate([
             messageView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -99,8 +100,7 @@ public class SentFAQMessageCell: UITableViewCell {
             faqView.topAnchor.constraint(equalTo: messageView.bottomAnchor),
             faqView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: Config.faqLeftPadding),
             faqView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Config.padding.right),
-            faqView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom)
-            ])
+            faqView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+        ])
     }
-
 }

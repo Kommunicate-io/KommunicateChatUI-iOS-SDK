@@ -26,7 +26,7 @@ class TopAlignedFlowLayout: UICollectionViewFlowLayout {
                 /// Get y coordinate of cell with maximum height.
                 let maxHeightY = line.max {
                     $0.frame.size.height < $1.frame.size.height
-                    }?.frame.origin.y
+                }?.frame.origin.y
 
                 /// Shift all the cells upwards using above y coordinate.
                 line.forEach {
@@ -35,7 +35,7 @@ class TopAlignedFlowLayout: UICollectionViewFlowLayout {
                         dy: (maxHeightY ?? $0.frame.origin.y) - $0.frame.origin.y
                     )
                 }
-        }
+            }
         return attributes
     }
 }
@@ -49,8 +49,8 @@ class TopRightAlignedFlowLayout: TopAlignedFlowLayout {
             let collectionViewWidth = collectionView?.frame.size.width,
             let attribs = attributes,
             attribs.count == 1
-            else {
-                return attributes
+        else {
+            return attributes
         }
 
         /// Only 1 item is present. Align it to right.

@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 open class ALKBaseCell<T>: UITableViewCell {
-
     var viewModel: T?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -18,16 +17,13 @@ open class ALKBaseCell<T>: UITableViewCell {
         setupStyle()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupViews() {
-
-    }
+    func setupViews() {}
 
     func setupStyle() {
-
         backgroundColor = .clear
         contentView.backgroundColor = .clear
     }
@@ -36,8 +32,7 @@ open class ALKBaseCell<T>: UITableViewCell {
         self.viewModel = viewModel
     }
 
-    class func rowHeigh(viewModel: T,width: CGFloat) -> CGFloat {
+    class func rowHeigh(viewModel _: T, width _: CGFloat) -> CGFloat {
         return 44
     }
-
 }

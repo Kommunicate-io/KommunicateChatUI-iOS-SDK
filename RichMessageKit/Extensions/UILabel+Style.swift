@@ -8,11 +8,9 @@
 import UIKit
 
 extension UILabel {
-
     func setStyle(_ style: Style) {
         font = style.font
         textColor = style.text
         backgroundColor = style.background
     }
-    
 }

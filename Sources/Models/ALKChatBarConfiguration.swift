@@ -19,7 +19,6 @@ public enum AttachmentType: CaseIterable, Equatable {
 /// A type that can be used to configure chat bar items
 /// like attachment icons and their visibility.
 public struct ALKChatBarConfiguration {
-
     /// A combination of different `AttachmentType`s we support.
     public enum AttachmentOptions {
         case all
@@ -32,7 +31,6 @@ public struct ALKChatBarConfiguration {
     public var optionsToShow: AttachmentOptions = .all
 
     private(set) var attachmentIcons: [AttachmentType: UIImage?] = {
-
         // This way we'll get an error when we have added a
         // new option but its icon is not present.
         var icons = [AttachmentType: UIImage?]()
@@ -60,7 +58,8 @@ public struct ALKChatBarConfiguration {
     ///   - type: The type(`AttachmentType`) that uses the specified image.
     public mutating func set(
         attachmentIcon icon: UIImage?,
-        for type: AttachmentType) {
+        for type: AttachmentType
+    ) {
         guard let icon = icon else { return }
         attachmentIcons[type] = icon
     }
@@ -73,7 +72,7 @@ extension ALKChatBarConfiguration.AttachmentOptions: Equatable {
             return true
         case (.all, .all):
             return true
-        case (.some(let l), .some(let r)):
+        case let (.some(l), .some(r)):
             return l == r
         case (.all, _):
             return false

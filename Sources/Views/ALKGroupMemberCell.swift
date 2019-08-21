@@ -9,7 +9,6 @@ import Foundation
 import Kingfisher
 
 struct GroupMemberInfo {
-
     let id: String
     let name: String
     let image: String?
@@ -27,18 +26,16 @@ struct GroupMemberInfo {
     }
 
     init(name: String, addCell: Bool = true) {
-        self.id = ""
+        id = ""
         self.name = name
         self.addCell = addCell
-        self.isAdmin = false
-        self.image = nil
-        self.adminText = nil
+        isAdmin = false
+        image = nil
+        adminText = nil
     }
-
 }
 
 class ALKGroupMemberCell: UICollectionViewCell {
-
     struct Padding {
         struct Profile {
             static let left: CGFloat = 20
@@ -47,10 +44,12 @@ class ALKGroupMemberCell: UICollectionViewCell {
             static let top: CGFloat = 10
             static let bottom: CGFloat = 10
         }
+
         struct Name {
             static let left: CGFloat = 10
             static let right: CGFloat = 10
         }
+
         struct Admin {
             static let right: CGFloat = 20
         }
@@ -91,7 +90,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -117,7 +116,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
             profile.image = placeHolder
             return
         }
-        let resource = ImageResource(downloadURL: url, cacheKey:url.absoluteString)
+        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
         profile.kf.setImage(with: resource, placeholder: placeHolder)
     }
 
@@ -144,6 +143,5 @@ class ALKGroupMemberCell: UICollectionViewCell {
         nameLabel.leadingAnchor.constraint(equalTo: profile.trailingAnchor, constant: Padding.Name.left).isActive = true
         nameLabel.centerYAnchor.constraint(equalTo: profile.centerYAnchor).isActive = true
         nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: adminLabel.leadingAnchor, constant: -Padding.Name.right).isActive = true
-
     }
 }

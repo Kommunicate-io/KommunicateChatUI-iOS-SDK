@@ -8,7 +8,6 @@
 import Foundation
 
 public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
-
     var messageView = ALKMyMessageView()
     var quickReplyView = ALKQuickReplyView(frame: .zero)
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
@@ -18,7 +17,7 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -30,13 +29,13 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.update(viewModel: viewModel)
         guard let quickReplyArray = viewModel.payloadFromMetadata() else {
             quickReplyView.isHidden = true
-            self.layoutIfNeeded()
+            layoutIfNeeded()
             return
         }
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.SentMessage.QuickReply.left + ChatCellPadding.SentMessage.QuickReply.right)
         updateQuickReplyView(quickReplyArray: quickReplyArray, height: height, width: quickReplyViewWidth)
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
@@ -52,16 +51,16 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     private func setupConstraints() {
-        self.contentView.addSubview(messageView)
+        contentView.addSubview(messageView)
         messageView.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(quickReplyView)
+        contentView.addSubview(quickReplyView)
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.SentMessage.Message.left).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * ChatCellPadding.SentMessage.Message.right).isActive = true
         messageViewHeight.isActive = true
     }
 
-    private func updateQuickReplyView(quickReplyArray: [Dictionary<String, Any>], height: CGFloat, width: CGFloat) {
+    private func updateQuickReplyView(quickReplyArray: [[String: Any]], height: CGFloat, width: CGFloat) {
         quickReplyView.maxWidth = width
         quickReplyView.alignLeft = false
         quickReplyView.update(quickReplyArray: quickReplyArray)
@@ -77,5 +76,4 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
                                       width: width,
                                       height: quickReplyViewHeight)
     }
-
 }

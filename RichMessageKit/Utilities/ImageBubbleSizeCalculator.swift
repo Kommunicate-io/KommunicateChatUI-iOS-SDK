@@ -8,7 +8,6 @@
 import Foundation
 
 class ImageBubbleSizeCalculator {
-
     func rowHeight(model: ImageMessage, maxWidth: CGFloat) -> CGFloat {
         let messageStyle = model.message.isMyMessage ? ImageBubbleTheme.sentMessage : ImageBubbleTheme.receivedMessage
 
@@ -28,5 +27,4 @@ class ImageBubbleSizeCalculator {
         totalPadding += ImageContainer.captionTopPadding
         return imageHeight + captionHeight + totalPadding
     }
-
 }

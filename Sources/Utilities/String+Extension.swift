@@ -10,24 +10,26 @@ import Foundation
 import UIKit
 
 // MARK: - Extension for String
-//get char at index
+
+// get char at index
 extension String {
     subscript(idx: Int) -> Character {
         guard let strIdx = index(startIndex, offsetBy: idx, limitedBy: endIndex)
-            else { fatalError("String index out of bounds") }
+        else { fatalError("String index out of bounds") }
         return self[strIdx]
     }
-    //let testStr:String = "12345"
-    //print(testStr[2])
+
+    // let testStr:String = "12345"
+    // print(testStr[2])
 }
 
 extension String {
-    func isCompose(of word:String) -> Bool {
-        return self.range(of: word, options: .literal) != nil ? true : false
+    func isCompose(of word: String) -> Bool {
+        return range(of: word, options: .literal) != nil ? true : false
     }
 }
 
-//get index of char
+// get index of char
 extension String {
     public func indexOfCharacter(char: Character) -> Int? {
         guard let range = range(of: String(char)) else {
@@ -37,29 +39,28 @@ extension String {
     }
 }
 
-//get w h
+// get w h
 extension String {
     func rectWithConstrainedSize(_ size: CGSize, font: UIFont) -> CGRect {
-        let boundingBox = self.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
+        let boundingBox = (self as NSString).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
         return boundingBox
     }
 
-    func evaluateStringWidth (textToEvaluate: String,fontSize:CGFloat) -> CGFloat {
+    func evaluateStringWidth(textToEvaluate: String, fontSize: CGFloat) -> CGFloat {
         let font = UIFont.systemFont(ofSize: fontSize)
-        let attributes = NSDictionary(object: font, forKey:NSAttributedString.Key.font as NSCopying)
-        let sizeOfText = textToEvaluate.size(withAttributes: (attributes as! [NSAttributedString.Key : Any] as [NSAttributedString.Key : Any]))
+        let attributes = NSDictionary(object: font, forKey: NSAttributedString.Key.font as NSCopying)
+        let sizeOfText = textToEvaluate.size(withAttributes: attributes as! [NSAttributedString.Key: Any] as [NSAttributedString.Key: Any])
         return sizeOfText.width
     }
 }
 
 extension String {
-
     func stripHTML() -> String {
-        return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
+        return addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
     }
 
     func trim() -> String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

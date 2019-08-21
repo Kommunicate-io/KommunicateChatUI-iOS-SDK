@@ -8,7 +8,6 @@
 import Foundation
 
 public protocol ALKConfigurable {
-
-    var configuration: ALKConfiguration! {get}
+    var configuration: ALKConfiguration! { get }
     init(configuration: ALKConfiguration)
 }

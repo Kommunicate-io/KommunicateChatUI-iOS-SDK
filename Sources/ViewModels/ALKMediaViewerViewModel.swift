@@ -6,15 +6,14 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
-protocol ALKMediaViewerViewModelDelegate: class {
+protocol ALKMediaViewerViewModelDelegate: AnyObject {
     func reloadView()
 }
 
 final class ALKMediaViewerViewModel: NSObject, Localizable {
-
     var localizedStringFileName: String!
 
     private var savingImagesuccessBlock: (() -> Void)?
@@ -34,6 +33,7 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
             delegate?.reloadView()
         }
     }
+
     fileprivate var isFirstIndexAudioVideo = false
     weak var delegate: ALKMediaViewerViewModelDelegate?
 
@@ -46,19 +46,18 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
     }
 
     func saveImage(image: UIImage?, successBlock: @escaping () -> Void, failBlock: @escaping (Error) -> Void) {
-
-        self.savingImagesuccessBlock   = successBlock
-        self.savingImagefailBlock      = failBlock
+        savingImagesuccessBlock = successBlock
+        savingImagefailBlock = failBlock
 
         guard let image = image else {
-            failBlock(NSError(domain: "IMAGE_NOT_AVAILABLE", code: 0 , userInfo: nil))
+            failBlock(NSError(domain: "IMAGE_NOT_AVAILABLE", code: 0, userInfo: nil))
             return
         }
 
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(ALKMediaViewerViewModel.image(_:didFinishSavingWithError:contextInfo:)), nil)
     }
 
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error, let failBlock = savingImagefailBlock {
             failBlock(error)
         } else if let successBlock = savingImagesuccessBlock {
@@ -75,12 +74,12 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
     }
 
     func getTitle() -> String {
-        return "\(currentIndex+1) of \(getTotalCount())"
+        return "\(currentIndex + 1) of \(getTotalCount())"
     }
 
     func updateCurrentIndex(by incr: Int) {
         let newIndex = currentIndex + incr
-        guard newIndex >= 0 && newIndex < messages.count else { return }
+        guard newIndex >= 0, newIndex < messages.count else { return }
         currentIndex = newIndex
     }
 
@@ -91,13 +90,13 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
 
     func getThumbnail(filePath: URL) -> UIImage? {
         do {
-            let asset = AVURLAsset(url: filePath , options: nil)
+            let asset = AVURLAsset(url: filePath, options: nil)
             let imgGenerator = AVAssetImageGenerator(asset: asset)
             imgGenerator.appliesPreferredTrackTransform = true
             let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             return UIImage(cgImage: cgImage)
 
-        } catch let error {
+        } catch {
             print("*** Error generating thumbnail: \(error.localizedDescription)")
             return nil
         }
@@ -112,12 +111,12 @@ final class ALKMediaViewerViewModel: NSObject, Localizable {
     }
 
     private func getMessageFor(index: Int) -> ALKMessageViewModel? {
-        guard index < messages.count else { return nil}
+        guard index < messages.count else { return nil }
         return messages[index]
     }
 
     private func checkCurrent(index: Int) {
-        guard index < messages.count, (messages[currentIndex].messageType == .video || messages[currentIndex].messageType == .voice) else { return }
+        guard index < messages.count, messages[currentIndex].messageType == .video || messages[currentIndex].messageType == .voice else { return }
         isFirstIndexAudioVideo = true
     }
 }

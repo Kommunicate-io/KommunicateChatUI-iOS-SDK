@@ -8,8 +8,7 @@
 import UIKit
 
 public class SentImageMessageCell: UITableViewCell {
-
-    //MARK:- Public properties
+    // MARK: - Public properties
 
     /// It is used to inform the delegate that the image is tapped. URL of tapped image is sent.
     public var delegate: Tappable?
@@ -20,19 +19,20 @@ public class SentImageMessageCell: UITableViewCell {
         public static var maxWidth = UIScreen.main.bounds.width
     }
 
-    //MARK:- Fileprivate properties
+    // MARK: - Fileprivate properties
 
     fileprivate lazy var messageView = SentMessageView(
         frame: .zero,
         padding: messageViewPadding,
-        maxWidth: Config.maxWidth)
+        maxWidth: Config.maxWidth
+    )
     fileprivate var messageViewPadding: Padding
     fileprivate var imageBubble: ImageContainer
     fileprivate var imageBubbleWidth: CGFloat
     fileprivate lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
     fileprivate var imageUrl: String?
 
-    //MARK:- Initializer
+    // MARK: - Initializer
 
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         messageViewPadding = Padding(left: Config.padding.left,
@@ -44,10 +44,10 @@ public class SentImageMessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
         setupGesture()
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -64,11 +64,12 @@ public class SentImageMessageCell: UITableViewCell {
         messageViewHeight.constant = SentMessageView.rowHeight(
             model: model.message,
             maxWidth: Config.maxWidth,
-            padding: messageViewPadding)
+            padding: messageViewPadding
+        )
 
         /// Set frame
         let height = SentImageMessageCell.rowHeight(model: model)
-        self.frame.size = CGSize(width: Config.maxWidth, height: height)
+        frame.size = CGSize(width: Config.maxWidth, height: height)
 
         imageUrl = model.url
         imageBubble.update(model: model)
@@ -85,7 +86,7 @@ public class SentImageMessageCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageView, imageBubble])
+        addViewsForAutolayout(views: [messageView, imageBubble])
 
         NSLayoutConstraint.activate([
             messageView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -96,8 +97,8 @@ public class SentImageMessageCell: UITableViewCell {
             imageBubble.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
             imageBubble.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * Config.padding.right),
             imageBubble.widthAnchor.constraint(equalToConstant: imageBubbleWidth),
-            imageBubble.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom)
-            ])
+            imageBubble.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+        ])
     }
 
     @objc private func imageTapped() {
@@ -117,5 +118,4 @@ public class SentImageMessageCell: UITableViewCell {
         tapGesture.numberOfTapsRequired = 1
         imageBubble.addGestureRecognizer(tapGesture)
     }
-
 }

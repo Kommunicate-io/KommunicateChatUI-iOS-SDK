@@ -13,7 +13,8 @@ extension UIViewController {
     @objc func hideKeyboard() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
-            action: #selector(UIViewController.dismissKeyboard))
+            action: #selector(UIViewController.dismissKeyboard)
+        )
 
         view.addGestureRecognizer(tap)
     }
@@ -22,27 +23,24 @@ extension UIViewController {
         view.endEditing(true)
     }
 
-    func alert(msg: String) {
-    }
+    func alert(msg _: String) {}
 
     class func topViewController() -> UIViewController? {
-        return self.topViewControllerWithRootViewController(rootViewController: UIApplication.shared.keyWindow?.rootViewController)
+        return topViewControllerWithRootViewController(rootViewController: UIApplication.shared.keyWindow?.rootViewController)
     }
 
     class func topViewControllerWithRootViewController(rootViewController: UIViewController?) -> UIViewController? {
-
         if rootViewController is UITabBarController {
             let control = rootViewController as! UITabBarController
-            return self.topViewControllerWithRootViewController(rootViewController: control.selectedViewController)
+            return topViewControllerWithRootViewController(rootViewController: control.selectedViewController)
         } else if rootViewController is UINavigationController {
             let control = rootViewController as! UINavigationController
-            return self.topViewControllerWithRootViewController(rootViewController: control.visibleViewController)
+            return topViewControllerWithRootViewController(rootViewController: control.visibleViewController)
         } else if let control = rootViewController?.presentedViewController {
-            return self.topViewControllerWithRootViewController(rootViewController: control)
+            return topViewControllerWithRootViewController(rootViewController: control)
         }
 
         return rootViewController
-
     }
 
     func add(_ child: UIViewController) {

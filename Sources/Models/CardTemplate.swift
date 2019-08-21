@@ -47,7 +47,6 @@ public struct CardTemplate: Codable {
 }
 
 public class Util {
-
     public func cardTemplate(from genericCard: ALKGenericCard) -> CardTemplate {
         let header = CardTemplate.Header(imgSrc: genericCard.imageUrl?.absoluteString, overlayText: genericCard.overlayText)
 
@@ -68,7 +67,8 @@ public class Util {
             subtitle: genericCard.subtitle,
             description: genericCard.description,
             header: header,
-            buttons: buttons)
+            buttons: buttons
+        )
         return template
     }
 }

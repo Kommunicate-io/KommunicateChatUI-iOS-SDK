@@ -9,8 +9,7 @@
 import Foundation
 
 extension CGSize {
-
-    static func getSizeAndScaleNotMoreThan(_ originalSize: CGSize, maximumSize: CGSize, aspectRatio: Bool) -> (CGSize, CGFloat) {
+    static func getSizeAndScaleNotMoreThan(_ originalSize: CGSize, maximumSize: CGSize, aspectRatio _: Bool) -> (CGSize, CGFloat) {
         if maximumSize.width < originalSize.width || maximumSize.height < originalSize.height {
             var scaleFactor: CGFloat = 0.0
 
@@ -25,8 +24,8 @@ extension CGSize {
             let overlapHeigth = (originalSize.height * scaleFactor).truncatingRemainder(dividingBy: 4.0)
             let overlapWidth = (originalSize.width * scaleFactor).truncatingRemainder(dividingBy: 4.0)
 
-            let newHeigth   = (originalSize.height * scaleFactor) - overlapHeigth
-            let newWidth    = (originalSize.width * scaleFactor) - overlapWidth
+            let newHeigth = (originalSize.height * scaleFactor) - overlapHeigth
+            let newWidth = (originalSize.width * scaleFactor) - overlapWidth
 
             return (CGSize(width: newWidth, height: newHeigth), scaleFactor)
         }
@@ -36,5 +35,4 @@ extension CGSize {
 
         return (originalSize, scaleFactor)
     }
-
 }

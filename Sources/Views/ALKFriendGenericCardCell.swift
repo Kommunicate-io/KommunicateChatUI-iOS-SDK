@@ -5,30 +5,29 @@
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
-
     var messageView = ALKFriendMessageView()
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open func update(viewModel: ALKMessageViewModel, width: CGFloat) {
+    open override func update(viewModel: ALKMessageViewModel, width: CGFloat) {
         messageView.update(viewModel: viewModel)
         let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
             ChatCellPadding.ReceivedMessage.Message.right)
         let height = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
         messageViewHeight.constant = height
-        self.layoutIfNeeded()
+        layoutIfNeeded()
 
         super.update(viewModel: viewModel, width: width)
     }
@@ -55,9 +54,9 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
         collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue).isActive = true
     }
 
-    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
-                ChatCellPadding.ReceivedMessage.Message.right)
+            ChatCellPadding.ReceivedMessage.Message.right)
         let messageHeight = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
         let cardHeight = super.cardHeightFor(message: viewModel, width: width)
         return cardHeight + messageHeight + 10 // Extra 10 below complete view. Modify this for club/unclub.
@@ -71,5 +70,4 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
     }
-
 }

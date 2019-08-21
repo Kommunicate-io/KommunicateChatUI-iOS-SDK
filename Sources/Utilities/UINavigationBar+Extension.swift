@@ -9,11 +9,11 @@ import Foundation
 
 extension UINavigationBar {
     func hideBottomHairline() {
-        self.hairlineImageView?.isHidden = true
+        hairlineImageView?.isHidden = true
     }
 
     func showBottomHairline() {
-        self.hairlineImageView?.isHidden = false
+        hairlineImageView?.isHidden = false
     }
 }
 

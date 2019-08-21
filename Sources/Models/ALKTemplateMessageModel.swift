@@ -8,7 +8,6 @@
 import Foundation
 
 open class ALKTemplateMessageModel: NSObject {
-
     /// Should be a unique identifier.
     open var identifier: String
 
@@ -37,13 +36,12 @@ open class ALKTemplateMessageModel: NSObject {
 }
 
 extension ALKTemplateMessageModel {
-
     /// Json will be parsed and mapped to the model.
     public convenience init?(json: [String: Any]) {
         guard let identifier = json["identifier"] as? String,
             let text = json["text"] as? String
-            else {
-                return nil
+        else {
+            return nil
         }
         self.init(identifier: identifier, text: text)
 

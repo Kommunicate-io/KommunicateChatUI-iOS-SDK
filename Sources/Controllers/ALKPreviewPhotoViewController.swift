@@ -1,6 +1,6 @@
 //
 //  ALKPreviewPhotoViewController.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 final class ALKPreviewPhotoViewController: ALKBaseViewController {
-
     fileprivate let scrollView: UIScrollView = {
         let sv = UIScrollView(frame: .zero)
         sv.backgroundColor = UIColor.clear
@@ -28,7 +27,6 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
     }()
 
     fileprivate let closeButton: UIButton = {
-
         let bt = UIButton(type: .system)
         bt.tintColor = .white
         bt.setImage(UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil), for: .normal)
@@ -48,16 +46,15 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
         self.image = image
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    required public init(configuration: ALKConfiguration) {
+    public required init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
     }
 
     func setupViews() {
-
         scrollView.delegate = self
 
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
@@ -75,7 +72,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.95)
         imageView.image = image
 
-        view.addViewsForAutolayout(views: [scrollView,closeButton])
+        view.addViewsForAutolayout(views: [scrollView, closeButton])
         scrollView.addViewsForAutolayout(views: [imageView])
 
         view.bringSubviewToFront(closeButton)
@@ -117,18 +114,16 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
     }
 
     @objc func doubleTapped(tap: UITapGestureRecognizer) {
-
         UIView.animate(withDuration: 0.5, animations: {
-
             let view = self.imageView
 
             let viewFrame = view.frame
 
             let location = tap.location(in: view)
-            let viewWidth = viewFrame.size.width/2.0
-            let viewHeight = viewFrame.size.height/2.0
+            let viewWidth = viewFrame.size.width / 2.0
+            let viewHeight = viewFrame.size.height / 2.0
 
-            let rect = CGRect(x: location.x - (viewWidth/2), y: location.y - (viewHeight/2), width: viewWidth, height: viewHeight)
+            let rect = CGRect(x: location.x - (viewWidth / 2), y: location.y - (viewHeight / 2), width: viewWidth, height: viewHeight)
 
             if self.scrollView.minimumZoomScale == self.scrollView.zoomScale {
                 self.scrollView.zoom(to: rect, animated: false)
@@ -137,11 +132,9 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
             }
 
         }, completion: nil)
-
     }
 
-    @objc func singleTapped(tap: UITapGestureRecognizer) {
-
+    @objc func singleTapped(tap _: UITapGestureRecognizer) {
         if scrollView.minimumZoomScale == scrollView.zoomScale {
             dissmiss()
         }
@@ -152,7 +145,6 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
     }
 
     func updateMinZoomScaleForSize(size: CGSize) {
-
         let widthScale = size.width / imageView.bounds.width
         let heightScale = size.height / imageView.bounds.height
         let minScale = min(widthScale, heightScale)
@@ -162,32 +154,27 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
     }
 
     func updateConstraintsForSize(size: CGSize) {
-
         let yOffset = max(0, (size.height - imageView.frame.height) / 2)
         let xOffset = max(0, (size.width - imageView.frame.width) / 2)
 
         updateConstraintsXY(xOffset: xOffset, yOffset: yOffset)
     }
 
-    func updateConstraintsXY(xOffset: CGFloat,yOffset: CGFloat) {
-
+    func updateConstraintsXY(xOffset: CGFloat, yOffset: CGFloat) {
         imageViewTopConstraint?.constant = yOffset
         imageViewBottomConstraint?.constant = yOffset
 
         imageViewLeadingConstraint?.constant = xOffset
         imageViewTrailingConstraint?.constant = xOffset
-
     }
-
 }
 
 extension ALKPreviewPhotoViewController: UIScrollViewDelegate {
-
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    func viewForZooming(in _: UIScrollView) -> UIView? {
         return imageView
     }
 
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    func scrollViewDidZoom(_: UIScrollView) {
         updateConstraintsForSize(size: view.bounds.size)
         view.layoutIfNeeded()
     }

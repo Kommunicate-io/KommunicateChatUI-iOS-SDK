@@ -1,5 +1,5 @@
 PODS:
-  - Applozic (6.14.0):
+  - Applozic (6.14.1):
     - SDWebImage (~> 5.0.6)
   - ApplozicSwift (3.2.0):
     - ApplozicSwift/Complete (= 3.2.0)
@@ -14,25 +14,27 @@ PODS:
   - iOSSnapshotTestCase/Core (6.1.0)
   - iOSSnapshotTestCase/SwiftSupport (6.1.0):
     - iOSSnapshotTestCase/Core
-  - Kingfisher (5.7.0)
+  - Kingfisher (5.7.1)
   - MGSwipeTableCell (1.6.8)
   - Nimble (8.0.2)
-  - Nimble-Snapshots (7.1.0):
-    - Nimble-Snapshots/Core (= 7.1.0)
-  - Nimble-Snapshots/Core (7.1.0):
+  - Nimble-Snapshots (8.0.0):
+    - Nimble-Snapshots/Core (= 8.0.0)
+  - Nimble-Snapshots/Core (8.0.0):
     - iOSSnapshotTestCase (~> 6.0)
     - Nimble (~> 8.0)
   - Quick (2.1.0)
   - SDWebImage (5.0.6):
     - SDWebImage/Core (= 5.0.6)
   - SDWebImage/Core (5.0.6)
-  - SwiftLint (0.31.0)
+  - SwiftFormat/CLI (0.40.11)
+  - SwiftLint (0.34.0)
 
 DEPENDENCIES:
   - ApplozicSwift (from `../ApplozicSwift.podspec`)
   - Nimble
   - Nimble-Snapshots
   - Quick
+  - SwiftFormat/CLI
   - SwiftLint
 
 SPEC REPOS:
@@ -45,6 +47,7 @@ SPEC REPOS:
     - Nimble-Snapshots
     - Quick
     - SDWebImage
+    - SwiftFormat
     - SwiftLint
 
 EXTERNAL SOURCES:
@@ -52,17 +55,18 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: 7cedb7e79f41b17aeea61f40affabacc87ded164
+  Applozic: 2b43fbc14a3fbd3cd5664c1040d1b1d86e21d3d1
   ApplozicSwift: 85e883ee3613c8931fbe13601686668e6a3ec8f4
   iOSSnapshotTestCase: 30d540b0c8feb9d7f8ff97acc25a3804b48ee264
-  Kingfisher: c7d211b54f1f30d8060aadab177d52b4349c825b
+  Kingfisher: 176d377ad339113c99ad4980cbae687f807e20fe
   MGSwipeTableCell: dc4eca3212ed38a563b27d6aa7b3c01ce656c1e2
   Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
-  Nimble-Snapshots: 2ec985281eef0eb9fc69a469deee851363a50d0e
+  Nimble-Snapshots: 8ec63f41ce6c7229a17be9a64edbc123b181f75b
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
-  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  SwiftFormat: 304f39cab266d39c9d60f4fceec37ed6f43b931c
+  SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
 
-PODFILE CHECKSUM: 6e7de6068aa53db2a6eb8bf4ed55a07d26a9dbfb
+PODFILE CHECKSUM: 263b80b5b0fd21d31e2fcd1d36bb68c211a15814
 
-COCOAPODS: 1.7.3
+COCOAPODS: 1.7.5

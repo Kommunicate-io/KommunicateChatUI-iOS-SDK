@@ -17,22 +17,24 @@ struct ContactModel {
 }
 
 class ContactView: UIView {
-
     struct Padding {
         struct ContactImage {
             static let left: CGFloat = 10
             static let width: CGFloat = 30
             static let height: CGFloat = 30
         }
+
         struct ContactName {
             static let left: CGFloat = 10
             static let right: CGFloat = 10
         }
+
         struct ContactSaveIcon {
             static let right: CGFloat = 10
             static let width: CGFloat = 10
             static let height: CGFloat = 15
         }
+
         static let height: CGFloat = 50
     }
 
@@ -57,7 +59,8 @@ class ContactView: UIView {
         var image = UIImage(
             named: "icon_arrow",
             in: Bundle.applozic,
-            compatibleWith: nil)?
+            compatibleWith: nil
+        )?
             .withRenderingMode(.alwaysTemplate)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         button.setImage(image, for: .normal)
@@ -74,7 +77,7 @@ class ContactView: UIView {
         setTarget()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -92,7 +95,7 @@ class ContactView: UIView {
             let data = contact.imageData,
             let image = UIImage(data: data)
         else {
-            self.contactImage.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+            contactImage.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
             return
         }
         contactImage.image = image
@@ -115,24 +118,24 @@ class ContactView: UIView {
         heightAnchor.constraint(equalToConstant: Padding.height).isActive = true
         addViewsForAutolayout(views: [contactImage, contactName, contactSaveIcon])
 
-        contactImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Padding.ContactImage.left).isActive = true
-        contactImage.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        contactImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.ContactImage.left).isActive = true
+        contactImage.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         contactImage.widthAnchor.constraint(equalToConstant: Padding.ContactImage.width).isActive = true
         contactImage.heightAnchor.constraint(equalToConstant: Padding.ContactImage.height).isActive = true
 
-        contactSaveIcon.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Padding.ContactSaveIcon.right).isActive = true
-        contactSaveIcon.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        contactSaveIcon.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.ContactSaveIcon.right).isActive = true
+        contactSaveIcon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         contactSaveIcon.widthAnchor.constraint(equalToConstant: Padding.ContactSaveIcon.width).isActive = true
         contactSaveIcon.heightAnchor.constraint(equalToConstant: Padding.ContactSaveIcon.height).isActive = true
 
         contactName.leadingAnchor.constraint(equalTo: contactImage.trailingAnchor, constant: Padding.ContactName.left).isActive = true
         contactName.trailingAnchor.constraint(equalTo: contactSaveIcon.leadingAnchor, constant: -Padding.ContactName.right).isActive = true
-        contactName.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        contactName.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
 
     private func setTarget() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
         tapGesture.numberOfTapsRequired = 1
-        self.addGestureRecognizer(tapGesture)
+        addGestureRecognizer(tapGesture)
     }
 }

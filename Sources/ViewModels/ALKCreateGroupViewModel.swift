@@ -1,13 +1,13 @@
 //
 //  CreateGroupViewModel.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 protocol ALKCreateGroupViewModelDelegate {
     func membersFetched()
@@ -29,31 +29,32 @@ enum Options: String, Localizable {
     func value(
         localizationFileName: String,
         index: Int,
-        delegate: ALKCreateGroupViewModelDelegate) -> UIAlertAction {
+        delegate: ALKCreateGroupViewModelDelegate
+    ) -> UIAlertAction {
         switch self {
         case .remove:
             let title = localizedString(forKey: "RemoveUser", withDefaultValue: SystemMessage.GroupDetails.RemoveUser, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .destructive, handler: { (_) in
+            return UIAlertAction(title: title, style: .destructive, handler: { _ in
                 delegate.remove(at: index)
             })
         case .makeAdmin:
             let title = localizedString(forKey: "MakeAdmin", withDefaultValue: SystemMessage.GroupDetails.MakeAdmin, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (_) in
+            return UIAlertAction(title: title, style: .default, handler: { _ in
                 delegate.makeAdmin(at: index)
             })
         case .dismissAdmin:
             let title = localizedString(forKey: "DismissAdmin", withDefaultValue: SystemMessage.GroupDetails.DismissAdmin, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (_) in
+            return UIAlertAction(title: title, style: .default, handler: { _ in
                 delegate.dismissAdmin(at: index)
             })
         case .sendMessage:
             let title = localizedString(forKey: "SendMessage", withDefaultValue: SystemMessage.GroupDetails.SendMessage, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (_) in
+            return UIAlertAction(title: title, style: .default, handler: { _ in
                 delegate.sendMessage(at: index)
             })
         case .info:
             let title = localizedString(forKey: "Info", withDefaultValue: SystemMessage.GroupDetails.Info, fileName: localizationFileName)
-            return UIAlertAction(title: title, style: .default, handler: { (_) in
+            return UIAlertAction(title: title, style: .default, handler: { _ in
                 delegate.info(at: index)
             })
         case .cancel:
@@ -64,7 +65,6 @@ enum Options: String, Localizable {
 }
 
 class ALKCreateGroupViewModel: Localizable {
-
     var groupName: String = ""
     var originalGroupName: String = ""
     var groupId: NSNumber
@@ -89,7 +89,8 @@ class ALKCreateGroupViewModel: Localizable {
         groupId: NSNumber,
         delegate: ALKCreateGroupViewModelDelegate,
         localizationFileName: String,
-        shouldShowInfoOption: Bool = false) {
+        shouldShowInfoOption: Bool = false
+    ) {
         groupName = name
         originalGroupName = name
         self.groupId = groupId
@@ -104,7 +105,7 @@ class ALKCreateGroupViewModel: Localizable {
     }
 
     func fetchParticipants() {
-        ALChannelDBService().fetchChannelMembersAsync(withChannelKey: self.groupId) { (members) in
+        ALChannelDBService().fetchChannelMembersAsync(withChannelKey: groupId) { members in
             guard let members = members as? [String], !members.isEmpty else {
                 return
             }
@@ -115,17 +116,18 @@ class ALKCreateGroupViewModel: Localizable {
 
             self.membersInfo =
                 alContacts
-                    .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
-                    .map {
-                        let user = $0!
-                        return GroupMemberInfo(
-                            id: user.userId ?? "",
-                            name: user.getDisplayName() ?? "",
-                            image: user.contactImageUrl,
-                            isAdmin: self.isAdmin(userId: user.userId!),
-                            addCell: false,
-                            adminText: self.adminText)
-            }
+                .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
+                .map {
+                    let user = $0!
+                    return GroupMemberInfo(
+                        id: user.userId ?? "",
+                        name: user.getDisplayName() ?? "",
+                        image: user.contactImageUrl,
+                        isAdmin: self.isAdmin(userId: user.userId!),
+                        addCell: false,
+                        adminText: self.adminText
+                    )
+                }
             self.membersInfo.insert(self.getCurrentUserInfo(), at: 0)
             DispatchQueue.main.async {
                 self.delegate.membersFetched()
@@ -172,8 +174,9 @@ class ALKCreateGroupViewModel: Localizable {
     private func isAdmin(userId: String) -> Bool {
         return ALChannelDBService()
             .loadChannelUserX(
-                byUserId: self.groupId,
-                andUserId: userId)?.isAdminUser() ?? false
+                byUserId: groupId,
+                andUserId: userId
+            )?.isAdminUser() ?? false
     }
 
     private func getCurrentUserInfo() -> GroupMemberInfo {
@@ -185,7 +188,7 @@ class ALKCreateGroupViewModel: Localizable {
             image: currentUser.contactImageUrl,
             isAdmin: isAdmin(userId: ALUserDefaultsHandler.getUserId()),
             addCell: false,
-            adminText: self.adminText)
+            adminText: adminText
+        )
     }
-
 }

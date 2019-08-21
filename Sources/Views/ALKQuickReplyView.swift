@@ -10,7 +10,6 @@ public struct QuickReplySettings {
 }
 
 public class ALKQuickReplyView: UIView {
-
     let font = QuickReplySettings.font
     let color = QuickReplySettings.color
 
@@ -25,22 +24,22 @@ public class ALKQuickReplyView: UIView {
 
     public var alignLeft: Bool = true
     public var maxWidth: CGFloat = UIScreen.main.bounds.width // Need default value otherwise crash if someone don't change from outside
-    public var quickReplySelected: ((_ index: Int?, _ name: String, _ dict: Dictionary<String, Any>?) -> Void)?
+    public var quickReplySelected: ((_ index: Int?, _ name: String, _ dict: [String: Any]?) -> Void)?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func update(quickReplyArray: [Dictionary<String, Any>]) {
+    public func update(quickReplyArray: [[String: Any]]) {
         setupQuickReplyButtons(quickReplyArray)
     }
 
-    public class func rowHeight(quickReplyArray: [Dictionary<String, Any>], maxWidth: CGFloat) -> CGFloat {
+    public class func rowHeight(quickReplyArray: [[String: Any]], maxWidth: CGFloat) -> CGFloat {
         let font = QuickReplySettings.font
         var width: CGFloat = 0
         var totalHeight: CGFloat = 0
@@ -71,14 +70,14 @@ public class ALKQuickReplyView: UIView {
     }
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [mainStackView])
-        mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        mainStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        addViewsForAutolayout(views: [mainStackView])
+        mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        mainStackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
-    private func setupQuickReplyButtons(_ quickReplyArray: [Dictionary<String, Any>]) {
+    private func setupQuickReplyButtons(_ quickReplyArray: [[String: Any]]) {
         mainStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
@@ -90,7 +89,7 @@ public class ALKQuickReplyView: UIView {
                 continue
             }
             index += 1
-            let button = curvedButton(title: title, index: index, metadata: quickReply["replyMetadata"] as? Dictionary<String, Any>)
+            let button = curvedButton(title: title, index: index, metadata: quickReply["replyMetadata"] as? [String: Any])
             width += button.buttonWidth()
 
             if width >= maxWidth {
@@ -127,7 +126,7 @@ public class ALKQuickReplyView: UIView {
         return stackView
     }
 
-    private func hiddenViewUsing(currWidth: CGFloat, maxWidth: CGFloat, subViews: [UIView]) -> UIView {
+    private func hiddenViewUsing(currWidth: CGFloat, maxWidth: CGFloat, subViews _: [UIView]) -> UIView {
         let unusedWidth = maxWidth - currWidth - 20
         let height = (subviews[0] as? ALKCurvedButton)?.buttonHeight() ?? 0
         let size = CGSize(width: unusedWidth, height: height)
@@ -138,7 +137,7 @@ public class ALKQuickReplyView: UIView {
         return view
     }
 
-    private func curvedButton(title: String, index: Int, metadata: Dictionary<String, Any>?) -> ALKCurvedButton {
+    private func curvedButton(title: String, index: Int, metadata: [String: Any]?) -> ALKCurvedButton {
         let button = ALKCurvedButton(title: title, font: font, color: color, maxWidth: maxWidth)
         button.index = index
         button.buttonSelected = { [weak self] index, title in

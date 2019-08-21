@@ -12,7 +12,6 @@ import UIKit
 /// It also accepts optional font, color and maxWidth for rendering.
 /// - NOTE: Minimum width is 45 and minimum height is 35 and cornerRadius is 15.
 public class CurvedButton: UIButton {
-
     // MARK: Public Properties
 
     /// Defines the padding for text inside button.
@@ -46,14 +45,14 @@ public class CurvedButton: UIButton {
                 maxWidth: CGFloat = UIScreen.main.bounds.width) {
         self.title = title
         self.delegate = delegate
-        self.textFont = font
+        textFont = font
         self.color = color
         self.maxWidth = maxWidth - CurvedButton.padding.left - CurvedButton.padding.right
         super.init(frame: .zero)
         setupButton()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -65,7 +64,7 @@ public class CurvedButton: UIButton {
     public func buttonWidth() -> CGFloat {
         let titleWidth = title.rectWithConstrainedWidth(maxWidth, font: textFont).width.rounded(.up)
         let buttonWidth = titleWidth + CurvedButton.padding.left + CurvedButton.padding.right
-        return max(buttonWidth, 45) //Minimum width is 45
+        return max(buttonWidth, 45) // Minimum width is 45
     }
 
     /// This method calculates height of button.
@@ -74,7 +73,7 @@ public class CurvedButton: UIButton {
     public func buttonHeight() -> CGFloat {
         let titleHeight = title.rectWithConstrainedWidth(maxWidth, font: textFont).height.rounded(.up)
         let buttonHeight = titleHeight + CurvedButton.padding.top + CurvedButton.padding.bottom
-        return max(buttonHeight, 35) //Minimum height is 35
+        return max(buttonHeight, 35) // Minimum height is 35
     }
 
     /// This method calculates size of button.
@@ -94,7 +93,7 @@ public class CurvedButton: UIButton {
 
     // MARK: Private methods
 
-    @objc private func tapped(_ sender: UIButton) {
+    @objc private func tapped(_: UIButton) {
         guard let delegate = delegate else { return }
         delegate.didTap(index: index, title: title)
     }
@@ -102,22 +101,21 @@ public class CurvedButton: UIButton {
     private func setupButton() {
         /// Attributed title for button
         let attributes = [NSAttributedString.Key.font: textFont,
-                          NSAttributedString.Key.foregroundColor : color]
+                          NSAttributedString.Key.foregroundColor: color]
         let attributedTitle = NSAttributedString(string: title, attributes: attributes)
 
-        self.setAttributedTitle(attributedTitle, for: .normal)
-        self.frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
-        self.widthAnchor.constraint(equalToConstant: buttonWidth()).isActive = true
-        self.heightAnchor.constraint(equalToConstant: buttonHeight()).isActive = true
-        self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        self.titleLabel?.lineBreakMode = .byWordWrapping
-        self.backgroundColor = .clear
-        self.layer.cornerRadius = 15
-        self.layer.borderWidth = 2
-        self.layer.borderColor = color.cgColor
-        self.clipsToBounds = true
+        setAttributedTitle(attributedTitle, for: .normal)
+        frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
+        widthAnchor.constraint(equalToConstant: buttonWidth()).isActive = true
+        heightAnchor.constraint(equalToConstant: buttonHeight()).isActive = true
+        contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        titleLabel?.lineBreakMode = .byWordWrapping
+        backgroundColor = .clear
+        layer.cornerRadius = 15
+        layer.borderWidth = 2
+        layer.borderColor = color.cgColor
+        clipsToBounds = true
 
-        self.addTarget(self, action: #selector(tapped(_:)), for: .touchUpInside)
+        addTarget(self, action: #selector(tapped(_:)), for: .touchUpInside)
     }
-
 }

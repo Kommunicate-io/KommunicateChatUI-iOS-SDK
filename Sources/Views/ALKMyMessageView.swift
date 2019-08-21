@@ -7,19 +7,21 @@
 
 /// A custom view which has text, time and state labels. And it's used in multiple cells.
 class ALKMyMessageView: UIView {
-
     struct Padding {
         struct MessageView {
             static let top: CGFloat = 4
             static let bottom: CGFloat = 6
         }
+
         struct BubbleView {
             static let bottom: CGFloat = 2
         }
+
         struct StateView {
             static let bottom: CGFloat = 1
             static let right: CGFloat = 2
         }
+
         struct TimeLabel {
             static let right: CGFloat = 2
             static let bottom: CGFloat = 2
@@ -28,7 +30,7 @@ class ALKMyMessageView: UIView {
 
     fileprivate var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
     fileprivate lazy var messageView: ALKHyperLabel = {
-        let label = ALKHyperLabel.init(frame: .zero)
+        let label = ALKHyperLabel(frame: .zero)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -62,13 +64,13 @@ class ALKMyMessageView: UIView {
         setupStyle()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     func setupStyle() {
-        if(ALKMessageStyle.sentBubble.style == .edge) {
-            let image = UIImage.init(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
+        if ALKMessageStyle.sentBubble.style == .edge {
+            let image = UIImage(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
             bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
             bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
         } else {
@@ -115,17 +117,17 @@ class ALKMyMessageView: UIView {
     }
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageView, bubbleView, stateView, timeLabel])
-        self.bringSubviewToFront(messageView)
-        messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: Padding.MessageView.top).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        messageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Padding.MessageView.bottom).isActive = true
-        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor).isActive = true
+        addViewsForAutolayout(views: [messageView, bubbleView, stateView, timeLabel])
+        bringSubviewToFront(messageView)
+        messageView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.MessageView.top).isActive = true
+        messageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        messageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Padding.MessageView.bottom).isActive = true
+        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
-        bubbleView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Padding.BubbleView.bottom).isActive = true
+        bubbleView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Padding.BubbleView.bottom).isActive = true
 
         stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
@@ -135,5 +137,4 @@ class ALKMyMessageView: UIView {
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: Padding.TimeLabel.bottom).isActive = true
     }
-
 }

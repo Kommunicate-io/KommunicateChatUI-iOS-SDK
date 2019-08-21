@@ -8,10 +8,8 @@
 import Foundation
 
 extension CGFloat {
-
     func cached(with key: String) -> CGFloat {
         HeightCache.shared.setHeight(self, for: key)
         return self
     }
-
 }

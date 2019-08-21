@@ -8,7 +8,6 @@
 import Foundation
 
 public struct SuggestedReplyMessage {
-
     /// Title to be displayed in suggested replies
     public var title: [String]
 
@@ -17,5 +16,4 @@ public struct SuggestedReplyMessage {
     public var reply: [String?]
 
     public var message: Message
-
 }

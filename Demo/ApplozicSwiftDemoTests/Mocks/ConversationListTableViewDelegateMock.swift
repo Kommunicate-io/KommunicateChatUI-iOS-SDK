@@ -8,10 +8,10 @@
 
 import Foundation
 import Applozic
+
 @testable import ApplozicSwift
 
 class ConversationListTableViewDelegateMock: ALKConversationListTableViewDelegate {
-
     func muteNotification(conversation: ALMessage, isMuted: Bool) {
 
     }
@@ -20,6 +20,7 @@ class ConversationListTableViewDelegateMock: ALKConversationListTableViewDelegat
 
     }
 
+    
     func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
         
     }

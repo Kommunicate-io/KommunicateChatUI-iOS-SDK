@@ -1,6 +1,6 @@
 //
 //  UITableView+Extension.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -10,32 +10,25 @@ import Foundation
 import UIKit
 
 extension UITableView {
-
     func scrollToBottomWithScroll() {
         scrollToBottom(animated: true)
     }
 
     func scrollToBottomSection1(animated: Bool = true) {
-
-        let indexPath = IndexPath.init(row: 0, section: 1)
+        let indexPath = IndexPath(row: 0, section: 1)
         scrollToRow(at: indexPath, at: .bottom, animated: animated)
     }
 
     func scrollToBottom(animated: Bool = true) {
-
         if numberOfSections > 0 {
-
             let sction = numberOfSections - 1
             let rows = numberOfRows(inSection: sction)
 
             if rows > 0 {
-
-                let indexPath = IndexPath.init(row: rows-1, section: sction)
+                let indexPath = IndexPath(row: rows - 1, section: sction)
                 scrollToRow(at: indexPath, at: .bottom, animated: animated)
             }
-
         }
-
     }
 
     var bottomOffset: CGPoint {
@@ -51,15 +44,13 @@ extension UITableView {
     }
 
     func scrollToBottomByOfset(animated: Bool = true) {
-
-        if(bottomOffset.y > 0) {
+        if bottomOffset.y > 0 {
             setContentOffset(bottomOffset, animated: animated)
         }
     }
 
-    func isCellVisible(section:Int, row: Int) -> Bool {
+    func isCellVisible(section: Int, row: Int) -> Bool {
         guard let indexes = self.indexPathsForVisibleRows else { return false }
-        return indexes.contains {$0.section == section && $0.row == row }
+        return indexes.contains { $0.section == section && $0.row == row }
     }
-
 }

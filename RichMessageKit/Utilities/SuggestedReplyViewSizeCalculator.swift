@@ -8,7 +8,6 @@
 import Foundation
 
 class SuggestedReplyViewSizeCalculator {
-
     func rowHeight(model: SuggestedReplyMessage, maxWidth: CGFloat, font: UIFont) -> CGFloat {
         var width: CGFloat = 0
         var totalHeight: CGFloat = 0
@@ -36,5 +35,4 @@ class SuggestedReplyViewSizeCalculator {
         totalHeight += prevHeight
         return totalHeight
     }
-
 }

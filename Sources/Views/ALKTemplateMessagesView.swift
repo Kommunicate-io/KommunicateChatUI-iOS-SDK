@@ -13,7 +13,6 @@ import UIKit
  A callback is sent, when any message is selected.
  */
 open class ALKTemplateMessagesView: UIView {
-
     // MARK: Public properties
 
     open var viewModel: ALKTemplateMessagesViewModel!
@@ -28,7 +27,7 @@ open class ALKTemplateMessagesView: UIView {
     }()
 
     /// Closure to be executed when a template message is selected
-    open var messageSelected:((ALKTemplateMessageModel)->Void)?
+    open var messageSelected: ((ALKTemplateMessageModel) -> Void)?
 
     // MARK: Intialization
 
@@ -38,7 +37,7 @@ open class ALKTemplateMessagesView: UIView {
         setupViews()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -49,7 +48,6 @@ open class ALKTemplateMessagesView: UIView {
     }
 
     private func setupCollectionView() {
-
         // Set datasource and delegate
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -60,21 +58,19 @@ open class ALKTemplateMessagesView: UIView {
         // Set constaints
         addViewsForAutolayout(views: [collectionView])
 
-        collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
-
 }
 
 extension ALKTemplateMessagesView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in _: UICollectionView) -> Int {
         return 1
     }
 
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.getNumberOfItemsIn(section: section)
     }
 
@@ -84,18 +80,16 @@ extension ALKTemplateMessagesView: UICollectionViewDelegate, UICollectionViewDat
         return cell
     }
 
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let selectedTemplate = viewModel.getTemplateForItemAt(row: indexPath.row) else {return}
+    public func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedTemplate = viewModel.getTemplateForItemAt(row: indexPath.row) else { return }
         messageSelected?(selectedTemplate)
 
-        //Send a notification (can be used outside the framework)
+        // Send a notification (can be used outside the framework)
         let notificationCenter = NotificationCenter()
         notificationCenter.post(name: NSNotification.Name(rawValue: "TemplateMessageSelected"), object: selectedTemplate)
-
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return viewModel.getSizeForItemAt(row: indexPath.row)
     }
-
 }

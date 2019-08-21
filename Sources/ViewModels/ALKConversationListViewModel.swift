@@ -6,11 +6,10 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
-protocol ALKConversationListViewModelDelegate: class {
-
+protocol ALKConversationListViewModelDelegate: AnyObject {
     func startedLoading()
     func listUpdated()
     func rowUpdatedAt(position: Int)
@@ -21,19 +20,18 @@ protocol ALKConversationListViewModelDelegate: class {
 
  A concrete class that conforms to this protocol is provided in the SDK. See `ALKConversationListViewModel`.
  */
-public protocol ALKConversationListViewModelProtocol: class {
-
+public protocol ALKConversationListViewModelProtocol: AnyObject {
     /**
      This method is returns the number of sections in the tableView.
      - Returns: The number of sections in the tableView
-    */
+     */
     func numberOfSections() -> Int
 
     /**
      This method is returns the number of rows in a particular tableview section.
      - Parameter section: Section of the tableView.
      - Returns: The number of rows in `section`
-    */
+     */
     func numberOfRowsInSection(_ section: Int) -> Int
 
     /**
@@ -46,23 +44,23 @@ public protocol ALKConversationListViewModelProtocol: class {
     /**
      This method returns the complete message list.
      - Returns: An array of all the messages in the list.
-    */
+     */
     func getChatList() -> [Any]
 
     /**
      This method is used to remove a message from the message list.
      - Parameter message: The message object to be removed from the message list.
-    */
+     */
     func remove(message: ALMessage)
 
     /**
      This method is used to mute a particular conversation thread.
      - Parameters:
-        - message: The message object whose conversation is to be muted.
-        - tillTime: NSNumber determining the amount of time conversation is to be muted.
-        - withCompletion: Escaping Closure when the mute request is complete.
-    */
-    func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->Void)
+     - message: The message object whose conversation is to be muted.
+     - tillTime: NSNumber determining the amount of time conversation is to be muted.
+     - withCompletion: Escaping Closure when the mute request is complete.
+     */
+    func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void)
 
     /**
      This method is used to unmute a particular conversation thread.
@@ -85,11 +83,9 @@ public protocol ALKConversationListViewModelProtocol: class {
     ///   - conversation: Message with the user whom we are going to unblock
     ///   - withCompletion: Escaping closure when unblock request is complete.
     func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void)
-
 }
 
-final public class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol, Localizable {
-
+public final class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol, Localizable {
     weak var delegate: ALKConversationListViewModelDelegate?
 
     var localizationFileName = String()
@@ -100,7 +96,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
     fileprivate var allMessages = [Any]()
 
     func prepareController(dbService: ALMessageDBService) {
-        self.delegate?.startedLoading()
+        delegate?.startedLoading()
         dbService.getMessages(nil)
     }
 
@@ -112,7 +108,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         return 1
     }
 
-    public func numberOfRowsInSection(_ section: Int) -> Int {
+    public func numberOfRowsInSection(_: Int) -> Int {
         return allMessages.count
     }
 
@@ -131,7 +127,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         let messageToDelete = allMessages.filter { ($0 as? ALMessage) == message }
         guard let messageDel = messageToDelete.first as? ALMessage,
             let index = (allMessages as? [ALMessage])?.index(of: messageDel) else {
-                return
+            return
         }
         allMessages.remove(at: index)
     }
@@ -147,18 +143,18 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
 
     func updateMessageList(messages: [Any]) {
         allMessages = messages
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             self.delegate?.listUpdated()
-        })
+        }
     }
 
     func updateDeliveryReport(convVC: ALKConversationViewController?, messageKey: String?, contactId: String?, status: Int32?) {
-        guard let vc = convVC  else { return }
+        guard let vc = convVC else { return }
         vc.updateDeliveryReport(messageKey: messageKey, contactId: contactId, status: status)
     }
 
     func updateStatusReport(convVC: ALKConversationViewController?, forContact contact: String?, status: Int32?) {
-        guard let vc = convVC  else { return }
+        guard let vc = convVC else { return }
         vc.updateStatusReport(contactId: contact, status: status)
     }
 
@@ -170,10 +166,10 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         for currentMessage in alMessages {
             var messagePresent = [ALMessage]()
             if let _ = currentMessage.groupId {
-                messagePresent = allMessages.filter { ($0.groupId != nil) ? $0.groupId == currentMessage.groupId:false }
+                messagePresent = allMessages.filter { ($0.groupId != nil) ? $0.groupId == currentMessage.groupId : false }
             } else {
                 messagePresent = allMessages.filter {
-                    $0.groupId == nil ? (($0.contactId != nil) ? $0.contactId == currentMessage.contactId:false) : false
+                    $0.groupId == nil ? (($0.contactId != nil) ? $0.contactId == currentMessage.contactId : false) : false
                 }
             }
 
@@ -185,16 +181,14 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
             }
         }
         if self.allMessages.count > 1 {
-
-            self.allMessages = allMessages.sorted { ($0.createdAtTime != nil && $1.createdAtTime != nil) ? Int(truncating: $0.createdAtTime) > Int(truncating: $1.createdAtTime):false }
+            self.allMessages = allMessages.sorted { ($0.createdAtTime != nil && $1.createdAtTime != nil) ? Int(truncating: $0.createdAtTime) > Int(truncating: $1.createdAtTime) : false }
         }
         delegate?.listUpdated()
-
     }
 
     func updateStatusFor(userDetail: ALUserDetail) {
         guard let alMessages = allMessages as? [ALMessage], let userId = userDetail.userId else { return }
-        let messages = alMessages.filter { ($0.contactId != nil) ? $0.contactId == userId :false }
+        let messages = alMessages.filter { ($0.contactId != nil) ? $0.contactId == userId : false }
         guard let firstMessage = messages.first, let index = alMessages.index(of: firstMessage) else { return }
         delegate?.rowUpdatedAt(position: index)
     }
@@ -215,20 +209,19 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> Void) {
-
         let time = (Int(Date().timeIntervalSince1970) * 1000)
-        sendMuteRequestFor(message: message, tillTime: time as NSNumber) { (success) in
+        sendMuteRequestFor(message: message, tillTime: time as NSNumber) { success in
             withCompletion(success)
         }
     }
 
-    public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool)->Void) {
+    public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void) {
         if message.isGroupChat, let channel = ALChannelService().getChannelByKey(message.groupId) {
             // Unmute channel
             let muteRequest = ALMuteRequest()
             muteRequest.id = channel.key
             muteRequest.notificationAfterTime = tillTime as NSNumber
-            ALChannelService().muteChannel(muteRequest) { (_, error) in
+            ALChannelService().muteChannel(muteRequest) { _, error in
                 if error != nil {
                     withCompletion(false)
                 }
@@ -239,7 +232,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
             let muteRequest = ALMuteRequest()
             muteRequest.userId = contact.userId
             muteRequest.notificationAfterTime = tillTime as NSNumber
-            ALUserService().muteUser(muteRequest) { (_, error) in
+            ALUserService().muteUser(muteRequest) { _, error in
                 if error != nil {
                     withCompletion(false)
                 }
@@ -251,7 +244,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
-        ALUserService().blockUser(conversation.contactIds) { (error, _) in
+        ALUserService().blockUser(conversation.contactIds) { error, _ in
             guard let error = error else {
                 print("UserId \(String(describing: conversation.contactIds)) is successfully blocked")
                 withCompletion(nil, true)
@@ -263,7 +256,7 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
-        ALUserService().unblockUser(conversation.contactIds) { (error, _) in
+        ALUserService().unblockUser(conversation.contactIds) { error, _ in
             guard let error = error else {
                 print("UserId \(String(describing: conversation.contactIds)) is successfully unblocked")
                 withCompletion(nil, true)
@@ -278,8 +271,8 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
         type conversationViewModelType: ALKConversationViewModel.Type,
         contactId: String?,
         channelId: NSNumber?,
-        conversationId: NSNumber?) -> ALKConversationViewModel {
-
+        conversationId: NSNumber?
+    ) -> ALKConversationViewModel {
         var convProxy: ALConversationProxy?
         if let convId = conversationId, let conversationProxy = conversationService.getConversationByKey(convId) {
             convProxy = conversationProxy
@@ -289,7 +282,8 @@ final public class ALKConversationListViewModel: NSObject, ALKConversationListVi
             contactId: contactId,
             channelKey: channelId,
             conversationProxy: convProxy,
-            localizedStringFileName : localizationFileName)
+            localizedStringFileName: localizationFileName
+        )
         return convViewModel
     }
 }

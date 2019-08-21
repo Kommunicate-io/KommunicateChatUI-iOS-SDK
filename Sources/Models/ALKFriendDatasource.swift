@@ -1,6 +1,6 @@
 //
 //  FriendDatasource.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -20,7 +20,7 @@ enum ALKDatasourceState {
     }
 }
 
-protocol ALKFriendDatasourceProtocol: class {
+protocol ALKFriendDatasourceProtocol: AnyObject {
     func getDatasource(state: ALKDatasourceState) -> [ALKFriendViewModel]
     func count(state: ALKDatasourceState) -> Int
     func getItem(atIndex: Int, state: ALKDatasourceState) -> ALKFriendViewModel?

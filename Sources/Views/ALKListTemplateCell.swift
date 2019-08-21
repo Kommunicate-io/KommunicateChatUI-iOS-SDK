@@ -7,9 +7,9 @@
 
 import UIKit
 
-/// MARK: - `ALKListTemplateCell` for sender side.
-public class ALKMyListTemplateCell: ALKListTemplateCell {
+// MARK: - `ALKListTemplateCell` for sender side.
 
+public class ALKMyListTemplateCell: ALKListTemplateCell {
     var messageView = ALKMyMessageView()
     lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
 
@@ -33,7 +33,7 @@ public class ALKMyListTemplateCell: ALKListTemplateCell {
     override func setupConstraints() {
         let leftPadding = ChatCellPadding.SentMessage.Message.left
         let rightPadding = ChatCellPadding.SentMessage.Message.right
-        self.contentView.addViewsForAutolayout(views: [messageView, listTemplateView])
+        contentView.addViewsForAutolayout(views: [messageView, listTemplateView])
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leftPadding).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
@@ -47,12 +47,11 @@ public class ALKMyListTemplateCell: ALKListTemplateCell {
         listTemplateView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * templateRightPadding).isActive = true
         listTemplateHeight.isActive = true
     }
-
 }
 
-/// MARK: - `ALKListTemplateCell` for receiver side.
-public class ALKFriendListTemplateCell: ALKListTemplateCell {
+// MARK: - `ALKListTemplateCell` for receiver side.
 
+public class ALKFriendListTemplateCell: ALKListTemplateCell {
     var messageView = ALKFriendMessageView()
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
@@ -75,7 +74,7 @@ public class ALKFriendListTemplateCell: ALKListTemplateCell {
     }
 
     override func setupConstraints() {
-        self.contentView.addViewsForAutolayout(views: [messageView, listTemplateView])
+        contentView.addViewsForAutolayout(views: [messageView, listTemplateView])
 
         let leftPadding = ChatCellPadding.ReceivedMessage.Message.left
         let rightPadding = ChatCellPadding.ReceivedMessage.Message.right
@@ -94,9 +93,9 @@ public class ALKFriendListTemplateCell: ALKListTemplateCell {
     }
 }
 
-/// MARK: - `ALKListTemplateCell`
-public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
+// MARK: - `ALKListTemplateCell`
 
+public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     static var paddingBelowCell: CGFloat = 10
 
     var listTemplateView: ListTemplateView = {
@@ -121,24 +120,24 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
+    public func update(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) {
         guard let metadata = viewModel.metadata,
             let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata) else {
             listTemplateView.isHidden = true
-            self.layoutIfNeeded()
+            layoutIfNeeded()
             return
         }
         listTemplateView.isHidden = false
         listTemplateView.update(item: template)
         listTemplateHeight.constant = ListTemplateView.rowHeight(template: template)
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
-    public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
+    public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) -> CGFloat {
         guard let metadata = viewModel.metadata,
             let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata) else {
             return CGFloat(0)
@@ -149,5 +148,4 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     func setupConstraints() {
         fatalError("This method must be overriden.")
     }
-
 }

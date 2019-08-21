@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 public class ALKPushNotificationHandler: Localizable {
     public static let shared = ALKPushNotificationHandler()
@@ -30,7 +30,7 @@ public class ALKPushNotificationHandler: Localizable {
     private var alChannel: ALChannel? {
         let alChannelService = ALChannelService()
 
-        // TODO:  This is a workaround as other method uses closure.
+        // TODO: This is a workaround as other method uses closure.
         // Later replace this with:
         // alChannelService.getChannelInformation(, orClientChannelKey: , withCompletion: )
         guard let alChannel = alChannelService.getChannelByKey(self.groupId) else {
@@ -40,17 +40,16 @@ public class ALKPushNotificationHandler: Localizable {
     }
 
     public func dataConnectionNotificationHandlerWith(_ configuration: ALKConfiguration) {
-
         self.configuration = configuration
 
         // No need to add removeObserver() as it is present in pushAssist.
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "showNotificationAndLaunchChat"), object: nil, queue: nil, using: {[weak self] notification in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "showNotificationAndLaunchChat"), object: nil, queue: nil, using: { [weak self] notification in
             print("launch chat push notification received")
             self?.contactId = nil
             self?.groupId = nil
             self?.title = ""
             self?.conversationId = nil
-            //Todo: Handle group
+            // Todo: Handle group
 
             guard let weakSelf = self, let object = notification.object as? String else { return }
             let components = object.components(separatedBy: ":")
@@ -83,9 +82,8 @@ public class ALKPushNotificationHandler: Localizable {
                 guard let userInfo = notification.userInfo, let alertValue = userInfo["alertValue"] as? String else {
                     return
                 }
-                ///TODO: FIX HERE. USE conversationId also.
+                // TODO: FIX HERE. USE conversationId also.
                 ALUtilityClass.thirdDisplayNotificationTS(alertValue, andForContactId: weakSelf.contactId, withGroupId: weakSelf.groupId, completionHandler: {
-
                     _ in
                     weakSelf.notificationTapped(userId: weakSelf.contactId, groupId: weakSelf.groupId)
 
@@ -102,18 +100,16 @@ public class ALKPushNotificationHandler: Localizable {
         let messagesVC = ALKConversationListViewController(configuration: configuration)
         messagesVC.contactId = userId
         messagesVC.channelKey = groupId
-        messagesVC.conversationId = self.conversationId
+        messagesVC.conversationId = conversationId
 
         let pushAssistant = ALPushAssist()
-        let topVC =  pushAssistant.topViewController
+        let topVC = pushAssistant.topViewController
         let nav = ALKBaseNavigationViewController(rootViewController: messagesVC)
         navVC?.modalTransitionStyle = .crossDissolve
         topVC?.present(nav, animated: true, completion: nil)
-
     }
 
     func notificationTapped(userId: String?, groupId: NSNumber?) {
         launchIndividualChatWith(userId: userId, groupId: groupId)
     }
-
 }

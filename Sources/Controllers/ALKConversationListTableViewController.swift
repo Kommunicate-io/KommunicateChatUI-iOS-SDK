@@ -5,14 +5,13 @@
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 /**
  A delegate used to notify the receiver of the click events in `ConversationListTableViewController`
  */
-public protocol ALKConversationListTableViewDelegate: class {
-
+public protocol ALKConversationListTableViewDelegate: AnyObject {
     /// Tells the delegate which chat cell is tapped alongwith the position.
     func tapped(_ chat: ALKChatViewModelProtocol, at index: Int)
 
@@ -22,40 +21,42 @@ public protocol ALKConversationListTableViewDelegate: class {
     /// Tells the delegate that the tableview is scrolled to bottom.
     func scrolledToBottom()
 
-    func muteNotification(conversation: ALMessage,isMuted : Bool)
+    func muteNotification(conversation: ALMessage, isMuted: Bool)
 
-    func userBlockNotification(userId:String, isBlocked: Bool)
+    func userBlockNotification(userId: String, isBlocked: Bool)
 }
 
 /**
  The **ConversationListTableViewController** manages rendering of chat cells using the viewModel supplied to it. It also contains delegate to send callbacks when a cell is tapped.
- 
+
  It uses ALKChatCell and EmptyChatCell as tableview cell and handles the swipe interaction of user with the chat cell.
  */
 // swiftlint:disable:next type_name
 public class ALKConversationListTableViewController: UITableViewController, Localizable {
-
     // MARK: - PUBLIC PROPERTIES
+
     public var viewModel: ALKConversationListViewModelProtocol
     public var dbService: ALMessageDBService!
     public lazy var dataSource = ConversationListTableViewDataSource(
         viewModel: self.viewModel,
-        cellConfigurator: { (message, tableCell) in
-        let cell = tableCell as! ALKChatCell
-        cell.update(viewModel: message, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
-        cell.chatCellDelegate = self
-    })
+        cellConfigurator: { message, tableCell in
+            let cell = tableCell as! ALKChatCell
+            cell.update(viewModel: message, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
+            cell.chatCellDelegate = self
+        }
+    )
     public weak var delegate: ALKConversationListTableViewDelegate?
 
     // MARK: - PRIVATE PROPERTIES
+
     fileprivate var configuration: ALKConfiguration
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
     fileprivate var tapToDismiss: UITapGestureRecognizer!
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
-    fileprivate var searchActive : Bool = false
-    fileprivate var searchFilteredChat:[Any] = []
+    fileprivate var searchActive: Bool = false
+    fileprivate var searchFilteredChat: [Any] = []
     fileprivate lazy var searchBar: UISearchBar = {
         var bar = UISearchBar()
         bar.autocapitalizationType = .sentences
@@ -64,12 +65,12 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
     /**
      Creates a ConversationListTableViewController object.
-     
+
      - Parameters:
-        - viewModel: A view model containing the message list to be rendered. It must conform to `ConversationListViewModelProtocol`
-        - dbService: `ALMessageDBService` object. Ensure that this object confirms to `ALMessageDBDelegate`
-        - configuration: A configuration to be used by this controller to configure different settings.
-        - delegate: A delegate used to receive callbacks when chat cell is tapped.
+     - viewModel: A view model containing the message list to be rendered. It must conform to `ConversationListViewModelProtocol`
+     - dbService: `ALMessageDBService` object. Ensure that this object confirms to `ALMessageDBDelegate`
+     - configuration: A configuration to be used by this controller to configure different settings.
+     - delegate: A delegate used to receive callbacks when chat cell is tapped.
      */
     public init(viewModel: ALKConversationListViewModelProtocol,
                 dbService: ALMessageDBService,
@@ -78,12 +79,12 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         self.viewModel = viewModel
         self.configuration = configuration
         self.showSearch = showSearch
-        self.localizedStringFileName = configuration.localizedStringFileName
+        localizedStringFileName = configuration.localizedStringFileName
         self.dbService = dbService
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -91,22 +92,23 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     /// - Parameter viewModel: The new viewModel that needs to be updated in tableView
     public func replaceViewModel(_ viewModel: ALKConversationListViewModelProtocol) {
         self.viewModel = viewModel
-        self.dataSource.viewModel = viewModel
-        self.tableView.reloadData()
+        dataSource.viewModel = viewModel
+        tableView.reloadData()
     }
 
     // MARK: - VIEW LIFE CYCLE
-    override public func viewDidLoad() {
+
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         searchBar.delegate = self
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.register(ALKChatCell.self, forCellReuseIdentifier: "cell")
         tableView.estimatedRowHeight = 0
     }
 
-    override public func viewWillDisappear(_ animated: Bool) {
+    public override func viewWillDisappear(_: Bool) {
         if let text = searchBar.text, !text.isEmpty {
             searchBar.text = ""
         }
@@ -116,6 +118,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
 
     // MARK: - TABLE VIEW DATA SOURCE METHODS
+
     public override func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.numberOfSections(in: tableView)
     }
@@ -140,12 +143,13 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         return dataSource.tableView(tableView, cellForRowAt: indexPath)
     }
 
-    public override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    public override func tableView(_: UITableView, canEditRowAt _: IndexPath) -> Bool {
         return true
     }
 
     // MARK: - TABLE VIEW DELEGATE METHODS
-    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    public override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         if searchActive {
             guard let message = searchFilteredChat[indexPath.row] as? ALMessage else {
                 return
@@ -159,16 +163,15 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         }
     }
 
-    public override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    public override func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
         return searchBar
     }
 
-    public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    public override func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
         return showSearch ? 50 : 0
     }
 
-    public override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-
+    public override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let emptyCellView = ALKEmptyView.instanceFromNib()
 
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
@@ -180,7 +183,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                 emptyCellView.removeGestureRecognizer(tap)
             }
 
-            let tap = UITapGestureRecognizer.init(target: self, action: #selector(compose))
+            let tap = UITapGestureRecognizer(target: self, action: #selector(compose))
             tap.numberOfTapsRequired = 1
 
             emptyCellView.addGestureRecognizer(tap)
@@ -189,15 +192,17 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         return emptyCellView
     }
 
-    public override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    public override func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
         return viewModel.numberOfRowsInSection(0) == 0 ? 325 : 0
     }
 
     // MARK: - HANDLE KEYBOARD
+
     override func hideKeyboard() {
         tapToDismiss = UITapGestureRecognizer(
             target: self,
-            action: #selector(UIViewController.dismissKeyboard))
+            action: #selector(UIViewController.dismissKeyboard)
+        )
         view.addGestureRecognizer(tapToDismiss)
     }
 
@@ -211,27 +216,27 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
 
     // MARK: - PRIVATE METHODS
-    private func setupView() {
-        self.tableView.estimatedRowHeight = 75
-        self.tableView.rowHeight = 75
-        self.tableView.separatorStyle = .none
-        self.tableView.backgroundColor = UIColor.white
-        self.tableView.keyboardDismissMode = .onDrag
-        self.tableView.accessibilityIdentifier = "OuterChatScreenTableView"
 
-        activityIndicator.center = CGPoint(x: view.bounds.size.width/2,
-                                           y: view.bounds.size.height/2)
+    private func setupView() {
+        tableView.estimatedRowHeight = 75
+        tableView.rowHeight = 75
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor.white
+        tableView.keyboardDismissMode = .onDrag
+        tableView.accessibilityIdentifier = "OuterChatScreenTableView"
+
+        activityIndicator.center = CGPoint(x: view.bounds.size.width / 2,
+                                           y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
         view.bringSubviewToFront(activityIndicator)
     }
-
 }
 
 // MARK: - SEARCH BAR DELEGATE
-extension ALKConversationListTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
 
-    func filterContentForSearchText(searchText: String, scope: String = "All") {
+extension ALKConversationListTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    func filterContentForSearchText(searchText: String, scope _: String = "All") {
         searchFilteredChat = viewModel.getChatList().filter { (chatViewModel) -> Bool in
             guard let conversation = chatViewModel as? ALMessage else {
                 return false
@@ -241,9 +246,10 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
             } else {
                 let conversationName = !conversation.name.isEmpty ?
                     conversation.name : localizedString(
-                    forKey: "NoNameMessage",
-                    withDefaultValue: SystemMessage.NoData.NoName,
-                    fileName: localizedStringFileName)
+                        forKey: "NoNameMessage",
+                        withDefaultValue: SystemMessage.NoData.NoName,
+                        fileName: localizedStringFileName
+                    )
                 return conversationName.lowercased().isCompose(of: searchText.lowercased())
             }
         }
@@ -254,8 +260,7 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
         filterContentForSearchText(searchText: searchController.searchBar.text!)
     }
 
-    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
+    public func searchBar(_: UISearchBar, textDidChange searchText: String) {
         searchFilteredChat = viewModel.getChatList().filter { (chatViewModel) -> Bool in
             guard let conversation = chatViewModel as? ALMessage else {
                 return false
@@ -266,7 +271,8 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
                 let conversationName = !conversation.name.isEmpty ? conversation.name : localizedString(
                     forKey: "NoNameMessage",
                     withDefaultValue: SystemMessage.NoData.NoName,
-                    fileName: localizedStringFileName)
+                    fileName: localizedStringFileName
+                )
                 return conversationName.lowercased().isCompose(of: searchText.lowercased())
             }
         }
@@ -275,16 +281,14 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
     }
 
     public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-
         hideKeyboard()
 
-        if(searchBar.text?.isEmpty)! {
+        if (searchBar.text?.isEmpty)! {
             self.tableView.reloadData()
         }
     }
 
     public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-
         view.removeGestureRecognizer(tapToDismiss)
 
         guard let text = searchBar.text else { return }
@@ -297,38 +301,36 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
         }
     }
 
-    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    public func searchBarCancelButtonClicked(_: UISearchBar) {
         searchActive = false
         self.tableView.reloadData()
     }
 
-    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    public func searchBarSearchButtonClicked(_: UISearchBar) {
         self.tableView.reloadData()
     }
-
 }
 
 // MARK: - ALKChatCell DELEGATE
+
 extension ALKConversationListTableViewController: ALKChatCellDelegate {
-
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    public func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol) {
-
+    public func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel _: ALKChatViewModelProtocol) {
         switch action {
-
         case .delete:
 
-            guard let indexPath = self.tableView.indexPath(for: cell) else {return}
+            guard let indexPath = self.tableView.indexPath(for: cell) else { return }
 
             if searchActive {
-                guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {return}
+                guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else { return }
 
-                let(prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
+                let (prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
                 let conversationName = !conversation.name.isEmpty ?
                     conversation.name : localizedString(
-                    forKey: "NoNameMessage",
-                    withDefaultValue: SystemMessage.NoData.NoName,
-                    fileName: localizedStringFileName)
+                        forKey: "NoNameMessage",
+                        withDefaultValue: SystemMessage.NoData.NoName,
+                        fileName: localizedStringFileName
+                    )
                 let name = conversation.isGroupChat ? conversation.groupName : conversationName
                 let text = "\(prefixText) \(name)?"
                 let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
@@ -337,15 +339,17 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                     title: localizedString(
                         forKey: "ButtonCancel",
                         withDefaultValue: SystemMessage.ButtonName.Cancel,
-                        fileName: localizedStringFileName),
+                        fileName: localizedStringFileName
+                    ),
                     style: .cancel,
-                    handler: nil)
-                let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (_) in
+                    handler: nil
+                )
+                let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
                     guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
 
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
-                        if  channelService.isChannelLeft(conversation.groupId) {
+                        if channelService.isChannelLeft(conversation.groupId) {
                             weakSelf.dbService.deleteAllMessages(byContact: nil, orChannelKey: conversation.groupId)
                             ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
                             weakSelf.searchFilteredChat.remove(at: indexPath.row)
@@ -361,7 +365,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                             channelService.leaveChannel(conversation.groupId, andUserId: ALUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
                                 error in
                                 ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
-                                    _,error in
+                                    _, error in
                                     guard error == nil else { return }
                                     weakSelf.tableView.reloadData()
                                     return
@@ -370,7 +374,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                         }
                     } else {
                         ALMessageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
-                            _,error in
+                            _, error in
                             guard error == nil else { return }
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
@@ -381,7 +385,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 alert.addAction(deleteButton)
                 present(alert, animated: true, completion: nil)
             } else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
-                let(prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
+                let (prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
 
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
                 let text = "\(prefixText) \(name)?"
@@ -390,14 +394,16 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                     title: localizedString(
                         forKey: "ButtonCancel",
                         withDefaultValue: SystemMessage.ButtonName.Cancel,
-                        fileName: localizedStringFileName),
+                        fileName: localizedStringFileName
+                    ),
                     style: .cancel,
-                    handler: nil)
-                let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (_) in
+                    handler: nil
+                )
+                let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
                     guard let weakSelf = self else { return }
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
-                        if  channelService.isChannelLeft(conversation.groupId) {
+                        if channelService.isChannelLeft(conversation.groupId) {
                             weakSelf.dbService.deleteAllMessages(byContact: nil, orChannelKey: conversation.groupId)
                             ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
                             weakSelf.viewModel.remove(message: conversation)
@@ -411,7 +417,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                             channelService.leaveChannel(conversation.groupId, andUserId: ALUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
                                 error in
                                 ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
-                                    _,error in
+                                    _, error in
                                     guard error == nil else { return }
                                     weakSelf.tableView.reloadData()
                                     return
@@ -420,7 +426,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                         }
                     } else {
                         ALMessageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
-                            _,error in
+                            _, error in
                             guard error == nil else { return }
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
@@ -430,9 +436,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 alert.addAction(cancelButton)
                 alert.addAction(deleteButton)
                 present(alert, animated: true, completion: nil)
-
             }
-            break
 
         case .mute:
             guard let indexPath = self.tableView.indexPath(for: cell) else {
@@ -465,7 +469,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 let indexPath = self.tableView.indexPath(for: cell),
                 let conversation = messageFor(indexPath: indexPath),
                 let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
-                else {
+            else {
                 return
             }
             let alertFormat = localizedString(forKey: "BlockUser", withDefaultValue: SystemMessage.Block.BlockUser, fileName: localizedStringFileName)
@@ -475,7 +479,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
             let alert = UIAlertController(title: nil, message: alertMessage, preferredStyle: .alert)
             let cancelButton = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
-            let blockButton = UIAlertAction(title: blockTitle, style: .destructive, handler: { [weak self] (_) in
+            let blockButton = UIAlertAction(title: blockTitle, style: .destructive, handler: { [weak self] _ in
                 guard let weakSelf = self else { return }
                 weakSelf.blockUser(in: conversation, at: indexPath)
             })
@@ -488,8 +492,8 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 let indexPath = self.tableView.indexPath(for: cell),
                 let conversation = messageFor(indexPath: indexPath),
                 let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
-                else {
-                    return
+            else {
+                return
             }
             let alertFormat = localizedString(forKey: "UnblockUser", withDefaultValue: SystemMessage.Block.UnblockUser, fileName: localizedStringFileName)
             let alertMessage = String(format: alertFormat, contact.getDisplayName())
@@ -498,7 +502,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
             let alert = UIAlertController(title: nil, message: alertMessage, preferredStyle: .alert)
             let cancelButton = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
-            let unblockButton = UIAlertAction(title: blockTitle, style: .destructive, handler: { [weak self] (_) in
+            let unblockButton = UIAlertAction(title: blockTitle, style: .destructive, handler: { [weak self] _ in
                 guard let weakSelf = self else { return }
                 weakSelf.unblockUser(in: conversation, at: indexPath)
             })
@@ -522,7 +526,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
     private func unblockUser(in conversation: ALMessage, at indexPath: IndexPath) {
         activityIndicator.startAnimating()
         view.isUserInteractionEnabled = false
-        viewModel.unblock(conversation: conversation) { (_, response) in
+        viewModel.unblock(conversation: conversation) { _, response in
             self.activityIndicator.stopAnimating()
             self.view.isUserInteractionEnabled = true
             guard response == true else {
@@ -540,7 +544,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
     private func blockUser(in conversation: ALMessage, at indexPath: IndexPath) {
         activityIndicator.startAnimating()
         view.isUserInteractionEnabled = false
-        viewModel.block(conversation: conversation) { (_, response) in
+        viewModel.block(conversation: conversation) { _, response in
             self.activityIndicator.stopAnimating()
             self.view.isUserInteractionEnabled = true
             guard response == true else {
@@ -570,31 +574,35 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
     }
 
     private func prefixAndButtonTitleForDeletePopup(conversation: ALMessage) -> (String, String) {
-
         let deleteGroupPopupMessage = localizedString(
             forKey: "DeleteGroupConversation",
             withDefaultValue: SystemMessage.Warning.DeleteGroupConversation,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
         let leaveGroupPopupMessage = localizedString(
             forKey: "LeaveGroupConversation",
             withDefaultValue: SystemMessage.Warning.LeaveGroupConoversation,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
         let deleteSingleConversationPopupMessage = localizedString(
             forKey: "DeleteSingleConversation",
             withDefaultValue: SystemMessage.Warning.DeleteSingleConversation,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
         let removeButtonText = localizedString(
             forKey: "ButtonRemove",
             withDefaultValue: SystemMessage.ButtonName.Remove,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
         let leaveButtonText = localizedString(
             forKey: "ButtonLeave",
             withDefaultValue: SystemMessage.ButtonName.Leave,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
 
         let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
 
-        let popupMessageForChannel = isChannelLeft ?  deleteGroupPopupMessage : leaveGroupPopupMessage
+        let popupMessageForChannel = isChannelLeft ? deleteGroupPopupMessage : leaveGroupPopupMessage
         let prefixTextForPopupMessage = conversation.isGroupChat ?
             popupMessageForChannel : deleteSingleConversationPopupMessage
         let buttonTitleForChannel = isChannelLeft ? removeButtonText : leaveButtonText
@@ -608,20 +616,23 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         let unmuteButton = localizedString(
             forKey: "UnmuteButton",
             withDefaultValue: SystemMessage.Mute.UnmuteButton,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
 
         if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
             let unmuteChannelFormat = localizedString(
                 forKey: "UnmuteChannel",
                 withDefaultValue: SystemMessage.Mute.UnmuteChannel,
-                fileName: localizedStringFileName)
+                fileName: localizedStringFileName
+            )
             let unmuteChannelMessage = String(format: unmuteChannelFormat, channel.name)
             return (unmuteChannelMessage, unmuteButton)
         } else if let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactId) {
             let unmuteUserFormat = localizedString(
                 forKey: "UnmuteUser",
                 withDefaultValue: SystemMessage.Mute.UnmuteUser,
-                fileName: localizedStringFileName)
+                fileName: localizedStringFileName
+            )
             let unmuteUserMessage = String(format: unmuteUserFormat, contact.getDisplayName())
             return (unmuteUserMessage, unmuteButton)
         } else {
@@ -630,12 +641,12 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
     }
 
     private func sendUnmuteRequestFor(conversation: ALMessage, atIndexPath: IndexPath) {
-        //Start activity indicator
+        // Start activity indicator
         self.activityIndicator.startAnimating()
 
-        viewModel.sendUnmuteRequestFor(message: conversation, withCompletion: { (success) in
+        viewModel.sendUnmuteRequestFor(message: conversation, withCompletion: { success in
 
-            //Stop activity indicator
+            // Stop activity indicator
             self.activityIndicator.stopAnimating()
 
             guard success == true else {
@@ -643,7 +654,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
 
             self.delegate?.muteNotification(conversation: conversation, isMuted: false)
-            //Update UI
+            // Update UI
             if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell {
                 guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
                     return
@@ -655,13 +666,13 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
     private func handleUnmuteActionFor(conversation: ALMessage, atIndexPath: IndexPath) {
         let (message, buttonTitle) = alertMessageAndButtonTitleToUnmute(conversation: conversation)
-        guard message != nil && buttonTitle != nil else {
+        guard message != nil, buttonTitle != nil else {
             return
         }
 
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let cancelButton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
-        let unmuteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] (_) in
+        let unmuteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
             guard let weakSelf = self else { return }
             weakSelf.sendUnmuteRequestFor(conversation: conversation, atIndexPath: atIndexPath)
         })
@@ -691,23 +702,23 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         muteConversationVC.modalPresentationStyle = .overCurrentContext
         self.present(muteConversationVC, animated: true, completion: nil)
     }
-
 }
 
 // MARK: - MUTE DELEGATE
+
 extension ALKConversationListTableViewController: Muteable {
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
-        //Start activity indicator
+        // Start activity indicator
         self.activityIndicator.startAnimating()
 
         let time = (Int64(Date().timeIntervalSince1970) * 1000) + forTime
 
-        self.viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { (success) in
+        self.viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { success in
 
-            //Stop activity indicator
+            // Stop activity indicator
             self.activityIndicator.stopAnimating()
 
-            //Update indexPath
+            // Update indexPath
             guard success == true else {
                 return
             }
@@ -722,12 +733,12 @@ extension ALKConversationListTableViewController: Muteable {
             }
         }
     }
-
 }
 
 // MARK: - SCROLL VIEW DELEGATE
+
 extension ALKConversationListTableViewController {
-    override public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let height = scrollView.frame.size.height
         let contentYoffset = scrollView.contentOffset.y
         let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end

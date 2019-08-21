@@ -19,10 +19,9 @@ struct TemplateDecoder {
     /// - throws: `TemplateDecodingError.payloadMissing` if the payload key is not present or if it doesn't contain a `String`.
     /// - throws: An error if any value throws an error during decoding.
     static func decode<T>(_ to: T.Type, from metadata: [String: Any]) throws -> T where T: Decodable {
-
         guard let payload = metadata["payload"] as? String
-            else {
-                throw TemplateDecodingError.payloadMissing
+        else {
+            throw TemplateDecodingError.payloadMissing
         }
         do {
             let template = try JSONDecoder().decode(to, from: payload.data)

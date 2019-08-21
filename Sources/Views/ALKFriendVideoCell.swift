@@ -6,11 +6,10 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class ALKFriendVideoCell: ALKVideoCell {
-
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -38,7 +37,7 @@ class ALKFriendVideoCell: ALKVideoCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        if(ALKMessageStyle.receivedBubble.style == .edge) {
+        if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
         } else {
@@ -53,7 +52,7 @@ class ALKFriendVideoCell: ALKVideoCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
 
-        contentView.addViewsForAutolayout(views: [avatarImageView,nameLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
 
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
@@ -86,12 +85,11 @@ class ALKFriendVideoCell: ALKVideoCell {
 
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         guard let url = viewModel.avatarURL else {
-            self.avatarImageView.image = placeHolder
+            avatarImageView.image = placeHolder
             return
         }
         let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-        self.avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-
+        avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
     }
 
     @objc private func avatarTappedAction() {

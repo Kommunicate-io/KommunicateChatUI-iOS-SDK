@@ -6,38 +6,35 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 
 extension AVCaptureVideoOrientation {
-
     var uiInterfaceOrientation: UIInterfaceOrientation {
-        get {
-            switch self {
-            case .landscapeLeft:        return .landscapeLeft
-            case .landscapeRight:       return .landscapeRight
-            case .portrait:             return .portrait
-            case .portraitUpsideDown:   return .portraitUpsideDown
-            }
+        switch self {
+        case .landscapeLeft: return .landscapeLeft
+        case .landscapeRight: return .landscapeRight
+        case .portrait: return .portrait
+        case .portraitUpsideDown: return .portraitUpsideDown
         }
     }
 
-    init(ui:UIInterfaceOrientation) {
+    init(ui: UIInterfaceOrientation) {
         switch ui {
-        case .landscapeRight:       self = .landscapeRight
-        case .landscapeLeft:        self = .landscapeLeft
-        case .portrait:             self = .portrait
-        case .portraitUpsideDown:   self = .portraitUpsideDown
-        default:                    self = .portrait
+        case .landscapeRight: self = .landscapeRight
+        case .landscapeLeft: self = .landscapeLeft
+        case .portrait: self = .portrait
+        case .portraitUpsideDown: self = .portraitUpsideDown
+        default: self = .portrait
         }
     }
 
-    init?(orientation:UIDeviceOrientation) {
+    init?(orientation: UIDeviceOrientation) {
         switch orientation {
-        case .landscapeRight:       self = .landscapeLeft
-        case .landscapeLeft:        self = .landscapeRight
-        case .portrait:             self = .portrait
-        case .portraitUpsideDown:   self = .portraitUpsideDown
+        case .landscapeRight: self = .landscapeLeft
+        case .landscapeLeft: self = .landscapeRight
+        case .portrait: self = .portrait
+        case .portraitUpsideDown: self = .portraitUpsideDown
         default:
             return nil
         }

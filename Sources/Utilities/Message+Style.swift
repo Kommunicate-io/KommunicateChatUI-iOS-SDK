@@ -8,7 +8,6 @@
 
 import Foundation
 public enum ALKMessageStyle {
-
     public static var displayName = Style(
         font: UIFont.font(.normal(size: 14)),
         text: .text(.gray9B)
@@ -53,12 +52,11 @@ public enum ALKMessageStyle {
     }
 
     public struct Bubble {
-
         /// Message bubble's background color.
         public var color: UIColor
 
         /// Message bubble corner Radius
-        public var cornerRadius:CGFloat
+        public var cornerRadius: CGFloat
 
         /// BubbleStyle of the message bubble.
         public var style: BubbleStyle
@@ -70,8 +68,8 @@ public enum ALKMessageStyle {
         public init(color: UIColor, style: BubbleStyle) {
             self.color = color
             self.style = style
-            self.widthPadding = 10.0
-            self.cornerRadius = 12
+            widthPadding = 10.0
+            cornerRadius = 12
         }
     }
 

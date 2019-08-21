@@ -9,7 +9,6 @@ import Foundation
 
 /// It is used to set set style for a view.
 public struct Style {
-
     public let font: UIFont
     public let text: UIColor
     public let background: UIColor
@@ -23,7 +22,6 @@ public struct Style {
     public init(font: UIFont, text: UIColor) {
         self.font = font
         self.text = text
-        self.background = .clear
+        background = .clear
     }
-
 }

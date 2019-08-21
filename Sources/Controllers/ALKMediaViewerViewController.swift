@@ -6,17 +6,16 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import AVFoundation
-import Kingfisher
 import AVKit
+import Foundation
+import Kingfisher
 
 final class ALKMediaViewerViewController: UIViewController {
-
     // to be injected
     var viewModel: ALKMediaViewerViewModel?
 
-    @IBOutlet private weak var fakeView: UIView!
+    @IBOutlet private var fakeView: UIView!
 
     fileprivate let scrollView: UIScrollView = {
         let sv = UIScrollView(frame: .zero)
@@ -68,8 +67,8 @@ final class ALKMediaViewerViewController: UIViewController {
     }
 
     private func setupNavigation() {
-        self.navigationController?.navigationBar.backgroundColor = UIColor.white
-        guard let navVC = self.navigationController else {return}
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+        guard let navVC = self.navigationController else { return }
         navVC.navigationBar.shadowImage = UIImage()
         navVC.navigationBar.isTranslucent = true
     }
@@ -85,11 +84,11 @@ final class ALKMediaViewerViewController: UIViewController {
         audioPlayButton.addTarget(self, action: #selector(ALKMediaViewerViewController.audioPlayButtonAction(_:)), for: .touchUpInside)
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(ALKMediaViewerViewController.swipeRightAction)) // put : at the end of method name
         swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        self.view.addGestureRecognizer(swipeRight)
+        view.addGestureRecognizer(swipeRight)
 
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ALKMediaViewerViewController.swipeLeftAction))
         swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
-        self.view.addGestureRecognizer(swipeLeft)
+        view.addGestureRecognizer(swipeLeft)
         view.addViewsForAutolayout(views: [imageView, playButton, audioPlayButton, audioIcon])
         imageView.bringSubviewToFront(playButton)
         view.bringSubviewToFront(audioPlayButton)
@@ -118,7 +117,7 @@ final class ALKMediaViewerViewController: UIViewController {
         view.layoutIfNeeded()
     }
 
-    @IBAction private func dismissPress(_ sender: Any) {
+    @IBAction private func dismissPress(_: Any) {
         dismiss(animated: true, completion: nil)
     }
 
@@ -133,7 +132,7 @@ final class ALKMediaViewerViewController: UIViewController {
     func showPhotoView(message: ALKMessageViewModel) {
         guard let filePath = message.filePath,
             let url = viewModel?.getURLFor(name: filePath) else {
-                return
+            return
         }
 
         let provider = LocalFileImageDataProvider(fileURL: url)
@@ -158,7 +157,7 @@ final class ALKMediaViewerViewController: UIViewController {
         viewModel.currentIndexAudioVideoPlayed()
     }
 
-    func showAudioView(message: ALKMessageViewModel) {
+    func showAudioView(message _: ALKMessageViewModel) {
         imageView.image = nil
         audioPlayButton.isHidden = false
         playButton.isHidden = true
@@ -215,11 +214,11 @@ final class ALKMediaViewerViewController: UIViewController {
         }
     }
 
-    @objc private func playButtonAction(_ action: UIButton) {
+    @objc private func playButtonAction(_: UIButton) {
         playVideo()
     }
 
-    @objc private func audioPlayButtonAction(_ action: UIButton) {
+    @objc private func audioPlayButtonAction(_: UIButton) {
         playAudio()
     }
 }

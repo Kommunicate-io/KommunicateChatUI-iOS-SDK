@@ -8,11 +8,11 @@
 import Foundation
 
 // MARK: - FriendPhotoLandscapeCell
-final class ALKFriendPhotoLandscapeCell: ALKFriendPhotoCell {
 
+final class ALKFriendPhotoLandscapeCell: ALKFriendPhotoCell {
     override func setupViews() {
         super.setupViews()
         let width = UIScreen.main.bounds.width
-        photoView.widthAnchor.constraint(equalToConstant: width*0.64).isActive = true
+        photoView.widthAnchor.constraint(equalToConstant: width * 0.64).isActive = true
     }
 }

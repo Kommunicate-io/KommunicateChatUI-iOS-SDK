@@ -13,12 +13,10 @@ import UIKit
 /// It also contains `Config` which is used to configure views properties. It can be changed from outside.
 /// - NOTE: Padding for message will be passed from outside. Time and status will be shown to the left of view with default padding.
 public class SentMessageView: UIView {
-
     // MARK: Public properties
 
     /// Configuration to change width height and padding of views inside SentMessageView.
     public struct Config {
-
         public struct StateView {
             public static var width: CGFloat = 17.0
             public static var height: CGFloat = 9.0
@@ -36,7 +34,6 @@ public class SentMessageView: UIView {
             /// Bottom padding of `MessageView` from `TimeLabel`
             public static var bottomPadding: CGFloat = 2.0
         }
-
     }
 
     // MARK: Fileprivate Properties
@@ -44,7 +41,8 @@ public class SentMessageView: UIView {
     fileprivate lazy var messageView = MessageView(
         bubbleStyle: MessageTheme.sentMessage.bubble,
         messageStyle: MessageTheme.sentMessage.message,
-        maxWidth: maxWidth)
+        maxWidth: maxWidth
+    )
 
     fileprivate var timeLabel: UILabel = {
         let lb = UILabel()
@@ -80,7 +78,7 @@ public class SentMessageView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -94,35 +92,35 @@ public class SentMessageView: UIView {
         let message = model.text ?? ""
         /// Set frame
         let height = SentMessageView.rowHeight(model: model, maxWidth: maxWidth, padding: padding)
-        self.frame.size = CGSize(width: maxWidth, height: height)
-        
+        frame.size = CGSize(width: maxWidth, height: height)
+
         // Set message
         messageView.update(model: message)
 
         // Set time and update timeLabel constraint.
         timeLabel.text = model.time
         let timeLabelSize = model.time.rectWithConstrainedWidth(Config.TimeLabel.maxWidth,
-                                                                  font: MessageTheme.sentMessage.time.font)
+                                                                font: MessageTheme.sentMessage.time.font)
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up) // This is amazing😱😱😱... a diff in fraction can trim.
-        self.layoutIfNeeded()
+        layoutIfNeeded()
 
         guard let status = model.status else { return }
         // Set status
         var statusImage = MessageTheme.sentMessage.status
         switch status {
-            case .pending:
-                statusImage.pending = statusImage.pending?.withRenderingMode(.alwaysTemplate)
-                stateView.image = statusImage.pending
-                stateView.tintColor = UIColor.red
-            case .sent:
-                stateView.image = statusImage.sent
-            case .delivered:
-                stateView.image = statusImage.delivered
-            case .read:
-                statusImage.read = statusImage.read?.withRenderingMode(.alwaysTemplate)
-                stateView.image = statusImage.read
-                stateView.tintColor = UIColor(netHex: 0x0578FF)
+        case .pending:
+            statusImage.pending = statusImage.pending?.withRenderingMode(.alwaysTemplate)
+            stateView.image = statusImage.pending
+            stateView.tintColor = UIColor.red
+        case .sent:
+            stateView.image = statusImage.sent
+        case .delivered:
+            stateView.image = statusImage.delivered
+        case .read:
+            statusImage.read = statusImage.read?.withRenderingMode(.alwaysTemplate)
+            stateView.image = statusImage.read
+            stateView.tintColor = UIColor(netHex: 0x0578FF)
         }
     }
 
@@ -134,17 +132,18 @@ public class SentMessageView: UIView {
     ///   - maxWidth: maxmimum allowable width for view.
     ///   - padding: padding for view. Use the same passsed while initializing.
     /// - Returns: Exact height of view.
-    public static func rowHeight(model: Message, maxWidth: CGFloat, font: UIFont = UIFont(), padding: Padding?) -> CGFloat {
+    public static func rowHeight(model: Message, maxWidth: CGFloat, font _: UIFont = UIFont(), padding: Padding?) -> CGFloat {
         guard let padding = padding else {
             print("❌❌❌ Padding is not passed from outside. Use same passed in initialization. ❌❌❌")
             return 0
         }
-        return SentMessageViewSizeCalculator().rowHeight(messageModel:model, maxWidth:maxWidth, padding:padding)
+        return SentMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: maxWidth, padding: padding)
     }
 
     // MARK: Private methods
+
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageView, timeLabel, stateView])
+        addViewsForAutolayout(views: [messageView, timeLabel, stateView])
 
         NSLayoutConstraint.activate([
             stateView.widthAnchor.constraint(equalToConstant: Config.StateView.width),
@@ -162,8 +161,7 @@ public class SentMessageView: UIView {
             messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
             messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
             messageView.leadingAnchor.constraint(greaterThanOrEqualTo: timeLabel.trailingAnchor, constant: Config.MessageView.leftPadding),
-            messageView.bottomAnchor.constraint(equalTo: stateView.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding)
-            ])
+            messageView.bottomAnchor.constraint(equalTo: stateView.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding),
+        ])
     }
-
 }

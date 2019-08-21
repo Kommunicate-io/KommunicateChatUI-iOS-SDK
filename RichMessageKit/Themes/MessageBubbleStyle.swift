@@ -8,7 +8,6 @@
 import Foundation
 
 public struct MessageBubbleStyle {
-
     public var color: UIColor
     public var cornerRadius: CGFloat
     public var padding: Padding
@@ -24,5 +23,4 @@ public struct MessageBubbleStyle {
         self.cornerRadius = cornerRadius
         self.padding = padding
     }
-
 }

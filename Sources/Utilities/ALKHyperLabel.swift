@@ -6,6 +6,4 @@
 //
 import Applozic
 
-open class ALKHyperLabel: ALHyperLabel {
-
-}
+open class ALKHyperLabel: ALHyperLabel {}

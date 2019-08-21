@@ -8,13 +8,13 @@
 
 import Foundation
 
-import UIKit
+import Applozic
+import AVFoundation
 import Foundation
 import Kingfisher
-import AVFoundation
-import Applozic
+import UIKit
 
-protocol ALKVoiceCellProtocol: class {
+protocol ALKVoiceCellProtocol: AnyObject {
     func playAudioPress(identifier: String)
 }
 
@@ -24,9 +24,8 @@ public enum ALKVoiceCellState {
     case pause
 }
 
-class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
-                    ALKReplyMenuItemProtocol,ALKReportMessageMenuItemProtocol {
-
+class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
     var soundPlayerView: UIView = {
         let mv = UIView()
         mv.contentMode = .scaleAspectFill
@@ -80,7 +79,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         return bv
     }()
 
-    var downloadTapped:((Bool)->Void)?
+    var downloadTapped: ((Bool) -> Void)?
 
     class func topPadding() -> CGFloat {
         return 12
@@ -101,20 +100,18 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         // Configure the view for the selected state
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
-
+    override class func rowHeigh(viewModel _: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
         let heigh: CGFloat
         heigh = 37
-        return topPadding()+heigh+bottomPadding()
+        return topPadding() + heigh + bottomPadding()
     }
 
-    func getTimeString(secLeft:CGFloat) -> String {
-
+    func getTimeString(secLeft: CGFloat) -> String {
         let min = (Int(secLeft) / 60) % 60
         let sec = (Int(secLeft) % 60)
         let minStr = String(min)
         var secStr = String(sec)
-        if sec < 10 {secStr = "0\(secStr)"}
+        if sec < 10 { secStr = "0\(secStr)" }
 
         return "\(minStr):\(secStr)"
     }
@@ -127,14 +124,14 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
             downloadTapped?(true)
         } else if let filePath = viewModel.filePath {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(filePath)).path) as Data? {
+            if let data = NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) as Data? {
                 updateViewForDownloadedState(data: data)
             }
         }
 
-        let timeLeft = Int(viewModel.voiceTotalDuration)-Int(viewModel.voiceCurrentDuration)
+        let timeLeft = Int(viewModel.voiceTotalDuration) - Int(viewModel.voiceCurrentDuration)
         let totalTime = Int(viewModel.voiceTotalDuration)
-        let percent = viewModel.voiceTotalDuration == 0 ? 0 : Float(timeLeft)/Float(totalTime)
+        let percent = viewModel.voiceTotalDuration == 0 ? 0 : Float(timeLeft) / Float(totalTime)
 
         let currentPlayTime = CGFloat(timeLeft)
 
@@ -144,13 +141,13 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         } else if viewModel.voiceCurrentState == .playing {
             print("identifier: ", viewModel.identifier)
             actionButton.isSelected = true
-            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+            playTimeLabel.text = getTimeString(secLeft: currentPlayTime)
         } else if viewModel.voiceCurrentState == .stop {
             actionButton.isSelected = false
-            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+            playTimeLabel.text = getTimeString(secLeft: currentPlayTime)
         } else {
             actionButton.isSelected = false
-            playTimeLabel.text = getTimeString(secLeft:currentPlayTime)
+            playTimeLabel.text = getTimeString(secLeft: currentPlayTime)
         }
 
         if viewModel.voiceCurrentState == .stop || viewModel.voiceCurrentDuration == 0 {
@@ -158,17 +155,17 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         } else {
             progressBar.setProgress(Float(percent), animated: false)
         }
-        timeLabel.text   = viewModel.time
+        timeLabel.text = viewModel.time
     }
 
     weak var voiceDelegate: ALKVoiceCellProtocol?
 
-    func setCellDelegate(delegate:ALKVoiceCellProtocol) {
+    func setCellDelegate(delegate: ALKVoiceCellProtocol) {
         voiceDelegate = delegate
     }
 
     @objc func actionTapped() {
-        guard let identifier = viewModel?.identifier else {return}
+        guard let identifier = viewModel?.identifier else { return }
         voiceDelegate?.playAudioPress(identifier: identifier)
     }
 
@@ -181,7 +178,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
     override func setupViews() {
         super.setupViews()
 
-        self.accessibilityIdentifier = "audioCell"
+        accessibilityIdentifier = "audioCell"
 
         var playIcon = UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil)
         playIcon = playIcon?.imageFlippedForRightToLeftLayoutDirection()
@@ -196,7 +193,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         actionButton.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
         clearButton.addTarget(self, action: #selector(ALKVoiceCell.soundPlayerAction), for: .touchUpInside)
 
-        contentView.addViewsForAutolayout(views: [soundPlayerView,bubbleView,progressBar,actionButton,playTimeLabel,frameView,timeLabel,clearButton])
+        contentView.addViewsForAutolayout(views: [soundPlayerView, bubbleView, progressBar, actionButton, playTimeLabel, frameView, timeLabel, clearButton])
         contentView.bringSubviewToFront(soundPlayerView)
         contentView.bringSubviewToFront(progressBar)
         contentView.bringSubviewToFront(playTimeLabel)
@@ -225,15 +222,14 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         clearButton.trailingAnchor.constraint(equalTo: soundPlayerView.trailingAnchor).isActive = true
 
         actionButton.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
-        actionButton.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor,constant:0).isActive = true
+        actionButton.leadingAnchor.constraint(equalTo: soundPlayerView.leadingAnchor, constant: 0).isActive = true
         actionButton.widthAnchor.constraint(equalToConstant: 45).isActive = true
         actionButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         playTimeLabel.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
         playTimeLabel.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
-        playTimeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: actionButton.leadingAnchor,constant:25).isActive = true
-        playTimeLabel.trailingAnchor.constraint(greaterThanOrEqualTo: actionButton.trailingAnchor,constant:25).isActive = true
-
+        playTimeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: actionButton.leadingAnchor, constant: 25).isActive = true
+        playTimeLabel.trailingAnchor.constraint(greaterThanOrEqualTo: actionButton.trailingAnchor, constant: 25).isActive = true
     }
 
     deinit {
@@ -246,8 +242,8 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
             let player = try AVAudioPlayer(data: data, fileTypeHint: AVFileType.wav.rawValue)
             viewModel?.voiceData = data
             viewModel?.voiceTotalDuration = CGFloat(player.duration)
-            playTimeLabel.text = getTimeString(secLeft:viewModel!.voiceTotalDuration)
-        } catch(let error) {
+            playTimeLabel.text = getTimeString(secLeft: viewModel!.voiceTotalDuration)
+        } catch {
             print(error)
         }
     }
@@ -258,7 +254,7 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     private func isMessageSent() -> Bool {
-        guard let viewModel = viewModel else { return false}
+        guard let viewModel = viewModel else { return false }
         return viewModel.isSent || viewModel.isAllReceived || viewModel.isAllRead
     }
 
@@ -271,41 +267,38 @@ class ALKVoiceCell:ALKChatBaseCell<ALKMessageViewModel>,
         guard let messages = dbService.getAllMessagesWithAttachment(
             forContact: viewModel?.contactId,
             andChannelKey: viewModel?.channelKey,
-            onlyDownloadedAttachments: true) as? [ALMessage] else { return }
+            onlyDownloadedAttachments: true
+        ) as? [ALMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
-        NSLog("Messages with attachment: ", messages )
+        NSLog("Messages with attachment: ", messages)
 
         guard let viewModel = viewModel as? ALKMessageModel,
             let currentIndex = messageModels.index(of: viewModel) else { return }
         vc?.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex, localizedStringFileName: localizedStringFileName)
-        UIViewController.topViewController()?.present(nav!, animated: true, completion: {
-        })
+        UIViewController.topViewController()?.present(nav!, animated: true, completion: {})
     }
 
-    func menuReply(_ sender: Any) {
+    func menuReply(_: Any) {
         menuAction?(.reply)
     }
 
-    func menuReport(_ sender: Any) {
+    func menuReport(_: Any) {
         menuAction?(.reportMessage)
     }
 }
 
 extension ALKVoiceCell: ALKHTTPManagerDownloadDelegate {
-    func dataDownloaded(task: ALKDownloadTask) {
-
-    }
+    func dataDownloaded(task _: ALKDownloadTask) {}
 
     func dataDownloadingFinished(task: ALKDownloadTask) {
-
         // update viewmodel's data field and time and then call update
         guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
             return
         }
         ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        if let data = NSData(contentsOfFile: (documentsURL.appendingPathComponent(task.filePath ?? "")).path) as Data? {
+        if let data = NSData(contentsOfFile: documentsURL.appendingPathComponent(task.filePath ?? "").path) as Data? {
             updateViewForDownloadedState(data: data)
         }
     }

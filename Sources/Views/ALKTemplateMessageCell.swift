@@ -8,7 +8,6 @@
 import UIKit
 
 open class ALKTemplateMessageCell: UICollectionViewCell {
-
     open var textLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.textColor = UIColor.black
@@ -20,28 +19,27 @@ open class ALKTemplateMessageCell: UICollectionViewCell {
 
     public let leftPadding: CGFloat = 5.0
 
-    override public init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     func setupUI() {
+        layer.masksToBounds = true
+        layer.cornerRadius = 10.0
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.gray.cgColor
+        backgroundColor = UIColor.clear
+        addViewsForAutolayout(views: [textLabel])
 
-        self.layer.masksToBounds = true
-        self.layer.cornerRadius = 10.0
-        self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.gray.cgColor
-        self.backgroundColor = UIColor.clear
-        self.addViewsForAutolayout(views: [textLabel])
-
-        textLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leftPadding).isActive = true
-        textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        textLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        textLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leftPadding).isActive = true
+        textLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        textLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
     open func update(text: String) {

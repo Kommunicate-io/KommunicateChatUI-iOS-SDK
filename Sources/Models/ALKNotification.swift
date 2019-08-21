@@ -8,6 +8,6 @@
 import Foundation
 
 public enum ALKNotification {
-   public static let createGroupAction = "createGroupAction"
-   public static let conversationListAction = "conversationListAction"
+    public static let createGroupAction = "createGroupAction"
+    public static let conversationListAction = "conversationListAction"
 }

@@ -8,16 +8,15 @@
 import UIKit
 
 class ALKEmailTopView: UIView {
-
     static let height: CGFloat = 20
 
     // MARK: - Private properties
-    
+
     fileprivate var emailImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "alk_replied_icon",
-                           in: Bundle.applozic,
-                           compatibleWith: nil)
+                                  in: Bundle.applozic,
+                                  compatibleWith: nil)
         imageView.isUserInteractionEnabled = false
         imageView.contentMode = .center
         imageView.isHidden = true
@@ -41,7 +40,7 @@ class ALKEmailTopView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -55,10 +54,10 @@ class ALKEmailTopView: UIView {
     // MARK: - Private helper methods
 
     private func setupConstraints() {
-        self.backgroundColor = .clear
-        self.addViewsForAutolayout(views: [emailImage, emailLabel])
+        backgroundColor = .clear
+        addViewsForAutolayout(views: [emailImage, emailLabel])
 
-        NSLayoutConstraint.activate ([
+        NSLayoutConstraint.activate([
             emailImage.topAnchor.constraint(equalTo: topAnchor),
             emailImage.leadingAnchor.constraint(equalTo: leadingAnchor),
             emailImage.heightAnchor.constraint(equalToConstant: ALKEmailTopView.height),
@@ -67,39 +66,36 @@ class ALKEmailTopView: UIView {
             emailLabel.topAnchor.constraint(equalTo: topAnchor),
             emailLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             emailLabel.leadingAnchor.constraint(equalTo: emailImage.trailingAnchor),
-            emailLabel.heightAnchor.constraint(equalToConstant: ALKEmailTopView.height)
-            ])
+            emailLabel.heightAnchor.constraint(equalToConstant: ALKEmailTopView.height),
+        ])
     }
-
 }
 
 class ALKEmailBottomView: UIView {
-
-
     struct Padding {
-
         struct View {
             static let height: CGFloat = 20
         }
+
         struct EmailInfo {
             static let height: CGFloat = 20.0
             static let width: CGFloat = 124.0
         }
+
         struct EmailLink {
             static let height: CGFloat = 20.0
             static let left: CGFloat = 3.0
-
         }
     }
 
     var emailInfo: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        let attributedStringforNowLabel =  NSMutableAttributedString(string: "Have trouble viewing?", attributes: [
+        let attributedStringforNowLabel = NSMutableAttributedString(string: "Have trouble viewing?", attributes: [
             .font: UIFont(name: "HelveticaNeue-Light", size: 13.0)!,
             .foregroundColor: UIColor(red: 53.0 / 255.0, green: 53.0 / 255.0, blue: 52.0 / 255.0, alpha: 1.0),
-            .kern: 0.04
-            ])
+            .kern: 0.04,
+        ])
         label.attributedText = attributedStringforNowLabel
         label.isOpaque = true
         label.isHidden = true
@@ -108,11 +104,11 @@ class ALKEmailBottomView: UIView {
 
     var emailLinkLabel: UILabel = {
         let label = UILabel()
-        let attributedStringforNowLabel =  NSMutableAttributedString(string: "See it in full view", attributes: [
+        let attributedStringforNowLabel = NSMutableAttributedString(string: "See it in full view", attributes: [
             .font: UIFont(name: "HelveticaNeue-Light", size: 13.0)!,
-            .foregroundColor:  UIColor(red: 81.0 / 255.0, green: 78.0 / 255.0, blue: 239.0 / 255.0, alpha: 1.0),
-            .kern: 0.04
-            ])
+            .foregroundColor: UIColor(red: 81.0 / 255.0, green: 78.0 / 255.0, blue: 239.0 / 255.0, alpha: 1.0),
+            .kern: 0.04,
+        ])
         label.isUserInteractionEnabled = true
         label.attributedText = attributedStringforNowLabel
         label.numberOfLines = 1
@@ -128,7 +124,7 @@ class ALKEmailBottomView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -142,11 +138,11 @@ class ALKEmailBottomView: UIView {
     // MARK: - Private helper methods
 
     private func setupConstraints() {
-        self.backgroundColor = .clear
-        self.addViewsForAutolayout(views: [emailInfo,emailLinkLabel])
-        self.bringSubviewToFront(emailLinkLabel)
+        backgroundColor = .clear
+        addViewsForAutolayout(views: [emailInfo, emailLinkLabel])
+        bringSubviewToFront(emailLinkLabel)
 
-        NSLayoutConstraint.activate ([
+        NSLayoutConstraint.activate([
             emailInfo.topAnchor.constraint(equalTo: topAnchor),
             emailInfo.leadingAnchor.constraint(equalTo: leadingAnchor),
             emailInfo.heightAnchor.constraint(equalToConstant: Padding.EmailInfo.height),
@@ -154,9 +150,8 @@ class ALKEmailBottomView: UIView {
 
             emailLinkLabel.topAnchor.constraint(equalTo: topAnchor),
             emailLinkLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            emailLinkLabel.leadingAnchor.constraint(equalTo: emailInfo.trailingAnchor,constant: Padding.EmailLink.left),
-            emailLinkLabel.heightAnchor.constraint(equalToConstant: Padding.EmailLink.height)
-            ])
+            emailLinkLabel.leadingAnchor.constraint(equalTo: emailInfo.trailingAnchor, constant: Padding.EmailLink.left),
+            emailLinkLabel.heightAnchor.constraint(equalToConstant: Padding.EmailLink.height),
+        ])
     }
-
 }

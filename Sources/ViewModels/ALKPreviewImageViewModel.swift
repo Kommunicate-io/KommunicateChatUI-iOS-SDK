@@ -1,6 +1,6 @@
 //
 //  ALKPreviewImageViewModel.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -9,7 +9,6 @@
 import Foundation
 
 final class ALKPreviewImageViewModel: NSObject, Localizable {
-
     var localizedStringFileName: String
 
     var imageUrl: URL
@@ -23,7 +22,8 @@ final class ALKPreviewImageViewModel: NSObject, Localizable {
         let text = localizedString(
             forKey: "DownloadOriginalImageFail",
             withDefaultValue: SystemMessage.Warning.DownloadOriginalImageFail,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
         return text
     }()
 
@@ -33,12 +33,11 @@ final class ALKPreviewImageViewModel: NSObject, Localizable {
     }
 
     func saveImage(image: UIImage?, successBlock: @escaping () -> Void, failBlock: @escaping (Error) -> Void) {
-
-        self.savingImagesuccessBlock   = successBlock
-        self.savingImagefailBlock      = failBlock
+        savingImagesuccessBlock = successBlock
+        savingImagefailBlock = failBlock
 
         guard let image = image else {
-            failBlock(NSError(domain: "IMAGE_NOT_AVAILABLE", code: 0 , userInfo: nil))
+            failBlock(NSError(domain: "IMAGE_NOT_AVAILABLE", code: 0, userInfo: nil))
             return
         }
 
@@ -46,13 +45,15 @@ final class ALKPreviewImageViewModel: NSObject, Localizable {
             image,
             self,
             #selector(ALKPreviewImageViewModel.image(_:didFinishSavingWithError:contextInfo:)),
-            nil)
+            nil
+        )
     }
 
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error, let failBlock = savingImagefailBlock {
             failBlock(error)
         } else if let successBlock = savingImagesuccessBlock {
             successBlock()
         }
-    }}
+    }
+}

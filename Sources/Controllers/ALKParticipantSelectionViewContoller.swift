@@ -1,30 +1,30 @@
 //
 //  ALKParticipantSelectionViewContoller.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
 import Applozic
+import UIKit
 
-protocol ALKSelectParticipantToAddProtocol: class {
+protocol ALKSelectParticipantToAddProtocol: AnyObject {
     func selectedParticipant(selectedList: [ALKFriendViewModel], addedList: [ALKFriendViewModel])
 }
 
-protocol ALKInviteButtonProtocol: class {
+protocol ALKInviteButtonProtocol: AnyObject {
     func getButtonAppearance(invitedFriendCount count: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool)
 }
 
 // swiftlint:disable:next type_name
 class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
-
     // MARK: - UI Stuff
+
     @IBOutlet private var btnInvite: UIButton!
     @IBOutlet fileprivate var tblParticipants: UITableView!
 
-    fileprivate var tapToDismiss:UITapGestureRecognizer?
+    fileprivate var tapToDismiss: UITapGestureRecognizer?
 
     fileprivate let searchController = UISearchController(searchResultsController: nil)
 
@@ -38,18 +38,20 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 //    private var friendDataService: FriendDataService?
 
     // MARK: - Initially Setup
+
     var friendsInGroup: [GroupMemberInfo]?
     weak var selectParticipantDelegate: ALKSelectParticipantToAddProtocol?
 
     /*
      var alphabetDict = ["A":[],"B":[],"C":[],"D":[],"E":[],"F":[],"G":[],"H":[],"I":[],"J":[],"K":[],"L":[],"M":[],"N":[],"O":[],"P":[],"Q":[],"R":[],"S":[],"T":[],"U":[],"V":[],"W":[],"X":[],"Y":[],"Z":[],"#":[]]
-     
+
      var alphabetSection : Array<String> = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
      */
 
     lazy var localizedStringFileName: String! = configuration.localizedStringFileName
 
     // MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -66,20 +68,21 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchFriendList()
-        self.edgesForExtendedLayout = []
+        edgesForExtendedLayout = []
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
     }
 
     // MARK: - UI Setup
+
     private func setupUI() {
         tblParticipants.accessibilityIdentifier = "SelectParticipantTableView"
         setupInviteButton()
         setupSearchBar()
-        self.navigationItem.title = localizedString(forKey: "AddToGroupTitle", withDefaultValue: SystemMessage.LabelName.AddToGroupTitle, fileName: localizedStringFileName)
+        navigationItem.title = localizedString(forKey: "AddToGroupTitle", withDefaultValue: SystemMessage.LabelName.AddToGroupTitle, fileName: localizedStringFileName)
         definesPresentationContext = true
         btnInvite.setTitle(localizedString(forKey: "InviteButton", withDefaultValue: SystemMessage.ButtonName.Invite, fileName: localizedStringFileName), for: .normal)
         tblParticipants.tableHeaderView = searchController.searchBar
@@ -93,18 +96,19 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
     private func setupSearchBar() {
         searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation   = false
-        searchController.searchBar.delegate                 = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
         searchController.searchBar.applySearchBarStyle()
     }
 
     // MARK: - Overriden methods
+
     override func backTapped() {
         let completion = { [weak self] in
             guard let weakSelf = self else { return }
             _ = weakSelf.navigationController?.popViewController(animated: true)
         }
-        if (newFriendsInGroupStore.hasAtLeastOneMember()) {
+        if newFriendsInGroupStore.hasAtLeastOneMember() {
             let alertInformationDiscardTitle = localizedString(forKey: "DiscardChangeTitle", withDefaultValue: SystemMessage.LabelName.DiscardChangeTitle, fileName: localizedStringFileName)
             let alertInformationDiscardMessage = localizedString(forKey: "DiscardChangeMessage", withDefaultValue: SystemMessage.Warning.DiscardChange, fileName: localizedStringFileName)
 
@@ -116,7 +120,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
                                                                  cancelTitle: cancelTitle,
                                                                  discardTitle: discardTitle,
                                                                  discardAction: {
-                                                                    completion()
+                                                                     completion()
             })
             present(alert, animated: true, completion: nil)
         } else {
@@ -125,8 +129,8 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     }
 
     // MARK: - API Logic
-    func fetchFriendList() {
 
+    func fetchFriendList() {
         getAllFriends {
             // Get existing friends in this group
             self.tblParticipants.reloadData()
@@ -134,9 +138,8 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     }
 
     func getAllFriends(completion: @escaping () -> Void) {
-
-        if(ALApplozicSettings.isContactsGroupEnabled()) {
-            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { (_, channel) in
+        if ALApplozicSettings.isContactsGroupEnabled() {
+            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
 
                 guard let alChannel = channel else {
                     completion()
@@ -171,22 +174,20 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
                         contact.email = dbContact.email
                         contact.localImageResourceName = dbContact.localImageResourceName
                         contact.contactType = dbContact.contactType
-                        models.append(ALKFriendViewModel.init(identity: contact))
+                        models.append(ALKFriendViewModel(identity: contact))
                     }
-                    self.datasource.update(datasource: models, state: .full)
+                    datasource.update(datasource: models, state: .full)
                     completion()
                 }
 
-            } catch(_) {
-
+            } catch (_) {
                 completion()
             }
         }
     }
 
-    func addCategorizeContacts(channel:ALChannel?) {
-
-        guard let alChannel = channel  else {
+    func addCategorizeContacts(channel: ALChannel?) {
+        guard let alChannel = channel else {
             return
         }
 
@@ -195,21 +196,19 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
         let savedLoginUserId = ALUserDefaultsHandler.getUserId() as String
 
         for memberId in alChannel.membersId {
-
             if let memberIdStr = memberId as? String, memberIdStr != savedLoginUserId {
-
                 let contact: ALContact? = contactService.loadContact(byKey: "userId", value: memberIdStr)
 
-                if(contact?.deletedAtTime == nil) {
-                    models.append(ALKFriendViewModel.init(identity: contact!))
+                if contact?.deletedAtTime == nil {
+                    models.append(ALKFriendViewModel(identity: contact!))
                 }
-
             }
         }
-        self.datasource.update(datasource: models, state: .full)
+        datasource.update(datasource: models, state: .full)
     }
 
     // MARK: - Handle keyboard
+
     fileprivate func hideSearchKeyboard() {
         tapToDismiss = UITapGestureRecognizer(target: self, action: #selector(dismissSearchKeyboard))
         view.addGestureRecognizer(tapToDismiss!)
@@ -225,25 +224,26 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     }
 
     // MARK: - IBAction
-    @IBAction func invitePress(_ sender: Any) {
+
+    @IBAction func invitePress(_: Any) {
         btnInvite.isEnabled = false
         var selectedFriendList = [ALKFriendViewModel]()
-        //get all friends selected into a list
+        // get all friends selected into a list
         for fv in datasource.getDatasource(state: .full) {
             if fv.getIsSelected() == true {
-
                 selectedFriendList.append(fv)
             }
         }
 
         let addedFriendList = getAddedFriend(allFriendsInGroup: selectedFriendList)
 
-        self.selectParticipantDelegate?.selectedParticipant(selectedList: selectedFriendList, addedList: addedFriendList)
+        selectParticipantDelegate?.selectedParticipant(selectedList: selectedFriendList, addedList: addedFriendList)
     }
 
     // MARK: - Other
+
     private func getNewGroupMemberCount() -> Int {
-        return self.datasource.getDatasource(state: .full).filter { (friendViewModel) -> Bool in
+        return datasource.getDatasource(state: .full).filter { (friendViewModel) -> Bool in
             friendViewModel.getIsSelected() == true && !isInPreviousFriendGroup(fri: friendViewModel)
         }.count
     }
@@ -270,19 +270,17 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     fileprivate func isInPreviousFriendGroup(fri: ALKFriendViewModel) -> Bool {
         guard let friendUUID = fri.friendUUID, let friendsInGroup = self.friendsInGroup else { return false }
         return !friendsInGroup
-                    .filter { $0.id == friendUUID }
-                    .isEmpty
+            .filter { $0.id == friendUUID }
+            .isEmpty
     }
-
 }
 
 extension ALKParticipantSelectionViewContoller: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in _: UITableView) -> Int {
         return 1
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         let state = ALKDatasourceState(isInUsed: searchController.isActiveAndContainText())
         return datasource.count(state: state)
 
@@ -291,9 +289,7 @@ extension ALKParticipantSelectionViewContoller: UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ALKFriendContactCell", for: indexPath) as? ALKFriendContactCell {
-
             let state = ALKDatasourceState(isInUsed: searchController.isActiveAndContainText())
 
             guard let fri = datasource.getItem(atIndex: indexPath.row, state: state) else {
@@ -311,7 +307,6 @@ extension ALKParticipantSelectionViewContoller: UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         let state = ALKDatasourceState(isInUsed: searchController.isActiveAndContainText())
 
         guard let fri = datasource.getItem(atIndex: indexPath.row, state: state) else { return }
@@ -321,10 +316,10 @@ extension ALKParticipantSelectionViewContoller: UITableViewDelegate, UITableView
         datasource.updateItem(item: fri, atIndex: indexPath.row, state: state)
 
         if !isInPreviousFriendGroup(fri: fri) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 tableView.deselectRow(at: indexPath, animated: true)
                 tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-            })
+            }
         }
     }
 
@@ -349,70 +344,68 @@ extension ALKParticipantSelectionViewContoller: UITableViewDelegate, UITableView
     }
 
     /*
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let returnedView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 30)) //set these values as necessary
-        //returnedView.backgroundColor = UIColor(red: 224.0, green: 9.0, blue: 9.0, alpha: 1)
-        
-        let label = InsetLabel(frame: CGRect(x: 0, y: 0, width: returnedView.frame.size.width, height: returnedView.frame.size.height))
-        label.text = alphabetSection[section]
-        label.backgroundColor = UIColor(netHex:0xFBE6E6)
-        returnedView.addSubview(label)
-        return returnedView
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return alphabetSection[section]
-    }
-    */
+     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+     return 30
+     }
+
+     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+     let returnedView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 30)) //set these values as necessary
+     //returnedView.backgroundColor = UIColor(red: 224.0, green: 9.0, blue: 9.0, alpha: 1)
+
+     let label = InsetLabel(frame: CGRect(x: 0, y: 0, width: returnedView.frame.size.width, height: returnedView.frame.size.height))
+     label.text = alphabetSection[section]
+     label.backgroundColor = UIColor(netHex:0xFBE6E6)
+     returnedView.addSubview(label)
+     return returnedView
+     }
+
+     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+     return alphabetSection[section]
+     }
+     */
 }
 
 extension ALKParticipantSelectionViewContoller: UISearchResultsUpdating, UISearchBarDelegate {
-
     func updateSearchResults(for searchController: UISearchController) {
         filterContentForSearchText(searchText: searchController.searchBar.text!)
     }
 
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    func searchBarTextDidBeginEditing(_: UISearchBar) {
         hideSearchKeyboard()
     }
 
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    func searchBarTextDidEndEditing(_: UISearchBar) {
         if let tab = tapToDismiss {
             view.removeGestureRecognizer(tab)
             tapToDismiss = nil
         }
     }
 
-    private func filterContentForSearchText(searchText: String, scope: String = "All") {
+    private func filterContentForSearchText(searchText: String, scope _: String = "All") {
         let filteredList = datasource.getDatasource(state: .full).filter { friendViewModel in
             friendViewModel.getFriendDisplayName().lowercased().contains(searchText.lowercased())
         }
         datasource.update(datasource: filteredList, state: .filtered)
-        self.tblParticipants.reloadData()
+        tblParticipants.reloadData()
     }
 }
 
 extension ALKParticipantSelectionViewContoller: ALKInviteButtonProtocol {
-
     func getButtonAppearance(invitedFriendCount friendCount: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool) {
-        let isEnabled = (friendCount > 0) ? true: false
+        let isEnabled = (friendCount > 0) ? true : false
         let background = (isEnabled ? UIColor.mainRed() : UIColor.disabledButton())
         let newMember = friendCount > 0 ? " (\(friendCount))" : ""
         let inviteMessage = localizedString(
             forKey: "InviteMessage",
             withDefaultValue: SystemMessage.LabelName.InviteMessage,
-            fileName: localizedStringFileName)
+            fileName: localizedStringFileName
+        )
         let title = "\(inviteMessage) \(newMember)"
         return (title, background, isEnabled)
     }
 }
 
 class ParticipantStore {
-
     private var participants = [String]()
 
     func storeParticipantID(idString: String) {
@@ -429,8 +422,7 @@ class ParticipantStore {
 }
 
 extension UISearchController {
-
     func isActiveAndContainText() -> Bool {
-        return self.isActive && self.searchBar.text != ""
+        return isActive && searchBar.text != ""
     }
 }

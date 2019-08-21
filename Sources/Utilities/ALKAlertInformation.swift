@@ -1,6 +1,6 @@
 //
 //  AlertInformation.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -22,20 +22,16 @@ enum ALKAlertInformation {
     case discardChange
 
     var title: String {
-        get {
-            switch self {
-            case .discardChange:
-                return ALKAlertText.Title.Discard
-            }
+        switch self {
+        case .discardChange:
+            return ALKAlertText.Title.Discard
         }
     }
 
     var message: String {
-        get {
-            switch self {
-            case .discardChange:
-                return ALKAlertText.Message.Discard
-            }
+        switch self {
+        case .discardChange:
+            return ALKAlertText.Message.Discard
         }
     }
 }

@@ -8,19 +8,19 @@
 import Foundation
 
 extension ALKMessageViewModel {
-
     private func messageDetails() -> Message {
         return Message(
-            text: self.message,
-            isMyMessage: self.isMyMessage,
-            time: self.time!,
-            displayName: self.displayName,
-            status: self.messageStatus(),
-            imageURL: self.avatarURL)
+            text: message,
+            isMyMessage: isMyMessage,
+            time: time!,
+            displayName: displayName,
+            status: messageStatus(),
+            imageURL: avatarURL
+        )
     }
 
     func imageMessage() -> ImageMessage? {
-        let payload = self.payloadFromMetadata()
+        let payload = payloadFromMetadata()
         precondition(payload != nil, "Payload cannot be nil")
         guard let imageData = payload?[0], let url = imageData["url"] as? String else {
             assertionFailure("Payload must contain url.")
@@ -29,20 +29,21 @@ extension ALKMessageViewModel {
         return ImageMessage(
             caption: imageData["caption"] as? String,
             url: url,
-            message: messageDetails())
+            message: messageDetails()
+        )
     }
 
     func faqMessage() -> FAQMessage? {
         guard
             let metadata = self.metadata,
             let payload = metadata["payload"] as? String,
-            let json = try? JSONSerialization.jsonObject(with: payload.data, options : .allowFragments),
-            let msg = json as? Dictionary<String,Any>
-            else { return nil }
+            let json = try? JSONSerialization.jsonObject(with: payload.data, options: .allowFragments),
+            let msg = json as? [String: Any]
+        else { return nil }
 
         var buttons = [String]()
 
-        if let btns = msg["buttons"] as? [Dictionary<String,Any>] {
+        if let btns = msg["buttons"] as? [[String: Any]] {
             btns.forEach {
                 if let name = $0["name"] as? String {
                     buttons.append(name)
@@ -55,7 +56,8 @@ extension ALKMessageViewModel {
             title: msg["title"] as? String,
             description: msg["description"] as? String,
             buttonLabel: msg["buttonLabel"] as? String,
-            buttons: buttons)
+            buttons: buttons
+        )
     }
 
     func messageStatus() -> MessageStatus {

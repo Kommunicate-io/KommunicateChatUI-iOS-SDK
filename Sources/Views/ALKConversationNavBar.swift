@@ -8,13 +8,12 @@
 import Foundation
 import Kingfisher
 
-@objc public protocol NavigationBarCallbacks: class {
+@objc public protocol NavigationBarCallbacks: AnyObject {
     func backButtonTapped()
     @objc func titleTapped()
 }
 
 open class ALKConversationNavBar: UIView, Localizable {
-
     let navigationBarBackgroundColor: UIColor
     let configuration: ALKConfiguration
     weak var delegate: NavigationBarCallbacks?
@@ -85,8 +84,8 @@ open class ALKConversationNavBar: UIView, Localizable {
         return stackView
     }()
 
-    required public init(configuration: ALKConfiguration, delegate: NavigationBarCallbacks) {
-        self.navigationBarBackgroundColor = configuration.navigationBarBackgroundColor
+    public required init(configuration: ALKConfiguration, delegate: NavigationBarCallbacks) {
+        navigationBarBackgroundColor = configuration.navigationBarBackgroundColor
         self.configuration = configuration
         self.delegate = delegate
         super.init(frame: .zero)
@@ -95,18 +94,18 @@ open class ALKConversationNavBar: UIView, Localizable {
         setupActions()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     func updateView(profile: ALKConversationProfile) {
         profileView.isHidden = false
-        setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: (profile.status != nil))
+        setupProfile(name: profile.name, imageUrl: profile.imageUrl, isContact: profile.status != nil)
         guard let status = profile.status, !profile.isBlocked else {
-            self.hideStatus(true)
+            hideStatus(true)
             return
         }
-        self.hideStatus(false)
+        hideStatus(false)
         updateStatus(isOnline: status.isOnline, lastSeenAt: status.lastSeenAt)
     }
 
@@ -131,12 +130,12 @@ open class ALKConversationNavBar: UIView, Localizable {
 
     private func setupConstraints() {
         statusIconBackground.addViewsForAutolayout(views: [onlineStatusIcon])
-        self.addViewsForAutolayout(views: [backImage, backButton, profileImage, statusIconBackground, profileView])
+        addViewsForAutolayout(views: [backImage, backButton, profileImage, statusIconBackground, profileView])
 
-        //Setup constraints
-        backButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        backButton.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        backButton.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        // Setup constraints
+        backButton.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        backButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        backButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         backButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
 
         backImage.leadingAnchor.constraint(equalTo: backButton.leadingAnchor, constant: 5).isActive = true
@@ -145,8 +144,8 @@ open class ALKConversationNavBar: UIView, Localizable {
         backImage.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
         profileImage.leadingAnchor.constraint(equalTo: backButton.trailingAnchor).isActive = true
-        profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
-        profileImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
+        profileImage.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+        profileImage.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 35).isActive = true
 
         statusIconBackground.bottomAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 0).isActive = true
@@ -162,7 +161,7 @@ open class ALKConversationNavBar: UIView, Localizable {
         profileView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 5).isActive = true
         profileView.topAnchor.constraint(equalTo: profileImage.topAnchor).isActive = true
         profileView.bottomAnchor.constraint(equalTo: profileImage.bottomAnchor).isActive = true
-        profileView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        profileView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
 
     private func hideStatus(_ hide: Bool) {
@@ -187,14 +186,14 @@ open class ALKConversationNavBar: UIView, Localizable {
     private func setupProfile(name: String, imageUrl: String?, isContact: Bool) {
         profileName.text = name
 
-        let placeholderName = isContact ?  "contactPlaceholder" : "groupPlaceholder"
+        let placeholderName = isContact ? "contactPlaceholder" : "groupPlaceholder"
         let placeholder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
         guard
             let urlString = imageUrl,
             let url = URL(string: urlString)
-            else {
-                self.profileImage.image = placeholder
-                return
+        else {
+            profileImage.image = placeholder
+            return
         }
         let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
         profileImage.kf.setImage(with: resource, placeholder: placeholder)
@@ -207,13 +206,13 @@ open class ALKConversationNavBar: UIView, Localizable {
         }
         let currentTime = Date()
         let lastSeen = Double(exactly: lastSeenAt) ?? 0.0
-        let lastOnlineTime = Date(timeIntervalSince1970: lastSeen/1000)
+        let lastOnlineTime = Date(timeIntervalSince1970: lastSeen / 1000)
         let difference = currentTime.timeIntervalSince(lastOnlineTime)
         var status: String = ""
         if difference < 60.0 { // Less than 1 minute
             status = localizedString(forKey: "JustNow", withDefaultValue: SystemMessage.UserStatus.JustNow, fileName: configuration.localizedStringFileName)
         } else if difference < 60.0 * 60.0 { // Less than 1 hour
-            let minutes = (difference.truncatingRemainder(dividingBy: 3600)) / 60
+            let minutes = difference.truncatingRemainder(dividingBy: 3600) / 60
             let format = localizedString(forKey: "MinutesAgo",
                                          withDefaultValue: SystemMessage.UserStatus.MinutesAgo,
                                          fileName: configuration.localizedStringFileName)
@@ -234,6 +233,4 @@ open class ALKConversationNavBar: UIView, Localizable {
                                              fileName: configuration.localizedStringFileName)
         onlineStatusText.text = String(format: lastSeenFormat, status)
     }
-
 }
-

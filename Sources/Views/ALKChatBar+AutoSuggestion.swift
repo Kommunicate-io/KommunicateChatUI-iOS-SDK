@@ -8,12 +8,11 @@
 import Foundation
 
 extension ALKChatBar: UITableViewDataSource, UITableViewDelegate {
-
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in _: UITableView) -> Int {
         return 1
     }
 
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return filteredAutocompletionItems.count
     }
 
@@ -32,7 +31,7 @@ extension ALKChatBar: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let text = filteredAutocompletionItems[indexPath.row].content
 
         // If we replace the text here then it resizes the textview incorrectly.

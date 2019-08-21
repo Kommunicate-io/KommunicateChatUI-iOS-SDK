@@ -5,32 +5,30 @@
 //  Created by Sunil on 14/03/19.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 class ALKFileUtils: NSObject {
-
-    func getFileName(filePath:String?,fileMeta: ALFileMetaInfo?) -> String {
+    func getFileName(filePath: String?, fileMeta: ALFileMetaInfo?) -> String {
         guard let fileMetaInfo = fileMeta, let fileName = fileMetaInfo.name else {
             guard let localPathName = filePath else {
                 return ""
             }
-            return  (localPathName as NSString).lastPathComponent as String
+            return (localPathName as NSString).lastPathComponent as String
         }
         return fileName
     }
 
-    func getFileSize(filePath: String?,fileMetaInfo:ALFileMetaInfo?) -> String? {
-
-        guard  let fileName = filePath else {
+    func getFileSize(filePath: String?, fileMetaInfo: ALFileMetaInfo?) -> String? {
+        guard let fileName = filePath else {
             return fileMetaInfo?.getTheSize()
         }
 
-        let filePath = self.getDocumentDirectory(fileName: fileName).path
+        let filePath = getDocumentDirectory(fileName: fileName).path
 
-        guard  let size = try? FileManager.default.attributesOfItem(atPath:filePath)[FileAttributeKey.size], let fileSize = size as? UInt64
-            else {
-                return ""
+        guard let size = try? FileManager.default.attributesOfItem(atPath: filePath)[FileAttributeKey.size], let fileSize = size as? UInt64
+        else {
+            return ""
         }
         var floatSize = Float(fileSize / 1024)
         if floatSize < 1023 {
@@ -46,17 +44,17 @@ class ALKFileUtils: NSObject {
         return String(format: "%.1f GB", floatSize)
     }
 
-    func getFileExtenion(filePath: String?, fileMeta:ALFileMetaInfo?) -> String {
+    func getFileExtenion(filePath: String?, fileMeta: ALFileMetaInfo?) -> String {
         guard let localPathName = filePath else {
-            guard let fileMetaInfo = fileMeta, let name =  fileMetaInfo.name,let pathExtension = URL(string: name)?.pathExtension else {
+            guard let fileMetaInfo = fileMeta, let name = fileMetaInfo.name, let pathExtension = URL(string: name)?.pathExtension else {
                 return ""
             }
             return pathExtension
         }
-        return self.getDocumentDirectory(fileName: localPathName).pathExtension
+        return getDocumentDirectory(fileName: localPathName).pathExtension
     }
 
-    func getDocumentDirectory(fileName:String) -> URL {
+    func getDocumentDirectory(fileName: String) -> URL {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return docDirPath.appendingPathComponent(fileName)
     }
@@ -66,9 +64,8 @@ class ALKFileUtils: NSObject {
             return false
         }
 
-        let pathExtension = self.getDocumentDirectory(fileName: filePath ?? "").pathExtension
-        let fileTypes = ["docx", "pdf", "doc", "java", "js","txt","html","xlsx","xls","ppt","pptx"]
-        return  fileTypes.contains(pathExtension)
+        let pathExtension = getDocumentDirectory(fileName: filePath ?? "").pathExtension
+        let fileTypes = ["docx", "pdf", "doc", "java", "js", "txt", "html", "xlsx", "xls", "ppt", "pptx"]
+        return fileTypes.contains(pathExtension)
     }
-
 }

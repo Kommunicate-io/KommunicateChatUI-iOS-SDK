@@ -7,9 +7,10 @@
 //
 
 import Foundation
-// MARK: - ALKMyPhotoLandscapeCell
-final class ALKMyPhotoLandscapeCell: ALKPhotoCell {
 
+// MARK: - ALKMyPhotoLandscapeCell
+
+final class ALKMyPhotoLandscapeCell: ALKPhotoCell {
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
@@ -29,7 +30,7 @@ final class ALKMyPhotoLandscapeCell: ALKPhotoCell {
         photoView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: 48).isActive = true
         photoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14).isActive = true
 
-        photoView.widthAnchor.constraint(equalToConstant: width*0.64).isActive = true
+        photoView.widthAnchor.constraint(equalToConstant: width * 0.64).isActive = true
         photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
 
         fileSizeLabel.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0).isActive = true
@@ -63,7 +64,7 @@ final class ALKMyPhotoLandscapeCell: ALKPhotoCell {
 
     override func setupStyle() {
         super.setupStyle()
-        if(ALKMessageStyle.sentBubble.style == .edge) {
+        if ALKMessageStyle.sentBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
             photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius

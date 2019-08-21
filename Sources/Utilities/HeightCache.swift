@@ -9,7 +9,6 @@ import Foundation
 
 /// A Utility to cache height for messages.
 class HeightCache {
-
     /// Wrapper around CGFloat as NSCache only accepts class not structs.
     private class Float {
         let value: CGFloat
@@ -22,7 +21,7 @@ class HeightCache {
     private let cache = NSCache<NSString, Float>()
 
     private init() {
-        cache.name = "MessageHeightCache" 
+        cache.name = "MessageHeightCache"
     }
 
     func setHeight(_ height: CGFloat, for key: String) {

@@ -8,8 +8,7 @@
 import UIKit
 
 public class ReceivedImageMessageCell: UITableViewCell {
-
-    //MARK:- Public properties
+    // MARK: - Public properties
 
     /// It is used to inform the delegate that the image is tapped. URL of tapped image is sent.
     public var delegate: Tappable?
@@ -20,11 +19,13 @@ public class ReceivedImageMessageCell: UITableViewCell {
         public static var maxWidth = UIScreen.main.bounds.width
     }
 
-    //MARK:- Private properties
+    // MARK: - Private properties
+
     fileprivate lazy var messageView = ReceivedMessageView(
         frame: .zero,
         padding: messageViewPadding,
-        maxWidth: Config.maxWidth)
+        maxWidth: Config.maxWidth
+    )
 
     fileprivate var messageViewPadding: Padding
     fileprivate var imageBubble: ImageContainer
@@ -42,10 +43,10 @@ public class ReceivedImageMessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
         setupGesture()
-        self.backgroundColor = .clear
+        backgroundColor = .clear
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -64,7 +65,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
 
         /// Set frame
         let height = ReceivedImageMessageCell.rowHeight(model: model)
-        self.frame.size = CGSize(width: Config.maxWidth, height: height)
+        frame.size = CGSize(width: Config.maxWidth, height: height)
 
         imageUrl = model.url
         imageBubble.update(model: model)
@@ -81,7 +82,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [messageView, imageBubble])
+        addViewsForAutolayout(views: [messageView, imageBubble])
         let leadingMargin =
             Config.padding.left
             + ReceivedMessageView.Config.ProfileImage.width
@@ -95,8 +96,8 @@ public class ReceivedImageMessageCell: UITableViewCell {
             imageBubble.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
             imageBubble.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leadingMargin),
             imageBubble.widthAnchor.constraint(equalToConstant: imageBubbleWidth),
-            imageBubble.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom)
-            ])
+            imageBubble.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+        ])
     }
 
     @objc private func imageTapped() {
@@ -116,5 +117,4 @@ public class ReceivedImageMessageCell: UITableViewCell {
         tapGesture.numberOfTapsRequired = 1
         imageBubble.addGestureRecognizer(tapGesture)
     }
-
 }

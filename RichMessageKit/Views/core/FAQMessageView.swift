@@ -10,7 +10,6 @@ import UIKit
 /// Its a view that displays a title with description on a bubble
 /// alongwith optional buttons at the bottom.
 public class FAQMessageView: UIView {
-
     // MARK: - Public properties
 
     /// Use this to adjust the spacing between title-description and description-buttons.
@@ -76,7 +75,7 @@ public class FAQMessageView: UIView {
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -128,13 +127,13 @@ public class FAQMessageView: UIView {
 
     private func setupConstraints() {
         bubbleView.addViewsForAutolayout(views: [titleLabel, descriptionLabel])
-        self.addViewsForAutolayout(views: [bubbleView, buttonLabel, buttons])
+        addViewsForAutolayout(views: [bubbleView, buttonLabel, buttons])
         let padding = style.bubble.padding
 
         if alignLeft {
-            buttonLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+            buttonLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         } else {
-            buttonLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor).isActive = true
+            buttonLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor).isActive = true
         }
 
         NSLayoutConstraint.activate([
@@ -160,8 +159,8 @@ public class FAQMessageView: UIView {
             buttons.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             buttons.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             buttons.topAnchor.constraint(equalTo: buttonLabel.bottomAnchor, constant: FAQMessageView.verticalSpacing),
-            buttons.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -FAQMessageView.verticalSpacing)
-            ])
+            buttons.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -FAQMessageView.verticalSpacing),
+        ])
     }
 }
 

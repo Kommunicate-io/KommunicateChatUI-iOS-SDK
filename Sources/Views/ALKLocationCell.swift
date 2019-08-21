@@ -1,26 +1,27 @@
 //
 //  ALKLocationCell.swift
-//  
+//
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
-import Kingfisher
 import Applozic
+import Kingfisher
+import UIKit
 
-protocol ALKLocationCellDelegate: class {
-    func displayLocation(location:ALKLocationPreviewViewModel)
+protocol ALKLocationCellDelegate: AnyObject {
+    func displayLocation(location: ALKLocationPreviewViewModel)
 }
 
 class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
-                        ALKReplyMenuItemProtocol,ALKReportMessageMenuItemProtocol {
-
-    weak var delegate:ALKLocationCellDelegate?
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
+    weak var delegate: ALKLocationCellDelegate?
 
     // MARK: - Declare Variables or Types
+
     // MARK: Environment in chat
+
     internal var timeLabel: UILabel = {
         let label = UILabel()
         return label
@@ -42,7 +43,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }()
 
     private lazy var tapGesture: UITapGestureRecognizer = {
-        let tapGesture = UITapGestureRecognizer.init(target: self, action: #selector(handleTap(withTapGesture:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(withTapGesture:)))
         tapGesture.numberOfTapsRequired = 1
         return tapGesture
     }()
@@ -58,6 +59,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     // MARK: Content in chat
+
     private var tempLocation: Geocode?
 
     private var locationImageView: UIImageView = {
@@ -77,6 +79,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }()
 
     // MARK: - Lifecycle
+
     override func setupViews() {
         super.setupViews()
 
@@ -125,7 +128,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         // locationImageView
         locationImageView.image = nil
-        guard let lat = viewModel.geocode?.location.latitude,let lon = viewModel.geocode?.location.longitude else {
+        guard let lat = viewModel.geocode?.location.latitude, let lon = viewModel.geocode?.location.longitude else {
             return
         }
         let latLonArgument = String(format: "%f,%f", lat, lon)
@@ -138,55 +141,57 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
             placeholder: UIImage(
                 named: "map_no_data",
                 in: Bundle.applozic,
-                compatibleWith: nil))
+                compatibleWith: nil
+            )
+        )
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,width: CGFloat) -> CGFloat {
+    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let heigh: CGFloat = ceil((width * 0.64) / viewModel.ratio)
         return heigh + 26.0
     }
 
     // MARK: - Method of class
-    func setDelegate(locDelegate:ALKLocationCellDelegate) {
+
+    func setDelegate(locDelegate: ALKLocationCellDelegate) {
         delegate = locDelegate
     }
 
     @objc func handleTap(withTapGesture gesture: UITapGestureRecognizer) {
-        if let geocode = viewModel?.geocode ,gesture.state == .ended {
+        if let geocode = viewModel?.geocode, gesture.state == .ended {
             tempLocation = geocode
             openMap(withLocation: geocode, completion: nil)
         }
     }
 
-    func openMap(withLocation geocode: Geocode, completion: ((_ isSuccess: Bool) -> Swift.Void)? = nil) {
-        if let locDelegate = delegate , locationPreviewViewModel().isReady {
+    func openMap(withLocation _: Geocode, completion _: ((_ isSuccess: Bool) -> Swift.Void)? = nil) {
+        if let locDelegate = delegate, locationPreviewViewModel().isReady {
             locDelegate.displayLocation(location: locationPreviewViewModel())
         }
     }
 
     // MARK: - ALKPreviewLocationViewControllerDelegate
+
     func locationPreviewViewModel() -> ALKLocationPreviewViewModel {
         guard let loc = tempLocation else {
             let unspecifiedLocaltionMsg = localizedString(forKey: "UnspecifiedLocation", withDefaultValue: SystemMessage.UIError.unspecifiedLocation, fileName: localizedStringFileName)
             return ALKLocationPreviewViewModel(addressText: unspecifiedLocaltionMsg, localizedStringFileName: localizedStringFileName)
         }
-        return ALKLocationPreviewViewModel(geocode:loc, localizedStringFileName: localizedStringFileName)
+        return ALKLocationPreviewViewModel(geocode: loc, localizedStringFileName: localizedStringFileName)
     }
 
-    func menuReply(_ sender: Any) {
+    func menuReply(_: Any) {
         menuAction?(.reply)
     }
 
-    func menuReport(_ sender: Any) {
+    func menuReport(_: Any) {
         menuAction?(.reportMessage)
     }
-
 }
 
 class ALKTappableView: UIView {
-
     // To highlight when long pressed
-    override open var canBecomeFirstResponder: Bool {
+    open override var canBecomeFirstResponder: Bool {
         return true
     }
 }

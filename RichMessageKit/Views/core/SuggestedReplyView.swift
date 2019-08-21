@@ -14,7 +14,6 @@ import UIKit
 /// Pass custom `SuggestedReplyConfig` to modify font and color of view.
 /// - NOTE: It uses an array of dictionary where each dictionary should have `title` key which will be used as button text.
 public class SuggestedReplyView: UIView {
-
     // MARK: Public properties
 
     /// Configuration for SuggestedReplyView.
@@ -22,7 +21,7 @@ public class SuggestedReplyView: UIView {
     public struct SuggestedReplyConfig {
         public var font = UIFont.systemFont(ofSize: 14)
         public var color = UIColor(red: 85, green: 83, blue: 183)
-        public init() { }
+        public init() {}
     }
 
     // MARK: Internal properties
@@ -58,14 +57,14 @@ public class SuggestedReplyView: UIView {
                 config: SuggestedReplyConfig = SuggestedReplyConfig(),
                 delegate: Tappable) {
         self.maxWidth = maxWidth
-        self.font = config.font
-        self.color = config.color
+        font = config.font
+        color = config.color
         self.delegate = delegate
         super.init(frame: .zero)
         setupConstraints()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -80,7 +79,7 @@ public class SuggestedReplyView: UIView {
         let width = maxWidth
         let height = SuggestedReplyView.rowHeight(model: model, maxWidth: width, font: font)
         let size = CGSize(width: width, height: height)
-        self.frame.size = size
+        frame.size = size
 
         alignLeft = !model.message.isMyMessage
 
@@ -96,21 +95,21 @@ public class SuggestedReplyView: UIView {
     ///   - font: Font for suggested replies. Pass the custom SuggestedReplyConfig font used while initialization.
     /// - Returns: Returns height of view based on passed parameters.
     public static func rowHeight(model: SuggestedReplyMessage,
-                                maxWidth: CGFloat = UIScreen.main.bounds.width,
-                                font: UIFont = SuggestedReplyConfig().font) -> CGFloat {
+                                 maxWidth: CGFloat = UIScreen.main.bounds.width,
+                                 font: UIFont = SuggestedReplyConfig().font) -> CGFloat {
         return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth, font: font)
     }
 
     // MARK: Private methods
 
     private func setupConstraints() {
-        self.addViewsForAutolayout(views: [mainStackView])
+        addViewsForAutolayout(views: [mainStackView])
         NSLayoutConstraint.activate([
             mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             mainStackView.topAnchor.constraint(equalTo: self.topAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-            ])
+            mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        ])
     }
 
     private func setupSuggestedReplyButtons(_ model: SuggestedReplyMessage) {
@@ -125,7 +124,7 @@ public class SuggestedReplyView: UIView {
             width += button.buttonWidth()
 
             if width >= maxWidth {
-                guard subviews.count > 0 else {
+                guard !subviews.isEmpty else {
                     let stackView = horizontalStackView(subviews: [button])
                     mainStackView.addArrangedSubview(stackView)
                     width = 0
@@ -158,7 +157,7 @@ public class SuggestedReplyView: UIView {
         return stackView
     }
 
-    private func hiddenViewUsing(currWidth: CGFloat, maxWidth: CGFloat, subViews: [UIView]) -> UIView {
+    private func hiddenViewUsing(currWidth: CGFloat, maxWidth: CGFloat, subViews _: [UIView]) -> UIView {
         let unusedWidth = maxWidth - currWidth - 20
         let height = (subviews[0] as? CurvedButton)?.buttonHeight() ?? 0
         let size = CGSize(width: unusedWidth, height: height)

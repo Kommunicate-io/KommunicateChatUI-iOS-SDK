@@ -8,11 +8,11 @@
 import Foundation
 
 struct ProfanityFilter {
-
     enum Errors: Error {
         case fileNotFoundError
         case formattingError
     }
+
     let fileName: String?
     let restrictedMessageRegex: String?
     var restrictedWords = Set<String>()
@@ -22,10 +22,10 @@ struct ProfanityFilter {
     private init(
         fileName: String?,
         messageRegex: String?,
-        bundle: Bundle) throws {
-
+        bundle: Bundle
+    ) throws {
         self.fileName = fileName
-        self.restrictedMessageRegex = messageRegex
+        restrictedMessageRegex = messageRegex
         self.bundle = bundle
 
         guard let fileName = fileName else { return }
@@ -41,7 +41,8 @@ struct ProfanityFilter {
 
         guard let fileURL = bundle.url(
             forResource: fileName,
-            withExtension: "txt") else {
+            withExtension: "txt"
+        ) else {
             throw Errors.fileNotFoundError
         }
         guard let wordText = try? String(contentsOf: fileURL, encoding: .utf8) else {
@@ -64,7 +65,7 @@ struct ProfanityFilter {
         // If not present in the restricted words then match the text
         // against the pattern.
         if let restrictedMessagePattern = restrictedMessageRegex {
-            let range = NSRange(text.startIndex..<text.endIndex, in: text)
+            let range = NSRange(text.startIndex ..< text.endIndex, in: text)
             do {
                 let regex = try NSRegularExpression(pattern: restrictedMessagePattern, options: [])
                 let matches = regex.numberOfMatches(in: text, options: [], range: range)

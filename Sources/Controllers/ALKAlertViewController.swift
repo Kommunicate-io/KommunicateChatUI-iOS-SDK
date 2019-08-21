@@ -7,13 +7,10 @@
 
 import Foundation
 
-
-import Foundation
 import Applozic
-
+import Foundation
 
 class ALKAlertViewController: UIViewController, Localizable {
-
     public struct Action {
         static let reportMessage: String = "REPORT_MESSAGE"
     }
@@ -48,12 +45,11 @@ class ALKAlertViewController: UIViewController, Localizable {
         struct ConfirmButton {
             static let height: CGFloat = 50.0
             static let left: CGFloat = 3.0
-
         }
     }
 
-    weak var  delegate : ALAlertButtonClickProtocol?
-    var action : String!
+    weak var delegate: ALAlertButtonClickProtocol?
+    var action: String!
     var configuration: ALKConfiguration!
     var messageKey: String!
 
@@ -69,14 +65,14 @@ class ALKAlertViewController: UIViewController, Localizable {
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.numberOfLines = 3
-        label.font = Font.bold(size:18.0).font()
+        label.font = Font.bold(size: 18.0).font()
         return label
     }()
 
     private let alertMessageLabel: UILabel = {
         let picker = UILabel()
         picker.numberOfLines = 4
-        picker.font = Font.light(size:14.0).font()
+        picker.font = Font.light(size: 14.0).font()
         return picker
     }()
 
@@ -85,16 +81,16 @@ class ALKAlertViewController: UIViewController, Localizable {
         let title = localizedString(forKey: "ReportMessage", withDefaultValue: SystemMessage.ButtonName.ReportMessage, fileName: configuration.localizedStringFileName).uppercased()
         button.setTitle(title, for: .normal)
         button.setTitleColor(UIView().tintColor, for: .normal)
-        button.setFont(font:Font.normal(size: 16.0).font())
+        button.setFont(font: Font.normal(size: 16.0).font())
         button.setBackgroundColor(UIColor(red: 242.0 / 255.0, green: 242.0 / 255.0, blue: 242.0 / 255.0, alpha: 1.0))
         return button
     }()
 
-    private lazy var  cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         let button = UIButton()
         let title = localizedString(forKey: "CapitalLetterCancelText", withDefaultValue: SystemMessage.ButtonName.CapitalLetterCancelText, fileName: configuration.localizedStringFileName)
         button.setTitle(title, for: .normal)
-        button.setFont(font:Font.normal(size: 16.0).font())
+        button.setFont(font: Font.normal(size: 16.0).font())
         button.setTitleColor(UIColor.black, for: .normal)
         button.setBackgroundColor(UIColor(red: 242.0 / 255.0, green: 242.0 / 255.0, blue: 242.0 / 255.0, alpha: 1.0))
         return button
@@ -106,8 +102,7 @@ class ALKAlertViewController: UIViewController, Localizable {
         return view
     }()
 
-
-    init(action:String, delegate: ALAlertButtonClickProtocol,messageKey: String, configuration: ALKConfiguration) {
+    init(action: String, delegate: ALAlertButtonClickProtocol, messageKey: String, configuration: ALKConfiguration) {
         super.init(nibName: nil, bundle: nil)
         self.messageKey = messageKey
         self.action = action
@@ -115,7 +110,7 @@ class ALKAlertViewController: UIViewController, Localizable {
         self.configuration = configuration
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -126,33 +121,33 @@ class ALKAlertViewController: UIViewController, Localizable {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        self.view.backgroundColor = UIColor.init(10, green: 10, blue: 10, alpha: 0.2)
-        self.view.isOpaque = false
+        view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
+        view.isOpaque = false
     }
 
-    func updateTitleAndMessage(_ text: String,message: String) {
-        self.popupTitle.text = text
-        self.alertMessageLabel.text = message
+    func updateTitleAndMessage(_ text: String, message: String) {
+        popupTitle.text = text
+        alertMessageLabel.text = message
     }
 
     @objc func tappedCancel() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     @objc func tappedConfirmButton() {
-        delegate?.confirmButtonClick(action: action,messageKey: self.messageKey)
+        delegate?.confirmButtonClick(action: action, messageKey: messageKey)
     }
 
     func setupViews() {
-        self.view.addViewsForAutolayout(views: [modalView])
+        view.addViewsForAutolayout(views: [modalView])
 
-        modalView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        modalView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        modalView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        modalView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         modalView.heightAnchor.constraint(equalToConstant: Padding.ModelView.height).isActive = true
-        modalView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: Padding.ModelView.left).isActive = true
-        modalView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -Padding.ModelView.right).isActive = true
+        modalView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.ModelView.left).isActive = true
+        modalView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.ModelView.right).isActive = true
 
-        modalView.addViewsForAutolayout(views: [popupTitle, alertMessageLabel, buttonUIView,cancelButton,confirmButton])
+        modalView.addViewsForAutolayout(views: [popupTitle, alertMessageLabel, buttonUIView, cancelButton, confirmButton])
 
         popupTitle.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: Padding.TitleLabel.left).isActive = true
         popupTitle.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.TitleLabel.right).isActive = true
@@ -167,7 +162,7 @@ class ALKAlertViewController: UIViewController, Localizable {
         buttonUIView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor).isActive = true
         buttonUIView.bottomAnchor.constraint(equalTo: modalView.bottomAnchor).isActive = true
 
-        let halfWidth =  (UIScreen.main.bounds.width - 60)/2
+        let halfWidth = (UIScreen.main.bounds.width - 60) / 2
 
         cancelButton.heightAnchor.constraint(equalToConstant: Padding.CancelButton.height).isActive = true
         cancelButton.leadingAnchor.constraint(equalTo: modalView.leadingAnchor).isActive = true
@@ -175,7 +170,7 @@ class ALKAlertViewController: UIViewController, Localizable {
         cancelButton.bottomAnchor.constraint(equalTo: modalView.bottomAnchor).isActive = true
 
         confirmButton.heightAnchor.constraint(equalToConstant: Padding.ConfirmButton.height).isActive = true
-        confirmButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor,constant: Padding.ConfirmButton.left).isActive = true
+        confirmButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: Padding.ConfirmButton.left).isActive = true
         confirmButton.trailingAnchor.constraint(equalTo: buttonUIView.trailingAnchor).isActive = true
         confirmButton.bottomAnchor.constraint(equalTo: modalView.bottomAnchor).isActive = true
 
@@ -186,5 +181,5 @@ class ALKAlertViewController: UIViewController, Localizable {
 }
 
 @objc protocol ALAlertButtonClickProtocol {
-    func confirmButtonClick(action:String,messageKey:String)
+    func confirmButtonClick(action: String, messageKey: String)
 }

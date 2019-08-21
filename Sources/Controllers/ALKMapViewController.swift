@@ -5,22 +5,21 @@
 //  Created by Mukesh Thawani on 10/10/17.
 //
 
-import UIKit
-import MapKit
 import Applozic
 import Kingfisher
+import MapKit
+import UIKit
 
-protocol ALKShareLocationViewControllerDelegate: class {
+protocol ALKShareLocationViewControllerDelegate: AnyObject {
     func locationDidSelected(geocode: Geocode, image: UIImage)
 }
 
 class ALKMapViewController: UIViewController, Localizable {
-
     var configuration: ALKConfiguration!
 
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet var mapView: MKMapView!
 
-    @IBOutlet weak var shareLocationButton: UIButton!
+    @IBOutlet var shareLocationButton: UIButton!
 
     var locationManager = CLLocationManager()
     var region = MKCoordinateRegion()
@@ -31,14 +30,14 @@ class ALKMapViewController: UIViewController, Localizable {
         super.viewDidLoad()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        self.title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
+    override func viewWillAppear(_: Bool) {
+        title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
         let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
         shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)
         shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.selected)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_: Bool) {
         determineCurrentLocation()
     }
 
@@ -55,16 +54,16 @@ class ALKMapViewController: UIViewController, Localizable {
         }
     }
 
-    @IBAction func closeButtonAction(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+    @IBAction func closeButtonAction(_: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
     }
 
-    @IBAction func sendLocationAction(_ sender: UIButton) {
+    @IBAction func sendLocationAction(_: UIButton) {
         region = mapView.region
         let location = CLLocationCoordinate2D(latitude: region.center.latitude, longitude: region.center.longitude)
         let geoCode = Geocode(coordinates: location)
-        self.delegate?.locationDidSelected(geocode: geoCode, image: UIImage())
-        self.dismiss(animated: true, completion: nil)
+        delegate?.locationDidSelected(geocode: geoCode, image: UIImage())
+        dismiss(animated: true, completion: nil)
     }
 
     private func createStaticMap(position: CLLocationCoordinate2D,
@@ -82,7 +81,6 @@ class ALKMapViewController: UIViewController, Localizable {
         urlString = urlString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
 
         if let urlString = urlString, let url = URL(string: urlString) {
-
             KingfisherManager.shared.retrieveImage(with: url, options: nil, progressBlock: nil) { (image: Image?, error: NSError?, _: CacheType, _: URL?) in
 
                 guard let image = image else {
@@ -100,7 +98,7 @@ class ALKMapViewController: UIViewController, Localizable {
 }
 
 extension ALKMapViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard !isInitialized else { return }
         isInitialized = true
         let userLoction: CLLocation = locations[0]
@@ -108,14 +106,14 @@ extension ALKMapViewController: CLLocationManagerDelegate {
         let longitude = userLoction.coordinate.longitude
         let latDelta: CLLocationDegrees = 0.05
         let lonDelta: CLLocationDegrees = 0.05
-        let span:MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
         let location: CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
         let region: MKCoordinateRegion = MKCoordinateRegion(center: location, span: span)
-        self.mapView.setRegion(region, animated: true)
-        self.mapView.showsUserLocation = true
+        mapView.setRegion(region, animated: true)
+        mapView.showsUserLocation = true
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    func locationManager(_: CLLocationManager, didFailWithError error: Error) {
         print("Error \(error)")
     }
 }

@@ -18,9 +18,7 @@ extension StoryboardIdentifiable where Self: UIViewController {
     }
 }
 
-extension UIViewController: StoryboardIdentifiable {
-
-}
+extension UIViewController: StoryboardIdentifiable {}
 
 extension UIStoryboard {
     enum Storyboard: String {
@@ -56,7 +54,7 @@ extension UIStoryboard {
     }
 
     func instantiateViewController<T: UIViewController>() -> T where T: StoryboardIdentifiable {
-        let optionalVC = self.instantiateViewController(withIdentifier: T.storyboardIdentifier)
+        let optionalVC = instantiateViewController(withIdentifier: T.storyboardIdentifier)
 
         guard let vc = optionalVC as? T else {
             fatalError("Couldn't instantiate view controller with identifier \(T.storyboardIdentifier)")

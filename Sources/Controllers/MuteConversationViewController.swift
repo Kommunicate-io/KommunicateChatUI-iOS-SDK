@@ -5,15 +5,14 @@
 //  Created by Shivam Pokhriyal on 15/10/18.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
-@objc protocol Muteable: class {
+@objc protocol Muteable: AnyObject {
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)
 }
 
 class MuteConversationViewController: UIViewController, Localizable {
-
     var configuration: ALKConfiguration!
 
     var delegate: Muteable!
@@ -71,7 +70,7 @@ class MuteConversationViewController: UIViewController, Localizable {
         let values = [
             localizedString(forKey: "EightHour", withDefaultValue: SystemMessage.MutePopup.EightHour, fileName: configuration.localizedStringFileName),
             localizedString(forKey: "OneWeek", withDefaultValue: SystemMessage.MutePopup.OneWeek, fileName: configuration.localizedStringFileName),
-            localizedString(forKey: "OneYear", withDefaultValue: SystemMessage.MutePopup.OneYear, fileName: configuration.localizedStringFileName)
+            localizedString(forKey: "OneYear", withDefaultValue: SystemMessage.MutePopup.OneYear, fileName: configuration.localizedStringFileName),
         ]
         return values
     }()
@@ -80,11 +79,11 @@ class MuteConversationViewController: UIViewController, Localizable {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         self.conversation = conversation
-        self.indexPath = atIndexPath
+        indexPath = atIndexPath
         self.configuration = configuration
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -95,12 +94,12 @@ class MuteConversationViewController: UIViewController, Localizable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.init(10, green: 10, blue: 10, alpha: 0.2)
-        self.view.isOpaque = false
+        view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
+        view.isOpaque = false
     }
 
     func updateTitle(_ text: String) {
-        self.popupTitle.text = text
+        popupTitle.text = text
     }
 
     func selectPickerRow(_ row: Int) {
@@ -108,51 +107,50 @@ class MuteConversationViewController: UIViewController, Localizable {
     }
 
     func setUpPickerView() {
-        //Picker view delegate and datasource
+        // Picker view delegate and datasource
         timePicker.delegate = self
         timePicker.dataSource = self
 
-        //Default set first row i.e. 8 hours
+        // Default set first row i.e. 8 hours
         selectPickerRow(0)
     }
 
     @objc func tappedConfirm() {
-
         switch timePicker.selectedRow(inComponent: 0) {
         case 0:
             // 8 hours
-            let time: Int64 = 8*60*60*1000
-            delegate.mute(conversation: self.conversation, forTime: Int64(time), atIndexPath: indexPath)
+            let time: Int64 = 8 * 60 * 60 * 1000
+            delegate.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
 
         case 1:
             // 1 week
-            let time: Int64 = 7*24*60*60*1000
-            delegate.mute(conversation: self.conversation, forTime: Int64(time), atIndexPath: indexPath)
+            let time: Int64 = 7 * 24 * 60 * 60 * 1000
+            delegate.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
 
         case 2:
             // 1 year
-            let time: Int64 = 365*24*60*60*1000
-            delegate.mute(conversation: self.conversation, forTime: Int64(time), atIndexPath: indexPath)
+            let time: Int64 = 365 * 24 * 60 * 60 * 1000
+            delegate.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
 
         default:
             print("This won't occur")
         }
 
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     @objc func tappedCancel() {
-         self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func setupViews() {
-        self.view.addViewsForAutolayout(views: [modalView])
+        view.addViewsForAutolayout(views: [modalView])
 
-        modalView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        modalView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        modalView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        modalView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         modalView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        modalView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
-        modalView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+        modalView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        modalView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
 
         modalView.addViewsForAutolayout(views: [popupTitle, timePicker, actionButtons])
 
@@ -171,25 +169,22 @@ class MuteConversationViewController: UIViewController, Localizable {
 
         setUpPickerView()
 
-        //Add button actions
+        // Add button actions
         confirmButton.addTarget(self, action: #selector(tappedConfirm), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(tappedCancel), for: .touchUpInside)
-
     }
-
 }
 
 extension MuteConversationViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in _: UIPickerView) -> Int {
         return 1
     }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.timeValues.count
+    func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+        return timeValues.count
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.timeValues[row]
+    func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+        return timeValues[row]
     }
 }

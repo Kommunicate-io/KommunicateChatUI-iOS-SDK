@@ -8,9 +8,8 @@
 
 import Foundation
 
-//handle all in app's display messages
-struct SystemMessage : Localizable {
-
+// handle all in app's display messages
+struct SystemMessage: Localizable {
     struct Camera {
         static let cameraPermission = localizedString(forKey: "EnableCameraPermissionMessage")
         static let CamNotAvailable = localizedString(forKey: "CameraNotAvailableMessage")
@@ -113,8 +112,8 @@ struct SystemMessage : Localizable {
     }
 
     struct PhotoAlbum {
-        static let Success  = localizedString(forKey: "PhotoAlbumSuccess")
-        static let Fail     = localizedString(forKey: "PhotoAlbumFail")
+        static let Success = localizedString(forKey: "PhotoAlbumSuccess")
+        static let Fail = localizedString(forKey: "PhotoAlbumFail")
         static let SuccessTitle = localizedString(forKey: "PhotoAlbumSuccessTitle")
         static let FailureTitle = localizedString(forKey: "PhotoAlbumFailureTitle")
         static let Ok = localizedString(forKey: "PhotoAlbumOk")

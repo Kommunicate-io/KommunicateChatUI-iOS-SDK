@@ -21,7 +21,7 @@ public class ALKDownloadTask {
     public var filePath: String?
 
     public init(downloadUrl url: String, fileName: String?) {
-        self.urlString = url
+        urlString = url
         self.fileName = fileName
     }
 }

@@ -6,14 +6,14 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
+import Applozic
+import ContactsUI
 import Foundation
 import UIKit
-import ContactsUI
-import Applozic
 
 /// The delegate of an `ALKConversationListViewController` object.
 /// Provides different methods to manage chat thread selections.
-public protocol ALKConversationListDelegate: class {
+public protocol ALKConversationListDelegate: AnyObject {
     func conversation(
         _ message: ALKChatViewModelProtocol,
         willSelectItemAt index: Int,
@@ -22,7 +22,6 @@ public protocol ALKConversationListDelegate: class {
 }
 
 open class ALKConversationListViewController: ALKBaseViewController, Localizable {
-
     public var conversationViewController: ALKConversationViewController?
     public var conversationViewModelType = ALKConversationViewModel.self
     public weak var delegate: ALKConversationListDelegate?
@@ -42,29 +41,31 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         let barButton = UIBarButtonItem(
             image: configuration.rightNavBarImageForConversationListView,
             style: .plain,
-            target: self, action: #selector(compose))
+            target: self, action: #selector(compose)
+        )
         return barButton
     }()
 
-    fileprivate var tapToDismiss:UITapGestureRecognizer!
+    fileprivate var tapToDismiss: UITapGestureRecognizer!
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate var localizedStringFileName: String!
 
-    required public init(configuration: ALKConfiguration) {
+    public required init(configuration: ALKConfiguration) {
         conversationListTableViewController = ALKConversationListTableViewController(
             viewModel: viewModel,
             dbService: dbService,
             configuration: configuration,
-            showSearch: false)
+            showSearch: false
+        )
         tableView = conversationListTableViewController.tableView
         super.init(configuration: configuration)
         conversationListTableViewController.delegate = self
-        self.localizedStringFileName = configuration.localizedStringFileName
+        localizedStringFileName = configuration.localizedStringFileName
         viewModel.localizationFileName = configuration.localizedStringFileName
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -74,8 +75,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     override func addObserver() {
-
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: {[weak self] notification in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: { [weak self] notification in
             guard let weakSelf = self else { return }
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message ?? "")
@@ -84,7 +84,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
         })
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "pushNotification"), object: nil, queue: nil, using: {[weak self] notification in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "pushNotification"), object: nil, queue: nil, using: { [weak self] notification in
             print("push notification received: ", notification.object ?? "")
             guard let weakSelf = self, let object = notification.object as? String else { return }
             let components = object.components(separatedBy: ":")
@@ -109,7 +109,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             let info = notification.userInfo
             let alertValue = info?["alertValue"]
             guard let updateUI = info?["updateUI"] as? Int else { return }
-            if updateUI == Int(APP_STATE_ACTIVE.rawValue), weakSelf.isViewLoaded, (weakSelf.view.window != nil) {
+            if updateUI == Int(APP_STATE_ACTIVE.rawValue), weakSelf.isViewLoaded, weakSelf.view.window != nil {
                 guard let alert = alertValue as? String else { return }
                 let alertComponents = alert.components(separatedBy: ":")
                 if alertComponents.count > 1 {
@@ -122,18 +122,18 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
                 // Coming from background
 
                 guard contactId != nil || groupId != nil || conversationId != nil else { return }
-               weakSelf.launchChat(contactId: contactId, groupId: groupId, conversationId: conversationId)
+                weakSelf.launchChat(contactId: contactId, groupId: groupId, conversationId: conversationId)
             }
         })
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "reloadTable"), object: nil, queue: nil, using: {[weak self] notification in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "reloadTable"), object: nil, queue: nil, using: { [weak self] notification in
             NSLog("Reloadtable notification received")
 
             guard let weakSelf = self, let list = notification.object as? [Any] else { return }
             weakSelf.viewModel.updateMessageList(messages: list)
         })
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil, queue: nil, using: {[weak self] notification in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil, queue: nil, using: { [weak self] notification in
             NSLog("update user detail notification received")
 
             guard let weakSelf = self, let userId = notification.object as? String else { return }
@@ -145,17 +145,16 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             })
         })
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: {[weak self] _ in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: { [weak self] _ in
             NSLog("update group name notification received")
-            guard let weakSelf = self, (weakSelf.view.window != nil) else { return }
+            guard let weakSelf = self, weakSelf.view.window != nil else { return }
             print("update group detail")
             weakSelf.tableView.reloadData()
         })
-
     }
 
     override func removeObserver() {
-        if (alMqttConversationService) != nil {
+        if alMqttConversationService != nil {
             alMqttConversationService.unsubscribeToConversation()
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "pushNotification"), object: nil)
@@ -165,17 +164,17 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
     }
 
-    override open func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+        activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
-        self.view.bringSubviewToFront(activityIndicator)
-        self.edgesForExtendedLayout = []
+        view.bringSubviewToFront(activityIndicator)
+        edgesForExtendedLayout = []
         viewModel.prepareController(dbService: dbService)
     }
 
-    override open func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         alMqttConversationService.mqttConversationDelegate = self
@@ -185,19 +184,18 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         setupView()
     }
 
-    override open func viewDidAppear(_ animated: Bool) {
+    open override func viewDidAppear(_: Bool) {
         print("contact id: ", contactId as Any)
         if contactId != nil || channelKey != nil || conversationId != nil {
             print("contact id present")
             launchChat(contactId: contactId, groupId: channelKey, conversationId: conversationId)
-            self.contactId = nil
-            self.channelKey = nil
-            self.conversationId = nil
+            contactId = nil
+            channelKey = nil
+            conversationId = nil
         }
     }
 
     private func setupView() {
-
         setUpNavigationRightButtons()
         title = localizedString(forKey: "ConversationListVCTitle", withDefaultValue: SystemMessage.ChatList.title, fileName: localizedStringFileName)
 
@@ -209,37 +207,37 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         }
 
         #if DEVELOPMENT
-        let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
-        indicator.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        indicator.hidesWhenStopped = true
-        indicator.stopAnimating()
-        let indicatorButton = UIBarButtonItem(customView: indicator)
+            let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+            indicator.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+            indicator.hidesWhenStopped = true
+            indicator.stopAnimating()
+            let indicatorButton = UIBarButtonItem(customView: indicator)
 
-        navigationItem.leftBarButtonItem = indicatorButton
+            navigationItem.leftBarButtonItem = indicatorButton
         #endif
 
         add(conversationListTableViewController)
-        conversationListTableViewController.view.frame = self.view.bounds
+        conversationListTableViewController.view.frame = view.bounds
         conversationListTableViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         conversationListTableViewController.view.translatesAutoresizingMaskIntoConstraints = true
     }
 
     func setUpNavigationRightButtons() {
-        let navigationItems =   configuration.navigationItemsForConversationList
-        var rightBarButtonItems : [UIBarButtonItem] = []
+        let navigationItems = configuration.navigationItemsForConversationList
+        var rightBarButtonItems: [UIBarButtonItem] = []
 
         if !configuration.hideStartChatButton {
             rightBarButtonItems.append(rightBarButtonItem)
         }
         for item in navigationItems {
-            let uiBarButtonItem =  item.barButton(target: self, action: #selector(customButtonEvent(_:)))
+            let uiBarButtonItem = item.barButton(target: self, action: #selector(customButtonEvent(_:)))
 
             if let barButtonItem = uiBarButtonItem {
                 rightBarButtonItems.append(barButtonItem)
             }
         }
-        if(!rightBarButtonItems.isEmpty){
-            navigationItem.rightBarButtonItems =  rightBarButtonItems
+        if !rightBarButtonItems.isEmpty {
+            navigationItem.rightBarButtonItems = rightBarButtonItems
         }
     }
 
@@ -269,16 +267,14 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         navigationController?.pushViewController(newChatVC, animated: true)
     }
 
-
     @objc func customButtonEvent(_ sender: AnyObject) {
-        guard let identifier = sender.tag  else {
+        guard let identifier = sender.tag else {
             return
         }
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: self,userInfo:["identifier":identifier])
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: self, userInfo: ["identifier": identifier])
     }
 
     func sync(message: ALMessage) {
-
         if let viewController = conversationViewController,
             viewController.viewModel != nil,
             viewController.viewModel.contactId == message.contactId,
@@ -293,14 +289,14 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         guard let nav = self.navigationController else { return }
         let poppedVC = nav.popViewController(animated: true)
         if poppedVC == nil {
-            self.dismiss(animated: true, completion: nil)
+            dismiss(animated: true, completion: nil)
         }
     }
 
     override func showAccountSuspensionView() {
         let accountVC = ALKAccountSuspensionController()
-        self.present(accountVC, animated: false, completion: nil)
-        accountVC.closePressed = {[weak self] in
+        present(accountVC, animated: false, completion: nil)
+        accountVC.closePressed = { [weak self] in
             let popVC = self?.navigationController?.popViewController(animated: true)
             if popVC == nil {
                 self?.navigationController?.dismiss(animated: true, completion: nil)
@@ -320,7 +316,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         } else {
             // push conversation VC
             conversationVC.viewWillLoadFromTappingOnNotification()
-            self.navigationController?.pushViewController(conversationVC, animated: false)
+            navigationController?.pushViewController(conversationVC, animated: false)
         }
     }
 
@@ -330,6 +326,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 }
 
 // MARK: ALMessagesDelegate
+
 extension ALKConversationListViewController: ALMessagesDelegate {
     public func getMessagesArray(_ messagesArray: NSMutableArray!) {
         guard let messages = messagesArray as? [Any] else {
@@ -345,7 +342,6 @@ extension ALKConversationListViewController: ALMessagesDelegate {
 }
 
 extension ALKConversationListViewController: ALKConversationListViewModelDelegate {
-
     open func startedLoading() {
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
@@ -368,7 +364,6 @@ extension ALKConversationListViewController: ALKConversationListViewModelDelegat
 }
 
 extension ALKConversationListViewController: ALMQTTConversationDelegate {
-
     open func mqttDidConnected() {
         if let viewController = self.navigationController?.visibleViewController as? ALKConversationViewController {
             viewController.subscribeChannelToMqtt()
@@ -391,7 +386,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     func isNewMessageForActiveThread(alMessage: ALMessage, vm: ALKConversationViewModel) -> Bool {
         let isGroupMessage = alMessage.groupId != nil && alMessage.groupId == vm.channelKey
         let isOneToOneMessage = alMessage.groupId == nil && vm.channelKey == nil && alMessage.contactId == vm.contactId
-        if ( isGroupMessage || isOneToOneMessage) {
+        if isGroupMessage || isOneToOneMessage {
             return true
         }
         return false
@@ -404,22 +399,22 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         return false
     }
 
-    open func syncCall(_ alMessage: ALMessage!, andMessageList messageArray: NSMutableArray!) {
+    open func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
         print("sync call: ", alMessage.message)
         guard let message = alMessage else { return }
-        let viewController = self.navigationController?.visibleViewController  as? ALKConversationViewController
-        if let vm = viewController?.viewModel, (vm.contactId != nil || vm.channelKey != nil),
+        let viewController = navigationController?.visibleViewController as? ALKConversationViewController
+        if let vm = viewController?.viewModel, vm.contactId != nil || vm.channelKey != nil,
             let visibleController = self.navigationController?.visibleViewController,
             visibleController.isKind(of: ALKConversationViewController.self),
             isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
-                viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
+            viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
         } else if !isMessageSentByLoggedInUser(alMessage: alMessage) {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
-            notificationView?.showNativeNotificationWithcompletionHandler({
+            notificationView?.showNativeNotificationWithcompletionHandler {
                 _ in
                 self.launchChat(contactId: message.contactId, groupId: message.groupId, conversationId: message.conversationId)
-            })
+            }
         }
         if let visibleController = self.navigationController?.visibleViewController,
             visibleController.isKind(of: ALKConversationListViewController.self) {
@@ -428,7 +423,6 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 
     open func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
-
         guard let viewController = conversationViewController ?? conversationVC(), let _ = viewController.viewModel else {
             return
         }
@@ -444,7 +438,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         viewModel.updateStatusReport(convVC: viewController, forContact: contactId, status: status)
     }
 
-    open func updateTypingStatus(_ applicationKey: String!, userId: String!, status: Bool) {
+    open func updateTypingStatus(_: String!, userId: String!, status: Bool) {
         print("Typing status is", status)
 
         guard let viewController = conversationViewController ?? conversationVC(), let vm = viewController.viewModel else { return
@@ -454,10 +448,9 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         }
         print("Contact id matched")
         viewModel.updateTypingStatus(in: viewController, userId: userId, status: status)
-
     }
 
-    open func reloadData(forUserBlockNotification userId: String!, andBlockFlag flag: Bool) {
+    open func reloadData(forUserBlockNotification userId: String!, andBlockFlag _: Bool) {
         print("reload data")
         let userDetail = ALUserDetail()
         userDetail.userId = userId
@@ -484,7 +477,6 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationListViewController: ALKConversationListTableViewDelegate {
-
     public func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
         delegate?.conversation(
             chat,
@@ -498,11 +490,11 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         }
         let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
         viewController.viewModel = convViewModel
-        self.navigationController?.pushViewController(viewController, animated: false)
+        navigationController?.pushViewController(viewController, animated: false)
     }
 
     public func emptyChatCellTapped() {
-        self.compose()
+        compose()
     }
 
     public func scrolledToBottom() {
@@ -510,22 +502,22 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
     }
 
     public func userBlockNotification(userId: String, isBlocked: Bool) {
-        var dic =  [AnyHashable : Any]()
+        var dic = [AnyHashable: Any]()
         dic["UserId"] = userId
         dic["Controller"] = self
         dic["Blocked"] = isBlocked
-        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self,userInfo: dic)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
     }
 
     public func muteNotification(conversation: ALMessage, isMuted: Bool) {
-        var dic =  [AnyHashable : Any]()
+        var dic = [AnyHashable: Any]()
         dic["Muted"] = isMuted
         dic["Controller"] = self
-        if(conversation.isGroupChat){
+        if conversation.isGroupChat {
             dic["ChannelKey"] = conversation.groupId
-        }else{
+        } else {
             dic["UserId"] = conversation.contactIds
         }
-        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self,userInfo: dic)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
     }
 }
