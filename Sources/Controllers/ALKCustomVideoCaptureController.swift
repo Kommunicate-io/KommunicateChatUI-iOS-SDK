@@ -12,7 +12,7 @@ import UIKit
 
 final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
     // delegate
-    var customCamDelegate: ALKCustomCameraProtocol!
+    weak var customCamDelegate: ALKCustomCameraProtocol?
     var camera = ALKCameraType.back
     var videoFileOutput = AVCaptureMovieFileOutput()
     var filePath: URL?

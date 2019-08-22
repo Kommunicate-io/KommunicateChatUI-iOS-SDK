@@ -235,7 +235,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 //            weakSelf.handlePushNotification = false
         })
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: { [weak self]
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
             _ in
             print("notification individual chat received")
         })
@@ -404,7 +404,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         stopAudioPlayer()
         chatBar.stopRecording()
         if individualLaunch {
-            if let _ = alMqttConversationService {
+            if alMqttConversationService != nil {
                 alMqttConversationService.unsubscribeToConversation()
             }
         }
@@ -667,7 +667,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             NSAttributedString(string: "Powered by Applozic")
         chatBar.poweredByMessageLabel.setLinkForSubstring("Applozic", withLinkHandler: {
             [weak self] _, substring in
-            guard let _ = substring else { return }
+            guard substring != nil else { return }
             let svc = SFSafariViewController(url: URL(string: "https://Applozic.com")!)
             self?.present(svc, animated: true, completion: nil)
         })
@@ -1401,7 +1401,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 extension ALKConversationViewController: CNContactPickerDelegate {
     public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
         viewModel.send(contact: contact, metadata: configuration.messageMetadata)
-        /// Send contact using path viewModelsend(photo:
     }
 }
 

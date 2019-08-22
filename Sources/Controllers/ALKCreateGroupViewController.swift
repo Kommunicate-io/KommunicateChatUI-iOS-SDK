@@ -10,8 +10,13 @@ import Applozic
 import Kingfisher
 import UIKit
 
-protocol ALKCreateGroupChatAddFriendProtocol {
-    func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel])
+protocol ALKCreateGroupChatAddFriendProtocol: AnyObject {
+    func createGroupGetFriendInGroupList(
+        friendsSelected: [ALKFriendViewModel],
+        groupName: String,
+        groupImgUrl: String,
+        friendsAdded: [ALKFriendViewModel]
+    )
 }
 
 final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
@@ -40,7 +45,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     var addContactMode: ALKAddContactMode = .newChat
 
     /// To be passed from outside for existing chat
-    var groupDelegate: ALKCreateGroupChatAddFriendProtocol!
+    weak var groupDelegate: ALKCreateGroupChatAddFriendProtocol?
     private var groupName: String = ""
     var groupProfileImgUrl = ""
     var groupId: NSNumber = 0
@@ -153,12 +158,12 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                     }
                     // Pass groupName empty in case of group name update
                     DispatchQueue.main.async {
-                        self.groupDelegate.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: groupName, groupImgUrl: imageUrl, friendsAdded: self.addedList)
+                        self.groupDelegate?.createGroupGetFriendInGroupList(friendsSelected: self.groupList, groupName: groupName, groupImgUrl: imageUrl, friendsAdded: self.addedList)
                     }
                 })
             } else {
                 // Pass groupImgUrl empty in case of group name update
-                groupDelegate.createGroupGetFriendInGroupList(friendsSelected: groupList, groupName: groupName, groupImgUrl: "", friendsAdded: addedList)
+                groupDelegate?.createGroupGetFriendInGroupList(friendsSelected: groupList, groupName: groupName, groupImgUrl: "", friendsAdded: addedList)
             }
         }
     }
@@ -285,15 +290,23 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         let alertTitle = localizedString(forKey: "DiscardChangeTitle", withDefaultValue: SystemMessage.LabelName.DiscardChangeTitle, fileName: localizedStringFileName)
         let alertMessage = localizedString(forKey: "DiscardChangeMessage", withDefaultValue: SystemMessage.Warning.DiscardChange, fileName: localizedStringFileName)
 
-        UIAlertController.presentDiscardAlert(onPresenter: navigationController, alertTitle: alertTitle, alertMessage: alertMessage, cancelTitle: cancelTitle, discardTitle: discardTitle,
-                                              onlyForCondition: { () -> Bool in
-
-                                                  createGroupViewModel.groupName != createGroupViewModel.originalGroupName || cropedImage != nil
-
-        }) { [weak self] in
-            guard let weakSelf = self else { return }
-            _ = weakSelf.navigationController?.popViewController(animated: true)
+        let nameOrImageChange: () -> Bool = {
+            createGroupViewModel.groupName !=
+                createGroupViewModel.originalGroupName || self.cropedImage != nil
         }
+        let popVC: () -> Void = {
+            _ = navigationController.popViewController(animated: true)
+        }
+
+        UIAlertController.presentDiscardAlert(
+            onPresenter: navigationController,
+            alertTitle: alertTitle,
+            alertMessage: alertMessage,
+            cancelTitle: cancelTitle,
+            discardTitle: discardTitle,
+            onlyForCondition: nameOrImageChange,
+            lastAction: popVC
+        )
     }
 
     private func changeUserRole(at index: Int, _ role: NSNumber) {

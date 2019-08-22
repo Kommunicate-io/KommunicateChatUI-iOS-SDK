@@ -13,7 +13,7 @@ import UIKit
 final class ALKCustomVideoPreviewViewController: ALKBaseViewController, Localizable {
     // MARK: - Variables and Types
 
-    private var customCamDelegate: ALKCustomCameraProtocol!
+    weak var customCamDelegate: ALKCustomCameraProtocol?
 
     var path: String!
 

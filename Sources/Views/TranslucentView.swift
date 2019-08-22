@@ -54,7 +54,7 @@ open class TranslucentView: UIView {
         }
     }
 
-    @IBInspectable open var translucentStyle: UIBarStyle {
+    open var translucentStyle: UIBarStyle {
         set {
             if toolbarBG != nil {
                 toolbarBG!.barStyle = newValue

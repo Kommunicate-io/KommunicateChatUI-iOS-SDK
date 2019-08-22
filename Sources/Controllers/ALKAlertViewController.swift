@@ -8,7 +8,6 @@
 import Foundation
 
 import Applozic
-import Foundation
 
 class ALKAlertViewController: UIViewController, Localizable {
     public struct Action {

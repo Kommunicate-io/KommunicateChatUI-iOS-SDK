@@ -140,7 +140,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             print("update user detail")
             ALUserService.updateUserDetail(userId, withCompletion: {
                 userDetail in
-                guard let _ = userDetail else { return }
+                guard userDetail != nil else { return }
                 weakSelf.tableView.reloadData()
             })
         })
@@ -423,7 +423,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 
     open func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
-        guard let viewController = conversationViewController ?? conversationVC(), let _ = viewController.viewModel else {
+        guard let viewController = conversationViewController ?? conversationVC(), viewController.viewModel != nil else {
             return
         }
 
@@ -431,7 +431,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 
     open func updateStatus(forContact contactId: String!, withStatus status: Int32) {
-        guard let viewController = conversationViewController ?? conversationVC(), let _ = viewController.viewModel else {
+        guard let viewController = conversationViewController ?? conversationVC(), viewController.viewModel != nil else {
             return
         }
 

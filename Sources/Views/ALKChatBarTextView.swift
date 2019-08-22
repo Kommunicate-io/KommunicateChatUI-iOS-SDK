@@ -20,7 +20,7 @@ open class ALKChatBarTextView: UITextView {
     }
 
     open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if let _ = self.overrideNextResponder {
+        if overrideNextResponder != nil {
             return false
         }
 

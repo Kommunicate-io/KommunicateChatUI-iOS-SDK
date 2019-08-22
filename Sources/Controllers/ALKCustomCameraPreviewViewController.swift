@@ -12,7 +12,7 @@ import UIKit
 final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localizable {
     // MARK: - Variables and Types
 
-    private var customCamDelegate: ALKCustomCameraProtocol!
+    weak var customCamDelegate: ALKCustomCameraProtocol?
     var image: UIImage!
 
     @IBOutlet fileprivate var scrollView: UIScrollView!
@@ -66,7 +66,7 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
     // MARK: - Method of class
 
     private func validateEnvironment() {
-        guard let _ = self.image else {
+        guard image != nil else {
             fatalError("Please use instance(_:) or set image")
         }
     }
@@ -145,14 +145,14 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
         }, completion: nil)
     }
 
-    func setSelectedImage(pickImage: UIImage, camDelegate: ALKCustomCameraProtocol) {
+    func setSelectedImage(pickImage: UIImage, camDelegate: ALKCustomCameraProtocol?) {
         image = pickImage
         customCamDelegate = camDelegate
     }
 
     @IBAction private func sendPhotoPress(_: Any) {
         navigationController?.dismiss(animated: false, completion: {
-            self.customCamDelegate.customCameraDidTakePicture(cropedImage: self.image)
+            self.customCamDelegate?.customCameraDidTakePicture(cropedImage: self.image)
         })
     }
 

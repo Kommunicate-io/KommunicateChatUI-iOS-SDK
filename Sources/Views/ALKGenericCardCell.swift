@@ -211,10 +211,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private class func headerHeight(_ header: CardTemplate.Header) -> CGFloat {
-        guard
-            let urlString = header.imgSrc,
-            let _ = URL(string: urlString)
-        else {
+        guard let urlString = header.imgSrc,
+            URL(string: urlString) != nil else {
             if let text = header.overlayText, !text.isEmpty {
                 return Config.OverlayText.height
             } else {

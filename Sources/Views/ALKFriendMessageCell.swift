@@ -326,10 +326,8 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
         let totalHeight = max(messageHeight + heightPadding, minimumHeight)
 
-        guard
-            let metadata = viewModel.metadata,
-            let _ = metadata[AL_MESSAGE_REPLY_KEY] as? String
-        else {
+        guard let metadata = viewModel.metadata,
+            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil else {
             return totalHeight
         }
         return totalHeight + Padding.ReplyView.height

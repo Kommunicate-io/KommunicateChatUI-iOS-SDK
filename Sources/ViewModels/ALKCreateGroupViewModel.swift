@@ -9,7 +9,7 @@
 import Applozic
 import Foundation
 
-protocol ALKCreateGroupViewModelDelegate {
+protocol ALKCreateGroupViewModelDelegate: AnyObject {
     func membersFetched()
     func remove(at index: Int)
     func makeAdmin(at index: Int)
@@ -72,7 +72,7 @@ class ALKCreateGroupViewModel: Localizable {
 
     var membersInfo = [GroupMemberInfo]()
 
-    let delegate: ALKCreateGroupViewModelDelegate
+    weak var delegate: ALKCreateGroupViewModelDelegate?
 
     lazy var isAddAllowed: Bool = {
         guard let channel = ALChannelDBService().loadChannel(byKey: groupId) else {
@@ -130,7 +130,7 @@ class ALKCreateGroupViewModel: Localizable {
                 }
             self.membersInfo.insert(self.getCurrentUserInfo(), at: 0)
             DispatchQueue.main.async {
-                self.delegate.membersFetched()
+                self.delegate?.membersFetched()
             }
         }
     }

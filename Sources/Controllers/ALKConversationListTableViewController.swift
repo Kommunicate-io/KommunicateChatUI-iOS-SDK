@@ -384,7 +384,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 alert.addAction(cancelButton)
                 alert.addAction(deleteButton)
                 present(alert, animated: true, completion: nil)
-            } else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 let (prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
 
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
@@ -448,7 +448,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                     return
                 }
                 self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
-            } else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
 
@@ -461,7 +461,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                     return
                 }
                 self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
-            } else if let _ = self.viewModel.chatFor(indexPath: indexPath), let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            } else if self.viewModel.chatFor(indexPath: indexPath) != nil, let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
                 self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
         case .block:

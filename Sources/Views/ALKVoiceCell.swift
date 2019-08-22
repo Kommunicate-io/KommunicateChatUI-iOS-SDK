@@ -10,7 +10,6 @@ import Foundation
 
 import Applozic
 import AVFoundation
-import Foundation
 import Kingfisher
 import UIKit
 
@@ -293,7 +292,7 @@ extension ALKVoiceCell: ALKHTTPManagerDownloadDelegate {
 
     func dataDownloadingFinished(task: ALKDownloadTask) {
         // update viewmodel's data field and time and then call update
-        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
+        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, viewModel != nil else {
             return
         }
         ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)

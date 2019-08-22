@@ -221,7 +221,6 @@
 				50782EDDAD137E89CDBDB613 /* Pods-ApplozicSwiftDemoTests.debug.xcconfig */,
 				953FE248F08943E58C8438CD /* Pods-ApplozicSwiftDemoTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -550,7 +549,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n";
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
 		};
 		8BC4B6812305713B00644A34 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

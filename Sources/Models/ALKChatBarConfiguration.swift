@@ -76,7 +76,7 @@ extension ALKChatBarConfiguration.AttachmentOptions: Equatable {
             return l == r
         case (.all, _):
             return false
-        case(.some(_), _):
+        case(.some, _):
             return false
         case(.none, _):
             return false

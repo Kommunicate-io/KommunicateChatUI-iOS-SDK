@@ -296,7 +296,7 @@ extension ALKDocumentCell: ALKHTTPManagerDownloadDelegate {
     }
 
     func dataDownloadingFinished(task: ALKDownloadTask) {
-        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, let _ = self.viewModel else {
+        guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, viewModel != nil else {
             DispatchQueue.main.async {
                 self.updateView(for: .download)
             }

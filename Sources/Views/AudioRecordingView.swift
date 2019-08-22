@@ -9,7 +9,7 @@ import Foundation
 
 import AVFoundation
 
-public protocol ALKAudioRecorderViewProtocol {
+public protocol ALKAudioRecorderViewProtocol: AnyObject {
     func cancelAudioRecording()
 }
 
@@ -24,7 +24,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
     private var recordingViewStartLocation: CGFloat = 0.0
     private var redDotStartLocation: CGFloat = 0.0
 
-    private var delegate: ALKAudioRecorderViewProtocol!
+    weak var delegate: ALKAudioRecorderViewProtocol?
 
     lazy var slideToCancel: UILabel = {
         let label = self.commonLabel()
@@ -96,7 +96,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
         return label
     }
 
-    func setAudioRecViewDelegate(recorderDelegate: ALKAudioRecorderViewProtocol) {
+    func setAudioRecViewDelegate(recorderDelegate: ALKAudioRecorderViewProtocol?) {
         delegate = recorderDelegate
     }
 
@@ -221,7 +221,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
             recordingView.frame.origin.x += (location.x - previousGestureLocation)
             redDot.frame.origin.x += (location.x - previousGestureLocation)
             if recordingView.frame.origin.x <= 0.0 {
-                delegate.cancelAudioRecording()
+                delegate?.cancelAudioRecording()
             }
         }
         slideView.frame.origin.x = newPos
@@ -240,7 +240,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
             recordingView.frame.origin.x += (location.x - previousGestureLocation)
             redDot.frame.origin.x += (location.x - previousGestureLocation)
             if recordingView.frame.origin.x + recordingView.frame.size.width >= redDotStartLocation + 30 {
-                delegate.cancelAudioRecording()
+                delegate?.cancelAudioRecording()
             }
         }
         slideView.frame.origin.x = newPos

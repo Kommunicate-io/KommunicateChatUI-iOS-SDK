@@ -15,7 +15,7 @@ import Foundation
 class MuteConversationViewController: UIViewController, Localizable {
     var configuration: ALKConfiguration!
 
-    var delegate: Muteable!
+    weak var delegate: Muteable?
     var conversation: ALMessage!
     var indexPath: IndexPath!
 
@@ -120,17 +120,17 @@ class MuteConversationViewController: UIViewController, Localizable {
         case 0:
             // 8 hours
             let time: Int64 = 8 * 60 * 60 * 1000
-            delegate.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
+            delegate?.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
 
         case 1:
             // 1 week
             let time: Int64 = 7 * 24 * 60 * 60 * 1000
-            delegate.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
+            delegate?.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
 
         case 2:
             // 1 year
             let time: Int64 = 365 * 24 * 60 * 60 * 1000
-            delegate.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
+            delegate?.mute(conversation: conversation, forTime: Int64(time), atIndexPath: indexPath)
 
         default:
             print("This won't occur")

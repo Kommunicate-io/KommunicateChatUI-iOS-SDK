@@ -22,6 +22,7 @@ extension UIAlertController {
         return alert
     }
 
+    // swiftlint:disable:next function_parameter_count
     static func presentDiscardAlert(onPresenter presenter: UIViewController, alertTitle: String, alertMessage: String, cancelTitle: String, discardTitle: String, onlyForCondition condition: () -> Bool, lastAction: @escaping () -> Void) {
         if condition() {
             let alert = makeCancelDiscardAlert(title: alertTitle,

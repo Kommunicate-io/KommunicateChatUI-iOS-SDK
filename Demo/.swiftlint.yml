@@ -33,6 +33,20 @@ disabled_rules: # rule identifiers to exclude from running
   - control_statement
   - force_cast
 
+  # temporarily disabled rules
+  - closure_parameter_position
+  - line_length
+  - todo
+  - compiler_protocol_init
+  - identifier_name
+  - syntactic_sugar
+  - discarded_notification_center_observer
+  - nesting
+  - trailing_comma
+  - cyclomatic_complexity
+  - type_name
+  - function_body_length
+
 included: # paths to include during linting. `--path` is ignored if present.
   - ../Sources
 excluded: # paths to ignore during linting. Takes precedence over `included`.

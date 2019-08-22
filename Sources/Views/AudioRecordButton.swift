@@ -30,7 +30,7 @@ open class AudioRecordButton: UIButton {
         }
     }
 
-    private var delegate: ALKAudioRecorderProtocol!
+    weak var delegate: ALKAudioRecorderProtocol?
 
     // aduio session
     private var recordingSession: AVAudioSession!
@@ -40,7 +40,7 @@ open class AudioRecordButton: UIButton {
 
     let recordButton: UIButton = UIButton(type: .custom)
 
-    func setAudioRecDelegate(recorderDelegate: ALKAudioRecorderProtocol) {
+    func setAudioRecDelegate(recorderDelegate: ALKAudioRecorderProtocol?) {
         delegate = recorderDelegate
     }
 
@@ -160,7 +160,7 @@ open class AudioRecordButton: UIButton {
             // play back?
             if audioFilename.isFileURL {
                 guard let soundData = NSData(contentsOf: audioFilename) else { return }
-                delegate.finishRecordingAudio(soundData: soundData)
+                delegate?.finishRecordingAudio(soundData: soundData)
             }
         }
     }
@@ -173,24 +173,20 @@ open class AudioRecordButton: UIButton {
         switch gesture.state {
         case .began:
             if checkMicrophonePermission() == false {
-                if delegate != nil {
-                    delegate.permissionNotGrant()
-                }
+                delegate?.permissionNotGrant()
             } else {
                 startAudioRecord()
-                if delegate != nil {
-                    delegate.startRecordingAudio()
-                }
+                delegate?.startRecordingAudio()
             }
 
         case .changed:
             if location.y < -10 || location.y > height + 10 {
                 if states == .recording {
-                    delegate.cancelRecordingAudio()
+                    delegate?.cancelRecordingAudio()
                     cancelAudioRecord()
                 }
             }
-            delegate.moveButton(location: location)
+            delegate?.moveButton(location: location)
 
         case .ended:
             if state == .none {
@@ -202,7 +198,7 @@ open class AudioRecordButton: UIButton {
             if states == .recording {
                 stopAudioRecord()
             } else {
-                delegate.cancelRecordingAudio()
+                delegate?.cancelRecordingAudio()
                 cancelAudioRecord()
             }
         }

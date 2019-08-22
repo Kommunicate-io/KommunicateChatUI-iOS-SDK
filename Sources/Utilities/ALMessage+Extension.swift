@@ -162,7 +162,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 
     public var isGroupChat: Bool {
-        guard let _ = self.groupId else {
+        guard groupId != nil else {
             return false
         }
         return true

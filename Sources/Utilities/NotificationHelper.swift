@@ -186,7 +186,7 @@ public class NotificationHelper {
 
     private func findChatVC(_ notification: NotificationData) {
         guard let vc = ALPushAssist().topViewController else { return }
-        if let _ = vc.navigationController?.viewControllers {
+        if vc.navigationController?.viewControllers != nil {
             findControllerInStack(vc) {
                 self.handleNotificationTap(notification)
             }

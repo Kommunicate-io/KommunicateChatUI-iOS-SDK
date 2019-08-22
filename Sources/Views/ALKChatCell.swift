@@ -44,6 +44,7 @@ public protocol ALKChatCellDelegate: AnyObject {
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol)
 }
 
+// swiftlint:disable:next type_body_length
 public final class ALKChatCell: MGSwipeTableCell, Localizable {
     enum ConstraintIdentifier: String {
         case iconWidthIdentifier = "iconViewWidth"
@@ -172,13 +173,11 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-
-        guard let _ = viewModel else {
+        guard viewModel != nil else {
             return
         }
 
         lineView.backgroundColor = UIColor(netHex: 0xF1F1F1)
-
         backgroundColor = highlighted ? UIColor(netHex: 0xECECEC) : UIColor.white
         contentView.backgroundColor = backgroundColor
 
@@ -188,13 +187,11 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        guard let _ = viewModel else {
+        guard viewModel != nil else {
             return
         }
 
         lineView.backgroundColor = UIColor(netHex: 0xF1F1F1)
-
         backgroundColor = selected ? UIColor(netHex: 0xECECEC) : UIColor.white
         contentView.backgroundColor = backgroundColor
 

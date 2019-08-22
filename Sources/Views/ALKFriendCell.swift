@@ -10,7 +10,7 @@ import Kingfisher
 import MGSwipeTableCell
 import UIKit
 
-protocol ALKFriendCellProtocol {
+protocol ALKFriendCellProtocol: AnyObject {
     func startVOIPWithFriend(atIndex: IndexPath)
     func startChatWithFriend(atIndex: IndexPath)
     func deleteFriend(atIndex: IndexPath)

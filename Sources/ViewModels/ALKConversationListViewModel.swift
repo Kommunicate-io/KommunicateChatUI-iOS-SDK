@@ -165,7 +165,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
 
         for currentMessage in alMessages {
             var messagePresent = [ALMessage]()
-            if let _ = currentMessage.groupId {
+            if currentMessage.groupId != nil {
                 messagePresent = allMessages.filter { ($0.groupId != nil) ? $0.groupId == currentMessage.groupId : false }
             } else {
                 messagePresent = allMessages.filter {

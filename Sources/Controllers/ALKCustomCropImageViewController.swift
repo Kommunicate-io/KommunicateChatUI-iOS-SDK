@@ -11,7 +11,7 @@ import UIKit
 final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable {
     @IBOutlet var previewScroll: UIScrollView!
 
-    private var customCamDelegate: ALKCustomCameraProtocol!
+    weak var customCamDelegate: ALKCustomCameraProtocol?
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
     var imgview: UIImageView! = UIImageView()
     var imagepicked: UIImage!
@@ -78,7 +78,7 @@ final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable
         setupGestureRecognizer()
     }
 
-    func setSelectedImage(pickImage: UIImage, camDelegate: ALKCustomCameraProtocol) {
+    func setSelectedImage(pickImage: UIImage, camDelegate: ALKCustomCameraProtocol?) {
         imagepicked = pickImage
         customCamDelegate = camDelegate
     }
@@ -109,7 +109,7 @@ final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable
         }
 
         navigationController?.dismiss(animated: false, completion: {
-            self.customCamDelegate.customCameraDidTakePicture(cropedImage: self.imageCroped)
+            self.customCamDelegate?.customCameraDidTakePicture(cropedImage: self.imageCroped)
         })
     }
 

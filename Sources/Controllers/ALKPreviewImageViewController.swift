@@ -161,14 +161,17 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
 
     @IBAction private func downlaodImgPress(_: Any) {
         guard let viewModel = viewModel else { return }
-        viewModel.saveImage(image: imageView.image, successBlock: {
+
+        let showSuccessAlert: () -> Void = {
             let photoAlbumSuccessTitleMsg = self.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: self.localizedStringFileName)
             let photoAlbumSuccessMsg = self.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: self.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumSuccessTitleMsg, message: photoAlbumSuccessMsg, preferredStyle: UIAlertController.Style.alert)
             let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: self.localizedStringFileName)
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-        }) { _ in
+        }
+
+        let showFailureAlert: (Error) -> Void = { _ in
             let photoAlbumFailureTitleMsg = self.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: self.localizedStringFileName)
             let photoAlbumFailMsg = self.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: self.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertController.Style.alert)
@@ -176,6 +179,12 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+
+        viewModel.saveImage(
+            image: imageView.image,
+            successBlock: showSuccessAlert,
+            failBlock: showFailureAlert
+        )
     }
 
     @objc private func doubleTapped(tap: UITapGestureRecognizer) {

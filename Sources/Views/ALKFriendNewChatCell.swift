@@ -35,7 +35,7 @@ class ALKFriendNewChatCell: UITableViewCell {
         return view
     }()
 
-    var delegate: ALKFriendCellProtocol!
+    weak var delegate: ALKFriendCellProtocol?
     var indexPath: IndexPath!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -72,7 +72,7 @@ class ALKFriendNewChatCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    func setFriendCellDelegate(cellDelegate: ALKFriendCellProtocol, indexPath: IndexPath) {
+    func setFriendCellDelegate(cellDelegate: ALKFriendCellProtocol?, indexPath: IndexPath) {
         delegate = cellDelegate
         self.indexPath = indexPath
     }
@@ -98,10 +98,10 @@ class ALKFriendNewChatCell: UITableViewCell {
     }
 
     @IBAction func voipPress(_: Any) {
-        delegate.startVOIPWithFriend(atIndex: indexPath)
+        delegate?.startVOIPWithFriend(atIndex: indexPath)
     }
 
     @IBAction func chatPress(_: Any) {
-        delegate.startChatWithFriend(atIndex: indexPath)
+        delegate?.startChatWithFriend(atIndex: indexPath)
     }
 }

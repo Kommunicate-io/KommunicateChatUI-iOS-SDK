@@ -13,6 +13,7 @@ public enum KDCircularProgressGlowMode {
 }
 
 @IBDesignable
+// swiftlint:disable:next type_body_length
 public class KDCircularProgress: UIView, CAAnimationDelegate {
     private enum Conversion {
         static func degreesToRadians(value: CGFloat) -> CGFloat {
