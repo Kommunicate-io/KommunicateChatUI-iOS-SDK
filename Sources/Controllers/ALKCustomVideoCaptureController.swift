@@ -28,7 +28,6 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
     @IBOutlet private var btnSwitchCam: UIButton!
 
     private var captureSession = AVCaptureSession()
-    private let stillImageOutput = AVCaptureStillImageOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     // If we find a device we'll store it here for later use
     private var captureDevice: AVCaptureDevice?
@@ -72,14 +71,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
                     return
                 }
                 if UIApplication.shared.canOpenURL(settingsUrl) {
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(settingsUrl, completionHandler: { _ in
-                            //
-                        })
-                    } else {
-                        // Fallback on earlier versions
-                        UIApplication.shared.openURL(settingsUrl)
-                    }
+                    UIApplication.shared.open(settingsUrl, completionHandler: nil)
                 }
             }
             alertController.addAction(settingsAction)
@@ -133,23 +125,24 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         // Do any additional setup after loading the view.
         captureSession.sessionPreset = AVCaptureSession.Preset.high
 
-        let devices = AVCaptureDevice.devices()
+        let devices = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
+            mediaType: .video,
+            position: .unspecified).devices
+
         for device in devices {
-            // Make sure this particular device supports video
-            if device.hasMediaType(AVMediaType.video) {
-                if camera == .back {
-                    if device.position == AVCaptureDevice.Position.back {
-                        captureDevice = device
-                        if captureDevice != nil {
-                            checkCameraPermission()
-                        }
+            if camera == .back {
+                if device.position == AVCaptureDevice.Position.back {
+                    captureDevice = device
+                    if captureDevice != nil {
+                        checkCameraPermission()
                     }
-                } else {
-                    if device.position == AVCaptureDevice.Position.front {
-                        captureDevice = device
-                        if captureDevice != nil {
-                            checkCameraPermission()
-                        }
+                }
+            } else {
+                if device.position == AVCaptureDevice.Position.front {
+                    captureDevice = device
+                    if captureDevice != nil {
+                        checkCameraPermission()
                     }
                 }
             }
@@ -174,14 +167,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
                 }
 
                 if UIApplication.shared.canOpenURL(settingsUrl) {
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(settingsUrl, completionHandler: { _ in
-                            //
-                        })
-                    } else {
-                        // Fallback on earlier versions
-                        UIApplication.shared.openURL(settingsUrl)
-                    }
+                    UIApplication.shared.open(settingsUrl, completionHandler: nil)
                 }
             }
             alertController.addAction(settingsAction)
@@ -212,11 +198,6 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         do {
             try captureDeviceInput = AVCaptureDeviceInput(device: captureDevice!)
             captureSession.addInput(captureDeviceInput!)
-            stillImageOutput.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
-
-            if captureSession.canAddOutput(stillImageOutput) {
-                captureSession.addOutput(stillImageOutput)
-            }
         } catch {}
 
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -263,44 +244,36 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
                 camera = .back
             }
 
-            let devices = AVCaptureDevice.devices()
-            for device in devices {
-                if device.hasMediaType(AVMediaType.video) {
-                    let newCamera: AVCaptureDevice?
-                    if camera == .front {
-                        newCamera = cameraWithPosition(position: AVCaptureDevice.Position.front)
-                    } else {
-                        newCamera = cameraWithPosition(position: AVCaptureDevice.Position.back)
-                    }
-                    guard let newCam = newCamera else { return }
+            let devices = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
+                mediaType: .video,
+                position: .unspecified).devices
+            let newCamera: AVCaptureDevice?
 
-                    let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
-                    captureSession.removeInput(currentCameraInput)
-
-                    do {
-                        try captureSession.addInput(AVCaptureDeviceInput(device: newCam))
-                        stillImageOutput.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
-                        if captureSession.canAddOutput(stillImageOutput) {
-                            captureSession.addOutput(stillImageOutput)
-                        }
-                    } catch {
-                        print("Error while adding camera input: \(error)")
-                    }
-                    captureSession.commitConfiguration()
-
-                    enableCameraControl(inSec: 1)
-                    break
-                }
+            if camera == .front {
+                newCamera = cameraWithPosition(position: AVCaptureDevice.Position.front, in: devices)
+            } else {
+                newCamera = cameraWithPosition(position: AVCaptureDevice.Position.back, in: devices)
             }
+            guard let newCam = newCamera else { return }
+
+            let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
+            captureSession.removeInput(currentCameraInput)
+
+            do {
+                try captureSession.addInput(AVCaptureDeviceInput(device: newCam))
+            } catch {
+                print("Error while adding camera input: \(error)")
+            }
+            captureSession.commitConfiguration()
+
+            enableCameraControl(inSec: 1)
         }
     }
 
-    private func cameraWithPosition(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let devices = AVCaptureDevice.devices()
-        for device in devices {
-            if (device as AnyObject).position == position {
-                return device
-            }
+    private func cameraWithPosition(position: AVCaptureDevice.Position, in devices: [AVCaptureDevice]) -> AVCaptureDevice? {
+        for device in devices where (device as AnyObject).position == position {
+            return device
         }
         return AVCaptureDevice(uniqueID: "")
     }
