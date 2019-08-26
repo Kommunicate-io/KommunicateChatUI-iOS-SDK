@@ -39,7 +39,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     let option = PHImageRequestOptions()
 
     var cameraOutput: Any? = {
-        return AVCapturePhotoOutput()
+        AVCapturePhotoOutput()
     }()
 
     @IBOutlet private var previewView: UIView!
@@ -214,7 +214,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         let devices = AVCaptureDevice.DiscoverySession(
             deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
             mediaType: .video,
-            position: .unspecified).devices
+            position: .unspecified
+        ).devices
         for device in devices {
             if camera == .back {
                 if device.position == AVCaptureDevice.Position.back {
@@ -285,7 +286,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 }
 
                 if UIApplication.shared.canOpenURL(settingsUrl) {
-                    UIApplication.shared.open(settingsUrl, completionHandler:nil)
+                    UIApplication.shared.open(settingsUrl, completionHandler: nil)
                 }
             }
             alertController.addAction(settingsAction)
@@ -320,8 +321,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 let cameraOutput = self.cameraOutput as? AVCapturePhotoOutput
                 cameraOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecJPEG])], completionHandler: nil)
 
-                if self.captureSession.canAddOutput(cameraOutput!) {
-                    self.captureSession.addOutput(cameraOutput!)
+                if captureSession.canAddOutput(cameraOutput!) {
+                    captureSession.addOutput(cameraOutput!)
                 }
             } else {
                 return
@@ -350,7 +351,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     private func saveToCamera() {
         if isUserControlEnable {
             isUserControlEnable = false
-            self.capturePhoto()
+            capturePhoto()
             enableCameraControl(inSec: 1)
         }
     }
@@ -373,17 +374,20 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
             let devices = AVCaptureDevice.DiscoverySession(
                 deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
                 mediaType: .video,
-                position: .unspecified).devices
+                position: .unspecified
+            ).devices
 
             let newCamera: AVCaptureDevice?
             if camera == .front {
                 newCamera = cameraWithPosition(
                     position: AVCaptureDevice.Position.front,
-                    in: devices)
+                    in: devices
+                )
             } else {
                 newCamera = cameraWithPosition(
                     position: AVCaptureDevice.Position.back,
-                    in: devices)
+                    in: devices
+                )
             }
 
             guard let newCam = newCamera else { return }
@@ -397,8 +401,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
                 cameraOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecJPEG])], completionHandler: nil)
 
-                if self.captureSession.canAddOutput(cameraOutput!) {
-                    self.captureSession.addOutput(cameraOutput!)
+                if captureSession.canAddOutput(cameraOutput!) {
+                    captureSession.addOutput(cameraOutput!)
                 }
 
             } catch {
@@ -412,7 +416,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
     private func cameraWithPosition(
         position: AVCaptureDevice.Position,
-        in devices: [AVCaptureDevice]) -> AVCaptureDevice? {
+        in devices: [AVCaptureDevice]
+    ) -> AVCaptureDevice? {
         for device in devices where (device as AnyObject).position == position {
             return device
         }

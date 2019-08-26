@@ -128,7 +128,8 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         let devices = AVCaptureDevice.DiscoverySession(
             deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
             mediaType: .video,
-            position: .unspecified).devices
+            position: .unspecified
+        ).devices
 
         for device in devices {
             if camera == .back {
@@ -247,7 +248,8 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
             let devices = AVCaptureDevice.DiscoverySession(
                 deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
                 mediaType: .video,
-                position: .unspecified).devices
+                position: .unspecified
+            ).devices
             let newCamera: AVCaptureDevice?
 
             if camera == .front {

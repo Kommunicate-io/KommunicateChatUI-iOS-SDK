@@ -2,6 +2,11 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+3.3.0(Upcoming)
+---
+### Enhancements
+[AL-3648] Option to zoom in Picture preview screen
+
 3.2.0
 ---
 ### Enhancements
