@@ -68,7 +68,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     var viewModel: ALKCreateGroupViewModel!
 
     private var createGroupBGColor: UIColor {
-        return btnCreateGroup.isEnabled ? UIColor.mainRed() : UIColor.disabledButton()
+        return btnCreateGroup.isEnabled ? configuration.channelDetail.button.background : UIColor.disabledButton()
     }
 
     override func viewDidLoad() {
@@ -178,19 +178,28 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         view.addSubview(activityIndicator)
         activityIndicator.isHidden = true
         txtfGroupName.layer.cornerRadius = 10
-        txtfGroupName.layer.borderColor = UIColor.mainRed().cgColor
+        txtfGroupName.layer.borderColor = configuration.channelDetail.groupNameBorderColor.cgColor
         txtfGroupName.layer.borderWidth = 1
         txtfGroupName.clipsToBounds = true
         txtfGroupName.delegate = self
+        txtfGroupName.textColor = configuration.channelDetail.groupName.text
+        txtfGroupName.font = configuration.channelDetail.groupName.font
         setupAttributedPlaceholder(textField: txtfGroupName)
 
         // set btns into circle
         viewGroupImg.layer.cornerRadius = 0.5 * viewGroupImg.frame.size.width
         viewGroupImg.clipsToBounds = true
 
-        editLabel.text = localizedString(forKey: "Edit", withDefaultValue: SystemMessage.LabelName.Edit, fileName: localizedStringFileName)
-        participantsLabel.text = localizedString(forKey: "Participants", withDefaultValue: SystemMessage.LabelName.Participants, fileName: localizedStringFileName)
+        editLabel.textColor = configuration.channelDetail.editLabel.text
+        editLabel.backgroundColor = configuration.channelDetail.editLabel.background
 
+        editLabel.text = localizedString(forKey: "Edit", withDefaultValue: SystemMessage.LabelName.Edit, fileName: localizedStringFileName)
+
+        participantsLabel.textColor = configuration.channelDetail.participantHeaderTitle.text
+        participantsLabel.font = configuration.channelDetail.participantHeaderTitle.font
+        participantsLabel.text = localizedString(forKey: "Participants", withDefaultValue: SystemMessage.LabelName.Participants, fileName: localizedStringFileName)
+        btnCreateGroup.setFont(font: configuration.channelDetail.button.font)
+        btnCreateGroup.setTextColor(color: configuration.channelDetail.button.text, forState: .normal)
         if addContactMode == .existingChat {
             // Button Create Group
             btnCreateGroup.layer.cornerRadius = 15
@@ -208,10 +217,13 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         tblParticipants.reloadData()
         title = addContactMode.navigationBarTitle(localizedStringFileName: localizedStringFileName)
 
+        let placeHolder = configuration.channelDetail.defaultGroupIcon?.scale(with: CGSize(width: 25, height: 25))
+
         if let url = URL(string: groupProfileImgUrl) {
-            let placeHolder = UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil)
             let resource = ImageResource(downloadURL: url, cacheKey: groupProfileImgUrl)
             imgGroupProfile.kf.setImage(with: resource, placeholder: placeHolder)
+        } else {
+            imgGroupProfile.image = placeHolder
         }
     }
 
@@ -322,6 +334,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         channelUser.userId = member.id
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
+        cell?.channelDetailConfig = configuration.channelDetail
         cell?.showLoading()
         ALChannelService().updateChannel(
             groupId,
@@ -381,6 +394,7 @@ extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
         let removeAction = UIAlertAction(title: removeButton, style: .destructive, handler: { _ in
             let indexPath = IndexPath(row: index, section: 0)
             let cell = self.tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
+            cell?.channelDetailConfig = self.configuration.channelDetail
             cell?.showLoading()
             ALChannelService().removeMember(fromChannel: member.id, andChannelKey: self.groupId, orClientChannelKey: nil, withCompletion: { error, response in
                 guard response != nil, error == nil else {
@@ -452,6 +466,7 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: ALKGroupMemberCell = tblParticipants.dequeueReusableCell(forIndexPath: indexPath)
+        cell.channelDetailConfig = configuration.channelDetail
         guard let viewModel = viewModel else { return cell }
         let member = viewModel.rowAt(index: indexPath.row)
         cell.updateView(model: member)
@@ -476,6 +491,7 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
             withDefaultValue: SystemMessage.GroupDetails.AddParticipant,
             fileName: localizedStringFileName
         )
+        header.channelDetailConfig = configuration.channelDetail
         header.updateView(model: GroupMemberInfo(name: addParticipantText))
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addParticipant))
         tapGesture.numberOfTapsRequired = 1

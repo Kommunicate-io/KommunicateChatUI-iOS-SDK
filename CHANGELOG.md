@@ -5,7 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 3.3.0(Upcoming)
 ---
 ### Enhancements
-[AL-3648] Option to zoom in Picture preview screen
+-[AL-3648] Option to zoom in Picture preview screen
+-[AL-3738] Add font and color customizations config for group detail screen
 
 3.2.0
 ---

@@ -36,6 +36,8 @@ struct GroupMemberInfo {
 }
 
 class ALKGroupMemberCell: UICollectionViewCell {
+    var channelDetailConfig = ALKChannelDetailViewConfiguration()
+
     struct Padding {
         struct Profile {
             static let left: CGFloat = 20
@@ -66,7 +68,6 @@ class ALKGroupMemberCell: UICollectionViewCell {
     let nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.font = UIFont(name: "HelveticaNeue", size: 15)
         label.textColor = UIColor(red: 89, green: 87, blue: 87)
         label.lineBreakMode = .byTruncatingTail
         return label
@@ -102,11 +103,13 @@ class ALKGroupMemberCell: UICollectionViewCell {
     func updateView(model: GroupMemberInfo) {
         self.model = model
         nameLabel.text = model.name
+        nameLabel.setTextColor(channelDetailConfig.memberName.text)
+        nameLabel.setFont(channelDetailConfig.memberName.font)
         adminLabel.isHidden = !model.isAdmin
         adminLabel.text = model.adminText
 
         guard !model.addCell else {
-            let image = UIImage(named: "icon_add_people-1", in: Bundle.applozic, compatibleWith: nil)
+            let image = channelDetailConfig.addMemberIcon?.scale(with: CGSize(width: 25, height: 25))
             profile.image = image
             return
         }
@@ -127,7 +130,6 @@ class ALKGroupMemberCell: UICollectionViewCell {
     private func setupConstraints() {
         contentView.addViewsForAutolayout(views: [profile, adminLabel, nameLabel, activityIndicator])
         contentView.bringSubviewToFront(activityIndicator)
-
         profile.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.Profile.left).isActive = true
         profile.widthAnchor.constraint(equalToConstant: Padding.Profile.width).isActive = true
         profile.heightAnchor.constraint(equalToConstant: Padding.Profile.height).isActive = true

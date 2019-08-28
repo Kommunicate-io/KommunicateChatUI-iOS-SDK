@@ -91,6 +91,8 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     private func setupInviteButton() {
         btnInvite.layer.cornerRadius = 15
         btnInvite.clipsToBounds = true
+        btnInvite.setFont(font: configuration.channelDetail.button.font)
+        btnInvite.setTitleColor(configuration.channelDetail.button.text, for: .normal)
         btnInvite.accessibilityIdentifier = "InviteButton"
     }
 
@@ -393,7 +395,7 @@ extension ALKParticipantSelectionViewContoller: UISearchResultsUpdating, UISearc
 extension ALKParticipantSelectionViewContoller: ALKInviteButtonProtocol {
     func getButtonAppearance(invitedFriendCount friendCount: Int) -> (String, backgroundColor: UIColor, isEnabled: Bool) {
         let isEnabled = (friendCount > 0) ? true : false
-        let background = (isEnabled ? UIColor.mainRed() : UIColor.disabledButton())
+        let background = (isEnabled ? configuration.channelDetail.button.background : UIColor.disabledButton())
         let newMember = friendCount > 0 ? " (\(friendCount))" : ""
         let inviteMessage = localizedString(
             forKey: "InviteMessage",

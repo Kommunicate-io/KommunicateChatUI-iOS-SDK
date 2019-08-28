@@ -187,5 +187,8 @@ public struct ALKConfiguration {
     /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
     public var disableAddParticipantButton = false
 
+    /// Use this to configure channel detail view like changing member name label color, title font etc.
+    public var channelDetail = ALKChannelDetailViewConfiguration()
+
     public init() {}
 }
