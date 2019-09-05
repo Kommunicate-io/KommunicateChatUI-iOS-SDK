@@ -157,6 +157,9 @@ public struct ALKConfiguration {
     // input view. Default value is false.
     public var isMemberMentionEnabled = false
 
+    // If true, Then message search will be enabled
+    public var isMessageSearchEnabled: Bool = false
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {
