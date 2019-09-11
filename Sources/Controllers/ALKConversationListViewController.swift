@@ -30,7 +30,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     var searchController: UISearchController!
     var searchBar: CustomSearchBar!
     lazy var resultVC = SearchResultViewController(configuration: configuration)
-    let searchButtonIdentifier = 10101012
+    let searchButtonIdentifier : Int = 10101012
 
     var dbService = ALMessageDBService()
     var viewModel = ALKConversationListViewModel()
@@ -88,6 +88,19 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             weakSelf.viewModel.addMessages(messages: list)
 
         })
+
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillHideNotification,
+            object: nil,
+            queue: nil,
+            using: { [weak self] _ in
+                guard let weakSelf = self else { return }
+
+                if weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
+                    weakSelf.showNavigationItems()
+                }
+            }
+        )
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "pushNotification"), object: nil, queue: nil, using: { [weak self] notification in
             print("push notification received: ", notification.object ?? "")
@@ -574,10 +587,17 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         }
         NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
     }
+
+    func showNavigationItems() {
+        searchBar.show(false)
+        searchBar.resignFirstResponder()
+        navigationItem.titleView = nil
+        setupBackButton()
+        setupNavigationRightButtons()
+    }
 }
 
 extension ALKConversationListViewController: UISearchBarDelegate {
-
     public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchKey = searchBar.text, !searchKey.isEmpty else {
             return
@@ -585,18 +605,14 @@ extension ALKConversationListViewController: UISearchBarDelegate {
         resultVC.search(key: searchKey)
     }
 
-    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    public func searchBar(_: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
-           resultVC.clearAndReload()
+            resultVC.clearAndReload()
         }
     }
 
     public func searchBarCancelButtonClicked(_: UISearchBar) {
-        searchBar.show(false)
-        searchBar.resignFirstResponder()
-        navigationItem.titleView = nil
-        setupBackButton()
-        setupNavigationRightButtons()
+        showNavigationItems()
         resultVC.clear()
     }
 }

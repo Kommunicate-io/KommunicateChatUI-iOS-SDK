@@ -54,9 +54,10 @@ class SearchResultViewController: UIViewController {
     func clear() {
         viewModel.clear()
     }
+
     func clearAndReload() {
         clear()
-        self.viewController.tableView.reloadData()
+        viewController.tableView.reloadData()
     }
 
     private func setupView() {
