@@ -54,6 +54,10 @@ class SearchResultViewController: UIViewController {
     func clear() {
         viewModel.clear()
     }
+    func clearAndReload() {
+        clear()
+        self.viewController.tableView.reloadData()
+    }
 
     private func setupView() {
         /// Add TableViewController
@@ -91,7 +95,6 @@ extension SearchResultViewController: ALKConversationListTableViewDelegate {
 
         let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
         present(navVC, animated: false, completion: nil)
-        dismiss(animated: true, completion: nil)
     }
 
     func emptyChatCellTapped() {}

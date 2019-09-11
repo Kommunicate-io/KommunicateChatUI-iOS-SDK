@@ -577,11 +577,18 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
 }
 
 extension ALKConversationListViewController: UISearchBarDelegate {
+
     public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchKey = searchBar.text, !searchKey.isEmpty else {
             return
         }
         resultVC.search(key: searchKey)
+    }
+
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+           resultVC.clearAndReload()
+        }
     }
 
     public func searchBarCancelButtonClicked(_: UISearchBar) {
