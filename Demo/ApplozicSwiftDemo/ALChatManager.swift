@@ -74,15 +74,17 @@ class ALChatManager: NSObject {
         let registerUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
         registerUserClientService.initWithCompletion(alUser, withCompletion: { (response, error) in
             guard error == nil else {
-                print("Error while registering to applozic");
-                let errorPass = NSError(domain:"Error while registering to applozic", code:0, userInfo:nil)
-                completion(nil , errorPass as NSError?)
+                completion(nil , error as NSError?)
                 return
             }
-            guard let response = response, response.isRegisteredSuccessfully() else {
-                ALUtilityClass.showAlertMessage("Invalid Password", andTitle: "Oops!!!")
-                let errorPass = NSError(domain:"Invalid Password", code:0, userInfo:nil)
-                completion(nil , errorPass as NSError?)
+            guard let response = response else {
+                let apiError = NSError(domain:"Applozic", code:0, userInfo:[NSLocalizedDescriptionKey: "Api error while registering to applozic"])
+                completion(nil , apiError as NSError?)
+                return;
+            }
+            guard response.isRegisteredSuccessfully() else {
+                let errorResponse = NSError(domain:"Applozic", code:0, userInfo:[NSLocalizedDescriptionKey: response.message])
+                completion(nil , errorResponse as NSError?)
                 return
             }
             print("Registration successfull")
