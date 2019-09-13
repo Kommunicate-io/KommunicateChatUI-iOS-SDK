@@ -1918,7 +1918,15 @@ extension ALKConversationViewController: NavigationBarCallbacks {
 
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UserProfileSelected"), object: info)
         }
-        guard isGroupDetailActionEnabled else { return }
+        guard isGroupDetailActionEnabled else {
+            if viewModel != nil, let channelKey = viewModel.channelKey {
+                let info: [String: Any] =
+                    ["ChannelKey": channelKey,
+                     "Controller": self]
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ChannelDetailSelected"), object: info)
+            }
+            return
+        }
         showParticipantListChat()
     }
 
