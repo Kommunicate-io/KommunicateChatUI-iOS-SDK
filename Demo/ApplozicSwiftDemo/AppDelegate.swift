@@ -46,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             self.window?.rootViewController!.present(viewController, animated:true, completion: nil)
 
         }
+
         UNUserNotificationCenter.current().delegate = self
         registerForNotification()
         return true
@@ -112,9 +113,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let service = ALPushNotificationService()
         guard !service.isApplozicNotification(notification.request.content.userInfo) else {
+           service.notificationArrived(to: UIApplication.shared, with: notification.request.content.userInfo)
+            completionHandler([])
             return
         }
-        completionHandler([.sound, .badge, .alert])
+        completionHandler([])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
