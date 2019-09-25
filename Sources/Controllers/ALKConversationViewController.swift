@@ -1140,6 +1140,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                             message: ALKMessageViewModel,
                             isButtonClickDisabled: Bool) {
         guard
+            !isButtonClickDisabled,
             let payload = message.payloadFromMetadata()?[index],
             let action = payload["action"] as? [String: Any],
             let type = action["type"] as? String
