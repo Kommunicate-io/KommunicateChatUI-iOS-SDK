@@ -646,6 +646,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if let messageMetadata = metadata, !messageMetadata.isEmpty {
             metaData.addEntries(from: messageMetadata)
         }
+        if metaData != nil {
+            for (key, value) in metaData {
+                guard let value = value as? [AnyHashable: Any] else { continue }
+                metaData[key] = ALUtilityClass.generateJsonString(from: value)
+            }
+        }
         return metaData
     }
 
