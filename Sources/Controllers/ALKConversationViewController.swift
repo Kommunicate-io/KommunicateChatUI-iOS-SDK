@@ -32,6 +32,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var individualLaunch = true
 
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
+    public lazy var autocompleteManager = AutoCompleteManager(
+        textView: chatBar.textView,
+        tableview: autocompletionView
+    )
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
@@ -385,8 +389,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
-        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
-        chatBar.setup(autocompletionView, withPrefex: "/")
         setRichMessageKitTheme()
         setupProfanityFilter()
     }
@@ -437,8 +439,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
+        setupAutoComplete()
         replyMessageView.closeButtonTapped = { [weak self] _ in
             self?.hideReplyMessageView()
+        }
+        replyMessageView.displayNames = { [weak self] userIds in
+            self?.viewModel.displayNames(ofUserIds: userIds)
         }
     }
 
@@ -695,7 +701,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             switch action {
             case let .sendText(button, message):
 
-                if message.count < 1 {
+                if message.string.count < 1 {
                     return
                 }
 
@@ -703,8 +709,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.viewModel.sendKeyboardDoneTyping()
 
                 weakSelf.chatBar.clear()
+                weakSelf.autocompleteManager.cancelAndHide()
 
-                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message) {
+                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message.string) {
                     let profanityTitle = weakSelf.localizedString(
                         forKey: "profaneWordsTitle",
                         withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
@@ -734,9 +741,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     button.isUserInteractionEnabled = true
                     return
                 }
+
+                var messageMetadata = self?.configuration.messageMetadata
+                let mentionHandler = MessageMentionEncoder(message: message)
+                var messageToSend = message.string
+                if mentionHandler.containsMentions {
+                    messageToSend = mentionHandler.replaceMentionsWithKeys().string
+                    let metadataForMentions = mentionHandler.metadataForMentions() ?? [:]
+                    // In case of a key match using the value set in config
+                    messageMetadata = (messageMetadata ?? [:])
+                        .merging(metadataForMentions) { current, _ in current }
+                }
                 weakSelf.isJustSent = true
-                print("About to send this message: ", message)
-                weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup, metadata: self?.configuration.messageMetadata)
+                print("About to send this message: ", messageToSend)
+                weakSelf.viewModel.send(message: messageToSend, isOpenGroup: weakSelf.viewModel.isOpenGroup, metadata: messageMetadata)
                 button.isUserInteractionEnabled = true
             case .chatBarTextChange:
 
@@ -839,6 +857,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             )
         } catch {
             print("Error while setting up profanity filter: \(error.localizedDescription)")
+        }
+    }
+
+    private func setupAutoComplete() {
+        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
+        autocompleteManager.autocompletionDelegate = self
+        if configuration.isMemberMentionEnabled {
+            autocompleteManager.registerPrefix(
+                prefix: MessageMention.Prefix,
+                configuration: AutoCompleteItemConfiguration.memberMention,
+                cellType: MentionAutoCompleteCell.self
+            )
         }
     }
 
@@ -1939,70 +1969,5 @@ extension ALKConversationViewController: NavigationBarCallbacks {
             return nil
         }
         return ALContactService().loadContact(byKey: "userId", value: contactId)
-    }
-}
-
-extension ALKConversationViewController: ALAlertButtonClickProtocol {
-    func confirmButtonClick(action: String, messageKey: String) {
-        let alPushAssist = ALPushAssist()
-
-        if action == ALKAlertViewController.Action.reportMessage {
-            alPushAssist.topViewController.dismiss(animated: false, completion: nil)
-
-            guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
-                return
-            }
-
-            let userService = ALUserService()
-            let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
-            activityIndicator.center = CGPoint(x: view.bounds.size.width / 2,
-                                               y: view.bounds.size.height / 2)
-            activityIndicator.color = UIColor.gray
-            view.addSubview(activityIndicator)
-            activityIndicator.startAnimating()
-
-            let message = localizedString(forKey: "ReportMessageSuccess", withDefaultValue: SystemMessage.Information.ReportMessageSuccess, fileName: configuration.localizedStringFileName)
-
-            let errorMessage = localizedString(forKey: "ReportMessageError", withDefaultValue: SystemMessage.Information.ReportMessageError, fileName: configuration.localizedStringFileName)
-
-            userService.reportUser(withMessageKey: messageKey) { _, error in
-                activityIndicator.stopAnimating()
-                if error == nil {
-                    self.showAlert(alertTitle: "", alertMessage: message)
-                } else {
-                    self.showAlert(alertTitle: "", alertMessage: errorMessage)
-                }
-            }
-        }
-    }
-
-    func showAlert(alertTitle: String, alertMessage: String) {
-        let alPushAssist = ALPushAssist()
-        let title = localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.ButtonName.ok, fileName: configuration.localizedStringFileName)
-        let alert = UIAlertController(
-            title: alertTitle,
-            message: alertMessage,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        alert.addAction(UIAlertAction(title: title, style: UIAlertAction.Style.default, handler: nil))
-        alPushAssist.topViewController.present(alert, animated: true, completion: nil)
-    }
-
-    func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
-                          message: ALKMessageViewModel) {
-        switch action {
-        case .reply:
-            print("Reply selected")
-            viewModel.setSelectedMessageToReply(message)
-            replyMessageView.update(message: message)
-            showReplyMessageView()
-        case .reportMessage:
-            let muteConversationVC = ALKAlertViewController(action: ALKAlertViewController.Action.reportMessage, delegate: self, messageKey: message.identifier, configuration: configuration)
-            let title = localizedString(forKey: "ReportAlertTitle", withDefaultValue: SystemMessage.Information.ReportAlertTitle, fileName: configuration.localizedStringFileName)
-            let message = localizedString(forKey: "ReportAlertMessage", withDefaultValue: SystemMessage.Information.ReportAlertMessage, fileName: configuration.localizedStringFileName)
-            muteConversationVC.updateTitleAndMessage(title, message: message)
-            muteConversationVC.modalPresentationStyle = .overCurrentContext
-            present(muteConversationVC, animated: true, completion: nil)
-        }
     }
 }

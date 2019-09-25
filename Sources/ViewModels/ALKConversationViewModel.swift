@@ -92,6 +92,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private var shouldSendTyping: Bool = true
 
     private var typingTimerTask = Timer()
+    private var groupMembers: Set<ALContact>?
 
     // MARK: - Initializer
 
@@ -142,6 +143,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessages.removeAll()
         richMessages.removeAll()
         alMessageWrapper = ALMessageArrayWrapper()
+        groupMembers = nil
     }
 
     open func groupProfileImgUrl() -> String {
@@ -240,10 +242,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         switch messageModel.messageType {
         case .text, .html, .email:
             if messageModel.isMyMessage {
-                let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth, displayNames: { userIds in
+                    self.displayNames(ofUserIds: userIds)
+                })
                 return height.cached(with: messageModel.identifier)
             } else {
-                let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+                let height = ALKFriendMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth, displayNames: { userIds in
+                    self.displayNames(ofUserIds: userIds)
+                })
                 return height.cached(with: messageModel.identifier)
             }
         case .photo:
@@ -1093,8 +1099,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
-
-            self.delegate?.loadingFinished(error: nil)
+            self.membersInGroup { members in
+                self.groupMembers = members
+                self.delegate?.loadingFinished(error: nil)
+            }
         })
     }
 
@@ -1151,7 +1159,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             if isFirstTime {
-                self.delegate?.loadingFinished(error: nil)
+                self.membersInGroup { members in
+                    self.groupMembers = members
+                    self.delegate?.loadingFinished(error: nil)
+                }
             } else {
                 self.delegate?.messageUpdated()
             }
@@ -1174,6 +1185,25 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.addMessagesToList(messages)
             self.delegate?.loadingFinished(error: nil)
         })
+    }
+
+    func fetchGroupMembersForAutocompletion() -> [AutoCompleteItem] {
+        guard let members = groupMembers else { return [] }
+        let items =
+            members
+            .filter { $0.userId != ALUserDefaultsHandler.getUserId() }
+            .map { AutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
+            .sorted { $0.content < $1.content }
+        return items
+    }
+
+    func displayNames(ofUserIds userIds: Set<String>) -> [String: String]? {
+        guard let groupMembers = groupMembers else { return nil }
+        var names: [String: String] = [:]
+        groupMembers
+            .filter { userIds.contains($0.userId) }
+            .forEach { names[$0.userId] = $0.displayName ?? $0.userId }
+        return names
     }
 
     // MARK: - Private Methods
@@ -1475,6 +1505,20 @@ open class ALKConversationViewModel: NSObject, Localizable {
         } catch {
             print("\(error)")
             return nil
+        }
+    }
+
+    private func membersInGroup(completion: @escaping ((Set<ALContact>?) -> Void)) {
+        guard let channelKey = channelKey else {
+            completion(nil)
+            return
+        }
+        ALChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
+            guard let contacts = contacts, !contacts.isEmpty else {
+                completion(nil)
+                return
+            }
+            completion(contacts)
         }
     }
 }

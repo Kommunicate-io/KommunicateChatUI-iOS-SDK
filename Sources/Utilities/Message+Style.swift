@@ -35,6 +35,20 @@ public enum ALKMessageStyle {
         text: .text(.black00)
     )
 
+    /// Style for mentions in sent message text
+    public static var sentMention = Style(
+        font: UIFont.systemFont(ofSize: 14),
+        text: UIColor.blue,
+        background: UIColor.blue.withAlphaComponent(0.1)
+    )
+
+    /// Style for mentions in received message text
+    public static var receivedMention = Style(
+        font: UIFont.systemFont(ofSize: 14),
+        text: UIColor.blue,
+        background: UIColor.blue.withAlphaComponent(0.1)
+    )
+
     @available(*, deprecated, message: "Use `receivedMessage` and `sentMessage`")
     public static var message = Style(
         font: UIFont.font(.normal(size: 14)),

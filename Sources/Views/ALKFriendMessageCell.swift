@@ -282,7 +282,11 @@ open class ALKFriendMessageCell: ALKMessageCell {
     }
 
     override func update(viewModel: ALKMessageViewModel) {
-        super.update(viewModel: viewModel, style: ALKMessageStyle.receivedMessage)
+        super.update(
+            viewModel: viewModel,
+            messageStyle: ALKMessageStyle.receivedMessage,
+            mentionStyle: ALKMessageStyle.receivedMention
+        )
 
         if viewModel.isReplyMessage {
             guard
@@ -311,17 +315,26 @@ open class ALKFriendMessageCell: ALKMessageCell {
         nameLabel.text = viewModel.displayName
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,
-                                 width: CGFloat) -> CGFloat {
+    class func rowHeigh(
+        viewModel: ALKMessageViewModel,
+        width: CGFloat,
+        displayNames: ((Set<String>) -> ([String: String]?))?
+    ) -> CGFloat {
         let minimumHeight = Padding.AvatarImage.top + Padding.AvatarImage.height + 5
-
         /// Calculating available width for messageView
         let leftSpacing = Padding.AvatarImage.left + Padding.AvatarImage.width + Padding.BubbleView.left + bubbleViewLeftPadding
         let rightSpacing = Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
         let messageWidth = width - (leftSpacing + rightSpacing)
 
         /// Calculating messageHeight
-        let messageHeight = super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.receivedMessage.font)
+        let messageHeight = super
+            .messageHeight(
+                viewModel: viewModel,
+                width: messageWidth,
+                font: ALKMessageStyle.receivedMessage.font,
+                mentionStyle: ALKMessageStyle.receivedMention,
+                displayNames: displayNames
+            )
         let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom
 
         let totalHeight = max(messageHeight + heightPadding, minimumHeight)

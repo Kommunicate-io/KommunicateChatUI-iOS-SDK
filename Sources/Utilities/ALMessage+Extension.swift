@@ -35,7 +35,9 @@ extension ALMessage: ALKChatViewModelProtocol {
         // TODO: This is a workaround as other method uses closure.
         // Later replace this with:
         // alChannelService.getChannelInformation(, orClientChannelKey: , withCompletion: )
-        guard let alChannel = alChannelService.getChannelByKey(self.groupId) else {
+        guard let groupId = groupId,
+            let alChannel = alChannelService.getChannelByKey(groupId)
+        else {
             return nil
         }
         return alChannel

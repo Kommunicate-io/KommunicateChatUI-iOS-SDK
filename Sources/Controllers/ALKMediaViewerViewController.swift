@@ -153,7 +153,7 @@ final class ALKMediaViewerViewController: UIViewController {
     func showPhotoView(message: ALKMessageViewModel) {
         guard let filePath = message.filePath,
             let url = viewModel?.getURLFor(name: filePath),
-            let imageData = try? Data(contentsOf:  url),
+            let imageData = try? Data(contentsOf: url),
             let image = UIImage(data: imageData)
         else {
             return

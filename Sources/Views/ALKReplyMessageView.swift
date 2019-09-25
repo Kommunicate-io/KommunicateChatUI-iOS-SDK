@@ -13,6 +13,18 @@ import UIKit
  to a message */
 
 open class ALKReplyMessageView: UIView, Localizable {
+    public enum Theme {
+        public static var message = Style(
+            font: Font.normal(size: 14).font(),
+            text: .text(.black00)
+        )
+        public static var mention = Style(
+            font: Font.normal(size: 14).font(),
+            text: .blue,
+            background: UIColor.blue.withAlphaComponent(0.1)
+        )
+    }
+
     var configuration: ALKConfiguration!
 
     open var nameLabel: UILabel = {
@@ -50,6 +62,7 @@ open class ALKReplyMessageView: UIView, Localizable {
     public var closeButtonTapped: ((Bool) -> Void)?
 
     private var message: ALKMessageViewModel?
+    var displayNames: ((Set<String>) -> ([String: String]?))?
 
     private enum Padding {
         enum NameLabel {
@@ -98,7 +111,17 @@ open class ALKReplyMessageView: UIView, Localizable {
         self.message = message
         nameLabel.text = message.isMyMessage ?
             selfNameText : message.displayName
-        messageLabel.text = getMessageText()
+        if message.messageType == .text,
+            let attributedText = message
+            .attributedTextWithMentions(
+                defaultAttributes: Theme.message.toAttributes,
+                mentionAttributes: Theme.mention.toAttributes,
+                displayNames: displayNames
+            ) {
+            messageLabel.attributedText = attributedText
+        } else {
+            messageLabel.text = getMessageText()
+        }
 
         if let imageURL = getURLForPreviewImage(message: message) {
             setImageFrom(url: imageURL, to: previewImageView)
@@ -110,6 +133,7 @@ open class ALKReplyMessageView: UIView, Localizable {
     // MARK: - Internal methods
 
     private func setUpViews() {
+        messageLabel.setStyle(Theme.message)
         setUpConstraints()
         closeButton.addTarget(self, action: #selector(closeButtonTapped(_:)), for: .touchUpInside)
     }

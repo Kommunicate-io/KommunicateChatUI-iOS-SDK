@@ -2,6 +2,11 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+3.4.0 (Upcoming)
+---
+### Enhancements
+- [AL-3761] Added support for member mention in groups.
+
 3.3.0
 ---
 ### Enhancements

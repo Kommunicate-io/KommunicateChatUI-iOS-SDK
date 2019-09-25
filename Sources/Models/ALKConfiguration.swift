@@ -152,6 +152,11 @@ public struct ALKConfiguration {
     // If false, Then  you can disable the default refresh button in chat view
     public var isRefreshButtonEnabled: Bool = true
 
+    // If true then the mention feature in groups will be enabled
+    // and it can be triggered by typing "@" character in the message
+    // input view. Default value is false.
+    public var isMemberMentionEnabled = false
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {

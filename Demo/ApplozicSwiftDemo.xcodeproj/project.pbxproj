@@ -48,6 +48,7 @@
 		8BA84180206A5A40004DD252 /* ALKGenericCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */; };
 		8BB6ACA82068E982003C3B26 /* ALKConversationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */; };
 		8BC08E632069086300259AEF /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BC08E622069086300259AEF /* testImage.png */; };
+		8BCCC96C232B846D00D0EB18 /* MessageMentionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCC96B232B846D00D0EB18 /* MessageMentionTests.swift */; };
 		8BDDEA6B21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDDEA6A21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift */; };
 		8BDDEA6D21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDDEA6C21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift */; };
 		8BDDEA6F21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDDEA6E21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift */; };
@@ -148,6 +149,7 @@
 		8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKGenericCardTests.swift; sourceTree = "<group>"; };
 		8BB6ACA72068E982003C3B26 /* ALKConversationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewModelTests.swift; sourceTree = "<group>"; };
 		8BC08E622069086300259AEF /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
+		8BCCC96B232B846D00D0EB18 /* MessageMentionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageMentionTests.swift; sourceTree = "<group>"; };
 		8BDDEA6A21D9F2EE005B22E3 /* ALKConversationVCMemoryLeakTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationVCMemoryLeakTests.swift; sourceTree = "<group>"; };
 		8BDDEA6C21DA0646005B22E3 /* ALKConversationListVCMemoryLeakTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationListVCMemoryLeakTests.swift; sourceTree = "<group>"; };
 		8BDDEA6E21DA09BE005B22E3 /* ALKConversationListViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationListViewControllerMock.swift; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 				8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */,
 				8B68A9B32276DFAB0021638A /* TemplateDecoderTests.swift */,
 				8BE8B3A622D4AC100001BDC2 /* ALKChatBarConfigurationTests.swift */,
+				8BCCC96B232B846D00D0EB18 /* MessageMentionTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -670,6 +673,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BCCC96C232B846D00D0EB18 /* MessageMentionTests.swift in Sources */,
 				8B1BFF4E21D2728B00768400 /* ViewControllerTestUtil.swift in Sources */,
 				8BA6FAE32089F18700BB1F6F /* ALKGenericListTests.swift in Sources */,
 				8BF8D8591FBDC2CF00804824 /* ALKNewChatViewModelTests.swift in Sources */,
