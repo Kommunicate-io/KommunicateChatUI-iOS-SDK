@@ -168,11 +168,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return message.groupId
     }
 
-    func richButtonTapped(index: Int, name: String, message: ALKMessageViewModel) {
-        print("Tapped")
-    }
-
-
     open func friends() -> [ALKFriendViewModel] {
         let alChannelService = ALChannelService()
 

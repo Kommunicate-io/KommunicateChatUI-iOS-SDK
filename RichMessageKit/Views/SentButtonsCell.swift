@@ -43,9 +43,9 @@ public class SentButtonsCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    /// Updates the `SentButtonsView`.
+    /// Updates the `SentButtonsCell`.
     ///
-    /// - Parameter model: object that conforms to `ImageMessage`
+    /// - Parameter model: object that conforms to `SuggestedReplyMessage`
     public func update(model: SuggestedReplyMessage) {
         guard model.message.isMyMessage else {
             print("😱😱😱Inconsistent information passed to the view.😱😱😱")
@@ -59,15 +59,12 @@ public class SentButtonsCell: UITableViewCell {
             padding: messageViewPadding
         )
         buttons.update(model: model)
-        let height = SentButtonsCell.rowHeight(model: model)
-        frame.size = CGSize(width: Config.maxWidth, height: height)
     }
 
-    /// It is used to get exact height of `ImageMessageView` using messageModel, width and padding
+    /// It is used to get exact height of `SentButtonsCell` using messageModel, width and padding
     ///
-    /// - NOTE: Font is not used. Change `ImageBubbleStyle.captionStyle.font`
     /// - Parameters:
-    ///   - model: object that conforms to `ImageMessage`
+    ///   - model: object that conforms to `SuggestedReplyMessage`
     /// - Returns: exact height of the view.
     public static func rowHeight(model: SuggestedReplyMessage) -> CGFloat {
         let messageViewPadding = Padding(left: Config.padding.left,

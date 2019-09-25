@@ -32,7 +32,7 @@ public class SuggestedReplyView: UIView {
     let maxWidth: CGFloat
     let font: UIFont
     let color: UIColor
-    var delegate: Tappable?
+    weak var delegate: Tappable?
 
     var model: SuggestedReplyMessage?
 
@@ -109,16 +109,15 @@ public class SuggestedReplyView: UIView {
         ])
     }
 
-    private func setupSuggestedReplyButtons(_ model: SuggestedReplyMessage) {
+    private func setupSuggestedReplyButtons(_ suggestedMessage: SuggestedReplyMessage) {
         mainStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
         var width: CGFloat = 0
         var subviews = [UIView]()
-        for index in 0 ..< model.title.count {
-            let object = model.title[index]
-            let title = object.title
-            let type = object.type
+        for index in 0 ..< suggestedMessage.suggestion.count {
+            let title = suggestedMessage.suggestion[index].title
+            let type = suggestedMessage.suggestion[index].type
             var button: RichButtonView!
             if type == .link {
                 button = linkButton(title: title, index: index)
@@ -188,8 +187,8 @@ public class SuggestedReplyView: UIView {
 
 extension SuggestedReplyView: Tappable {
     public func didTap(index: Int?, title: String) {
-        guard let model = model, let index = index else { return }
-        let replyToBeSend = model.reply[index] ?? title
+        guard let index = index, let suggestion = model?.suggestion[index] else { return }
+        let replyToBeSend = suggestion.reply ?? suggestion.title
         delegate?.didTap(index: index, title: replyToBeSend)
     }
 }

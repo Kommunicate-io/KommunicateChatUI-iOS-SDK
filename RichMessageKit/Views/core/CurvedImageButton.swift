@@ -11,15 +11,15 @@ public class LinkButton: UIView, RichButtonView {
 
     public struct Config {
         public struct Label {
-            public static let left: CGFloat = 16
-            public static let right: CGFloat = 10
-            public static let top: CGFloat = 8
-            public static let bottom: CGFloat = 8
+            public static var left: CGFloat = 16
+            public static var right: CGFloat = 10
+            public static var top: CGFloat = 8
+            public static var bottom: CGFloat = 8
         }
         public struct Image {
-            public static let right: CGFloat = 16
-            public static let width: CGFloat = 12
-            public static let height: CGFloat = 12
+            public static var right: CGFloat = 16
+            public static var width: CGFloat = 12
+            public static var height: CGFloat = 12
         }
 
         fileprivate static let extraSpace = Label.left + Label.right + Image.width + Image.right
@@ -27,6 +27,7 @@ public class LinkButton: UIView, RichButtonView {
 
     /// Index of button. It will be used when button is tapped
     public var index: Int?
+    public weak var delegate: Tappable?
 
     // MARK: Internal Properties
 
@@ -34,7 +35,6 @@ public class LinkButton: UIView, RichButtonView {
     let color: UIColor
     let textFont: UIFont
     let maxWidth: CGFloat
-    var delegate: Tappable?
 
     private let label = UILabel()
 
@@ -51,7 +51,6 @@ public class LinkButton: UIView, RichButtonView {
     ///
     /// - Parameters:
     ///   - title: Text to be shown in the button.
-    ///   - delegate: A delegate used to receive callbacks when button is tapped.
     ///   - font: Font for button text.
     ///   - color: Color for button text.
     ///   - maxWidth: Maximum width of button so that it can render in multiple lines of text is large.

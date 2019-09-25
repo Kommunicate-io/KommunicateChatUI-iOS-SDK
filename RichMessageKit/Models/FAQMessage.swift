@@ -20,9 +20,9 @@ public struct FAQMessage {
 }
 
 extension FAQMessage {
-    func getButtonTitles() -> [SuggestedReplyMessage.Button] {
-        var buttonTitles = [SuggestedReplyMessage.Button]()
-        buttons.map { buttonTitles.append(SuggestedReplyMessage.Button(title: $0)) }
+    func getSuggestion() -> [SuggestedReplyMessage.Suggestion] {
+        var buttonTitles = [SuggestedReplyMessage.Suggestion]()
+        buttons.map { buttonTitles.append(SuggestedReplyMessage.Suggestion(title: $0, reply: $0)) }
         return buttonTitles
     }
 }
