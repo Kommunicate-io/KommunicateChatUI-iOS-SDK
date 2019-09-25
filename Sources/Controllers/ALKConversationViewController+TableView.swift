@@ -483,6 +483,26 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(model: imageMessage)
                 return cell
             }
+        case .allButtons:
+            guard let allButtons = message.allButtons() else { return UITableViewCell() }
+            if message.isMyMessage {
+                let cell: SentButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: allButtons)
+                return cell
+            } else {
+                let cell: ReceivedButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: allButtons)
+                cell.tapped = { [weak self] index, name in
+                    guard let weakSelf = self else { return }
+                    weakSelf.richButtonSelected(
+                        index: index,
+                        title: name,
+                        message: message,
+                        isButtonClickDisabled: weakSelf.configuration.disableRichMessageButtonAction
+                    )
+                }
+                return cell
+            }
         }
     }
 

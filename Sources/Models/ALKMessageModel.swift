@@ -32,6 +32,7 @@ public enum ALKMessageType: String {
     case genericCard = "Card"
 
     case imageMessage = "ImageMessage"
+    case allButtons = "AllButtons"
 }
 
 // MARK: - MessageViewModel

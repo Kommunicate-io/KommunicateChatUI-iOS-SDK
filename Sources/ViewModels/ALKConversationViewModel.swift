@@ -383,6 +383,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     .rowHeight(model: imageMessage)
                     .cached(with: messageModel.identifier)
             }
+        case .allButtons:
+            guard let model = messageModel.allButtons() else { return 0 }
+            if messageModel.isMyMessage {
+                return
+                    SentButtonsCell
+                        .rowHeight(model: model)
+                        .cached(with: messageModel.identifier)
+            } else {
+                return
+                    ReceivedButtonsCell
+                        .rowHeight(model: model)
+                        .cached(with: messageModel.identifier)
+            }
         }
     }
 
@@ -627,6 +640,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
         if let messageMetadata = metadata, !messageMetadata.isEmpty {
             metaData.addEntries(from: messageMetadata)
+        }
+        if metaData != nil {
+            for (key, value) in metaData {
+                guard let value = value as? [AnyHashable: Any] else { continue }
+                metaData[key] = ALUtilityClass.generateJsonString(from: value)
+            }
         }
         return metaData
     }

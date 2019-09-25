@@ -121,6 +121,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Document"
         case .contact:
             return "Contact"
+        case .allButtons:
+            return message ?? "Buttons"
         }
     }
 
@@ -365,6 +367,8 @@ extension ALMessage {
             return .imageMessage
         case "10":
             return .cardTemplate
+        case "11":
+            return .allButtons
         default:
             return .text
         }

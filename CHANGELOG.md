@@ -6,6 +6,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ---
 ### Enhancements
 - [AL-3761] Added support for member mention in groups.
+- [AL-3741] Added support for rich message template 11.
 
 3.3.0
 ---

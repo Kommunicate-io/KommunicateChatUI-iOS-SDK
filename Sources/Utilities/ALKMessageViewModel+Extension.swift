@@ -71,4 +71,21 @@ extension ALKMessageViewModel {
             return .pending
         }
     }
+
+    func allButtons() -> SuggestedReplyMessage? {
+        guard let payload = payloadFromMetadata() else { return nil }
+        var buttons = [SuggestedReplyMessage.Suggestion]()
+        for object in payload {
+            guard let name = object["name"] as? String,
+                let action = object["action"] as? [String: Any],
+                let type = action["type"] as? String
+                else { continue }
+            var buttonType = SuggestedReplyMessage.SuggestionType.normal
+            if type == "link" {
+                buttonType = .link
+            }
+            buttons.append(SuggestedReplyMessage.Suggestion(title: name, type: buttonType))
+        }
+        return SuggestedReplyMessage(suggestion: buttons, message: messageDetails())
+    }
 }

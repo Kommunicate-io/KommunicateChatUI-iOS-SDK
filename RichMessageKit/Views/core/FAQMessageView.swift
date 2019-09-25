@@ -49,7 +49,7 @@ public class FAQMessageView: UIView {
         return label
     }()
 
-    fileprivate lazy var buttons = SuggestedReplyView(config: SuggestedReplyView.SuggestedReplyConfig(), delegate: self)
+    fileprivate lazy var buttons = SuggestedReplyView()
 
     fileprivate let style: FAQMessageStyle
     fileprivate let alignLeft: Bool
@@ -71,6 +71,7 @@ public class FAQMessageView: UIView {
         style = faqStyle
         self.alignLeft = alignLeft
         super.init(frame: frame)
+        buttons.delegate = self
         setupStyle()
         setupConstraints()
     }
@@ -94,7 +95,7 @@ public class FAQMessageView: UIView {
         descriptionHeight.constant = model.description?.heightWithConstrainedWidth(width, font: style.description.font) ?? 0
         buttonLabel.text = model.buttonLabel
         buttonLabelHeight.constant = model.buttonLabel?.heightWithConstrainedWidth(maxWidth, font: style.buttonLabel.font) ?? 0
-        buttons.update(model: SuggestedReplyMessage(title: model.buttons, reply: model.buttons, message: model.message))
+        buttons.update(model: SuggestedReplyMessage(suggestion: model.getSuggestion(), message: model.message))
     }
 
     /// It's used to get exact height for `FAQMessageView`
@@ -107,7 +108,7 @@ public class FAQMessageView: UIView {
     public class func rowHeight(model: FAQMessage, maxWidth: CGFloat, style: FAQMessageStyle) -> CGFloat {
         let padding = style.bubble.padding
         let width = maxWidth - (padding.left + padding.right)
-        let buttonModel = SuggestedReplyMessage(title: model.buttons, reply: model.buttons, message: model.message)
+        let buttonModel = SuggestedReplyMessage(suggestion: model.getSuggestion(), message: model.message)
         let buttonHeight = SuggestedReplyView.rowHeight(model: buttonModel, maxWidth: maxWidth) + 2 * verticalSpacing
         let titleHeight = (model.title?.heightWithConstrainedWidth(width, font: style.title.font) ?? 0) + style.bubble.padding.top + verticalSpacing
         let descriptionHeight = (model.description?.heightWithConstrainedWidth(width, font: style.description.font) ?? 0) + style.bubble.padding.bottom + verticalSpacing

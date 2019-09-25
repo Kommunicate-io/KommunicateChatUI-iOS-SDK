@@ -18,3 +18,11 @@ public struct FAQMessage {
 
     public var buttons: [String]
 }
+
+extension FAQMessage {
+    func getSuggestion() -> [SuggestedReplyMessage.Suggestion] {
+        var buttonTitles = [SuggestedReplyMessage.Suggestion]()
+        buttons.map { buttonTitles.append(SuggestedReplyMessage.Suggestion(title: $0, reply: $0)) }
+        return buttonTitles
+    }
+}
