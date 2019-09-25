@@ -131,6 +131,8 @@ public class LinkButton: UIView, RichButtonView {
         label.textColor = color
         label.font = textFont
 
+        imageView.tintColor = color
+
         frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
 
         NSLayoutConstraint.activate([
