@@ -168,6 +168,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return message.groupId
     }
 
+    func richButtonTapped(index: Int, name: String, message: ALKMessageViewModel) {
+        print("Tapped")
+    }
+
+
     open func friends() -> [ALKFriendViewModel] {
         let alChannelService = ALChannelService()
 
@@ -382,6 +387,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     ReceivedImageMessageCell
                     .rowHeight(model: imageMessage)
                     .cached(with: messageModel.identifier)
+            }
+        case .allButtons:
+            guard let model = messageModel.allButtons() else { return 0 }
+            if messageModel.isMyMessage {
+                return
+                    SentButtonsCell
+                        .rowHeight(model: model)
+                        .cached(with: messageModel.identifier)
+            } else {
+                return
+                    ReceivedButtonsCell
+                        .rowHeight(model: model)
+                        .cached(with: messageModel.identifier)
             }
         }
     }

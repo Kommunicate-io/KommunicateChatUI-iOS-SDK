@@ -14,8 +14,13 @@ class SuggestedReplyViewSizeCalculator {
         var size = CGSize(width: 0, height: 0)
         var prevHeight: CGFloat = 0
 
-        for title in model.title {
-            size = CurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
+        for object in model.title {
+            let title = object.title
+            if object.type == .link {
+                size = LinkButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
+            } else {
+                size = CurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
+            }
             let currWidth = size.width
             if currWidth > maxWidth {
                 totalHeight += size.height + prevHeight + 10 // 10 padding between buttons

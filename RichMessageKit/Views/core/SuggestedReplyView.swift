@@ -32,7 +32,7 @@ public class SuggestedReplyView: UIView {
     let maxWidth: CGFloat
     let font: UIFont
     let color: UIColor
-    let delegate: Tappable?
+    var delegate: Tappable?
 
     var model: SuggestedReplyMessage?
 
@@ -51,15 +51,12 @@ public class SuggestedReplyView: UIView {
     ///
     /// - Parameters:
     ///   - maxWidth: Max Width to constrain view.
-    ///   - delegate: It is used to inform the delegate when suggested reply is selected.
     /// Gives information about the title and index of quick reply selected. Indexing starts from 1.
     public init(maxWidth: CGFloat = UIScreen.main.bounds.width,
-                config: SuggestedReplyConfig = SuggestedReplyConfig(),
-                delegate: Tappable) {
+                config: SuggestedReplyConfig = SuggestedReplyConfig()) {
         self.maxWidth = maxWidth
         font = config.font
         color = config.color
-        self.delegate = delegate
         super.init(frame: .zero)
         setupConstraints()
     }
@@ -119,8 +116,15 @@ public class SuggestedReplyView: UIView {
         var width: CGFloat = 0
         var subviews = [UIView]()
         for index in 0 ..< model.title.count {
-            let title = model.title[index]
-            let button = curvedButton(title: title, index: index)
+            let object = model.title[index]
+            let title = object.title
+            let type = object.type
+            var button: RichButtonView!
+            if type == .link {
+                button = linkButton(title: title, index: index)
+            } else {
+                button = curvedButton(title: title, index: index)
+            }
             width += button.buttonWidth()
 
             if width >= maxWidth {
@@ -168,8 +172,15 @@ public class SuggestedReplyView: UIView {
         return view
     }
 
-    private func curvedButton(title: String, index: Int) -> CurvedButton {
+    private func curvedButton(title: String, index: Int) -> RichButtonView {
         let button = CurvedButton(title: title, delegate: self, font: font, color: color, maxWidth: maxWidth)
+        button.index = index
+        return button
+    }
+
+    private func linkButton(title: String, index: Int) -> RichButtonView {
+        let button = LinkButton(title: title, font: font, color: color, maxWidth: maxWidth)
+        button.delegate = self
         button.index = index
         return button
     }

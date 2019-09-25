@@ -11,7 +11,7 @@ import UIKit
 ///
 /// It also accepts optional font, color and maxWidth for rendering.
 /// - NOTE: Minimum width is 45 and minimum height is 35 and cornerRadius is 15.
-public class CurvedButton: UIButton {
+public class CurvedButton: UIButton, RichButtonView {
     // MARK: Public Properties
 
     /// Defines the padding for text inside button.

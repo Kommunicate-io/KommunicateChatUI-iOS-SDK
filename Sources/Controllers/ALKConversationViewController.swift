@@ -642,6 +642,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ReceivedImageMessageCell.self)
         tableView.register(ReceivedFAQMessageCell.self)
         tableView.register(SentFAQMessageCell.self)
+        tableView.register(SentButtonsCell.self)
+        tableView.register(ReceivedButtonsCell.self)
     }
 
     private func prepareMoreBar() {
@@ -1133,6 +1135,31 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         sendQuickReply(msg, metadata: metadata)
     }
 
+    func richButtonSelected(index: Int,
+                            title: String,
+                            message: ALKMessageViewModel,
+                            isButtonClickDisabled: Bool) {
+        guard
+            let payload = message.payloadFromMetadata()?[index],
+            let action = payload["action"] as? [String: Any],
+            let type = action["type"] as? String
+        else {
+            return
+        }
+        switch type {
+        case "link":
+            linkButtonSelected(action)
+        case "submit":
+            let ackMessage = action["message"] as? String ?? title
+            submitButtonSelected(metadata: action, text: ackMessage)
+        case "quickReply":
+            let ackMessage = action["message"] as? String ?? title
+            sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any])
+        default:
+            print("Do nothing")
+        }
+    }
+
     func messageButtonSelected(
         index: Int,
         title: String,
@@ -1304,6 +1331,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func sendQuickReply(_ text: String, metadata: [String: Any]?) {
         var customMetadata = metadata ?? [String: Any]()
+
         guard let messageMetadata = configuration.messageMetadata as? [String: Any] else {
             viewModel.send(message: text, metadata: customMetadata)
             return

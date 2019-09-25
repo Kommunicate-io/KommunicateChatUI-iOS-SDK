@@ -8,8 +8,25 @@
 import Foundation
 
 public struct SuggestedReplyMessage {
-    /// Title to be displayed in suggested replies
-    public var title: [String]
+
+    public enum ButtonType {
+        case link
+        case normal
+    }
+
+    public struct Button {
+        let title: String
+        let type: ButtonType 
+
+        public init(title: String, type: ButtonType = .normal) {
+            self.title = title
+            self.type = type
+        }
+    }
+
+    /// Title to be displayed in the view.
+    /// Dictionary of name and type.
+    public var title: [Button]
 
     /// Reply that should be given when title is clicked
     /// If nil, then title will be used as reply
