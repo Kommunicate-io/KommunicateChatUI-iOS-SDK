@@ -17,9 +17,10 @@ class SuggestedReplyViewSizeCalculator {
         for suggestion in model.suggestion {
             let title = suggestion.title
             if suggestion.type == .link {
-                size = LinkButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
+                let image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)
+                size = CurvedImageButton.buttonSize(text: title, image: image, maxWidth: maxWidth)
             } else {
-                size = CurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: font)
+                size = CurvedImageButton.buttonSize(text: title, maxWidth: maxWidth)
             }
             let currWidth = size.width
             if currWidth > maxWidth {

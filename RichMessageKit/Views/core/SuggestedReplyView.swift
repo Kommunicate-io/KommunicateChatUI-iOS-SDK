@@ -102,10 +102,10 @@ public class SuggestedReplyView: UIView {
     private func setupConstraints() {
         addViewsForAutolayout(views: [mainStackView])
         NSLayoutConstraint.activate([
-            mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            mainStackView.topAnchor.constraint(equalTo: self.topAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            mainStackView.topAnchor.constraint(equalTo: topAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 
@@ -118,11 +118,12 @@ public class SuggestedReplyView: UIView {
         for index in 0 ..< suggestedMessage.suggestion.count {
             let title = suggestedMessage.suggestion[index].title
             let type = suggestedMessage.suggestion[index].type
-            var button: RichButtonView!
+            var button: CurvedImageButton!
             if type == .link {
-                button = linkButton(title: title, index: index)
+                let image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)
+                button = curvedButton(title: title, image: image, index: index)
             } else {
-                button = curvedButton(title: title, index: index)
+                button = curvedButton(title: title, image: nil, index: index)
             }
             width += button.buttonWidth()
 
@@ -171,14 +172,8 @@ public class SuggestedReplyView: UIView {
         return view
     }
 
-    private func curvedButton(title: String, index: Int) -> RichButtonView {
-        let button = CurvedButton(title: title, delegate: self, font: font, color: color, maxWidth: maxWidth)
-        button.index = index
-        return button
-    }
-
-    private func linkButton(title: String, index: Int) -> RichButtonView {
-        let button = LinkButton(title: title, font: font, color: color, maxWidth: maxWidth)
+    private func curvedButton(title: String, image: UIImage?, index: Int) -> CurvedImageButton {
+        let button = CurvedImageButton(title: title, image: image, maxWidth: maxWidth)
         button.delegate = self
         button.index = index
         return button
