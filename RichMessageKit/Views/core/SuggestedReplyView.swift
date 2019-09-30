@@ -163,7 +163,7 @@ public class SuggestedReplyView: UIView {
 
     private func hiddenViewUsing(currWidth: CGFloat, maxWidth: CGFloat, subViews _: [UIView]) -> UIView {
         let unusedWidth = maxWidth - currWidth - 20
-        let height = (subviews[0] as? CurvedButton)?.buttonHeight() ?? 0
+        let height = (subviews[0] as? CurvedImageButton)?.buttonHeight() ?? 0
         let size = CGSize(width: unusedWidth, height: height)
 
         let view = UIView()
@@ -183,7 +183,7 @@ public class SuggestedReplyView: UIView {
 extension SuggestedReplyView: Tappable {
     public func didTap(index: Int?, title: String) {
         guard let index = index, let suggestion = model?.suggestion[index] else { return }
-        let replyToBeSend = suggestion.reply ?? suggestion.title
+        let replyToBeSend = suggestion.reply ?? title
         delegate?.didTap(index: index, title: replyToBeSend)
     }
 }

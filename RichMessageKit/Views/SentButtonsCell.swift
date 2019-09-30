@@ -9,6 +9,7 @@ import Foundation
 
 public class SentButtonsCell: UITableViewCell {
     // MARK: - Public properties
+
     public struct Config {
         public static var buttonTopPadding: CGFloat = 4
         public static var padding = Padding(left: 60, right: 10, top: 10, bottom: 10)
@@ -89,7 +90,6 @@ public class SentButtonsCell: UITableViewCell {
             buttons.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Config.padding.right),
             buttons.leadingAnchor.constraint(equalTo: leadingAnchor),
             buttons.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
-            ])
+        ])
     }
-
 }

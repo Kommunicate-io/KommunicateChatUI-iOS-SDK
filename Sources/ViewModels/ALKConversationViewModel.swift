@@ -388,13 +388,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if messageModel.isMyMessage {
                 return
                     SentButtonsCell
-                        .rowHeight(model: model)
-                        .cached(with: messageModel.identifier)
+                    .rowHeight(model: model)
+                    .cached(with: messageModel.identifier)
             } else {
                 return
                     ReceivedButtonsCell
-                        .rowHeight(model: model)
-                        .cached(with: messageModel.identifier)
+                    .rowHeight(model: model)
+                    .cached(with: messageModel.identifier)
             }
         }
     }

@@ -8,7 +8,6 @@
 import Foundation
 
 public struct SuggestedReplyMessage {
-
     public enum SuggestionType {
         case link
         case normal
@@ -31,7 +30,6 @@ public struct SuggestedReplyMessage {
     /// Title to be displayed in the view.
     /// Dictionary of name and type.
     public var suggestion: [Suggestion]
-
 
     public var message: Message
 }

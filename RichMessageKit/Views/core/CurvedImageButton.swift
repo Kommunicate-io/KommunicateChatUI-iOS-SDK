@@ -11,10 +11,8 @@ import UIKit
 ///
 /// To change the spacing and other properties of view, change parameters of #CurvedImageButton.Config
 public class CurvedImageButton: UIView {
-
     /// Configuration to change UI properties of `CurvedImageButton`
     public struct Config {
-
         /// Padding of view.
         public var padding = Padding(left: 16, right: 16, top: 8, bottom: 8)
 
@@ -49,8 +47,7 @@ public class CurvedImageButton: UIView {
         /// Border width of view.
         var borderWidth: CGFloat = 2
 
-        public init() { }
-
+        public init() {}
     }
 
     /// Index of button. It will be used when button is tapped
@@ -110,10 +107,10 @@ public class CurvedImageButton: UIView {
     public func buttonWidth() -> CGFloat {
         let titleWidth =
             title
-                .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+            .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
                                       font: config.font)
-                .width
-                .rounded(.up)
+            .width
+            .rounded(.up)
         let buttonWidth = titleWidth + config.spaceWithoutText
         return max(buttonWidth, config.minWidth) // Minimum width is 45
     }
@@ -124,10 +121,10 @@ public class CurvedImageButton: UIView {
     public func buttonHeight() -> CGFloat {
         let titleHeight =
             title
-                .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                          font: config.font)
-                .height
-                .rounded(.up)
+            .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+                                      font: config.font)
+            .height
+            .rounded(.up)
         let buttonHeight = titleHeight + config.padding.top + config.padding.bottom
         return max(buttonHeight, config.minHeight) // Minimum height is 35
     }
@@ -140,6 +137,11 @@ public class CurvedImageButton: UIView {
                                  image: UIImage? = nil,
                                  maxWidth: CGFloat = UIScreen.main.bounds.width,
                                  config: Config = Config()) -> CGSize {
+        var config = config
+        if image == nil {
+            config.textImageSpace = 0
+            config.imageSize = CGSize(width: 0, height: 0)
+        }
         let textSize = text.rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
                                                      font: config.font)
         let labelWidth = textSize.width.rounded(.up)
@@ -196,7 +198,6 @@ public class CurvedImageButton: UIView {
                                        constant: config.padding.top),
             label.bottomAnchor.constraint(equalTo: bottomAnchor,
                                           constant: -config.padding.bottom),
-            ])
+        ])
     }
-
 }

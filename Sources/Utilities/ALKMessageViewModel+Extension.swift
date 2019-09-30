@@ -79,7 +79,7 @@ extension ALKMessageViewModel {
             guard let name = object["name"] as? String,
                 let action = object["action"] as? [String: Any],
                 let type = action["type"] as? String
-                else { continue }
+            else { continue }
             var buttonType = SuggestedReplyMessage.SuggestionType.normal
             if type == "link" {
                 buttonType = .link
