@@ -9,7 +9,7 @@ import Foundation
 
 public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
     var messageView = ALKMyMessageView()
-    var quickReplyView = ALKQuickReplyView(frame: .zero)
+    var quickReplyView = SuggestedReplyView()
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -27,14 +27,14 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         let height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
         messageViewHeight.constant = height
         messageView.update(viewModel: viewModel)
-        guard let quickReplyArray = viewModel.payloadFromMetadata() else {
+        guard let suggestedReply = viewModel.suggestedReply() else {
             quickReplyView.isHidden = true
             layoutIfNeeded()
             return
         }
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.SentMessage.QuickReply.left + ChatCellPadding.SentMessage.QuickReply.right)
-        updateQuickReplyView(quickReplyArray: quickReplyArray, height: height, width: quickReplyViewWidth)
+        quickReplyView.update(model: suggestedReply, maxWidth: quickReplyViewWidth)
         layoutIfNeeded()
     }
 
@@ -42,38 +42,39 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         let messageWidth = maxWidth -
             (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
         let height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
-        guard let quickReplyDict = viewModel.payloadFromMetadata() else {
+        guard let suggestedReplies = viewModel.suggestedReply() else {
             return height
         }
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.SentMessage.QuickReply.left + ChatCellPadding.SentMessage.QuickReply.right)
-        return height + ALKQuickReplyView.rowHeight(quickReplyArray: quickReplyDict, maxWidth: quickReplyViewWidth) + 20 // Padding between messages
+
+        return height
+            + SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
+            + 20 // Padding between messages
     }
 
     private func setupConstraints() {
         contentView.addSubview(messageView)
-        messageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(quickReplyView)
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.SentMessage.Message.left).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * ChatCellPadding.SentMessage.Message.right).isActive = true
-        messageViewHeight.isActive = true
-    }
+        contentView.addViewsForAutolayout(views: [messageView, quickReplyView])
+        NSLayoutConstraint.activate([
+            messageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            messageView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: ChatCellPadding.SentMessage.Message.left
+            ),
+            messageView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -ChatCellPadding.SentMessage.Message.right
+            ),
+            messageViewHeight,
 
-    private func updateQuickReplyView(quickReplyArray: [[String: Any]], height: CGFloat, width: CGFloat) {
-        quickReplyView.maxWidth = width
-        quickReplyView.alignLeft = false
-        quickReplyView.update(quickReplyArray: quickReplyArray)
-        let quickReplyViewHeight = ALKQuickReplyView.rowHeight(quickReplyArray: quickReplyArray, maxWidth: width)
-
-        var xPos = ChatCellPadding.SentMessage.QuickReply.left
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            xPos = ChatCellPadding.SentMessage.QuickReply.right
-        }
-
-        quickReplyView.frame = CGRect(x: xPos,
-                                      y: height + ChatCellPadding.SentMessage.QuickReply.top,
-                                      width: width,
-                                      height: quickReplyViewHeight)
+            quickReplyView.topAnchor.constraint(
+                equalTo: messageView.bottomAnchor,
+                constant: ChatCellPadding.SentMessage.QuickReply.top
+            ),
+            quickReplyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            quickReplyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            quickReplyView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ])
     }
 }

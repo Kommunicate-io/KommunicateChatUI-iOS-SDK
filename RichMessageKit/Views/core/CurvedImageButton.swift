@@ -173,6 +173,8 @@ public class CurvedImageButton: UIView {
         label.text = title
         label.textColor = config.color
         label.font = config.font
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
 
         imageView.tintColor = config.color
         imageView.image = image?.withRenderingMode(.alwaysTemplate)

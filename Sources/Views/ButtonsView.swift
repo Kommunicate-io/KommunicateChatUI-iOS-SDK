@@ -55,25 +55,40 @@ public class ButtonsView: UIView {
         }
         for index in 0 ..< payload.count {
             let dict = payload[index]
+            var config = CurvedImageButton.Config()
+            config.font = font
             guard let type = dict["type"] as? String, type == "link" else {
                 // Submit button
+                config.color = MessageButtonConfig.SubmitButton.textColor
                 let name = dict["name"] as? String ?? ""
-                let button = submitButton(title: name, index: index)
+                let button = CurvedImageButton(title: name, config: config, maxWidth: maxWidth)
                 mainStackView.addArrangedSubview(button)
                 continue
             }
             // Link Button
+            config.color = MessageButtonConfig.LinkButton.textColor
             let name = dict["name"] as? String ?? ""
-            let button = linkButton(title: name, index: index)
+            let image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)
+            let button = CurvedImageButton(title: name, image: image, config: config, maxWidth: maxWidth)
             mainStackView.addArrangedSubview(button)
         }
     }
 
     public class func rowHeight(payload: [[String: Any]], maxWidth: CGFloat) -> CGFloat {
         var height: CGFloat = 0
+        var config = CurvedImageButton.Config()
+        config.font = MessageButtonConfig.font
         for dict in payload {
             let title = dict["name"] as? String ?? ""
-            let currHeight = ALKCurvedButton.buttonSize(text: title, maxWidth: maxWidth, font: MessageButtonConfig.font).height
+            var currHeight: CGFloat = 0
+            if let type = dict["type"] as? String, type == "link" {
+                config.color = MessageButtonConfig.LinkButton.textColor
+                let image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)
+                currHeight = CurvedImageButton.buttonSize(text: title, image: image, maxWidth: maxWidth, config: config).height
+            } else {
+                config.color = MessageButtonConfig.SubmitButton.textColor
+                currHeight = CurvedImageButton.buttonSize(text: title, maxWidth: maxWidth, config: config).height
+            }
             height += currHeight + 2 // StackView spacing
         }
         return height
@@ -85,32 +100,5 @@ public class ButtonsView: UIView {
         mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         mainStackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    }
-
-    private func submitButton(title: String, index: Int) -> ALKCurvedButton {
-        let color = MessageButtonConfig.SubmitButton.textColor
-        let button = ALKCurvedButton(title: title, font: font, color: color, maxWidth: maxWidth)
-        button.index = index
-        button.buttonSelected = { [weak self] tag, title in
-            self?.buttonSelected?(tag!, title)
-        }
-        return button
-    }
-
-    private func linkButton(title: String, index: Int) -> ALKCurvedButton {
-        let color = MessageButtonConfig.LinkButton.textColor
-        let button = ALKCurvedButton(title: title, font: font, color: color, maxWidth: maxWidth)
-        button.index = index
-        button.layer.borderWidth = 0
-
-        let attributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: font,
-                                                         NSAttributedString.Key.foregroundColor: color,
-                                                         NSAttributedString.Key.underlineStyle: 1]
-        let attributedTitle = NSAttributedString(string: title, attributes: attributes)
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        button.buttonSelected = { [weak self] tag, title in
-            self?.buttonSelected?(tag!, title)
-        }
-        return button
     }
 }

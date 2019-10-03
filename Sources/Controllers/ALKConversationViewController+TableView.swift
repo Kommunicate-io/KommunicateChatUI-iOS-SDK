@@ -340,15 +340,13 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = message.payloadFromMetadata() else {
                     return cell
                 }
-                cell.quickReplyView.quickReplySelected = { [weak self] tag, title, metadata in
-                    guard let weakSelf = self,
-                        let index = tag else { return }
+                cell.quickReplySelected = { [weak self] index, title in
+                    guard let weakSelf = self else { return }
                     weakSelf.quickReplySelected(
                         index: index,
                         title: title,
                         template: template,
                         message: message,
-                        metadata: metadata,
                         isButtonClickDisabled: weakSelf.configuration.disableRichMessageButtonAction
                     )
                 }

@@ -29,7 +29,6 @@ public class SuggestedReplyView: UIView {
     // This is used to align the view to left or right. Gets value from message.isMyMessage
     var alignLeft: Bool = true
 
-    let maxWidth: CGFloat
     let font: UIFont
     let color: UIColor
     weak var delegate: Tappable?
@@ -52,9 +51,7 @@ public class SuggestedReplyView: UIView {
     /// - Parameters:
     ///   - maxWidth: Max Width to constrain view.
     /// Gives information about the title and index of quick reply selected. Indexing starts from 1.
-    public init(maxWidth: CGFloat = UIScreen.main.bounds.width,
-                config: SuggestedReplyConfig = SuggestedReplyConfig()) {
-        self.maxWidth = maxWidth
+    public init(config: SuggestedReplyConfig = SuggestedReplyConfig()) {
         font = config.font
         color = config.color
         super.init(frame: .zero)
@@ -70,7 +67,7 @@ public class SuggestedReplyView: UIView {
     /// Creates Suggested reply buttons using dictionary.
     ///
     /// - Parameter - model: Object that conforms to `SuggestedReplyMessage`.
-    public func update(model: SuggestedReplyMessage) {
+    public func update(model: SuggestedReplyMessage, maxWidth: CGFloat) {
         self.model = model
         /// Set frame size.
         let width = maxWidth
@@ -80,7 +77,7 @@ public class SuggestedReplyView: UIView {
 
         alignLeft = !model.message.isMyMessage
 
-        setupSuggestedReplyButtons(model)
+        setupSuggestedReplyButtons(model, maxWidth: maxWidth)
     }
 
     /// It calculates height of `SuggestedReplyView` based on the dictionary passed.
@@ -92,7 +89,7 @@ public class SuggestedReplyView: UIView {
     ///   - font: Font for suggested replies. Pass the custom SuggestedReplyConfig font used while initialization.
     /// - Returns: Returns height of view based on passed parameters.
     public static func rowHeight(model: SuggestedReplyMessage,
-                                 maxWidth: CGFloat = UIScreen.main.bounds.width,
+                                 maxWidth: CGFloat,
                                  font: UIFont = SuggestedReplyConfig().font) -> CGFloat {
         return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth, font: font)
     }
@@ -109,7 +106,7 @@ public class SuggestedReplyView: UIView {
         ])
     }
 
-    private func setupSuggestedReplyButtons(_ suggestedMessage: SuggestedReplyMessage) {
+    private func setupSuggestedReplyButtons(_ suggestedMessage: SuggestedReplyMessage, maxWidth: CGFloat) {
         mainStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
@@ -121,9 +118,9 @@ public class SuggestedReplyView: UIView {
             var button: CurvedImageButton!
             if type == .link {
                 let image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)
-                button = curvedButton(title: title, image: image, index: index)
+                button = curvedButton(title: title, image: image, index: index, maxWidth: maxWidth)
             } else {
-                button = curvedButton(title: title, image: nil, index: index)
+                button = curvedButton(title: title, image: nil, index: index, maxWidth: maxWidth)
             }
             width += button.buttonWidth()
 
@@ -172,7 +169,7 @@ public class SuggestedReplyView: UIView {
         return view
     }
 
-    private func curvedButton(title: String, image: UIImage?, index: Int) -> CurvedImageButton {
+    private func curvedButton(title: String, image: UIImage?, index: Int, maxWidth: CGFloat) -> CurvedImageButton {
         let button = CurvedImageButton(title: title, image: image, maxWidth: maxWidth)
         button.delegate = self
         button.index = index

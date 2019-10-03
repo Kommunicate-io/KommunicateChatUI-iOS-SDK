@@ -19,7 +19,7 @@ public class SentButtonsCell: UITableViewCell {
 
     // MARK: - Fileprivate properties
 
-    fileprivate lazy var buttons = SuggestedReplyView(maxWidth: Config.buttonWidth)
+    fileprivate lazy var buttons = SuggestedReplyView()
     fileprivate lazy var messageView = SentMessageView(
         frame: .zero,
         padding: messageViewPadding,
@@ -59,7 +59,7 @@ public class SentButtonsCell: UITableViewCell {
             maxWidth: Config.maxWidth,
             padding: messageViewPadding
         )
-        buttons.update(model: model)
+        buttons.update(model: model, maxWidth: Config.buttonWidth)
     }
 
     /// It is used to get exact height of `SentButtonsCell` using messageModel, width and padding
