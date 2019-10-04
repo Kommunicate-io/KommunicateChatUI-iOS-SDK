@@ -29,13 +29,11 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.update(viewModel: viewModel)
         guard let suggestedReply = viewModel.suggestedReply() else {
             quickReplyView.isHidden = true
-            layoutIfNeeded()
             return
         }
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.SentMessage.QuickReply.left + ChatCellPadding.SentMessage.QuickReply.right)
         quickReplyView.update(model: suggestedReply, maxWidth: quickReplyViewWidth)
-        layoutIfNeeded()
     }
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
@@ -50,7 +48,8 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
 
         return height
             + SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
-            + 20 // Padding between messages
+            + ChatCellPadding.SentMessage.QuickReply.top
+            + ChatCellPadding.SentMessage.QuickReply.top
     }
 
     private func setupConstraints() {
@@ -72,9 +71,15 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
                 equalTo: messageView.bottomAnchor,
                 constant: ChatCellPadding.SentMessage.QuickReply.top
             ),
+            quickReplyView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -ChatCellPadding.SentMessage.QuickReply.right
+            ),
             quickReplyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            quickReplyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            quickReplyView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            quickReplyView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -ChatCellPadding.SentMessage.QuickReply.bottom
+            ),
         ])
     }
 }

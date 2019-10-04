@@ -32,13 +32,11 @@ public class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageView.update(viewModel: viewModel)
         guard let suggestedReplies = viewModel.suggestedReply() else {
             quickReplyView.isHidden = true
-            layoutIfNeeded()
             return
         }
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.QuickReply.right)
         quickReplyView.update(model: suggestedReplies, maxWidth: quickReplyViewWidth)
-        layoutIfNeeded()
     }
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
@@ -53,6 +51,7 @@ public class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         return height
             + SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
             + ChatCellPadding.ReceivedMessage.QuickReply.top
+            + ChatCellPadding.ReceivedMessage.QuickReply.bottom
     }
 
     private func setupConstraints() {
@@ -72,10 +71,19 @@ public class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
             ),
             messageViewHeight,
 
-            quickReplyView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ChatCellPadding.ReceivedMessage.QuickReply.top),
-            quickReplyView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor),
+            quickReplyView.topAnchor.constraint(
+                equalTo: messageView.bottomAnchor,
+                constant: ChatCellPadding.ReceivedMessage.QuickReply.top
+            ),
+            quickReplyView.leadingAnchor.constraint(
+                equalTo: messageView.leadingAnchor,
+                constant: ChatCellPadding.ReceivedMessage.QuickReply.left
+            ),
             quickReplyView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor),
-            quickReplyView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            quickReplyView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -ChatCellPadding.ReceivedMessage.QuickReply.bottom
+            ),
         ])
     }
 }

@@ -365,7 +365,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
-                cell.buttonView.buttonSelected = { [weak self] index, title in
+                cell.buttonSelected = { [weak self] index, title in
                     guard let weakSelf = self else { return }
                     weakSelf.messageButtonSelected(
                         index: index,
