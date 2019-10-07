@@ -14,12 +14,12 @@ import Nimble_Snapshots
 class ALKCurvedButtonSnapshotTests: QuickSpec {
 
     override func spec() {
-        describe("ALKCurvedButton") {
-            var button: ALKCurvedButton!
+        describe("CurvedImageButton") {
+            var button: CurvedImageButton!
 
             context("with default settings") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Demo text")
+                    button = CurvedImageButton(title: "Demo text")
                 }
                 it("has a valid snapshot") {
                     expect(button).to(haveValidSnapshot())
@@ -28,7 +28,9 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different font") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Demo text", font: UIFont.boldSystemFont(ofSize: 40))
+                    var config = CurvedImageButton.Config()
+                    config.font = UIFont.boldSystemFont(ofSize: 40)
+                    button = CurvedImageButton(title: "Demo text", config: config)
                 }
                 it("has a valid snapshot") {
                     expect(button).to(haveValidSnapshot())
@@ -37,7 +39,14 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different color") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Demo text", color: UIColor.red)
+                    var config = CurvedImageButton.Config()
+                    let color = CurvedImageButton.Config.Color(
+                        text: .red,
+                        border: UIColor.red.cgColor,
+                        background: .clear,
+                        tint: .red)
+                    config.color = color
+                    button = CurvedImageButton(title: "Demo text", config: config)
                 }
                 it("has a valid snapshot") {
                     expect(button).to(haveValidSnapshot())
@@ -46,7 +55,7 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different width") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Very long text for button", maxWidth: 100)
+                    button = CurvedImageButton(title: "Very long text for button", maxWidth: 100)
                 }
                 it("has a valid snapshot") {
                     expect(button).to(haveValidSnapshot())
@@ -55,7 +64,7 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different backgroundColor") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Demo text")
+                    button = CurvedImageButton(title: "Demo text")
                     button.backgroundColor = UIColor.yellow
                 }
                 it("has a valid snapshot") {
@@ -65,7 +74,7 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("without border") {
                 beforeEach {
-                    button = ALKCurvedButton(title: "Demo text")
+                    button = CurvedImageButton(title: "Demo text")
                     button.layer.borderWidth = 0
                     button.backgroundColor = UIColor.white
                 }

@@ -7,7 +7,7 @@
 
 open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     var messageView = ALKMyMessageView()
-    var buttonView = ButtonsView(frame: .zero)
+    var buttonView = SuggestedReplyView()
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
     override func setupViews() {
@@ -23,13 +23,13 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageViewHeight.constant = height
         messageView.update(viewModel: viewModel)
 
-        guard let dict = viewModel.payloadFromMetadata() else {
-            layoutIfNeeded()
+        guard let dict = viewModel.linkOrSubmitButton() else {
+            buttonView.isHidden = true
             return
         }
+        buttonView.isHidden = false
         let buttonWidth = maxWidth - (ChatCellPadding.SentMessage.MessageButton.left + ChatCellPadding.SentMessage.MessageButton.right)
-        updateMessageButtonView(payload: dict, width: buttonWidth, heightOffset: height)
-        layoutIfNeeded()
+        buttonView.update(model: dict, maxWidth: buttonWidth)
     }
 
     open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -37,43 +37,58 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
         let messageHeight = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
 
-        guard let dict = viewModel.payloadFromMetadata() else {
+        guard let dict = viewModel.linkOrSubmitButton() else {
             return messageHeight + 10 // Paddding
         }
         let buttonWidth = width - (ChatCellPadding.SentMessage.MessageButton.left + ChatCellPadding.SentMessage.MessageButton.right)
-        let buttonHeight = ButtonsView.rowHeight(payload: dict, maxWidth: buttonWidth)
-        return messageHeight + buttonHeight + 20 // Padding between messages
+        let buttonHeight = SuggestedReplyView.rowHeight(model: dict, maxWidth: buttonWidth)
+        return messageHeight
+            + buttonHeight
+            + ChatCellPadding.SentMessage.MessageButton.top
+            + ChatCellPadding.SentMessage.MessageButton.bottom
     }
 
     private func setupConstraints() {
-        contentView.addSubview(messageView)
-        contentView.addSubview(buttonView)
-        messageView.translatesAutoresizingMaskIntoConstraints = false
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.SentMessage.Message.left).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * ChatCellPadding.SentMessage.Message.right).isActive = true
-        messageViewHeight.isActive = true
-    }
+        contentView.addViewsForAutolayout(views: [messageView, buttonView])
+        NSLayoutConstraint.activate([
+            messageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            messageView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: ChatCellPadding.SentMessage.Message.left
+            ),
+            messageView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -1 * ChatCellPadding.SentMessage.Message.right
+            ),
+            messageViewHeight,
 
-    private func updateMessageButtonView(payload: [[String: Any]], width: CGFloat, heightOffset: CGFloat) {
-        buttonView.maxWidth = width
-        buttonView.stackViewAlignment = .trailing
-        buttonView.update(payload: payload)
-
-        buttonView.frame = CGRect(x: ChatCellPadding.SentMessage.MessageButton.left,
-                                  y: heightOffset + ChatCellPadding.SentMessage.MessageButton.top,
-                                  width: width,
-                                  height: ButtonsView.rowHeight(payload: payload, maxWidth: width))
+            buttonView.topAnchor.constraint(
+                equalTo: messageView.bottomAnchor,
+                constant: ChatCellPadding.SentMessage.MessageButton.top
+            ),
+            buttonView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -ChatCellPadding.SentMessage.MessageButton.right
+            ),
+            buttonView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            buttonView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -ChatCellPadding.SentMessage.MessageButton.bottom
+            ),
+        ])
     }
 }
 
 class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     var messageView = ALKFriendMessageView()
-    var buttonView = ButtonsView(frame: .zero)
+    var buttonView = SuggestedReplyView()
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
+
+    var buttonSelected: ((_ index: Int, _ name: String) -> Void)?
 
     override func setupViews() {
         super.setupViews()
+        buttonView.delegate = self
         setupConstraints()
     }
 
@@ -85,13 +100,13 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         messageViewHeight.constant = height
         messageView.update(viewModel: viewModel)
 
-        guard let dict = viewModel.payloadFromMetadata() else {
-            layoutIfNeeded()
+        guard let dict = viewModel.linkOrSubmitButton() else {
+            buttonView.isHidden = true
             return
         }
+        buttonView.isHidden = false
         let buttonWidth = maxWidth - (ChatCellPadding.ReceivedMessage.MessageButton.left + ChatCellPadding.ReceivedMessage.MessageButton.right)
-        updateMessageButtonView(payload: dict, width: buttonWidth, heightOffset: height)
-        layoutIfNeeded()
+        buttonView.update(model: dict, maxWidth: buttonWidth)
     }
 
     open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -99,32 +114,51 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             (ChatCellPadding.ReceivedMessage.Message.left + ChatCellPadding.ReceivedMessage.Message.right)
         let messageHeight = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
 
-        guard let dict = viewModel.payloadFromMetadata() else {
+        guard let dict = viewModel.linkOrSubmitButton() else {
             return messageHeight + 10 // Paddding
         }
         let buttonWidth = width - (ChatCellPadding.ReceivedMessage.MessageButton.left + ChatCellPadding.ReceivedMessage.MessageButton.right)
-        let buttonHeight = ButtonsView.rowHeight(payload: dict, maxWidth: buttonWidth)
-        return messageHeight + buttonHeight + 20 // Padding between messages
+        let buttonHeight = SuggestedReplyView.rowHeight(model: dict, maxWidth: buttonWidth)
+        return messageHeight
+            + buttonHeight
+            + ChatCellPadding.ReceivedMessage.MessageButton.top
+            + ChatCellPadding.ReceivedMessage.MessageButton.bottom
     }
 
     private func setupConstraints() {
-        contentView.addSubview(messageView)
-        contentView.addSubview(buttonView)
-        messageView.translatesAutoresizingMaskIntoConstraints = false
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ChatCellPadding.ReceivedMessage.Message.left).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * ChatCellPadding.ReceivedMessage.Message.right).isActive = true
-        messageViewHeight.isActive = true
+        contentView.addViewsForAutolayout(views: [messageView, buttonView])
+        NSLayoutConstraint.activate([
+            messageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            messageView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: ChatCellPadding.ReceivedMessage.Message.left
+            ),
+            messageView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -1 * ChatCellPadding.ReceivedMessage.Message.right
+            ),
+            messageViewHeight,
+
+            buttonView.topAnchor.constraint(
+                equalTo: messageView.bottomAnchor,
+                constant: ChatCellPadding.ReceivedMessage.MessageButton.top
+            ),
+            buttonView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: ChatCellPadding.ReceivedMessage.MessageButton.left
+            ),
+            buttonView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            buttonView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -ChatCellPadding.ReceivedMessage.MessageButton.bottom
+            ),
+        ])
     }
+}
 
-    private func updateMessageButtonView(payload: [[String: Any]], width: CGFloat, heightOffset: CGFloat) {
-        buttonView.maxWidth = width
-        buttonView.stackViewAlignment = .leading
-        buttonView.update(payload: payload)
-
-        buttonView.frame = CGRect(x: ChatCellPadding.ReceivedMessage.MessageButton.left,
-                                  y: heightOffset + ChatCellPadding.ReceivedMessage.MessageButton.top,
-                                  width: width,
-                                  height: ButtonsView.rowHeight(payload: payload, maxWidth: width))
+extension ALKFriendMessageButtonCell: Tappable {
+    func didTap(index: Int?, title: String) {
+        guard let index = index, let buttonSelected = buttonSelected else { return }
+        buttonSelected(index, title)
     }
 }

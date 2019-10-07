@@ -1118,7 +1118,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         title: String,
         template: [[String: Any]],
         message: ALKMessageViewModel,
-        metadata: [String: Any]?,
         isButtonClickDisabled: Bool
     ) {
         print("\(title, index) quick reply button selected")
@@ -1129,10 +1128,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         /// Get message to send
         guard index <= template.count, index > 0 else { return }
         let dict = template[index - 1]
-        let msg = dict["message"] as? String ?? title
+        let metadata = dict["replyMetadata"] as? [String: Any]
 
         /// Use metadata
-        sendQuickReply(msg, metadata: metadata)
+        sendQuickReply(title, metadata: metadata)
     }
 
     func richButtonSelected(index: Int,

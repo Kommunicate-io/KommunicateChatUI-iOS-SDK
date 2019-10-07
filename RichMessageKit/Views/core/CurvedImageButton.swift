@@ -7,43 +7,78 @@
 
 import UIKit
 
-public class LinkButton: UIView, RichButtonView {
-
+/// A curved button with text and optional image.
+///
+/// To change the spacing and other properties of view, change parameters of #CurvedImageButton.Config
+public class CurvedImageButton: UIView {
+    /// Configuration to change UI properties of `CurvedImageButton`
     public struct Config {
-        public struct Label {
-            public static var left: CGFloat = 16
-            public static var right: CGFloat = 10
-            public static var top: CGFloat = 8
-            public static var bottom: CGFloat = 8
-        }
-        public struct Image {
-            public static var right: CGFloat = 16
-            public static var width: CGFloat = 12
-            public static var height: CGFloat = 12
+        public struct Color {
+            /// Used for text color
+            public var text = UIColor(red: 85, green: 83, blue: 183)
+
+            /// Used for border color of view
+            public var border = UIColor(red: 85, green: 83, blue: 183).cgColor
+
+            /// Used for background color of view
+            public var background = UIColor.clear
+
+            /// Used for tint color of image
+            public var tint = UIColor(red: 85, green: 83, blue: 183)
         }
 
-        fileprivate static let extraSpace = Label.left + Label.right + Image.width + Image.right
+        /// Padding of view.
+        public var padding = Padding(left: 16, right: 16, top: 8, bottom: 8)
+
+        /// Space between image and text.
+        /// If image is nil then this space will be 0.
+        public var textImageSpace: CGFloat = 10
+
+        /// Size of image.
+        /// If image is nil then size will be 0.
+        public var imageSize = CGSize(width: 12, height: 12)
+
+        /// Font for text inside view.
+        public var font = UIFont.systemFont(ofSize: 14)
+
+        /// Instance of `Color` type that can be used to change the colors used in view.
+        public var color = Color()
+
+        var spaceWithoutText: CGFloat {
+            return padding.left + padding.right + textImageSpace + imageSize.width
+        }
+
+        /// Minimum width of the view.
+        var minWidth: CGFloat = 45
+
+        /// Minimum height of the view.
+        var minHeight: CGFloat = 35
+
+        /// Corner radius of view.
+        var cornerRadius: CGFloat = 15
+
+        /// Border width of view.
+        var borderWidth: CGFloat = 2
+
+        public init() {}
     }
 
     /// Index of button. It will be used when button is tapped
     public var index: Int?
+
+    /// Used to inform the delegate that the button is pressed.
     public weak var delegate: Tappable?
 
     // MARK: Internal Properties
 
     let title: String
-    let color: UIColor
-    let textFont: UIFont
     let maxWidth: CGFloat
+    let image: UIImage?
+    var config: Config
 
     private let label = UILabel()
 
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        let image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)
-        imageView.image = image?.withRenderingMode(.alwaysTemplate)
-        return imageView
-    }()
+    private let imageView = UIImageView()
 
     // MARK: Initializers
 
@@ -51,18 +86,23 @@ public class LinkButton: UIView, RichButtonView {
     ///
     /// - Parameters:
     ///   - title: Text to be shown in the button.
-    ///   - font: Font for button text.
-    ///   - color: Color for button text.
+    ///   - image: Optional. If used, an image of size CurvedImageButton.Config.Image will be shown to the right of text.
+    ///   - config: `CurvedImageButton.Config`. It can be used to customize UI of button.
     ///   - maxWidth: Maximum width of button so that it can render in multiple lines of text is large.
     public init(title: String,
-                font: UIFont = UIFont.systemFont(ofSize: 14),
-                color: UIColor = UIColor(red: 85, green: 83, blue: 183),
+                image: UIImage? = nil,
+                config: Config = Config(),
                 maxWidth: CGFloat = UIScreen.main.bounds.width) {
         self.title = title
-        textFont = font
-        self.color = color
+        self.image = image
+        self.config = config
+        if image == nil {
+            self.config.textImageSpace = 0
+            self.config.imageSize = CGSize(width: 0, height: 0)
+        }
         self.maxWidth = maxWidth
         super.init(frame: .zero)
+        setupView()
         setupConstraint()
         setupAction()
     }
@@ -77,32 +117,49 @@ public class LinkButton: UIView, RichButtonView {
     ///
     /// - Returns: Button width for the given title.
     public func buttonWidth() -> CGFloat {
-        let titleWidth = title.rectWithConstrainedWidth(maxWidth - Config.extraSpace, font: textFont).width.rounded(.up)
-        let buttonWidth = titleWidth + Config.extraSpace
-        return max(buttonWidth, 45) // Minimum width is 45
+        let titleWidth =
+            title
+            .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+                                      font: config.font)
+            .width
+            .rounded(.up)
+        let buttonWidth = titleWidth + config.spaceWithoutText
+        return max(buttonWidth, config.minWidth) // Minimum width is 45
     }
 
     /// This method calculates height of button.
     ///
     /// - Returns: Button height for the given title.
     public func buttonHeight() -> CGFloat {
-        let titleHeight = title.rectWithConstrainedWidth(maxWidth - Config.extraSpace, font: textFont).height.rounded(.up)
-        let buttonHeight = titleHeight + Config.Label.top + Config.Label.bottom
-        return max(buttonHeight, 35) // Minimum height is 35
+        let titleHeight =
+            title
+            .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+                                      font: config.font)
+            .height
+            .rounded(.up)
+        let buttonHeight = titleHeight + config.padding.top + config.padding.bottom
+        return max(buttonHeight, config.minHeight) // Minimum height is 35
     }
 
     /// This method calculates size of button.
     ///
-    /// - NOTE: Pass same maxWidth and font used while creating button.
+    /// - NOTE: Pass same maxWidth, title and image used while creating button. Otherwise result will be wrong.
     /// - Returns: Button size for the given title.
     public class func buttonSize(text: String,
+                                 image: UIImage? = nil,
                                  maxWidth: CGFloat = UIScreen.main.bounds.width,
-                                 font: UIFont = UIFont.systemFont(ofSize: 14)) -> CGSize {
-        let textSize = text.rectWithConstrainedWidth(maxWidth - Config.extraSpace, font: font)
+                                 config: Config = Config()) -> CGSize {
+        var config = config
+        if image == nil {
+            config.textImageSpace = 0
+            config.imageSize = CGSize(width: 0, height: 0)
+        }
+        let textSize = text.rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+                                                     font: config.font)
         let labelWidth = textSize.width.rounded(.up)
-        let labelHeight = textSize.height.rounded(.up) + Config.Label.top + Config.Label.bottom
-        return CGSize(width: max(labelWidth + Config.extraSpace, 45),
-                      height: max(labelHeight, 35))
+        let labelHeight = textSize.height.rounded(.up) + config.padding.top + config.padding.bottom
+        return CGSize(width: max(labelWidth + config.spaceWithoutText, config.minWidth),
+                      height: max(labelHeight, config.minHeight))
     }
 
     // MARK: Private methods
@@ -118,38 +175,43 @@ public class LinkButton: UIView, RichButtonView {
         addGestureRecognizer(tapGesture)
     }
 
-    private func setupConstraint() {
-        addViewsForAutolayout(views: [label, imageView])
-        backgroundColor = .clear
-        layer.cornerRadius = 15
-        layer.borderWidth = 2
-        layer.borderColor = color.cgColor
+    private func setupView() {
+        backgroundColor = config.color.background
+        layer.cornerRadius = config.cornerRadius
+        layer.borderWidth = config.borderWidth
+        layer.borderColor = config.color.border
         clipsToBounds = true
 
         label.text = title
-        label.textColor = color
-        label.font = textFont
+        label.textColor = config.color.text
+        label.font = config.font
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
 
-        imageView.tintColor = color
+        imageView.tintColor = config.color.tint
+        imageView.image = image?.withRenderingMode(.alwaysTemplate)
 
         frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
+    }
+
+    private func setupConstraint() {
+        addViewsForAutolayout(views: [label, imageView])
 
         NSLayoutConstraint.activate([
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                constant: -LinkButton.Config.Image.right),
-            imageView.widthAnchor.constraint(equalToConstant: LinkButton.Config.Image.width),
-            imageView.heightAnchor.constraint(equalToConstant: LinkButton.Config.Image.height),
+                                                constant: -config.padding.right),
+            imageView.widthAnchor.constraint(equalToConstant: config.imageSize.width),
+            imageView.heightAnchor.constraint(equalToConstant: config.imageSize.height),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             label.leadingAnchor.constraint(equalTo: leadingAnchor,
-                                           constant: LinkButton.Config.Label.left),
+                                           constant: config.padding.left),
             label.trailingAnchor.constraint(equalTo: imageView.leadingAnchor,
-                                            constant: -LinkButton.Config.Label.right),
+                                            constant: -config.textImageSpace),
             label.topAnchor.constraint(equalTo: topAnchor,
-                                       constant: LinkButton.Config.Label.top),
+                                       constant: config.padding.top),
             label.bottomAnchor.constraint(equalTo: bottomAnchor,
-                                          constant: -LinkButton.Config.Label.bottom),
-            ])
+                                          constant: -config.padding.bottom),
+        ])
     }
-
 }

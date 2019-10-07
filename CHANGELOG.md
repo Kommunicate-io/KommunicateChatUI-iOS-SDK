@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 - [AL-3761] Added support for member mention in groups.
 - [AL-3741] Added support for rich message template 11.
+- [AL-3847] Updated UI for link button and refractored rich messages to use same view for all types of buttons. 
 
 3.3.0
 ---

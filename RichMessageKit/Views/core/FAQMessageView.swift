@@ -95,7 +95,7 @@ public class FAQMessageView: UIView {
         descriptionHeight.constant = model.description?.heightWithConstrainedWidth(width, font: style.description.font) ?? 0
         buttonLabel.text = model.buttonLabel
         buttonLabelHeight.constant = model.buttonLabel?.heightWithConstrainedWidth(maxWidth, font: style.buttonLabel.font) ?? 0
-        buttons.update(model: SuggestedReplyMessage(suggestion: model.getSuggestion(), message: model.message))
+        buttons.update(model: SuggestedReplyMessage(suggestion: model.getSuggestion(), message: model.message), maxWidth: width)
     }
 
     /// It's used to get exact height for `FAQMessageView`

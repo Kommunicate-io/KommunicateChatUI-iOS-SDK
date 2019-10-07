@@ -8,8 +8,8 @@
 import UIKit
 
 public class ReceivedButtonsCell: UITableViewCell {
-
     // MARK: - Public properties
+
     public var tapped: ((_ index: Int, _ name: String) -> Void)?
 
     public struct Config {
@@ -24,7 +24,7 @@ public class ReceivedButtonsCell: UITableViewCell {
 
     // MARK: - Fileprivate properties
 
-    fileprivate lazy var buttons = SuggestedReplyView(maxWidth: Config.buttonWidth)
+    fileprivate lazy var buttons = SuggestedReplyView()
     fileprivate lazy var messageView = ReceivedMessageView(
         frame: .zero,
         padding: messageViewPadding,
@@ -65,7 +65,7 @@ public class ReceivedButtonsCell: UITableViewCell {
             maxWidth: Config.maxWidth,
             padding: messageViewPadding
         )
-        buttons.update(model: model)
+        buttons.update(model: model, maxWidth: Config.buttonWidth)
     }
 
     /// It is used to get exact height of `ReceivedButtonsCell` using messageModel, width and padding
@@ -87,8 +87,8 @@ public class ReceivedButtonsCell: UITableViewCell {
         addViewsForAutolayout(views: [messageView, buttons])
         let leadingMargin =
             Config.padding.left
-                + ReceivedMessageView.Config.ProfileImage.width
-                + ReceivedMessageView.Config.MessageView.leftPadding
+            + ReceivedMessageView.Config.ProfileImage.width
+            + ReceivedMessageView.Config.MessageView.leftPadding
         NSLayoutConstraint.activate([
             messageView.topAnchor.constraint(equalTo: self.topAnchor),
             messageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -99,7 +99,7 @@ public class ReceivedButtonsCell: UITableViewCell {
             buttons.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttons.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingMargin),
             buttons.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
-            ])
+        ])
     }
 }
 
