@@ -1340,11 +1340,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.send(message: text, metadata: customMetadata)
     }
 
-    private func postRequestUsing(url: URL, param: [String: Any]) -> URLRequest? {
+    private func postRequestUsing(url: URL, data: Data) -> URLRequest? {
         var request = URLRequest(url: url)
         request.timeoutInterval = 600
         request.httpMethod = "POST"
-        guard let data = ALUtilityClass.generateJsonString(from: param)?.data(using: .utf8) else { return nil }
         request.httpBody = data
         let contentLength = String(format: "%lu", UInt(data.count))
         request.setValue(contentLength, forHTTPHeaderField: "Content-Length")
@@ -1404,13 +1403,30 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    /// Really weird.🤯 😰
+    /// For templateId 3, formData is a string.
+    /// But for templateId 11, formData is a dictionary.
     private func submitButtonSelected(metadata: [String: Any], text: String) {
         guard
-            let formData = metadata["formData"] as? [String: Any],
             let urlString = metadata["formAction"] as? String,
-            let url = URL(string: urlString),
-            var request = postRequestUsing(url: url, param: formData)
+            let url = URL(string: urlString)
         else {
+            return
+        }
+        var request: URLRequest!
+        if let formData = metadata["formData"] as? String {
+            guard
+                let data = formData.data(using: .utf8),
+                let urlRequest = postRequestUsing(url: url, data: data)
+                else { return }
+            request = urlRequest
+        } else if let formData = metadata["formData"] as? [String: Any] {
+            guard
+                let data = ALUtilityClass.generateJsonString(from: formData)?.data(using: .utf8),
+                let urlRequest = postRequestUsing(url: url, data: data)
+                else { return }
+            request = urlRequest
+        } else {
             return
         }
         viewModel.send(message: text, metadata: nil)
