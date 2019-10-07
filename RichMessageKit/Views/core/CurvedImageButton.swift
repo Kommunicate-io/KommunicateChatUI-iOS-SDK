@@ -13,6 +13,20 @@ import UIKit
 public class CurvedImageButton: UIView {
     /// Configuration to change UI properties of `CurvedImageButton`
     public struct Config {
+        public struct Color {
+            /// Used for text color
+            public var text = UIColor(red: 85, green: 83, blue: 183)
+
+            /// Used for border color of view
+            public var border = UIColor(red: 85, green: 83, blue: 183).cgColor
+
+            /// Used for background color of view
+            public var background = UIColor.clear
+
+            /// Used for tint color of image
+            public var tint = UIColor(red: 85, green: 83, blue: 183)
+        }
+
         /// Padding of view.
         public var padding = Padding(left: 16, right: 16, top: 8, bottom: 8)
 
@@ -27,22 +41,8 @@ public class CurvedImageButton: UIView {
         /// Font for text inside view.
         public var font = UIFont.systemFont(ofSize: 14)
 
-        /// Color used inside view.
+        /// Instance of `Color` type that can be used to change the colors used in view.
         public var color = Color()
-
-        public struct Color {
-            /// Used for text color
-            public var textColor = UIColor(red: 85, green: 83, blue: 183)
-
-            /// Used for border color of view
-            public var borderColor = UIColor(red: 85, green: 83, blue: 183).cgColor
-
-            /// Used for background color of view
-            public var backgroundColor = UIColor.clear
-
-            /// Used for tint color of image
-            public var tintColor = UIColor(red: 85, green: 83, blue: 183)
-        }
 
         var spaceWithoutText: CGFloat {
             return padding.left + padding.right + textImageSpace + imageSize.width
@@ -176,19 +176,19 @@ public class CurvedImageButton: UIView {
     }
 
     private func setupView() {
-        backgroundColor = config.color.backgroundColor
+        backgroundColor = config.color.background
         layer.cornerRadius = config.cornerRadius
         layer.borderWidth = config.borderWidth
-        layer.borderColor = config.color.borderColor
+        layer.borderColor = config.color.border
         clipsToBounds = true
 
         label.text = title
-        label.textColor = config.color.textColor
+        label.textColor = config.color.text
         label.font = config.font
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
-        imageView.tintColor = config.color.tintColor
+        imageView.tintColor = config.color.tint
         imageView.image = image?.withRenderingMode(.alwaysTemplate)
 
         frame.size = CGSize(width: buttonWidth(), height: buttonHeight())

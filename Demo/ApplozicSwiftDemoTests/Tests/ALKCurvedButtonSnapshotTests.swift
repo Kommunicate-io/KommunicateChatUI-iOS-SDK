@@ -41,10 +41,10 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
                 beforeEach {
                     var config = CurvedImageButton.Config()
                     let color = CurvedImageButton.Config.Color(
-                        textColor: .red,
-                        borderColor: UIColor.red.cgColor,
-                        backgroundColor: .clear,
-                        tintColor: .red)
+                        text: .red,
+                        border: UIColor.red.cgColor,
+                        background: .clear,
+                        tint: .red)
                     config.color = color
                     button = CurvedImageButton(title: "Demo text", config: config)
                 }
