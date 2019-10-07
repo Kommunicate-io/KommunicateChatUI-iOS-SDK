@@ -1126,8 +1126,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard !isButtonClickDisabled else { return }
 
         /// Get message to send
-        guard index <= template.count, index > 0 else { return }
-        let dict = template[index - 1]
+        guard index < template.count, index >= 0 else { return }
+        let dict = template[index]
         let metadata = dict["replyMetadata"] as? [String: Any]
 
         /// Use metadata
