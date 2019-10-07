@@ -16,7 +16,6 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
     override func spec() {
         describe("CurvedImageButton") {
             var button: CurvedImageButton!
-            var config = CurvedImageButton.Config()
 
             context("with default settings") {
                 beforeEach {
@@ -29,6 +28,7 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different font") {
                 beforeEach {
+                    var config = CurvedImageButton.Config()
                     config.font = UIFont.boldSystemFont(ofSize: 40)
                     button = CurvedImageButton(title: "Demo text", config: config)
                 }
@@ -39,6 +39,7 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
 
             context("with different color") {
                 beforeEach {
+                    var config = CurvedImageButton.Config()
                     let color = CurvedImageButton.Config.Color(
                         textColor: .red,
                         borderColor: UIColor.red.cgColor,
