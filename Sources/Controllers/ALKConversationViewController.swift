@@ -702,7 +702,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             switch action {
             case let .sendText(button, message):
-
+                let message = message
+                    .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                 if message.string.count < 1 {
                     return
                 }

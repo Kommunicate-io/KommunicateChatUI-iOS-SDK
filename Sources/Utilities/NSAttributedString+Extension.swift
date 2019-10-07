@@ -19,4 +19,29 @@ extension NSAttributedString {
         ns.append(rhs)
         return NSAttributedString(attributedString: ns)
     }
+
+    func trimmingCharacters(in set: CharacterSet) -> NSAttributedString {
+        let modifiedString = NSMutableAttributedString(attributedString: self)
+        modifiedString.trimCharacters(in: set)
+        return NSAttributedString(attributedString: modifiedString)
+    }
+}
+
+extension NSMutableAttributedString {
+    public func trimCharacters(in set: CharacterSet) {
+        var range = (string as NSString).rangeOfCharacter(from: set, options: .anchored)
+
+        // Trim leading characters from character set.
+        while range.location != NSNotFound {
+            replaceCharacters(in: range, with: "")
+            range = (string as NSString).rangeOfCharacter(from: set, options: .anchored)
+        }
+
+        // Trim trailing characters from character set.
+        range = (string as NSString).rangeOfCharacter(from: set, options: [.anchored, .backwards])
+        while range.location != NSNotFound {
+            replaceCharacters(in: range, with: "")
+            range = (string as NSString).rangeOfCharacter(from: set, options: [.anchored, .backwards])
+        }
+    }
 }
