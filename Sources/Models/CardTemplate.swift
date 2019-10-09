@@ -8,9 +8,9 @@
 import Foundation
 
 public struct CardTemplate: Codable {
-    public let title: String
+    public let title: String?
     public let titleExt: String?
-    public let subtitle: String
+    public let subtitle: String?
     public let description: String?
     public let header: Header?
     public let buttons: [Button]?
