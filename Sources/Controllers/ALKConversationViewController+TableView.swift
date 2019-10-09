@@ -597,11 +597,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     func configurePaginationWindow() {
-        if self.tableView.frame.equalTo(CGRect.zero) { return }
-        if self.tableView.isDragging { return }
-        if self.tableView.isDecelerating { return }
-        let topOffset = -self.tableView.contentInset.top
-        let distanceFromTop = self.tableView.contentOffset.y - topOffset
+        if tableView.frame.equalTo(CGRect.zero) { return }
+        if tableView.isDragging { return }
+        if tableView.isDecelerating { return }
+        let topOffset = -tableView.contentInset.top
+        let distanceFromTop = tableView.contentOffset.y - topOffset
         let minimumDistanceFromTopToTriggerLoadingMore: CGFloat = 200
         let nearTop = distanceFromTop <= minimumDistanceFromTopToTriggerLoadingMore
         if !nearTop { return }

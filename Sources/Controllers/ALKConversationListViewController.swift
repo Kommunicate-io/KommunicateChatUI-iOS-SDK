@@ -27,6 +27,11 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     public weak var delegate: ALKConversationListDelegate?
     public var conversationListTableViewController: ALKConversationListTableViewController
 
+    var searchController: UISearchController!
+    var searchBar: CustomSearchBar!
+    lazy var resultVC = SearchResultViewController(configuration: configuration)
+    let searchButtonIdentifier: Int = 10101012
+
     var dbService = ALMessageDBService()
     var viewModel = ALKConversationListViewModel()
 
@@ -83,6 +88,19 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             weakSelf.viewModel.addMessages(messages: list)
 
         })
+
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardDidHideNotification,
+            object: nil,
+            queue: nil,
+            using: { [weak self] _ in
+                guard let weakSelf = self else { return }
+
+                if  weakSelf.navigationController?.visibleViewController  as?  ALKConversationListViewController != nil , weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
+                    weakSelf.showNavigationItems()
+                }
+            }
+        )
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "pushNotification"), object: nil, queue: nil, using: { [weak self] notification in
             print("push notification received: ", notification.object ?? "")
@@ -151,6 +169,14 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             print("update group detail")
             weakSelf.tableView.reloadData()
         })
+
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: nil, queue: nil, using: { [weak self] notification in
+            guard let weakSelf = self, let notificationUserInfo = notification.userInfo else { return }
+            let identifier = notificationUserInfo["identifier"] as! Int
+            if identifier == weakSelf.searchButtonIdentifier {
+                weakSelf.searchTapped()
+            }
+        })
     }
 
     override func removeObserver() {
@@ -162,6 +188,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "reloadTable"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "USER_DETAILS_UPDATE_CALL"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: nil)
     }
 
     open override func viewWillAppear(_ animated: Bool) {
@@ -181,7 +209,9 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         alMqttConversationService.subscribeToConversation()
         dbService.delegate = self
         viewModel.delegate = self
+        setupSearchController()
         setupView()
+        extendedLayoutIncludesOpaqueBars = true
     }
 
     open override func viewDidAppear(_: Bool) {
@@ -196,16 +226,9 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     private func setupView() {
-        setUpNavigationRightButtons()
+        setupNavigationRightButtons()
+        setupBackButton()
         title = localizedString(forKey: "ConversationListVCTitle", withDefaultValue: SystemMessage.ChatList.title, fileName: localizedStringFileName)
-
-        let back = localizedString(forKey: "Back", withDefaultValue: SystemMessage.ChatList.leftBarBackButton, fileName: localizedStringFileName)
-        let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
-
-        if !configuration.hideBackButtonInConversationList {
-            navigationItem.leftBarButtonItem = leftBarButtonItem
-        }
-
         #if DEVELOPMENT
             let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
             indicator.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
@@ -222,13 +245,36 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         conversationListTableViewController.view.translatesAutoresizingMaskIntoConstraints = true
     }
 
-    func setUpNavigationRightButtons() {
+    func setupBackButton() {
+        let back = localizedString(forKey: "Back", withDefaultValue: SystemMessage.ChatList.leftBarBackButton, fileName: localizedStringFileName)
+        let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
+
+        if !configuration.hideBackButtonInConversationList {
+            navigationItem.leftBarButtonItem = leftBarButtonItem
+        }
+    }
+
+    func setupNavigationRightButtons() {
+        let isSearchButtonButtonAdded = configuration.navigationItemsForConversationList.contains { $0.identifier == searchButtonIdentifier }
+
         let navigationItems = configuration.navigationItemsForConversationList
+
         var rightBarButtonItems: [UIBarButtonItem] = []
+
+        if configuration.isMessageSearchEnabled, !isSearchButtonButtonAdded {
+
+            let barButton = UIBarButtonItem(
+                image: UIImage(named: "search", in: Bundle.applozic, compatibleWith: nil),
+                style: .plain,
+                target: self, action: #selector(searchTapped)
+            )
+            rightBarButtonItems.append(barButton)
+        }
 
         if !configuration.hideStartChatButton {
             rightBarButtonItems.append(rightBarButtonItem)
         }
+
         for item in navigationItems {
             let uiBarButtonItem = item.barButton(target: self, action: #selector(customButtonEvent(_:)))
 
@@ -237,7 +283,31 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             }
         }
         if !rightBarButtonItems.isEmpty {
-            navigationItem.rightBarButtonItems = rightBarButtonItems
+            let rightButtons = rightBarButtonItems.prefix(3)
+            navigationItem.rightBarButtonItems = Array(rightButtons)
+        }
+    }
+
+    func setupSearchController() {
+        searchController = UISearchController(searchResultsController: resultVC)
+        searchController.searchBar.autocapitalizationType = .none
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.alpha = 0
+        searchController.searchBar.showsCancelButton = true
+        searchBar = CustomSearchBar(searchBar: searchController.searchBar)
+        definesPresentationContext = true
+    }
+
+    @objc private func searchTapped() {
+        navigationItem.rightBarButtonItems = nil
+        navigationItem.leftBarButtonItems = nil
+        navigationItem.titleView = searchBar
+
+        UIView.animate(withDuration: 0.5, animations: {
+            self.searchBar.show(true)
+        }) { _ in
+            self.searchBar.becomeFirstResponder()
         }
     }
 
@@ -519,5 +589,33 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
             dic["UserId"] = conversation.contactIds
         }
         NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
+    }
+
+    func showNavigationItems() {
+        searchBar.show(false)
+        searchBar.resignFirstResponder()
+        navigationItem.titleView = nil
+        setupBackButton()
+        setupNavigationRightButtons()
+    }
+}
+
+extension ALKConversationListViewController: UISearchBarDelegate {
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchKey = searchBar.text, !searchKey.isEmpty else {
+            return
+        }
+        resultVC.search(key: searchKey)
+    }
+
+    public func searchBar(_: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            resultVC.clearAndReload()
+        }
+    }
+
+    public func searchBarCancelButtonClicked(_: UISearchBar) {
+        showNavigationItems()
+        resultVC.clear()
     }
 }
