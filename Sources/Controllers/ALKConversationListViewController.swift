@@ -90,7 +90,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         })
 
         NotificationCenter.default.addObserver(
-            forName: UIResponder.keyboardWillHideNotification,
+            forName: UIResponder.keyboardDidHideNotification,
             object: nil,
             queue: nil,
             using: { [weak self] _ in
