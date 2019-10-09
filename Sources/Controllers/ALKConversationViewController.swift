@@ -1235,7 +1235,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             openLink(url)
         case CardTemplateActionType.submit.rawValue:
             var dict = [String: Any]()
-            dict["formData"] = payload.formData
+            dict["formData"] = payload.formData?.dictionary
             dict["formAction"] = payload.formAction
             dict["requestType"] = payload.requestType
             submitButtonSelected(metadata: dict, text: payload.text ?? "")
@@ -1403,7 +1403,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    /// Really weird.🤯 😰
     /// For templateId 3, formData is a string.
     /// But for templateId 11, formData is a dictionary.
     private func submitButtonSelected(metadata: [String: Any], text: String) {
@@ -1418,13 +1417,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard
                 let data = formData.data(using: .utf8),
                 let urlRequest = postRequestUsing(url: url, data: data)
-                else { return }
+            else { return }
             request = urlRequest
         } else if let formData = metadata["formData"] as? [String: Any] {
             guard
                 let data = ALUtilityClass.generateJsonString(from: formData)?.data(using: .utf8),
                 let urlRequest = postRequestUsing(url: url, data: data)
-                else { return }
+            else { return }
             request = urlRequest
         } else {
             return
