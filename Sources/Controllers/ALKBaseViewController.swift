@@ -26,17 +26,13 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
 
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.barTintColor = configuration.navigationBarBackgroundColor
-        navigationController?.navigationBar.tintColor = configuration.navigationBarItemColor
 
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: configuration.navigationBarTitleColor]
-
-        navigationController?.navigationBar.isTranslucent = false
         if navigationController?.viewControllers.first != self {
             var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
             backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backTapped))
         }
+
         if configuration.hideNavigationBarBottomLine {
             navigationController?.navigationBar.hideBottomHairline()
         }
