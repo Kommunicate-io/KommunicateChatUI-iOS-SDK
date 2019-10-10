@@ -222,14 +222,7 @@ open class ALKMyMessageCell: ALKMessageCell {
     open override func setupStyle() {
         super.setupStyle()
         messageView.setStyle(ALKMessageStyle.sentMessage)
-        if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: false)
-        } else {
-            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-        }
+        bubbleView.setStyle(ALKMessageStyle.sentBubble, isReceiverSide: false)
     }
 
     open override func update(viewModel: ALKMessageViewModel) {
@@ -323,14 +316,20 @@ open class ALKMyMessageCell: ALKMessageCell {
     override func menuWillShow(_ sender: Any) {
         super.menuWillShow(sender)
         if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: true)
+            bubbleView.image = bubbleView.imageBubble(
+                for: ALKMessageStyle.sentBubble.style,
+                isReceiverSide: false,
+                showHangOverImage: true)
         }
     }
 
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
         if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: false)
+            bubbleView.image = bubbleView.imageBubble(
+                for: ALKMessageStyle.sentBubble.style,
+                isReceiverSide: false,
+                showHangOverImage: false)
         }
     }
 }
