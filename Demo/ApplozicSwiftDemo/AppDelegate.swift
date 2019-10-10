@@ -26,6 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BuddyBuildSDK.setup()
 
+        let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+        navigationBarProxy.barTintColor
+            = UIColor(red:0.93, green:0.94, blue:0.95, alpha:1.0) // light nav blue
+        navigationBarProxy.isTranslucent = false
 
         /// Use this for Customizing notification.
         /// - NOTE:

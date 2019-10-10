@@ -229,15 +229,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         setupNavigationRightButtons()
         setupBackButton()
         title = localizedString(forKey: "ConversationListVCTitle", withDefaultValue: SystemMessage.ChatList.title, fileName: localizedStringFileName)
-        #if DEVELOPMENT
-            let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
-            indicator.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-            indicator.hidesWhenStopped = true
-            indicator.stopAnimating()
-            let indicatorButton = UIBarButtonItem(customView: indicator)
-
-            navigationItem.leftBarButtonItem = indicatorButton
-        #endif
 
         add(conversationListTableViewController)
         conversationListTableViewController.view.frame = view.bounds
