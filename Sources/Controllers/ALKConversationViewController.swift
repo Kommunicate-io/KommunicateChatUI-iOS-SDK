@@ -414,10 +414,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     override func backTapped() {
-        print("back tapped")
         view.endEditing(true)
         viewModel.sendKeyboardDoneTyping()
-        let popVC = navigationController?.popToRootViewController(animated: true)
+        let popVC = navigationController?.popViewController(animated: true)
         if popVC == nil {
             dismiss(animated: true, completion: nil)
         }
