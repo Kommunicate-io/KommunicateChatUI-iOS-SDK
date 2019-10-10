@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             // Get login screen from storyboard and present it
             let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as UIViewController
             self.window?.makeKeyAndVisible();
+            viewController.modalPresentationStyle = .fullScreen
             self.window?.rootViewController!.present(viewController, animated:true, completion: nil)
 
         }

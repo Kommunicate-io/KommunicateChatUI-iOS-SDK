@@ -1442,12 +1442,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func shareContact() {
         CNContactStore().requestAccess(for: .contacts) { granted, _ in
-            if granted {
-                let vc = CNContactPickerViewController()
-                vc.delegate = self
-                self.present(vc, animated: true, completion: nil)
-            } else {
-                ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+            DispatchQueue.main.async {
+                if granted {
+                    let vc = CNContactPickerViewController()
+                    vc.delegate = self
+                    self.present(vc, animated: true, completion: nil)
+                } else {
+                    ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+                }
             }
         }
     }

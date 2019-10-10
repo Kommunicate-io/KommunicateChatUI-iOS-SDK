@@ -106,6 +106,7 @@ public class ALKPushNotificationHandler: Localizable {
         let topVC = pushAssistant.topViewController
         let nav = ALKBaseNavigationViewController(rootViewController: messagesVC)
         navVC?.modalTransitionStyle = .crossDissolve
+        navVC?.modalPresentationStyle = .fullScreen
         topVC?.present(nav, animated: true, completion: nil)
     }
 

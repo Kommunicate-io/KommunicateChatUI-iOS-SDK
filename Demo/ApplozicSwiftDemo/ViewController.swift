@@ -37,6 +37,7 @@ class ViewController: UIViewController {
     @IBAction func launchChatList(_ sender: Any) {
         let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
         let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
+        nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: false, completion: nil)
 //        Use this to check sample for custom push notif. Comment above lines.
 //        let vc = ContainerViewController()
