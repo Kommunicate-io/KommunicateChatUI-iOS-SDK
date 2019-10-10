@@ -48,11 +48,8 @@ class ALKFriendVoiceCell: ALKVoiceCell {
             bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         } else {
-            soundPlayerView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-            bubbleView.tintColor = ALKMessageStyle.receivedBubble.color
-            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
-            soundPlayerView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.setBubbleStyle(ALKMessageStyle.receivedBubble)
+            soundPlayerView.setBubbleStyle(ALKMessageStyle.receivedBubble)
         }
     }
 

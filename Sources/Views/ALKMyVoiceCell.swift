@@ -72,11 +72,8 @@ class ALKMyVoiceCell: ALKVoiceCell {
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         } else {
-            soundPlayerView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-            soundPlayerView.backgroundColor = ALKMessageStyle.sentBubble.color
+            bubbleView.setBubbleStyle(ALKMessageStyle.sentBubble)
+            soundPlayerView.setBubbleStyle(ALKMessageStyle.sentBubble)
         }
     }
 }
