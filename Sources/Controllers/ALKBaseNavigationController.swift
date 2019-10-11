@@ -24,6 +24,7 @@ public class ALKBaseNavigationViewController: UINavigationController {
 
     private func setupAppearance() {
         let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+        navigationBarProxy.shadowImage = navigationBarProxy.shadowImage ?? UIImage()
         navigationBarProxy.tintColor = navigationBarProxy.tintColor ?? UIColor.navigationTextOceanBlue()
         navigationBarProxy.titleTextAttributes =
             navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.black]

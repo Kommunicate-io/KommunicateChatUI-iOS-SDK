@@ -67,16 +67,8 @@ final class ALKMediaViewerViewController: UIViewController {
         updateView(message: message)
     }
 
-    private func setupNavigation() {
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        guard let navVC = self.navigationController else { return }
-        navVC.navigationBar.shadowImage = UIImage()
-        navVC.navigationBar.isTranslucent = true
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupNavigation()
         viewModel?.delegate = self
     }
 

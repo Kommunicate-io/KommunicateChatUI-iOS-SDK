@@ -813,7 +813,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .showLocation:
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.applozic)
 
-                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+                guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController else { return }
                 guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
                 mapViewVC.delegate = self
                 mapViewVC.setConfiguration(weakSelf.configuration)
