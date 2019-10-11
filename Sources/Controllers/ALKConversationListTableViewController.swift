@@ -644,23 +644,17 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         // Start activity indicator
         self.activityIndicator.startAnimating()
 
-        viewModel.sendUnmuteRequestFor(message: conversation, withCompletion: { success in
-
+        viewModel.sendUnmuteRequestFor(message: conversation, withCompletion: { [weak self] success in
+            guard let weakSelf = self else { return }
             // Stop activity indicator
-            self.activityIndicator.stopAnimating()
+            weakSelf.activityIndicator.stopAnimating()
 
             guard success == true else {
                 return
             }
 
-            self.delegate?.muteNotification(conversation: conversation, isMuted: false)
-            // Update UI
-            if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell {
-                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
-                    return
-                }
-                cell.update(viewModel: chat, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
-            }
+            weakSelf.delegate?.muteNotification(conversation: conversation, isMuted: false)
+            weakSelf.tableView.reloadRows(at: [atIndexPath], with: .none)
         })
     }
 
@@ -713,24 +707,18 @@ extension ALKConversationListTableViewController: Muteable {
 
         let time = (Int64(Date().timeIntervalSince1970) * 1000) + forTime
 
-        self.viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { success in
-
+        self.viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { [weak self] success in
+            guard let weakSelf = self else { return }
             // Stop activity indicator
-            self.activityIndicator.stopAnimating()
+            weakSelf.activityIndicator.stopAnimating()
 
             // Update indexPath
             guard success == true else {
                 return
             }
 
-            self.delegate?.muteNotification(conversation: conversation, isMuted: true)
-
-            if let cell = self.tableView.cellForRow(at: atIndexPath) as? ALKChatCell {
-                guard let chat = self.searchActive ? self.searchFilteredChat[atIndexPath.row] as? ALMessage : self.viewModel.chatFor(indexPath: atIndexPath) as? ALMessage else {
-                    return
-                }
-                cell.update(viewModel: chat, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
-            }
+            weakSelf.delegate?.muteNotification(conversation: conversation, isMuted: true)
+            weakSelf.tableView.reloadRows(at: [atIndexPath], with: .none)
         }
     }
 }
