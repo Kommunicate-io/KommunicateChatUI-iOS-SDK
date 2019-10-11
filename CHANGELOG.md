@@ -23,6 +23,11 @@ Below is the sample code to illustrate how to use this setting:
         ALKMessageStyle.receivedBubble.border.width = 2
 ```
 - Back button on Chat screen will now just pop. Earlier it was going back to the root view controller.
+- [AL-3854] We will now show mute icon in chat list when the conversation is muted.
+The mute icon image can be changed from outside using below code.
+```
+        ALKChatCell.Config.iconMuted = "PASS_YOUR_IMAGE_HERE"
+```
 
 ### Fixes
 - [AL-3862] Fixed a crash where dbMessage was being forcefully unwrapped.

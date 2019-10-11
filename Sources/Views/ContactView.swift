@@ -84,6 +84,11 @@ class ContactView: UIView {
     func setStyle(itemColor: UIColor, bubbleStyle: ALKMessageStyle.Bubble) {
         contactName.textColor = itemColor
         contactSaveIcon.tintColor = itemColor
+        guard bubbleStyle.style == .round else {
+            backgroundColor = bubbleStyle.color
+            layer.cornerRadius = bubbleStyle.cornerRadius
+            return
+        }
         setBubbleStyle(bubbleStyle)
     }
 
