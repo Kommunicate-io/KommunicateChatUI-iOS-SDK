@@ -654,7 +654,9 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
 
             weakSelf.delegate?.muteNotification(conversation: conversation, isMuted: false)
-            weakSelf.tableView.reloadRows(at: [atIndexPath], with: .none)
+            if weakSelf.tableView.isValid(indexPath: atIndexPath) {
+                weakSelf.tableView.reloadRows(at: [atIndexPath], with: .none)
+            }
         })
     }
 
@@ -718,7 +720,9 @@ extension ALKConversationListTableViewController: Muteable {
             }
 
             weakSelf.delegate?.muteNotification(conversation: conversation, isMuted: true)
-            weakSelf.tableView.reloadRows(at: [atIndexPath], with: .none)
+            if weakSelf.tableView.isValid(indexPath: atIndexPath) {
+                weakSelf.tableView.reloadRows(at: [atIndexPath], with: .none)
+            }
         }
     }
 }
