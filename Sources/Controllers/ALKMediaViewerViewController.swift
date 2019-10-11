@@ -66,7 +66,6 @@ final class ALKMediaViewerViewController: UIViewController {
         guard let message = viewModel?.getMessageForCurrentIndex() else { return }
         updateView(message: message)
     }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel?.delegate = self
@@ -97,8 +96,21 @@ final class ALKMediaViewerViewController: UIViewController {
         view.bringSubviewToFront(audioPlayButton)
         view.bringSubviewToFront(audioIcon)
 
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        var bottomAnchor: NSLayoutYAxisAnchor {
+            if #available(iOS 11.0, *) {
+                return self.view.safeAreaLayoutGuide.bottomAnchor
+            } else {
+                return self.view.bottomAnchor
+            }
+        }
+
+        var topAnchor = view.topAnchor
+        if #available(iOS 11, *) {
+            topAnchor = view.safeAreaLayoutGuide.topAnchor
+        }
+
+        scrollView.topAnchor.constraint(equalTo: topAnchor,constant: -70).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
 
@@ -190,20 +202,30 @@ final class ALKMediaViewerViewController: UIViewController {
             print("Photo type")
             updateTitle(title: viewModel.getTitle())
             showPhotoView(message: message)
-            updateMinZoomScaleForSize(size: view.bounds.size)
-            updateConstraintsForSize(size: view.bounds.size)
+            updateMinZoomScaleForSize(size: windowSize())
+            updateConstraintsForSize(size: windowSize())
         case .video:
             print("Video type")
             updateTitle(title: viewModel.getTitle())
             showVideoView(message: message)
-            updateMinZoomScaleForSize(size: view.bounds.size)
-            updateConstraintsForSize(size: view.bounds.size)
+            updateMinZoomScaleForSize(size: windowSize())
+            updateConstraintsForSize(size: windowSize())
         case .voice:
             print("Audio type")
             updateTitle(title: viewModel.getTitle())
             showAudioView(message: message)
         default:
             print("Other type")
+        }
+    }
+
+    func windowSize() -> CGSize {
+        if #available(iOS 11.0, *) {
+            let safeAreaInsets = self.view.safeAreaInsets
+            return CGSize(width: UIScreen.main.bounds.width - (safeAreaInsets.left + safeAreaInsets.right), height: UIScreen.main.bounds.height - (safeAreaInsets.top + safeAreaInsets.bottom))
+        } else {
+            // Fallback on earlier versions
+            return CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         }
     }
 
@@ -301,7 +323,7 @@ extension ALKMediaViewerViewController: UIScrollViewDelegate {
     }
 
     func scrollViewDidZoom(_: UIScrollView) {
-        updateConstraintsForSize(size: view.bounds.size)
+       updateConstraintsForSize(size: view.bounds.size)
         view.layoutIfNeeded()
     }
 }
