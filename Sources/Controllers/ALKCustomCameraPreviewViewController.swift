@@ -53,7 +53,6 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupNavigation()
         updateMinZoomScaleForSize(size: view.bounds.size)
         updateConstraintsForSize(size: view.bounds.size)
     }
@@ -80,16 +79,6 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(tap:)))
         doubleTap.numberOfTapsRequired = 2
         scrollView.addGestureRecognizer(doubleTap)
-    }
-
-    private func setupNavigation() {
-        navigationItem.title = title
-
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        navigationController?.navigationBar.tintColor = UIColor.black
-        guard let navVC = self.navigationController else { return }
-        navVC.navigationBar.shadowImage = UIImage()
-        navVC.navigationBar.isTranslucent = true
     }
 
     private func updateMinZoomScaleForSize(size: CGSize) {

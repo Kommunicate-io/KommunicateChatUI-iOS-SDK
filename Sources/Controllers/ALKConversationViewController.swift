@@ -813,7 +813,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .showLocation:
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.applozic)
 
-                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+                guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController else { return }
                 guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
                 mapViewVC.delegate = self
                 mapViewVC.setConfiguration(weakSelf.configuration)
@@ -1442,12 +1442,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func shareContact() {
         CNContactStore().requestAccess(for: .contacts) { granted, _ in
-            if granted {
-                let vc = CNContactPickerViewController()
-                vc.delegate = self
-                self.present(vc, animated: true, completion: nil)
-            } else {
-                ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+            DispatchQueue.main.async {
+                if granted {
+                    let vc = CNContactPickerViewController()
+                    vc.delegate = self
+                    self.present(vc, animated: true, completion: nil)
+                } else {
+                    ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+                }
             }
         }
     }

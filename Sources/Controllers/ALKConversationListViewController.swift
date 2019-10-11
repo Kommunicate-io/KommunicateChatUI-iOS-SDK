@@ -95,7 +95,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             using: { [weak self] _ in
                 guard let weakSelf = self else { return }
 
-                if  weakSelf.navigationController?.visibleViewController  as?  ALKConversationListViewController != nil , weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
+                if weakSelf.navigationController?.visibleViewController as? ALKConversationListViewController != nil, weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
                     weakSelf.showNavigationItems()
                 }
             }
@@ -168,7 +168,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             print("update group detail")
             weakSelf.tableView.reloadData()
         })
-
     }
 
     override func removeObserver() {
@@ -237,13 +236,11 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     func setupNavigationRightButtons() {
-
         let navigationItems = configuration.navigationItemsForConversationList
 
         var rightBarButtonItems: [UIBarButtonItem] = []
 
         if configuration.isMessageSearchEnabled {
-
             let barButton = UIBarButtonItem(
                 image: UIImage(named: "search", in: Bundle.applozic, compatibleWith: nil),
                 style: .plain,

@@ -359,7 +359,8 @@ open class ALKFriendMessageCell: ALKMessageCell {
             bubbleView.image = bubbleView.imageBubble(
                 for: ALKMessageStyle.receivedBubble.style,
                 isReceiverSide: true,
-                showHangOverImage: true)
+                showHangOverImage: true
+            )
         }
     }
 
@@ -369,7 +370,8 @@ open class ALKFriendMessageCell: ALKMessageCell {
             bubbleView.image = bubbleView.imageBubble(
                 for: ALKMessageStyle.receivedBubble.style,
                 isReceiverSide: true,
-                showHangOverImage: false)
+                showHangOverImage: false
+            )
         }
     }
 

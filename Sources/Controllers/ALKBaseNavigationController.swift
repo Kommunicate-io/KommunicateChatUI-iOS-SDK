@@ -24,17 +24,13 @@ public class ALKBaseNavigationViewController: UINavigationController {
 
     private func setupAppearance() {
         let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+        navigationBarProxy.shadowImage = navigationBarProxy.shadowImage ?? UIImage()
         navigationBarProxy.tintColor = navigationBarProxy.tintColor ?? UIColor.navigationTextOceanBlue()
         navigationBarProxy.titleTextAttributes =
             navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.black]
 
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = navigationBarProxy.barTintColor
-            appearance.titleTextAttributes = navigationBarProxy.titleTextAttributes ?? [:]
-            navigationBarProxy.scrollEdgeAppearance = appearance
-            navigationBarProxy.compactAppearance = appearance
-            navigationBarProxy.standardAppearance = appearance
+        if navigationBarProxy.backgroundImage(for: .default) == nil {
+            navigationBarProxy.barTintColor = navigationBarProxy.barTintColor ?? UIColor.navigationOceanBlue()
         }
     }
 }
