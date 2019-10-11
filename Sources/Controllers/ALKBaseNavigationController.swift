@@ -32,14 +32,5 @@ public class ALKBaseNavigationViewController: UINavigationController {
         if navigationBarProxy.backgroundImage(for: .default) == nil {
             navigationBarProxy.barTintColor = navigationBarProxy.barTintColor ?? UIColor.navigationOceanBlue()
         }
-
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = navigationBarProxy.barTintColor
-            appearance.titleTextAttributes = navigationBarProxy.titleTextAttributes ?? [:]
-            navigationBarProxy.scrollEdgeAppearance = appearance
-            navigationBarProxy.compactAppearance = appearance
-            navigationBarProxy.standardAppearance = appearance
-        }
     }
 }
