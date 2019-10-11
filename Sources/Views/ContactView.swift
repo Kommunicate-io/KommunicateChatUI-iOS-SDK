@@ -81,10 +81,10 @@ class ContactView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setColorIn(text: UIColor, background: UIColor) {
-        contactName.textColor = text
-        contactSaveIcon.tintColor = text
-        backgroundColor = background
+    func setStyle(itemColor: UIColor, bubbleStyle: ALKMessageStyle.Bubble) {
+        contactName.textColor = itemColor
+        contactSaveIcon.tintColor = itemColor
+        setBubbleStyle(bubbleStyle)
     }
 
     func update(contactModel: ContactModel) {

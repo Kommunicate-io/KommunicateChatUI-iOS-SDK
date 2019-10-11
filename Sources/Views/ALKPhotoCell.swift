@@ -377,7 +377,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate func updateThumbnailPath(_ key: String, filePath: String) {
         let messageKey = ThumbnailIdentifier.removePrefix(from: key)
-        let dbMessage = ALMessageDBService().getMessageByKey("key", value: messageKey) as! DB_Message
+        guard let dbMessage = ALMessageDBService().getMessageByKey("key", value: messageKey) as? DB_Message else { return }
         dbMessage.fileMetaInfo.thumbnailFilePath = filePath
 
         let alHandler = ALDBHandler.sharedInstance()
