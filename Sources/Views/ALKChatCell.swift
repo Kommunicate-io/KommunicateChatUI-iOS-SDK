@@ -58,6 +58,10 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         }
     }
 
+    public struct Config {
+        public static var iconMuted = UIImage(named: "muted", in: Bundle.applozic, compatibleWith: nil)
+    }
+
     public var localizationFileName: String = "Localizable"
 
     private var avatarImageView: UIImageView = {
@@ -100,7 +104,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.isHidden = true
-        imageView.image = UIImage(named: "mute", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = Config.iconMuted
         return imageView
     }()
 
