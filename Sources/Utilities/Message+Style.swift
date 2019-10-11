@@ -68,7 +68,7 @@ public enum ALKMessageStyle {
     public struct Bubble {
 
         public struct Border {
-            public var color: CGColor = UIColor.clear.cgColor
+            public var color: UIColor = UIColor.clear
             public var width: CGFloat = 0
         }
 
@@ -81,7 +81,7 @@ public enum ALKMessageStyle {
         /// BubbleStyle of the message bubble.
         public var style: BubbleStyle
 
-        /// Used to add border to bubble.
+        /// For setting border to bubble.
         /// Note: Only works when `BubbleStyle` is `round`
         public var border: Border = Border()
 

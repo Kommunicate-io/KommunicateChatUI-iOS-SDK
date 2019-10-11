@@ -10,18 +10,19 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [AL-3847] Updated UI for link button and refractored rich messages to use same view for all types of buttons.
 - [AL-3642] Added support for message search.
 - [AL-3853] Added support for navigation bar customization using `UIAppearance`.
-- [AL-3852] Added setting for adding border to message bubble. This setting will only take effect with round bubble and will only work with text messages, audio messages and contact messages. For other messages the setting will have no effect.
+- [AL-3852] Added setting for adding border to message bubble.
+This setting will only take effect with round bubble and will only work with text messages, audio messages and contact messages. For other messages the setting will have no effect.
 Below is the sample code to illustrate how to use this setting:
 ```
         ALKMessageStyle.sentBubble.style = .round
-        ALKMessageStyle.sentBubble.border.color = UIColor.blue.cgColor
+        ALKMessageStyle.sentBubble.border.color = UIColor.blue
         ALKMessageStyle.sentBubble.border.width = 2
 
         ALKMessageStyle.receivedBubble.style = .round
-        ALKMessageStyle.receivedBubble.border.color = UIColor.red.cgColor
+        ALKMessageStyle.receivedBubble.border.color = UIColor.red
         ALKMessageStyle.receivedBubble.border.width = 2
 ```
-- Back button on Chat screen will now just pop. Earlier it will popping to root view controller.
+- Back button on Chat screen will now just pop. Earlier it was going back to the root view controller.
 
 ### Fixes
 - [AL-3862] Fixed a crash where dbMessage was being forcefully unwrapped.

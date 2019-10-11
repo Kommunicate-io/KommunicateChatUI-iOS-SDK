@@ -25,7 +25,7 @@ extension UIView {
         layer.cornerRadius = style.cornerRadius
         tintColor = style.color
         backgroundColor = style.color
-        layer.borderColor = style.border.color
+        layer.borderColor = style.border.color.cgColor
         layer.borderWidth = style.border.width
     }
 }
