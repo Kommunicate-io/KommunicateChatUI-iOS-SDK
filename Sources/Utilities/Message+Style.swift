@@ -66,7 +66,6 @@ public enum ALKMessageStyle {
     }
 
     public struct Bubble {
-
         public struct Border {
             public var color: UIColor = UIColor.clear
             public var width: CGFloat = 0

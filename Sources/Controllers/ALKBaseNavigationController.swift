@@ -28,6 +28,10 @@ public class ALKBaseNavigationViewController: UINavigationController {
         navigationBarProxy.titleTextAttributes =
             navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.black]
 
+        if navigationBarProxy.backgroundImage(for: .default) == nil {
+            navigationBarProxy.barTintColor = navigationBarProxy.barTintColor ?? UIColor.navigationOceanBlue()
+        }
+
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
             appearance.backgroundColor = navigationBarProxy.barTintColor

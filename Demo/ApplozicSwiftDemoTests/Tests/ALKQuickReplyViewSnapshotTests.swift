@@ -15,7 +15,7 @@ class ALKQuickReplyViewSnapshotTests: QuickSpec {
 
     override func spec() {
         describe("SuggestedReplyView") {
-            var view = SuggestedReplyView()
+            let view = SuggestedReplyView()
 
             context("with small texts") {
                 beforeEach {

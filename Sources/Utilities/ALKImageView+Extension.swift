@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import UIKit
 import Kingfisher
+import UIKit
 
 extension ALKImageView {
-
     func setStyle(_ bubbleStyle: ALKMessageStyle.Bubble, isReceiverSide: Bool) {
         if bubbleStyle.style == .edge {
             tintColor = bubbleStyle.color
@@ -29,7 +28,7 @@ extension ALKImageView {
         if isReceiverSide { imageTitle = showHangOverImage ? "chat_bubble_grey_hover" : "chat_bubble_grey" }
 
         guard let bubbleImage = UIImage(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
-            else { return nil }
+        else { return nil }
 
         // This API is from the Kingfisher so instead of directly using
         // imageFlippedForRightToLeftLayoutDirection() we are using this as it handles
@@ -37,5 +36,4 @@ extension ALKImageView {
         let modifier = FlipsForRightToLeftLayoutDirectionImageModifier()
         return modifier.modify(bubbleImage)
     }
-
 }
