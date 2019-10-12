@@ -1,13 +1,13 @@
 PODS:
-  - Applozic (6.14.1):
-    - SDWebImage (~> 5.0.6)
+  - Applozic (6.16.0):
+    - SDWebImage (~> 5.1.0)
   - ApplozicSwift (3.3.0):
     - ApplozicSwift/Complete (= 3.3.0)
   - ApplozicSwift/Complete (3.3.0):
-    - Applozic (~> 6.14.0)
+    - Applozic (~> 6.16.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 5.7.0)
-    - MGSwipeTableCell (~> 1.6.8)
+    - MGSwipeTableCell (~> 1.6.9)
   - ApplozicSwift/RichMessageKit (3.3.0)
   - iOSSnapshotTestCase (6.1.0):
     - iOSSnapshotTestCase/SwiftSupport (= 6.1.0)
@@ -15,7 +15,7 @@ PODS:
   - iOSSnapshotTestCase/SwiftSupport (6.1.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (5.7.1)
-  - MGSwipeTableCell (1.6.8)
+  - MGSwipeTableCell (1.6.9)
   - Nimble (8.0.2)
   - Nimble-Snapshots (8.0.0):
     - Nimble-Snapshots/Core (= 8.0.0)
@@ -23,9 +23,9 @@ PODS:
     - iOSSnapshotTestCase (~> 6.0)
     - Nimble (~> 8.0)
   - Quick (2.1.0)
-  - SDWebImage (5.0.6):
-    - SDWebImage/Core (= 5.0.6)
-  - SDWebImage/Core (5.0.6)
+  - SDWebImage (5.1.1):
+    - SDWebImage/Core (= 5.1.1)
+  - SDWebImage/Core (5.1.1)
   - SwiftFormat/CLI (0.40.11)
   - SwiftLint (0.34.0)
 
@@ -55,15 +55,15 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: 2b43fbc14a3fbd3cd5664c1040d1b1d86e21d3d1
-  ApplozicSwift: 147d51e9b7c44e851bbca9d16779e9bd8175e19d
+  Applozic: e60d7863e31f8a5afefcb72229f6540fc45de4c3
+  ApplozicSwift: be831df513bc7a000e0b470a2beb9894d4c63fa1
   iOSSnapshotTestCase: 30d540b0c8feb9d7f8ff97acc25a3804b48ee264
   Kingfisher: 176d377ad339113c99ad4980cbae687f807e20fe
-  MGSwipeTableCell: dc4eca3212ed38a563b27d6aa7b3c01ce656c1e2
+  MGSwipeTableCell: 17349a8b56c81245bd77671251eb8aa9d486d46b
   Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
   Nimble-Snapshots: 8ec63f41ce6c7229a17be9a64edbc123b181f75b
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
-  SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
+  SDWebImage: 96d7f03415ccb28d299d765f93557ff8a617abd8
   SwiftFormat: 304f39cab266d39c9d60f4fceec37ed6f43b931c
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
 

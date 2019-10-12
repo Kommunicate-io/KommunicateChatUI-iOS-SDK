@@ -1,5 +1,24 @@
 ## Migration Guides
 
+### Migrating from versions < 3.4.0
+
+#### Navigation Bar Customization
+
+- `ALKConfiguration.navigationBarBackgroundColor`, has been deprecated. Use `UIAppearance` for navigation bar configuration.
+- `ALKConfiguration.navigationBarItemColor`, has been deprecated. Use `UIAppearance` for navigation bar configuration.
+- `ALKConfiguration.navigationBarTitleColor`, has been deprecated. Use `UIAppearance` for navigation bar configuration.
+
+If you are using `ALKBaseNavigationViewController` to present the conversation then, you can customize it like this:
+
+```swift
+// Use `appearance(whenContainedInInstancesOf:)` method to limit the changes to instances of `ALKBaseNavigationViewController`.
+let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+
+navigationBarProxy.tintColor = UIColor.blue
+navigationBarProxy.barTintColor = UIColor.gray
+navigationBarProxy.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black] // title color
+```
+
 ### Migrating from versions < 3.1.0
 
 ####  ChatBar Configuration

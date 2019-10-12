@@ -21,6 +21,7 @@ extension UISearchBar {
         let searchBar = UISearchBar()
         searchBar.applySearchBarStyle()
         searchBar.placeholder = placeholder
+        searchBar.barTintColor = .white
         return searchBar
     }
 

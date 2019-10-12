@@ -106,6 +106,13 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
     private func registerCell() {
         tableView.register(ALKFriendNewChatCell.self)
     }
+
+    private func launch(_ conversationVC: ALKConversationViewController) {
+        // Remove current VC from the stack
+        var navControllers = self.navigationController?.viewControllers.dropLast() ?? []
+        navControllers.append(conversationVC)
+        self.navigationController?.setViewControllers(navControllers, animated: true)
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -142,8 +149,6 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
         let friendViewModel = self.viewModel.friendForRow(indexPath: indexPath)
 
-        tableView.deselectRow(at: indexPath, animated: true)
-
         tableView.isUserInteractionEnabled = false
 
         let viewModel = ALKConversationViewModel(contactId: friendViewModel.friendUUID, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
@@ -151,8 +156,8 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
 
+        launch(conversationVC)
         self.tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(conversationVC, animated: true)
         self.tableView.isUserInteractionEnabled = true
     }
 
@@ -224,7 +229,8 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key, localizedStringFileName: self.configuration.localizedStringFileName)
             let conversationVC = ALKConversationViewController(configuration: self.configuration)
             conversationVC.viewModel = viewModel
-            self.navigationController?.pushViewController(conversationVC, animated: true)
+            _ = self.navigationController?.popToViewController(self, animated: true)
+            self.launch(conversationVC)
             self.tableView.isUserInteractionEnabled = true
         })
     }

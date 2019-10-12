@@ -53,4 +53,8 @@ extension UITableView {
         guard let indexes = self.indexPathsForVisibleRows else { return false }
         return indexes.contains { $0.section == section && $0.row == row }
     }
+
+    func isValid(indexPath: IndexPath) -> Bool {
+        return indexPath.section < numberOfSections && indexPath.row < numberOfRows(inSection: indexPath.section)
+    }
 }

@@ -127,6 +127,7 @@ class ALChatManager: NSObject {
     func launchChatList(from viewController: UIViewController, with configuration: ALKConfiguration) {
         let conversationVC = ALKConversationListViewController(configuration: configuration)
         let navVC = ALKBaseNavigationViewController(rootViewController: conversationVC)
+        navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: false, completion: nil)
     }
 
@@ -136,6 +137,7 @@ class ALChatManager: NSObject {
             vc.present(navVC, animated: false, completion: nil)
             return
         }
+        vc.modalPresentationStyle = .fullScreen
         vc.navigationController?.pushViewController(viewController, animated: false)
     }
 

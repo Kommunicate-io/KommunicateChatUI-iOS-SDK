@@ -35,7 +35,9 @@ extension ALMessage: ALKChatViewModelProtocol {
         // TODO: This is a workaround as other method uses closure.
         // Later replace this with:
         // alChannelService.getChannelInformation(, orClientChannelKey: , withCompletion: )
-        guard let alChannel = alChannelService.getChannelByKey(self.groupId) else {
+        guard let groupId = groupId,
+            let alChannel = alChannelService.getChannelByKey(groupId)
+        else {
             return nil
         }
         return alChannel
@@ -119,6 +121,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Document"
         case .contact:
             return "Contact"
+        case .allButtons:
+            return message ?? "Buttons"
         }
     }
 
@@ -363,6 +367,8 @@ extension ALMessage {
             return .imageMessage
         case "10":
             return .cardTemplate
+        case "11":
+            return .allButtons
         default:
             return .text
         }

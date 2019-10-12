@@ -26,18 +26,6 @@ public struct ALKConfiguration {
     /// navigation bar is visible. Default value is true.
     public var hideNavigationBarBottomLine = true
 
-    /// Navigation bar's background color. It will be used in all the
-    /// ViewControllers where navigation bar is visible.
-    public var navigationBarBackgroundColor = UIColor.navigationOceanBlue()
-
-    /// Navigation bar's tint color. It will be used in all the
-    /// ViewControllers where navigation bar is visible.
-    public var navigationBarItemColor = UIColor.navigationTextOceanBlue()
-
-    /// Navigation bar's title color. It will be used in all the
-    /// ViewControllers where navigation bar is visible.
-    public var navigationBarTitleColor = UIColor.black
-
     /// ChatBar's bottom view color. This is the view which contains
     /// all the attachment and other options.
     public var chatBarAttachmentViewBackgroundColor = UIColor.background(.grayEF)
@@ -152,6 +140,14 @@ public struct ALKConfiguration {
     // If false, Then  you can disable the default refresh button in chat view
     public var isRefreshButtonEnabled: Bool = true
 
+    // If true then the mention feature in groups will be enabled
+    // and it can be triggered by typing "@" character in the message
+    // input view. Default value is false.
+    public var isMemberMentionEnabled = false
+
+    // If true, Then message search will be enabled
+    public var isMessageSearchEnabled: Bool = false
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {
@@ -189,6 +185,37 @@ public struct ALKConfiguration {
 
     /// Use this to configure channel detail view like changing member name label color, title font etc.
     public var channelDetail = ALKChannelDetailViewConfiguration()
+
+    /// Navigation bar's background color. It will be used in all the
+    /// ViewControllers where navigation bar is visible.
+    @available(*, deprecated, message: "Use UIAppearance for customization.")
+    public var navigationBarBackgroundColor = UIColor.navigationOceanBlue() {
+        didSet {
+            let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+            navigationBarProxy.barTintColor = navigationBarBackgroundColor
+        }
+    }
+
+    /// Navigation bar's tint color. It will be used in all the
+    /// ViewControllers where navigation bar is visible.
+    @available(*, deprecated, message: "Use UIAppearance for customization.")
+    public var navigationBarItemColor = UIColor.navigationTextOceanBlue() {
+        didSet {
+            let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+            navigationBarProxy.tintColor = navigationBarItemColor
+        }
+    }
+
+    /// Navigation bar's title color. It will be used in all the
+    /// ViewControllers where navigation bar is visible.
+    @available(*, deprecated, message: "Use UIAppearance for customization.")
+    public var navigationBarTitleColor = UIColor.black {
+        didSet {
+            let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+            navigationBarProxy.titleTextAttributes =
+                [NSAttributedString.Key.foregroundColor: navigationBarTitleColor]
+        }
+    }
 
     public init() {}
 }

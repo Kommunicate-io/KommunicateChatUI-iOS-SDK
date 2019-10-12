@@ -32,6 +32,7 @@ public enum ALKMessageType: String {
     case genericCard = "Card"
 
     case imageMessage = "ImageMessage"
+    case allButtons = "AllButtons"
 }
 
 // MARK: - MessageViewModel
@@ -107,6 +108,46 @@ extension ALKMessageModel: Equatable {
 }
 
 extension ALKMessageViewModel {
+    var containsMentions: Bool {
+        // Only check when it's a group
+        guard channelKey != nil, let mentionParser = mentionParser else {
+            return false
+        }
+        return mentionParser.containsMentions
+    }
+
+    var mentionedUserIds: Set<String>? {
+        return mentionParser?.mentionedUserIds()
+    }
+
+    private var mentionParser: MessageMentionDecoder? {
+        guard let message = message,
+            let metadata = metadata,
+            !metadata.isEmpty else {
+            return nil
+        }
+        let mentionParser = MessageMentionDecoder(message: message, metadata: metadata)
+        return mentionParser
+    }
+
+    func attributedTextWithMentions(
+        defaultAttributes: [NSAttributedString.Key: Any],
+        mentionAttributes: [NSAttributedString.Key: Any],
+        displayNames: ((Set<String>) -> ([String: String]?))?
+    ) -> NSAttributedString? {
+        guard containsMentions,
+            let userIds = mentionedUserIds,
+            let names = displayNames?(userIds),
+            let attributedText = mentionParser?.messageWithMentions(
+                displayNamesOfUsers: names,
+                attributesForMention: mentionAttributes,
+                defaultAttributes: defaultAttributes
+            ) else {
+            return nil
+        }
+        return attributedText
+    }
+
     func payloadFromMetadata() -> [[String: Any]]? {
         guard let metadata = self.metadata, let payload = metadata["payload"] as? String else { return nil }
         let data = payload.data

@@ -33,6 +33,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.showReport = false
+                cell.displayNames = { [weak self] userIds in
+                    self?.viewModel.displayNames(ofUserIds: userIds)
+                }
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
@@ -48,6 +51,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.showReport = configuration.isReportMessageEnabled
+                cell.displayNames = { [weak self] userIds in
+                    self?.viewModel.displayNames(ofUserIds: userIds)
+                }
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
                 cell.avatarTapped = { [weak self] in
@@ -69,6 +75,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.displayNames = { [weak self] userIds in
+                    self?.viewModel.displayNames(ofUserIds: userIds)
+                }
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
                 cell.menuAction = { [weak self] action in
@@ -80,6 +89,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.showReport = configuration.isReportMessageEnabled
+                cell.displayNames = { [weak self] userIds in
+                    self?.viewModel.displayNames(ofUserIds: userIds)
+                }
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
                 cell.avatarTapped = { [weak self] in
@@ -328,15 +340,13 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = message.payloadFromMetadata() else {
                     return cell
                 }
-                cell.quickReplyView.quickReplySelected = { [weak self] tag, title, metadata in
-                    guard let weakSelf = self,
-                        let index = tag else { return }
+                cell.quickReplySelected = { [weak self] index, title in
+                    guard let weakSelf = self else { return }
                     weakSelf.quickReplySelected(
                         index: index,
                         title: title,
                         template: template,
                         message: message,
-                        metadata: metadata,
                         isButtonClickDisabled: weakSelf.configuration.disableRichMessageButtonAction
                     )
                 }
@@ -355,7 +365,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
-                cell.buttonView.buttonSelected = { [weak self] index, title in
+                cell.buttonSelected = { [weak self] index, title in
                     guard let weakSelf = self else { return }
                     weakSelf.messageButtonSelected(
                         index: index,
@@ -471,6 +481,26 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(model: imageMessage)
                 return cell
             }
+        case .allButtons:
+            guard let allButtons = message.allButtons() else { return UITableViewCell() }
+            if message.isMyMessage {
+                let cell: SentButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: allButtons)
+                return cell
+            } else {
+                let cell: ReceivedButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(model: allButtons)
+                cell.tapped = { [weak self] index, name in
+                    guard let weakSelf = self else { return }
+                    weakSelf.richButtonSelected(
+                        index: index,
+                        title: name,
+                        message: message,
+                        isButtonClickDisabled: weakSelf.configuration.disableRichMessageButtonAction
+                    )
+                }
+                return cell
+            }
         }
     }
 
@@ -567,11 +597,11 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     func configurePaginationWindow() {
-        if self.tableView.frame.equalTo(CGRect.zero) { return }
-        if self.tableView.isDragging { return }
-        if self.tableView.isDecelerating { return }
-        let topOffset = -self.tableView.contentInset.top
-        let distanceFromTop = self.tableView.contentOffset.y - topOffset
+        if tableView.frame.equalTo(CGRect.zero) { return }
+        if tableView.isDragging { return }
+        if tableView.isDecelerating { return }
+        let topOffset = -tableView.contentInset.top
+        let distanceFromTop = tableView.contentOffset.y - topOffset
         let minimumDistanceFromTopToTriggerLoadingMore: CGFloat = 200
         let nearTop = distanceFromTop <= minimumDistanceFromTopToTriggerLoadingMore
         if !nearTop { return }

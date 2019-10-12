@@ -33,7 +33,6 @@ public enum ALKChatCellAction {
     case delete
     case favorite
     case store
-    case call
     case mute
     case unmute
     case block
@@ -57,6 +56,10 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             static let height: CGFloat = 15
             static let width: CGFloat = 24
         }
+    }
+
+    public struct Config {
+        public static var iconMuted = UIImage(named: "muted", in: Bundle.applozic, compatibleWith: nil)
     }
 
     public var localizationFileName: String = "Localizable"
@@ -97,12 +100,12 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         return view
     }()
 
-    private lazy var voipButton: UIButton = {
-        let bt = UIButton(type: .custom)
-        bt.setImage(UIImage(named: "icon_menu_dial_on"), for: .normal)
-        bt.setImage(UIImage(named: "icon_call_disable"), for: .disabled)
-        bt.addTarget(self, action: #selector(callTapped(button:)), for: .touchUpInside)
-        return bt
+    private var muteIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.isHidden = true
+        imageView.image = Config.iconMuted
+        return imageView
     }()
 
     private lazy var favoriteButton: UIButton = {
@@ -162,13 +165,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        voipButton.isHidden = true
         setupConstraints()
-    }
-
-    deinit {
-        voipButton.removeTarget(self, action: #selector(callTapped(button:)), for: .touchUpInside)
-        // favoriteButton.removeTarget(self, action:  #selector(favoriteTapped(button:)), for: .touchUpInside)
     }
 
     public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
@@ -243,6 +240,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
         nameLabel.text = name
         locationLabel.text = viewModel.theLastMessage
+        muteIcon.isHidden = !isConversationMuted(viewModel: viewModel)
 
         if viewModel.messageType == .email {
             emailIcon.isHidden = false
@@ -282,8 +280,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
             onlineStatusView.isHidden = !contact.connected
         }
-
-        voipButton.isEnabled = !viewModel.isGroupChat
     }
 
     private func setupLeftSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
@@ -383,7 +379,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
     }
 
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel, lineView, voipButton, /* favoriteButton, */ badgeNumberView, timeLabel, onlineStatusView, emailIcon])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel, lineView, muteIcon, /* favoriteButton, */ badgeNumberView, timeLabel, onlineStatusView, emailIcon])
 
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
@@ -406,7 +402,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         locationLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         locationLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
-        locationLabel.trailingAnchor.constraint(equalTo: voipButton.leadingAnchor, constant: -19).isActive = true
+        locationLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
         // setup constraint of line
         lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -424,10 +420,10 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
         // setup constraint of VOIP button
         // voipButton.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor, constant: -25.0).isActive = true
-        voipButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -23).isActive = true
-        voipButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        voipButton.widthAnchor.constraint(equalToConstant: 24.0).isActive = true
-        voipButton.heightAnchor.constraint(equalToConstant: 25.0).isActive = true
+        muteIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19).isActive = true
+        muteIcon.centerYAnchor.constraint(equalTo: locationLabel.centerYAnchor).isActive = true
+        muteIcon.widthAnchor.constraint(equalToConstant: 15.0).isActive = true
+        muteIcon.heightAnchor.constraint(equalToConstant: 15.0).isActive = true
 
         // setup constraint of badgeNumber
         badgeNumberView.addViewsForAutolayout(views: [badgeNumberLabel])
@@ -468,11 +464,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     func setComingSoonDelegate(delegate: UIView) {
         comingSoonDelegate = delegate
-    }
-
-    @objc func callTapped(button _: UIButton) {
-        guard let viewModel = self.viewModel else { return }
-        chatCellDelegate?.chatCell(cell: self, action: .call, viewModel: viewModel)
     }
 
     @objc func favoriteTapped(button _: UIButton) {

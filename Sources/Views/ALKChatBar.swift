@@ -10,16 +10,6 @@ import Applozic
 import Foundation
 import UIKit
 
-public struct AutoCompleteItem {
-    var key: String
-    var content: String
-
-    public init(key: String, content: String) {
-        self.key = key
-        self.content = content
-    }
-}
-
 // swiftlint:disable:next type_body_length
 open class ALKChatBar: UIView, Localizable {
     var configuration: ALKConfiguration!
@@ -36,7 +26,7 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     public enum ActionType {
-        case sendText(UIButton, String)
+        case sendText(UIButton, NSAttributedString)
         case chatBarTextBeginEdit
         case chatBarTextChange(UIButton)
         case sendVoice(NSData)
@@ -89,14 +79,11 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     public let textView: ALKChatBarTextView = {
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 4.0
         let tv = ALKChatBarTextView()
         tv.setBackgroundColor(UIColor.color(.none))
         tv.scrollsToTop = false
         tv.autocapitalizationType = .sentences
         tv.accessibilityIdentifier = "chatTextView"
-        tv.typingAttributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: UIFont.font(.normal(size: 16.0))]
         return tv
     }()
 
@@ -217,10 +204,31 @@ open class ALKChatBar: UIView, Localizable {
         }
     }
 
+    var defaultTextAttributes: [NSAttributedString.Key: Any] = {
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 4.0
+        let attrs = [
+            NSAttributedString.Key.paragraphStyle: style,
+            NSAttributedString.Key.font: UIFont.font(.normal(size: 16.0)),
+        ]
+        return attrs
+    }() {
+        didSet {
+            textView.typingAttributes = defaultTextAttributes
+        }
+    }
+
     private var attachmentButtonStackView: UIStackView = {
         let attachmentStack = UIStackView(frame: CGRect.zero)
         return attachmentStack
     }()
+
+    fileprivate var textViewHeighConstrain: NSLayoutConstraint?
+    fileprivate let textViewHeigh: CGFloat = 40.0
+    fileprivate let textViewHeighMax: CGFloat = 102.2 + 8.0
+
+    fileprivate var textViewTrailingWithSend: NSLayoutConstraint?
+    fileprivate var textViewTrailingWithMic: NSLayoutConstraint?
 
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight
@@ -232,9 +240,9 @@ open class ALKChatBar: UIView, Localizable {
     @objc func tapped(button: UIButton) {
         switch button {
         case sendButton:
-            let text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            if text.lengthOfBytes(using: .utf8) > 0 {
-                action?(.sendText(button, text))
+            let attributedText = textView.attributedText ?? NSAttributedString(string: textView.text)
+            if attributedText.string.lengthOfBytes(using: .utf8) > 0 {
+                action?(.sendText(button, attributedText))
             }
         case plusButton:
             action?(.more(button))
@@ -270,7 +278,8 @@ open class ALKChatBar: UIView, Localizable {
 
         micButton.setAudioRecDelegate(recorderDelegate: self)
         soundRec.setAudioRecViewDelegate(recorderDelegate: self)
-        textView.delegate = self
+        textView.typingAttributes = defaultTextAttributes
+        textView.add(delegate: self)
         backgroundColor = .background(.grayEF)
         translatesAutoresizingMaskIntoConstraints = false
 
@@ -291,15 +300,6 @@ open class ALKChatBar: UIView, Localizable {
         updateMediaViewVisibility()
     }
 
-    func setup(_ tableview: UITableView, withPrefex prefix: String) {
-        autocompletionView = tableview
-        autocompletionView.dataSource = self
-        autocompletionView.delegate = self
-        autoCompletionViewHeightConstraint = autocompletionView.heightAnchor.constraint(equalToConstant: 0)
-        autoCompletionViewHeightConstraint?.isActive = true
-        self.prefix = prefix
-    }
-
     func setComingSoonDelegate(delegate: UIView) {
         comingSoonDelegate = delegate
     }
@@ -307,8 +307,8 @@ open class ALKChatBar: UIView, Localizable {
     open func clear() {
         textView.text = ""
         clearTextInTextView()
+        textView.attributedText = nil
         toggleKeyboardType(textView: textView)
-        hideAutoCompletionView()
     }
 
     func hideMicButton() {
@@ -347,19 +347,6 @@ open class ALKChatBar: UIView, Localizable {
             isNeedInitText = false
         }
     }
-
-    fileprivate var textViewHeighConstrain: NSLayoutConstraint?
-    fileprivate let textViewHeigh: CGFloat = 40.0
-    fileprivate let textViewHeighMax: CGFloat = 102.2 + 8.0
-
-    fileprivate var textViewTrailingWithSend: NSLayoutConstraint?
-    fileprivate var textViewTrailingWithMic: NSLayoutConstraint?
-    fileprivate var autoCompletionViewHeightConstraint: NSLayoutConstraint?
-
-    public var autoCompletionItems = [AutoCompleteItem]()
-    var filteredAutocompletionItems = [AutoCompleteItem]()
-
-    public var prefix: String?
 
     // swiftlint:disable:next function_body_length
     private func setupConstraints(
@@ -618,10 +605,7 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     func updateTextViewHeight(textView: UITextView, text: String) {
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 4.0
-        let font = textView.font ?? UIFont.font(.normal(size: 14.0))
-        let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
+        let attributes = textView.typingAttributes
         let tv = UITextView(frame: textView.frame)
         tv.attributedText = NSAttributedString(string: text, attributes: attributes)
 
@@ -668,26 +652,18 @@ open class ALKChatBar: UIView, Localizable {
 }
 
 extension ALKChatBar: UITextViewDelegate {
-    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
-        guard var text = textView.text as NSString? else {
-            return true
-        }
-
-        text = text.replacingCharacters(in: range, with: string) as NSString
-        updateTextViewHeight(textView: textView, text: text as String)
-        return true
-    }
-
     public func textViewDidChange(_ textView: UITextView) {
-        placeHolder.isHidden = !textView.text.isEmpty
-        placeHolder.alpha = textView.text.isEmpty ? 1.0 : 0.0
-
-        toggleButtonInChatBar(hide: textView.text.isEmpty)
-        if showAutosuggestionsForText(textView.text, withPrefix: prefix ?? "") {
-            updateAutocompletionFor(text: String(textView.text.dropFirst()))
+        textView.typingAttributes = defaultTextAttributes
+        if textView.text.isEmpty {
+            clearTextInTextView()
         } else {
-            hideAutoCompletionView()
+            placeHolder.isHidden = true
+            placeHolder.alpha = 0
+
+            toggleButtonInChatBar(hide: false)
+            updateTextViewHeight(textView: textView, text: textView.text)
         }
+
         if let selectedTextRange = textView.selectedTextRange {
             let line = textView.caretRect(for: selectedTextRange.start)
             let overflow = line.origin.y + line.size.height - (textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top)
@@ -748,24 +724,6 @@ extension ALKChatBar: UITextViewDelegate {
         }
         textView.inputView = nil
         textView.reloadInputViews()
-    }
-
-    func showAutoCompletionView() {
-        let contentHeight = autocompletionView.contentSize.height
-
-        let bottomPadding: CGFloat = contentHeight > 0 ? 25 : 0
-        let maxheight: CGFloat = 200
-        autoCompletionViewHeightConstraint?.constant = contentHeight < maxheight ? contentHeight + bottomPadding : maxheight
-    }
-
-    func hideAutoCompletionView() {
-        autoCompletionViewHeightConstraint?.constant = 0
-    }
-
-    func showAutosuggestionsForText(_ text: String, withPrefix prefix: String) -> Bool {
-        guard !prefix.isEmpty, text.starts(with: prefix) else { return false }
-        if text.count > 1, text[1] == " " { return false }
-        return true
     }
 }
 

@@ -40,7 +40,7 @@ public struct MessageStyle {
     )
 
     /// Style for message bubble
-    public var bubble = MessageBubbleStyle(color: UIColor.lightGray, cornerRadius: 5, padding: Padding(left: 10, right: 10, top: 5, bottom: 5))
+    public var bubble = MessageBubbleStyle(color: UIColor.lightGray, cornerRadius: 5, padding: Padding(left: 10, right: 10, top: 10, bottom: 10))
 
     /// Image for all cases of `MessageStatus`
     public var status = StatusImage()

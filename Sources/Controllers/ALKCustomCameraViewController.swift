@@ -184,13 +184,6 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     // MARK: - UI control
 
     private func setupNavigation() {
-        let title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, fileName: localizedStringFileName)
-        navigationItem.title = title
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        navigationController?.navigationBar.tintColor = UIColor.black
-        guard let navVC = self.navigationController else { return }
-        navVC.navigationBar.shadowImage = UIImage()
-        navVC.navigationBar.isTranslucent = true
         var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissCameraPress(_:)))

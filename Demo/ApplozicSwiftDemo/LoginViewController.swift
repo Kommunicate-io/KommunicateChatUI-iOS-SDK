@@ -67,7 +67,6 @@ class LoginViewController: UIViewController {
             if error == nil {
                 NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")
-
                 self.present(vc!, animated: false, completion: nil)
             } else {
                 NSLog("[REGISTRATION] Applozic user registration error: %@", error.debugDescription)

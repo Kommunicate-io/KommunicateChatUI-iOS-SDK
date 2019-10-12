@@ -67,9 +67,9 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
 
     override func setupStyle() {
         super.setupStyle()
-        contactView.setColorIn(
-            text: ALKMessageStyle.sentMessage.text,
-            background: ALKMessageStyle.sentBubble.color
+        contactView.setStyle(
+            itemColor: ALKMessageStyle.sentMessage.text,
+            bubbleStyle: ALKMessageStyle.sentBubble
         )
     }
 

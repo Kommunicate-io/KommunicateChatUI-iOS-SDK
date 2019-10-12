@@ -222,18 +222,15 @@ open class ALKMyMessageCell: ALKMessageCell {
     open override func setupStyle() {
         super.setupStyle()
         messageView.setStyle(ALKMessageStyle.sentMessage)
-        if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: false)
-        } else {
-            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-        }
+        bubbleView.setStyle(ALKMessageStyle.sentBubble, isReceiverSide: false)
     }
 
     open override func update(viewModel: ALKMessageViewModel) {
-        super.update(viewModel: viewModel, style: ALKMessageStyle.sentMessage)
+        super.update(
+            viewModel: viewModel,
+            messageStyle: ALKMessageStyle.sentMessage,
+            mentionStyle: ALKMessageStyle.sentMention
+        )
 
         if viewModel.isReplyMessage {
             guard
@@ -266,13 +263,21 @@ open class ALKMyMessageCell: ALKMessageCell {
         }
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel,
-                                 width: CGFloat) -> CGFloat {
+    class func rowHeigh(viewModel: ALKMessageViewModel,
+                        width: CGFloat,
+                        displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
         /// Calculating messageHeight
         let leftSpacing = Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
         let rightSpacing = Padding.BubbleView.right + bubbleViewRightPadding
         let messageWidth = width - (leftSpacing + rightSpacing)
-        let messageHeight = super.messageHeight(viewModel: viewModel, width: messageWidth, font: ALKMessageStyle.sentMessage.font)
+        let messageHeight = super
+            .messageHeight(
+                viewModel: viewModel,
+                width: messageWidth,
+                font: ALKMessageStyle.sentMessage.font,
+                mentionStyle: ALKMessageStyle.sentMention,
+                displayNames: displayNames
+            )
         let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
 
         let totalHeight = messageHeight + heightPadding
@@ -311,14 +316,22 @@ open class ALKMyMessageCell: ALKMessageCell {
     override func menuWillShow(_ sender: Any) {
         super.menuWillShow(sender)
         if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: true)
+            bubbleView.image = bubbleView.imageBubble(
+                for: ALKMessageStyle.sentBubble.style,
+                isReceiverSide: false,
+                showHangOverImage: true
+            )
         }
     }
 
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
         if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.image = bubbleViewImage(for: ALKMessageStyle.sentBubble.style, isReceiverSide: false, showHangOverImage: false)
+            bubbleView.image = bubbleView.imageBubble(
+                for: ALKMessageStyle.sentBubble.style,
+                isReceiverSide: false,
+                showHangOverImage: false
+            )
         }
     }
 }

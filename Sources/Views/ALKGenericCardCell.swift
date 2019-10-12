@@ -222,22 +222,24 @@ open class ALKGenericCardCell: UICollectionViewCell {
         return Config.imageHeight
     }
 
+    private class func textHeight(_ text: String?, size: CGSize, font: UIFont) -> CGFloat {
+        guard let text = text, !text.isEmpty else { return 0 }
+        return text.rectWithConstrainedSize(size, font: font).height.rounded(.up)
+    }
+
     open class func rowHeight(card: CardTemplate, maxWidth: CGFloat) -> CGFloat {
         var headerHt: CGFloat = 0
         if let header = card.header {
             headerHt = headerHeight(header)
         }
         let titleConstraint = CGSize(width: maxWidth, height: Font.title.lineHeight)
-        let titleHeight = !card.title.isEmpty ? card.title.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up) : 0
+        let titleHeight = textHeight(card.title, size: titleConstraint, font: Font.title)
 
         let subtitleConstraint = CGSize(width: maxWidth, height: Font.subtitle.lineHeight)
-        let subtitleHeight = !card.subtitle.isEmpty ? card.subtitle.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up) : 0
+        let subtitleHeight = textHeight(card.subtitle, size: subtitleConstraint, font: Font.subtitle)
 
         let descriptionConstraint = CGSize(width: maxWidth, height: Font.description.lineHeight)
-        var descriptionHeight: CGFloat = 0
-        if let description = card.description, !description.isEmpty {
-            descriptionHeight = description.rectWithConstrainedSize(descriptionConstraint, font: Font.description).height.rounded(.up) * CGFloat(3)
-        }
+        let descriptionHeight = textHeight(card.description, size: descriptionConstraint, font: Font.description) * CGFloat(3)
 
         let totalButtonHeight = Config.buttonHeight * CGFloat(card.buttons?.count ?? 0)
 
@@ -269,8 +271,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
         contentView.layoutIfNeeded()
     }
 
-    private func setTitle(_ text: String) {
-        guard !text.isEmpty else {
+    private func setTitle(_ text: String?) {
+        guard let text = text, !text.isEmpty else {
             titleStackView.constraint(withIdentifier: ConstraintIdentifier.titleView.rawValue)?.constant = 0
             return
         }
@@ -280,8 +282,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
         titleStackView.constraint(withIdentifier: ConstraintIdentifier.titleView.rawValue)?.constant = height
     }
 
-    private func setSubtitle(_ text: String) {
-        guard !text.isEmpty else {
+    private func setSubtitle(_ text: String?) {
+        guard let text = text, !text.isEmpty else {
             subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = 0
             return
         }

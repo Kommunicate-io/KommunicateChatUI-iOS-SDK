@@ -32,6 +32,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var individualLaunch = true
 
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
+    public lazy var autocompleteManager = AutoCompleteManager(
+        textView: chatBar.textView,
+        tableview: autocompletionView
+    )
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
@@ -385,8 +389,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
-        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
-        chatBar.setup(autocompletionView, withPrefex: "/")
         setRichMessageKitTheme()
         setupProfanityFilter()
     }
@@ -412,10 +414,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     override func backTapped() {
-        print("back tapped")
         view.endEditing(true)
         viewModel.sendKeyboardDoneTyping()
-        let popVC = navigationController?.popToRootViewController(animated: true)
+        let popVC = navigationController?.popViewController(animated: true)
         if popVC == nil {
             dismiss(animated: true, completion: nil)
         }
@@ -437,8 +438,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
+        setupAutoComplete()
         replyMessageView.closeButtonTapped = { [weak self] _ in
             self?.hideReplyMessageView()
+        }
+        replyMessageView.displayNames = { [weak self] userIds in
+            self?.viewModel.displayNames(ofUserIds: userIds)
         }
     }
 
@@ -636,6 +641,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ReceivedImageMessageCell.self)
         tableView.register(ReceivedFAQMessageCell.self)
         tableView.register(SentFAQMessageCell.self)
+        tableView.register(SentButtonsCell.self)
+        tableView.register(ReceivedButtonsCell.self)
     }
 
     private func prepareMoreBar() {
@@ -694,8 +701,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             switch action {
             case let .sendText(button, message):
-
-                if message.count < 1 {
+                let message = message
+                    .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                if message.string.count < 1 {
                     return
                 }
 
@@ -703,8 +711,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.viewModel.sendKeyboardDoneTyping()
 
                 weakSelf.chatBar.clear()
+                weakSelf.autocompleteManager.cancelAndHide()
 
-                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message) {
+                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message.string) {
                     let profanityTitle = weakSelf.localizedString(
                         forKey: "profaneWordsTitle",
                         withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
@@ -734,9 +743,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     button.isUserInteractionEnabled = true
                     return
                 }
+
+                var messageMetadata = self?.configuration.messageMetadata
+                let mentionHandler = MessageMentionEncoder(message: message)
+                var messageToSend = message.string
+                if mentionHandler.containsMentions {
+                    messageToSend = mentionHandler.replaceMentionsWithKeys().string
+                    let metadataForMentions = mentionHandler.metadataForMentions() ?? [:]
+                    // In case of a key match using the value set in config
+                    messageMetadata = (messageMetadata ?? [:])
+                        .merging(metadataForMentions) { current, _ in current }
+                }
                 weakSelf.isJustSent = true
-                print("About to send this message: ", message)
-                weakSelf.viewModel.send(message: message, isOpenGroup: weakSelf.viewModel.isOpenGroup, metadata: self?.configuration.messageMetadata)
+                print("About to send this message: ", messageToSend)
+                weakSelf.viewModel.send(message: messageToSend, isOpenGroup: weakSelf.viewModel.isOpenGroup, metadata: messageMetadata)
                 button.isUserInteractionEnabled = true
             case .chatBarTextChange:
 
@@ -793,7 +813,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .showLocation:
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.applozic)
 
-                guard let nav = storyboard.instantiateInitialViewController() as? UINavigationController else { return }
+                guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController else { return }
                 guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
                 mapViewVC.delegate = self
                 mapViewVC.setConfiguration(weakSelf.configuration)
@@ -839,6 +859,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             )
         } catch {
             print("Error while setting up profanity filter: \(error.localizedDescription)")
+        }
+    }
+
+    private func setupAutoComplete() {
+        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
+        autocompleteManager.autocompletionDelegate = self
+        if configuration.isMemberMentionEnabled {
+            autocompleteManager.registerPrefix(
+                prefix: MessageMention.Prefix,
+                configuration: AutoCompleteItemConfiguration.memberMention,
+                cellType: MentionAutoCompleteCell.self
+            )
         }
     }
 
@@ -1086,7 +1118,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         title: String,
         template: [[String: Any]],
         message: ALKMessageViewModel,
-        metadata: [String: Any]?,
         isButtonClickDisabled: Bool
     ) {
         print("\(title, index) quick reply button selected")
@@ -1095,12 +1126,38 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard !isButtonClickDisabled else { return }
 
         /// Get message to send
-        guard index <= template.count, index > 0 else { return }
-        let dict = template[index - 1]
-        let msg = dict["message"] as? String ?? title
+        guard index < template.count, index >= 0 else { return }
+        let dict = template[index]
+        let metadata = dict["replyMetadata"] as? [String: Any]
 
         /// Use metadata
-        sendQuickReply(msg, metadata: metadata)
+        sendQuickReply(title, metadata: metadata)
+    }
+
+    func richButtonSelected(index: Int,
+                            title: String,
+                            message: ALKMessageViewModel,
+                            isButtonClickDisabled: Bool) {
+        guard
+            !isButtonClickDisabled,
+            let payload = message.payloadFromMetadata()?[index],
+            let action = payload["action"] as? [String: Any],
+            let type = action["type"] as? String
+        else {
+            return
+        }
+        switch type {
+        case "link":
+            linkButtonSelected(action)
+        case "submit":
+            let ackMessage = action["message"] as? String ?? title
+            submitButtonSelected(metadata: action, text: ackMessage)
+        case "quickReply":
+            let ackMessage = action["message"] as? String ?? title
+            sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any])
+        default:
+            print("Do nothing")
+        }
     }
 
     func messageButtonSelected(
@@ -1178,7 +1235,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             openLink(url)
         case CardTemplateActionType.submit.rawValue:
             var dict = [String: Any]()
-            dict["formData"] = payload.formData
+            dict["formData"] = payload.formData?.dictionary
             dict["formAction"] = payload.formAction
             dict["requestType"] = payload.requestType
             submitButtonSelected(metadata: dict, text: payload.text ?? "")
@@ -1274,6 +1331,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func sendQuickReply(_ text: String, metadata: [String: Any]?) {
         var customMetadata = metadata ?? [String: Any]()
+
         guard let messageMetadata = configuration.messageMetadata as? [String: Any] else {
             viewModel.send(message: text, metadata: customMetadata)
             return
@@ -1282,11 +1340,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.send(message: text, metadata: customMetadata)
     }
 
-    private func postRequestUsing(url: URL, param: String) -> URLRequest? {
+    private func postRequestUsing(url: URL, data: Data) -> URLRequest? {
         var request = URLRequest(url: url)
         request.timeoutInterval = 600
         request.httpMethod = "POST"
-        guard let data = param.data(using: .utf8) else { return nil }
         request.httpBody = data
         let contentLength = String(format: "%lu", UInt(data.count))
         request.setValue(contentLength, forHTTPHeaderField: "Content-Length")
@@ -1346,13 +1403,29 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    /// For templateId 3, formData is a string.
+    /// But for templateId 11, formData is a dictionary.
     private func submitButtonSelected(metadata: [String: Any], text: String) {
         guard
-            let formData = metadata["formData"] as? String,
             let urlString = metadata["formAction"] as? String,
-            let url = URL(string: urlString),
-            var request = postRequestUsing(url: url, param: formData)
+            let url = URL(string: urlString)
         else {
+            return
+        }
+        var request: URLRequest!
+        if let formData = metadata["formData"] as? String {
+            guard
+                let data = formData.data(using: .utf8),
+                let urlRequest = postRequestUsing(url: url, data: data)
+            else { return }
+            request = urlRequest
+        } else if let formData = metadata["formData"] as? [String: Any] {
+            guard
+                let data = ALUtilityClass.generateJsonString(from: formData)?.data(using: .utf8),
+                let urlRequest = postRequestUsing(url: url, data: data)
+            else { return }
+            request = urlRequest
+        } else {
             return
         }
         viewModel.send(message: text, metadata: nil)
@@ -1369,12 +1442,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     private func shareContact() {
         CNContactStore().requestAccess(for: .contacts) { granted, _ in
-            if granted {
-                let vc = CNContactPickerViewController()
-                vc.delegate = self
-                self.present(vc, animated: true, completion: nil)
-            } else {
-                ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+            DispatchQueue.main.async {
+                if granted {
+                    let vc = CNContactPickerViewController()
+                    vc.delegate = self
+                    self.present(vc, animated: true, completion: nil)
+                } else {
+                    ALUtilityClass.permissionPopUp(withMessage: "Enable Contact permission", andViewController: self)
+                }
             }
         }
     }
@@ -1939,70 +2014,5 @@ extension ALKConversationViewController: NavigationBarCallbacks {
             return nil
         }
         return ALContactService().loadContact(byKey: "userId", value: contactId)
-    }
-}
-
-extension ALKConversationViewController: ALAlertButtonClickProtocol {
-    func confirmButtonClick(action: String, messageKey: String) {
-        let alPushAssist = ALPushAssist()
-
-        if action == ALKAlertViewController.Action.reportMessage {
-            alPushAssist.topViewController.dismiss(animated: false, completion: nil)
-
-            guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
-                return
-            }
-
-            let userService = ALUserService()
-            let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
-            activityIndicator.center = CGPoint(x: view.bounds.size.width / 2,
-                                               y: view.bounds.size.height / 2)
-            activityIndicator.color = UIColor.gray
-            view.addSubview(activityIndicator)
-            activityIndicator.startAnimating()
-
-            let message = localizedString(forKey: "ReportMessageSuccess", withDefaultValue: SystemMessage.Information.ReportMessageSuccess, fileName: configuration.localizedStringFileName)
-
-            let errorMessage = localizedString(forKey: "ReportMessageError", withDefaultValue: SystemMessage.Information.ReportMessageError, fileName: configuration.localizedStringFileName)
-
-            userService.reportUser(withMessageKey: messageKey) { _, error in
-                activityIndicator.stopAnimating()
-                if error == nil {
-                    self.showAlert(alertTitle: "", alertMessage: message)
-                } else {
-                    self.showAlert(alertTitle: "", alertMessage: errorMessage)
-                }
-            }
-        }
-    }
-
-    func showAlert(alertTitle: String, alertMessage: String) {
-        let alPushAssist = ALPushAssist()
-        let title = localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.ButtonName.ok, fileName: configuration.localizedStringFileName)
-        let alert = UIAlertController(
-            title: alertTitle,
-            message: alertMessage,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        alert.addAction(UIAlertAction(title: title, style: UIAlertAction.Style.default, handler: nil))
-        alPushAssist.topViewController.present(alert, animated: true, completion: nil)
-    }
-
-    func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
-                          message: ALKMessageViewModel) {
-        switch action {
-        case .reply:
-            print("Reply selected")
-            viewModel.setSelectedMessageToReply(message)
-            replyMessageView.update(message: message)
-            showReplyMessageView()
-        case .reportMessage:
-            let muteConversationVC = ALKAlertViewController(action: ALKAlertViewController.Action.reportMessage, delegate: self, messageKey: message.identifier, configuration: configuration)
-            let title = localizedString(forKey: "ReportAlertTitle", withDefaultValue: SystemMessage.Information.ReportAlertTitle, fileName: configuration.localizedStringFileName)
-            let message = localizedString(forKey: "ReportAlertMessage", withDefaultValue: SystemMessage.Information.ReportAlertMessage, fileName: configuration.localizedStringFileName)
-            muteConversationVC.updateTitleAndMessage(title, message: message)
-            muteConversationVC.modalPresentationStyle = .overCurrentContext
-            present(muteConversationVC, animated: true, completion: nil)
-        }
     }
 }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'ApplozicSwift'
-  s.version = '3.3.0'
+  s.version = '3.4.0'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
   s.summary = 'Applozic Swift Kit'
   s.homepage = 'https://github.com/AppLozic/ApplozicSwift'
@@ -23,8 +23,8 @@ Pod::Spec.new do |s|
     complete.source_files = 'Sources/**/*.swift'
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
     complete.dependency 'Kingfisher', '~> 5.7.0'
-    complete.dependency 'MGSwipeTableCell', '~> 1.6.8'
-    complete.dependency 'Applozic', '~> 6.14.0'
+    complete.dependency 'MGSwipeTableCell', '~> 1.6.9'
+    complete.dependency 'Applozic', '~> 6.16.0'
     complete.dependency 'ApplozicSwift/RichMessageKit'
   end
 end

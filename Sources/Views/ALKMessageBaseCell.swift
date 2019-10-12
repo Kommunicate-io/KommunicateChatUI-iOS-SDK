@@ -16,7 +16,8 @@ class ALKImageView: UIImageView {
     }
 }
 
-open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
+// swiftlint:disable:next type_body_length
+open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
     /// Dummy view required to calculate height for normal text.
     fileprivate static var dummyMessageView: ALKTextView = {
         let textView = ALKTextView(frame: .zero)
@@ -134,8 +135,13 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
     }()
 
     var replyViewAction: (() -> Void)?
+    var displayNames: ((Set<String>) -> ([String: String]?))?
 
-    func update(viewModel: ALKMessageViewModel, style: Style) {
+    func update(
+        viewModel: ALKMessageViewModel,
+        messageStyle: Style,
+        mentionStyle: Style
+    ) {
         self.viewModel = viewModel
 
         if viewModel.isReplyMessage {
@@ -146,8 +152,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
             else { return }
             replyNameLabel.text = actualMessage.isMyMessage ?
                 selfNameText : actualMessage.displayName
-            replyMessageLabel.text =
-                getMessageTextFrom(viewModel: actualMessage)
+            setReplyMessageText(viewModel: actualMessage, mentionStyle: mentionStyle)
+
             if let imageURL = getURLForPreviewImage(message: actualMessage) {
                 setImageFrom(url: imageURL, to: previewImageView)
             } else {
@@ -157,17 +163,18 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
             replyNameLabel.text = ""
             replyMessageLabel.text = ""
             previewImageView.image = nil
+            replyMessageLabel.attributedText = nil
         }
 
         timeLabel.text = viewModel.time
-        resetTextView(style)
+        resetTextView(messageStyle)
         guard let message = viewModel.message else { return }
 
         switch viewModel.messageType {
         case .text:
             emailTopHeight.constant = 0
             emailBottomViewHeight.constant = 0
-            messageView.text = message
+            setMessageText(viewModel: viewModel, mentionStyle: mentionStyle)
             return
         case .html:
             emailTopHeight.constant = 0
@@ -220,7 +227,9 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     class func messageHeight(viewModel: ALKMessageViewModel,
                              width: CGFloat,
-                             font: UIFont) -> CGFloat {
+                             font: UIFont,
+                             mentionStyle: Style,
+                             displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
         dummyMessageView.font = font
 
         /// Check if message is nil
@@ -230,6 +239,14 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
         switch viewModel.messageType {
         case .text:
+            if let attributedText = viewModel
+                .attributedTextWithMentions(
+                    defaultAttributes: dummyMessageView.typingAttributes,
+                    mentionAttributes: mentionStyle.toAttributes,
+                    displayNames: displayNames
+                ) {
+                return TextViewSizeCalculator.height(dummyMessageView, attributedText: attributedText, maxWidth: width)
+            }
             return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
         case .html:
             guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
@@ -260,18 +277,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         }
     }
 
-    func menuCopy(_: Any) {
-        UIPasteboard.general.string = viewModel?.message ?? ""
-    }
-
-    func menuReply(_: Any) {
-        menuAction?(.reply)
-    }
-
-    func menuReport(_: Any) {
-        menuAction?(.reportMessage)
-    }
-
     func getMessageFor(key: String) -> ALKMessageViewModel? {
         let messageService = ALMessageService()
         return messageService.getALMessage(byKey: key)?.messageModel
@@ -279,22 +284,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
 
     @objc func replyViewTapped() {
         replyViewAction?()
-    }
-
-    func bubbleViewImage(for _: ALKMessageStyle.BubbleStyle, isReceiverSide: Bool = false, showHangOverImage: Bool) -> UIImage? {
-        var imageTitle = showHangOverImage ? "chat_bubble_red_hover" : "chat_bubble_red"
-        // We can rotate the above image but loading the required
-        // image would be faster and we already have both the images.
-        if isReceiverSide { imageTitle = showHangOverImage ? "chat_bubble_grey_hover" : "chat_bubble_grey" }
-
-        guard let bubbleImage = UIImage(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
-        else { return nil }
-
-        // This API is from the Kingfisher so instead of directly using
-        // imageFlippedForRightToLeftLayoutDirection() we are using this as it handles
-        // platform availability and future updates for us.
-        let modifier = FlipsForRightToLeftLayoutDirectionImageModifier()
-        return modifier.modify(bubbleImage)
     }
 
     // MARK: - Private helper methods
@@ -424,5 +413,39 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel>, ALKCopyMenuItem
         messageView.text = nil
         messageView.typingAttributes = [:]
         messageView.setStyle(style)
+    }
+
+    private func setReplyMessageText(
+        viewModel: ALKMessageViewModel,
+        mentionStyle: Style
+    ) {
+        if viewModel.messageType == .text,
+            let attributedText = viewModel
+            .attributedTextWithMentions(
+                defaultAttributes: [:],
+                mentionAttributes: mentionStyle.toAttributes,
+                displayNames: displayNames
+            ) {
+            replyMessageLabel.attributedText = attributedText
+        } else {
+            replyMessageLabel.text =
+                getMessageTextFrom(viewModel: viewModel)
+        }
+    }
+
+    private func setMessageText(
+        viewModel: ALKMessageViewModel,
+        mentionStyle: Style
+    ) {
+        if let attributedText = viewModel
+            .attributedTextWithMentions(
+                defaultAttributes: messageView.typingAttributes,
+                mentionAttributes: mentionStyle.toAttributes,
+                displayNames: displayNames
+            ) {
+            messageView.attributedText = attributedText
+        } else {
+            messageView.text = viewModel.message
+        }
     }
 }
