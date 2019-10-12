@@ -2,14 +2,15 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-3.4.0 (Upcoming)
+3.4.0
 ---
 ### Enhancements
+- Added support for iOS 13.
 - [AL-3761] Added support for member mention in groups.
 - [AL-3741] Added support for rich message template 11.
 - [AL-3847] Updated UI for link button and refractored rich messages to use same view for all types of buttons.
 - [AL-3642] Added support for message search.
-- [AL-3853] Added support for navigation bar customization using `UIAppearance`.
+- [AL-3853] Added support for navigation bar customization using `UIAppearance`. See `MIGRATING.md` for more details.
 - [AL-3852] Added setting for adding border to message bubble.
 This setting will only take effect with round bubble and will only work with text messages, audio messages and contact messages. For other messages the setting will have no effect.
 Below is the sample code to illustrate how to use this setting:
