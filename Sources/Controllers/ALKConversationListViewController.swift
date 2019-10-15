@@ -29,7 +29,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     var searchController: UISearchController!
     var searchBar: CustomSearchBar!
-    lazy var resultVC = SearchResultViewController(configuration: configuration)
+    lazy var resultVC = ALKSearchResultViewController(configuration: configuration)
 
     var dbService = ALMessageDBService()
     var viewModel = ALKConversationListViewModel()

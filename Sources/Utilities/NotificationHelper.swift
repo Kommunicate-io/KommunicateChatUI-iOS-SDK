@@ -138,6 +138,10 @@ public class NotificationHelper {
         case _ where topVCName.hasPrefix("ALK"):
             return true
         default:
+            if let searchVC = topVC as? UISearchController,
+                searchVC.searchResultsController as? ALKSearchResultViewController != nil {
+                return true
+            }
             return false
         }
     }
@@ -156,6 +160,11 @@ public class NotificationHelper {
             print("ConversationViewController on top")
             refreshConversation(vc, with: notification)
         default:
+            if let searchVC = topVC as? UISearchController,
+                let vc = searchVC.presentingViewController as? ALKConversationListViewController {
+                openConversationFromListVC(vc, notification: notification)
+                return
+            }
             print("Some other view controller need to find chat vc")
             findChatVC(notification)
         }
