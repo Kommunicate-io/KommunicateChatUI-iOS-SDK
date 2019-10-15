@@ -178,10 +178,11 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
     public override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         guard let emptyCellView = tableView.dequeueReusableHeaderFooterView(
-            withIdentifier: ALKEmptyView.reuseIdentifier)
+            withIdentifier: ALKEmptyView.reuseIdentifier
+        )
             as? ALKEmptyView
-            else {
-                return nil
+        else {
+            return nil
         }
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
         emptyCellView.conversationLabel.text = noConversationLabelText

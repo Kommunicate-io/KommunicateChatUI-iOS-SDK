@@ -7,12 +7,13 @@
 
 import Foundation
 
-class ALKEmptyView:  UITableViewHeaderFooterView {
+class ALKEmptyView: UITableViewHeaderFooterView {
     static let reuseIdentifier = "EmptyChatCell"
 
     static var nib: UINib {
         return UINib(nibName: "EmptyChatCell", bundle: Bundle.applozic)
     }
+
     @IBOutlet var startNewConversationButtonIcon: UIButton!
     @IBOutlet var conversationLabel: UILabel!
 }

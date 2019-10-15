@@ -66,6 +66,7 @@ final class ALKMediaViewerViewController: UIViewController {
         guard let message = viewModel?.getMessageForCurrentIndex() else { return }
         updateView(message: message)
     }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel?.delegate = self
@@ -100,7 +101,7 @@ final class ALKMediaViewerViewController: UIViewController {
             if #available(iOS 11.0, *) {
                 return self.view.safeAreaLayoutGuide.bottomAnchor
             } else {
-                return self.view.bottomAnchor
+                return view.bottomAnchor
             }
         }
 
@@ -109,7 +110,7 @@ final class ALKMediaViewerViewController: UIViewController {
             topAnchor = view.safeAreaLayoutGuide.topAnchor
         }
 
-        scrollView.topAnchor.constraint(equalTo: topAnchor,constant: -70).isActive = true
+        scrollView.topAnchor.constraint(equalTo: topAnchor, constant: -70).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -323,7 +324,7 @@ extension ALKMediaViewerViewController: UIScrollViewDelegate {
     }
 
     func scrollViewDidZoom(_: UIScrollView) {
-       updateConstraintsForSize(size: view.bounds.size)
+        updateConstraintsForSize(size: view.bounds.size)
         view.layoutIfNeeded()
     }
 }
