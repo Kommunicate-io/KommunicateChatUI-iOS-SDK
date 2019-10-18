@@ -218,7 +218,7 @@ extension ALMessage {
 
     var date: Date {
         guard let time = createdAtTime else { return Date() }
-        let sentAt = Date(timeIntervalSince1970: Double(time.doubleValue / 1000))
+        let sentAt = Date(timeIntervalSince1970: Double(createdAtTime.doubleValue / 1000))
         return sentAt
     }
 

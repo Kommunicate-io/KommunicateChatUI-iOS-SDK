@@ -101,6 +101,7 @@ struct SystemMessage: Localizable {
         static let ReportMessage = localizedString(forKey: "ReportMessage")
         static let Delete = localizedString(forKey: "DeleteButtonName")
         static let ok = localizedString(forKey: "OkMessage")
+        static let okay = localizedString(forKey: "OkayMessage")
     }
 
     struct NoData {

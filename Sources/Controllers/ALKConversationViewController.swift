@@ -1091,7 +1091,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func scrollTo(message: ALKMessageViewModel) {
+        // TO-Do change this to check if reply message is in db or not
+
         let messageService = ALMessageService()
+
+        let controller = ALKReplyController(messageKey: message.identifier, configuration: configuration)
+
+        let alPushAssist = ALPushAssist()
+
+        alPushAssist.topViewController.present(controller, animated: true, completion: nil)
+
         guard
             let metadata = message.metadata,
             let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String

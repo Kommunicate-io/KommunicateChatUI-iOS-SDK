@@ -37,9 +37,10 @@ public class ALKPushNotificationHandler: Localizable {
                     andForContactId: notificationData.userId,
                     withGroupId: notificationData.groupId,
                     completionHandler: {
-                    _ in
+                        _ in
                         weakSelf.launchIndividualChatWith(notificationData: notificationData)
-                })
+                    }
+                )
             default:
                 weakSelf.launchIndividualChatWith(notificationData: notificationData)
             }
@@ -58,5 +59,4 @@ public class ALKPushNotificationHandler: Localizable {
         nav.modalPresentationStyle = .fullScreen
         topVC?.present(nav, animated: true, completion: nil)
     }
-
 }
