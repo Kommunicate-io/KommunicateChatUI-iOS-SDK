@@ -316,7 +316,6 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
-            viewModel?.filePath = filePath
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
             setPhotoViewImageFromFileURL(path)

@@ -484,6 +484,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
             task.identifier = message.identifier
             task.totalBytesExpectedToDownload = message.size
             httpManager.downloadAttachment(task: task)
+            httpManager.downloadCompleted = { [weak self] task in
+                guard let weakSelf = self, let identifier = task.identifier else { return }
+                var msg = weakSelf.messageForRow(identifier: identifier)
+                if ThumbnailIdentifier.hasPrefix(in: identifier) {
+                    msg?.fileMetaInfo?.thumbnailFilePath = task.filePath
+                } else {
+                    msg?.filePath = task.filePath
+                }
+            }
         }
     }
 

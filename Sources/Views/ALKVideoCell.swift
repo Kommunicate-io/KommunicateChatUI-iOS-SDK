@@ -265,7 +265,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             uploadButton.isHidden = true
             downloadButton.isHidden = true
             progressView.isHidden = true
-            viewModel?.filePath = filePath
             playButton.isHidden = false
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
