@@ -2,6 +2,11 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+3.5.0
+---
+### Enhancements
+- [AL-3826] Show reply message in popup when it is not visible in the list.
+
 3.4.0
 ---
 ### Enhancements
