@@ -1092,22 +1092,21 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     func scrollTo(message: ALKMessageViewModel) {
         // TO-Do change this to check if reply message is in db or not
-
-        let messageService = ALMessageService()
-
-        let controller = ALKReplyController(messageKey: message.identifier, configuration: configuration)
-
-        let alPushAssist = ALPushAssist()
-
-        alPushAssist.topViewController.present(controller, animated: true, completion: nil)
-
         guard
             let metadata = message.metadata,
             let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String
-        else { return }
+            else {
+                return
+        }
+        let messageService = ALMessageService()
         let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
-        else { return }
+            else {
+                let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
+                let alPushAssist = ALPushAssist()
+                alPushAssist.topViewController.present(controller, animated: false, completion: nil)
+                return
+        }
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
 

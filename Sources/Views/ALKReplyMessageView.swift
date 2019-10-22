@@ -283,26 +283,13 @@ open class ALKReplyMessageView: UIView, Localizable {
             if let filepath = message.filePath {
                 let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 let path = docDirPath.appendingPathComponent(filepath)
-                return getThumbnail(filePath: path)
+                let fileUtills = ALKFileUtils()
+                return fileUtills.getThumbnail(filePath: path)
             }
             return UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
         case .location:
             return UIImage(named: "map_no_data", in: Bundle.applozic, compatibleWith: nil)
         default:
-            return nil
-        }
-    }
-
-    private func getThumbnail(filePath: URL) -> UIImage? {
-        do {
-            let asset = AVURLAsset(url: filePath, options: nil)
-            let imgGenerator = AVAssetImageGenerator(asset: asset)
-            imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
-            return UIImage(cgImage: cgImage)
-
-        } catch {
-            print("*** Error generating thumbnail: \(error.localizedDescription)")
             return nil
         }
     }

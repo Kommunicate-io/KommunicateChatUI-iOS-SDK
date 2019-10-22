@@ -268,7 +268,8 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             playButton.isHidden = false
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
-            photoView.image = getThumbnail(filePath: path)
+            let fileUtills = ALKFileUtils()
+            photoView.image = fileUtills.getThumbnail(filePath: path)
         case .downloading(let progress, _):
             // show progress bar
             print("downloading")
@@ -283,20 +284,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             playButton.isHidden = true
             photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
             uploadButton.isHidden = false
-        }
-    }
-
-    private func getThumbnail(filePath: URL) -> UIImage? {
-        do {
-            let asset = AVURLAsset(url: filePath, options: nil)
-            let imgGenerator = AVAssetImageGenerator(asset: asset)
-            imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
-            return UIImage(cgImage: cgImage)
-
-        } catch {
-            print("*** Error generating thumbnail: \(error.localizedDescription)")
-            return nil
         }
     }
 

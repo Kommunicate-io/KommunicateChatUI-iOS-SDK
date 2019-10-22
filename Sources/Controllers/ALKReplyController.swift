@@ -11,9 +11,17 @@ import Applozic
 import Kingfisher
 
 class ALKReplyController: UIViewController, Localizable {
+    var message: ALMessage?
+    var attachmentView = ALKAttatchmentView(frame: .zero)
+
+    fileprivate enum ConstraintIdentifier {
+        static let modelViewHeight = "modelViewHeight"
+    }
+
     public struct Padding {
         struct ModelView {
-            static let height: CGFloat = 250.0
+            static let heightForMessageView : CGFloat = 250.0
+            static let heightForAttachmentView : CGFloat = 300.0
             static let left: CGFloat = 30.0
             static let right: CGFloat = 30.0
         }
@@ -22,22 +30,28 @@ class ALKReplyController: UIViewController, Localizable {
             static let top: CGFloat = 15.0
             static let left: CGFloat = 10.0
             static let right: CGFloat = 10.0
-            static let height : CGFloat  = 30.0
+            static let height: CGFloat = 30.0
         }
 
         struct MessageLabel {
             static let bottom: CGFloat = 12.0
             static let left: CGFloat = 15.0
             static let right: CGFloat = 15.0
-            static let height : CGFloat  = 50.0
-
+            static let height: CGFloat = 50.0
         }
 
         struct MessageTextView {
             static let top: CGFloat = 3.0
             static let left: CGFloat = 10.0
             static let right: CGFloat = 10.0
-            static let height : CGFloat  = 80.0
+            static let height: CGFloat = 80.0
+        }
+
+        struct AttachmentView {
+            static let top: CGFloat = 3.0
+            static let left: CGFloat = 10.0
+            static let right: CGFloat = 10.0
+            static let height: CGFloat = 150.0
         }
 
         struct ButtonUIView {
@@ -71,7 +85,6 @@ class ALKReplyController: UIViewController, Localizable {
     private let timeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "Sun, 18 June"
         label.textColor = UIColor(red: 88 / 255.0, green: 87 / 255.0, blue: 87 / 255.0, alpha: 1.0)
         label.numberOfLines = 3
         label.font = Font.bold(size: 12.0).font()
@@ -110,7 +123,6 @@ class ALKReplyController: UIViewController, Localizable {
         let label = UILabel()
         label.numberOfLines = 4
         label.textColor = UIColor(red: 140 / 255.0, green: 140 / 255.0, blue: 140 / 255.0, alpha: 1.0)
-        label.text = "We are unable to directly retrieve this message for you. You can still scroll up your messages and view it."
         label.font = Font.light(size: 14.0).font()
         return label
     }()
@@ -141,30 +153,43 @@ class ALKReplyController: UIViewController, Localizable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.clear
         setupViews()
+        proccessAndUpdateView()
+    }
 
+    func proccessAndUpdateView()  {
         let messageDatabase = ALMessageDBService()
-        let message = messageDatabase.getMessageByKey(messageKey)
-        messageView.sizeToFit()
+        message = messageDatabase.getMessageByKey(messageKey)
+        guard let messageObject = message else {
+            return
+        }
+        let infoMessage = localizedString(forKey: "ReplyInfoMessage", withDefaultValue: SystemMessage.Information.ReportInfoMessage, fileName: configuration.localizedStringFileName)
+        alertMessageLabel.text = infoMessage
+
+        if messageObject.fileMeta != nil || messageObject.isLocationMessage() {
+            modalView.constraint(withIdentifier: ConstraintIdentifier.modelViewHeight)?.constant = Padding.ModelView.heightForAttachmentView
+            attachmentView.isHidden = false
+            messageView.isHidden = true
+            attachmentView.update(message: messageObject, localizationFileName: configuration.localizedStringFileName)
+        } else {
+            messageView.isHidden = false
+            attachmentView.isHidden = true
+            modalView.constraint(withIdentifier: ConstraintIdentifier.modelViewHeight)?.constant = Padding.ModelView.heightForMessageView
+            messageView.text = messageObject.message
+            messageView.sizeToFit()
+        }
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         let contactService = ALContactService()
-        let contact = contactService.loadContact(byKey: "userId", value: message?.to)
-
+        let contact = contactService.loadContact(byKey: "userId", value: messageObject.to)
         if let imageUrl = contact?.contactImageUrl, let url = URL(string: imageUrl) {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             avatarImageView.image = placeHolder
         }
-
-        view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
-        view.isOpaque = false
 
         guard let value = message?.createdAtTime.doubleValue else {
             return
@@ -185,27 +210,25 @@ class ALKReplyController: UIViewController, Localizable {
 
     func setupViews() {
         view.addViewsForAutolayout(views: [modalView])
-
         modalView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         modalView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        modalView.heightAnchor.constraint(equalToConstant: Padding.ModelView.height).isActive = true
+
+        modalView.heightAnchor.constraintEqualToAnchor(
+            constant: 0,
+            identifier: ConstraintIdentifier.modelViewHeight
+        ).isActive = true
         modalView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.ModelView.left).isActive = true
         modalView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.ModelView.right).isActive = true
-
-        modalView.addViewsForAutolayout(views: [timeLabel, alertMessageLabel, buttonUIView, confirmButton, avatarImageView, buttonUIView, messageView])
-
+        modalView.addViewsForAutolayout(views: [timeLabel, alertMessageLabel, buttonUIView, confirmButton, avatarImageView, buttonUIView, messageView, attachmentView])
         modalView.bringSubviewToFront(confirmButton)
         modalView.bringSubviewToFront(messageView)
 
         avatarImageView.topAnchor.constraint(equalTo: modalView.topAnchor, constant: Padding.AvatarImage.top).isActive = true
-
         avatarImageView.leadingAnchor.constraint(
             equalTo: modalView.leadingAnchor,
             constant: Padding.AvatarImage.left
         ).isActive = true
-
         avatarImageView.heightAnchor.constraint(equalToConstant: Padding.AvatarImage.height).isActive = true
-
         avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImage.width).isActive = true
 
         timeLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.TitleLabel.left).isActive = true
@@ -213,16 +236,18 @@ class ALKReplyController: UIViewController, Localizable {
         timeLabel.topAnchor.constraint(equalTo: modalView.topAnchor, constant: Padding.TitleLabel.top).isActive = true
 
         messageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: -Padding.MessageTextView.top).isActive = true
-
         messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.MessageTextView.left).isActive = true
         messageView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.MessageTextView.right).isActive = true
-
         messageView.heightAnchor.constraint(equalToConstant: Padding.MessageTextView.height).isActive = true
+
+        attachmentView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: -Padding.AttachmentView.top).isActive = true
+        attachmentView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.AttachmentView.left).isActive = true
+        attachmentView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.AttachmentView.right).isActive = true
+        attachmentView.heightAnchor.constraint(equalToConstant: Padding.AttachmentView.height).isActive = true
 
         alertMessageLabel.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: Padding.MessageLabel.left).isActive = true
         alertMessageLabel.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.MessageLabel.right).isActive = true
         alertMessageLabel.heightAnchor.constraint(equalToConstant: Padding.MessageLabel.height).isActive = true
-
         alertMessageLabel.bottomAnchor.constraint(equalTo: buttonUIView.topAnchor, constant: -Padding.MessageLabel.bottom).isActive = true
 
         buttonUIView.heightAnchor.constraint(equalToConstant: Padding.ButtonUIView.height).isActive = true
