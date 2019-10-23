@@ -21,7 +21,7 @@ class ALKReplyController: UIViewController, Localizable {
         struct ModelView {
             static let minHeightForMessageView: CGFloat = 210.0
             static let maxHeightForMessageView: CGFloat = 250.0
-            static let heightForAttachmentView: CGFloat = 300.0
+            static let heightForAttachmentView: CGFloat = 310.0
             static let left: CGFloat = 30.0
             static let right: CGFloat = 30.0
         }
