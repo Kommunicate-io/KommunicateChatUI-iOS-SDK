@@ -1091,7 +1091,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func scrollTo(message: ALKMessageViewModel) {
-        // TO-Do change this to check if reply message is in db or not
         guard
             let metadata = message.metadata,
             let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String
@@ -1104,7 +1103,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             else {
                 let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
                 let alPushAssist = ALPushAssist()
-                alPushAssist.topViewController.present(controller, animated: false, completion: nil)
+                self.present(controller, animated: false, completion: nil)
                 return
         }
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)

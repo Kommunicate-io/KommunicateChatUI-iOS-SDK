@@ -98,7 +98,6 @@ class ALKReplyController: UIViewController, Localizable {
         let layer = imv.layer
         layer.cornerRadius = 12
         layer.masksToBounds = true
-        imv.image = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
         imv.isUserInteractionEnabled = true
         return imv
     }()
@@ -200,10 +199,6 @@ class ALKReplyController: UIViewController, Localizable {
         timeLabel.text = date.stringCompareCurrentDate()
     }
 
-    @objc func tappedCancel() {
-        dismiss(animated: true, completion: nil)
-    }
-
     @objc func tappedConfirmButton() {
         dismiss(animated: true, completion: nil)
     }
@@ -219,7 +214,7 @@ class ALKReplyController: UIViewController, Localizable {
         ).isActive = true
         modalView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.ModelView.left).isActive = true
         modalView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.ModelView.right).isActive = true
-        modalView.addViewsForAutolayout(views: [timeLabel, alertMessageLabel, buttonUIView, confirmButton, avatarImageView, buttonUIView, messageView, attachmentView])
+        modalView.addViewsForAutolayout(views: [timeLabel, alertMessageLabel, buttonUIView, confirmButton, avatarImageView, messageView, attachmentView])
         modalView.bringSubviewToFront(confirmButton)
         modalView.bringSubviewToFront(messageView)
 
@@ -234,13 +229,14 @@ class ALKReplyController: UIViewController, Localizable {
         timeLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.TitleLabel.left).isActive = true
         timeLabel.heightAnchor.constraint(equalToConstant: Padding.TitleLabel.height).isActive = true
         timeLabel.topAnchor.constraint(equalTo: modalView.topAnchor, constant: Padding.TitleLabel.top).isActive = true
+        timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: modalView.trailingAnchor).isActive = true
 
-        messageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: -Padding.MessageTextView.top).isActive = true
+        messageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: Padding.MessageTextView.top).isActive = true
         messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.MessageTextView.left).isActive = true
         messageView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.MessageTextView.right).isActive = true
         messageView.heightAnchor.constraint(equalToConstant: Padding.MessageTextView.height).isActive = true
 
-        attachmentView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: -Padding.AttachmentView.top).isActive = true
+        attachmentView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: Padding.AttachmentView.top).isActive = true
         attachmentView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.AttachmentView.left).isActive = true
         attachmentView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.AttachmentView.right).isActive = true
         attachmentView.heightAnchor.constraint(equalToConstant: Padding.AttachmentView.height).isActive = true
