@@ -11,17 +11,17 @@ import Applozic
 import Kingfisher
 
 class ALKReplyController: UIViewController, Localizable {
-    var message: ALMessage?
-    var attachmentView = ALKAttatchmentView(frame: .zero)
 
     fileprivate enum ConstraintIdentifier {
         static let modelViewHeight = "modelViewHeight"
+        static let messageTextViewHeight = "messageTextViewHeight"
     }
 
-    public struct Padding {
+    struct Padding {
         struct ModelView {
-            static let heightForMessageView : CGFloat = 250.0
-            static let heightForAttachmentView : CGFloat = 300.0
+            static let minHeightForMessageView: CGFloat = 210.0
+            static let maxHeightForMessageView: CGFloat = 250.0
+            static let heightForAttachmentView: CGFloat = 300.0
             static let left: CGFloat = 30.0
             static let right: CGFloat = 30.0
         }
@@ -44,7 +44,8 @@ class ALKReplyController: UIViewController, Localizable {
             static let top: CGFloat = 3.0
             static let left: CGFloat = 10.0
             static let right: CGFloat = 10.0
-            static let height: CGFloat = 80.0
+            static let maxHeight: CGFloat = 80.0
+            static let minHeight: CGFloat = 40.0
         }
 
         struct AttachmentView {
@@ -70,7 +71,8 @@ class ALKReplyController: UIViewController, Localizable {
             static let height: CGFloat = 25.0
         }
     }
-
+    var message: ALMessage?
+    var attachmentView = ALKAttatchmentView(frame: .zero)
     var action: String!
     var configuration: ALKConfiguration!
     var messageKey: String?
@@ -102,7 +104,7 @@ class ALKReplyController: UIViewController, Localizable {
         return imv
     }()
 
-    let messageView: UITextView = {
+    private let messageView: UITextView = {
         let textView = UITextView(frame: .zero)
         textView.isUserInteractionEnabled = true
         textView.isSelectable = true
@@ -154,12 +156,12 @@ class ALKReplyController: UIViewController, Localizable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
         setupViews()
         proccessAndUpdateView()
     }
 
-    func proccessAndUpdateView()  {
+    func proccessAndUpdateView() {
         let messageDatabase = ALMessageDBService()
         message = messageDatabase.getMessageByKey(messageKey)
         guard let messageObject = message else {
@@ -176,7 +178,20 @@ class ALKReplyController: UIViewController, Localizable {
         } else {
             messageView.isHidden = false
             attachmentView.isHidden = true
-            modalView.constraint(withIdentifier: ConstraintIdentifier.modelViewHeight)?.constant = Padding.ModelView.heightForMessageView
+            let height = messageObject.message.heightWithConstrainedWidth(getMaxWidth(), font: Font.normal(size: 14).font())
+            var modelViewHeight: CGFloat = 0
+            var messasgeTextViewHeight: CGFloat = 0
+
+            if height <= 35.0 {
+                modelViewHeight = Padding.ModelView.minHeightForMessageView
+                messasgeTextViewHeight = Padding.MessageTextView.minHeight
+            } else {
+                modelViewHeight = Padding.ModelView.maxHeightForMessageView
+                messasgeTextViewHeight = Padding.MessageTextView.maxHeight
+            }
+
+            modalView.constraint(withIdentifier: ConstraintIdentifier.modelViewHeight)?.constant = modelViewHeight
+            messageView.constraint(withIdentifier: ConstraintIdentifier.messageTextViewHeight)?.constant = messasgeTextViewHeight
             messageView.text = messageObject.message
             messageView.sizeToFit()
         }
@@ -201,6 +216,14 @@ class ALKReplyController: UIViewController, Localizable {
 
     @objc func tappedConfirmButton() {
         dismiss(animated: true, completion: nil)
+    }
+
+    func getMaxWidth() -> CGFloat {
+        let modelPadding = Padding.ModelView.left + Padding.ModelView.right
+        let avatarImagePadding = Padding.AvatarImage.left + Padding.AvatarImage.width
+        let messageViewPadding = Padding.MessageTextView.left + Padding.MessageTextView.right
+        let contentWidth = modelPadding + avatarImagePadding + messageViewPadding
+        return view.bounds.width - contentWidth
     }
 
     func setupViews() {
@@ -232,9 +255,12 @@ class ALKReplyController: UIViewController, Localizable {
         timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: modalView.trailingAnchor).isActive = true
 
         messageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: Padding.MessageTextView.top).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.MessageTextView.left).isActive = true
+        messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor,
+                                             constant: Padding.MessageTextView.left).isActive = true
         messageView.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -Padding.MessageTextView.right).isActive = true
-        messageView.heightAnchor.constraint(equalToConstant: Padding.MessageTextView.height).isActive = true
+        messageView.heightAnchor.constraintEqualToAnchor(
+            constant: 0, identifier: ConstraintIdentifier.messageTextViewHeight
+        ).isActive = true
 
         attachmentView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: Padding.AttachmentView.top).isActive = true
         attachmentView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.AttachmentView.left).isActive = true

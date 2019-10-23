@@ -1094,17 +1094,17 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard
             let metadata = message.metadata,
             let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String
-            else {
-                return
+        else {
+            return
         }
         let messageService = ALMessageService()
         let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
-            else {
-                let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
-                let alPushAssist = ALPushAssist()
-                self.present(controller, animated: false, completion: nil)
-                return
+        else {
+            let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
+            let alPushAssist = ALPushAssist()
+            present(controller, animated: false, completion: nil)
+            return
         }
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }

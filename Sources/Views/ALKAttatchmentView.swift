@@ -133,11 +133,11 @@ class ALKAttatchmentView: UIView {
     func showLocation() {
         loadingIndicator.stopLoading()
         let mapUrl = getMapImageURL()
-        attachmentImage.kf.setImage(with: mapUrl,   placeholder: UIImage(
+        attachmentImage.kf.setImage(with: mapUrl, placeholder: UIImage(
             named: "map_no_data",
             in: Bundle.applozic,
             compatibleWith: nil
-        ) )
+        ))
     }
 
     func getMapImageURL() -> URL? {
