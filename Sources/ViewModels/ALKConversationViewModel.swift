@@ -1076,7 +1076,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     completion(nil)
                     return
                 }
-                completion(self.conversationProfileFrom(contact: nil, channel: channel))
+                guard
+                    let userId = channel.getReceiverIdInGroupOfTwo(),
+                    let contact = ALContactDBService().loadContact(byKey: "userId", value: userId)
+                else {
+                    completion(self.conversationProfileFrom(contact: nil, channel: channel))
+                    return
+                }
+                completion(self.conversationProfileFrom(contact: contact, channel: nil))
             }
         } else if contactId != nil {
             ALUserService().getUserDetail(contactId) { contact in

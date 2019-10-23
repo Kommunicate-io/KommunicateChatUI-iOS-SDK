@@ -71,13 +71,15 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 
     public var groupName: String {
-        if isGroupChat {
-            guard let alChannel = alChannel, let name = alChannel.name else {
-                return ""
-            }
+        guard let alChannel = alChannel else { return "" }
+        let name = alChannel.name ?? ""
+        guard
+            let userId = alChannel.getReceiverIdInGroupOfTwo(),
+            let contact = ALContactDBService().loadContact(byKey: "userId", value: userId)
+        else {
             return name
         }
-        return ""
+        return contact.getDisplayName()
     }
 
     public var theLastMessage: String? {

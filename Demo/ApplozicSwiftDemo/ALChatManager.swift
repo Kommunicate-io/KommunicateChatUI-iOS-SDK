@@ -218,10 +218,11 @@ class ALChatManager: NSObject {
             channel in
             guard let channel = channel else {
                 channelService.createChannel(userId, orClientChannelKey: clientGroupId, andMembersList: [userId], andImageLink: nil, channelType: Int16(GROUP_OF_TWO.rawValue), andMetaData: metadata, withCompletion: { channel, error in
-                    guard error == nil else {
+                    guard error == nil, let channel = channel else {
                         print("Error while creating channel : \(String(describing: error))")
                         return
                     }
+                    ALChannelDBService().addMember(toChannel: userId, andChannelKey: channel.key)
                     self.launchGroupWith(clientGroupId: clientGroupId, from: viewController, configuration: configuration)
                 })
                 return
