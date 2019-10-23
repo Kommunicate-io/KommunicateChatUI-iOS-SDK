@@ -12,7 +12,7 @@ import Kingfisher
 
 class ALKReplyController: UIViewController, Localizable {
 
-    fileprivate enum ConstraintIdentifier {
+    enum ConstraintIdentifier {
         static let modelViewHeight = "modelViewHeight"
         static let messageTextViewHeight = "messageTextViewHeight"
     }
@@ -61,7 +61,6 @@ class ALKReplyController: UIViewController, Localizable {
 
         struct ConfirmButton {
             static let height: CGFloat = 50.0
-            static let left: CGFloat = 3.0
         }
 
         struct AvatarImage {
@@ -71,11 +70,11 @@ class ALKReplyController: UIViewController, Localizable {
             static let height: CGFloat = 25.0
         }
     }
-    var message: ALMessage?
-    var attachmentView = ALKAttatchmentView(frame: .zero)
-    var action: String!
-    var configuration: ALKConfiguration!
-    var messageKey: String?
+
+    let configuration: ALKConfiguration
+    let messageKey: String
+
+    private let attachmentView = ALKAttatchmentView(frame: .zero)
 
     private let modalView: UIView = {
         let view = UIView()
@@ -100,7 +99,6 @@ class ALKReplyController: UIViewController, Localizable {
         let layer = imv.layer
         layer.cornerRadius = 12
         layer.masksToBounds = true
-        imv.isUserInteractionEnabled = true
         return imv
     }()
 
@@ -145,9 +143,9 @@ class ALKReplyController: UIViewController, Localizable {
     }()
 
     init(messageKey: String, configuration: ALKConfiguration) {
-        super.init(nibName: nil, bundle: nil)
         self.messageKey = messageKey
         self.configuration = configuration
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder _: NSCoder) {
@@ -156,29 +154,29 @@ class ALKReplyController: UIViewController, Localizable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.clear
+        view.isOpaque = false
+        view.backgroundColor = .clear
         setupViews()
         proccessAndUpdateView()
     }
 
     func proccessAndUpdateView() {
         let messageDatabase = ALMessageDBService()
-        message = messageDatabase.getMessageByKey(messageKey)
-        guard let messageObject = message else {
+        guard let message = messageDatabase.getMessageByKey(messageKey) else {
             return
         }
         let infoMessage = localizedString(forKey: "ReplyInfoMessage", withDefaultValue: SystemMessage.Information.ReportInfoMessage, fileName: configuration.localizedStringFileName)
         alertMessageLabel.text = infoMessage
 
-        if messageObject.fileMeta != nil || messageObject.isLocationMessage() {
+        if message.fileMeta != nil || message.isLocationMessage() {
             modalView.constraint(withIdentifier: ConstraintIdentifier.modelViewHeight)?.constant = Padding.ModelView.heightForAttachmentView
             attachmentView.isHidden = false
             messageView.isHidden = true
-            attachmentView.update(message: messageObject, localizationFileName: configuration.localizedStringFileName)
+            attachmentView.update(message: message, localizationFileName: configuration.localizedStringFileName)
         } else {
             messageView.isHidden = false
             attachmentView.isHidden = true
-            let height = messageObject.message.heightWithConstrainedWidth(getMaxWidth(), font: Font.normal(size: 14).font())
+            let height = message.message.heightWithConstrainedWidth(getMaxWidth(), font: Font.normal(size: 14).font())
             var modelViewHeight: CGFloat = 0
             var messasgeTextViewHeight: CGFloat = 0
 
@@ -192,12 +190,12 @@ class ALKReplyController: UIViewController, Localizable {
 
             modalView.constraint(withIdentifier: ConstraintIdentifier.modelViewHeight)?.constant = modelViewHeight
             messageView.constraint(withIdentifier: ConstraintIdentifier.messageTextViewHeight)?.constant = messasgeTextViewHeight
-            messageView.text = messageObject.message
+            messageView.text = message.message
             messageView.sizeToFit()
         }
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         let contactService = ALContactService()
-        let contact = contactService.loadContact(byKey: "userId", value: messageObject.to)
+        let contact = contactService.loadContact(byKey: "userId", value: message.to)
         if let imageUrl = contact?.contactImageUrl, let url = URL(string: imageUrl) {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
@@ -205,13 +203,7 @@ class ALKReplyController: UIViewController, Localizable {
             avatarImageView.image = placeHolder
         }
 
-        guard let value = message?.createdAtTime.doubleValue else {
-            return
-        }
-
-        let date = Date(timeIntervalSince1970: Double(value / 1000))
-
-        timeLabel.text = date.stringCompareCurrentDate()
+        timeLabel.text = message.date.stringCompareCurrentDate()
     }
 
     @objc func tappedConfirmButton() {
@@ -278,7 +270,7 @@ class ALKReplyController: UIViewController, Localizable {
         buttonUIView.bottomAnchor.constraint(equalTo: modalView.bottomAnchor).isActive = true
 
         confirmButton.heightAnchor.constraint(equalToConstant: Padding.ConfirmButton.height).isActive = true
-        confirmButton.leadingAnchor.constraint(equalTo: buttonUIView.leadingAnchor, constant: Padding.ConfirmButton.left).isActive = true
+        confirmButton.leadingAnchor.constraint(equalTo: buttonUIView.leadingAnchor).isActive = true
         confirmButton.trailingAnchor.constraint(equalTo: buttonUIView.trailingAnchor).isActive = true
         confirmButton.bottomAnchor.constraint(equalTo: modalView.bottomAnchor).isActive = true
 

@@ -1102,8 +1102,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
         else {
             let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
-            let alPushAssist = ALPushAssist()
-            present(controller, animated: false, completion: nil)
+            controller.modalPresentationStyle = .overCurrentContext
+            present(controller, animated: true, completion: nil)
             return
         }
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
