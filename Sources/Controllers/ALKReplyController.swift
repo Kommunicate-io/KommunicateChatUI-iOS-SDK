@@ -73,6 +73,8 @@ class ALKReplyController: UIViewController, Localizable {
 
     let configuration: ALKConfiguration
     let messageKey: String
+    let userId : String?
+    let groupId : NSNumber?
 
     private let attachmentView = ALKAttatchmentView(frame: .zero)
 
@@ -142,7 +144,9 @@ class ALKReplyController: UIViewController, Localizable {
         return view
     }()
 
-    init(messageKey: String, configuration: ALKConfiguration) {
+    init(userId: String?, groupId: NSNumber?, messageKey: String, configuration: ALKConfiguration) {
+        self.userId = userId
+        self.groupId = groupId
         self.messageKey = messageKey
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
