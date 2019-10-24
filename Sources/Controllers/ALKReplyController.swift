@@ -19,8 +19,8 @@ class ALKReplyController: UIViewController, Localizable {
 
     struct Padding {
         struct ModelView {
-            static let minHeightForMessageView: CGFloat = 210.0
-            static let maxHeightForMessageView: CGFloat = 250.0
+            static let minHeightForMessageView: CGFloat = 230.0
+            static let maxHeightForMessageView: CGFloat = 270.0
             static let heightForAttachmentView: CGFloat = 310.0
             static let left: CGFloat = 30.0
             static let right: CGFloat = 30.0
@@ -44,8 +44,8 @@ class ALKReplyController: UIViewController, Localizable {
             static let top: CGFloat = 3.0
             static let left: CGFloat = 10.0
             static let right: CGFloat = 10.0
-            static let maxHeight: CGFloat = 80.0
-            static let minHeight: CGFloat = 40.0
+            static let maxHeight: CGFloat = 100.0
+            static let minHeight: CGFloat = 60.0
         }
 
         struct AttachmentView {
