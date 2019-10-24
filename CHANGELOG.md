@@ -2,10 +2,11 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
-3.5.0
+3.5.0 (upcoming releases)
 ---
 ### Enhancements
 - [AL-3826] Show reply message in popup when it is not visible in the list.
+- Now user's display name will be shown instead of group name in case of GROUP_OF_TWO. 
 
 3.4.0
 ---
