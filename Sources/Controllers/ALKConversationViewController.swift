@@ -32,10 +32,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var individualLaunch = true
 
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
-    public lazy var autocompleteManager = AutoCompleteManager(
-        textView: chatBar.textView,
-        tableview: autocompletionView
-    )
+    public lazy var autocompleteManager: AutoCompleteManager = {
+        let manager = AutoCompleteManager(
+            textView: chatBar.textView,
+            tableview: autocompletionView
+        )
+        manager.autocompletionDelegate = self
+        return manager
+    }()
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
@@ -43,6 +47,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableview.estimatedRowHeight = 50
         tableview.rowHeight = UITableView.automaticDimension
         tableview.separatorStyle = .none
+        tableview.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         return tableview
     }()
 
@@ -438,7 +443,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
-        setupAutoComplete()
+        setupMemberMention()
         replyMessageView.closeButtonTapped = { [weak self] _ in
             self?.hideReplyMessageView()
         }
@@ -862,9 +867,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    private func setupAutoComplete() {
-        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
-        autocompleteManager.autocompletionDelegate = self
+    private func setupMemberMention() {
         if configuration.isMemberMentionEnabled {
             autocompleteManager.registerPrefix(
                 prefix: MessageMention.Prefix,
