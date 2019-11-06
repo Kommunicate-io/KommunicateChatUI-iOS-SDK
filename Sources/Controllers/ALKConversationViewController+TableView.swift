@@ -286,7 +286,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
-        case .genericCard, .cardTemplate:
+        case .cardTemplate:
             if message.isMyMessage {
                 let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.showReport = false
@@ -562,7 +562,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let metadata = message.metadata else {
             return
         }
-        if message.messageType == .genericCard || message.messageType == .cardTemplate {
+        if message.messageType == .cardTemplate {
             if message.isMyMessage {
                 guard let cell = cell as? ALKMyGenericCardCell else {
                     return
@@ -667,7 +667,7 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
         else {
             return CGSize(width: 0, height: 0)
         }
-        if message.messageType == .genericCard || message.messageType == .cardTemplate {
+        if message.messageType == .cardTemplate {
             let width = view.frame.width - cardTemplateMargin
 
             let height = ALKGenericCardCell.rowHeight(card: template[indexPath.row], maxWidth: width)

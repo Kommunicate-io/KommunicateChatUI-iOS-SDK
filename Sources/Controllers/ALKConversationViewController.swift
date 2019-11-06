@@ -627,8 +627,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendLocationCell.self)
         tableView.register(ALKMyVideoCell.self)
         tableView.register(ALKFriendVideoCell.self)
-        tableView.register(ALKMyGenericListCell.self)
-        tableView.register(ALKFriendGenericListCell.self)
         tableView.register(ALKMyGenericCardCell.self)
         tableView.register(ALKFriendGenericCardCell.self)
         tableView.register(ALKFriendQuickReplyCell.self)
@@ -1112,17 +1110,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
 
-    func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate], key: String) {
-        print("\(title, tag) button selected in generic list")
-        var infoDict = [String: Any]()
-        infoDict["buttonName"] = title
-        infoDict["buttonIndex"] = tag
-        infoDict["template"] = template
-        infoDict["messageKey"] = key
-        infoDict["userId"] = viewModel.contactId
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
-    }
-
     func quickReplySelected(
         index: Int,
         title: String,
@@ -1130,7 +1117,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         message: ALKMessageViewModel,
         isButtonClickDisabled: Bool
     ) {
-        print("\(title, index) quick reply button selected")
+        print("\(title), \(index) quick reply button selected")
         sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template, messageKey: message.identifier)
 
         guard !isButtonClickDisabled else { return }
@@ -1609,25 +1596,16 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
         let notificationSelector = #selector(ALKConversationViewController.sendRightNavBarButtonSelectionNotification(_:))
 
-        if let image = configuration.rightNavBarImageForConversationView {
-            button = UIBarButtonItem(
-                image: image,
-                style: UIBarButtonItem.Style.plain,
-                target: self,
-                action: notificationSelector
-            )
-        } else {
-            var selector = notificationSelector
-            if configuration.rightNavBarSystemIconForConversationView == .refresh {
-                selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
-            }
-
-            button = UIBarButtonItem(
-                barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
-                target: self,
-                action: selector
-            )
+        var selector = notificationSelector
+        if configuration.rightNavBarSystemIconForConversationView == .refresh {
+            selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
         }
+
+        button = UIBarButtonItem(
+            barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
+            target: self,
+            action: selector
+        )
         return button
     }
 

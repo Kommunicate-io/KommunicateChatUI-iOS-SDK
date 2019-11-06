@@ -98,8 +98,6 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Video"
         case .html:
             return "Text"
-        case .genericCard:
-            return message
         case .faqTemplate:
             return message ?? "FAQ"
         case .quickReply:
@@ -355,8 +353,6 @@ extension ALMessage {
             return .text
         }
         switch templateId {
-        case "2":
-            return .genericCard
         case "3":
             return .button
         case "6":
