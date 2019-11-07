@@ -22,7 +22,10 @@ public struct FAQMessage {
 extension FAQMessage {
     func getSuggestion() -> [SuggestedReplyMessage.Suggestion] {
         var buttonTitles = [SuggestedReplyMessage.Suggestion]()
-        buttons.map { buttonTitles.append(SuggestedReplyMessage.Suggestion(title: $0, reply: $0)) }
+        buttons.forEach { button in
+            buttonTitles
+                .append(SuggestedReplyMessage.Suggestion(title: button, reply: button))
+        }
         return buttonTitles
     }
 }

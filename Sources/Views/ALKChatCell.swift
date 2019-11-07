@@ -427,8 +427,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
         // setup constraint of badgeNumber
         badgeNumberView.addViewsForAutolayout(views: [badgeNumberLabel])
-
-        badgeNumberView.trailingAnchor.constraint(lessThanOrEqualTo: nameLabel.leadingAnchor, constant: -5)
         badgeNumberView.topAnchor.constraint(equalTo: avatarImageView.topAnchor, constant: 0).isActive = true
         badgeNumberView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: -12).isActive = true
 

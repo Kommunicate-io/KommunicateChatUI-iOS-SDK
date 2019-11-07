@@ -272,7 +272,7 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // grab all the images
-        let asset = allPhotos.object(at: indexPath.item)
+        _ = allPhotos.object(at: indexPath.item)
         if selectedRows[indexPath.row] == 1 {
             selectedFiles.remove(object: indexPath)
             selectedRows[indexPath.row] = 0

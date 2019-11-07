@@ -53,7 +53,7 @@ extension UIStoryboard {
         return UIStoryboard(name: storyboard.rawValue, bundle: bundle)
     }
 
-    func instantiateViewController<T: UIViewController>() -> T where T: StoryboardIdentifiable {
+    func instantiateViewController<T: UIViewController>() -> T {
         let optionalVC = instantiateViewController(withIdentifier: T.storyboardIdentifier)
 
         guard let vc = optionalVC as? T else {

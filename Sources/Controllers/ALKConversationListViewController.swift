@@ -42,8 +42,9 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     var tableView: UITableView
 
     lazy var rightBarButtonItem: UIBarButtonItem = {
+        let icon = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
         let barButton = UIBarButtonItem(
-            image: configuration.rightNavBarImageForConversationListView,
+            image: icon,
             style: .plain,
             target: self, action: #selector(compose)
         )
@@ -306,11 +307,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     @objc func compose() {
-        // Send notification outside that button is clicked
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: configuration.nsNotificationNameForNavIconClick), object: self)
-        if configuration.handleNavIconClickOnConversationListView {
-            return
-        }
         let newChatVC = ALKNewChatViewController(configuration: configuration, viewModel: ALKNewChatViewModel(localizedStringFileName: configuration.localizedStringFileName))
         navigationController?.pushViewController(newChatVC, animated: true)
     }

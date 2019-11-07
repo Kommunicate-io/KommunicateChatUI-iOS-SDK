@@ -559,7 +559,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
             return
         }
-        guard let metadata = message.metadata else {
+        guard message.metadata != nil else {
             return
         }
         if message.messageType == .cardTemplate {
@@ -623,13 +623,18 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
 extension ALKConversationViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
-            let metadata = message.metadata
+        guard
+            let message = viewModel.messageForRow(
+                indexPath: IndexPath(
+                    row: 0,
+                    section: collectionView.tag)
+            ),
+             message.metadata != nil
         else {
             return 0
         }
 
-        guard let collectionView = collectionView as? ALKIndexedCollectionView,
+        guard let _ = collectionView as? ALKIndexedCollectionView,
             let template = ALKGenericCardCollectionView.getCardTemplate(message: message)
         else {
             return 0
@@ -653,7 +658,7 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
         let card = template[indexPath.row]
         cell.update(card: card)
         cell.buttonSelected = { [weak self] tag, title, card in
-            print("\(title, tag) button selected in generic card \(card)")
+            print("\(title), \(tag) button selected in generic card \(card)")
             guard let strongSelf = self else { return }
             strongSelf.cardTemplateSelected(tag: tag, title: title, template: card, message: message)
         }
