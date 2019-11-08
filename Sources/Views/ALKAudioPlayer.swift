@@ -37,13 +37,10 @@ final class ALKAudioPlayer {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ALKAudioPlayer.updateCounter), userInfo: nil, repeats: true)
 
             do {
-                if #available(iOS 10.0, *) {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                } else {
-                    // Fallback on earlier versions
-                    ALAudioSession().getWithPlayback(true)
-                }
-            } catch {}
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            } catch {
+                print("Error while setting AVAudioSession category: ", error.localizedDescription)
+            }
 
             audioPlayer.stop()
             audioPlayer.play()
@@ -59,13 +56,10 @@ final class ALKAudioPlayer {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ALKAudioPlayer.updateCounter), userInfo: nil, repeats: true)
 
             do {
-                if #available(iOS 10.0, *) {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                } else {
-                    // Fallback on earlier versions
-                    ALAudioSession().getWithPlayback(true)
-                }
-            } catch {}
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            } catch {
+                print("Error while setting AVAudioSession category: ", error.localizedDescription)
+            }
 
             audioPlayer.currentTime = TimeInterval(atTime)
             audioPlayer.play()

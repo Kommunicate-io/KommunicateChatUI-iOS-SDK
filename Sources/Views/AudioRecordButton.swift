@@ -127,12 +127,7 @@ open class AudioRecordButton: UIButton {
             AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue,
         ]
         do {
-            if #available(iOS 10.0, *) {
-                try recordingSession.setCategory(.playAndRecord, mode: .default)
-            } else {
-                // Fallback on earlier versions
-                recordingSession = ALAudioSession().getWithPlayback(false)
-            }
+            try recordingSession.setCategory(.playAndRecord, mode: .default)
             try recordingSession.overrideOutputAudioPort(.speaker)
             try recordingSession.setActive(true)
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
@@ -140,6 +135,7 @@ open class AudioRecordButton: UIButton {
             audioRecorder.record()
             states = .recording
         } catch {
+            print("Error while initiating audio recording: ", error.localizedDescription)
             stopAudioRecord()
         }
     }
