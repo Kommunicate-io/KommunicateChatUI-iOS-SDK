@@ -283,11 +283,11 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         navigationItem.leftBarButtonItems = nil
         navigationItem.titleView = searchBar
 
-        UIView.animate(withDuration: 0.5, animations: {
-            self.searchBar.show(true)
-        }) { _ in
-            self.searchBar.becomeFirstResponder()
-        }
+        UIView.animate(
+            withDuration: 0.5,
+            animations: { self.searchBar.show(true) },
+            completion: { _ in self.searchBar.becomeFirstResponder() }
+        )
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {

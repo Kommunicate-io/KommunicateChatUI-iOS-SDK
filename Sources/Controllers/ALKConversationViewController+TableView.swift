@@ -634,10 +634,10 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
             return 0
         }
 
-        guard let _ = collectionView as? ALKIndexedCollectionView,
+        guard collectionView.isKind(of: ALKIndexedCollectionView.self),
             let template = ALKGenericCardCollectionView.getCardTemplate(message: message)
-        else {
-            return 0
+            else {
+                return 0
         }
         return template.count
     }

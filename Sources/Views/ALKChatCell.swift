@@ -43,7 +43,6 @@ public protocol ALKChatCellDelegate: AnyObject {
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol)
 }
 
-// swiftlint:disable:next type_body_length
 public final class ALKChatCell: MGSwipeTableCell, Localizable {
     enum ConstraintIdentifier: String {
         case iconWidthIdentifier = "iconViewWidth"
