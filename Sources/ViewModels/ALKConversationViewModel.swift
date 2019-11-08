@@ -27,12 +27,30 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     // MARK: - Inputs
 
-    open var contactId: String?
-    open var channelKey: NSNumber?
+    open var contactId: String? {
+        didSet {
+            if contactId != nil {
+                chatId = contactId
+            }
+        }
+    }
+    open var channelKey: NSNumber? {
+        didSet {
+            if channelKey != nil {
+                chatId = channelKey?.stringValue
+            }
+        }
+    }
     open var isSearch: Bool = false
 
     // For topic based chat
-    open var conversationProxy: ALConversationProxy?
+    open var conversationProxy: ALConversationProxy? {
+        didSet {
+            if conversationProxy != nil {
+                chatId = conversationProxy?.id?.stringValue
+            }
+        }
+    }
 
     public weak var delegate: ALKConversationViewModelDelegate?
 
