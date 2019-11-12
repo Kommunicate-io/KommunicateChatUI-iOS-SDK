@@ -66,16 +66,16 @@ public class NotificationHelper {
         guard
             let topVC = ALPushAssist().topViewController as? ALKConversationViewController,
             let viewModel = topVC.viewModel
-            else {
-                guard  let topVC = ALPushAssist().topViewController as? ALKReplyController else {
-                    return false
-                }
-                return isChatThreadIsOpen(notification, userId: topVC.userId, groupId:  topVC.groupId)
+        else {
+            guard let topVC = ALPushAssist().topViewController as? ALKReplyController else {
+                return false
+            }
+            return isChatThreadIsOpen(notification, userId: topVC.userId, groupId: topVC.groupId)
         }
-        return isChatThreadIsOpen(notification, userId: viewModel.contactId, groupId:  viewModel.channelKey)
+        return isChatThreadIsOpen(notification, userId: viewModel.contactId, groupId: viewModel.channelKey)
     }
 
-    private func isChatThreadIsOpen(_ notification: NotificationData, userId : String?, groupId : NSNumber?) -> Bool {
+    private func isChatThreadIsOpen(_ notification: NotificationData, userId: String?, groupId: NSNumber?) -> Bool {
         let isGroupMessage = notification.groupId != nil && notification.groupId == groupId
         let isOneToOneMessage = notification.groupId == nil && groupId == nil && notification.userId == userId
         if isGroupMessage || isOneToOneMessage {

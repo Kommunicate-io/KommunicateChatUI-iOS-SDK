@@ -11,7 +11,6 @@ import Applozic
 import Kingfisher
 
 class ALKReplyController: UIViewController, Localizable {
-
     enum ConstraintIdentifier {
         static let modelViewHeight = "modelViewHeight"
         static let messageTextViewHeight = "messageTextViewHeight"
@@ -73,8 +72,8 @@ class ALKReplyController: UIViewController, Localizable {
 
     let configuration: ALKConfiguration
     let messageKey: String
-    let userId : String?
-    let groupId : NSNumber?
+    let userId: String?
+    let groupId: NSNumber?
 
     private let attachmentView = ALKAttatchmentView(frame: .zero)
 

@@ -627,17 +627,18 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
             let message = viewModel.messageForRow(
                 indexPath: IndexPath(
                     row: 0,
-                    section: collectionView.tag)
+                    section: collectionView.tag
+                )
             ),
-             message.metadata != nil
+            message.metadata != nil
         else {
             return 0
         }
 
         guard collectionView.isKind(of: ALKIndexedCollectionView.self),
             let template = ALKGenericCardCollectionView.getCardTemplate(message: message)
-            else {
-                return 0
+        else {
+            return 0
         }
         return template.count
     }

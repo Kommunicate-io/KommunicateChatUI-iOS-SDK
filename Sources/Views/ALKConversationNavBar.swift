@@ -48,7 +48,7 @@ open class ALKConversationNavBar: UIView, Localizable {
     var profileName: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "HelveticaNeue", size: 16) ?? UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor(96, green: 94, blue: 94)
+        label.textColor = .black
         return label
     }()
 
