@@ -20,9 +20,9 @@ public class ALKLoadingIndicator: UIStackView, Localizable {
 
     // MARK: - Initializer
 
-    public init(frame: CGRect, color: UIColor) {
+    public init(frame: CGRect, color: UIColor = .black) {
         super.init(frame: frame)
-        setupStyle(color)
+        set(color)
         setupView()
         isHidden = true
     }
@@ -44,12 +44,12 @@ public class ALKLoadingIndicator: UIStackView, Localizable {
         activityIndicator.stopAnimating()
     }
 
-    // MARK: - Private helper methods
-
-    private func setupStyle(_ color: UIColor) {
+    public func set(_ color: UIColor) {
         activityIndicator.color = color
         loadingLabel.textColor = color
     }
+
+    // MARK: - Private helper methods
 
     private func setupView() {
         axis = .horizontal

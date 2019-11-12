@@ -55,7 +55,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contactService: ALContactService!
 
-    lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor)
+    var loadingIndicator = ALKLoadingIndicator(frame: .zero)
 
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
@@ -582,9 +582,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupNavigation() {
+        if let navBar = navigationController?.navigationBar {
+            let titleColor = navBar.titleTextAttributes?[.foregroundColor] as? UIColor ?? .black
+            loadingIndicator.set(titleColor)
+            navigationBar.setupAppearance(navBar)
+        }
         navigationItem.titleView = loadingIndicator
         loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
         viewModel.currentConversationProfile { profile in
             guard let profile = profile else { return }

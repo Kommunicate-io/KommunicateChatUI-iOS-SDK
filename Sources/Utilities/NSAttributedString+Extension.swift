@@ -45,3 +45,7 @@ extension NSMutableAttributedString {
         }
     }
 }
+
+extension NSAttributedString.Key {
+    public static let secondaryFont = NSAttributedString.Key("ALKSecondaryFont")
+}
