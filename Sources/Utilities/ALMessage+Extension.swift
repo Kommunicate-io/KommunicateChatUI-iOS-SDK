@@ -71,13 +71,15 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 
     public var groupName: String {
-        if isGroupChat {
-            guard let alChannel = alChannel, let name = alChannel.name else {
-                return ""
-            }
+        guard let alChannel = alChannel else { return "" }
+        let name = alChannel.name ?? ""
+        guard
+            let userId = alChannel.getReceiverIdInGroupOfTwo(),
+            let contact = ALContactDBService().loadContact(byKey: "userId", value: userId)
+        else {
             return name
         }
-        return ""
+        return contact.getDisplayName()
     }
 
     public var theLastMessage: String? {
@@ -96,8 +98,6 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Video"
         case .html:
             return "Text"
-        case .genericCard:
-            return message
         case .faqTemplate:
             return message ?? "FAQ"
         case .quickReply:
@@ -353,8 +353,6 @@ extension ALMessage {
             return .text
         }
         switch templateId {
-        case "2":
-            return .genericCard
         case "3":
             return .button
         case "6":

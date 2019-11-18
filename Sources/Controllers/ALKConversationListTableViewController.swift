@@ -105,6 +105,11 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ALKChatCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(
+            ALKEmptyView.nib,
+            forHeaderFooterViewReuseIdentifier:
+            ALKEmptyView.reuseIdentifier
+        )
         tableView.estimatedRowHeight = 0
     }
 
@@ -172,8 +177,13 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
 
     public override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
-        let emptyCellView = ALKEmptyView.instanceFromNib()
-
+        guard let emptyCellView = tableView.dequeueReusableHeaderFooterView(
+            withIdentifier: ALKEmptyView.reuseIdentifier
+        )
+            as? ALKEmptyView
+        else {
+            return nil
+        }
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
         emptyCellView.conversationLabel.text = noConversationLabelText
         emptyCellView.startNewConversationButtonIcon.isHidden = configuration.hideEmptyStateStartNewButtonInConversationList

@@ -27,12 +27,30 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     // MARK: - Inputs
 
-    open var contactId: String?
-    open var channelKey: NSNumber?
+    open var contactId: String? {
+        didSet {
+            if contactId != nil {
+                chatId = contactId
+            }
+        }
+    }
+    open var channelKey: NSNumber? {
+        didSet {
+            if channelKey != nil {
+                chatId = channelKey?.stringValue
+            }
+        }
+    }
     open var isSearch: Bool = false
 
     // For topic based chat
-    open var conversationProxy: ALConversationProxy?
+    open var conversationProxy: ALConversationProxy? {
+        didSet {
+            if conversationProxy != nil {
+                chatId = conversationProxy?.id?.stringValue
+            }
+        }
+    }
 
     public weak var delegate: ALKConversationViewModelDelegate?
 
@@ -291,7 +309,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 height = ALKFriendVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             }
             return height.cached(with: messageModel.identifier)
-        case .genericCard, .cardTemplate:
+        case .cardTemplate:
             if messageModel.isMyMessage {
                 return
                     ALKMyGenericCardCell
@@ -484,6 +502,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
             task.identifier = message.identifier
             task.totalBytesExpectedToDownload = message.size
             httpManager.downloadAttachment(task: task)
+            httpManager.downloadCompleted = { [weak self] task in
+                guard let weakSelf = self, let identifier = task.identifier else { return }
+                var msg = weakSelf.messageForRow(identifier: identifier)
+                if ThumbnailIdentifier.hasPrefix(in: identifier) {
+                    msg?.fileMetaInfo?.thumbnailFilePath = task.filePath
+                } else {
+                    msg?.filePath = task.filePath
+                }
+            }
         }
     }
 
@@ -641,11 +668,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if let messageMetadata = metadata, !messageMetadata.isEmpty {
             metaData.addEntries(from: messageMetadata)
         }
-        if metaData != nil {
-            for (key, value) in metaData {
-                guard let value = value as? [AnyHashable: Any] else { continue }
-                metaData[key] = ALUtilityClass.generateJsonString(from: value)
-            }
+        for (key, value) in metaData {
+            guard let value = value as? [AnyHashable: Any] else { continue }
+            metaData[key] = ALUtilityClass.generateJsonString(from: value)
         }
         return metaData
     }
@@ -1031,17 +1056,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return IndexPath(row: 0, section: index)
     }
 
-    open func genericTemplateFor(message: ALKMessageViewModel) -> Any? {
-        guard richMessages[message.identifier] == nil else {
-            return richMessages[message.identifier]
-        }
-        if message.messageType == .genericCard {
-            return getGenericCardTemplateFor(message: message)
-        } else {
-            return getGenericListTemplateFor(message: message)
-        }
-    }
-
     open func showPoweredByMessage() -> Bool {
         return ALApplicationInfo().showPoweredByMessage()
     }
@@ -1067,7 +1081,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     completion(nil)
                     return
                 }
-                completion(self.conversationProfileFrom(contact: nil, channel: channel))
+                guard
+                    let userId = channel.getReceiverIdInGroupOfTwo(),
+                    let contact = ALContactDBService().loadContact(byKey: "userId", value: userId)
+                else {
+                    completion(self.conversationProfileFrom(contact: nil, channel: channel))
+                    return
+                }
+                completion(self.conversationProfileFrom(contact: contact, channel: nil))
             }
         } else if contactId != nil {
             ALUserService().getUserDetail(contactId) { contact in
@@ -1504,21 +1525,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         do {
             let cards = try JSONDecoder().decode([ALKGenericCard].self, from: payload.data)
             let cardTemplate = ALKGenericCardTemplate(cards: cards)
-            richMessages[message.identifier] = cardTemplate
-            return cardTemplate
-        } catch {
-            print("\(error)")
-            return nil
-        }
-    }
-
-    private func getGenericListTemplateFor(message: ALKMessageViewModel) -> [ALKGenericListTemplate]? {
-        guard
-            let metadata = message.metadata,
-            let payload = metadata["payload"] as? String
-        else { return nil }
-        do {
-            let cardTemplate = try JSONDecoder().decode([ALKGenericListTemplate].self, from: payload.data)
             richMessages[message.identifier] = cardTemplate
             return cardTemplate
         } catch {

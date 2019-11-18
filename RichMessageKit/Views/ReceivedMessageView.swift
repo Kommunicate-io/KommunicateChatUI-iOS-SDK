@@ -68,7 +68,7 @@ public class ReceivedMessageView: UIView {
 
     fileprivate var avatarImageView: UIImageView = {
         let imv = UIImageView()
-        imv.image = UIImage(named: "placeholder", in: Bundle.richMessageKit, compatibleWith: nil)
+        imv.image = UIImage(named: "contact-placeholder", in: Bundle.richMessageKit, compatibleWith: nil)
         imv.contentMode = .scaleAspectFill
         imv.clipsToBounds = true
         imv.layer.cornerRadius = 18.5

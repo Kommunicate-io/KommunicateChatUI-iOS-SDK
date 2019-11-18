@@ -50,9 +50,9 @@ class ALMessageTests: XCTestCase {
         let message = MockMessage().message
         let mockMetaData = NSMutableDictionary()
         mockMetaData["contentType"] = "300"
-        mockMetaData["templateId"] = "2"
+        mockMetaData["templateId"] = "10"
         message.metadata = mockMetaData
-        XCTAssert(message.messageType == .genericCard)
+        XCTAssert(message.messageType == .cardTemplate)
     }
 
     func testMessageType_WhenFAQTemplate() {

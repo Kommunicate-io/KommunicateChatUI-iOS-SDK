@@ -32,10 +32,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var individualLaunch = true
 
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
-    public lazy var autocompleteManager = AutoCompleteManager(
-        textView: chatBar.textView,
-        tableview: autocompletionView
-    )
+    public lazy var autocompleteManager: AutoCompleteManager = {
+        let manager = AutoCompleteManager(
+            textView: chatBar.textView,
+            tableview: autocompletionView
+        )
+        manager.autocompletionDelegate = self
+        return manager
+    }()
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
@@ -43,6 +47,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableview.estimatedRowHeight = 50
         tableview.rowHeight = UITableView.automaticDimension
         tableview.separatorStyle = .none
+        tableview.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         return tableview
     }()
 
@@ -50,7 +55,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contactService: ALContactService!
 
-    lazy var loadingIndicator = ALKLoadingIndicator(frame: .zero, color: self.configuration.navigationBarTitleColor)
+    var loadingIndicator = ALKLoadingIndicator(frame: .zero)
 
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
@@ -304,7 +309,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("update group detail")
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
-            guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
+            guard let key = weakSelf.viewModel.channelKey,
+                let channel = alChannelService.getChannelByKey(key),
+                channel.name != nil else {
+                return
+            }
             let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel)
             weakSelf.navigationBar.updateView(profile: profile)
             weakSelf.newMessagesAdded()
@@ -312,7 +321,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil, queue: nil) { [weak self] _ in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
-            let profile = weakSelf.viewModel.currentConversationProfile(completion: { profile in
+            weakSelf.viewModel.currentConversationProfile(completion: { profile in
                 guard let profile = profile else { return }
                 weakSelf.navigationBar.updateView(profile: profile)
             })
@@ -438,7 +447,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         prepareTable()
         prepareMoreBar()
         prepareChatBar()
-        setupAutoComplete()
+        setupMemberMention()
         replyMessageView.closeButtonTapped = { [weak self] _ in
             self?.hideReplyMessageView()
         }
@@ -573,9 +582,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupNavigation() {
+        if let navBar = navigationController?.navigationBar {
+            let titleColor = navBar.titleTextAttributes?[.foregroundColor] as? UIColor ?? .black
+            loadingIndicator.set(titleColor)
+            navigationBar.setupAppearance(navBar)
+        }
         navigationItem.titleView = loadingIndicator
         loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
         viewModel.currentConversationProfile { profile in
             guard let profile = profile else { return }
@@ -622,8 +635,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendLocationCell.self)
         tableView.register(ALKMyVideoCell.self)
         tableView.register(ALKFriendVideoCell.self)
-        tableView.register(ALKMyGenericListCell.self)
-        tableView.register(ALKFriendGenericListCell.self)
         tableView.register(ALKMyGenericCardCell.self)
         tableView.register(ALKFriendGenericCardCell.self)
         tableView.register(ALKFriendQuickReplyCell.self)
@@ -862,9 +873,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    private func setupAutoComplete() {
-        autocompletionView.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
-        autocompleteManager.autocompletionDelegate = self
+    private func setupMemberMention() {
         if configuration.isMemberMentionEnabled {
             autocompleteManager.registerPrefix(
                 prefix: MessageMention.Prefix,
@@ -1091,26 +1100,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func scrollTo(message: ALKMessageViewModel) {
-        let messageService = ALMessageService()
         guard
             let metadata = message.metadata,
             let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String
-        else { return }
+        else {
+            return
+        }
+        let messageService = ALMessageService()
         let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
-        else { return }
+        else {
+            let controller = ALKReplyController(userId: viewModel.contactId, groupId: viewModel.channelKey, messageKey: replyId, configuration: configuration)
+            controller.modalPresentationStyle = .overCurrentContext
+            present(controller, animated: true, completion: nil)
+            return
+        }
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-    }
-
-    func postGenericListButtonTapNotification(tag: Int, title: String, template: [ALKGenericListTemplate], key: String) {
-        print("\(title, tag) button selected in generic list")
-        var infoDict = [String: Any]()
-        infoDict["buttonName"] = title
-        infoDict["buttonIndex"] = tag
-        infoDict["template"] = template
-        infoDict["messageKey"] = key
-        infoDict["userId"] = viewModel.contactId
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "GenericRichListButtonSelected"), object: infoDict)
     }
 
     func quickReplySelected(
@@ -1120,7 +1125,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         message: ALKMessageViewModel,
         isButtonClickDisabled: Bool
     ) {
-        print("\(title, index) quick reply button selected")
+        print("\(title), \(index) quick reply button selected")
         sendNotification(withName: "QuickReplyButtonSelected", buttonName: title, buttonIndex: index, template: template, messageKey: message.identifier)
 
         guard !isButtonClickDisabled else { return }
@@ -1360,11 +1365,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func openLink(_ url: URL) {
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
+        UIApplication.shared.open(url)
     }
 
     private func linkButtonSelected(_ selectedButton: [String: Any]) {
@@ -1385,7 +1386,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var responseUrl: URL?
         requestHandler(request) { dat, response, error in
             guard error == nil, let data = dat, let url = response?.url else {
-                print("Error while making submit button request: \(error), \(dat), \(response)")
+                print("Error while making submit button request: \(error?.localizedDescription ?? "")")
                 group.leave()
                 return
             }
@@ -1599,25 +1600,16 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
         let notificationSelector = #selector(ALKConversationViewController.sendRightNavBarButtonSelectionNotification(_:))
 
-        if let image = configuration.rightNavBarImageForConversationView {
-            button = UIBarButtonItem(
-                image: image,
-                style: UIBarButtonItem.Style.plain,
-                target: self,
-                action: notificationSelector
-            )
-        } else {
-            var selector = notificationSelector
-            if configuration.rightNavBarSystemIconForConversationView == .refresh {
-                selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
-            }
-
-            button = UIBarButtonItem(
-                barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
-                target: self,
-                action: selector
-            )
+        var selector = notificationSelector
+        if configuration.rightNavBarSystemIconForConversationView == .refresh {
+            selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
         }
+
+        button = UIBarButtonItem(
+            barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
+            target: self,
+            action: selector
+        )
         return button
     }
 
@@ -1702,7 +1694,7 @@ extension ALKConversationViewController: ALKLocationCellDelegate {
         let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
         let locationString = String(format: "https://maps.google.com/maps?q=loc:%@", latLonString)
         guard let locationUrl = URL(string: locationString) else { return }
-        UIApplication.shared.openURL(locationUrl)
+        UIApplication.shared.open(locationUrl)
     }
 }
 
@@ -1893,41 +1885,6 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         guard let userId = userId else { return }
         print("update user detail")
         viewModel.updateUserDetail(userId)
-    }
-}
-
-extension ALKConversationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        // Video attachment
-        if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String, mediaType == "public.movie" {
-            guard let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL else { return }
-            print("video path is: ", url.path)
-            viewModel.encodeVideo(videoURL: url, completion: {
-                path in
-                guard let newPath = path else { return }
-                var indexPath: IndexPath?
-                DispatchQueue.main.async {
-                    (_, indexPath) = self.viewModel.sendVideo(atPath: newPath, sourceType: picker.sourceType, metadata: self.configuration.messageMetadata)
-                    self.tableView.beginUpdates()
-                    self.tableView.insertSections(IndexSet(integer: (indexPath?.section)!), with: .automatic)
-                    self.tableView.endUpdates()
-                    self.tableView.scrollToBottom(animated: false)
-                    guard let newIndexPath = indexPath, let cell = self.tableView.cellForRow(at: newIndexPath) as? ALKMyVideoCell else { return }
-                    guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
-                        let notificationView = ALNotificationView()
-                        notificationView.noDataConnectionNotificationView()
-                        return
-                    }
-                    self.viewModel.uploadVideo(view: cell, indexPath: newIndexPath)
-                }
-            })
-        }
-
-        picker.dismiss(animated: true, completion: nil)
     }
 }
 

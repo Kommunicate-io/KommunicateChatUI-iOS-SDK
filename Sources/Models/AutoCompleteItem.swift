@@ -8,16 +8,18 @@
 import Foundation
 
 public struct AutoCompleteItem {
-    var key: String
-    var content: String
-    var displayImageURL: URL?
-
-    /// A key used for referencing which substrings were autocompletes
-    static let attributesKey = NSAttributedString.Key("com.applozicswift.autocompletekey")
+    public let key: String
+    public let content: String
+    public let displayImageURL: URL?
 
     public init(key: String, content: String, displayImageURL: URL? = nil) {
         self.key = key
         self.content = content
         self.displayImageURL = displayImageURL
     }
+}
+
+extension AutoCompleteItem {
+    /// A key used for referencing which substrings were autocompletes
+    static public let attributesKey = NSAttributedString.Key("com.applozicswift.autocompletekey")
 }

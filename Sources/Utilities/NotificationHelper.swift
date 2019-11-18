@@ -67,10 +67,17 @@ public class NotificationHelper {
             let topVC = ALPushAssist().topViewController as? ALKConversationViewController,
             let viewModel = topVC.viewModel
         else {
-            return false
+            guard let topVC = ALPushAssist().topViewController as? ALKReplyController else {
+                return false
+            }
+            return isChatThreadIsOpen(notification, userId: topVC.userId, groupId: topVC.groupId)
         }
-        let isGroupMessage = notification.groupId != nil && notification.groupId == viewModel.channelKey
-        let isOneToOneMessage = notification.groupId == nil && viewModel.channelKey == nil && notification.userId == viewModel.contactId
+        return isChatThreadIsOpen(notification, userId: viewModel.contactId, groupId: viewModel.channelKey)
+    }
+
+    private func isChatThreadIsOpen(_ notification: NotificationData, userId: String?, groupId: NSNumber?) -> Bool {
+        let isGroupMessage = notification.groupId != nil && notification.groupId == groupId
+        let isOneToOneMessage = notification.groupId == nil && groupId == nil && notification.userId == userId
         if isGroupMessage || isOneToOneMessage {
             return true
         }
@@ -138,6 +145,10 @@ public class NotificationHelper {
         case _ where topVCName.hasPrefix("ALK"):
             return true
         default:
+            if let searchVC = topVC as? UISearchController,
+                searchVC.searchResultsController as? ALKSearchResultViewController != nil {
+                return true
+            }
             return false
         }
     }
@@ -156,6 +167,11 @@ public class NotificationHelper {
             print("ConversationViewController on top")
             refreshConversation(vc, with: notification)
         default:
+            if let searchVC = topVC as? UISearchController,
+                let vc = searchVC.presentingViewController as? ALKConversationListViewController {
+                openConversationFromListVC(vc, notification: notification)
+                return
+            }
             print("Some other view controller need to find chat vc")
             findChatVC(notification)
         }

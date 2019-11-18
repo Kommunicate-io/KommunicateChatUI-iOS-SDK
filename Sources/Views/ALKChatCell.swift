@@ -43,7 +43,6 @@ public protocol ALKChatCellDelegate: AnyObject {
     func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol)
 }
 
-// swiftlint:disable:next type_body_length
 public final class ALKChatCell: MGSwipeTableCell, Localizable {
     enum ConstraintIdentifier: String {
         case iconWidthIdentifier = "iconViewWidth"
@@ -427,8 +426,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
         // setup constraint of badgeNumber
         badgeNumberView.addViewsForAutolayout(views: [badgeNumberLabel])
-
-        badgeNumberView.trailingAnchor.constraint(lessThanOrEqualTo: nameLabel.leadingAnchor, constant: -5)
         badgeNumberView.topAnchor.constraint(equalTo: avatarImageView.topAnchor, constant: 0).isActive = true
         badgeNumberView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: -12).isActive = true
 

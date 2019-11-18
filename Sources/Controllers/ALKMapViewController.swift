@@ -66,32 +66,6 @@ class ALKMapViewController: UIViewController, Localizable {
         dismiss(animated: true, completion: nil)
     }
 
-    private func createStaticMap(position: CLLocationCoordinate2D,
-                                 success: @escaping (UIImage) -> Void,
-                                 failure: @escaping (Error?) -> Void) {
-        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else {
-            failure(nil)
-            return
-        }
-        var urlString: String? = "https://maps.googleapis.com/maps/api/staticmap?" +
-            "markers=color:red|size:mid|\(position.latitude),\(position.longitude)" +
-            "&zoom=15&size=237x102&maptype=roadmap&scale=2" +
-            "&key=\(apiKey)"
-
-        urlString = urlString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-
-        if let urlString = urlString, let url = URL(string: urlString) {
-            KingfisherManager.shared.retrieveImage(with: url, options: nil, progressBlock: nil) { (image: Image?, error: NSError?, _: CacheType, _: URL?) in
-
-                guard let image = image else {
-                    failure(error)
-                    return
-                }
-                success(image)
-            }
-        }
-    }
-
     public func setConfiguration(_ configuration: ALKConfiguration) {
         self.configuration = configuration
     }

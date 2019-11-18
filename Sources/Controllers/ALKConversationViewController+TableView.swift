@@ -286,7 +286,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
-        case .genericCard, .cardTemplate:
+        case .cardTemplate:
             if message.isMyMessage {
                 let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.showReport = false
@@ -559,10 +559,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
             return
         }
-        guard let metadata = message.metadata else {
+        guard message.metadata != nil else {
             return
         }
-        if message.messageType == .genericCard || message.messageType == .cardTemplate {
+        if message.messageType == .cardTemplate {
             if message.isMyMessage {
                 guard let cell = cell as? ALKMyGenericCardCell else {
                     return
@@ -623,13 +623,19 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
 extension ALKConversationViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
-            let metadata = message.metadata
+        guard
+            let message = viewModel.messageForRow(
+                indexPath: IndexPath(
+                    row: 0,
+                    section: collectionView.tag
+                )
+            ),
+            message.metadata != nil
         else {
             return 0
         }
 
-        guard let collectionView = collectionView as? ALKIndexedCollectionView,
+        guard collectionView.isKind(of: ALKIndexedCollectionView.self),
             let template = ALKGenericCardCollectionView.getCardTemplate(message: message)
         else {
             return 0
@@ -653,7 +659,7 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
         let card = template[indexPath.row]
         cell.update(card: card)
         cell.buttonSelected = { [weak self] tag, title, card in
-            print("\(title, tag) button selected in generic card \(card)")
+            print("\(title), \(tag) button selected in generic card \(card)")
             guard let strongSelf = self else { return }
             strongSelf.cardTemplateSelected(tag: tag, title: title, template: card, message: message)
         }
@@ -667,7 +673,7 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
         else {
             return CGSize(width: 0, height: 0)
         }
-        if message.messageType == .genericCard || message.messageType == .cardTemplate {
+        if message.messageType == .cardTemplate {
             let width = view.frame.width - cardTemplateMargin
 
             let height = ALKGenericCardCell.rowHeight(card: template[indexPath.row], maxWidth: width)

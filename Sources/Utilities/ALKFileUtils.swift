@@ -68,4 +68,18 @@ class ALKFileUtils: NSObject {
         let fileTypes = ["docx", "pdf", "doc", "java", "js", "txt", "html", "xlsx", "xls", "ppt", "pptx"]
         return fileTypes.contains(pathExtension)
     }
+
+    func getThumbnail(filePath: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: filePath, options: nil)
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            imgGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+            return UIImage(cgImage: cgImage)
+
+        } catch {
+            print("*** Error generating thumbnail: \(error.localizedDescription)")
+            return nil
+        }
+    }
 }

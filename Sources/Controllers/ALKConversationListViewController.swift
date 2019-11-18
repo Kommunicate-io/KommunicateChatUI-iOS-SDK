@@ -29,7 +29,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     var searchController: UISearchController!
     var searchBar: CustomSearchBar!
-    lazy var resultVC = SearchResultViewController(configuration: configuration)
+    lazy var resultVC = ALKSearchResultViewController(configuration: configuration)
 
     var dbService = ALMessageDBService()
     var viewModel = ALKConversationListViewModel()
@@ -42,8 +42,9 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     var tableView: UITableView
 
     lazy var rightBarButtonItem: UIBarButtonItem = {
+        let icon = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
         let barButton = UIBarButtonItem(
-            image: configuration.rightNavBarImageForConversationListView,
+            image: icon,
             style: .plain,
             target: self, action: #selector(compose)
         )
@@ -282,11 +283,11 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         navigationItem.leftBarButtonItems = nil
         navigationItem.titleView = searchBar
 
-        UIView.animate(withDuration: 0.5, animations: {
-            self.searchBar.show(true)
-        }) { _ in
-            self.searchBar.becomeFirstResponder()
-        }
+        UIView.animate(
+            withDuration: 0.5,
+            animations: { self.searchBar.show(true) },
+            completion: { _ in self.searchBar.becomeFirstResponder() }
+        )
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
@@ -306,11 +307,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     @objc func compose() {
-        // Send notification outside that button is clicked
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: configuration.nsNotificationNameForNavIconClick), object: self)
-        if configuration.handleNavIconClickOnConversationListView {
-            return
-        }
         let newChatVC = ALKNewChatViewController(configuration: configuration, viewModel: ALKNewChatViewModel(localizedStringFileName: configuration.localizedStringFileName))
         navigationController?.pushViewController(newChatVC, animated: true)
     }

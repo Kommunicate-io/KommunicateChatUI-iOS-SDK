@@ -90,8 +90,12 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec{
             
             it("use image") {
                 configuration = ALKConfiguration()
-                configuration.rightNavBarImageForConversationView = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
-                
+                configuration.isRefreshButtonEnabled = false
+                configuration.navigationItemsForConversationView = [
+                    ALKNavigationItem(
+                        identifier: 123456,
+                        icon: UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)!
+                    )]
                 prepareController()
                 
                 navigationController.navigationBar.snapshotView(afterScreenUpdates: true)

@@ -14,7 +14,6 @@ import Kingfisher
 }
 
 open class ALKConversationNavBar: UIView, Localizable {
-    let navigationBarBackgroundColor: UIColor
     let configuration: ALKConfiguration
     weak var delegate: NavigationBarCallbacks?
     open var disableTitleAction: Bool = false
@@ -28,8 +27,10 @@ open class ALKConversationNavBar: UIView, Localizable {
 
     let backImage: UIImageView = {
         let view = UIImageView()
-        var backImage = UIImage(named: "back", in: Bundle.applozic, compatibleWith: nil)
-        backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
+        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        backImage = backImage?
+            .imageFlippedForRightToLeftLayoutDirection()
+            .withRenderingMode(.alwaysTemplate)
         view.image = backImage
         view.isUserInteractionEnabled = false
         return view
@@ -47,13 +48,12 @@ open class ALKConversationNavBar: UIView, Localizable {
     var profileName: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "HelveticaNeue", size: 16) ?? UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor(96, green: 94, blue: 94)
+        label.textColor = .black
         return label
     }()
 
     lazy var statusIconBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = self.navigationBarBackgroundColor
         view.layer.cornerRadius = 6
         view.clipsToBounds = true
         return view
@@ -85,17 +85,31 @@ open class ALKConversationNavBar: UIView, Localizable {
     }()
 
     public required init(configuration: ALKConfiguration, delegate: NavigationBarCallbacks) {
-        navigationBarBackgroundColor = configuration.navigationBarBackgroundColor
         self.configuration = configuration
         self.delegate = delegate
         super.init(frame: .zero)
         setupConstraints()
-        setupStyle()
         setupActions()
     }
 
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    public func setupAppearance(_ appearance: UINavigationBar) {
+        if let textColor = appearance.titleTextAttributes?[.foregroundColor] as? UIColor {
+            profileName.textColor = textColor
+            onlineStatusText.textColor = textColor
+        }
+        if let titleFont = appearance.titleTextAttributes?[.font] as? UIFont {
+            profileName.font = titleFont
+        }
+        if let subtitleFont = appearance.titleTextAttributes?[.secondaryFont] as? UIFont {
+            onlineStatusText.font = subtitleFont
+        }
+        if let tintColor = appearance.tintColor {
+            backButton.tintColor = tintColor
+        }
     }
 
     func updateView(profile: ALKConversationProfile) {
@@ -167,12 +181,6 @@ open class ALKConversationNavBar: UIView, Localizable {
     private func hideStatus(_ hide: Bool) {
         statusIconBackground.isHidden = hide
         onlineStatusText.isHidden = hide
-    }
-
-    private func setupStyle() {
-        backImage.tintColor = configuration.navigationBarItemColor
-        profileName.textColor = configuration.navigationBarTitleColor
-        onlineStatusText.textColor = configuration.navigationBarTitleColor
     }
 
     private func setupActions() {

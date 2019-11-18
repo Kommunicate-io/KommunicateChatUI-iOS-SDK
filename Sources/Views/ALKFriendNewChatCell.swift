@@ -48,7 +48,7 @@ class ALKFriendNewChatCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        contentView.backgroundColor  = .white
+        contentView.backgroundColor = .white
         contentView.addViewsForAutolayout(views: [imgDisplay, lblDisplayName, separatorView])
 
         // Image Display

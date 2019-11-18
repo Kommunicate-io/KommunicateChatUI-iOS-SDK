@@ -2,6 +2,16 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+4.0.0
+---
+### Enhancements
+- [AL-3826] Reply message will be shown in a popup when it is not visible in the list.
+- Now user's display name will be shown instead of group name in case of `GROUP_OF_TWO`.
+
+### Fixes
+- Fixed an issue where navigation bar's back button color was not changing using `UIAppearance`.
+- Fixed all the warnings.
+
 3.4.0
 ---
 ### Enhancements

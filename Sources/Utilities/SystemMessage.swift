@@ -49,6 +49,7 @@ struct SystemMessage: Localizable {
         static let ReportMessageError = localizedString(forKey: "ReportMessageError")
         static let ReportAlertTitle = localizedString(forKey: "ReportAlertTitle")
         static let ReportAlertMessage = localizedString(forKey: "ReportAlertMessage")
+        static let ReportInfoMessage = localizedString(forKey: "ReplyInfoMessage")
     }
 
     struct Update {
@@ -101,6 +102,7 @@ struct SystemMessage: Localizable {
         static let ReportMessage = localizedString(forKey: "ReportMessage")
         static let Delete = localizedString(forKey: "DeleteButtonName")
         static let ok = localizedString(forKey: "OkMessage")
+        static let okay = localizedString(forKey: "OkayMessage")
     }
 
     struct NoData {

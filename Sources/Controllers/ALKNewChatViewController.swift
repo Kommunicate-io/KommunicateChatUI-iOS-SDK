@@ -109,9 +109,9 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
 
     private func launch(_ conversationVC: ALKConversationViewController) {
         // Remove current VC from the stack
-        var navControllers = self.navigationController?.viewControllers.dropLast() ?? []
+        var navControllers = navigationController?.viewControllers.dropLast() ?? []
         navControllers.append(conversationVC)
-        self.navigationController?.setViewControllers(navControllers, animated: true)
+        navigationController?.setViewControllers(navControllers, animated: true)
     }
 }
 

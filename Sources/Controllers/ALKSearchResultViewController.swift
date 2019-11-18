@@ -9,7 +9,7 @@
 import Applozic
 import UIKit
 
-class SearchResultViewController: UIViewController {
+class ALKSearchResultViewController: UIViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
     let viewModel = SearchResultViewModel()
@@ -75,7 +75,7 @@ class SearchResultViewController: UIViewController {
     }
 }
 
-extension SearchResultViewController: ALKConversationListTableViewDelegate {
+extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
     func muteNotification(conversation _: ALMessage, isMuted _: Bool) {}
 
     func userBlockNotification(userId _: String, isBlocked _: Bool) {}

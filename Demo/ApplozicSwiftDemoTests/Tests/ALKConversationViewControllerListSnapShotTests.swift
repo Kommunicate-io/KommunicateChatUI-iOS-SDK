@@ -80,7 +80,12 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
             beforeEach {
                 configuration = ALKConfiguration()
-                configuration.rightNavBarImageForConversationListView = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
+                configuration.hideStartChatButton = true
+                configuration.navigationItemsForConversationList = [
+                    ALKNavigationItem(
+                        identifier: 123456,
+                        icon: UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)!
+                )]
                 conversationVC = ALKConversationListViewController(configuration: configuration)
                 conversationVC.dbService = ALMessageDBServiceMock()
                 conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
