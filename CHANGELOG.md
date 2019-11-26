@@ -2,6 +2,12 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+4.0.1
+---
+### Fixes
+
+- Fixed an issue where button's title was sent as a message in card template.
+
 4.0.0
 ---
 ### Enhancements

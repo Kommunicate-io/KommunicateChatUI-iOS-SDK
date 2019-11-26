@@ -1245,7 +1245,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             dict["requestType"] = payload.requestType
             submitButtonSelected(metadata: dict, text: payload.text ?? "")
         case CardTemplateActionType.quickReply.rawValue:
-            let text = payload.title ?? buttons[tag].name
+            let text = buttons[tag].action?.payload?.message ?? buttons[tag].name
             sendQuickReply(text, metadata: nil)
         default:
             /// Action not defined. Post notification outside.
