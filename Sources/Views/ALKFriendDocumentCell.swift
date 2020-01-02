@@ -104,7 +104,7 @@ class ALKFriendDocumentCell: ALKDocumentCell {
         super.setupStyle()
         timeLabel.setStyle(ALKMessageStyle.time)
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
+        bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
     }
 
     override class func rowHeigh(viewModel _: ALKMessageViewModel, width _: CGFloat) -> CGFloat {

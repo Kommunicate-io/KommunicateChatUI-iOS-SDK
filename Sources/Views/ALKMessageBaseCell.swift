@@ -168,6 +168,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
 
         timeLabel.text = viewModel.time
         resetTextView(messageStyle)
+        emailView(show:false)
         guard let message = viewModel.message else { return }
 
         switch viewModel.messageType {
@@ -179,13 +180,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         case .html:
             emailTopHeight.constant = 0
             emailBottomViewHeight.constant = 0
-            emailTopView.show(false)
-            emailBottomView.show(false)
         case .email:
             emailTopHeight.constant = ALKEmailTopView.height
             emailBottomViewHeight.constant = ALKEmailBottomView.Padding.View.height
-            emailTopView.show(true)
-            emailBottomView.show(true)
+            emailView(show:true)
         default:
             print("😱😱😱Shouldn't come here.😱😱😱")
             return
@@ -284,6 +282,11 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     @objc func replyViewTapped() {
         replyViewAction?()
+    }
+
+    private func emailView(show: Bool) {
+        emailTopView.show(show)
+        emailBottomView.show(show)
     }
 
     // MARK: - Private helper methods

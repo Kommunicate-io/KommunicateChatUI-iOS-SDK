@@ -2,6 +2,13 @@
 
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
+
+4.0.2(upcoming)
+---
+### Enhancements
+
+- [CM-51] Email message layout improvement.
+
 4.0.1
 ---
 ### Fixes
