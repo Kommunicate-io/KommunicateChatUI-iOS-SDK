@@ -21,5 +21,5 @@ public struct AutoCompleteItem {
 
 extension AutoCompleteItem {
     /// A key used for referencing which substrings were autocompletes
-    static public let attributesKey = NSAttributedString.Key("com.applozicswift.autocompletekey")
+    public static let attributesKey = NSAttributedString.Key("com.applozicswift.autocompletekey")
 }

@@ -11,13 +11,10 @@ import UIKit
 import Applozic
 
 class LoginViewController: UIViewController {
-
     @IBOutlet weak var userName: UITextField!
     @IBOutlet weak var password: UITextField!
-
     @IBOutlet weak var emailId: UITextField!
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,12 +27,10 @@ class LoginViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
     
     @IBAction func getStartedBtn(_ sender: AnyObject) {
         let appId = ALChatManager.applicationId
         let alUser : ALUser =  ALUser()
-
         alUser.applicationId = appId
         
         if(ALChatManager.isNilOrEmpty( self.userName.text as NSString?))
@@ -47,24 +42,22 @@ class LoginViewController: UIViewController {
         }
         alUser.userId = self.userName.text
         ALUserDefaultsHandler.setUserId(alUser.userId)
-
         print("userName:: " , alUser.userId)
         if(!((emailId.text?.isEmpty)!)){
-             alUser.email = emailId.text
-             ALUserDefaultsHandler.setEmailId(alUser.email)
+            alUser.email = emailId.text
+            ALUserDefaultsHandler.setEmailId(alUser.email)
         }
-
         if (!((password.text?.isEmpty)!)){
             alUser.password = password.text
             ALUserDefaultsHandler.setPassword(alUser.password)
         }
         registerUserToApplozic(alUser: alUser)
     }
-
     private func registerUserToApplozic(alUser: ALUser) {
         let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
         alChatManager.connectUser(alUser, completion: {response, error in
             if error == nil {
+                self.addContacts()
                 NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")
                 self.present(vc!, animated: false, completion: nil)
@@ -73,8 +66,16 @@ class LoginViewController: UIViewController {
             }
         })
     }
-
-
+    func addContacts(){
+        let contact1  = ALContact()
+        let contact2 = ALContact()
+        contact1.userId = "iOSDemoContact1"
+        contact1.displayName = "iOS Demo Contact 1"
+        contact2.userId = "iOSDemoContact2"
+        contact2.displayName = "iOS Demo Contact 2"
+        let contactService = ALContactService()
+        contactService.addList(ofContacts: [contact1 , contact2])
+    }
 }
 
 

@@ -34,6 +34,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         }
     }
+
     open var channelKey: NSNumber? {
         didSet {
             if channelKey != nil {
@@ -41,6 +42,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         }
     }
+
     open var isSearch: Bool = false
 
     // For topic based chat

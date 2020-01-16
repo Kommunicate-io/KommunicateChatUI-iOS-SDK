@@ -124,11 +124,13 @@ open class ALKChatBar: UIView, Localizable {
 
     open var photoButton: UIButton = {
         let bt = UIButton(type: .custom)
+        bt.accessibilityIdentifier = "photoButtonInConversationScreen"
         return bt
     }()
 
     open var galleryButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "galleryButtonInConversationScreen"
         return button
     }()
 
@@ -142,11 +144,13 @@ open class ALKChatBar: UIView, Localizable {
 
     open var locationButton: UIButton = {
         let bt = UIButton(type: .custom)
+        bt.accessibilityIdentifier = "locationButtonInConversationScreen"
         return bt
     }()
 
     open var contactButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "contactButtonInConversationScreen"
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
         return button
@@ -183,6 +187,7 @@ open class ALKChatBar: UIView, Localizable {
 
     open var videoButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "videoButtonInConversationScreen"
         return button
     }()
 

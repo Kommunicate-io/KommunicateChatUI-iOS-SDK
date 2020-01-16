@@ -6,6 +6,10 @@
 	<string>$(TestUserPassword)</string>
 	<key>TestUserId</key>
 	<string>$(TestUserId)</string>
+	<key>GroupMember1</key>
+	<string>$(GroupMember1)</string>
+	<key>GroupMember2</key>
+	<string>$(GroupMember2)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
