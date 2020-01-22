@@ -29,7 +29,7 @@ extension String {
     func word(at nsrange: NSRange) -> (word: String, range: Range<String.Index>)? {
         guard !isEmpty,
             let range = Range(nsrange, in: self),
-            let parts = self.wordParts(range)
+            let parts = wordParts(range)
         else { return nil }
 
         // If the left-next character is whitespace, the "right word part" is the full word

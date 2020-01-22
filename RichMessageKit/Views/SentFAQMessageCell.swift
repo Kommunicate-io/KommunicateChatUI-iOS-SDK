@@ -92,15 +92,15 @@ public class SentFAQMessageCell: UITableViewCell {
         addViewsForAutolayout(views: [messageView, faqView])
 
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: self.topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            messageView.topAnchor.constraint(equalTo: topAnchor),
+            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             messageViewHeight,
 
             faqView.topAnchor.constraint(equalTo: messageView.bottomAnchor),
-            faqView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: Config.faqLeftPadding),
-            faqView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Config.padding.right),
-            faqView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+            faqView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: Config.faqLeftPadding),
+            faqView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Config.padding.right),
+            faqView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
         ])
     }
 }

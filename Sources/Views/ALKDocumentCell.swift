@@ -184,7 +184,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     @objc func openWKWebView(gesture _: UITapGestureRecognizer) {
-        guard let filePath = self.viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath: filePath) else {
+        guard let filePath = viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath: filePath) else {
             let errorMessage = (viewModel?.filePath != nil) ? "File type is not supported" : "File is not downloaded"
             print(errorMessage)
             return
@@ -248,7 +248,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
             downloadButton.isHidden = true
             progressView.isHidden = true
             viewModel?.filePath = filePath
-        case .downloading(let progress, _):
+        case let .downloading(progress, _):
             // show progress bar
             downloadButton.isHidden = true
             progressView.isHidden = false

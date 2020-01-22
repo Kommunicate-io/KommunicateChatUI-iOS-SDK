@@ -148,18 +148,18 @@ public class SentMessageView: UIView {
         NSLayoutConstraint.activate([
             stateView.widthAnchor.constraint(equalToConstant: Config.StateView.width),
             stateView.heightAnchor.constraint(equalToConstant: Config.StateView.height),
-            stateView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
-            stateView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: padding.left),
+            stateView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
+            stateView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: padding.left),
             stateView.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -1 * Config.TimeLabel.leftPadding),
 
-            timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
+            timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
             timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: stateView.trailingAnchor, constant: Config.TimeLabel.leftPadding),
             timeLabelWidth,
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -1 * Config.MessageView.leftPadding),
 
-            messageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
-            messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
+            messageView.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
             messageView.leadingAnchor.constraint(greaterThanOrEqualTo: timeLabel.trailingAnchor, constant: Config.MessageView.leftPadding),
             messageView.bottomAnchor.constraint(equalTo: stateView.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding),
         ])

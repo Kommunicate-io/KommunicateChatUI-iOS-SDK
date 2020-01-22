@@ -51,7 +51,7 @@ extension ALKNavigationItem {
 extension ALKNavigationItem {
     func barButton(target: Any, action: Selector) -> UIBarButtonItem? {
         guard let image = self.buttonImage else {
-            guard let text = self.buttonText else {
+            guard let text = buttonText else {
                 return nil
             }
             let button = UIBarButtonItem(title: text, style: .plain, target: target, action: action)

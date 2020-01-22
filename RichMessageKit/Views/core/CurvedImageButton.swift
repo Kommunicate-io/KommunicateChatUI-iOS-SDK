@@ -119,10 +119,10 @@ public class CurvedImageButton: UIView {
     public func buttonWidth() -> CGFloat {
         let titleWidth =
             title
-            .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                      font: config.font)
-            .width
-            .rounded(.up)
+                .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+                                          font: config.font)
+                .width
+                .rounded(.up)
         let buttonWidth = titleWidth + config.spaceWithoutText
         return max(buttonWidth, config.minWidth) // Minimum width is 45
     }
@@ -133,10 +133,10 @@ public class CurvedImageButton: UIView {
     public func buttonHeight() -> CGFloat {
         let titleHeight =
             title
-            .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                      font: config.font)
-            .height
-            .rounded(.up)
+                .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
+                                          font: config.font)
+                .height
+                .rounded(.up)
         let buttonHeight = titleHeight + config.padding.top + config.padding.bottom
         return max(buttonHeight, config.minHeight) // Minimum height is 35
     }

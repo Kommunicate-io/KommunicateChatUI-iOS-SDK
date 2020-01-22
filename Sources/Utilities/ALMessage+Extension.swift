@@ -23,7 +23,7 @@ let emailSourceType = 7
 extension ALMessage: ALKChatViewModelProtocol {
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
-        guard let alContact = alContactDbService.loadContact(byKey: "userId", value: self.to) else {
+        guard let alContact = alContactDbService.loadContact(byKey: "userId", value: to) else {
             return nil
         }
         return alContact
@@ -193,7 +193,7 @@ extension ALMessage {
 
     public var messageType: ALKMessageType {
         guard source != emailSourceType else {
-            /// Attachments come as separate message.
+            // Attachments come as separate message.
             if message == nil, let type = getAttachmentType() {
                 return type
             }

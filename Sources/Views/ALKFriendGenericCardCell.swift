@@ -35,7 +35,7 @@ open class ALKFriendGenericCardCell: ALKGenericCardBaseCell {
     override func setupViews() {
         setupCollectionView()
 
-        contentView.addViewsForAutolayout(views: [self.collectionView, self.messageView])
+        contentView.addViewsForAutolayout(views: [collectionView, messageView])
         contentView.bringSubviewToFront(messageView)
 
         let leftPadding = ChatCellPadding.ReceivedMessage.Message.left

@@ -116,18 +116,18 @@ class ALKCreateGroupViewModel: Localizable {
 
             self.membersInfo =
                 alContacts
-                .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
-                .map {
-                    let user = $0!
-                    return GroupMemberInfo(
-                        id: user.userId ?? "",
-                        name: user.getDisplayName() ?? "",
-                        image: user.contactImageUrl,
-                        isAdmin: self.isAdmin(userId: user.userId!),
-                        addCell: false,
-                        adminText: self.adminText
-                    )
-                }
+                    .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
+                    .map {
+                        let user = $0!
+                        return GroupMemberInfo(
+                            id: user.userId ?? "",
+                            name: user.getDisplayName() ?? "",
+                            image: user.contactImageUrl,
+                            isAdmin: self.isAdmin(userId: user.userId!),
+                            addCell: false,
+                            adminText: self.adminText
+                        )
+                    }
             self.membersInfo.insert(self.getCurrentUserInfo(), at: 0)
             DispatchQueue.main.async {
                 self.delegate?.membersFetched()

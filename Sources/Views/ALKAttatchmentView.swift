@@ -74,11 +74,11 @@ class ALKAttatchmentView: UIView {
             return
         }
 
-        guard let messageObject = self.message else {
+        guard let messageObject = message else {
             return
         }
 
-        /// For email attachments url is to be used directly
+        // For email attachments url is to be used directly
         if messageObject.source == emailSourceType, let url = messageObject.fileMetaInfo?.url {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = self

@@ -270,7 +270,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             let path = docDirPath.appendingPathComponent(filePath)
             let fileUtills = ALKFileUtils()
             photoView.image = fileUtills.getThumbnail(filePath: path)
-        case .downloading(let progress, _):
+        case let .downloading(progress, _):
             // show progress bar
             print("downloading")
             uploadButton.isHidden = true

@@ -61,13 +61,13 @@ class ALKSearchResultViewController: UIViewController {
     }
 
     private func setupView() {
-        /// Add TableViewController
+        // Add TableViewController
         add(viewController)
         viewController.view.frame = view.bounds
         viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         viewController.view.translatesAutoresizingMaskIntoConstraints = true
 
-        /// Add Activity Indicator
+        // Add Activity Indicator
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)

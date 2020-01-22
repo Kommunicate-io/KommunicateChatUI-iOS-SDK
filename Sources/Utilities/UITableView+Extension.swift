@@ -50,7 +50,7 @@ extension UITableView {
     }
 
     func isCellVisible(section: Int, row: Int) -> Bool {
-        guard let indexes = self.indexPathsForVisibleRows else { return false }
+        guard let indexes = indexPathsForVisibleRows else { return false }
         return indexes.contains { $0.section == section && $0.row == row }
     }
 

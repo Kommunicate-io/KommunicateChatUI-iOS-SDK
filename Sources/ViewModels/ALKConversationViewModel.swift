@@ -315,13 +315,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if messageModel.isMyMessage {
                 return
                     ALKMyGenericCardCell
-                    .rowHeigh(viewModel: messageModel, width: maxWidth)
-                    .cached(with: messageModel.identifier)
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ALKFriendGenericCardCell
-                    .rowHeigh(viewModel: messageModel, width: maxWidth)
-                    .cached(with: messageModel.identifier)
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             }
         case .faqTemplate:
             guard let faqMessage = messageModel.faqMessage() else { return 0 }
@@ -334,87 +334,87 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if messageModel.isMyMessage {
                 return
                     ALKMyQuickReplyCell
-                    .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ALKFriendQuickReplyCell
-                    .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             }
         case .button:
             if messageModel.isMyMessage {
                 return
                     ALKMyMessageButtonCell
-                    .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
-                    .cached(with: messageModel.identifier)
+                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ALKFriendMessageButtonCell
-                    .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
-                    .cached(with: messageModel.identifier)
+                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             }
         case .listTemplate:
             if messageModel.isMyMessage {
                 return
                     ALKMyListTemplateCell
-                    .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ALKFriendListTemplateCell
-                    .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: messageModel.identifier)
             }
         case .document:
             if messageModel.isMyMessage {
                 return
                     ALKMyDocumentCell
-                    .rowHeigh(viewModel: messageModel, width: maxWidth)
-                    .cached(with: messageModel.identifier)
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ALKFriendDocumentCell
-                    .rowHeigh(viewModel: messageModel, width: maxWidth)
-                    .cached(with: messageModel.identifier)
+                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: messageModel.identifier)
             }
         case .contact:
             if messageModel.isMyMessage {
                 return
                     ALKMyContactMessageCell
-                    .rowHeight()
-                    .cached(with: messageModel.identifier)
+                        .rowHeight()
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ALKFriendContactMessageCell
-                    .rowHeight()
-                    .cached(with: messageModel.identifier)
+                        .rowHeight()
+                        .cached(with: messageModel.identifier)
             }
         case .imageMessage:
             guard let imageMessage = messageModel.imageMessage() else { return 0 }
             if messageModel.isMyMessage {
                 return
                     SentImageMessageCell
-                    .rowHeight(model: imageMessage)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(model: imageMessage)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ReceivedImageMessageCell
-                    .rowHeight(model: imageMessage)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(model: imageMessage)
+                        .cached(with: messageModel.identifier)
             }
         case .allButtons:
             guard let model = messageModel.allButtons() else { return 0 }
             if messageModel.isMyMessage {
                 return
                     SentButtonsCell
-                    .rowHeight(model: model)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(model: model)
+                        .cached(with: messageModel.identifier)
             } else {
                 return
                     ReceivedButtonsCell
-                    .rowHeight(model: model)
-                    .cached(with: messageModel.identifier)
+                        .rowHeight(model: model)
+                        .cached(with: messageModel.identifier)
             }
         }
     }
@@ -764,7 +764,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             contentType = ALMESSAGE_CONTENT_CAMERA_RECORDING
         }
 
-        guard let alMessage = self.processAttachment(filePath: url, text: "", contentType: Int(contentType), isVideo: true, metadata: metadata) else { return (nil, nil) }
+        guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(contentType), isVideo: true, metadata: metadata) else { return (nil, nil) }
         addToWrapper(message: alMessage)
         return (alMessage, IndexPath(row: 0, section: messageModels.count - 1))
     }
@@ -875,7 +875,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     func syncOpenGroup(message: ALMessage) {
         guard let groupId = message.groupId,
-            groupId == self.channelKey,
+            groupId == channelKey,
             !message.isMyMessage,
             message.deviceKey != ALUserDefaultsHandler.getDeviceKeyString() else {
             return
@@ -1233,9 +1233,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let members = groupMembers else { return [] }
         let items =
             members
-            .filter { $0.userId != ALUserDefaultsHandler.getUserId() }
-            .map { AutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
-            .sorted { $0.content < $1.content }
+                .filter { $0.userId != ALUserDefaultsHandler.getUserId() }
+                .map { AutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
+                .sorted { $0.content < $1.content }
         return items
     }
 

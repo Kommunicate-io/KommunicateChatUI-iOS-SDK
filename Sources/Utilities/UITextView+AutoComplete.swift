@@ -31,7 +31,7 @@ extension UITextView {
     }
 
     var caretRange: NSRange? {
-        guard let selectedRange = self.selectedTextRange else { return nil }
+        guard let selectedRange = selectedTextRange else { return nil }
         return NSRange(
             location: offset(from: beginningOfDocument, to: selectedRange.start),
             length: offset(from: selectedRange.start, to: selectedRange.end)

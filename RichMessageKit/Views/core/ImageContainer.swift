@@ -95,12 +95,12 @@ public class ImageContainer: UIView {
         let imageHeight = maxWidth * heightRatio
 
         NSLayoutConstraint.activate([
-            bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            bubbleView.topAnchor.constraint(equalTo: self.topAnchor),
-            bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            bubbleView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bubbleView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bubbleView.topAnchor.constraint(equalTo: topAnchor),
+            bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
             imageView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: padding.left),
             imageView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -1 * padding.right),
             imageView.heightAnchor.constraint(equalToConstant: imageHeight),

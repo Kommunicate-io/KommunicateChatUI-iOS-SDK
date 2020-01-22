@@ -120,7 +120,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     }
 
     @IBAction func createGroupPress(_: Any) {
-        guard var groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+        guard var groupName = txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             let msg = localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, fileName: localizedStringFileName)
             alert(msg: msg)
             return
