@@ -120,7 +120,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     }
 
     @IBAction func createGroupPress(_: Any) {
-        guard var groupName = self.txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+        guard var groupName = txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             let msg = localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, fileName: localizedStringFileName)
             alert(msg: msg)
             return
@@ -137,7 +137,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         if groupDelegate != nil {
             if let image = cropedImage {
                 // upload image first
-                guard let uploadUrl = URL(string: ALUserDefaultsHandler.getBASEURL() + IMAGE_UPLOAD_URL) else {
+                guard let uploadUrl = URL(string: ALUserDefaultsHandler.getBASEURL() + AL_IMAGE_UPLOAD_URL) else {
                     NSLog("NO URL TO UPLOAD GROUP PROFILE IMAGE")
                     return
                 }

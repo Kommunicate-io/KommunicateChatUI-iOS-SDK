@@ -330,7 +330,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     @objc func customBackAction() {
-        guard let nav = self.navigationController else { return }
+        guard let nav = navigationController else { return }
         let poppedVC = nav.popViewController(animated: true)
         if poppedVC == nil {
             dismiss(animated: true, completion: nil)
@@ -409,7 +409,7 @@ extension ALKConversationListViewController: ALKConversationListViewModelDelegat
 
 extension ALKConversationListViewController: ALMQTTConversationDelegate {
     open func mqttDidConnected() {
-        if let viewController = self.navigationController?.visibleViewController as? ALKConversationViewController {
+        if let viewController = navigationController?.visibleViewController as? ALKConversationViewController {
             viewController.subscribeChannelToMqtt()
         }
         print("MQTT did connected")
@@ -448,7 +448,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         guard let message = alMessage else { return }
         let viewController = navigationController?.visibleViewController as? ALKConversationViewController
         if let vm = viewController?.viewModel, vm.contactId != nil || vm.channelKey != nil,
-            let visibleController = self.navigationController?.visibleViewController,
+            let visibleController = navigationController?.visibleViewController,
             visibleController.isKind(of: ALKConversationViewController.self),
             isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
             viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
@@ -460,7 +460,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
                 self.launchChat(contactId: message.contactId, groupId: message.groupId, conversationId: message.conversationId)
             }
         }
-        if let visibleController = self.navigationController?.visibleViewController,
+        if let visibleController = navigationController?.visibleViewController,
             visibleController.isKind(of: ALKConversationListViewController.self) {
             sync(message: alMessage)
         }
@@ -499,7 +499,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         let userDetail = ALUserDetail()
         userDetail.userId = userId
         viewModel.updateStatusFor(userDetail: userDetail)
-        guard let viewController = self.navigationController?.visibleViewController as? ALKConversationViewController else {
+        guard let viewController = navigationController?.visibleViewController as? ALKConversationViewController else {
             return
         }
         viewController.checkUserBlock()
@@ -508,7 +508,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     open func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
         print("Last seen updated")
         viewModel.updateStatusFor(userDetail: alUserDetail)
-        guard let viewController = self.navigationController?.visibleViewController as? ALKConversationViewController else {
+        guard let viewController = navigationController?.visibleViewController as? ALKConversationViewController else {
             return
         }
         viewController.updateLastSeen(atStatus: alUserDetail)

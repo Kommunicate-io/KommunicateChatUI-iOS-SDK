@@ -71,7 +71,7 @@ extension UITextView {
         if lang == nil {
             lang = UIApplication.shared.textInputMode?.primaryLanguage
         }
-        /// Still no language is detected then simply return
+        // Still no language is detected then simply return
         guard let language = lang else { return }
         let isRTL = NSLocale.characterDirection(forLanguage: language) == .rightToLeft
         textAlignment = isRTL ? .right : .left

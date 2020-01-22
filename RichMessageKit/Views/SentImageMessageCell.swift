@@ -89,15 +89,15 @@ public class SentImageMessageCell: UITableViewCell {
         addViewsForAutolayout(views: [messageView, imageBubble])
 
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: self.topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            messageView.topAnchor.constraint(equalTo: topAnchor),
+            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             messageViewHeight,
 
             imageBubble.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
-            imageBubble.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * Config.padding.right),
+            imageBubble.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * Config.padding.right),
             imageBubble.widthAnchor.constraint(equalToConstant: imageBubbleWidth),
-            imageBubble.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+            imageBubble.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
         ])
     }
 

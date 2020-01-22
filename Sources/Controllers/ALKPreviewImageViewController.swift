@@ -79,7 +79,7 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
 
     private func setupNavigation() {
         navigationController?.navigationBar.backgroundColor = UIColor.white
-        guard let navVC = self.navigationController else { return }
+        guard let navVC = navigationController else { return }
         navVC.navigationBar.shadowImage = UIImage()
         navVC.navigationBar.isTranslucent = true
     }

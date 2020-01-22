@@ -28,7 +28,7 @@ extension UIView {
         }
 
         for subview in view.subviews {
-            if let imageView = self.hairlineImageView(in: subview) { return imageView }
+            if let imageView = hairlineImageView(in: subview) { return imageView }
         }
 
         return nil

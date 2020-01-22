@@ -47,8 +47,6 @@ class ALKConversationListViewControllerTests: XCTestCase {
         let selectItemExpectation = XCTestExpectation(description: "Conversation list item selected")
         let conversation = ConversationListTest()
         conversation.selectItemExpectation = selectItemExpectation
-
-        let conversationListVM = ALKConversationListViewModel()
         let conversationVC = ALKConversationViewControllerMock(configuration: ALKConfiguration())
         conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000, localizedStringFileName: ALKConfiguration().localizedStringFileName)
 

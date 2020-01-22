@@ -17,7 +17,7 @@ extension MGSwipeButton {
     }
 
     private func alignVerticalLTR(padding: CGFloat = 10.0) {
-        guard let imageViewSize = self.imageView?.bounds.size else { return }
+        guard let imageViewSize = imageView?.bounds.size else { return }
         titleLabel?.font = UIFont.systemFont(ofSize: 14)
         imageEdgeInsets = UIEdgeInsets(
             top: -padding,
@@ -34,7 +34,7 @@ extension MGSwipeButton {
     }
 
     private func alignVerticalRTL(padding: CGFloat = 10.0) {
-        guard let imageViewSize = self.imageView?.bounds.size else { return }
+        guard let imageViewSize = imageView?.bounds.size else { return }
         titleLabel?.font = UIFont.systemFont(ofSize: 14)
         imageEdgeInsets = UIEdgeInsets(
             top: -padding,

@@ -85,18 +85,18 @@ public class ReceivedImageMessageCell: UITableViewCell {
         addViewsForAutolayout(views: [messageView, imageBubble])
         let leadingMargin =
             Config.padding.left
-            + ReceivedMessageView.Config.ProfileImage.width
-            + ReceivedMessageView.Config.MessageView.leftPadding
+                + ReceivedMessageView.Config.ProfileImage.width
+                + ReceivedMessageView.Config.MessageView.leftPadding
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: self.topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            messageView.topAnchor.constraint(equalTo: topAnchor),
+            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             messageViewHeight,
 
             imageBubble.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
-            imageBubble.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leadingMargin),
+            imageBubble.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingMargin),
             imageBubble.widthAnchor.constraint(equalToConstant: imageBubbleWidth),
-            imageBubble.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+            imageBubble.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
         ])
     }
 

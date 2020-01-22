@@ -263,7 +263,7 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
                 return conversationName.lowercased().isCompose(of: searchText.lowercased())
             }
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 
     public func updateSearchResults(for searchController: UISearchController) {
@@ -287,14 +287,14 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
             }
         }
         searchActive = !searchText.isEmpty
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 
     public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         hideKeyboard()
 
         if (searchBar.text?.isEmpty)! {
-            self.tableView.reloadData()
+            tableView.reloadData()
         }
     }
 
@@ -313,11 +313,11 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
 
     public func searchBarCancelButtonClicked(_: UISearchBar) {
         searchActive = false
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 
     public func searchBarSearchButtonClicked(_: UISearchBar) {
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 }
 
@@ -329,7 +329,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         switch action {
         case .delete:
 
-            guard let indexPath = self.tableView.indexPath(for: cell) else { return }
+            guard let indexPath = tableView.indexPath(for: cell) else { return }
 
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else { return }
@@ -394,7 +394,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 alert.addAction(cancelButton)
                 alert.addAction(deleteButton)
                 present(alert, animated: true, completion: nil)
-            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
+            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
                 let (prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
 
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
@@ -449,7 +449,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
 
         case .mute:
-            guard let indexPath = self.tableView.indexPath(for: cell) else {
+            guard let indexPath = tableView.indexPath(for: cell) else {
                 return
             }
 
@@ -457,26 +457,26 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
                     return
                 }
-                self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
-            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
-                self.handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
+                handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
+            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
+                handleMuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
 
         case .unmute:
-            guard let indexPath = self.tableView.indexPath(for: cell) else {
+            guard let indexPath = tableView.indexPath(for: cell) else {
                 return
             }
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
                     return
                 }
-                self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
-            } else if self.viewModel.chatFor(indexPath: indexPath) != nil, let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage {
-                self.handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
+                handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
+            } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
+                handleUnmuteActionFor(conversation: conversation, atIndexPath: indexPath)
             }
         case .block:
             guard
-                let indexPath = self.tableView.indexPath(for: cell),
+                let indexPath = tableView.indexPath(for: cell),
                 let conversation = messageFor(indexPath: indexPath),
                 let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
             else {
@@ -499,7 +499,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
         case .unblock:
             guard
-                let indexPath = self.tableView.indexPath(for: cell),
+                let indexPath = tableView.indexPath(for: cell),
                 let conversation = messageFor(indexPath: indexPath),
                 let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
             else {
@@ -526,11 +526,11 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
     }
 
     private func confirmationAlert(with message: String) {
-        let okTitle = self.localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.Block.OkMessage, fileName: self.localizedStringFileName)
+        let okTitle = localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.Block.OkMessage, fileName: localizedStringFileName)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let okButton = UIAlertAction(title: okTitle, style: .default, handler: nil)
         alert.addAction(okButton)
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 
     private func unblockUser(in conversation: ALMessage, at indexPath: IndexPath) {
@@ -576,7 +576,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
             return conversation
         } else {
-            guard let conversation = self.viewModel.getChatList()[indexPath.row] as? ALMessage else {
+            guard let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage else {
                 return nil
             }
             return conversation
@@ -652,7 +652,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
     private func sendUnmuteRequestFor(conversation: ALMessage, atIndexPath: IndexPath) {
         // Start activity indicator
-        self.activityIndicator.startAnimating()
+        activityIndicator.startAnimating()
 
         viewModel.sendUnmuteRequestFor(message: conversation, withCompletion: { [weak self] success in
             guard let weakSelf = self else { return }
@@ -706,7 +706,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         let muteConversationVC = MuteConversationViewController(delegate: self, conversation: conversation, atIndexPath: atIndexPath, configuration: configuration)
         muteConversationVC.updateTitle(title)
         muteConversationVC.modalPresentationStyle = .overCurrentContext
-        self.present(muteConversationVC, animated: true, completion: nil)
+        present(muteConversationVC, animated: true, completion: nil)
     }
 }
 
@@ -715,11 +715,11 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 extension ALKConversationListTableViewController: Muteable {
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
         // Start activity indicator
-        self.activityIndicator.startAnimating()
+        activityIndicator.startAnimating()
 
         let time = (Int64(Date().timeIntervalSince1970) * 1000) + forTime
 
-        self.viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { [weak self] success in
+        viewModel.sendMuteRequestFor(message: conversation, tillTime: NSNumber(value: time)) { [weak self] success in
             guard let weakSelf = self else { return }
             // Stop activity indicator
             weakSelf.activityIndicator.stopAnimating()

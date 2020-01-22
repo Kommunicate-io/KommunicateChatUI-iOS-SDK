@@ -25,7 +25,7 @@ struct MockMessage {
         alMessage.storeOnDevice = false
         alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
         alMessage.key = UUID().uuidString
-        alMessage.source = Int16(SOURCE_IOS)
+        alMessage.source = Int16(AL_SOURCE_IOS)
         alMessage.conversationId = nil
         alMessage.groupId = nil
         alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))

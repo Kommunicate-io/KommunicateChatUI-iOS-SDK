@@ -81,15 +81,15 @@ public class SentButtonsCell: UITableViewCell {
         addViewsForAutolayout(views: [messageView, buttons])
 
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: self.topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            messageView.topAnchor.constraint(equalTo: topAnchor),
+            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             messageViewHeight,
 
             buttons.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
             buttons.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Config.padding.right),
             buttons.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttons.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * Config.padding.bottom),
+            buttons.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
         ])
     }
 }

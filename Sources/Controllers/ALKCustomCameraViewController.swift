@@ -128,7 +128,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 // connection is active
             } else {
                 // connection is not active
-                //try to change self.captureSession.sessionPreset,
+                // try to change self.captureSession.sessionPreset,
                 // or change videoDevice.activeFormat
             }
         }
@@ -521,7 +521,7 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
     }
 
     func numberOfSections(in _: UICollectionView) -> Int {
-        return 1 //the vertical side
+        return 1 // the vertical side
     }
 
     // MARK: UICollectionViewDelegateFlowLayout

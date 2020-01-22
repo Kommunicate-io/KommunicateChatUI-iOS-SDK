@@ -168,14 +168,14 @@ public class ReceivedMessageView: UIView {
         let nameRightPadding = max(padding.right, Config.DisplayName.rightPadding)
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Config.ProfileImage.topPadding),
-            avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
             avatarImageView.widthAnchor.constraint(equalToConstant: Config.ProfileImage.width),
             avatarImageView.heightAnchor.constraint(equalToConstant: Config.ProfileImage.height),
 
-            nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Config.DisplayName.leftPadding),
             nameLabel.heightAnchor.constraint(equalToConstant: Config.DisplayName.height),
-            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -1 * nameRightPadding),
+            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -1 * nameRightPadding),
 
             messageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Config.MessageView.topPadding),
             messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Config.MessageView.leftPadding),
@@ -183,10 +183,10 @@ public class ReceivedMessageView: UIView {
             messageView.trailingAnchor.constraint(lessThanOrEqualTo: timeLabel.leadingAnchor, constant: -1 * Config.TimeLabel.leftPadding),
 
             timeLabel.leadingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: Config.TimeLabel.leftPadding),
-            timeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
+            timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
             timeLabelWidth,
             timeLabelHeight,
-            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -1 * padding.right),
+            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -1 * padding.right),
         ])
     }
 }

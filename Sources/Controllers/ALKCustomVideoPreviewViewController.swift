@@ -63,7 +63,7 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController, Localiza
         navigationItem.title = title
 
         navigationController?.navigationBar.setBackgroundImage(UIImage(color: .main, alpha: 0.6), for: .default)
-        guard let navVC = self.navigationController else { return }
+        guard let navVC = navigationController else { return }
         navVC.navigationBar.shadowImage = UIImage()
         navVC.navigationBar.isTranslucent = true
     }

@@ -138,29 +138,29 @@ public class FAQMessageView: UIView {
         }
 
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left),
-            titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
-            titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
             titleHeight,
 
-            descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left),
-            descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
+            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
+            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: FAQMessageView.verticalSpacing),
             descriptionHeight,
 
-            bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            bubbleView.topAnchor.constraint(equalTo: self.topAnchor),
+            bubbleView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bubbleView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bubbleView.topAnchor.constraint(equalTo: topAnchor),
             bubbleView.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: padding.bottom),
 
             buttonLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: FAQMessageView.verticalSpacing),
-            buttonLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            buttonLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttonLabelHeight,
 
-            buttons.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            buttons.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            buttons.leadingAnchor.constraint(equalTo: leadingAnchor),
+            buttons.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttons.topAnchor.constraint(equalTo: buttonLabel.bottomAnchor, constant: FAQMessageView.verticalSpacing),
-            buttons.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -FAQMessageView.verticalSpacing),
+            buttons.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -FAQMessageView.verticalSpacing),
         ])
     }
 }

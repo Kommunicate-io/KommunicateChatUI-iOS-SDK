@@ -118,7 +118,7 @@ class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
-        /// Auto-Download
+        // Auto-Download
         if viewModel.filePath == nil {
             downloadTapped?(true)
         } else if let filePath = viewModel.filePath {

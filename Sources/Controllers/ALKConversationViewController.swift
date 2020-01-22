@@ -359,7 +359,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         setUpRightNavigationButtons()
-        if let listVC = self.navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch {
+        if let listVC = navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch {
             individualLaunch = false
         }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
@@ -854,7 +854,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             switch (pattern, filename) {
             case ("", ""):
                 return nil
-            case (let pattern, ""):
+            case let (pattern, ""):
                 return (try ProfanityFilter(restrictedMessageRegex: pattern))
             case let ("", filename):
                 return (try ProfanityFilter(fileName: filename))
@@ -1917,7 +1917,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 guard let indexPath = viewModel.sendVideo(
                     atPath: path,
                     sourceType: .photoLibrary,
-                    metadata: self.configuration.messageMetadata
+                    metadata: configuration.messageMetadata
                 ).1
                 else { continue }
                 tableView.beginUpdates()

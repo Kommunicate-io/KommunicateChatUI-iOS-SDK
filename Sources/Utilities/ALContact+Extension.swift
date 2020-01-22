@@ -15,7 +15,7 @@ extension ALContact: ALKContactProtocol {
     }
 
     public var friendDisplayImgURL: URL? {
-        guard let imageUrl = self.contactImageUrl, let url = URL(string: imageUrl) else {
+        guard let imageUrl = contactImageUrl, let url = URL(string: imageUrl) else {
             return nil
         }
         return url

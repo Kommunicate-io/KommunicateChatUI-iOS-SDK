@@ -107,14 +107,14 @@ public class MessageView: UIView {
         bringSubviewToFront(messageLabel)
 
         NSLayoutConstraint.activate([
-            bubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            bubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            bubbleView.topAnchor.constraint(equalTo: self.topAnchor),
-            bubbleView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            messageLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding.top),
-            messageLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1 * padding.bottom),
-            messageLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding.left),
-            messageLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1 * padding.right),
+            bubbleView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bubbleView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bubbleView.topAnchor.constraint(equalTo: topAnchor),
+            bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
+            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
+            messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
+            messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
         ])
     }
 }

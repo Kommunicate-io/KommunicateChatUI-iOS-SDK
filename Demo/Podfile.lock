@@ -1,33 +1,35 @@
 PODS:
-  - Applozic (6.17.0):
+  - Applozic (7.0.0):
     - SDWebImage (~> 5.1.0)
   - ApplozicSwift (4.0.1):
     - ApplozicSwift/Complete (= 4.0.1)
   - ApplozicSwift/Complete (4.0.1):
-    - Applozic (~> 6.17.0)
+    - Applozic (~> 7.0.0)
     - ApplozicSwift/RichMessageKit
-    - Kingfisher (~> 5.7.0)
-    - MGSwipeTableCell (~> 1.6.9)
+    - Kingfisher (~> 5.13.0)
+    - MGSwipeTableCell (~> 1.6.11)
   - ApplozicSwift/RichMessageKit (4.0.1)
-  - iOSSnapshotTestCase (6.1.0):
-    - iOSSnapshotTestCase/SwiftSupport (= 6.1.0)
-  - iOSSnapshotTestCase/Core (6.1.0)
-  - iOSSnapshotTestCase/SwiftSupport (6.1.0):
+  - iOSSnapshotTestCase (6.2.0):
+    - iOSSnapshotTestCase/SwiftSupport (= 6.2.0)
+  - iOSSnapshotTestCase/Core (6.2.0)
+  - iOSSnapshotTestCase/SwiftSupport (6.2.0):
     - iOSSnapshotTestCase/Core
-  - Kingfisher (5.7.1)
-  - MGSwipeTableCell (1.6.9)
-  - Nimble (8.0.2)
-  - Nimble-Snapshots (8.0.0):
-    - Nimble-Snapshots/Core (= 8.0.0)
-  - Nimble-Snapshots/Core (8.0.0):
+  - Kingfisher (5.13.0):
+    - Kingfisher/Core (= 5.13.0)
+  - Kingfisher/Core (5.13.0)
+  - MGSwipeTableCell (1.6.11)
+  - Nimble (8.0.5)
+  - Nimble-Snapshots (8.1.1):
+    - Nimble-Snapshots/Core (= 8.1.1)
+  - Nimble-Snapshots/Core (8.1.1):
     - iOSSnapshotTestCase (~> 6.0)
     - Nimble (~> 8.0)
-  - Quick (2.1.0)
+  - Quick (2.2.0)
   - SDWebImage (5.1.1):
     - SDWebImage/Core (= 5.1.1)
   - SDWebImage/Core (5.1.1)
-  - SwiftFormat/CLI (0.40.11)
-  - SwiftLint (0.34.0)
+  - SwiftFormat/CLI (0.44.0)
+  - SwiftLint (0.38.2)
 
 DEPENDENCIES:
   - ApplozicSwift (from `../ApplozicSwift.podspec`)
@@ -55,17 +57,17 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: f84adef5b0d0606f7d33b88b66c67978f6a9160e
-  ApplozicSwift: 75effb6ac41c4792912acca935b4990b473adc6f
-  iOSSnapshotTestCase: 30d540b0c8feb9d7f8ff97acc25a3804b48ee264
-  Kingfisher: 176d377ad339113c99ad4980cbae687f807e20fe
-  MGSwipeTableCell: 17349a8b56c81245bd77671251eb8aa9d486d46b
-  Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
-  Nimble-Snapshots: 8ec63f41ce6c7229a17be9a64edbc123b181f75b
-  Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
+  Applozic: 56b5e70268a29478e8cac30df6490b0a9251fd20
+  ApplozicSwift: 85cebb660df317406de392ec80262cc92c168131
+  iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
+  Kingfisher: 0d334cada987fcddbe9b5cec516406e1ee9d4748
+  MGSwipeTableCell: b804e4e450dee439c42250be90bd50458bf67fce
+  Nimble: 4ab1aeb9b45553c75b9687196b0fa0713170a332
+  Nimble-Snapshots: 5058fb9b459e64371f54a0f8d9dde6f33db490a0
+  Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   SDWebImage: 96d7f03415ccb28d299d765f93557ff8a617abd8
-  SwiftFormat: 304f39cab266d39c9d60f4fceec37ed6f43b931c
-  SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
+  SwiftFormat: 180a4d17bcfa2c9f61b202dac7dddd2087ff920a
+  SwiftLint: 8f5d2f903e1c9bcbc832fd16771e80a263ac6cbb
 
 PODFILE CHECKSUM: 263b80b5b0fd21d31e2fcd1d36bb68c211a15814
 
