@@ -1391,7 +1391,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessage.storeOnDevice = false
         alMessage.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
         alMessage.key = UUID().uuidString
-        alMessage.source = Int16(SOURCE_IOS)
+        alMessage.source = Int16(AL_SOURCE_IOS)
         alMessage.conversationId = conversationId
         alMessage.groupId = channelKey
         return alMessage

@@ -439,7 +439,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Applozic;
 				TargetAttributes = {
 					8B36D0E31F3DC5E900FEFFD2 = {
