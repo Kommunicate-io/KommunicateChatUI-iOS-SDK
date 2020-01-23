@@ -3,19 +3,19 @@
 The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
 
 
-4.0.2(upcoming)
----
+## [Unreleased]
+
 ### Enhancements
 
 - [CM-51] Email message layout improvement.
 
-4.0.1
+## [4.0.1]
 ---
 ### Fixes
 
 - Fixed an issue where button's title was sent as a message in card template.
 
-4.0.0
+## [4.0.0]
 ---
 ### Enhancements
 - [AL-3826] Reply message will be shown in a popup when it is not visible in the list.
@@ -25,7 +25,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - Fixed an issue where navigation bar's back button color was not changing using `UIAppearance`.
 - Fixed all the warnings.
 
-3.4.0
+## [3.4.0]
 ---
 ### Enhancements
 - Added support for iOS 13.
@@ -56,13 +56,13 @@ The mute icon image can be changed from outside using below code.
 ### Fixes
 - [AL-3862] Fixed a crash where dbMessage was being forcefully unwrapped.
 
-3.3.0
+## [3.3.0]
 ---
 ### Enhancements
 -[AL-3648] Option to zoom in Picture preview screen.
 -[AL-3738] Added font and color customizations configuration for group detail screen.
 
-3.2.0
+## [3.2.0]
 ---
 ### Enhancements
 - [AL-3647] Send notification for mute, block and add member click
@@ -71,7 +71,7 @@ The mute icon image can be changed from outside using below code.
 ### Fixes
 - Fixed an issue where duplicate messages were getting added in the chat thread from notifications.
 
-3.1.0
+## [3.1.0]
 ---
 ### Enhancements
 - [AL-3580] Added separate config options for the chat bar items.
@@ -80,7 +80,7 @@ The mute icon image can be changed from outside using below code.
 - [AL-3210] Added RTL support.
 - [AL-3624] Added support for passing regular expression pattern to restrict certain messages.
 
-3.0.0
+## [3.0.0]
 ---
 ### Enhancements
 - [AL-3623] Now iOS 10 is the minimum version supported.
@@ -91,7 +91,7 @@ The mute icon image can be changed from outside using below code.
 ### Fixes
 - Fixed a crash when video isn't exported properly.
 
-2.7.0
+## [2.7.0]
 ---
 
 ### Enhancements
@@ -107,7 +107,7 @@ The mute icon image can be changed from outside using below code.
 - [AL-3548] Fixed an issue where app was crashing after tapping on notification.
 - Now, group title action will be disabled for support group(GroupType = 10) as well.
 
-2.6.0
+## [2.6.0]
 ---
 ### Enhancements
 - [AL-3397] Added support for sharing contacts.
@@ -118,7 +118,7 @@ The mute icon image can be changed from outside using below code.
 - Fixed an issue where user was shown "Not part of group" which was happening because fetch request for group members was giving null.
 
 
-2.5.1
+## [2.5.1]
 
 ### Enhancments
 - [AL-3490] Added support for Back button action in Conversation VC if the VC is presented not pushed.
@@ -126,7 +126,7 @@ The mute icon image can be changed from outside using below code.
 ### Fixes
 - [AL-3486]Fixed an issue where in some cases view was in an incorrect state if the keyboard is visible.
 
-2.5.0
+## [2.5.0]
 ---
 ### Enhancements
 - [AL-3301] Added a way to use custom view for in-app notifications.
@@ -138,7 +138,7 @@ The mute icon image can be changed from outside using below code.
 - Fixed an issue where in some cases removed group member was able to send an audio message.
 - Resolved an issue where Block/Unblock was not reflecting in real-time.
 
-2.4.0
+## [2.4.0]
 ---
 ### Enhancements
 - [AL-3267] Added support for blocking/unblocking a user.
@@ -152,7 +152,7 @@ The mute icon image can be changed from outside using below code.
 - Fixed an issue where changing the right nav bar conversation icon was still refreshing the view.
 -  Fixed issue where style was not used for text message sent and received.
 
-2.3.0
+## [2.3.0]
 ---
 ### Enhancments
 - Updates Swift version to 4.2
@@ -182,7 +182,7 @@ The mute icon image can be changed from outside using below code.
 ```
 - Added email message support.
 
-2.2.0
+## [2.2.0]
 ---
 ### Enhancments
 
@@ -196,7 +196,7 @@ The mute icon image can be changed from outside using below code.
 -[AL-3240] Fixed an where clicking mute/unmute and if the title is large then it was going out of screen.
 -[AL-3241] Fixed an issue where if we update the name it was also updating the group icon.
 
-2.1.0
+## [2.1.0]
 ---
 ### Enhancements
 
@@ -206,7 +206,7 @@ The mute icon image can be changed from outside using below code.
 ### Fixes
 - Fixed an issue where view was taking time in moving upwards when keyboard appears in the screen.
 
-2.0.0
+## [2.0.0]
 ---
 ### Fixes
 
@@ -218,7 +218,7 @@ The mute icon image can be changed from outside using below code.
 - [AL 3136] Default message meta data configuration
 - Use the same bubble in case of menu click show and hide if style setting is passed
 
-1.3.0
+## [1.3.0]
 ---
 ### Enhancements
 
@@ -239,7 +239,7 @@ The mute icon image can be changed from outside using below code.
 - [Al-3123] Fix an issue where notification will come for the message sent by the logged in user from different device.
 - [AL-3117] Refresh conversationView when it is opened.
 
-1.2.0
+## [1.2.0]
 ---
 ### Enhancements
 - [AL-3004] Update chat screen to enable/disble chat for user when user is added/removed in the group.
@@ -256,7 +256,7 @@ The mute icon image can be changed from outside using below code.
 - [AL-3022] Fix an issue where audio option was still visible for open group.
 - [AL-2973] Fix an issue where notification won't come for messages when chat screen is open.
 
-1.1.0
+## [1.1.0]
 ---
 ### Fixes
 - Fix position of audio-mic button. When coming back from photos screen or location screen position of mic button moves to left of screen.
@@ -265,7 +265,7 @@ The mute icon image can be changed from outside using below code.
 - [AL-2978] Fix an issue where new one to one chat from a user would overlap all the groupChats in which this user has sent last message.
 - [CS-169] Fix trimming of launch-page start to chat text in iPhone 5s.
 
-1.0.0
+## [1.0.0]
 ---
 ### Enhancements
 - [AL-2875] New swipe based design for audio recording.
@@ -274,18 +274,17 @@ The mute icon image can be changed from outside using below code.
 ### Fixes
 - [AL-2909] Fix trimming of  multiline message
 
-0.15.1
+## [0.15.1]
 ---
 ### Fixes
 - [AL-2908] Fixed message character going out of bounds.
 - [CS-127] Fixed an issue where tapping on notification was not opening chat screen.
 
-0.15.0
+## [0.15.0]
 ---
 ### Enhancements
-
 - [CS-108] Add support for contacts group.
 
 ### Fixes
-
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
+
