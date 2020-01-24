@@ -71,13 +71,16 @@ platform :ios do
     releaseBranchName = options[:releaseBranchName]
     sh("git", "add", "-u")
     sh("git", "commit", "-m", "Bump version to #{version} [ci skip]")
-    sh("git", "fetch")
+    sh("git", "fetch", "origin", "master")
+    sh("git", "branch", "master", "origin/master")
+    sh("git", "fetch", ".", "#{releaseBranchName}:master")
     sh("git", "checkout", "master")
-    sh("git", "merge", releaseBranchName)
     sh("git", "tag", version)
-    sh("git", "push", "origin", "--tags", "master")
+    sh("git", "fetch", "origin", "dev")
+    sh("git", "branch", "dev", "origin/dev")
+    sh("git", "fetch", ".", "master:dev")
     sh("git", "checkout", "dev")
-    sh("git", "merge", "master")
+    sh("git", "push", "origin", "--tags", "master")
     sh("git", "push", "origin", "dev")
   end
 end
