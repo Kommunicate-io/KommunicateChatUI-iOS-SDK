@@ -5,6 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+## [4.1.0] - 2020-01-27
+
 ### Enhancements
 
 - [CM-51] Email message layout improvement.
@@ -287,4 +289,5 @@ The mute icon image can be changed from outside using below code.
 
 ### Fixes
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
+
 
