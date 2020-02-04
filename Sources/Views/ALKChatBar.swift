@@ -313,7 +313,8 @@ open class ALKChatBar: UIView, Localizable {
         textView.text = ""
         clearTextInTextView()
         textView.attributedText = nil
-        toggleKeyboardType(textView: textView)
+        // If the keyboard used is not English, the keyboard is changed.
+        // toggleKeyboardType(textView: textView)
     }
 
     func hideMicButton() {
