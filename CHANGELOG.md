@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+
+- [CM-142] Fixed back button alignment issue in the Conversation screen.
+
 ## [4.1.0] - 2020-01-27
 
 ### Enhancements
