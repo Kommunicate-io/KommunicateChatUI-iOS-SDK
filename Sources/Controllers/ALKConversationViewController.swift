@@ -589,7 +589,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         navigationItem.titleView = loadingIndicator
         loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
+        var items: [UIBarButtonItem] = navigationItem.leftBarButtonItems ?? []
+        items.append(UIBarButtonItem(customView: navigationBar))
+        navigationItem.leftBarButtonItems = items
         viewModel.currentConversationProfile { profile in
             guard let profile = profile else { return }
             self.loadingIndicator.stopLoading()
@@ -1937,10 +1939,6 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
 }
 
 extension ALKConversationViewController: NavigationBarCallbacks {
-    open func backButtonTapped() {
-        backTapped()
-    }
-
     open func titleTapped() {
         if let contact = contactDetails(), let contactId = contact.userId {
             let info: [String: Any] =
