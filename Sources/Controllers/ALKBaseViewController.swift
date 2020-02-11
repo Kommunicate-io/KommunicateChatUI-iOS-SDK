@@ -30,7 +30,14 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         if navigationController?.viewControllers.first != self {
             var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
             backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
-            navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(backTapped))
+            let backButton = UIBarButtonItem(
+                image: backImage,
+                style: .plain,
+                target: self,
+                action: #selector(backTapped)
+            )
+            backButton.accessibilityIdentifier = "conversationBackButton"
+            navigationItem.leftBarButtonItem = backButton
         }
 
         if configuration.hideNavigationBarBottomLine {
