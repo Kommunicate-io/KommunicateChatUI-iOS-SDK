@@ -9,7 +9,7 @@
 import Applozic
 import UIKit
 
-class ALKSearchResultViewController: UIViewController {
+public class ALKSearchResultViewController: UIViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
     let viewModel = SearchResultViewModel()
@@ -24,7 +24,7 @@ class ALKSearchResultViewController: UIViewController {
 
     var conversationViewController: ALKConversationViewController?
 
-    init(configuration: ALKConfiguration) {
+    public init(configuration: ALKConfiguration) {
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
         viewController.delegate = self
@@ -34,12 +34,12 @@ class ALKSearchResultViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
 
-    func search(key: String) {
+    public func search(key: String) {
         activityIndicator.startAnimating()
         clear()
         viewController.replaceViewModel(viewModel)
@@ -51,11 +51,11 @@ class ALKSearchResultViewController: UIViewController {
         }
     }
 
-    func clear() {
+    public func clear() {
         viewModel.clear()
     }
 
-    func clearAndReload() {
+    public func clearAndReload() {
         clear()
         viewController.tableView.reloadData()
     }
@@ -76,11 +76,11 @@ class ALKSearchResultViewController: UIViewController {
 }
 
 extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
-    func muteNotification(conversation _: ALMessage, isMuted _: Bool) {}
+    public func muteNotification(conversation _: ALMessage, isMuted _: Bool) {}
 
-    func userBlockNotification(userId _: String, isBlocked _: Bool) {}
+    public func userBlockNotification(userId _: String, isBlocked _: Bool) {}
 
-    func tapped(_ chat: ALKChatViewModelProtocol, at _: Int) {
+    public func tapped(_ chat: ALKChatViewModelProtocol, at _: Int) {
         let convViewModel = viewModel.conversationViewModelFrom(
             contactId: chat.contactId,
             channelId: chat.channelKey,
@@ -98,7 +98,7 @@ extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
         present(navVC, animated: false, completion: nil)
     }
 
-    func emptyChatCellTapped() {}
+    public func emptyChatCellTapped() {}
 
-    func scrolledToBottom() {}
+    public func scrolledToBottom() {}
 }

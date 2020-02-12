@@ -359,9 +359,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         setUpRightNavigationButtons()
-        if let listVC = navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch {
-            individualLaunch = false
-        }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
@@ -456,7 +453,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    func checkUserBlock() {
+    open func checkUserBlock() {
         guard !viewModel.isGroup, let contactId = viewModel.contactId else { return }
         ALUserService().getUserDetail(contactId) { contact in
             guard let contact = contact, contact.block else {

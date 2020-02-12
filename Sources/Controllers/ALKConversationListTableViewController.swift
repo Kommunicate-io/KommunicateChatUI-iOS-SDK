@@ -37,6 +37,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
     public var viewModel: ALKConversationListViewModelProtocol
     public var dbService: ALMessageDBService!
+    public var hideNoConversationView = false
     public lazy var dataSource = ConversationListTableViewDataSource(
         viewModel: self.viewModel,
         cellConfigurator: { message, tableCell in
@@ -177,11 +178,8 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
 
     public override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
-        guard let emptyCellView = tableView.dequeueReusableHeaderFooterView(
-            withIdentifier: ALKEmptyView.reuseIdentifier
-        )
-            as? ALKEmptyView
-        else {
+        guard !hideNoConversationView,
+            let emptyCellView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ALKEmptyView.reuseIdentifier) as? ALKEmptyView else {
             return nil
         }
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
@@ -203,6 +201,9 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
 
     public override func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        guard !hideNoConversationView else {
+            return 0
+        }
         return viewModel.numberOfRowsInSection(0) == 0 ? 325 : 0
     }
 
