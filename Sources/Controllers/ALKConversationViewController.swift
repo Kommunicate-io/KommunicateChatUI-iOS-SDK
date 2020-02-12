@@ -176,7 +176,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
-    override func addObserver() {
+    open override func addObserver() {
         NotificationCenter.default.addObserver(
             forName: UIResponder.keyboardWillShowNotification,
             object: nil,
@@ -333,7 +333,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    override func removeObserver() {
+    open override func removeObserver() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "newMessageNotification"), object: nil)
@@ -428,7 +428,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    override func showAccountSuspensionView() {
+    open override func showAccountSuspensionView() {
         let accountVC = ALKAccountSuspensionController()
         present(accountVC, animated: false, completion: nil)
         accountVC.closePressed = { [weak self] in

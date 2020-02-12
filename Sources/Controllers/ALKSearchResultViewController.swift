@@ -60,6 +60,15 @@ public class ALKSearchResultViewController: UIViewController {
         viewController.tableView.reloadData()
     }
 
+    public func setUpSearchViewController() -> UISearchController {
+        let searchController = UISearchController(searchResultsController: self)
+        searchController.searchBar.autocapitalizationType = .none
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.alpha = 0
+        searchController.searchBar.showsCancelButton = true
+        return searchController
+    }
+
     private func setupView() {
         // Add TableViewController
         add(viewController)
