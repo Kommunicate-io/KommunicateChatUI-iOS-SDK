@@ -7,11 +7,12 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 
 ### Enhancements
-- Added save photo button.
+- Added save photo button in the media viewer.
 
 ### Fixes
 - If the keyboard used is not English, the keyboard is changed. (.asciiCapable -> .emailAddress)
 - [CM-142] Fixed back button alignment issue in the Conversation screen.
+- [CM-133] Fixed an issue where updating certain localizable strings from a custom localizable file did not work.
 
 ## [4.1.0] - 2020-01-27
 
