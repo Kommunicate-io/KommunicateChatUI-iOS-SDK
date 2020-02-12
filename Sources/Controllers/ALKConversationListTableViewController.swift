@@ -357,15 +357,19 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 )
                 let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
                     guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
-
+                    self?.startLoadingIndicator()
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
                         if channelService.isChannelLeft(conversation.groupId) {
-                            weakSelf.dbService.deleteAllMessages(byContact: nil, orChannelKey: conversation.groupId)
-                            ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
-                            weakSelf.searchFilteredChat.remove(at: indexPath.row)
-                            weakSelf.viewModel.remove(message: conversation)
-                            weakSelf.tableView.reloadData()
+                            ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                                _, error in
+                                self?.stopLoadingIndicator()
+                                guard error == nil else { return }
+                                ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
+                                weakSelf.viewModel.remove(message: conversation)
+                                weakSelf.tableView.reloadData()
+                                return
+                            })
                         } else if ALChannelService.isChannelDeleted(conversation.groupId) {
                             let channelDbService = ALChannelDBService()
                             channelDbService.deleteChannel(conversation.groupId)
@@ -375,17 +379,18 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                         } else {
                             channelService.leaveChannel(conversation.groupId, andUserId: ALUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
                                 error in
-                                ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
-                                    _, error in
-                                    guard error == nil else { return }
-                                    weakSelf.tableView.reloadData()
+                                self?.stopLoadingIndicator()
+                                guard error == nil else {
+                                    print("Failed to leave the channel : \(String(describing: conversation.groupId))")
                                     return
-                                })
+                                }
+                                weakSelf.tableView.reloadData()
                             })
                         }
                     } else {
                         ALMessageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
                             _, error in
+                            self?.stopLoadingIndicator()
                             guard error == nil else { return }
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
@@ -412,13 +417,19 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                 )
                 let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
                     guard let weakSelf = self else { return }
+                    self?.startLoadingIndicator()
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
                         if channelService.isChannelLeft(conversation.groupId) {
-                            weakSelf.dbService.deleteAllMessages(byContact: nil, orChannelKey: conversation.groupId)
-                            ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
-                            weakSelf.viewModel.remove(message: conversation)
-                            weakSelf.tableView.reloadData()
+                            ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                                _, error in
+                                self?.stopLoadingIndicator()
+                                guard error == nil else { return }
+                                ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
+                                weakSelf.viewModel.remove(message: conversation)
+                                weakSelf.tableView.reloadData()
+                                return
+                            })
                         } else if ALChannelService.isChannelDeleted(conversation.groupId) {
                             let channelDbService = ALChannelDBService()
                             channelDbService.deleteChannel(conversation.groupId)
@@ -427,17 +438,18 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
                         } else {
                             channelService.leaveChannel(conversation.groupId, andUserId: ALUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
                                 error in
-                                ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
-                                    _, error in
-                                    guard error == nil else { return }
-                                    weakSelf.tableView.reloadData()
+                                self?.stopLoadingIndicator()
+                                guard error == nil else {
+                                    print("Failed to leave the channel : \(String(describing: conversation.groupId))")
                                     return
-                                })
+                                }
+                                weakSelf.tableView.reloadData()
                             })
                         }
                     } else {
                         ALMessageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
                             _, error in
+                            self?.stopLoadingIndicator()
                             guard error == nil else { return }
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
@@ -524,6 +536,16 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         default:
             print("not present")
         }
+    }
+
+    private func startLoadingIndicator() {
+        activityIndicator.startAnimating()
+        view.isUserInteractionEnabled = false
+    }
+
+    private func stopLoadingIndicator() {
+        activityIndicator.stopAnimating()
+        view.isUserInteractionEnabled = true
     }
 
     private func confirmationAlert(with message: String) {
