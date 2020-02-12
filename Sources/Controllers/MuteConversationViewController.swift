@@ -44,14 +44,15 @@ class MuteConversationViewController: UIViewController, Localizable {
     private lazy var confirmButton: UIButton = {
         let button = UIButton()
         let title = localizedString(forKey: "ConfirmButton", withDefaultValue: SystemMessage.ButtonName.Confirm, fileName: configuration.localizedStringFileName)
-        button.setTitle(NSLocalizedString("ConfirmButton", value: SystemMessage.ButtonName.Confirm, comment: ""), for: .normal)
+        button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         return button
     }()
 
-    private let cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitle(NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), for: .normal)
+        let title = localizedString(forKey: "ButtonCancel", withDefaultValue: SystemMessage.ButtonName.Cancel, fileName: configuration.localizedStringFileName)
+        button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         return button
     }()

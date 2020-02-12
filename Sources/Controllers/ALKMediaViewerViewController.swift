@@ -224,7 +224,7 @@ final class ALKMediaViewerViewController: UIViewController {
             print("Other type")
         }
     }
-    
+
     @IBAction private func downlaodImgPress(_: Any) {
        guard let viewModel = viewModel else { return }
 

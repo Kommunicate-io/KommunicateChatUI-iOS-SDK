@@ -678,7 +678,9 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
         }
 
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let cancelButton = UIAlertAction(title: NSLocalizedString("ButtonCancel", value: SystemMessage.ButtonName.Cancel, comment: ""), style: .cancel, handler: nil)
+        let cancelButtonText = localizedString(forKey: "ButtonCancel", withDefaultValue: SystemMessage.ButtonName.Cancel, fileName: configuration.localizedStringFileName)
+        let cancelButton = UIAlertAction(title: cancelButtonText, style: .cancel, handler: nil)
+
         let unmuteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
             guard let weakSelf = self else { return }
             weakSelf.sendUnmuteRequestFor(conversation: conversation, atIndexPath: atIndexPath)
