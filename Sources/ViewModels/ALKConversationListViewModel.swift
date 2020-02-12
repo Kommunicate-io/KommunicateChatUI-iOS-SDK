@@ -9,7 +9,7 @@
 import Applozic
 import Foundation
 
-protocol ALKConversationListViewModelDelegate: AnyObject {
+public protocol ALKConversationListViewModelDelegate: AnyObject {
     func startedLoading()
     func listUpdated()
     func rowUpdatedAt(position: Int)
@@ -85,17 +85,20 @@ public protocol ALKConversationListViewModelProtocol: AnyObject {
     func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void)
 }
 
-public final class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol, Localizable {
-    weak var delegate: ALKConversationListViewModelDelegate?
+public final class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol {
+    public weak var delegate: ALKConversationListViewModelDelegate?
 
-    var localizationFileName = String()
     var alChannelService = ALChannelService()
     var alContactService = ALContactService()
     var conversationService = ALConversationService()
 
+    public override init() {
+        super.init()
+    }
+
     fileprivate var allMessages = [Any]()
 
-    func prepareController(dbService: ALMessageDBService) {
+    public func prepareController(dbService: ALMessageDBService) {
         delegate?.startedLoading()
         dbService.getMessages(nil)
     }
@@ -132,7 +135,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         allMessages.remove(at: index)
     }
 
-    func updateTypingStatus(in viewController: ALKConversationViewController, userId: String, status: Bool) {
+    public func updateTypingStatus(in viewController: ALKConversationViewController, userId: String, status: Bool) {
         let contactDbService = ALContactDBService()
         let contact = contactDbService.loadContact(byKey: "userId", value: userId)
         guard let alContact = contact else { return }
@@ -141,24 +144,24 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         viewController.showTypingLabel(status: status, userId: userId)
     }
 
-    func updateMessageList(messages: [Any]) {
+    public func updateMessageList(messages: [Any]) {
         allMessages = messages
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             self.delegate?.listUpdated()
         }
     }
 
-    func updateDeliveryReport(convVC: ALKConversationViewController?, messageKey: String?, contactId: String?, status: Int32?) {
+    public func updateDeliveryReport(convVC: ALKConversationViewController?, messageKey: String?, contactId: String?, status: Int32?) {
         guard let vc = convVC else { return }
         vc.updateDeliveryReport(messageKey: messageKey, contactId: contactId, status: status)
     }
 
-    func updateStatusReport(convVC: ALKConversationViewController?, forContact contact: String?, status: Int32?) {
+    public func updateStatusReport(convVC: ALKConversationViewController?, forContact contact: String?, status: Int32?) {
         guard let vc = convVC else { return }
         vc.updateStatusReport(contactId: contact, status: status)
     }
 
-    func addMessages(messages: Any) {
+    public func addMessages(messages: Any) {
         guard let alMessages = messages as? [ALMessage], var allMessages = allMessages as? [ALMessage] else {
             return
         }
@@ -186,20 +189,20 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         delegate?.listUpdated()
     }
 
-    func updateStatusFor(userDetail: ALUserDetail) {
+    public func updateStatusFor(userDetail: ALUserDetail) {
         guard let alMessages = allMessages as? [ALMessage], let userId = userDetail.userId else { return }
         let messages = alMessages.filter { ($0.contactId != nil) ? $0.contactId == userId : false }
         guard let firstMessage = messages.first, let index = alMessages.index(of: firstMessage) else { return }
         delegate?.rowUpdatedAt(position: index)
     }
 
-    func syncCall(viewController: ALKConversationViewController?, message: ALMessage, isChatOpen: Bool) {
+    public func syncCall(viewController: ALKConversationViewController?, message: ALMessage, isChatOpen: Bool) {
         if isChatOpen {
             viewController?.sync(message: message)
         }
     }
 
-    func fetchMoreMessages(dbService: ALMessageDBService) {
+    public func fetchMoreMessages(dbService: ALMessageDBService) {
         guard !ALUserDefaultsHandler.getFlagForAllConversationFetched() else { return }
         delegate?.startedLoading()
         dbService.fetchConversationfromServer(completion: {
@@ -267,11 +270,44 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         }
     }
 
-    func conversationViewModelOf(
+    public func updateUserDetail(userId: String, completion: @escaping (Bool) -> Void) {
+        ALUserService.updateUserDetail(userId, withCompletion: {
+            userDetail in
+            guard let detail = userDetail else {
+                completion(false)
+                return
+            }
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
+            completion(true)
+        })
+    }
+
+    public func muteNotification(conversation: ALMessage, isMuted: Bool) {
+        var dic = [AnyHashable: Any]()
+        dic["Muted"] = isMuted
+        dic["Controller"] = self
+        if conversation.isGroupChat {
+            dic["ChannelKey"] = conversation.groupId
+        } else {
+            dic["UserId"] = conversation.contactIds
+        }
+        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
+    }
+
+    public func userBlockNotification(userId: String, isBlocked: Bool) {
+        var dic = [AnyHashable: Any]()
+        dic["UserId"] = userId
+        dic["Controller"] = self
+        dic["Blocked"] = isBlocked
+        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
+    }
+
+    public func conversationViewModelOf(
         type conversationViewModelType: ALKConversationViewModel.Type,
         contactId: String?,
         channelId: NSNumber?,
-        conversationId: NSNumber?
+        conversationId: NSNumber?,
+        localizedStringFileName: String?
     ) -> ALKConversationViewModel {
         var convProxy: ALConversationProxy?
         if let convId = conversationId, let conversationProxy = conversationService.getConversationByKey(convId) {
@@ -282,7 +318,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
             contactId: contactId,
             channelKey: channelId,
             conversationProxy: convProxy,
-            localizedStringFileName: localizationFileName
+            localizedStringFileName: localizedStringFileName
         )
         return convViewModel
     }

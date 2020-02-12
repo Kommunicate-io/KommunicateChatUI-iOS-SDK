@@ -27,6 +27,7 @@ public protocol ALKChatViewModelProtocol {
     var conversationId: NSNumber! { get set }
     var createdAt: String? { get }
     var messageType: ALKMessageType { get }
+    var channelType: Int16 { get }
 }
 
 public enum ALKChatCellAction {
@@ -371,7 +372,11 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     private func placeholderImage(_ placeholderImage: UIImage? = nil, viewModel: ALKChatViewModelProtocol) -> UIImage? {
         guard let image = placeholderImage else {
-            let placeholder = viewModel.isGroupChat ? "groupPlaceholder" : "contactPlaceholder"
+            var placeholder = "contactPlaceholder"
+
+            if viewModel.isGroupChat, viewModel.channelType != Int16(SUPPORT_GROUP.rawValue) {
+                placeholder = "groupPlaceholder"
+            }
             return UIImage(named: placeholder, in: Bundle.applozic, compatibleWith: nil)
         }
         return image

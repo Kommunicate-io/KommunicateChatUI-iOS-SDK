@@ -9,7 +9,6 @@ import Foundation
 import Kingfisher
 
 @objc public protocol NavigationBarCallbacks: AnyObject {
-    func backButtonTapped()
     @objc func titleTapped()
 }
 
@@ -17,24 +16,6 @@ open class ALKConversationNavBar: UIView, Localizable {
     let configuration: ALKConfiguration
     weak var delegate: NavigationBarCallbacks?
     open var disableTitleAction: Bool = false
-
-    let backButton: UIButton = {
-        let view = UIButton()
-        view.accessibilityIdentifier = "conversationBackButton"
-        view.backgroundColor = .clear
-        return view
-    }()
-
-    let backImage: UIImageView = {
-        let view = UIImageView()
-        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
-        backImage = backImage?
-            .imageFlippedForRightToLeftLayoutDirection()
-            .withRenderingMode(.alwaysTemplate)
-        view.image = backImage
-        view.isUserInteractionEnabled = false
-        return view
-    }()
 
     var profileImage: UIImageView = {
         let imageView = UIImageView()
@@ -107,9 +88,6 @@ open class ALKConversationNavBar: UIView, Localizable {
         if let subtitleFont = appearance.titleTextAttributes?[.secondaryFont] as? UIFont {
             onlineStatusText.font = subtitleFont
         }
-        if let tintColor = appearance.tintColor {
-            backButton.tintColor = tintColor
-        }
     }
 
     func updateView(profile: ALKConversationProfile) {
@@ -133,10 +111,6 @@ open class ALKConversationNavBar: UIView, Localizable {
         }
     }
 
-    @objc func backButtonTapped() {
-        delegate?.backButtonTapped()
-    }
-
     @objc func titleTapped() {
         guard !disableTitleAction else { return }
         delegate?.titleTapped()
@@ -144,20 +118,9 @@ open class ALKConversationNavBar: UIView, Localizable {
 
     private func setupConstraints() {
         statusIconBackground.addViewsForAutolayout(views: [onlineStatusIcon])
-        addViewsForAutolayout(views: [backImage, backButton, profileImage, statusIconBackground, profileView])
+        addViewsForAutolayout(views: [profileImage, statusIconBackground, profileView])
 
-        // Setup constraints
-        backButton.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        backButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        backButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        backButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-
-        backImage.leadingAnchor.constraint(equalTo: backButton.leadingAnchor, constant: 5).isActive = true
-        backImage.centerYAnchor.constraint(equalTo: backButton.centerYAnchor).isActive = true
-        backImage.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        backImage.heightAnchor.constraint(equalToConstant: 20).isActive = true
-
-        profileImage.leadingAnchor.constraint(equalTo: backButton.trailingAnchor).isActive = true
+        profileImage.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         profileImage.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
         profileImage.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 35).isActive = true
@@ -184,8 +147,6 @@ open class ALKConversationNavBar: UIView, Localizable {
     }
 
     private func setupActions() {
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-
         let tapAction = UITapGestureRecognizer(target: self, action: #selector(titleTapped))
         tapAction.numberOfTapsRequired = 1
         profileView.addGestureRecognizer(tapAction)

@@ -359,9 +359,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         setUpRightNavigationButtons()
-        if let listVC = navigationController?.viewControllers.first as? ALKConversationListViewController, listVC.isViewLoaded, individualLaunch {
-            individualLaunch = false
-        }
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
@@ -456,7 +453,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    func checkUserBlock() {
+    open func checkUserBlock() {
         guard !viewModel.isGroup, let contactId = viewModel.contactId else { return }
         ALUserService().getUserDetail(contactId) { contact in
             guard let contact = contact, contact.block else {
@@ -589,7 +586,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         navigationItem.titleView = loadingIndicator
         loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationBar)
+        var items: [UIBarButtonItem] = navigationItem.leftBarButtonItems ?? []
+        items.append(UIBarButtonItem(customView: navigationBar))
+        navigationItem.leftBarButtonItems = items
         viewModel.currentConversationProfile { profile in
             guard let profile = profile else { return }
             self.loadingIndicator.stopLoading()
@@ -1937,10 +1936,6 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
 }
 
 extension ALKConversationViewController: NavigationBarCallbacks {
-    open func backButtonTapped() {
-        backTapped()
-    }
-
     open func titleTapped() {
         if let contact = contactDetails(), let contactId = contact.userId {
             let info: [String: Any] =

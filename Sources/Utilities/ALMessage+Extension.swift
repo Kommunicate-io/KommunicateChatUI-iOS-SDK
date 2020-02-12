@@ -184,6 +184,11 @@ extension ALMessage: ALKChatViewModelProtocol {
         let isToday = ALUtilityClass.isToday(date)
         return getCreatedAtTime(isToday)
     }
+
+    public var channelType: Int16 {
+        guard let alChannel = alChannel else { return 0 }
+        return alChannel.type
+    }
 }
 
 extension ALMessage {

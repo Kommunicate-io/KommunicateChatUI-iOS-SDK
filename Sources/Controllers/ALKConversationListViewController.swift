@@ -67,7 +67,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         super.init(configuration: configuration)
         conversationListTableViewController.delegate = self
         localizedStringFileName = configuration.localizedStringFileName
-        viewModel.localizationFileName = configuration.localizedStringFileName
     }
 
     public required init?(coder _: NSCoder) {
@@ -156,11 +155,13 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
             guard let weakSelf = self, let userId = notification.object as? String else { return }
             print("update user detail")
-            ALUserService.updateUserDetail(userId, withCompletion: {
-                userDetail in
-                guard userDetail != nil else { return }
-                weakSelf.tableView.reloadData()
-            })
+
+            weakSelf.viewModel.updateUserDetail(userId: userId) { success in
+                if success {
+                    weakSelf.tableView.reloadData()
+                }
+            }
+
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: { [weak self] _ in
@@ -291,7 +292,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     func launchChat(contactId: String?, groupId: NSNumber?, conversationId: NSNumber? = nil) {
-        let conversationViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: contactId, channelId: groupId, conversationId: conversationId)
+        let conversationViewModel = viewModel.conversationViewModelOf(type: conversationViewModelType, contactId: contactId, channelId: groupId, conversationId: conversationId, localizedStringFileName: localizedStringFileName)
 
         let viewController: ALKConversationViewController!
         if conversationViewController == nil {
@@ -303,6 +304,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             viewController.viewModel.channelKey = conversationViewModel.channelKey
             viewController.viewModel.conversationProxy = conversationViewModel.conversationProxy
         }
+        viewController.individualLaunch = false
         push(conversationVC: viewController, with: conversationViewModel)
     }
 
@@ -418,13 +420,11 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     open func updateUserDetail(_ userId: String!) {
         guard let userId = userId else { return }
         print("update user detail")
-
-        ALUserService.updateUserDetail(userId, withCompletion: {
-            userDetail in
-            guard let detail = userDetail else { return }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
-            self.tableView.reloadData()
-        })
+        viewModel.updateUserDetail(userId: userId) { updated in
+            if updated {
+                self.tableView.reloadData()
+            }
+        }
     }
 
     func isNewMessageForActiveThread(alMessage: ALMessage, vm: ALKConversationViewModel) -> Bool {
@@ -534,6 +534,7 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         }
         let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
         viewController.viewModel = convViewModel
+        viewController.individualLaunch = false
         navigationController?.pushViewController(viewController, animated: false)
     }
 
@@ -546,23 +547,11 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
     }
 
     public func userBlockNotification(userId: String, isBlocked: Bool) {
-        var dic = [AnyHashable: Any]()
-        dic["UserId"] = userId
-        dic["Controller"] = self
-        dic["Blocked"] = isBlocked
-        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
+        viewModel.userBlockNotification(userId: userId, isBlocked: isBlocked)
     }
 
     public func muteNotification(conversation: ALMessage, isMuted: Bool) {
-        var dic = [AnyHashable: Any]()
-        dic["Muted"] = isMuted
-        dic["Controller"] = self
-        if conversation.isGroupChat {
-            dic["ChannelKey"] = conversation.groupId
-        } else {
-            dic["UserId"] = conversation.contactIds
-        }
-        NotificationCenter.default.post(name: Notification.Name(rawValue: ALKNotification.conversationListAction), object: self, userInfo: dic)
+        viewModel.muteNotification(conversation: conversation, isMuted: isMuted)
     }
 
     func showNavigationItems() {

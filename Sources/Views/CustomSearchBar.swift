@@ -8,10 +8,10 @@
 
 import UIKit
 
-class CustomSearchBar: UIView {
-    let searchBar: UISearchBar
+public class CustomSearchBar: UIView {
+    public let searchBar: UISearchBar
 
-    init(searchBar: UISearchBar) {
+    public init(searchBar: UISearchBar) {
         self.searchBar = searchBar
         super.init(frame: CGRect(x: 0, y: 0, width: searchBar.frame.width, height: 44))
         backgroundColor = .clear
@@ -28,24 +28,24 @@ class CustomSearchBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         searchBar.frame = bounds
     }
 
-    func show(_ show: Bool) {
+    public func show(_ show: Bool) {
         alpha = show ? 1 : 0
         searchBar.alpha = show ? 1 : 0
     }
 
     @discardableResult
-    override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
         searchBar.becomeFirstResponder()
         return super.becomeFirstResponder()
     }
 
     @discardableResult
-    override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         searchBar.resignFirstResponder()
         return super.resignFirstResponder()
     }
