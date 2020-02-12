@@ -5,8 +5,12 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
-### Fixes
 
+### Enhancements
+- Added save photo button.
+
+### Fixes
+- If the keyboard used is not English, the keyboard is changed. (.asciiCapable -> .emailAddress)
 - [CM-142] Fixed back button alignment issue in the Conversation screen.
 
 ## [4.1.0] - 2020-01-27

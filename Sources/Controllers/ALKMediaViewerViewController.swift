@@ -198,7 +198,7 @@ final class ALKMediaViewerViewController: UIViewController {
 
     fileprivate func updateView(message: ALKMessageViewModel) {
         guard let viewModel = viewModel else { return }
-
+        navigationItem.rightBarButtonItem = nil
         switch message.messageType {
         case .photo:
             print("Photo type")
@@ -206,6 +206,10 @@ final class ALKMediaViewerViewController: UIViewController {
             showPhotoView(message: message)
             updateMinZoomScaleForSize(size: windowSize())
             updateConstraintsForSize(size: windowSize())
+            let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
+            button.tintColor = UINavigationBar.appearance().tintColor
+            navigationItem.rightBarButtonItem = button
         case .video:
             print("Video type")
             updateTitle(title: viewModel.getTitle())
@@ -219,6 +223,34 @@ final class ALKMediaViewerViewController: UIViewController {
         default:
             print("Other type")
         }
+    }
+    
+    @IBAction private func downlaodImgPress(_: Any) {
+       guard let viewModel = viewModel else { return }
+
+       let showSuccessAlert: () -> Void = {
+           let photoAlbumSuccessTitleMsg = viewModel.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: viewModel.localizedStringFileName)
+           let photoAlbumSuccessMsg = viewModel.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: viewModel.localizedStringFileName)
+           let alert = UIAlertController(title: photoAlbumSuccessTitleMsg, message: photoAlbumSuccessMsg, preferredStyle: UIAlertController.Style.alert)
+           let photoAlbumOkMsg = viewModel.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
+           alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
+           self.present(alert, animated: true, completion: nil)
+       }
+
+       let showFailureAlert: (Error) -> Void = { _ in
+           let photoAlbumFailureTitleMsg = viewModel.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: viewModel.localizedStringFileName)
+           let photoAlbumFailMsg = viewModel.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: viewModel.localizedStringFileName)
+           let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertController.Style.alert)
+           let photoAlbumOkMsg = viewModel.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
+           alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
+           self.present(alert, animated: true, completion: nil)
+       }
+
+       viewModel.saveImage(
+           image: imageView.image,
+           successBlock: showSuccessAlert,
+           failBlock: showFailureAlert
+       )
     }
 
     func windowSize() -> CGSize {
