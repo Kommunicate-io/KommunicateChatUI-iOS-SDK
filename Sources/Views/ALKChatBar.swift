@@ -266,7 +266,8 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     fileprivate func toggleKeyboardType(textView: UITextView) {
-        textView.keyboardType = .asciiCapable
+        // If the keyboard used is not English, the keyboard is changed. (.asciiCapable -> .emailAddress)
+        textView.keyboardType = .emailAddress
         textView.reloadInputViews()
         textView.keyboardType = .default
         textView.reloadInputViews()
@@ -313,8 +314,7 @@ open class ALKChatBar: UIView, Localizable {
         textView.text = ""
         clearTextInTextView()
         textView.attributedText = nil
-        // If the keyboard used is not English, the keyboard is changed.
-        // toggleKeyboardType(textView: textView)
+        toggleKeyboardType(textView: textView)
     }
 
     func hideMicButton() {

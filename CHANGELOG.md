@@ -5,6 +5,12 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Added save photo button.
+
+### Fixes
+- If the keyboard used is not English, the keyboard is changed. (.asciiCapable -> .emailAddress)
+
 ## [4.1.0] - 2020-01-27
 
 ### Enhancements
