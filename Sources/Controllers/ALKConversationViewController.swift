@@ -1660,8 +1660,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         navigationItem.titleView = loadingIndicator
         loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
         viewModel.currentConversationProfile { profile in
-            self.loadingIndicator.stopLoading()
             guard let profile = profile else { return }
+            self.loadingIndicator.stopLoading()
             self.navigationBar.updateView(profile: profile)
         }
     }
