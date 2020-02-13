@@ -553,7 +553,7 @@ open class ALKChatBar: UIView, Localizable {
         } else {
             micButton.isSelected = false
             soundRec.isHidden = true
-            placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
+            resetToDefaultPlaceholderText()
         }
     }
 
@@ -561,7 +561,7 @@ open class ALKChatBar: UIView, Localizable {
         soundRec.userDidStopRecording()
         micButton.isSelected = false
         soundRec.isHidden = true
-        placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
+        resetToDefaultPlaceholderText()
     }
 
     func hideAudioOptionInChatBar() {
@@ -607,7 +607,7 @@ open class ALKChatBar: UIView, Localizable {
     func enableChat() {
         guard soundRec.isHidden else { return }
         toggleUserInteractionForViews(enabled: true)
-        placeHolder.text = NSLocalizedString("ChatHere", value: SystemMessage.Information.ChatHere, comment: "")
+        resetToDefaultPlaceholderText()
     }
 
     func updateTextViewHeight(textView: UITextView, text: String) {
@@ -715,6 +715,10 @@ extension ALKChatBar: UITextViewDelegate {
         guard textView.text == nil || textView.text.isEmpty else { return }
         textView.changeTextDirection()
         placeHolder.changeTextDirection()
+    }
+
+    func resetToDefaultPlaceholderText() {
+        placeHolder.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
     }
 
     fileprivate func clearTextInTextView() {

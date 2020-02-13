@@ -878,7 +878,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3A79B6C05D6173C4463ED7CB /* Pods-ApplozicSwiftDemo.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ApplozicSwiftDemo/ApplozicSwiftDemo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -904,7 +903,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93DB0B99BE403A911D24886C /* Pods-ApplozicSwiftDemo.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ApplozicSwiftDemo/ApplozicSwiftDemo.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -929,7 +927,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 50782EDDAD137E89CDBDB613 /* Pods-ApplozicSwiftDemoTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = C25JNDCBM4;
 				INFOPLIST_FILE = ApplozicSwiftDemoTests/Info.plist;
@@ -945,7 +942,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 953FE248F08943E58C8438CD /* Pods-ApplozicSwiftDemoTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = C25JNDCBM4;
 				INFOPLIST_FILE = ApplozicSwiftDemoTests/Info.plist;
@@ -960,7 +956,6 @@
 		8B36D1131F3DC5EA00FEFFD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = C25JNDCBM4;
 				INFOPLIST_FILE = ApplozicSwiftDemoUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -974,7 +969,6 @@
 		8B36D1141F3DC5EA00FEFFD2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = C25JNDCBM4;
 				INFOPLIST_FILE = ApplozicSwiftDemoUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

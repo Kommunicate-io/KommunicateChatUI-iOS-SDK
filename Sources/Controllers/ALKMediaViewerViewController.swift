@@ -224,33 +224,33 @@ final class ALKMediaViewerViewController: UIViewController {
             print("Other type")
         }
     }
-    
+
     @IBAction private func downlaodImgPress(_: Any) {
-       guard let viewModel = viewModel else { return }
+        guard let viewModel = viewModel else { return }
 
-       let showSuccessAlert: () -> Void = {
-           let photoAlbumSuccessTitleMsg = viewModel.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: viewModel.localizedStringFileName)
-           let photoAlbumSuccessMsg = viewModel.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: viewModel.localizedStringFileName)
-           let alert = UIAlertController(title: photoAlbumSuccessTitleMsg, message: photoAlbumSuccessMsg, preferredStyle: UIAlertController.Style.alert)
-           let photoAlbumOkMsg = viewModel.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
-           alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
-           self.present(alert, animated: true, completion: nil)
-       }
+        let showSuccessAlert: () -> Void = {
+            let photoAlbumSuccessTitleMsg = viewModel.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: viewModel.localizedStringFileName)
+            let photoAlbumSuccessMsg = viewModel.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: viewModel.localizedStringFileName)
+            let alert = UIAlertController(title: photoAlbumSuccessTitleMsg, message: photoAlbumSuccessMsg, preferredStyle: UIAlertController.Style.alert)
+            let photoAlbumOkMsg = viewModel.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
+            alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
 
-       let showFailureAlert: (Error) -> Void = { _ in
-           let photoAlbumFailureTitleMsg = viewModel.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: viewModel.localizedStringFileName)
-           let photoAlbumFailMsg = viewModel.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: viewModel.localizedStringFileName)
-           let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertController.Style.alert)
-           let photoAlbumOkMsg = viewModel.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
-           alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
-           self.present(alert, animated: true, completion: nil)
-       }
+        let showFailureAlert: (Error) -> Void = { _ in
+            let photoAlbumFailureTitleMsg = viewModel.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: viewModel.localizedStringFileName)
+            let photoAlbumFailMsg = viewModel.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: viewModel.localizedStringFileName)
+            let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertController.Style.alert)
+            let photoAlbumOkMsg = viewModel.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
+            alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
 
-       viewModel.saveImage(
-           image: imageView.image,
-           successBlock: showSuccessAlert,
-           failBlock: showFailureAlert
-       )
+        viewModel.saveImage(
+            image: imageView.image,
+            successBlock: showSuccessAlert,
+            failBlock: showFailureAlert
+        )
     }
 
     func windowSize() -> CGSize {

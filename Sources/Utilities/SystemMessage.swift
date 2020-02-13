@@ -28,11 +28,6 @@ struct SystemMessage: Localizable {
     }
 
     struct Map {
-        static let NoGPS = localizedString(forKey: "TurnGPSOnMessage")
-        static let MapIsLoading = localizedString(forKey: "MapLoadingMessage")
-        static let AllowPermission = localizedString(forKey: "AllowGPSMessage")
-        static let TurnOnLocationService = localizedString(forKey: "TurnOnLocationService")
-        static let LocationAlertMessage = localizedString(forKey: "LocationAlertMessage")
         static let ShareLocationTitle = localizedString(forKey: "ShareLocationTitle")
         static let SendLocationButton = localizedString(forKey: "SendLocationButton")
     }
