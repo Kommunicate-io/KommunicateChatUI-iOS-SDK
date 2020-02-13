@@ -585,8 +585,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             loadingIndicator.set(titleColor)
             navigationBar.setupAppearance(navBar)
         }
-        navigationItem.titleView = loadingIndicator
-        loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
         var items: [UIBarButtonItem] = navigationItem.leftBarButtonItems ?? []
         items.append(UIBarButtonItem(customView: navigationBar))
         navigationItem.leftBarButtonItems = items
@@ -1659,6 +1657,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func updateConversationProfile() {
+        navigationItem.titleView = loadingIndicator
+        loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
         viewModel.currentConversationProfile { profile in
             guard let profile = profile else { return }
             self.loadingIndicator.stopLoading()
