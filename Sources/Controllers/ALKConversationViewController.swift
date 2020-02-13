@@ -892,7 +892,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     /// Call this method after proper viewModel initialization
     open func refreshViewController() {
         clearAndReloadTable()
-        updateConversationProfofile()
+        updateConversationProfile()
         prepareContextView()
         configureChatBar()
         // Check for group left
@@ -1658,7 +1658,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.reloadData()
     }
 
-    public func updateConversationProfofile() {
+    public func updateConversationProfile() {
         viewModel.currentConversationProfile { profile in
             guard let profile = profile else { return }
             self.loadingIndicator.stopLoading()
