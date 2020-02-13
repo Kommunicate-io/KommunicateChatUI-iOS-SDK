@@ -74,11 +74,13 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     deinit {
-        removeObserver()
+        if alMqttConversationService != nil {
+            alMqttConversationService.unsubscribeToConversation()
+        }
         conversationListTableViewController.remove()
     }
 
-    override func addObserver() {
+    open override func addObserver() {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: { [weak self] notification in
             guard let weakSelf = self else { return }
             let msgArray = notification.object as? [ALMessage]
@@ -172,10 +174,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         })
     }
 
-    override func removeObserver() {
-        if alMqttConversationService != nil {
-            alMqttConversationService.unsubscribeToConversation()
-        }
+    open override func removeObserver() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "pushNotification"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "newMessageNotification"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "reloadTable"), object: nil)
@@ -269,12 +268,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 
     func setupSearchController() {
-        searchController = UISearchController(searchResultsController: resultVC)
-        searchController.searchBar.autocapitalizationType = .none
-        searchController.hidesNavigationBarDuringPresentation = false
+        searchController = resultVC.setUpSearchViewController()
         searchController.searchBar.delegate = self
-        searchController.searchBar.alpha = 0
-        searchController.searchBar.showsCancelButton = true
         searchBar = CustomSearchBar(searchBar: searchController.searchBar)
         definesPresentationContext = true
     }
@@ -339,7 +334,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         }
     }
 
-    override func showAccountSuspensionView() {
+    open override func showAccountSuspensionView() {
         let accountVC = ALKAccountSuspensionController()
         present(accountVC, animated: false, completion: nil)
         accountVC.closePressed = { [weak self] in

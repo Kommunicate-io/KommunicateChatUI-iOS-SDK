@@ -60,9 +60,9 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         addObserver()
     }
 
-    func addObserver() {}
+    open func addObserver() {}
 
-    func removeObserver() {}
+    open func removeObserver() {}
 
     deinit {
         removeObserver()
@@ -75,5 +75,5 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         }
     }
 
-    func showAccountSuspensionView() {}
+    open func showAccountSuspensionView() {}
 }

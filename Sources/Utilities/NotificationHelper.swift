@@ -140,6 +140,7 @@ public class NotificationHelper {
         case "MuteConversationViewController",
              "ALKWebViewController",
              "SelectProfilePicViewController",
+             "CNContactPickerViewController",
              "CAMImagePickerCameraViewController":
             return true
         case _ where topVCName.hasPrefix("ALK"):
