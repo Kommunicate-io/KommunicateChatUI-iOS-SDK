@@ -359,6 +359,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         setUpRightNavigationButtons()
+        setupNavigation()
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
@@ -584,16 +585,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             loadingIndicator.set(titleColor)
             navigationBar.setupAppearance(navBar)
         }
-        navigationItem.titleView = loadingIndicator
-        loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
         var items: [UIBarButtonItem] = navigationItem.leftBarButtonItems ?? []
         items.append(UIBarButtonItem(customView: navigationBar))
         navigationItem.leftBarButtonItems = items
-        viewModel.currentConversationProfile { profile in
-            guard let profile = profile else { return }
-            self.loadingIndicator.stopLoading()
-            self.navigationBar.updateView(profile: profile)
-        }
     }
 
     private func prepareTable() {
@@ -663,7 +657,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    private func configureChatBar() {
+    public func configureChatBar() {
         if viewModel.isOpenGroup {
             chatBar.updateMediaViewVisibility(hide: true)
             chatBar.hideMicButton()
@@ -894,18 +888,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     /// Call this method after proper viewModel initialization
-    public func refreshViewController() {
-        viewModel.clearViewModel()
-        tableView.reloadData()
-
-        setupNavigation()
+    open func refreshViewController() {
+        clearAndReloadTable()
+        updateConversationProfile()
         prepareContextView()
         configureChatBar()
         // Check for group left
         isChannelLeft()
         checkUserBlock()
         subscribeChannelToMqtt()
-
         viewModel.prepareController()
     }
 
@@ -1658,6 +1649,21 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     public func updateTyingStatus(status: Bool, userId: String) {
         showTypingLabel(status: status, userId: userId)
+    }
+
+    public func clearAndReloadTable() {
+        viewModel.clearViewModel()
+        tableView.reloadData()
+    }
+
+    public func updateConversationProfile() {
+        navigationItem.titleView = loadingIndicator
+        loadingIndicator.startLoading(localizationFileName: configuration.localizedStringFileName)
+        viewModel.currentConversationProfile { profile in
+            guard let profile = profile else { return }
+            self.loadingIndicator.stopLoading()
+            self.navigationBar.updateView(profile: profile)
+        }
     }
 }
 
