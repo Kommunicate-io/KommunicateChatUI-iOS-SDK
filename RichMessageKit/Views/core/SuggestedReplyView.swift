@@ -122,7 +122,7 @@ public class SuggestedReplyView: UIView {
             } else {
                 button = curvedButton(title: title, image: nil, index: index, maxWidth: maxWidth)
             }
-            width += button.buttonWidth()
+            width += button.buttonWidth() + 20 //Button Padding and view spacing
 
             if width >= maxWidth {
                 guard !subviews.isEmpty else {
@@ -133,13 +133,12 @@ public class SuggestedReplyView: UIView {
                 }
                 let hiddenView = hiddenViewUsing(currWidth: width - button.buttonWidth(), maxWidth: maxWidth, subViews: subviews)
                 alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
-                width = button.buttonWidth() + 10
+                width = button.buttonWidth() + 20
                 let stackView = horizontalStackView(subviews: subviews)
                 mainStackView.addArrangedSubview(stackView)
                 subviews.removeAll()
                 subviews.append(button)
             } else {
-                width += 10
                 subviews.append(button)
             }
         }
