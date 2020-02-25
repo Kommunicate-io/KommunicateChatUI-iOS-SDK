@@ -28,7 +28,7 @@ public class CurvedImageButton: UIView {
         }
 
         /// Padding of view.
-        public var padding = Padding(left: 16, right: 16, top: 8, bottom: 8)
+        public var padding = Padding(left: 14, right: 14, top: 8, bottom: 8)
 
         /// Space between image and text.
         /// If image is nil then this space will be 0.
@@ -185,7 +185,7 @@ public class CurvedImageButton: UIView {
         label.text = title
         label.textColor = config.color.text
         label.font = config.font
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
         imageView.tintColor = config.color.tint

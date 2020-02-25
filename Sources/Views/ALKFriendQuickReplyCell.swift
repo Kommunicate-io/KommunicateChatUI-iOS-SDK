@@ -79,7 +79,10 @@ public class ALKFriendQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
                 equalTo: messageView.leadingAnchor,
                 constant: ChatCellPadding.ReceivedMessage.QuickReply.left
             ),
-            quickReplyView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor),
+            quickReplyView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -ChatCellPadding.ReceivedMessage.QuickReply.right
+            ),
             quickReplyView.bottomAnchor.constraint(
                 equalTo: contentView.bottomAnchor,
                 constant: -ChatCellPadding.ReceivedMessage.QuickReply.bottom

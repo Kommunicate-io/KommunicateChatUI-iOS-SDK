@@ -38,7 +38,7 @@ struct ChatCellPadding {
         struct QuickReply {
             static let left: CGFloat = 60
             static let top: CGFloat = 5
-            static let right: CGFloat = 40
+            static let right: CGFloat = 10
             static let bottom: CGFloat = 5
         }
 
