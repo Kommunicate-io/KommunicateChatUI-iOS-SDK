@@ -10,10 +10,10 @@ import XCTest
 @testable import ApplozicSwift
 
 class ProfanityFilterTests: XCTestCase {
-
     var profanityFilter: ProfanityFilter = try! ProfanityFilter(
         fileName: "restrictedWords",
-        bundle: Bundle(for: ProfanityFilterTests.self))
+        bundle: Bundle(for: ProfanityFilterTests.self)
+    )
 
     func test_whenUppercaseText() {
         XCTAssertTrue(profanityFilter.containsRestrictedWords(text: "BADWORD"))
@@ -43,7 +43,8 @@ class ProfanityFilterTests: XCTestCase {
     func test_whenMatchIsPresent() {
         let profanityFilterWithRegex = try! ProfanityFilter(
             restrictedMessageRegex: "\\d{10}",
-            bundle: Bundle(for: ProfanityFilterTests.self))
+            bundle: Bundle(for: ProfanityFilterTests.self)
+        )
         XCTAssertTrue(profanityFilterWithRegex
             .containsRestrictedWords(text: "hello 9299999999"))
     }
@@ -51,7 +52,8 @@ class ProfanityFilterTests: XCTestCase {
     func test_whenMatchIsNotPresent() {
         let profanityFilterWithRegex = try! ProfanityFilter(
             restrictedMessageRegex: "\\d{10}",
-            bundle: Bundle(for: ProfanityFilterTests.self))
+            bundle: Bundle(for: ProfanityFilterTests.self)
+        )
         XCTAssertFalse(profanityFilterWithRegex
             .containsRestrictedWords(text: "hello 929999"))
     }
@@ -60,18 +62,19 @@ class ProfanityFilterTests: XCTestCase {
         let profanityFilterWithRegex = try! ProfanityFilter(
             fileName: "restrictedWords",
             restrictedMessageRegex: "\\d{10}",
-            bundle: Bundle(for: ProfanityFilterTests.self))
+            bundle: Bundle(for: ProfanityFilterTests.self)
+        )
         XCTAssertTrue(profanityFilterWithRegex
             .containsRestrictedWords(text: "hello 929999999 badword"))
     }
 
     func test_whenRegexPatternIsInvalid() {
-
         // "}" is missing in the end
         let invalidPattern = "\\d{10"
         let profanityFilterWithRegex = try! ProfanityFilter(
             restrictedMessageRegex: invalidPattern,
-            bundle: Bundle(for: ProfanityFilterTests.self))
+            bundle: Bundle(for: ProfanityFilterTests.self)
+        )
         XCTAssertFalse(profanityFilterWithRegex
             .containsRestrictedWords(text: "hello 9299999999"))
     }

@@ -6,11 +6,10 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import XCTest
 import Applozic
+import XCTest
 @testable import ApplozicSwift
 class ALKConversationListViewControllerTests: XCTestCase {
-
     var conversationListVC: ALKConversationListViewController!
 
     override func setUp() {
@@ -34,7 +33,8 @@ class ALKConversationListViewControllerTests: XCTestCase {
         let conversationVM = ALKConversationViewModel(
             contactId: "testUser123",
             channelKey: nil,
-            localizedStringFileName: ALKConfiguration().localizedStringFileName)
+            localizedStringFileName: ALKConfiguration().localizedStringFileName
+        )
         let message = MockMessage().message
         message.contactIds = "testUser123"
         let result = conversationListVC
@@ -43,7 +43,6 @@ class ALKConversationListViewControllerTests: XCTestCase {
     }
 
     func testDelegateCallback_whenMessageThreadIsSelected() {
-
         let selectItemExpectation = XCTestExpectation(description: "Conversation list item selected")
         let conversation = ConversationListTest()
         conversation.selectItemExpectation = selectItemExpectation
@@ -61,17 +60,17 @@ class ALKConversationListViewControllerTests: XCTestCase {
         XCTAssertNotNil(conversationListVC.tableView)
         let tableView = conversationListVC.tableView
         tableView.delegate?.tableView?(tableView, didSelectRowAt: firstIndex)
-        
+
         wait(for: [selectItemExpectation], timeout: 2)
     }
-    
+
     func testMessageSentByLoggedInUser_WhenTypeOutBox() {
         let message = MockMessage().message
         message.contactIds = "testUser123"
         message.type = "5" // Message type OUTBOX
         XCTAssertTrue(conversationListVC.isMessageSentByLoggedInUser(alMessage: message))
     }
-    
+
     func testMessageSentByLoggedInUser_WhenTypeInBox() {
         let message = MockMessage().message
         message.contactIds = "testUser123"

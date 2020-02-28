@@ -6,13 +6,12 @@
 //  Copyright © 2019 Applozic. All rights reserved.
 //
 
-import Quick
 import Nimble
 import Nimble_Snapshots
+import Quick
 @testable import ApplozicSwift
 
 class ALKCurvedButtonSnapshotTests: QuickSpec {
-
     override func spec() {
         describe("CurvedImageButton") {
             var button: CurvedImageButton!
@@ -44,7 +43,8 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
                         text: .red,
                         border: UIColor.red.cgColor,
                         background: .clear,
-                        tint: .red)
+                        tint: .red
+                    )
                     config.color = color
                     button = CurvedImageButton(title: "Demo text", config: config)
                 }
@@ -84,5 +84,4 @@ class ALKCurvedButtonSnapshotTests: QuickSpec {
             }
         }
     }
-
 }

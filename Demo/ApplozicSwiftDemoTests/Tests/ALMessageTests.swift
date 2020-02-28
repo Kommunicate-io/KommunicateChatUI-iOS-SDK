@@ -12,7 +12,6 @@ import Applozic
 @testable import ApplozicSwift
 
 class ALMessageTests: XCTestCase {
-
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -34,7 +33,7 @@ class ALMessageTests: XCTestCase {
         let message = MockMessage().message
         message.contentType = Int16(ALMESSAGE_CONTENT_DEFAULT)
         XCTAssert(message.messageType == .text)
-        //TODO: Check if imageURL, path and other items are nil or empty as it's a text message
+        // TODO: Check if imageURL, path and other items are nil or empty as it's a text message
     }
 
     func testMessageType_WhenTypeIsImage() {

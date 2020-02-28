@@ -6,35 +6,31 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Quick
+import Applozic
 import Nimble
 import Nimble_Snapshots
-import Applozic
+import Quick
 @testable import ApplozicSwift
 
-class ALKChatBarSnapshotTests: QuickSpec{
-    
+class ALKChatBarSnapshotTests: QuickSpec {
     override func spec() {
-        
         describe("ChatBar") {
-            
             var configuration: ALKConfiguration!
             var chatBar: ALKChatBar!
             var demoView: UIView!
-            
+
             func prepareChatBar() {
                 demoView.addViewsForAutolayout(views: [chatBar])
                 chatBar.leadingAnchor.constraint(equalTo: demoView.leadingAnchor).isActive = true
                 chatBar.trailingAnchor.constraint(equalTo: demoView.trailingAnchor).isActive = true
             }
-            
+
             beforeEach {
                 demoView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300))
                 configuration = ALKConfiguration()
             }
-            
-            context("configure line between send icon and text view") {
 
+            context("configure line between send icon and text view") {
                 it("hides line image") {
                     configuration.hideLineImageFromChatBar = true
                     chatBar = ALKChatBar(frame: .zero, configuration: configuration)
@@ -51,14 +47,13 @@ class ALKChatBarSnapshotTests: QuickSpec{
             }
 
             context("configure send icon") {
-                
                 it("show send icon") {
                     configuration.hideAudioOptionInChatBar = true
                     chatBar = ALKChatBar(frame: .zero, configuration: configuration)
                     prepareChatBar()
                     expect(chatBar).to(haveValidSnapshot())
                 }
-                
+
                 it("change send icon image") {
                     configuration.hideAudioOptionInChatBar = true
                     configuration.sendMessageIcon = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
@@ -69,7 +64,6 @@ class ALKChatBarSnapshotTests: QuickSpec{
             }
 
             context("configure attachment options") {
-
                 it("shows all options by default") {
                     chatBar = ALKChatBar(frame: .zero, configuration: configuration)
                     prepareChatBar()
@@ -135,5 +129,4 @@ class ALKChatBarSnapshotTests: QuickSpec{
             }
         }
     }
-    
 }

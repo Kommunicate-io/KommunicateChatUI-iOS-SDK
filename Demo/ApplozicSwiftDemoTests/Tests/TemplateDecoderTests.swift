@@ -10,14 +10,12 @@ import XCTest
 @testable import ApplozicSwift
 
 class TemplateDecoderTests: XCTestCase {
-
     struct CustomType: Decodable {
         let title: String
     }
 
     func testWhenPayloadIsNotPresent() {
-
-        XCTAssertThrowsError(try TemplateDecoder.decode(ListTemplate.self, from: ["":""])) { error in
+        XCTAssertThrowsError(try TemplateDecoder.decode(ListTemplate.self, from: ["": ""])) { error in
             guard let decodingError = error as? TemplateDecodingError else {
                 XCTFail("Threw the wrong type of error")
                 return
@@ -27,11 +25,11 @@ class TemplateDecoderTests: XCTestCase {
     }
 
     func testWhenEmptyPayloadIsPresent() {
-        XCTAssertThrowsError(try TemplateDecoder.decode(ListTemplate.self, from: ["payload":""]))
+        XCTAssertThrowsError(try TemplateDecoder.decode(ListTemplate.self, from: ["payload": ""]))
     }
 
     func testWhenCorrectPayloadIsPresent() {
-        let customJson = ["payload":"{\"title\": \"Hello\"}"]
+        let customJson = ["payload": "{\"title\": \"Hello\"}"]
         XCTAssertNoThrow(try TemplateDecoder.decode(CustomType.self, from: customJson))
     }
 }

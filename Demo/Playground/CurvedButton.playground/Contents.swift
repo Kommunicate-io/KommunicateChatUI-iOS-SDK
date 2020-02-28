@@ -12,4 +12,3 @@ button = ALKCurvedButton(title: "Demo Button 2", font: font, color: color)
 
 /// Restricting button width
 button = ALKCurvedButton(title: "Long text inside button for multiline", maxWidth: 200)
-

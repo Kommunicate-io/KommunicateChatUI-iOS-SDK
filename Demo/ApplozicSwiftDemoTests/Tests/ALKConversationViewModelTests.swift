@@ -10,7 +10,6 @@ import XCTest
 @testable import ApplozicSwift
 
 class ALKConversationViewModelTests: XCTestCase {
-
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -24,15 +23,15 @@ class ALKConversationViewModelTests: XCTestCase {
     func testContentType_WhenSendingImage() {
         let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         let testBundle = Bundle(for: ALKConversationViewModelTests.self)
-        let (message, _) = conversationVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!, metadata :nil)
+        let (message, _) = conversationVM.send(photo: UIImage(named: "testImage.png", in: testBundle, compatibleWith: nil)!, metadata: nil)
         XCTAssertNotNil(message)
         XCTAssertNotNil(message?.fileMeta.contentType)
-        XCTAssert((message!.fileMeta.contentType.hasPrefix("image")))
+        XCTAssert(message!.fileMeta.contentType.hasPrefix("image"))
     }
 
     func testMessage_WhenSendingEmptyImage_isNil() {
         let conversationVM = ALKConversationViewModel(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
-        let (message, _) = conversationVM.send(photo: UIImage(), metadata :nil)
+        let (message, _) = conversationVM.send(photo: UIImage(), metadata: nil)
         XCTAssertNil(message)
     }
 }

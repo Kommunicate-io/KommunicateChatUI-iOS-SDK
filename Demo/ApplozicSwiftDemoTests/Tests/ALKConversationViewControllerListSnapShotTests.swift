@@ -6,23 +6,19 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Quick
+import Applozic
 import Nimble
 import Nimble_Snapshots
-import Applozic
+import Quick
 @testable import ApplozicSwift
 
 class ALKConversationViewControllerListSnapShotTests: QuickSpec {
-
     override func spec() {
-
         describe("Conversation list") {
-
             var conversationVC: ALKConversationListViewController!
             var navigationController: UINavigationController!
 
             beforeEach {
-
                 conversationVC = ALKConversationListViewController(configuration: ALKConfiguration())
                 ALMessageDBServiceMock.lastMessage.createdAtTime = NSNumber(value: Date().timeIntervalSince1970 * 1000)
                 conversationVC.dbService = ALMessageDBServiceMock()
@@ -45,7 +41,7 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
             it("Open chat thread") {
                 XCTAssertNotNil(conversationVC.tableView)
-                let tableView = conversationVC.tableView 
+                let tableView = conversationVC.tableView
                 tableView.delegate?.tableView?(tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
                 XCTAssertNotNil(conversationVC.navigationController?.view)
                 expect(conversationVC.navigationController).toEventually(haveValidSnapshot())
@@ -73,7 +69,6 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
         }
 
         describe("configure right nav bar icon") {
-
             var configuration: ALKConfiguration!
             var conversationVC: ALKConversationListViewController!
             var navigationController: UINavigationController!
@@ -83,9 +78,10 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 configuration.hideStartChatButton = true
                 configuration.navigationItemsForConversationList = [
                     ALKNavigationItem(
-                        identifier: 123456,
+                        identifier: 123_456,
                         icon: UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)!
-                )]
+                    ),
+                ]
                 conversationVC = ALKConversationListViewController(configuration: configuration)
                 conversationVC.dbService = ALMessageDBServiceMock()
                 conversationVC.conversationViewModelType = ALKConversationViewModelMock.self
@@ -94,15 +90,14 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
 
                 navigationController = ALKBaseNavigationViewController(rootViewController: conversationVC)
                 navigationController.navigationBar.isTranslucent = false
-                navigationController.navigationBar.tintColor = UIColor(red:0.10, green:0.65, blue:0.89, alpha:1.0)
+                navigationController.navigationBar.tintColor = UIColor(red: 0.10, green: 0.65, blue: 0.89, alpha: 1.0)
                 if #available(iOS 13.0, *) {
                     let appearance = UINavigationBarAppearance()
-                    appearance.backgroundColor =  UIColor(red:0.93, green:0.94, blue:0.95, alpha:1.0)
+                    appearance.backgroundColor = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0)
                     navigationController.navigationBar.standardAppearance = appearance
-                }else{
-                    navigationController.navigationBar.barTintColor = UIColor(red:0.93, green:0.94, blue:0.95, alpha:1.0)
+                } else {
+                    navigationController.navigationBar.barTintColor = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0)
                 }
-
             }
 
             it("change icon image") {
@@ -110,11 +105,9 @@ class ALKConversationViewControllerListSnapShotTests: QuickSpec {
                 expect(navigationController.navigationBar).to(haveValidSnapshot())
             }
         }
-
     }
 
     func getApplicationKey() -> NSString {
-
         let appKey = ALUserDefaultsHandler.getApplicationKey() as NSString?
         let applicationKey = appKey
         return applicationKey!

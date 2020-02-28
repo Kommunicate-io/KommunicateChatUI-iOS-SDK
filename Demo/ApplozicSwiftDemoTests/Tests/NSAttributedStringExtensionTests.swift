@@ -10,7 +10,6 @@ import XCTest
 @testable import ApplozicSwift
 
 class NSAttributedStringExtensionTests: XCTestCase {
-
     let charactersToRemove = CharacterSet.whitespacesAndNewlines
 
     func testAttributedString_whenTrimmed() {
@@ -28,7 +27,8 @@ class NSAttributedStringExtensionTests: XCTestCase {
         let attributedString1 = NSMutableAttributedString(string: "abc \n ")
         let stringWithAttributes = NSAttributedString(
             string: "with custom color",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.red]
+        )
         attributedString1.append(stringWithAttributes)
 
         let expectedAttributedString1 = NSMutableAttributedString(string: "abc \n ")
@@ -47,7 +47,8 @@ class NSAttributedStringExtensionTests: XCTestCase {
         let attributedString3 = NSMutableAttributedString(string: "abc")
         let stringWithAttributesAndEmptyLines = NSAttributedString(
             string: "with custom color \n  ",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.red]
+        )
         attributedString3.append(stringWithAttributesAndEmptyLines)
 
         let expectedAttributedString3 = NSMutableAttributedString(string: "abc")

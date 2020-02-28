@@ -4,7 +4,7 @@ import ApplozicSwift
 func fromJSON(string: String) throws -> [[String: Any]] {
     guard let data = string.data(using: .utf8),
         let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [AnyObject]
-        else {
+    else {
         throw NSError(domain: NSCocoaErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON"])
     }
     return jsonObject.map { $0 as! [String: Any] }
@@ -23,7 +23,6 @@ view.update(quickReplyArray: dict)
 let view2 = ALKQuickReplyView(frame: CGRect(x: 0, y: 0, width: 800, height: ALKQuickReplyView.rowHeight(quickReplyArray: dict, maxWidth: 800)))
 view2.maxWidth = 800
 view2.update(quickReplyArray: dict)
-
 
 /// Using different payload
 

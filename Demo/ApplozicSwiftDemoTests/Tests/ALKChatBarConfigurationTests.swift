@@ -10,7 +10,6 @@ import XCTest
 @testable import ApplozicSwift
 
 class ALKChatBarConfigurationTests: XCTestCase {
-
     var chatBarConfig: ALKChatBarConfiguration!
 
     override func setUp() {

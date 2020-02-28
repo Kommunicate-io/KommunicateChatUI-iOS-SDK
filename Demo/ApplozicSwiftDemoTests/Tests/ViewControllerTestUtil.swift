@@ -6,11 +6,10 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import XCTest
 import UIKit
+import XCTest
 
 class ViewControllerTestUtil<T: UIViewController> {
-
     private var rootWindow: UIWindow!
 
     func setupTopLevelUI(withViewController viewController: T) {
@@ -25,8 +24,8 @@ class ViewControllerTestUtil<T: UIViewController> {
     func tearDownTopLevelUI() {
         guard let rootWindow = rootWindow,
             let rootViewController = rootWindow.rootViewController as? T else {
-                XCTFail("tearDownTopLevelUI() was called without setupTopLevelUI() being called first")
-                return
+            XCTFail("tearDownTopLevelUI() was called without setupTopLevelUI() being called first")
+            return
         }
         rootViewController.viewWillDisappear(false)
         rootViewController.viewDidDisappear(false)

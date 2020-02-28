@@ -6,30 +6,19 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 @testable import ApplozicSwift
 
 class ConversationListTableViewDelegateMock: ALKConversationListTableViewDelegate {
-    func muteNotification(conversation: ALMessage, isMuted: Bool) {
+    func muteNotification(conversation _: ALMessage, isMuted _: Bool) {}
 
-    }
+    func userBlockNotification(userId _: String, isBlocked _: Bool) {}
 
-    func userBlockNotification(userId: String, isBlocked: Bool) {
+    func tapped(_: ALKChatViewModelProtocol, at _: Int) {}
 
-    }
+    func emptyChatCellTapped() {}
 
-    
-    func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
-        
-    }
-    
-    func emptyChatCellTapped() {
-        
-    }
-    
-    func scrolledToBottom() {
-        
-    }
+    func scrolledToBottom() {}
 }

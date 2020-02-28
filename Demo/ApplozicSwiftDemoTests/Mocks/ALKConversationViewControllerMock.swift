@@ -10,14 +10,13 @@ import Foundation
 @testable import ApplozicSwift
 
 class ALKConversationViewControllerMock: ALKConversationViewController {
-    
     var testDisplayName: String!
     var onDeinitialized: (() -> Void)?
-    
+
     required init(configuration: ALKConfiguration) {
         super.init(configuration: configuration)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -25,7 +24,7 @@ class ALKConversationViewControllerMock: ALKConversationViewController {
     deinit {
         onDeinitialized?()
     }
-    
+
     override func setTypingNoticeDisplayName(displayName: String) {
         testDisplayName = displayName
     }

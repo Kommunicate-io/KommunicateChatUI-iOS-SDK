@@ -6,8 +6,8 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 @testable import ApplozicSwift
 
 class ALKConversationListViewControllerMock: ALKConversationListViewController, Muteable {
@@ -18,7 +18,7 @@ class ALKConversationListViewControllerMock: ALKConversationListViewController, 
         super.init(configuration: configuration)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -26,7 +26,7 @@ class ALKConversationListViewControllerMock: ALKConversationListViewController, 
         onDeinitialized?()
     }
 
-    func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+    func mute(conversation _: ALMessage, forTime _: Int64, atIndexPath _: IndexPath) {
         isMuteCalled = true
     }
 }

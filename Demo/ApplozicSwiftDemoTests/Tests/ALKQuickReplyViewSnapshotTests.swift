@@ -6,13 +6,12 @@
 //  Copyright © 2019 Applozic. All rights reserved.
 //
 
-import Quick
 import Nimble
 import Nimble_Snapshots
+import Quick
 @testable import ApplozicSwift
 
 class ALKQuickReplyViewSnapshotTests: QuickSpec {
-
     override func spec() {
         describe("SuggestedReplyView") {
             let view = SuggestedReplyView()
@@ -45,8 +44,8 @@ class ALKQuickReplyViewSnapshotTests: QuickSpec {
     func parseJson(string: String) throws -> [[String: Any]] {
         guard let data = string.data(using: .utf8),
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [AnyObject]
-            else {
-                throw NSError(domain: NSCocoaErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON"])
+        else {
+            throw NSError(domain: NSCocoaErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON"])
         }
         return jsonObject.map { $0 as! [String: Any] }
     }

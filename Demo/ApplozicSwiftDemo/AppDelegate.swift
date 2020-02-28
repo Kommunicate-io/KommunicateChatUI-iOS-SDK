@@ -6,29 +6,27 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import UIKit
 import Applozic
 import ApplozicSwift
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-
     var window: UIWindow?
 
     static let config: ALKConfiguration = {
         var config = ALKConfiguration()
         // Change config based on requirement like:
         // config.isTapOnNavigationBarEnabled = false
-//        config.localizedStringFileName = "CustomLocalizable"
         return config
     }()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BuddyBuildSDK.setup()
 
         let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
         navigationBarProxy.barTintColor
-            = UIColor(red:0.93, green:0.94, blue:0.95, alpha:1.0) // light nav blue
+            = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0) // light nav blue
         navigationBarProxy.isTranslucent = false
 
         /// Use this for Customizing notification.
@@ -39,17 +37,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         ///       Finally, Uncomment below line
         /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
         ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(AppDelegate.config)
-        let alApplocalNotificationHnadler : ALAppLocalNotifications =  ALAppLocalNotifications.appLocalNotificationHandler()
+        let alApplocalNotificationHnadler: ALAppLocalNotifications = ALAppLocalNotifications.appLocalNotificationHandler()
         alApplocalNotificationHnadler.dataConnectionNotificationHandler()
 
-        if (ALUserDefaultsHandler.isLoggedIn())
-        {
+        if ALUserDefaultsHandler.isLoggedIn() {
             // Get login screen from storyboard and present it
-            let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as UIViewController
-            self.window?.makeKeyAndVisible();
+            let viewController: UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as UIViewController
+            window?.makeKeyAndVisible()
             viewController.modalPresentationStyle = .fullScreen
-            self.window?.rootViewController!.present(viewController, animated:true, completion: nil)
-
+            window?.rootViewController!.present(viewController, animated: true, completion: nil)
         }
 
         UNUserNotificationCenter.current().delegate = self
@@ -57,17 +53,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
+    func applicationWillResignActive(_: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
+    func applicationDidEnterBackground(_: UIApplication) {
         print("APP_ENTER_IN_BACKGROUND")
         NotificationCenter.default.post(name: Notification.Name(rawValue: "APP_ENTER_IN_BACKGROUND"), object: nil)
     }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
+    func applicationWillEnterForeground(_: UIApplication) {
         ALPushNotificationService.applicationEntersForeground()
         print("APP_ENTER_IN_FOREGROUND")
 
@@ -75,57 +71,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
-    func applicationDidBecomeActive(_ application: UIApplication) {
+    func applicationDidBecomeActive(_: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(_ application: UIApplication) {
+    func applicationWillTerminate(_: UIApplication) {
         ALDBHandler.sharedInstance().saveContext()
     }
 
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)
-    {
-
-        print("DEVICE_TOKEN_DATA :: \(deviceToken.description)")  // (SWIFT = 3) : TOKEN PARSING
+    func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("DEVICE_TOKEN_DATA :: \(deviceToken.description)") // (SWIFT = 3) : TOKEN PARSING
 
         var deviceTokenString: String = ""
-        for i in 0..<deviceToken.count
-        {
+        for i in 0 ..< deviceToken.count {
             deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
         }
         print("DEVICE_TOKEN_STRING :: \(deviceTokenString)")
 
-        if (ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString)
-        {
+        if ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
             let alRegisterUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
-            alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { (response, error) in
-                print ("REGISTRATION_RESPONSE :: \(String(describing: response))")
+            alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { response, _ in
+                print("REGISTRATION_RESPONSE :: \(String(describing: response))")
             })
         }
     }
 
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error)
-    {
+    func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Couldn’t register: \(error)")
     }
 
     func registerForNotification() {
-        UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _, _ in
         }
         UIApplication.shared.registerForRemoteNotifications()
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let service = ALPushNotificationService()
         guard !service.isApplozicNotification(notification.request.content.userInfo) else {
-           service.notificationArrived(to: UIApplication.shared, with: notification.request.content.userInfo)
+            service.notificationArrived(to: UIApplication.shared, with: notification.request.content.userInfo)
             completionHandler([])
             return
         }
         completionHandler([])
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let service = ALPushNotificationService()
         let dict = response.notification.request.content.userInfo
         guard !service.isApplozicNotification(dict) else {
@@ -143,4 +134,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         completionHandler()
     }
 }
-

@@ -10,11 +10,8 @@ import Nimble
 import Quick
 @testable import ApplozicSwift
 
-
 class ALKConversationListVCMemoryLeakTests: QuickSpec {
-
     override func spec() {
-
         var conversationListVC: ALKConversationListViewControllerMock!
         var isDeinitCalled: Bool = false
 

@@ -6,16 +6,13 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 class ALMessageDBServiceMock: ALMessageDBService {
-
     static var lastMessage: ALMessage! = MockMessage().message
 
-    override func getMessages(_ subGroupList: NSMutableArray!) {
+    override func getMessages(_: NSMutableArray!) {
         delegate.getMessagesArray([ALMessageDBServiceMock.lastMessage])
     }
-
 }
-

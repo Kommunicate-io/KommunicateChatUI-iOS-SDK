@@ -6,11 +6,11 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 class ALContactServiceMock: ALContactService {
-    override func loadContact(byKey key: String!, value: String!) -> ALContact! {
+    override func loadContact(byKey _: String!, value _: String!) -> ALContact! {
         let contact = ALContact()
         contact.displayName = "demoDisplayName"
         return contact

@@ -6,24 +6,18 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 @testable import ApplozicSwift
 
 class ConversationListTableVCMock: ALKConversationListTableViewController {
-    
     var isMuteCalled: Bool = false
-    
-    override func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+
+    override func mute(conversation _: ALMessage, forTime _: Int64, atIndexPath _: IndexPath) {
         isMuteCalled = true
     }
-    
-    func tapped(_ chat: ALKChatViewModelProtocol, at index: Int) {
-        
-    }
-    
-    func emptyChatCellTapped() {
-        
-    }
-    
+
+    func tapped(_: ALKChatViewModelProtocol, at _: Int) {}
+
+    func emptyChatCellTapped() {}
 }

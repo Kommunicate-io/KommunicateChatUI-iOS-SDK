@@ -8,8 +8,8 @@
 
 /// This is a sample to illustrate usage of custom in-app notifications.
 
-import UIKit
 import ApplozicSwift
+import UIKit
 
 enum Menu: String {
     case simple
@@ -18,11 +18,10 @@ enum Menu: String {
 }
 
 class ContainerViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.backgroundColor = UIColor.lightGray
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.pause, target: self, action: #selector(navigationItemTapped))
+        navigationController?.navigationBar.backgroundColor = UIColor.lightGray
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.pause, target: self, action: #selector(navigationItemTapped))
         view.backgroundColor = .blue
     }
 
@@ -32,7 +31,7 @@ class ContainerViewController: UIViewController {
         menuController.menuSelected = menuSelected(_:)
         navVC.modalTransitionStyle = .flipHorizontal
         navVC.modalPresentationStyle = .overCurrentContext
-        self.present(navVC, animated: true, completion: nil)
+        present(navVC, animated: true, completion: nil)
     }
 
     func menuSelected(_ menu: Menu) {
@@ -47,7 +46,7 @@ class ContainerViewController: UIViewController {
 //            self.present(navVC, animated: true, completion: nil)
             let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
             let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
-            self.present(nav, animated: false, completion: nil)
+            present(nav, animated: false, completion: nil)
         case .profile:
             print("Profile")
         }
@@ -60,9 +59,8 @@ class ContainerViewController: UIViewController {
 //        let navVC = UINavigationController(rootViewController: vc)
 //        self.present(navVC, animated: true, completion: nil)
         let nav = ALKBaseNavigationViewController(rootViewController: viewController)
-        self.present(nav, animated: false, completion: nil)
+        present(nav, animated: false, completion: nil)
     }
-
 }
 
 class ConversationContainerViewController: UIViewController {
@@ -70,15 +68,15 @@ class ConversationContainerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(back))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(back))
         add(conversationVC)
-        conversationVC.view.frame = self.view.bounds
+        conversationVC.view.frame = view.bounds
         conversationVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         conversationVC.view.translatesAutoresizingMaskIntoConstraints = true
     }
 
     @objc func back() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     deinit {
@@ -92,11 +90,13 @@ class MenuViewController: UIViewController {
         button.setTitle(Menu.simple.rawValue, for: .normal)
         return button
     }()
+
     let conversationButton: UIButton = {
         let button = UIButton()
         button.setTitle(Menu.conversation.rawValue, for: .normal)
         return button
     }()
+
     let profileButton: UIButton = {
         let button = UIButton()
         button.setTitle(Menu.profile.rawValue, for: .normal)
@@ -113,13 +113,13 @@ class MenuViewController: UIViewController {
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.navigationController?.navigationBar.backgroundColor = UIColor.lightGray
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(backTapped))
+        navigationController?.navigationBar.backgroundColor = UIColor.lightGray
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(backTapped))
         setupConstraints()
         setTarget()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -153,16 +153,16 @@ class MenuViewController: UIViewController {
             let title = button.title(for: .normal),
             let menu = Menu(rawValue: title),
             let menuSelected = menuSelected
-            else {
-                return
+        else {
+            return
         }
-        self.dismiss(animated: true) {
+        dismiss(animated: true) {
             menuSelected(menu)
         }
     }
 
     @objc func backTapped() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func setTarget() {
@@ -173,23 +173,20 @@ class MenuViewController: UIViewController {
 }
 
 extension UIView {
-
     func addViewsForAutolayout(views: [UIView]) {
         for view in views {
             view.translatesAutoresizingMaskIntoConstraints = false
             addSubview(view)
         }
     }
-
 }
 
 extension UIViewController {
-
     var bottomAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.view.safeAreaLayoutGuide.bottomAnchor
         } else {
-            return self.view.bottomAnchor
+            return view.bottomAnchor
         }
     }
 
@@ -197,7 +194,7 @@ extension UIViewController {
         if #available(iOS 11.0, *) {
             return self.view.safeAreaLayoutGuide.topAnchor
         } else {
-            return self.view.topAnchor
+            return view.topAnchor
         }
     }
 
@@ -205,7 +202,7 @@ extension UIViewController {
         if #available(iOS 11.0, *) {
             return self.view.safeAreaLayoutGuide.leadingAnchor
         } else {
-            return self.view.leadingAnchor
+            return view.leadingAnchor
         }
     }
 
@@ -213,7 +210,7 @@ extension UIViewController {
         if #available(iOS 11.0, *) {
             return self.view.safeAreaLayoutGuide.trailingAnchor
         } else {
-            return self.view.trailingAnchor
+            return view.trailingAnchor
         }
     }
 

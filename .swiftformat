@@ -1,6 +1,7 @@
 # file options
 
---exclude Tests,Demo/*
+--exclude Tests,Demo/Pods
+
 
 # format options
 

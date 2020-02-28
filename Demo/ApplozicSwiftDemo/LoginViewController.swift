@@ -6,56 +6,54 @@
 //
 //
 
-
-import UIKit
 import Applozic
+import UIKit
 
 class LoginViewController: UIViewController {
-    @IBOutlet weak var userName: UITextField!
-    @IBOutlet weak var password: UITextField!
-    @IBOutlet weak var emailId: UITextField!
+    @IBOutlet var userName: UITextField!
+    @IBOutlet var password: UITextField!
+    @IBOutlet var emailId: UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
         ALUserDefaultsHandler.setUserAuthenticationTypeId(1) // APPLOZIC
-        
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func getStartedBtn(_ sender: AnyObject) {
+
+    @IBAction func getStartedBtn(_: AnyObject) {
         let appId = ALChatManager.applicationId
-        let alUser : ALUser =  ALUser()
+        let alUser: ALUser = ALUser()
         alUser.applicationId = appId
-        
-        if(ALChatManager.isNilOrEmpty( self.userName.text as NSString?))
-        {
+
+        if ALChatManager.isNilOrEmpty(userName.text as NSString?) {
             let alert = UIAlertController(title: "Applozic", message: "Please enter userId ", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return;
+            present(alert, animated: true, completion: nil)
+            return
         }
-        alUser.userId = self.userName.text
+        alUser.userId = userName.text
         ALUserDefaultsHandler.setUserId(alUser.userId)
-        print("userName:: " , alUser.userId)
-        if(!((emailId.text?.isEmpty)!)){
+        print("userName:: ", alUser.userId)
+        if !((emailId.text?.isEmpty)!) {
             alUser.email = emailId.text
             ALUserDefaultsHandler.setEmailId(alUser.email)
         }
-        if (!((password.text?.isEmpty)!)){
+        if !((password.text?.isEmpty)!) {
             alUser.password = password.text
             ALUserDefaultsHandler.setPassword(alUser.password)
         }
         registerUserToApplozic(alUser: alUser)
     }
+
     private func registerUserToApplozic(alUser: ALUser) {
         let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
-        alChatManager.connectUser(alUser, completion: {response, error in
+        alChatManager.connectUser(alUser, completion: { response, error in
             if error == nil {
                 self.addContacts()
                 NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
@@ -66,16 +64,15 @@ class LoginViewController: UIViewController {
             }
         })
     }
-    func addContacts(){
-        let contact1  = ALContact()
+
+    func addContacts() {
+        let contact1 = ALContact()
         let contact2 = ALContact()
         contact1.userId = "iOSDemoContact1"
         contact1.displayName = "iOS Demo Contact 1"
         contact2.userId = "iOSDemoContact2"
         contact2.displayName = "iOS Demo Contact 2"
         let contactService = ALContactService()
-        contactService.addList(ofContacts: [contact1 , contact2])
+        contactService.addList(ofContacts: [contact1, contact2])
     }
 }
-
-

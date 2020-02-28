@@ -10,7 +10,6 @@ import XCTest
 @testable import ApplozicSwift
 
 class ALKNewChatViewModelTests: XCTestCase {
-    
     override func setUp() {
         super.setUp()
     }
@@ -38,6 +37,4 @@ class ALKNewChatViewModelTests: XCTestCase {
             XCTAssertTrue(userServiceMock.getListOfUsersMethodCalled)
         })
     }
-
-    
 }

@@ -6,15 +6,13 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
-
-class ALApplozicSettingsMock: ALApplozicSettings{
-
+class ALApplozicSettingsMock: ALApplozicSettings {
     static var filterContactStatus: Bool = false
 
-    override static func getFilterContactsStatus() -> Bool{
+    override static func getFilterContactsStatus() -> Bool {
         return filterContactStatus
     }
 }

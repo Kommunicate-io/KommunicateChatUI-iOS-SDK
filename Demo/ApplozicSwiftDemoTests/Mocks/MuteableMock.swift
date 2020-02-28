@@ -6,16 +6,15 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 @testable import ApplozicSwift
 
 class MuteableMock: Muteable {
-    
     var isDelegateCalled: Bool = false
-    var time: Int64? = nil
-    
-    func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath) {
+    var time: Int64?
+
+    func mute(conversation _: ALMessage, forTime: Int64, atIndexPath _: IndexPath) {
         isDelegateCalled = true
         time = forTime
     }

@@ -6,15 +6,14 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
+import ApplozicSwift
 import Foundation
 import XCTest
-import ApplozicSwift
 
 class ConversationListTest: ALKConversationListDelegate {
-
     var selectItemExpectation: XCTestExpectation!
 
-    func conversation(_ message: ALKChatViewModelProtocol, willSelectItemAt index: Int, viewController: ALKConversationListViewController) {
+    func conversation(_: ALKChatViewModelProtocol, willSelectItemAt _: Int, viewController _: ALKConversationListViewController) {
         selectItemExpectation.fulfill()
     }
 }

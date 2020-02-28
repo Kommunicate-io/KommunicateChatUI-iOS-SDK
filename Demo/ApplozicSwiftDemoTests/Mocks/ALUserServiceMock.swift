@@ -6,16 +6,14 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 class ALUserServiceMock: ALUserService {
-
     var getListOfUsersMethodCalled: Bool = false
 
     override func getListOfRegisteredUsers(completion: ((Error?) -> Swift.Void)!) {
         getListOfUsersMethodCalled = true
         completion(nil)
     }
-
 }

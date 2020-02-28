@@ -10,17 +10,17 @@ import XCTest
 @testable import ApplozicSwift
 
 class MessageMentionTests: XCTestCase {
-
     let sampleMessage = "@testdemo9 hi @testdemo10!"
 
     func sampleMetadataWithTwoIndices(
         firstIndex: (Int, Int) = (0, 10),
-        secondIndex: (Int, Int) = (14, 25)) -> [String: Any] {
+        secondIndex: (Int, Int) = (14, 25)
+    ) -> [String: Any] {
         let sampleMetadata: [String: Any] = [
             "AL_MEMBER_MENTION":
                 """
-            [\n  {\n    \"indices\" : [\n      \(firstIndex.0),\n      \(firstIndex.1)\n    ],\n    \"userId\" : \"testdemo9\"\n  },\n  {\n    \"indices\" : [\n      \(secondIndex.0),\n      \(secondIndex.1)\n    ],\n    \"userId\" : \"testdemo10\"\n  }\n]
-            """
+                [\n  {\n    \"indices\" : [\n      \(firstIndex.0),\n      \(firstIndex.1)\n    ],\n    \"userId\" : \"testdemo9\"\n  },\n  {\n    \"indices\" : [\n      \(secondIndex.0),\n      \(secondIndex.1)\n    ],\n    \"userId\" : \"testdemo10\"\n  }\n]
+                """,
         ]
         return sampleMetadata
     }

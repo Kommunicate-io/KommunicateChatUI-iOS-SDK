@@ -6,8 +6,8 @@
 //  Copyright © 2019 Applozic. All rights reserved.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 struct MockMessage {
     var message: ALMessage = {
@@ -16,7 +16,7 @@ struct MockMessage {
         alMessage.contactIds = "testexample"
         alMessage.message = "hello there"
         alMessage.type = "5"
-        let date = Date(timeIntervalSince1970: -123456789.0).timeIntervalSince1970*1000
+        let date = Date(timeIntervalSince1970: -123_456_789.0).timeIntervalSince1970 * 1000
         alMessage.createdAtTime = NSNumber(value: date)
         alMessage.sendToDevice = false
         alMessage.deviceKey = ALUserDefaultsHandler.getDeviceKeyString()
