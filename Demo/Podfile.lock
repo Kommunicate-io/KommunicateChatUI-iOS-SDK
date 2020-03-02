@@ -1,10 +1,10 @@
 PODS:
-  - Applozic (7.0.0):
+  - Applozic (7.1.0):
     - SDWebImage (~> 5.1.0)
   - ApplozicSwift (5.0.0):
     - ApplozicSwift/Complete (= 5.0.0)
   - ApplozicSwift/Complete (5.0.0):
-    - Applozic (~> 7.0.0)
+    - Applozic (~> 7.1.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 5.13.0)
     - MGSwipeTableCell (~> 1.6.11)
@@ -14,9 +14,9 @@ PODS:
   - iOSSnapshotTestCase/Core (6.2.0)
   - iOSSnapshotTestCase/SwiftSupport (6.2.0):
     - iOSSnapshotTestCase/Core
-  - Kingfisher (5.13.0):
-    - Kingfisher/Core (= 5.13.0)
-  - Kingfisher/Core (5.13.0)
+  - Kingfisher (5.13.1):
+    - Kingfisher/Core (= 5.13.1)
+  - Kingfisher/Core (5.13.1)
   - MGSwipeTableCell (1.6.11)
   - Nimble (8.0.5)
   - Nimble-Snapshots (8.1.1):
@@ -28,8 +28,8 @@ PODS:
   - SDWebImage (5.1.1):
     - SDWebImage/Core (= 5.1.1)
   - SDWebImage/Core (5.1.1)
-  - SwiftFormat/CLI (0.44.0)
-  - SwiftLint (0.38.2)
+  - SwiftFormat/CLI (0.44.2)
+  - SwiftLint (0.39.1)
 
 DEPENDENCIES:
   - ApplozicSwift (from `../ApplozicSwift.podspec`)
@@ -57,17 +57,17 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: 56b5e70268a29478e8cac30df6490b0a9251fd20
-  ApplozicSwift: b81035777b58a235c6ad599e2fb0ae043c3cca29
+  Applozic: d4c79ed0d8a14fbf48d46fba4f6ee1729c64d264
+  ApplozicSwift: 400658ca04f76acd7231a58d432cea3c32a4c182
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
-  Kingfisher: 0d334cada987fcddbe9b5cec516406e1ee9d4748
+  Kingfisher: f33a848445e33c543620812158dc5d47f6bf90df
   MGSwipeTableCell: b804e4e450dee439c42250be90bd50458bf67fce
   Nimble: 4ab1aeb9b45553c75b9687196b0fa0713170a332
   Nimble-Snapshots: 5058fb9b459e64371f54a0f8d9dde6f33db490a0
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   SDWebImage: 96d7f03415ccb28d299d765f93557ff8a617abd8
-  SwiftFormat: 180a4d17bcfa2c9f61b202dac7dddd2087ff920a
-  SwiftLint: 8f5d2f903e1c9bcbc832fd16771e80a263ac6cbb
+  SwiftFormat: 53968b5cc5d466727e796f789fa9be6c38da34cb
+  SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
 
 PODFILE CHECKSUM: 37b1748ae38c7d600b4859d10af77ebc84042008
 

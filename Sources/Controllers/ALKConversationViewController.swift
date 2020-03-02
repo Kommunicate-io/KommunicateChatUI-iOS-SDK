@@ -54,6 +54,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     open lazy var navigationBar = ALKConversationNavBar(configuration: self.configuration, delegate: self)
 
     var contactService: ALContactService!
+    let registerUserClientService = ALRegisterUserClientService()
 
     var loadingIndicator = ALKLoadingIndicator(frame: .zero)
 
@@ -241,7 +242,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.viewModel.addMessagesToList(list)
-//            weakSelf.handlePushNotification = false
+            //            weakSelf.handlePushNotification = false
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
@@ -431,9 +432,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     open override func showAccountSuspensionView() {
         let accountVC = ALKAccountSuspensionController()
-        present(accountVC, animated: false, completion: nil)
         accountVC.closePressed = { [weak self] in
-            _ = self?.navigationController?.popToRootViewController(animated: true)
+            self?.dismiss(animated: true, completion: nil)
+        }
+        present(accountVC, animated: false, completion: nil)
+        registerUserClientService.syncAccountStatus { response, error in
+            guard error == nil, let response = response, response.isRegisteredSuccessfully() else {
+                print("Failed to sync the account package status")
+                return
+            }
+            print("Successfuly synced the account  package status")
         }
     }
 

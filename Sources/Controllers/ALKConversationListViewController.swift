@@ -29,6 +29,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     var searchController: UISearchController!
     var searchBar: CustomSearchBar!
+    let registerUserClientService = ALRegisterUserClientService()
+
     lazy var resultVC = ALKSearchResultViewController(configuration: configuration)
 
     var dbService = ALMessageDBService()
@@ -336,12 +338,16 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     open override func showAccountSuspensionView() {
         let accountVC = ALKAccountSuspensionController()
-        present(accountVC, animated: false, completion: nil)
         accountVC.closePressed = { [weak self] in
-            let popVC = self?.navigationController?.popViewController(animated: true)
-            if popVC == nil {
-                self?.navigationController?.dismiss(animated: true, completion: nil)
+            self?.dismiss(animated: true, completion: nil)
+        }
+        present(accountVC, animated: false, completion: nil)
+        registerUserClientService.syncAccountStatus { response, error in
+            guard error == nil, let response = response, response.isRegisteredSuccessfully() else {
+                print("Failed to sync the account package status")
+                return
             }
+            print("Successfuly synced the account package status")
         }
     }
 

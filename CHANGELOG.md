@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Added support for syncing package details when a suspension screen is shown.
+
 ## [5.0.0] - 2020-02-14
 
 ### Enhancements
