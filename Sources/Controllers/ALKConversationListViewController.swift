@@ -455,6 +455,10 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
         } else if !isMessageSentByLoggedInUser(alMessage: alMessage) {
+
+            guard !configuration.isInAppNotificationBannerDisabled else {
+                return
+            }
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler {
                 _ in

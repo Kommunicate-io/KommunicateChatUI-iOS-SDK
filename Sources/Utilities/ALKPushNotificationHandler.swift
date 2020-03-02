@@ -32,6 +32,7 @@ public class ALKPushNotificationHandler: Localizable {
             case NSNumber(value: APP_STATE_ACTIVE.rawValue):
                 guard !NotificationHelper().isNotificationForActiveThread(notificationData) else { return }
                 // TODO: FIX HERE. USE conversationId also.
+                guard !configuration.isInAppNotificationBannerDisabled else { return }
                 ALUtilityClass.thirdDisplayNotificationTS(
                     message,
                     andForContactId: notificationData.userId,

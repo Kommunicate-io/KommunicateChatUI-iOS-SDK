@@ -975,6 +975,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             viewModel.syncOpenGroup(message: message)
             return
         }
+        guard !configuration.isInAppNotificationBannerDisabled else {
+            return
+        }
         guard message.conversationId == nil || message.conversationId != viewModel.conversationProxy?.id else {
             return
         }
