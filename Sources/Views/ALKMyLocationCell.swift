@@ -33,8 +33,6 @@ final class ALKMyLocationCell: ALKLocationCell {
 
         stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1.0).isActive = true
         stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -2.0).isActive = true
-        stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
-        stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
 
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -2.0).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
@@ -42,20 +40,7 @@ final class ALKMyLocationCell: ALKLocationCell {
 
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
-
-        if viewModel.isAllRead {
-            stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor(netHex: 0x0578FF)
-        } else if viewModel.isAllReceived {
-            stateView.image = UIImage(named: "read_state_2", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else if viewModel.isSent {
-            stateView.image = UIImage(named: "read_state_1", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else {
-            stateView.image = UIImage(named: "seen_state_0", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor.red
-        }
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     override func setupStyle() {
@@ -68,6 +53,7 @@ final class ALKMyLocationCell: ALKLocationCell {
             bubbleView.tintColor = ALKMessageStyle.sentBubble.color
             bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
         }
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {

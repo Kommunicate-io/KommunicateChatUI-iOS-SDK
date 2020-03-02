@@ -41,6 +41,7 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
     }
 
     override func update(viewModel: ALKMessageViewModel) {
+        super.update(viewModel: viewModel)
         loadingIndicator.startLoading(localizationFileName: localizedStringFileName)
         contactView.isHidden = true
         if let filePath = viewModel.filePath {
@@ -48,21 +49,7 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         }
         timeLabel.text = viewModel.time
         timeLabel.setStyle(ALKMessageStyle.time)
-
-        // Set read status
-        if viewModel.isAllRead {
-            stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor(netHex: 0x0578FF)
-        } else if viewModel.isAllReceived {
-            stateView.image = UIImage(named: "read_state_2", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else if viewModel.isSent {
-            stateView.image = UIImage(named: "read_state_1", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else {
-            stateView.image = UIImage(named: "seen_state_0", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor.red
-        }
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     override func setupStyle() {
@@ -71,6 +58,7 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
             itemColor: ALKMessageStyle.sentMessage.text,
             bubbleStyle: ALKMessageStyle.sentBubble
         )
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     class func rowHeight() -> CGFloat {
@@ -92,9 +80,6 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         loadingIndicator.topAnchor.constraint(equalTo: contactView.topAnchor).isActive = true
         loadingIndicator.bottomAnchor.constraint(equalTo: contactView.bottomAnchor).isActive = true
         loadingIndicator.leadingAnchor.constraint(equalTo: contactView.leadingAnchor).isActive = true
-
-        stateView.widthAnchor.constraint(equalToConstant: Padding.StateView.width).isActive = true
-        stateView.heightAnchor.constraint(equalToConstant: Padding.StateView.height).isActive = true
         stateView.bottomAnchor.constraint(equalTo: contactView.bottomAnchor, constant: -1 * Padding.StateView.bottom).isActive = true
         stateView.trailingAnchor.constraint(equalTo: contactView.leadingAnchor, constant: -1 * Padding.StateView.right).isActive = true
 

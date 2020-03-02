@@ -59,6 +59,41 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
                 // functional tests.
                 expect(conversationVC.navigationController).to(haveValidSnapshot())
             }
+
+            describe("Message status") {
+                context("When status icon style is set to none") {
+                    beforeEach {
+                        ALKMessageStyle.messageStatus.set(icon: .none, for: .sent)
+                    }
+                    it("status icon is not visible") {
+                        expect(conversationVC.navigationController).to(haveValidSnapshot())
+                    }
+                }
+
+                context("When status icon style is set to an image with tint color") {
+                    beforeEach {
+                        let testIcon =
+                            UIImage(named: "read_status_icon", in: .test, compatibleWith: nil) ?? UIImage()
+                        ALKMessageStyle.messageStatus
+                            .set(icon: .templateImageWithTint(image: testIcon, tintColor: .red), for: .sent)
+                    }
+                    it("status icon with color is visible") {
+                        expect(conversationVC.navigationController).to(haveValidSnapshot())
+                    }
+                }
+
+                context("When status icon style is set to an image") {
+                    beforeEach {
+                        let testIcon =
+                            UIImage(named: "read_status_icon", in: .test, compatibleWith: nil) ?? UIImage()
+                        ALKMessageStyle.messageStatus
+                            .set(icon: .normalImage(image: testIcon), for: .sent)
+                    }
+                    it("status icon is visible") {
+                        expect(conversationVC.navigationController).to(haveValidSnapshot())
+                    }
+                }
+            }
         }
 
         describe("Configure NavBar right button") {

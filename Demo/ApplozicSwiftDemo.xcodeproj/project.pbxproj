@@ -43,6 +43,7 @@
 		8B4E9FFD215A39C5001FD5F3 /* ALKConversationViewControllerListSnapShotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1E967220D679EC00A4EB34 /* ALKConversationViewControllerListSnapShotTests.swift */; };
 		8B4E9FFF215BC804001FD5F3 /* ALKConversationViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E9FFE215BC804001FD5F3 /* ALKConversationViewModelMock.swift */; };
 		8B523B432067E1DE001B5989 /* ALMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B523B422067E1DE001B5989 /* ALMessageTests.swift */; };
+		8B593B92240D221A006F06EB /* read_status_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B593B91240D221A006F06EB /* read_status_icon.png */; };
 		8B68A9B42276DFAB0021638A /* TemplateDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B68A9B32276DFAB0021638A /* TemplateDecoderTests.swift */; };
 		8B7C524823473506008AD91D /* NSAttributedStringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C524723473506008AD91D /* NSAttributedStringExtensionTests.swift */; };
 		8BA84180206A5A40004DD252 /* ALKGenericCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */; };
@@ -146,6 +147,7 @@
 		8B4E9FFB215A31B2001FD5F3 /* ALMessageDBServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALMessageDBServiceMock.swift; sourceTree = "<group>"; };
 		8B4E9FFE215BC804001FD5F3 /* ALKConversationViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKConversationViewModelMock.swift; sourceTree = "<group>"; };
 		8B523B422067E1DE001B5989 /* ALMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALMessageTests.swift; sourceTree = "<group>"; };
+		8B593B91240D221A006F06EB /* read_status_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = read_status_icon.png; sourceTree = "<group>"; };
 		8B68A9B32276DFAB0021638A /* TemplateDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateDecoderTests.swift; sourceTree = "<group>"; };
 		8B7C524723473506008AD91D /* NSAttributedStringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedStringExtensionTests.swift; sourceTree = "<group>"; };
 		8BA8417F206A5A40004DD252 /* ALKGenericCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALKGenericCardTests.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 		8BC08E61206907A500259AEF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B593B91240D221A006F06EB /* read_status_icon.png */,
 				8BE8B3A822D4B1370001BDC2 /* play_icon_test.png */,
 				8B06E488225E367D00B7FA64 /* restrictedWords.txt */,
 				8BC08E622069086300259AEF /* testImage.png */,
@@ -506,6 +509,7 @@
 			files = (
 				8B06E489225E367D00B7FA64 /* restrictedWords.txt in Resources */,
 				8BC08E632069086300259AEF /* testImage.png in Resources */,
+				8B593B92240D221A006F06EB /* read_status_icon.png in Resources */,
 				8BE8B3A922D4B1370001BDC2 /* play_icon_test.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -152,3 +152,17 @@ extension ALKMessageViewModel {
         return quickReplyArray
     }
 }
+
+extension ALKMessageViewModel {
+    public var status: MessageStatus {
+        if isAllRead {
+            return .read
+        } else if isAllReceived {
+            return .delivered
+        } else if isSent {
+            return .sent
+        } else {
+            return .pending
+        }
+    }
+}

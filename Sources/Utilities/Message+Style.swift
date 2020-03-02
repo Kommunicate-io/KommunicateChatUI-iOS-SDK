@@ -98,4 +98,7 @@ public enum ALKMessageStyle {
 
     public static var sentBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge)
     public static var receivedBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge)
+
+    /// Style for sent message status icon like read, delivered etc.
+    public static var messageStatus = SentMessageStatus()
 }

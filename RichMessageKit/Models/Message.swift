@@ -8,7 +8,7 @@
 import Foundation
 
 /// Gives infomation about message status.
-public enum MessageStatus {
+public enum MessageStatus: CaseIterable {
     case pending
     case sent
     case delivered

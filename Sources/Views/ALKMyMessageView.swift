@@ -89,20 +89,7 @@ class ALKMyMessageView: UIView {
         timeLabel.text = viewModel.time
         timeLabel.setStyle(ALKMessageStyle.time)
 
-        // Set read status
-        if viewModel.isAllRead {
-            stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor(netHex: 0x0578FF)
-        } else if viewModel.isAllReceived {
-            stateView.image = UIImage(named: "read_state_2", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else if viewModel.isSent {
-            stateView.image = UIImage(named: "read_state_1", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else {
-            stateView.image = UIImage(named: "seen_state_0", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor.red
-        }
+        setStatusStyle(status: viewModel.status, ALKMessageStyle.messageStatus)
     }
 
     class func rowHeight(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -128,13 +115,33 @@ class ALKMyMessageView: UIView {
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
         bubbleView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Padding.BubbleView.bottom).isActive = true
-
-        stateView.widthAnchor.constraint(equalToConstant: 17.0).isActive = true
-        stateView.heightAnchor.constraint(equalToConstant: 9.0).isActive = true
         stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * Padding.StateView.bottom).isActive = true
         stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -1 * Padding.StateView.right).isActive = true
 
         timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: Padding.TimeLabel.bottom).isActive = true
+    }
+
+    func setStatusStyle(
+        status: MessageStatus,
+        _ style: ALKMessageStyle.SentMessageStatus,
+        _ size: CGSize = CGSize(width: 17, height: 9)
+    ) {
+        guard let statusIcon = style.statusIcons[status] else { return }
+        switch statusIcon {
+        case let .templateImageWithTint(image, tintColor):
+            stateView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysTemplate)
+            stateView.tintColor = tintColor
+        case let .normalImage(image):
+            stateView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysOriginal)
+        case .none:
+            stateView.image = nil
+        }
     }
 }

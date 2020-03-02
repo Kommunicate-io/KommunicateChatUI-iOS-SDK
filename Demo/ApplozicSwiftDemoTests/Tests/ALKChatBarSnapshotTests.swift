@@ -99,8 +99,7 @@ class ALKChatBarSnapshotTests: QuickSpec {
                 }
             }
             context("configure attachment icons") {
-                let testBundle = Bundle(for: ALKChatBarSnapshotTests.self)
-                let testIcon = UIImage(named: "play_icon_test", in: testBundle, compatibleWith: nil)
+                let testIcon = UIImage(named: "play_icon_test", in: .test, compatibleWith: nil)
 
                 it("updates all icons if all are set") {
                     configuration.chatBar.set(attachmentIcon: testIcon, for: .contact)
@@ -128,5 +127,11 @@ class ALKChatBarSnapshotTests: QuickSpec {
                 }
             }
         }
+    }
+}
+
+extension Bundle {
+    static var test: Bundle {
+        return Bundle(for: ALKChatBarSnapshotTests.self)
     }
 }

@@ -139,6 +139,32 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     }
 }
 
+extension ALKChatBaseCell where T == ALKMessageViewModel {
+    func setStatusStyle(
+        statusView: UIImageView,
+        _ style: ALKMessageStyle.SentMessageStatus,
+        _ size: CGSize = CGSize(width: 17, height: 9)
+    ) {
+        guard let viewModel = viewModel,
+            let statusIcon = style.statusIcons[viewModel.status] else { return }
+        switch statusIcon {
+        case let .templateImageWithTint(image, tintColor):
+            statusView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysTemplate)
+            statusView.tintColor = tintColor
+        case let .normalImage(image):
+            statusView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysOriginal)
+        case .none:
+            statusView.image = nil
+        }
+    }
+}
+
 // MARK: - ALKCopyMenuItemProtocol
 
 @objc protocol ALKCopyMenuItemProtocol {

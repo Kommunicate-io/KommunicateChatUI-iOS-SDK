@@ -205,8 +205,6 @@ open class ALKMyMessageCell: ALKMessageCell {
                 equalTo: bubbleView.leadingAnchor,
                 constant: -Padding.StateView.right
             ),
-            stateView.widthAnchor.constraint(equalToConstant: Padding.StateView.width),
-            stateView.heightAnchor.constraint(equalToConstant: Padding.StateView.height),
 
             timeLabel.trailingAnchor.constraint(
                 equalTo: stateView.leadingAnchor,
@@ -223,6 +221,7 @@ open class ALKMyMessageCell: ALKMessageCell {
         super.setupStyle()
         messageView.setStyle(ALKMessageStyle.sentMessage)
         bubbleView.setStyle(ALKMessageStyle.sentBubble, isReceiverSide: false)
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     open override func update(viewModel: ALKMessageViewModel) {
@@ -247,20 +246,7 @@ open class ALKMyMessageCell: ALKMessageCell {
         } else {
             showReplyView(false)
         }
-
-        if viewModel.isAllRead {
-            stateView.image = UIImage(named: "read_state_3", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor(netHex: 0x0578FF)
-        } else if viewModel.isAllReceived {
-            stateView.image = UIImage(named: "read_state_2", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else if viewModel.isSent {
-            stateView.image = UIImage(named: "read_state_1", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = nil
-        } else {
-            stateView.image = UIImage(named: "seen_state_0", in: Bundle.applozic, compatibleWith: nil)
-            stateView.tintColor = UIColor.red
-        }
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel,
