@@ -5,6 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+## [5.1.0] - 2020-03-03
+
 ### Enhancements
 - Added support for syncing package details when a suspension screen is shown.
 - Added an option to change message status(read receipt) style. Now icon for message status can be changed from outside or it can be hidden.
@@ -307,5 +309,6 @@ The mute icon image can be changed from outside using below code.
 - [CS-108] Add support for contacts group.
 
 ### Fixes
+- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
