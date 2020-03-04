@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+-[CM-136] RichMessage button UI issue
+
 ## [5.1.0] - 2020-03-03
 
 ### Enhancements
@@ -15,6 +18,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ```
 	config.isInAppNotificationBannerDisabled = true
 ```
+
 ## [5.0.0] - 2020-02-14
 
 ### Enhancements

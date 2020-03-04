@@ -49,7 +49,7 @@ public class ALKMyQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
         return height
             + SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
             + ChatCellPadding.SentMessage.QuickReply.top
-            + ChatCellPadding.SentMessage.QuickReply.top
+            + ChatCellPadding.SentMessage.QuickReply.bottom
     }
 
     private func setupConstraints() {

@@ -122,7 +122,7 @@ public class SuggestedReplyView: UIView {
             } else {
                 button = curvedButton(title: title, image: nil, index: index, maxWidth: maxWidth)
             }
-            width += button.buttonWidth()
+            width += button.buttonWidth() + 10 // Button Padding
 
             if width >= maxWidth {
                 guard !subviews.isEmpty else {
@@ -139,7 +139,6 @@ public class SuggestedReplyView: UIView {
                 subviews.removeAll()
                 subviews.append(button)
             } else {
-                width += 10
                 subviews.append(button)
             }
         }

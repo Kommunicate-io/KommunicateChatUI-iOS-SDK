@@ -22,19 +22,20 @@ class SuggestedReplyViewSizeCalculator {
             } else {
                 size = CurvedImageButton.buttonSize(text: title, maxWidth: maxWidth)
             }
-            let currWidth = size.width
+            let currWidth = size.width + 10 // Button Padding
             if currWidth > maxWidth {
                 totalHeight += size.height + prevHeight + 10 // 10 padding between buttons
                 width = 0
                 prevHeight = 0
                 continue
             }
+
             if width + currWidth > maxWidth {
                 totalHeight += prevHeight + 10 // 10 padding between buttons
-                width = currWidth + 10
+                width = currWidth
                 prevHeight = size.height
             } else {
-                width += currWidth + 10 // 10 padding between buttons
+                width += currWidth
                 prevHeight = size.height
             }
         }
