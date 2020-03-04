@@ -60,14 +60,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationDidEnterBackground(_: UIApplication) {
         print("APP_ENTER_IN_BACKGROUND")
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "APP_ENTER_IN_BACKGROUND"), object: nil)
     }
 
     func applicationWillEnterForeground(_: UIApplication) {
-        ALPushNotificationService.applicationEntersForeground()
         print("APP_ENTER_IN_FOREGROUND")
-
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "APP_ENTER_IN_FOREGROUND"), object: nil)
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
