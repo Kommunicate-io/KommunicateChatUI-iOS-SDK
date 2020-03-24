@@ -1602,7 +1602,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-
     func rightNavbarButton() -> UIBarButtonItem? {
         guard !configuration.hideRightNavBarButtonForConversationView else {
             return nil
