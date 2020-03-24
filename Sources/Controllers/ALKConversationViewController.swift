@@ -1482,11 +1482,11 @@ extension ALKConversationViewController: CNContactPickerDelegate {
 }
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
-    public func loadingStarted() {
+    @objc open func loadingStarted() {
         activityIndicator.startAnimating()
     }
 
-    public func loadingFinished(error _: Error?) {
+    @objc open func loadingFinished(error _: Error?) {
         activityIndicator.stopAnimating()
         let oldSectionCount = tableView.numberOfSections
         tableView.reloadData()
@@ -1592,6 +1592,16 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel)
         navigationBar.updateView(profile: profile)
     }
+
+    // Call this if the last message is not fully visible.
+    // This happens when chatbar's header height increases later on.
+    public func showLastMessage() {
+        if tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0) {
+            let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+            moveTableViewToBottom(indexPath: indexPath)
+        }
+    }
+
 
     func rightNavbarButton() -> UIBarButtonItem? {
         guard !configuration.hideRightNavBarButtonForConversationView else {
