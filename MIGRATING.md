@@ -1,5 +1,25 @@
 ## Migration Guides
 
+### Migrating from versions <= 5.1.1
+
+#### Date separator and channel info messages style customization
+
+- `ALKConfiguration.conversationViewCustomCellTextColor`, has been deprecated. Use style `ALKMessageStyle.infoMessage` or `ALKMessageStyle.dateSeparator`.
+
+- `ALKConfiguration.conversationViewCustomCellBackgroundColor`, has been deprecated. Use style `ALKMessageStyle.infoMessage` or `ALKMessageStyle.dateSeparator`.
+
+Use below config for changing the style for date cell or channel info messages.
+</br>
+
+For example to change the style in date separator you can config as below:
+```swift
+ALKMessageStyle.dateSeparator = Style(font: UIFont.systemFont(ofSize: 12), text: UIColor.black, background: .red)
+```
+For example to change the style for channel info messages you can config as below:
+ ```swift
+ ALKMessageStyle.infoMessage = Style(font: UIFont.systemFont(ofSize: 12), text: UIColor.black , background: .red)
+ ```
+
 ### Migrating from versions < 3.4.0
 
 #### Navigation Bar Customization
@@ -37,7 +57,7 @@ navigationBarProxy.titleTextAttributes = [NSAttributedString.Key.foregroundColor
 
   -  ConversationList configuration
    `ALKConfiguration.rightNavBarImageForConversationListView`, has been deprecated. Use `ALKConfiguration.navigationItemsForConversationList` to add buttons in the navigation bar
-   
+
   ```swift
     // ConversationList
     var navigationItemsForConversationList = [ALKNavigationItem]()
@@ -53,7 +73,7 @@ navigationBarProxy.titleTextAttributes = [NSAttributedString.Key.foregroundColor
 
     // Adding an item in the list
     navigationItemsForConversationList.append(buttonTwo)
-    
+
     config.navigationItemsForConversationList = navigationItemsForConversationList
 
     // Add an Observer to get the event callback
@@ -64,9 +84,9 @@ navigationBarProxy.titleTextAttributes = [NSAttributedString.Key.foregroundColor
         print("Navigation button click for identifier in ConversationList is : ",identifier)
     })
   ```
-  
+
   -  ConversationView configuration
-    
+
   ```swift
     // ConversationView
     var navigationItemsForConversationView = [ALKNavigationItem]()

@@ -5,6 +5,16 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Customize the date and info message font, text color or background color of the view
+</br>Use the below config to change the style of date separator and channel info messages:
+
+```
+   ALKMessageStyle.infoMessage = Style(font: UIFont.systemFont(ofSize: 12), text: UIColor.black , background: .red)
+
+   ALKMessageStyle.dateSeparator = Style(font: UIFont.systemFont(ofSize: 12), text: UIColor.black, background: .red)
+```
+
 ## [5.1.1] - 2020-03-04
 
 ### Fixes

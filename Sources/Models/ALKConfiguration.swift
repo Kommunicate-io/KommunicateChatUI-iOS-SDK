@@ -64,12 +64,6 @@ public struct ALKConfiguration {
     /// If true then start new conversation button shown in the empty state will be disabled
     public var hideEmptyStateStartNewButtonInConversationList = false
 
-    /// Date cell and  information cell  background color
-    public var conversationViewCustomCellBackgroundColor = UIColor.gray
-
-    /// Date cell and  information cell  text color
-    public var conversationViewCustomCellTextColor = UIColor.white
-
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata: [AnyHashable: Any]?
 
@@ -217,6 +211,28 @@ public struct ALKConfiguration {
             let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
             navigationBarProxy.titleTextAttributes =
                 [NSAttributedString.Key.foregroundColor: navigationBarTitleColor]
+        }
+    }
+
+    /// Date cell and  information cell  background color
+    @available(*, deprecated, message: "Use ALKMessageStyle for customization.")
+    public var conversationViewCustomCellBackgroundColor = UIColor.gray {
+        didSet {
+            let infoMessageStyle = ALKMessageStyle.infoMessage
+            let dateCellStyle = ALKMessageStyle.dateSeparator
+            ALKMessageStyle.infoMessage = Style(font: infoMessageStyle.font, text: conversationViewCustomCellTextColor, background: conversationViewCustomCellBackgroundColor)
+            ALKMessageStyle.dateSeparator = Style(font: dateCellStyle.font, text: conversationViewCustomCellTextColor, background: conversationViewCustomCellBackgroundColor)
+        }
+    }
+
+    /// Date cell and  information cell  text color
+    @available(*, deprecated, message: "Use ALKMessageStyle for customization.")
+    public var conversationViewCustomCellTextColor = UIColor.white {
+        didSet {
+            let infoMessageStyle = ALKMessageStyle.infoMessage
+            let dateCellStyle = ALKMessageStyle.dateSeparator
+            ALKMessageStyle.infoMessage = Style(font: infoMessageStyle.font, text: conversationViewCustomCellTextColor, background: conversationViewCustomCellBackgroundColor)
+            ALKMessageStyle.dateSeparator = Style(font: dateCellStyle.font, text: conversationViewCustomCellTextColor, background: conversationViewCustomCellBackgroundColor)
         }
     }
 

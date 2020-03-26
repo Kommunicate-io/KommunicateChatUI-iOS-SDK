@@ -36,4 +36,13 @@ class ALKDateSectionHeaderView: UIView {
     func setupDate(withDateFormat date: String) {
         dateLabel.text = date
     }
+
+    func setupViewStyle() {
+        backgroundColor = UIColor.clear
+        let dateCellStyle = ALKMessageStyle.dateSeparator
+        dateView.backgroundColor = dateCellStyle.background
+        dateLabel.backgroundColor = dateCellStyle.background
+        dateLabel.textColor = dateCellStyle.text
+        dateLabel.setFont(dateCellStyle.font)
+    }
 }

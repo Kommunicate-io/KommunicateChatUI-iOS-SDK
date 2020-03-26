@@ -14,7 +14,6 @@ final class ALKInformationCell: UITableViewCell {
 
     fileprivate var messageView: UITextView = {
         let tv = UITextView()
-        tv.setFont(UIFont.font(.bold(size: 12.0)))
         tv.isEditable = false
         tv.backgroundColor = .clear
         tv.isSelectable = false
@@ -54,19 +53,18 @@ final class ALKInformationCell: UITableViewCell {
 
             let rect = (nomalizedMessage as NSString).boundingRect(with: CGSize(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude),
                                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                                   attributes: [NSAttributedString.Key.font: UIFont.font(.bold(size: 12))],
+                                                                   attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
                                                                    context: nil)
             messageHeigh = rect.height + 17
-
             messageHeigh = ceil(messageHeigh)
         }
-
         return topPadding() + messageHeigh + bottomPadding()
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
+        setupStyle()
     }
 
     required init?(coder _: NSCoder) {
@@ -82,10 +80,6 @@ final class ALKInformationCell: UITableViewCell {
     }
 
     fileprivate func setupConstraints() {
-        contentView.backgroundColor = UIColor.clear
-        backgroundColor = UIColor.clear
-        bubbleView.backgroundColor = configuration.conversationViewCustomCellBackgroundColor
-        messageView.textColor = configuration.conversationViewCustomCellTextColor
         contentView.addViewsForAutolayout(views: [messageView, bubbleView])
         contentView.bringSubviewToFront(messageView)
 
@@ -98,5 +92,14 @@ final class ALKInformationCell: UITableViewCell {
         bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -3).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: messageView.leftAnchor, constant: -4).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: messageView.rightAnchor, constant: 4).isActive = true
+    }
+
+    func setupStyle() {
+        contentView.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
+
+        bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
+        messageView.setFont(ALKMessageStyle.infoMessage.font)
+        messageView.textColor = ALKMessageStyle.infoMessage.text
     }
 }

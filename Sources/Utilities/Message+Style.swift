@@ -49,6 +49,20 @@ public enum ALKMessageStyle {
         background: UIColor.blue.withAlphaComponent(0.1)
     )
 
+    /// Style for channel info messages in chat
+    public static var infoMessage = Style(
+        font: UIFont.font(.bold(size: 12.0)),
+        text: UIColor.white,
+        background: UIColor.gray
+    )
+
+    /// Style for date cell in chat
+    public static var dateSeparator = Style(
+        font: UIFont.font(.bold(size: 12.0)),
+        text: UIColor.white,
+        background: UIColor.gray
+    )
+
     @available(*, deprecated, message: "Use `receivedMessage` and `sentMessage`")
     public static var message = Style(
         font: UIFont.font(.normal(size: 14)),
