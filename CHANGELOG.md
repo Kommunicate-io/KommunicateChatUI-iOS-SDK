@@ -5,6 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+## [5.2.0] - 2020-03-31
+
 ### Enhancements
 - Customize the date and info message font, text color or background color of the view
 </br>Use the below config to change the style of date separator and channel info messages:
@@ -325,6 +327,7 @@ The mute icon image can be changed from outside using below code.
 - [CS-108] Add support for contacts group.
 
 ### Fixes
+- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
