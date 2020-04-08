@@ -189,7 +189,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             return
         }
         /// Comes here for html and email
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .utility).async {
             let attributedText = ALKMessageCell.attributedStringFrom(message, for: viewModel.identifier)
             DispatchQueue.main.async {
                 self.messageView.attributedText = attributedText

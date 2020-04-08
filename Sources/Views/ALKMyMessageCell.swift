@@ -98,10 +98,6 @@ open class ALKMyMessageCell: ALKMessageCell {
 
         NSLayoutConstraint.activate([
             bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            bubbleView.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor,
-                constant: -Padding.BubbleView.bottom
-            ),
             bubbleView.leadingAnchor.constraint(
                 greaterThanOrEqualTo: contentView.leadingAnchor,
                 constant: Padding.BubbleView.left
@@ -183,6 +179,21 @@ open class ALKMyMessageCell: ALKMessageCell {
                 constant: -ALKMyMessageCell.bubbleViewRightPadding
             ),
             emailTopHeight,
+            emailBottomView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -Padding.BubbleView.bottom * 0.7
+            ),
+            emailBottomViewHeight,
+            emailBottomView.leadingAnchor.constraint(
+                greaterThanOrEqualTo: contentView.leadingAnchor
+            ),
+            emailBottomView.trailingAnchor.constraint(
+                equalTo: bubbleView.trailingAnchor
+            ),
+            bubbleView.bottomAnchor.constraint(
+                equalTo: emailBottomView.topAnchor,
+                constant: -Padding.BubbleView.bottom * 0.3
+            ),
 
             messageView.topAnchor.constraint(
                 equalTo: emailTopView.bottomAnchor

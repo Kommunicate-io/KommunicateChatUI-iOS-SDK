@@ -145,8 +145,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
                 lessThanOrEqualTo: contentView.trailingAnchor
             ),
             emailBottomView.leadingAnchor.constraint(
-                equalTo: bubbleView.leadingAnchor,
-                constant: ALKFriendMessageCell.bubbleViewLeftPadding
+                equalTo: bubbleView.leadingAnchor
             ),
 
             bubbleView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
