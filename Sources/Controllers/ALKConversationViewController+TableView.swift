@@ -39,6 +39,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
+                cell.delegate = self
                 cell.menuAction = { [weak self] action in
                     self?.menuItemSelected(action: action, message: message)
                 }
@@ -56,6 +57,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
+                cell.delegate = self
                 cell.avatarTapped = { [weak self] in
                     guard let currentModel = cell.viewModel else { return }
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
@@ -80,6 +82,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
+                cell.delegate = self
                 cell.menuAction = { [weak self] action in
                     self?.menuItemSelected(action: action, message: message)
                 }
@@ -94,6 +97,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
+                cell.delegate = self
                 cell.avatarTapped = { [weak self] in
                     guard let currentModel = cell.viewModel else { return }
                     self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
