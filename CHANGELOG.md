@@ -5,7 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
 - [CM-201] Fixed an issue where the footer of the sender-side view of email messages overlapped with the header, as there were no constraints.
+- [CM-146] Fix search messages loading issue.
 
 ## [5.2.0] - 2020-03-31
 

@@ -132,7 +132,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     public func prepareController() {
         if isSearch {
+            delegate?.loadingStarted()
             loadSearchMessages()
+            return
         }
         // Load messages from server in case of open group
         guard !isOpenGroup else {
@@ -423,6 +425,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func nextPage() {
         if isSearch {
             loadSearchMessages()
+            return
         }
         guard !isOpenGroup else {
             loadOpenGroupMessages()
@@ -1152,38 +1155,113 @@ open class ALKConversationViewModel: NSObject, Localizable {
     func loadSearchMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
-            time = (messageList.firstObject as! ALMessage).createdAtTime
+            guard let message = messageList.firstObject as? ALMessage else {
+                return
+            }
+            time = message.createdAtTime
         }
         let messageListRequest = MessageListRequest()
         messageListRequest.userId = contactId
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
-        ALMessageClientService().getMessageList(forUser: messageListRequest, isSearch: true) { messages, error in
-            guard error == nil, let messages = messages else {
-                self.delegate?.loadingFinished(error: error)
+        ALMessageClientService().getMessageList(forUser: messageListRequest, isSearch: true) { [weak self] messages, error in
+            guard error == nil, let messages = messages, let weakSelf = self else {
+                self?.delegate?.loadingFinished(error: error)
                 return
             }
-            if let list = self.alMessageWrapper.getUpdatedMessageArray(), list.count > 1, let newMessages = messages as? [ALMessage] {
-                for mesg in newMessages {
-                    guard let msg = self.alMessages.first, let time = Double(msg.createdAtTime.stringValue) else { continue }
-                    if let msgTime = Double(mesg.createdAtTime.stringValue), time <= msgTime {
-                        continue
+
+            if let list = weakSelf.alMessageWrapper.getUpdatedMessageArray(), list.count > 1 {
+                weakSelf.fetchReplyMessages(from: messages) { [weak self] result in
+                    guard let replyWeakSelf = self else {
+                        self?.delegate?.loadingFinished(error: nil)
+                        return
                     }
-                    self.alMessageWrapper
-                        .getUpdatedMessageArray()
-                        .insert(mesg, at: 0)
-                    self.alMessages.insert(mesg, at: 0)
-                    self.messageModels.insert(mesg.messageModel, at: 0)
+                    switch result {
+                    case let .success(messagesArray):
+                        for mesg in messagesArray as! [ALMessage] {
+                            guard let msg = self?.alMessages.first, let time = Double(msg.createdAtTime.stringValue) else { continue }
+                            if let msgTime = Double(mesg.createdAtTime.stringValue), time <= msgTime {
+                                continue
+                            }
+                            replyWeakSelf.alMessageWrapper
+                                .getUpdatedMessageArray()
+                                .insert(mesg, at: 0)
+                            replyWeakSelf.alMessages.insert(mesg, at: 0)
+                            replyWeakSelf.messageModels.insert(mesg.messageModel, at: 0)
+                        }
+                        replyWeakSelf.delegate?.loadingFinished(error: nil)
+                    case let .failure(error):
+                        print("Error in fetching messages:", error.localizedDescription)
+                        replyWeakSelf.delegate?.loadingFinished(error: nil)
+                    }
                 }
-                self.delegate?.loadingFinished(error: nil)
                 return
             }
-            self.alMessages = messages.reversed() as! [ALMessage]
-            self.alMessageWrapper.addObject(toMessageArray: messages)
-            let models = self.alMessages.map { $0.messageModel }
-            self.messageModels = models
-            self.delegate?.loadingFinished(error: nil)
+
+            weakSelf.fetchReplyMessages(from: messages) { [weak self] result in
+                guard let replyWeakSelf = self else {
+                    self?.delegate?.loadingFinished(error: nil)
+                    return
+                }
+                switch result {
+                case let .success(messagesArray):
+                    replyWeakSelf.alMessages = messagesArray.reversed() as! [ALMessage]
+                    replyWeakSelf.alMessageWrapper.addObject(toMessageArray: messages)
+                    let models = replyWeakSelf.alMessages.map { $0.messageModel }
+                    replyWeakSelf.messageModels = models
+                    replyWeakSelf.delegate?.loadingFinished(error: nil)
+                case let .failure(error):
+                    print("Error in fetching messages:", error.localizedDescription)
+                    replyWeakSelf.delegate?.loadingFinished(error: nil)
+                }
+            }
+        }
+    }
+
+    func fetchReplyMessages(from messages: NSMutableArray, _ completion: @escaping (Result<NSMutableArray, Error>) -> Void) {
+        let service = ALMessageService()
+        let messageDb = ALMessageDBService()
+        let replyMessageKeys = NSMutableArray()
+        let contactService = ALContactService()
+        let contactDBService = ALContactDBService()
+
+        let alUserService = ALUserService()
+        if let newMessages = messages as? [ALMessage] {
+            for msg in newMessages {
+                if let metadata = msg.metadata,
+                    let replyKey = metadata.value(forKey: AL_MESSAGE_REPLY_KEY) as? String,
+                    messageDb.getMessageByKey("key", value: replyKey) == nil,
+                    !replyMessageKeys.contains(replyKey) {
+                    replyMessageKeys.add(replyKey)
+                }
+            }
+
+            service.fetchReplyMessages(replyMessageKeys) { replyMessages in
+                var userNotPresentIds = [String]()
+
+                if let newMessages = replyMessages as? [ALMessage], !newMessages.isEmpty {
+                    for replyMessage in newMessages {
+                        if !contactService.isContactExist(replyMessage.to) {
+                            userNotPresentIds.append(replyMessage.to)
+                        }
+                    }
+                }
+
+                guard !userNotPresentIds.isEmpty else {
+                    completion(.success(messages))
+                    return
+                }
+                alUserService.fetchAndupdateUserDetails(NSMutableArray(array: userNotPresentIds), withCompletion: { userDetailArray, theError in
+
+                    guard theError == nil else {
+                        completion(.failure(theError!))
+                        return
+                    }
+                    contactDBService.addUserDetails(userDetailArray)
+                    completion(.success(messages))
+                })
+            }
         }
     }
 
