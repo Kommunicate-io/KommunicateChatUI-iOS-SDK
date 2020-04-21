@@ -8,7 +8,7 @@
 import Foundation
 
 extension ALKConversationViewController: ALKMessageCellDelegate {
-    public func urlTapped(url: URL, message: ALKMessageViewModel) {
+    public func urlTapped(url: URL, message _: ALKMessageViewModel) {
         UIApplication.shared.open(url)
     }
 }

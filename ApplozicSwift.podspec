@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'ApplozicSwift'
-  s.version = '5.2.0'
+  s.version = '5.3.0'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
   s.summary = 'Applozic Swift Kit'
   s.homepage = 'https://github.com/AppLozic/ApplozicSwift'

@@ -22,7 +22,6 @@ public protocol ALKMessageCellDelegate: AnyObject {
 
 // swiftlint:disable:next type_body_length
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
-
     weak var delegate: ALKMessageCellDelegate?
 
     /// Dummy view required to calculate height for normal text.
@@ -449,7 +448,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
 }
 
 extension ALKMessageCell: UITextViewDelegate {
-    public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    public func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction _: UITextItemInteraction) -> Bool {
         guard let message = viewModel else { return true }
         delegate?.urlTapped(url: URL, message: message)
         return false

@@ -5,6 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+## [5.3.0] - 2020-04-21
+
 ### Enhancements
 
 - [CM-193] Added support to open the application when tapping any URL in the text message. If the application isn't installed, we'll open it in Safari.
@@ -336,6 +338,7 @@ The mute icon image can be changed from outside using below code.
 - [CS-108] Add support for contacts group.
 
 ### Fixes
+- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
