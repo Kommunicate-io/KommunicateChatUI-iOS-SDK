@@ -93,7 +93,7 @@ open class ALKMyMessageCell: ALKMessageCell {
 
     override func setupViews() {
         super.setupViews()
-
+        accessibilityIdentifier = "myTextCell"
         contentView.addViewsForAutolayout(views: [stateView])
 
         NSLayoutConstraint.activate([

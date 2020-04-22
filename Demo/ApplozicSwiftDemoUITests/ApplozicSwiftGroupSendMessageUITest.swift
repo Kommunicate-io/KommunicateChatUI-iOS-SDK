@@ -44,7 +44,7 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         inputView.typeText(GroupData.typeText) // typeing message
         app.buttons[InAppButton.ConversationScreen.send].tap() // sending message in group
         let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Faild to delete group DemoGroupForImage")
+        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForImage")
     }
 
     func testSendImageInGroup() {
@@ -72,7 +72,7 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         waitFor(object: doneButton) { $0.exists }
         doneButton.tap()
         let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Faild to delete group DemoGroupForImage")
+        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForImage")
     }
 
     func testSendContactInGroup() {
@@ -93,7 +93,7 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         waitFor(object: selectcontact) { $0.exists }
         selectcontact.tap()
         let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Faild to delete group DemoGroupForImage")
+        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForImage")
     }
 
     func testSendLocationInGroup() {
@@ -114,7 +114,7 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         waitFor(object: sendLocation) { $0.exists }
         sendLocation.tap()
         let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Faild to delete group DemoGroupForLocation")
+        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForLocation")
     }
 
     private func login() {
@@ -199,7 +199,7 @@ extension XCTestCase {
         expectation(for: predicate, evaluatedWith: object, handler: nil)
         waitForExpectations(timeout: timeout) { error in
             if error != nil {
-                let message = "Failed to fulful expectation block for \(object) after \(timeout) seconds."
+                let message = "Failed to fulfil expectation block for \(object) after \(timeout) seconds."
                 self.recordFailure(withDescription: message, inFile: file, atLine: Int(line), expected: true)
             }
         }

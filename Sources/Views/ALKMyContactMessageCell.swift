@@ -38,6 +38,7 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
 
     override func setupViews() {
         setupConstraints()
+        accessibilityIdentifier = "myContactCell"
     }
 
     override func update(viewModel: ALKMessageViewModel) {

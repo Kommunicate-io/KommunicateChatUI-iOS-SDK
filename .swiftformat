@@ -2,7 +2,6 @@
 
 --exclude Tests,Demo/Pods
 
-
 # format options
 
 --allman false

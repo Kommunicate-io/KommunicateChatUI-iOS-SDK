@@ -40,6 +40,15 @@ enum InAppButton {
         static let removeUser = "Remove user"
     }
 
+    enum EditGroup {
+        static let remove = "Remove"
+        static let save = "Save"
+        static let removeUser = "Remove user"
+        static let makeGroupAdmin = "Make group admin"
+        static let iconSendWhite = "icon send white"
+        static let edit = "Edit"
+    }
+
     enum ConversationScreen {
         static let send = "sendButton"
         static let back = "conversationBackButton"
@@ -66,4 +75,11 @@ enum AppTextFeild {
     static let password = "Password"
     static let typeGroupName = "Type group name"
     static let chatTextView = "chatTextView"
+}
+
+enum AppCells {
+    static let textCell = "myTextCell"
+    static let photoCell = "myPhotoCell"
+    static let locationCell = "myLocationCell"
+    static let contactCell = "myContactCell"
 }

@@ -24,6 +24,7 @@ final class ALKMyLocationCell: ALKLocationCell {
 
     override func setupViews() {
         super.setupViews()
+        accessibilityIdentifier = "myLocationCell"
         // add view to contenview and setup constraint
         contentView.addViewsForAutolayout(views: [stateView])
 

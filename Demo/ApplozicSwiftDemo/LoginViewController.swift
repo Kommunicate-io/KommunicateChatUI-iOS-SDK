@@ -68,11 +68,14 @@ class LoginViewController: UIViewController {
     func addContacts() {
         let contact1 = ALContact()
         let contact2 = ALContact()
+        let contact3 = ALContact()
         contact1.userId = "iOSDemoContact1"
         contact1.displayName = "iOS Demo Contact 1"
         contact2.userId = "iOSDemoContact2"
         contact2.displayName = "iOS Demo Contact 2"
+        contact3.userId = "iOSDemoContact3"
+        contact3.displayName = "iOS Demo Contact 3"
         let contactService = ALContactService()
-        contactService.addList(ofContacts: [contact1, contact2])
+        contactService.addList(ofContacts: [contact1, contact2, contact3])
     }
 }

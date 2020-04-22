@@ -10,6 +10,8 @@
 	<string>$(GroupMember1)</string>
 	<key>GroupMember2</key>
 	<string>$(GroupMember2)</string>
+	<key>GroupMember3</key>
+	<string>$(GroupMember3)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

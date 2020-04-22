@@ -37,7 +37,7 @@ final class ALKMyPhotoPortalCell: ALKPhotoCell {
 
     override func setupViews() {
         super.setupViews()
-
+        accessibilityIdentifier = "myPhotoCell"
         contentView.addViewsForAutolayout(views: [stateView])
 
         photoView.topAnchor
