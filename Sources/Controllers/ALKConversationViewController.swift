@@ -647,7 +647,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendListTemplateCell.self)
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKFriendDocumentCell.self)
-        tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKMyContactMessageCell.self)
         tableView.register(ALKFriendContactMessageCell.self)
         tableView.register(SentImageMessageCell.self)
@@ -656,6 +655,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(SentFAQMessageCell.self)
         tableView.register(SentButtonsCell.self)
         tableView.register(ReceivedButtonsCell.self)
+
+        tableView.register(ALKMyLinkPreviewCell.self)
+        tableView.register(ALKFriendLinkPreviewCell.self)
     }
 
     private func prepareMoreBar() {
@@ -1072,6 +1074,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     func attachmentUploadDidCompleteWith(response: Any?, indexPath: IndexPath) {
         viewModel.uploadAttachmentCompleted(responseDict: response, indexPath: indexPath)
+    }
+
+    func isCellVisible(identifier: String) -> Bool {
+        guard let index = viewModel.sectionFor(identifier: identifier) else { return false }
+        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: index)) as? ALKChatBaseCell<ALKMessageViewModel>
+        return cell != nil
     }
 
     func messageAvatarViewDidTap(messageVM: ALKMessageViewModel, indexPath _: IndexPath) {

@@ -22,6 +22,23 @@ public protocol ALKMessageCellDelegate: AnyObject {
 
 // swiftlint:disable:next type_body_length
 open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
+    enum ConstraintIdentifier {
+        enum ReplyNameLabel {
+            static let height = "ReplyNameHeight"
+        }
+
+        enum ReplyMessageLabel {
+            static let height = "ReplyMessageHeight"
+        }
+
+        enum PreviewImage {
+            static let height = "ReplyPreviewImageHeight"
+            static let width = "ReplyPreviewImageWidth"
+        }
+
+        static let replyViewHeightIdentifier = "ReplyViewHeight"
+    }
+
     weak var delegate: ALKMessageCellDelegate?
 
     /// Dummy view required to calculate height for normal text.

@@ -146,3 +146,4 @@ CapitalLetterCancelText = "CANCEL";
 EmailWebViewTitle =  "Email";
 OkayMessage = "OKAY";
 ReplyInfoMessage = "We are unable to directly retrieve this message for you. You can still scroll up your messages and view it.";
+FailedToLoadLink = "Failed to load a link";

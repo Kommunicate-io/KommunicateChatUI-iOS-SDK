@@ -1,19 +1,7 @@
-//
-//  ALKMessageCell.swift
-//
-//
-//  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
-//
-
 import Applozic
 import Foundation
-import Kingfisher
-import UIKit
 
-// MARK: - ALKMyMessageCell
-
-open class ALKMyMessageCell: ALKMessageCell {
+class ALKMyLinkPreviewCell: ALKLinkPreviewBaseCell {
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()
         sv.isUserInteractionEnabled = false
@@ -29,26 +17,26 @@ open class ALKMyMessageCell: ALKMessageCell {
         return ALKMessageStyle.sentBubble.widthPadding + 5
     }()
 
-    struct Padding {
-        struct ReplyView {
+    enum Padding {
+        enum ReplyView {
             static let height: CGFloat = 80.0
             static let left: CGFloat = 5.0
             static let right: CGFloat = 5.0
             static let top: CGFloat = 5.0
         }
 
-        struct ReplyNameLabel {
+        enum ReplyNameLabel {
             static let right: CGFloat = 10.0
             static let height: CGFloat = 30.0
         }
 
-        struct ReplyMessageLabel {
+        enum ReplyMessageLabel {
             static let right: CGFloat = 10.0
             static let top: CGFloat = 5.0
             static let height: CGFloat = 30.0
         }
 
-        struct PreviewImageView {
+        enum PreviewImageView {
             static let height: CGFloat = 50.0
             static let width: CGFloat = 70.0
             static let right: CGFloat = 10.0
@@ -56,27 +44,39 @@ open class ALKMyMessageCell: ALKMessageCell {
             static let bottom: CGFloat = 5.0
         }
 
-        struct MessageView {
-            static let top: CGFloat = 5
+        enum MessageView {
+            static let top: CGFloat = 5.0
             static let bottom: CGFloat = 10.0
         }
 
-        struct BubbleView {
+        enum BubbleView {
             static let left: CGFloat = 95.0
             static let bottom: CGFloat = 8.0
             static let right: CGFloat = 10.0
         }
 
-        struct StateView {
+        enum StateView {
             static let height: CGFloat = 9.0
             static let width: CGFloat = 17.0
             static let right: CGFloat = 2.0
+        }
+
+        enum LinkView {
+            static let height: CGFloat = 90.0
+            static let top: CGFloat = 5.0
+            static let left: CGFloat = 10.0
+            static let right: CGFloat = 8.0
+        }
+
+        enum TimeLabel {
+            static let left: CGFloat = 2.0
+            static let bottom: CGFloat = 2.0
         }
     }
 
     override func setupViews() {
         super.setupViews()
-        accessibilityIdentifier = "myTextCell"
+
         contentView.addViewsForAutolayout(views: [stateView])
 
         NSLayoutConstraint.activate([
@@ -90,8 +90,22 @@ open class ALKMyMessageCell: ALKMessageCell {
                 constant: -Padding.BubbleView.right
             ),
 
-            replyView.topAnchor.constraint(
+            emailTopView.topAnchor.constraint(
                 equalTo: bubbleView.topAnchor,
+                constant: Padding.MessageView.top
+            ),
+            emailTopView.leadingAnchor.constraint(
+                equalTo: bubbleView.leadingAnchor,
+                constant: ALKMessageStyle.sentBubble.widthPadding
+            ),
+            emailTopView.trailingAnchor.constraint(
+                equalTo: bubbleView.trailingAnchor,
+                constant: -ALKMyMessageCell.bubbleViewRightPadding
+            ),
+            emailTopHeight,
+
+            replyView.topAnchor.constraint(
+                equalTo: emailTopView.bottomAnchor,
                 constant: Padding.ReplyView.top
             ),
             replyView.heightAnchor.constraintEqualToAnchor(
@@ -148,20 +162,6 @@ open class ALKMyMessageCell: ALKMessageCell {
                 constant: 0,
                 identifier: ConstraintIdentifier.ReplyMessageLabel.height
             ),
-
-            emailTopView.topAnchor.constraint(
-                equalTo: replyView.bottomAnchor,
-                constant: Padding.MessageView.top
-            ),
-            emailTopView.leadingAnchor.constraint(
-                equalTo: bubbleView.leadingAnchor,
-                constant: ALKMessageStyle.sentBubble.widthPadding
-            ),
-            emailTopView.trailingAnchor.constraint(
-                equalTo: bubbleView.trailingAnchor,
-                constant: -ALKMyMessageCell.bubbleViewRightPadding
-            ),
-            emailTopHeight,
             emailBottomView.bottomAnchor.constraint(
                 equalTo: contentView.bottomAnchor,
                 constant: -Padding.BubbleView.bottom * 0.7
@@ -178,8 +178,21 @@ open class ALKMyMessageCell: ALKMessageCell {
                 constant: -Padding.BubbleView.bottom * 0.3
             ),
 
+            linkView.topAnchor.constraint(
+                equalTo: replyView.bottomAnchor,
+                constant: Padding.LinkView.top
+            ),
+            linkView.leadingAnchor.constraint(
+                equalTo: bubbleView.leadingAnchor,
+                constant: Padding.LinkView.left
+            ),
+            linkView.trailingAnchor.constraint(
+                equalTo: bubbleView.trailingAnchor,
+                constant: -Padding.LinkView.right
+            ),
+            linkView.heightAnchor.constraint(equalToConstant: Padding.LinkView.height),
             messageView.topAnchor.constraint(
-                equalTo: emailTopView.bottomAnchor
+                equalTo: linkView.bottomAnchor
             ),
             messageView.leadingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
@@ -193,7 +206,6 @@ open class ALKMyMessageCell: ALKMessageCell {
                 equalTo: bubbleView.bottomAnchor,
                 constant: -Padding.MessageView.bottom
             ),
-
             stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor),
             stateView.trailingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
@@ -202,11 +214,11 @@ open class ALKMyMessageCell: ALKMessageCell {
 
             timeLabel.trailingAnchor.constraint(
                 equalTo: stateView.leadingAnchor,
-                constant: -2.0
+                constant: -Padding.TimeLabel.left
             ),
             timeLabel.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
-                constant: 2
+                constant: Padding.TimeLabel.bottom
             ),
         ])
     }
@@ -241,6 +253,7 @@ open class ALKMyMessageCell: ALKMessageCell {
             showReplyView(false)
         }
         setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
+        linkView.update(url: url, identifier: viewModel.identifier)
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel,
@@ -258,14 +271,27 @@ open class ALKMyMessageCell: ALKMessageCell {
                 mentionStyle: ALKMessageStyle.sentMention,
                 displayNames: displayNames
             )
+
         let heightPadding = Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.ReplyView.top
 
-        let totalHeight = messageHeight + heightPadding
-        guard let metadata = viewModel.metadata,
-            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil else {
-            return totalHeight
+        let linkURL = ALKLinkPreviewManager.extractURLAndAddInCache(from: viewModel.message, identifier: viewModel.identifier)
+
+        var isReplyMessage = false
+        if let metadata = viewModel.metadata,
+            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil {
+            isReplyMessage = true
         }
-        return totalHeight + Padding.ReplyView.height
+
+        if isReplyMessage, linkURL != nil {
+            let linkViewHeight = ALKLinkView.height() + Padding.LinkView.top
+            return messageHeight + heightPadding + Padding.ReplyView.height + linkViewHeight
+        } else if isReplyMessage {
+            return messageHeight + Padding.ReplyView.height
+        } else if linkURL != nil {
+            return messageHeight + heightPadding + ALKLinkView.height() + Padding.LinkView.top
+        }
+
+        return messageHeight + heightPadding
     }
 
     fileprivate func showReplyView(_ show: Bool) {

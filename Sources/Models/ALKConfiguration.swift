@@ -145,6 +145,9 @@ public struct ALKConfiguration {
     // If true, then in-app notification banner will be disabled
     public var isInAppNotificationBannerDisabled: Bool = false
 
+    // If true, then link preview will be disabled
+    public var isLinkPreviewDisabled: Bool = false
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {

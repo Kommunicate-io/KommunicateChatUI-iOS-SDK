@@ -21,6 +21,22 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         return viewModel.numberOfRows(section: section)
     }
 
+    private func necessarySetupForMessageCell(cell: ALKMessageCell, message: ALKMessageViewModel) {
+        cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+        cell.displayNames = { [weak self] userIds in
+            self?.viewModel.displayNames(ofUserIds: userIds)
+        }
+        cell.update(viewModel: message)
+        cell.update(chatBar: chatBar)
+        cell.delegate = self
+        cell.menuAction = { [weak self] action in
+            self?.menuItemSelected(action: action, message: message)
+        }
+        cell.replyViewAction = { [weak self] in
+            self?.scrollTo(message: message)
+        }
+    }
+
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
@@ -28,84 +44,45 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         }
         print("Cell updated at row: ", indexPath.row, "and type is: ", message.messageType)
 
-        guard !message.isReplyMessage else {
-            // Get reply cell and return
-            if message.isMyMessage {
-                let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.showReport = false
-                cell.displayNames = { [weak self] userIds in
-                    self?.viewModel.displayNames(ofUserIds: userIds)
-                }
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.update(viewModel: message)
-                cell.update(chatBar: chatBar)
-                cell.delegate = self
-                cell.menuAction = { [weak self] action in
-                    self?.menuItemSelected(action: action, message: message)
-                }
-                cell.replyViewAction = { [weak self] in
-                    self?.scrollTo(message: message)
-                }
-                return cell
-
-            } else {
-                let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.showReport = configuration.isReportMessageEnabled
-                cell.displayNames = { [weak self] userIds in
-                    self?.viewModel.displayNames(ofUserIds: userIds)
-                }
-                cell.update(viewModel: message)
-                cell.update(chatBar: chatBar)
-                cell.delegate = self
-                cell.avatarTapped = { [weak self] in
-                    guard let currentModel = cell.viewModel else { return }
-                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
-                }
-                cell.menuAction = { [weak self] action in
-                    self?.menuItemSelected(action: action, message: message)
-                }
-                cell.replyViewAction = { [weak self] in
-                    self?.scrollTo(message: message)
-                }
-                return cell
-            }
-        }
         switch message.messageType {
         case .text, .html, .email:
-            if message.isMyMessage {
-                let cell: ALKMyMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.showReport = false
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.displayNames = { [weak self] userIds in
-                    self?.viewModel.displayNames(ofUserIds: userIds)
+            if !configuration.isLinkPreviewDisabled, message.messageType == .text, ALKLinkPreviewManager.extractURLAndAddInCache(from: message.message, identifier: message.identifier) != nil {
+                var cell = ALKLinkPreviewBaseCell()
+                if message.isMyMessage {
+                    cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyLinkPreviewCell
+                    cell.showReport = false
+                    necessarySetupForMessageCell(cell: cell, message: message)
+                } else {
+                    cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendLinkPreviewCell
+                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.avatarTapped = { [weak self] in
+                        guard let currentModel = cell.viewModel else { return }
+                        self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                    }
+                    necessarySetupForMessageCell(cell: cell, message: message)
                 }
-                cell.update(viewModel: message)
-                cell.update(chatBar: chatBar)
-                cell.delegate = self
-                cell.menuAction = { [weak self] action in
-                    self?.menuItemSelected(action: action, message: message)
+                cell.isCellVisible { [weak self] identifier in
+                    guard let weakSelf = self else { return false }
+                    return weakSelf.isCellVisible(identifier: identifier)
                 }
                 return cell
 
             } else {
-                let cell: ALKFriendMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.showReport = configuration.isReportMessageEnabled
-                cell.displayNames = { [weak self] userIds in
-                    self?.viewModel.displayNames(ofUserIds: userIds)
+                if message.isMyMessage {
+                    let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyMessageCell
+                    cell.showReport = false
+                    necessarySetupForMessageCell(cell: cell, message: message)
+                    return cell
+                } else {
+                    let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendMessageCell
+                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.avatarTapped = { [weak self] in
+                        guard let currentModel = cell.viewModel else { return }
+                        self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                    }
+                    necessarySetupForMessageCell(cell: cell, message: message)
+                    return cell
                 }
-                cell.update(viewModel: message)
-                cell.update(chatBar: chatBar)
-                cell.delegate = self
-                cell.avatarTapped = { [weak self] in
-                    guard let currentModel = cell.viewModel else { return }
-                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
-                }
-                cell.menuAction = { [weak self] action in
-                    self?.menuItemSelected(action: action, message: message)
-                }
-                return cell
             }
         case .photo:
             if message.isMyMessage {
@@ -509,7 +486,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     public func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame)
+        return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
     }
 
     public func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

@@ -10,13 +10,13 @@ import WebKit
 
 class ALKWebViewController: UIViewController, WKNavigationDelegate {
     var wkWebView: WKWebView = WKWebView()
-    let htmlString: String
+    let htmlString: String?
     let url: URL?
-    let navTitle: String?
+    let navTitle: String
 
     let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
-    init(htmlString: String, url: URL?, title: String?) {
+    init(htmlString: String?, url: URL?, title: String) {
         self.htmlString = htmlString
         self.url = url
         navTitle = title
@@ -73,7 +73,15 @@ class ALKWebViewController: UIViewController, WKNavigationDelegate {
         wkWebView.navigationDelegate = self
         view = wkWebView
         activityIndicator.startAnimating()
-        wkWebView.loadHTMLString(htmlString, baseURL: url)
+
+        guard let html = htmlString else {
+            if let openUrl = url {
+                let request = URLRequest(url: openUrl)
+                wkWebView.load(request)
+            }
+            return
+        }
+        wkWebView.loadHTMLString(html, baseURL: url)
     }
 
     override func viewWillAppear(_ animated: Bool) {
