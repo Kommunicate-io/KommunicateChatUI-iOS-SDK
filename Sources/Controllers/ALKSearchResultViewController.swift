@@ -9,12 +9,10 @@
 import Applozic
 import UIKit
 
-public class ALKSearchResultViewController: UIViewController {
+public class ALKSearchResultViewController: ALKBaseViewController {
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
     let viewModel = SearchResultViewModel()
-    let configuration: ALKConfiguration
-
     lazy var viewController = ALKConversationListTableViewController(
         viewModel: self.viewModel,
         dbService: ALMessageDBService(),
@@ -24,9 +22,8 @@ public class ALKSearchResultViewController: UIViewController {
 
     var conversationViewController: ALKConversationViewController?
 
-    public init(configuration: ALKConfiguration) {
-        self.configuration = configuration
-        super.init(nibName: nil, bundle: nil)
+    public required init(configuration: ALKConfiguration) {
+        super.init(configuration: configuration)
         viewController.delegate = self
     }
 
@@ -66,6 +63,11 @@ public class ALKSearchResultViewController: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.alpha = 0
         searchController.searchBar.showsCancelButton = true
+        if #available(iOS 13.0, *) {
+            searchController.automaticallyShowsCancelButton = true
+        } else {
+            searchController.searchBar.showsCancelButton = true
+        }
         return searchController
     }
 
@@ -82,6 +84,7 @@ public class ALKSearchResultViewController: UIViewController {
         view.addSubview(activityIndicator)
         view.bringSubviewToFront(activityIndicator)
     }
+
 }
 
 extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
@@ -102,9 +105,7 @@ extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
         viewController.viewModel = convViewModel
         viewController.individualLaunch = false
         conversationViewController = viewController
-
-        let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
-        present(navVC, animated: false, completion: nil)
+        presentingViewController?.navigationController?.pushViewController(viewController, animated: true)
     }
 
     public func emptyChatCellTapped() {}

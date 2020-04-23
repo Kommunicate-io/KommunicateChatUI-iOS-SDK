@@ -191,7 +191,6 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         activityIndicator.color = UIColor.gray
         view.addSubview(activityIndicator)
         view.bringSubviewToFront(activityIndicator)
-        edgesForExtendedLayout = []
         viewModel.prepareController(dbService: dbService)
     }
 

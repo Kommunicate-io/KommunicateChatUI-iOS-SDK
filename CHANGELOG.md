@@ -5,11 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
-## [5.3.0] - 2020-04-21
-
 ### Enhancements
 
-- [CM-193] Added support to open the application when tapping any URL in the text message. If the application isn't installed, we'll open it in Safari.
 - Show link preview in chat for web links
 </br>You can use below config to disable web link preview in chat:
 ```
@@ -43,6 +40,16 @@ If you don't want to use the above option, You can white list some the websites 
 ```
 You can read more on Property List Keys
 [here](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity/nsexceptiondomains)
+
+### Fixes
+- [CM-146] Fixed back button issue in searched conversation view.
+
+
+## [5.3.0] - 2020-04-21
+
+### Enhancements
+
+- [CM-193] Added support to open the application when tapping any URL in the text message. If the application isn't installed, we'll open it in Safari.
 
 ### Fixes
 
