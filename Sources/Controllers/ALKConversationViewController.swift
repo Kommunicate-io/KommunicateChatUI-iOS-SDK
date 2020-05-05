@@ -1699,7 +1699,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 }
 
 extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
-    func createGroupGetFriendInGroupList(friendsSelected _: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
+    func createGroupGetFriendInGroupList(friendsSelected _: [ALKFriendViewModel], groupName: String, groupImgUrl: String?, friendsAdded: [ALKFriendViewModel]) {
         if viewModel.isGroup {
             viewModel.updateGroup(groupName: groupName, groupImage: groupImgUrl, friendsAdded: friendsAdded)
             _ = navigationController?.popToViewController(self, animated: true)

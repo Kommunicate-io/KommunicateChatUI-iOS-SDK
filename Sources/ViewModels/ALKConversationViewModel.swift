@@ -586,8 +586,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func updateGroup(groupName: String, groupImage: String, friendsAdded: [ALKFriendViewModel]) {
-        if !groupName.isEmpty || !groupImage.isEmpty {
+    open func updateGroup(groupName: String, groupImage: String?, friendsAdded: [ALKFriendViewModel]) {
+        if !groupName.isEmpty || groupImage != nil {
             updateGroupInfo(groupName: groupName, groupImage: groupImage, completion: { success in
                 self.updateInfo()
                 guard success, !friendsAdded.isEmpty else { return }
@@ -1345,7 +1345,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private func updateGroupInfo(
         groupName: String,
-        groupImage: String,
+        groupImage: String?,
         completion: @escaping (Bool) -> Void
     ) {
         guard let groupId = groupKey() else { return }

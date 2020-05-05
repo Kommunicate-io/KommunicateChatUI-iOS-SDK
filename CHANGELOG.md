@@ -44,6 +44,7 @@ You can read more on Property List Keys
 ### Fixes
 - [CM-146] Fixed back button issue in searched conversation view.
 - [CM-241] Fixed a crash that could happen when some message updates are delayed.
+- [CM-225] Fixed an issue where group profile was getting removed on group name update.
 
 ## [5.3.0] - 2020-04-21
 

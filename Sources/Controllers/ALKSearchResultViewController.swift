@@ -84,7 +84,6 @@ public class ALKSearchResultViewController: ALKBaseViewController {
         view.addSubview(activityIndicator)
         view.bringSubviewToFront(activityIndicator)
     }
-
 }
 
 extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {

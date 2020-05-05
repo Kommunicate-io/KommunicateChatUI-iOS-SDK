@@ -205,7 +205,7 @@ extension ALKNewChatViewController: UISearchBarDelegate {
 // MARK: - CreateGroupChatAddFriendProtocol
 
 extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
-    func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded _: [ALKFriendViewModel]) {
+    func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String?, friendsAdded _: [ALKFriendViewModel]) {
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
 
         // Server call

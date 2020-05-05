@@ -14,7 +14,7 @@ protocol ALKCreateGroupChatAddFriendProtocol: AnyObject {
     func createGroupGetFriendInGroupList(
         friendsSelected: [ALKFriendViewModel],
         groupName: String,
-        groupImgUrl: String,
+        groupImgUrl: String?,
         friendsAdded: [ALKFriendViewModel]
     )
 }
@@ -163,7 +163,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                 })
             } else {
                 // Pass groupImgUrl empty in case of group name update
-                groupDelegate?.createGroupGetFriendInGroupList(friendsSelected: groupList, groupName: groupName, groupImgUrl: "", friendsAdded: addedList)
+                groupDelegate?.createGroupGetFriendInGroupList(friendsSelected: groupList, groupName: groupName, groupImgUrl: nil, friendsAdded: addedList)
             }
         }
     }

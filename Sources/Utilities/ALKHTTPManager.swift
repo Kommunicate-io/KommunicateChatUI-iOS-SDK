@@ -57,7 +57,7 @@ class ALKHTTPManager: NSObject {
     }
 
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?) -> Void) {
-        guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.path, paramString: nil) as URLRequest? else { return }
+        guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.absoluteString, paramString: nil) as URLRequest? else { return }
 
         let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
         let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
