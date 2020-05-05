@@ -1524,9 +1524,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     public func updateMessageAt(indexPath: IndexPath) {
         DispatchQueue.main.async {
-            self.tableView.beginUpdates()
+            guard indexPath.section < self.tableView.numberOfSections else {
+                print("Message(section) can't be updated due to incorrect index")
+                return
+            }
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-            self.tableView.endUpdates()
         }
     }
 

@@ -189,7 +189,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
                     conversationVC.endAppearanceTransition()
                 }
                 it("renders on the left side") {
-                    expect(conversationVC.view).toEventually(haveValidSnapshot(), timeout: 2.0)
+                    expect(conversationVC.view).toEventually(haveValidSnapshot(), timeout: 3.0)
                 }
             }
             context("when it was sent") {
@@ -199,7 +199,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
                     conversationVC.endAppearanceTransition()
                 }
                 it("renders on the right side") {
-                    expect(conversationVC.view).toEventually(haveValidSnapshot(), timeout: 2.0)
+                    expect(conversationVC.view).toEventually(haveValidSnapshot(), timeout: 3.0)
                 }
             }
         }
