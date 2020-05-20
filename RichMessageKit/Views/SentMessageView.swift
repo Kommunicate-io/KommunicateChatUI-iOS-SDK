@@ -17,17 +17,6 @@ public class SentMessageView: UIView {
 
     /// Configuration to change width height and padding of views inside SentMessageView.
     public struct Config {
-        public struct StateView {
-            public static var width: CGFloat = 17.0
-            public static var height: CGFloat = 9.0
-        }
-
-        public struct TimeLabel {
-            /// Left padding of `TimeLabel` from `StateView`
-            public static var leftPadding: CGFloat = 2.0
-            public static var maxWidth: CGFloat = 200.0
-        }
-
         public struct MessageView {
             /// Left padding of `MessageView` from `TimeLabel`
             public static var leftPadding: CGFloat = 2.0
@@ -44,22 +33,6 @@ public class SentMessageView: UIView {
         maxWidth: maxWidth
     )
 
-    fileprivate var timeLabel: UILabel = {
-        let lb = UILabel()
-        lb.setStyle(MessageTheme.sentMessage.time)
-        lb.isOpaque = true
-        return lb
-    }()
-
-    fileprivate var stateView: UIImageView = {
-        let sv = UIImageView()
-        sv.isUserInteractionEnabled = false
-        sv.contentMode = .center
-        return sv
-    }()
-
-    fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
-    fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
     fileprivate var padding: Padding
     fileprivate var maxWidth: CGFloat
 
@@ -96,32 +69,6 @@ public class SentMessageView: UIView {
 
         // Set message
         messageView.update(model: message)
-
-        // Set time and update timeLabel constraint.
-        timeLabel.text = model.time
-        let timeLabelSize = model.time.rectWithConstrainedWidth(Config.TimeLabel.maxWidth,
-                                                                font: MessageTheme.sentMessage.time.font)
-        timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
-        timeLabelWidth.constant = timeLabelSize.width.rounded(.up) // This is amazing😱😱😱... a diff in fraction can trim.
-        layoutIfNeeded()
-
-        guard let status = model.status else { return }
-        // Set status
-        var statusImage = MessageTheme.sentMessage.status
-        switch status {
-        case .pending:
-            statusImage.pending = statusImage.pending?.withRenderingMode(.alwaysTemplate)
-            stateView.image = statusImage.pending
-            stateView.tintColor = UIColor.red
-        case .sent:
-            stateView.image = statusImage.sent
-        case .delivered:
-            stateView.image = statusImage.delivered
-        case .read:
-            statusImage.read = statusImage.read?.withRenderingMode(.alwaysTemplate)
-            stateView.image = statusImage.read
-            stateView.tintColor = UIColor(netHex: 0x0578FF)
-        }
     }
 
     /// It's used to get exact height of messageView.
@@ -143,25 +90,16 @@ public class SentMessageView: UIView {
     // MARK: Private methods
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [messageView, timeLabel, stateView])
-
+        addViewsForAutolayout(views: [messageView])
         NSLayoutConstraint.activate([
-            stateView.widthAnchor.constraint(equalToConstant: Config.StateView.width),
-            stateView.heightAnchor.constraint(equalToConstant: Config.StateView.height),
-            stateView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
-            stateView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: padding.left),
-            stateView.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -1 * Config.TimeLabel.leftPadding),
-
-            timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
-            timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: stateView.trailingAnchor, constant: Config.TimeLabel.leftPadding),
-            timeLabelWidth,
-            timeLabelHeight,
-            timeLabel.trailingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -1 * Config.MessageView.leftPadding),
-
             messageView.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
             messageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
-            messageView.leadingAnchor.constraint(greaterThanOrEqualTo: timeLabel.trailingAnchor, constant: Config.MessageView.leftPadding),
-            messageView.bottomAnchor.constraint(equalTo: stateView.bottomAnchor, constant: -1 * Config.MessageView.bottomPadding),
+            messageView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: Config.MessageView.leftPadding),
+            messageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.MessageView.bottomPadding),
         ])
+    }
+
+    func updateHeightOfView(hideView: Bool, model: String?) {
+        messageView.updateHeighOfView(hideView: hideView, model: model ?? "")
     }
 }

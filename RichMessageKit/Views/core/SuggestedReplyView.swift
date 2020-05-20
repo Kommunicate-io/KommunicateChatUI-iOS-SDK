@@ -112,6 +112,12 @@ public class SuggestedReplyView: UIView {
         }
         var width: CGFloat = 0
         var subviews = [UIView]()
+        // A Boolean value to indicate whether the suggested replies span over more than 1 line.
+        // Usage: We add hidden view to horizontal stackview due to the bug in stackview which causes subviews to
+        // expand to cover total width.Change In case there is just 1 line, then it's probably
+        // a better idea to just restrict the total width of stackview to the minimal required width rather than
+        // bluntly adding hidden view all the time.
+        var isMultiLine = false
         for index in 0 ..< suggestedMessage.suggestion.count {
             let title = suggestedMessage.suggestion[index].title
             let type = suggestedMessage.suggestion[index].type
@@ -125,6 +131,7 @@ public class SuggestedReplyView: UIView {
             width += button.buttonWidth() + 10 // Button Padding
 
             if width >= maxWidth {
+                isMultiLine = true
                 guard !subviews.isEmpty else {
                     let stackView = horizontalStackView(subviews: [button])
                     mainStackView.addArrangedSubview(stackView)
@@ -143,7 +150,11 @@ public class SuggestedReplyView: UIView {
             }
         }
         let hiddenView = hiddenViewUsing(currWidth: width, maxWidth: maxWidth, subViews: subviews)
-        alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
+
+        if isMultiLine {
+            alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
+        }
+
         let stackView = horizontalStackView(subviews: subviews)
         mainStackView.addArrangedSubview(stackView)
     }

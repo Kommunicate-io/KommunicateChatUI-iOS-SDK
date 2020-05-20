@@ -13,32 +13,80 @@ public class SentImageMessageCell: UITableViewCell {
     /// It is used to inform the delegate that the image is tapped. URL of tapped image is sent.
     public var delegate: Tappable?
 
-    public struct Config {
-        public static var imageBubbleTopPadding: CGFloat = 4
-        public static var padding = Padding(left: 60, right: 10, top: 10, bottom: 10)
+    public enum Config {
         public static var maxWidth = UIScreen.main.bounds.width
+
+        public struct MessageView {
+            /// Left padding of `MessageView`
+            public static var leftPadding: CGFloat = 60.0
+            /// Bottom padding of `MessageView`
+            public static var rightPadding: CGFloat = 10.0
+            public static var topPadding: CGFloat = 10.0
+            public static var bottomPadding: CGFloat = 0
+        }
+
+        public enum StateView {
+            public static var rightPadding: CGFloat = 2.0
+            public static var topPadding: CGFloat = 5
+        }
+
+        public enum TimeLabel {
+            /// Left padding of `TimeLabel` from `StateView`
+            public static var leftPadding: CGFloat = 2.0
+            public static var maxWidth: CGFloat = 200.0
+            public static var rightPadding: CGFloat = 2.0
+            public static var topPadding: CGFloat = 2.0
+        }
+
+        public enum ImageBubbleView {
+            public static var topPadding: CGFloat = 2.0
+            public static var rightPadding: CGFloat = 10
+        }
     }
 
     // MARK: - Fileprivate properties
 
-    fileprivate lazy var messageView = SentMessageView(
-        frame: .zero,
-        padding: messageViewPadding,
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.setStyle(MessageTheme.sentMessage.time)
+        lb.isOpaque = true
+        return lb
+    }()
+
+    fileprivate var stateView: UIImageView = {
+        let sv = UIImageView()
+        sv.isUserInteractionEnabled = false
+        sv.contentMode = .center
+        return sv
+    }()
+
+    fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
+
+    fileprivate lazy var stateViewWidth = stateView.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var stateViewHeight = stateView.heightAnchor.constraint(equalToConstant: 0)
+
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.sentMessage.bubble,
+        messageStyle: MessageTheme.sentMessage.message,
         maxWidth: Config.maxWidth
     )
     fileprivate var messageViewPadding: Padding
     fileprivate var imageBubble: ImageContainer
     fileprivate var imageBubbleWidth: CGFloat
     fileprivate lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
+
+    fileprivate lazy var imageBubbleHeight = imageBubble.heightAnchor.constraint(equalToConstant: 0)
+
     fileprivate var imageUrl: String?
 
     // MARK: - Initializer
 
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        messageViewPadding = Padding(left: Config.padding.left,
-                                     right: Config.padding.right,
-                                     top: Config.padding.top,
-                                     bottom: Config.imageBubbleTopPadding)
+        messageViewPadding = Padding(left: Config.MessageView.leftPadding,
+                                     right: Config.MessageView.rightPadding,
+                                     top: Config.MessageView.topPadding,
+                                     bottom: Config.ImageBubbleView.topPadding)
         imageBubble = ImageContainer(frame: .zero, maxWidth: Config.maxWidth, isMyMessage: true)
         imageBubbleWidth = Config.maxWidth * ImageBubbleTheme.sentMessage.widthRatio
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -60,12 +108,27 @@ public class SentImageMessageCell: UITableViewCell {
             print("For SentMessage value of isMyMessage should be true")
             return
         }
-        messageView.update(model: model.message)
-        messageViewHeight.constant = SentMessageView.rowHeight(
-            model: model.message,
-            maxWidth: Config.maxWidth,
-            padding: messageViewPadding
-        )
+        let isMessageEmpty = model.message.isMessageEmpty()
+
+        messageViewHeight.constant = isMessageEmpty ? 0 : SentMessageViewSizeCalculator().rowHeight(messageModel: model.message, maxWidth: Config.maxWidth, padding: messageViewPadding)
+
+        if !isMessageEmpty {
+            messageView.update(model: model.message.text ?? "")
+        }
+
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message.text ?? "")
+
+        imageBubbleHeight.constant = ImageBubbleSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth)
+
+        setStatusStyle(statusView: stateView, MessageTheme.messageStatus, model: model.message)
+
+        // Set time and update timeLabel constraint.
+        timeLabel.text = model.message.time
+        let timeLabelSize = model.message.time.rectWithConstrainedWidth(Config.TimeLabel.maxWidth,
+                                                                        font: MessageTheme.sentMessage.time.font)
+        timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
+        timeLabelWidth.constant = timeLabelSize.width.rounded(.up) // This is amazing😱😱😱... a diff in fraction can trim.
+        layoutIfNeeded()
 
         /// Set frame
         let height = SentImageMessageCell.rowHeight(model: model)
@@ -82,22 +145,33 @@ public class SentImageMessageCell: UITableViewCell {
     ///   - model: object that conforms to `ImageMessage`
     /// - Returns: exact height of the view.
     public static func rowHeight(model: ImageMessage) -> CGFloat {
-        return ImageMessageViewSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth, padding: Config.padding)
+        return ImageMessageViewSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth)
     }
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [messageView, imageBubble])
+        addViewsForAutolayout(views: [messageView, imageBubble, timeLabel, stateView])
 
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            messageView.topAnchor.constraint(equalTo: topAnchor, constant: Config.MessageView.topPadding),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * Config.MessageView.rightPadding),
+            messageView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: Config.MessageView.leftPadding),
             messageViewHeight,
 
-            imageBubble.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
-            imageBubble.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * Config.padding.right),
+            imageBubble.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: Config.ImageBubbleView.topPadding),
+            imageBubble.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * Config.ImageBubbleView.rightPadding),
             imageBubble.widthAnchor.constraint(equalToConstant: imageBubbleWidth),
-            imageBubble.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
+
+            imageBubbleHeight,
+            stateView.topAnchor.constraint(equalTo: imageBubble.bottomAnchor, constant: Config.StateView.topPadding),
+            stateViewWidth,
+            stateViewHeight,
+            stateView.trailingAnchor.constraint(equalTo: imageBubble.trailingAnchor, constant: -1 * Config.StateView.rightPadding),
+
+            timeLabel.topAnchor.constraint(equalTo: imageBubble.bottomAnchor, constant: Config.TimeLabel.topPadding),
+            timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: stateView.leadingAnchor, constant: Config.TimeLabel.leftPadding),
+            timeLabelWidth,
+            timeLabelHeight,
+            timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Config.TimeLabel.rightPadding),
         ])
     }
 
@@ -117,5 +191,35 @@ public class SentImageMessageCell: UITableViewCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         tapGesture.numberOfTapsRequired = 1
         imageBubble.addGestureRecognizer(tapGesture)
+    }
+
+    func setStatusStyle(
+        statusView: UIImageView,
+        _ style: MessageTheme.SentMessageStatus,
+        _ size: CGSize = CGSize(width: 17, height: 9), model: Message
+    ) {
+        guard let status = model.status, let statusIcon = style.statusIcons[status] else { return }
+
+        switch statusIcon {
+        case let .templateImageWithTint(image, tintColor):
+            statusView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysTemplate)
+            statusView.tintColor = tintColor
+            stateViewWidth.constant = size.width
+            stateViewHeight.constant = size.height
+        case let .normalImage(image):
+            statusView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysOriginal)
+            stateViewWidth.constant = size.width
+            stateViewHeight.constant = size.height
+        case .none:
+            statusView.image = nil
+            stateViewWidth.constant = 0
+            stateViewHeight.constant = 0
+        }
     }
 }

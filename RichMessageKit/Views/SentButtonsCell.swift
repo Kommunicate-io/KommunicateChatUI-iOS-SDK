@@ -88,7 +88,7 @@ public class SentButtonsCell: UITableViewCell {
 
             buttons.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
             buttons.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Config.padding.right),
-            buttons.leadingAnchor.constraint(equalTo: leadingAnchor),
+            buttons.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
             buttons.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
         ])
     }

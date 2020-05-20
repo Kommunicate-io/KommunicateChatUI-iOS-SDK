@@ -268,8 +268,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             }
         case .cardTemplate:
+
             if message.isMyMessage {
-                let cell: ALKMyGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyGenericCardMessageCell
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
@@ -279,7 +280,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             } else {
-                let cell: ALKFriendGenericCardCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendGenericCardMessageCell
                 cell.showReport = configuration.isReportMessageEnabled
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
@@ -289,7 +290,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+
         case .faqTemplate:
+
             if message.isMyMessage {
                 let cell: SentFAQMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 guard let faqMessage = message.faqMessage() else { return UITableViewCell() }
@@ -308,14 +311,15 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         case .quickReply:
             if message.isMyMessage {
-                let cell: ALKMyQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell: ALKMyMessageQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
                 return cell
             } else {
-                let cell: ALKFriendQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell: ALKFriendMessageQuickReplyCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
                 guard let template = message.payloadFromMetadata() else {
@@ -335,7 +339,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         case .button:
             if message.isMyMessage {
-                /// No button action if message sent by same user.
                 let cell: ALKMyMessageButtonCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
@@ -359,13 +362,13 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             }
         case .listTemplate:
             if message.isMyMessage {
-                let cell: ALKMyListTemplateCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyMessageListTemplateCell
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
                 return cell
             } else {
-                let cell: ALKFriendListTemplateCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendMessageListTemplateCell
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
@@ -462,6 +465,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(model: imageMessage)
                 return cell
             }
+
         case .allButtons:
             guard let allButtons = message.allButtons() else { return UITableViewCell() }
             if message.isMyMessage {
@@ -543,14 +547,14 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         }
         if message.messageType == .cardTemplate {
             if message.isMyMessage {
-                guard let cell = cell as? ALKMyGenericCardCell else {
+                guard let cell = cell as? ALKMyGenericCardMessageCell else {
                     return
                 }
                 cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)
                 let index = cell.collectionView.tag
                 cell.collectionView.setContentOffset(CGPoint(x: collectionViewOffsetFromIndex(index), y: 0), animated: false)
             } else {
-                guard let cell = cell as? ALKFriendGenericCardCell else {
+                guard let cell = cell as? ALKFriendGenericCardMessageCell else {
                     return
                 }
                 cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, indexPath: indexPath)

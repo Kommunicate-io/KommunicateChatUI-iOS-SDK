@@ -10,12 +10,9 @@ import Foundation
 class SentMessageViewSizeCalculator {
     func rowHeight(messageModel: Message, maxWidth: CGFloat, padding: Padding) -> CGFloat {
         let message = messageModel.text ?? ""
-        let config = SentMessageView.Config.self
-        let totalWidthPadding = padding.left + padding.right + config.MessageView.leftPadding + config.TimeLabel.leftPadding
+        let totalWidthPadding = padding.left + padding.right
 
-        let timeLabelWidth = messageModel.time.rectWithConstrainedWidth(config.TimeLabel.maxWidth, font: MessageTheme.sentMessage.time.font).width.rounded(.up)
-
-        let messageWidth = maxWidth - (totalWidthPadding + config.StateView.width + timeLabelWidth)
+        let messageWidth = maxWidth - totalWidthPadding
 
         let messageHeight = MessageViewSizeCalculator().rowHeight(
             text: message,
@@ -24,6 +21,6 @@ class SentMessageViewSizeCalculator {
             padding: MessageTheme.sentMessage.bubble.padding
         )
 
-        return messageHeight + padding.top + padding.bottom + config.MessageView.bottomPadding
+        return messageHeight + padding.top + padding.bottom
     }
 }

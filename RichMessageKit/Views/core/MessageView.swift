@@ -9,6 +9,16 @@ import UIKit
 
 /// Its a view that displays text on top of a bubble.
 public class MessageView: UIView {
+    enum ConstraintIdentifier {
+        enum BubbleView {
+            static let height = "BubbleViewViewHeight"
+        }
+
+        enum MessageLabel {
+            static let height = "MessageLabelHeight"
+        }
+    }
+
     // MARK: Internal Properties
 
     let maxWidth: CGFloat
@@ -109,12 +119,27 @@ public class MessageView: UIView {
         NSLayoutConstraint.activate([
             bubbleView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bubbleView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bubbleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.BubbleView.height),
             bubbleView.topAnchor.constraint(equalTo: topAnchor),
             bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor),
             messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
             messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
             messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
             messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
+            messageLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.MessageLabel.height),
         ])
+    }
+
+    public func updateHeighOfView(hideView: Bool, model: String) {
+        let messageHeight = hideView ? 0 :
+            MessageViewSizeCalculator().rowHeight(text: model,
+                                                  font: messageStyle.font,
+                                                  maxWidth: maxWidth,
+                                                  padding: bubbleStyle.padding)
+        messageLabel
+            .constraint(withIdentifier: ConstraintIdentifier.MessageLabel.height)?.constant = messageHeight
+
+        bubbleView
+            .constraint(withIdentifier: ConstraintIdentifier.BubbleView.height)?.constant = messageHeight
     }
 }

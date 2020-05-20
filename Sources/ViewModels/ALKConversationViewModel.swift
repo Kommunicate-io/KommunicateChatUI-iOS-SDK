@@ -331,12 +331,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         case .cardTemplate:
             if messageModel.isMyMessage {
                 return
-                    ALKMyGenericCardCell
+                    ALKMyGenericCardMessageCell
                         .rowHeigh(viewModel: messageModel, width: maxWidth)
                         .cached(with: cacheIdentifier)
             } else {
                 return
-                    ALKFriendGenericCardCell
+                    ALKFriendGenericCardMessageCell
                         .rowHeigh(viewModel: messageModel, width: maxWidth)
                         .cached(with: cacheIdentifier)
             }
@@ -347,15 +347,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return ReceivedFAQMessageCell.rowHeight(model: faqMessage).cached(with: cacheIdentifier)
             }
+
         case .quickReply:
             if messageModel.isMyMessage {
                 return
-                    ALKMyQuickReplyCell
+                    ALKMyMessageQuickReplyCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                         .cached(with: cacheIdentifier)
             } else {
                 return
-                    ALKFriendQuickReplyCell
+                    ALKFriendMessageQuickReplyCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                         .cached(with: cacheIdentifier)
             }
@@ -374,12 +375,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         case .listTemplate:
             if messageModel.isMyMessage {
                 return
-                    ALKMyListTemplateCell
+                    ALKMyMessageListTemplateCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                         .cached(with: cacheIdentifier)
             } else {
                 return
-                    ALKFriendListTemplateCell
+                    ALKFriendMessageListTemplateCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                         .cached(with: cacheIdentifier)
             }

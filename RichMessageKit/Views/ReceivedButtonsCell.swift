@@ -18,8 +18,30 @@ public class ReceivedButtonsCell: UITableViewCell {
         public static var maxWidth = UIScreen.main.bounds.width
         public static var buttonWidth = maxWidth -
             (padding.left + padding.right
-                + ReceivedMessageView.Config.ProfileImage.width
+                + ProfileImage.width
                 + ReceivedMessageView.Config.MessageView.leftPadding)
+        public struct ProfileImage {
+            public static var width: CGFloat = 37.0
+            public static var height: CGFloat = 37.0
+            /// Top padding of `ProfileImage` from `DisplayName`
+            public static var topPadding: CGFloat = 2.0
+        }
+
+        public struct TimeLabel {
+            /// Left padding of `TimeLabel` from `MessageView`
+            public static var leftPadding: CGFloat = 2.0
+            public static var maxWidth: CGFloat = 200.0
+        }
+
+        public struct DisplayName {
+            public static var height: CGFloat = 16.0
+
+            /// Left padding of `DisplayName` from `ProfileImage`
+            public static var leftPadding: CGFloat = 10.0
+
+            /// Right padding of `DisplayName` from `ReceivedMessageView`. Used as lessThanOrEqualTo
+            public static var rightPadding: CGFloat = 20.0
+        }
     }
 
     // MARK: - Fileprivate properties
@@ -87,7 +109,7 @@ public class ReceivedButtonsCell: UITableViewCell {
         addViewsForAutolayout(views: [messageView, buttons])
         let leadingMargin =
             Config.padding.left
-                + ReceivedMessageView.Config.ProfileImage.width
+                + Config.ProfileImage.width
                 + ReceivedMessageView.Config.MessageView.leftPadding
         NSLayoutConstraint.activate([
             messageView.topAnchor.constraint(equalTo: topAnchor),
@@ -96,7 +118,7 @@ public class ReceivedButtonsCell: UITableViewCell {
             messageViewHeight,
 
             buttons.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
-            buttons.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttons.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
             buttons.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingMargin),
             buttons.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
         ])

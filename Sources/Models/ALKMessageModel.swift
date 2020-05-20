@@ -104,6 +104,13 @@ extension ALKMessageModel: Equatable {
 }
 
 extension ALKMessageViewModel {
+    var isMessageEmpty: Bool {
+        guard let messageString = message, !messageString.trim().isEmpty else {
+            return true
+        }
+        return false
+    }
+
     var containsMentions: Bool {
         // Only check when it's a group
         guard channelKey != nil, let mentionParser = mentionParser else {

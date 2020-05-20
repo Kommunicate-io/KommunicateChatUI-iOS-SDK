@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+-[CM-224] Add support for rich message templates without any text message
+
 ## [5.4.0] - 2020-05-07
 
 ### Enhancements

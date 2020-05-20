@@ -99,17 +99,17 @@ extension ALMessage: ALKChatViewModelProtocol {
         case .html:
             return "Text"
         case .faqTemplate:
-            return message ?? "FAQ"
+            return isMessageEmpty ? "FAQ" : message
         case .quickReply:
-            return message
+            return isMessageEmpty ? "Message" : message
         case .button:
-            return message
+            return isMessageEmpty ? "Message" : message
         case .listTemplate:
-            return message
+            return isMessageEmpty ? "Message" : message
         case .cardTemplate:
-            return message
+            return isMessageEmpty ? "Message" : message
         case .imageMessage:
-            return message ?? "Photo"
+            return isMessageEmpty ? "Photo" : message
         case .email:
             guard let channelMetadata = alChannel?.metadata,
                 let messageText = channelMetadata[ChannelMetadataKey.conversationSubject]
@@ -122,7 +122,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         case .contact:
             return "Contact"
         case .allButtons:
-            return message ?? "Buttons"
+            return isMessageEmpty ? "Buttons" : message
         }
     }
 
@@ -188,6 +188,10 @@ extension ALMessage: ALKChatViewModelProtocol {
     public var channelType: Int16 {
         guard let alChannel = alChannel else { return 0 }
         return alChannel.type
+    }
+
+    public var isMessageEmpty: Bool {
+        return message == nil || message != nil && message.trim().isEmpty
     }
 }
 

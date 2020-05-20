@@ -1,17 +1,48 @@
 //
-//  ALKMyGenericCardCell.swift
+//  ALKMyGenericCardMessageCell.swift
 //  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
-open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
+open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
+    enum Padding {
+        enum StateView {
+            static let top: CGFloat = 3
+            static let right: CGFloat = 2
+            static let height: CGFloat = 9
+            static let width: CGFloat = 17
+        }
+
+        enum TimeLabel {
+            static let right: CGFloat = 2
+            static let left: CGFloat = 2
+            static let top: CGFloat = 2
+            static let maxWidth: CGFloat = 200
+        }
+    }
+
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.isOpaque = true
+        return lb
+    }()
+
+    fileprivate var stateView: UIImageView = {
+        let sv = UIImageView()
+        sv.isUserInteractionEnabled = false
+        sv.contentMode = .center
+        return sv
+    }()
+
+    fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
+
     var messageView = ALKMyMessageView()
     lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
 
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
     }
 
     public required init?(coder _: NSCoder) {
@@ -19,21 +50,47 @@ open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
     }
 
     open override func update(viewModel: ALKMessageViewModel, width: CGFloat) {
+        self.viewModel = viewModel
+
+        let isMessageEmpty = viewModel.isMessageEmpty
         let messageWidth = width -
             (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
-        let height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
-        messageViewHeight.constant = height
-        messageView.update(viewModel: viewModel)
+
+        messageViewHeight.constant = isMessageEmpty ? 0 : ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        if !isMessageEmpty {
+            messageView.update(viewModel: viewModel)
+        }
+        messageView.updateHeightOfView(hideView: isMessageEmpty, viewModel: viewModel, maxWidth: width)
 
         super.update(viewModel: viewModel, width: width)
+
+        // Set time
+        timeLabel.text = viewModel.time
+        timeLabel.setStyle(ALKMessageStyle.time)
+
+        let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
+            Padding.TimeLabel.maxWidth,
+            font: ALKMessageStyle.time.font
+        )
+
+        timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
+        timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
+
+        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
     override func setupViews() {
+        super.setupViews()
         setupCollectionView()
 
         let leftPadding = ChatCellPadding.SentMessage.Message.left
         let rightPadding = ChatCellPadding.SentMessage.Message.right
-        contentView.addViewsForAutolayout(views: [messageView, collectionView])
+        contentView.addViewsForAutolayout(views: [messageView, collectionView, stateView, timeLabel])
+
+        contentView.bringSubviewToFront(collectionView)
+        contentView.bringSubviewToFront(stateView)
+        contentView.bringSubviewToFront(timeLabel)
+
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leftPadding).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
@@ -46,14 +103,32 @@ open class ALKMyGenericCardCell: ALKGenericCardBaseCell {
         collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKGenericCardBaseCell.cardTopPadding).isActive = true
         collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue).isActive = true
+        stateView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Padding.StateView.top).isActive = true
+        stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor, constant: -1 * Padding.StateView.right).isActive = true
+        stateView.heightAnchor.constraint(equalToConstant: Padding.StateView.height).isActive = true
+        stateView.widthAnchor.constraint(equalToConstant: Padding.StateView.width).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Padding.TimeLabel.top).isActive = true
+        timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: Padding.TimeLabel.left).isActive = true
+        timeLabelWidth.isActive = true
+        timeLabelHeight.isActive = true
+        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
     }
 
     public override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
-        let messageWidth = width -
-            (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
-        let messageHeight = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        var height: CGFloat = 0
+        let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
+            Padding.TimeLabel.maxWidth,
+            font: ALKMessageStyle.time.font
+        )
+
+        if !viewModel.isMessageEmpty {
+            let messageWidth = width -
+                (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
+            height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        }
+
         let cardHeight = super.cardHeightFor(message: viewModel, width: width)
-        return cardHeight + messageHeight + 10 // Extra padding below view. Change this for club/unclub
+        return cardHeight + height + 10 + timeLabelSize.height.rounded(.up) + Padding.TimeLabel.top // Extra padding below view. Change this for club/unclub
     }
 
     private func setupCollectionView() {

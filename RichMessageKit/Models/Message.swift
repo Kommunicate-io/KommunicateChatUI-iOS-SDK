@@ -40,4 +40,12 @@ public struct Message {
 
     /// Image url of sender.
     public var imageURL: URL?
+
+    /// To check if the message is empty
+    func isMessageEmpty() -> Bool {
+        guard let message = text, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return true
+        }
+        return false
+    }
 }

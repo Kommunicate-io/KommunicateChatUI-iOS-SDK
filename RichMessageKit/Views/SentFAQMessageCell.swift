@@ -16,17 +16,60 @@ public class SentFAQMessageCell: UITableViewCell {
 
     /// Configuration to adjust padding and maxWidth for the view.
     public struct Config {
-        public static var padding = Padding(left: 60, right: 10, top: 10, bottom: 10)
         public static var maxWidth = UIScreen.main.bounds.width
-        public static var faqTopPadding: CGFloat = 4
-        public static var faqLeftPadding: CGFloat = 20
+
+        public struct MessageView {
+            /// Left padding of `MessageView`
+            public static var leftPadding: CGFloat = 60.0
+            /// Bottom padding of `MessageView`
+            public static var rightPadding: CGFloat = 10.0
+            public static var topPadding: CGFloat = 10.0
+            public static var bottomPadding: CGFloat = 0.0
+        }
+
+        public enum StateView {
+            public static var rightPadding: CGFloat = 2.0
+            public static var bottomPadding: CGFloat = 5
+        }
+
+        public enum TimeLabel {
+            public static var maxWidth: CGFloat = 200.0
+            public static var rightPadding: CGFloat = 2.0
+            public static var bottomPadding: CGFloat = 2.0
+        }
+
+        public enum FaqView {
+            public static var topPadding: CGFloat = 5.0
+            public static var rightPadding: CGFloat = 10.0
+            public static var leftPadding: CGFloat = 20.0
+        }
     }
 
     // MARK: Fileprivate properties
 
-    fileprivate lazy var messageView = SentMessageView(
-        frame: .zero,
-        padding: messageViewPadding,
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.setStyle(MessageTheme.sentMessage.time)
+        lb.isOpaque = true
+        return lb
+    }()
+
+    fileprivate var stateView: UIImageView = {
+        let sv = UIImageView()
+        sv.isUserInteractionEnabled = false
+        sv.contentMode = .center
+        return sv
+    }()
+
+    fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
+
+    fileprivate lazy var stateViewWidth = stateView.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var stateViewHeight = stateView.heightAnchor.constraint(equalToConstant: 0)
+
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.sentMessage.bubble,
+        messageStyle: MessageTheme.sentMessage.message,
         maxWidth: Config.maxWidth
     )
 
@@ -40,15 +83,15 @@ public class SentFAQMessageCell: UITableViewCell {
 
     fileprivate lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    static let faqWidth = Config.maxWidth - Config.faqLeftPadding - Config.padding.right
+    static let faqWidth = Config.maxWidth - Config.FaqView.leftPadding - Config.FaqView.rightPadding
 
     // MARK: Initializer
 
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        messageViewPadding = Padding(left: Config.padding.left,
-                                     right: Config.padding.right,
-                                     top: Config.padding.top,
-                                     bottom: Config.faqTopPadding)
+        messageViewPadding = Padding(left: Config.MessageView.leftPadding,
+                                     right: Config.MessageView.rightPadding,
+                                     top: Config.MessageView.topPadding,
+                                     bottom: Config.MessageView.bottomPadding)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         setupConstraints()
@@ -69,8 +112,24 @@ public class SentFAQMessageCell: UITableViewCell {
             print("For Sender view isMyMessage should be true")
             return
         }
-        messageView.update(model: model.message)
-        messageViewHeight.constant = SentMessageView.rowHeight(model: model.message, maxWidth: Config.maxWidth, padding: messageViewPadding)
+        let isMessageEmpty = model.message.isMessageEmpty()
+
+        messageViewHeight.constant = isMessageEmpty ? 0 : SentMessageViewSizeCalculator().rowHeight(messageModel: model.message, maxWidth: Config.maxWidth, padding: messageViewPadding)
+        if !isMessageEmpty {
+            messageView.update(model: model.message.text ?? "")
+        }
+
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message.text ?? "")
+
+        setStatusStyle(statusView: stateView, MessageTheme.messageStatus, model: model.message)
+
+        // Set time and update timeLabel constraint.
+        timeLabel.text = model.message.time
+        let timeLabelSize = model.message.time.rectWithConstrainedWidth(Config.TimeLabel.maxWidth,
+                                                                        font: MessageTheme.sentMessage.time.font)
+        timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
+        timeLabelWidth.constant = timeLabelSize.width.rounded(.up) // This is amazing😱😱😱... a diff in fraction can trim.
+        layoutIfNeeded()
 
         faqView.update(model: model, maxWidth: SentFAQMessageCell.faqWidth)
         /// Set frame
@@ -83,24 +142,62 @@ public class SentFAQMessageCell: UITableViewCell {
     /// - Parameter model: `FAQMessage` used for updating the cell.
     /// - Returns: Exact height of cell.
     public class func rowHeight(model: FAQMessage) -> CGFloat {
-        return FAQMessageSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth, padding: Config.padding)
+        return FAQMessageSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth)
     }
 
     // MARK: - Private helper methods
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [messageView, faqView])
+        addViewsForAutolayout(views: [messageView, faqView, stateView, timeLabel])
 
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            messageView.topAnchor.constraint(equalTo: topAnchor, constant: Config.MessageView.topPadding),
+            messageView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: Config.MessageView.leftPadding),
+            messageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * Config.MessageView.rightPadding),
             messageViewHeight,
+            faqView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: Config.FaqView.topPadding),
+            faqView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Config.FaqView.leftPadding),
+            faqView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Config.FaqView.rightPadding),
+            faqView.bottomAnchor.constraint(equalTo: timeLabel.topAnchor),
+            stateViewWidth,
+            stateViewHeight,
+            stateView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.StateView.bottomPadding),
+            stateView.trailingAnchor.constraint(equalTo: faqView.trailingAnchor, constant: -1 * Config.StateView.rightPadding),
 
-            faqView.topAnchor.constraint(equalTo: messageView.bottomAnchor),
-            faqView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: Config.faqLeftPadding),
-            faqView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Config.padding.right),
-            faqView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
+            timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.TimeLabel.bottomPadding),
+            timeLabelWidth,
+            timeLabelHeight,
+            timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Config.TimeLabel.rightPadding),
         ])
+    }
+
+    func setStatusStyle(
+        statusView: UIImageView,
+        _ style: MessageTheme.SentMessageStatus,
+        _ size: CGSize = CGSize(width: 17, height: 9), model: Message
+    ) {
+        guard let status = model.status, let statusIcon = style.statusIcons[status] else { return }
+
+        switch statusIcon {
+        case let .templateImageWithTint(image, tintColor):
+            statusView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysTemplate)
+            statusView.tintColor = tintColor
+            stateViewWidth.constant = size.width
+            stateViewHeight.constant = size.height
+        case let .normalImage(image):
+            statusView.image = image
+                .imageFlippedForRightToLeftLayoutDirection()
+                .scale(with: size)?
+                .withRenderingMode(.alwaysOriginal)
+            stateViewWidth.constant = size.width
+            stateViewHeight.constant = size.height
+        case .none:
+            statusView.image = nil
+            stateViewWidth.constant = 0
+            stateViewHeight.constant = 0
+        }
     }
 }

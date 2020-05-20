@@ -637,14 +637,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendLocationCell.self)
         tableView.register(ALKMyVideoCell.self)
         tableView.register(ALKFriendVideoCell.self)
-        tableView.register(ALKMyGenericCardCell.self)
-        tableView.register(ALKFriendGenericCardCell.self)
-        tableView.register(ALKFriendQuickReplyCell.self)
-        tableView.register(ALKMyQuickReplyCell.self)
+        tableView.register(ALKMyGenericCardMessageCell.self)
+        tableView.register(ALKFriendGenericCardMessageCell.self)
+        tableView.register(ALKFriendMessageQuickReplyCell.self)
+        tableView.register(ALKMyMessageQuickReplyCell.self)
         tableView.register(ALKMyMessageButtonCell.self)
         tableView.register(ALKFriendMessageButtonCell.self)
-        tableView.register(ALKMyListTemplateCell.self)
-        tableView.register(ALKFriendListTemplateCell.self)
+        tableView.register(ALKMyMessageListTemplateCell.self)
+        tableView.register(ALKFriendMessageListTemplateCell.self)
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKFriendDocumentCell.self)
         tableView.register(ALKMyContactMessageCell.self)
@@ -1481,6 +1481,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         MessageTheme.receivedMessage.displayName = ALKMessageStyle.displayName
         MessageTheme.receivedMessage.time = ALKMessageStyle.time
         MessageTheme.sentMessage.time = ALKMessageStyle.time
+        setSentMessageStatus()
+    }
+
+    func setSentMessageStatus() {
+        let messageStatus = ALKMessageStyle.messageStatus
+        for (status, icon) in messageStatus.statusIcons {
+            setStatus(statusIcon: icon, status: status)
+        }
+    }
+
+    func setStatus(statusIcon: ALKMessageStyle.StatusIcon, status: MessageStatus) {
+        switch statusIcon {
+        case let .templateImageWithTint(image, tintColor):
+            MessageTheme.messageStatus.set(icon: .templateImageWithTint(image: image, tintColor: tintColor), for: status)
+        case let .normalImage(image):
+            MessageTheme.messageStatus.set(icon: .normalImage(image: image), for: status)
+        case .none:
+            MessageTheme.messageStatus.set(icon: .none, for: status)
+        }
     }
 }
 

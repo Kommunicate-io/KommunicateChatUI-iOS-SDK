@@ -28,6 +28,12 @@ class ALKMyMessageView: UIView {
         }
     }
 
+    enum ConstraintIdentifier {
+        enum MessageView {
+            static let height = "MessageViewHeight"
+        }
+    }
+
     fileprivate var widthPadding: CGFloat = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
     fileprivate lazy var messageView: ALKHyperLabel = {
         let label = ALKHyperLabel(frame: .zero)
@@ -35,19 +41,6 @@ class ALKMyMessageView: UIView {
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         return label
-    }()
-
-    fileprivate var timeLabel: UILabel = {
-        let lb = UILabel()
-        lb.isOpaque = true
-        return lb
-    }()
-
-    fileprivate var stateView: UIImageView = {
-        let sv = UIImageView()
-        sv.isUserInteractionEnabled = false
-        sv.contentMode = .center
-        return sv
     }()
 
     fileprivate var bubbleView: UIImageView = {
@@ -84,12 +77,6 @@ class ALKMyMessageView: UIView {
         // Set message
         messageView.text = viewModel.message ?? ""
         messageView.setStyle(ALKMessageStyle.sentMessage)
-
-        // Set time
-        timeLabel.text = viewModel.time
-        timeLabel.setStyle(ALKMessageStyle.time)
-
-        setStatusStyle(status: viewModel.status, ALKMessageStyle.messageStatus)
     }
 
     class func rowHeight(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
@@ -104,44 +91,24 @@ class ALKMyMessageView: UIView {
     }
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [messageView, bubbleView, stateView, timeLabel])
+        addViewsForAutolayout(views: [messageView, bubbleView])
         bringSubviewToFront(messageView)
         messageView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         messageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Padding.MessageView.bottom).isActive = true
+        messageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.MessageView.height).isActive = true
         messageView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor).isActive = true
 
         bubbleView.leadingAnchor.constraint(equalTo: messageView.leadingAnchor, constant: -widthPadding).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: widthPadding).isActive = true
         bubbleView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Padding.BubbleView.bottom).isActive = true
-        stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1 * Padding.StateView.bottom).isActive = true
-        stateView.trailingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: -1 * Padding.StateView.right).isActive = true
-
-        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
-        timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: Padding.TimeLabel.bottom).isActive = true
     }
 
-    func setStatusStyle(
-        status: MessageStatus,
-        _ style: ALKMessageStyle.SentMessageStatus,
-        _ size: CGSize = CGSize(width: 17, height: 9)
-    ) {
-        guard let statusIcon = style.statusIcons[status] else { return }
-        switch statusIcon {
-        case let .templateImageWithTint(image, tintColor):
-            stateView.image = image
-                .imageFlippedForRightToLeftLayoutDirection()
-                .scale(with: size)?
-                .withRenderingMode(.alwaysTemplate)
-            stateView.tintColor = tintColor
-        case let .normalImage(image):
-            stateView.image = image
-                .imageFlippedForRightToLeftLayoutDirection()
-                .scale(with: size)?
-                .withRenderingMode(.alwaysOriginal)
-        case .none:
-            stateView.image = nil
-        }
+    func updateHeightOfView(hideView: Bool, viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
+        let messageHeight = hideView ? 0 : viewModel.message?.heightWithConstrainedWidth(maxWidth, font: ALKMessageStyle.sentMessage.font)
+
+        messageView
+            .constraint(withIdentifier: ConstraintIdentifier.MessageView.height)?.constant = messageHeight ?? 0
     }
 }

@@ -133,8 +133,12 @@ public class FAQMessageView: UIView {
 
         if alignLeft {
             buttonLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+            buttons.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+            buttons.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor).isActive = true
         } else {
             buttonLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor).isActive = true
+            buttons.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor).isActive = true
+            buttons.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         }
 
         NSLayoutConstraint.activate([
@@ -156,9 +160,6 @@ public class FAQMessageView: UIView {
             buttonLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: FAQMessageView.verticalSpacing),
             buttonLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttonLabelHeight,
-
-            buttons.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttons.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttons.topAnchor.constraint(equalTo: buttonLabel.bottomAnchor, constant: FAQMessageView.verticalSpacing),
             buttons.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -FAQMessageView.verticalSpacing),
         ])

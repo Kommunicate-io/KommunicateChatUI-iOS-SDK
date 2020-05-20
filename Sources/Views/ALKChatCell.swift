@@ -28,6 +28,7 @@ public protocol ALKChatViewModelProtocol {
     var createdAt: String? { get }
     var messageType: ALKMessageType { get }
     var channelType: Int16 { get }
+    var isMessageEmpty: Bool { get }
 }
 
 public enum ALKChatCellAction {
