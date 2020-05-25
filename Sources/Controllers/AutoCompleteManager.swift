@@ -134,7 +134,7 @@ extension AutoCompleteManager: UITextViewDelegate {
         shouldChangeTextIn range: NSRange,
         replacementText _: String
     ) -> Bool {
-        guard var text = textView.text as NSString? else {
+        guard textView.text != nil else {
             return true
         }
 
