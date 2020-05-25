@@ -14,4 +14,8 @@ extension UIView {
             addSubview(view)
         }
     }
+
+     func constraint(withIdentifier: String) -> NSLayoutConstraint? {
+        return constraints.filter { $0.identifier == withIdentifier }.first
+    }
 }

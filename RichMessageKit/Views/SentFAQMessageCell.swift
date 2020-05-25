@@ -5,6 +5,7 @@
 //  Created by Shivam Pokhriyal on 04/06/19.
 //
 
+import Foundation
 import UIKit
 
 /// FAQMessageCell for sender side.

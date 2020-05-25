@@ -17,10 +17,6 @@ extension UIView {
         addSubview(bottomBorderView)
     }
 
-    func constraint(withIdentifier: String) -> NSLayoutConstraint? {
-        return constraints.filter { $0.identifier == withIdentifier }.first
-    }
-
     func setBubbleStyle(_ style: ALKMessageStyle.Bubble) {
         layer.cornerRadius = style.cornerRadius
         tintColor = style.color
