@@ -102,7 +102,7 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
         collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -cardRightPadding).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKGenericCardBaseCell.cardTopPadding).isActive = true
-        collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.collectionView.rawValue).isActive = true
+        collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: CommonConstraintIdentifier.collectionView.rawValue).isActive = true
         stateView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Padding.StateView.top).isActive = true
         stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor, constant: -1 * Padding.StateView.right).isActive = true
         stateView.heightAnchor.constraint(equalToConstant: Padding.StateView.height).isActive = true
@@ -144,7 +144,7 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
 open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
     open var collectionView: ALKGenericCardCollectionView!
 
-    enum ConstraintIdentifier: String {
+    enum CommonConstraintIdentifier: String {
         case collectionView = "CollectionView"
     }
 
@@ -157,7 +157,7 @@ open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
         collectionView.setMessage(viewModel: viewModel)
         collectionView.reloadData()
         let collectionViewHeight = ALKGenericCardCollectionView.rowHeightFor(message: viewModel, width: width)
-        collectionView.constraint(withIdentifier: ConstraintIdentifier.collectionView.rawValue)?.constant = collectionViewHeight
+        collectionView.constraint(withIdentifier: CommonConstraintIdentifier.collectionView.rawValue)?.constant = collectionViewHeight
     }
 
     open override func draw(_ rect: CGRect) {
