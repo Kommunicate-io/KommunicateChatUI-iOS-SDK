@@ -12,6 +12,7 @@ import Kingfisher
 // MARK: - FriendPhotoCell
 
 class ALKFriendPhotoCell: ALKPhotoCell {
+    let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -53,7 +54,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         captionLabel.textColor = ALKMessageStyle.receivedMessage.text
         if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.backgroundColor = appSettingsUserDefaults.getReceivedMessageBackgroundColor()
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
         } else {
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius

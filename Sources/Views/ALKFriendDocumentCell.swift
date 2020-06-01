@@ -11,6 +11,7 @@ import Kingfisher
 import UIKit
 
 class ALKFriendDocumentCell: ALKDocumentCell {
+    let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
     struct Padding {
         struct NameLabel {
             static let top: CGFloat = 6
@@ -104,7 +105,7 @@ class ALKFriendDocumentCell: ALKDocumentCell {
         super.setupStyle()
         timeLabel.setStyle(ALKMessageStyle.time)
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+        bubbleView.backgroundColor = appSettingsUserDefaults.getReceivedMessageBackgroundColor()
     }
 
     override class func rowHeigh(viewModel _: ALKMessageViewModel, width _: CGFloat) -> CGFloat {

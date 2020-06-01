@@ -84,7 +84,7 @@ class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
         super.setupStyle()
         contactView.setStyle(
             itemColor: ALKMessageStyle.receivedMessage.text,
-            bubbleStyle: ALKMessageStyle.receivedBubble
+            bubbleStyle: ALKMessageStyle.receivedBubble, isReceiverSide: true
         )
     }
 

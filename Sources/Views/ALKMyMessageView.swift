@@ -43,8 +43,8 @@ class ALKMyMessageView: UIView {
         return label
     }()
 
-    fileprivate var bubbleView: UIImageView = {
-        let bv = UIImageView()
+    fileprivate var bubbleView: ALKImageView = {
+        let bv = ALKImageView()
         bv.clipsToBounds = true
         bv.isUserInteractionEnabled = false
         bv.isOpaque = true
@@ -62,15 +62,7 @@ class ALKMyMessageView: UIView {
     }
 
     func setupStyle() {
-        if ALKMessageStyle.sentBubble.style == .edge {
-            let image = UIImage(named: "chat_bubble_rounded", in: Bundle.applozic, compatibleWith: nil)
-            bubbleView.tintColor = UIColor(netHex: 0xF1F0F0)
-            bubbleView.image = image?.imageFlippedForRightToLeftLayoutDirection()
-        } else {
-            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-        }
+        bubbleView.setStyle(ALKMessageStyle.sentBubble, isReceiverSide: false)
     }
 
     func update(viewModel: ALKMessageViewModel) {

@@ -97,7 +97,7 @@ class ALKFriendMessageView: UIView {
     }
 
     func setupStyle() {
-        bubbleView.setStyle(ALKMessageStyle.receivedBubble, isReceiverSide: true)
+        bubbleView.setBubbleStyle(ALKMessageStyle.receivedBubble, isReceiverSide: true)
     }
 
     func setupViews() {

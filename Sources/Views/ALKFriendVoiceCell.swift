@@ -44,13 +44,8 @@ class ALKFriendVoiceCell: ALKVoiceCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-        if ALKMessageStyle.receivedBubble.style == .edge {
-            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
-            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-        } else {
-            bubbleView.setBubbleStyle(ALKMessageStyle.receivedBubble)
-            soundPlayerView.setBubbleStyle(ALKMessageStyle.receivedBubble)
-        }
+        bubbleView.setBubbleStyle(ALKMessageStyle.receivedBubble, isReceiverSide: true)
+        soundPlayerView.setBubbleStyle(ALKMessageStyle.receivedBubble, isReceiverSide: true)
     }
 
     override func setupViews() {
@@ -60,9 +55,6 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
-
-        bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
-
         let width = UIScreen.main.bounds.width
 
         soundPlayerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true

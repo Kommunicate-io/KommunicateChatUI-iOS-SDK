@@ -163,11 +163,7 @@ open class ALKChatBar: UIView, Localizable {
 
     open lazy var sendButton: UIButton = {
         let bt = UIButton(type: .custom)
-        var image = configuration.sendMessageIcon
-        image = image?.imageFlippedForRightToLeftLayoutDirection()
-        bt.setImage(image, for: .normal)
         bt.accessibilityIdentifier = "sendButton"
-
         return bt
     }()
 
@@ -296,9 +292,15 @@ open class ALKChatBar: UIView, Localizable {
         galleryButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
-
-        setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons)
+        let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+        let sendButtonTintColor = appSettingsUserDefaults.getAttachmentIconsTintColor()
+        setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons, tintColor: sendButtonTintColor)
         setupConstraints()
+        micButton.setButtonTintColor(color: sendButtonTintColor)
+        var image = configuration.sendMessageIcon
+        image = image?.imageFlippedForRightToLeftLayoutDirection().withRenderingMode(.alwaysTemplate)
+        sendButton.imageView?.tintColor = sendButtonTintColor
+        sendButton.setImage(image, for: .normal)
 
         if configuration.hideLineImageFromChatBar {
             lineImageView.isHidden = true
@@ -629,15 +631,18 @@ open class ALKChatBar: UIView, Localizable {
         }
     }
 
-    func setupAttachment(buttonIcons: [AttachmentType: UIImage?]) {
+    func setupAttachment(buttonIcons: [AttachmentType: UIImage?], tintColor: UIColor?) {
         func setup(
             image: UIImage?,
             to button: UIButton,
             withSize size: CGSize = CGSize(width: 25, height: 25)
         ) {
             var image = image?.imageFlippedForRightToLeftLayoutDirection()
-            image = image?.scale(with: size)
+            image = image?.scale(with: size)?.withRenderingMode(.alwaysTemplate)
             button.setImage(image, for: .normal)
+            if tintColor != nil {
+                button.imageView?.tintColor = tintColor
+            }
         }
 
         for option in AttachmentType.allCases {

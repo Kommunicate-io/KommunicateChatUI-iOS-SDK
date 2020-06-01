@@ -46,14 +46,7 @@ final class ALKMyLocationCell: ALKLocationCell {
 
     override func setupStyle() {
         super.setupStyle()
-        if ALKMessageStyle.sentBubble.style == .edge {
-            bubbleView.backgroundColor = UIColor.background(.redC0)
-            bubbleView.layer.cornerRadius = 12
-        } else {
-            bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
-            bubbleView.tintColor = ALKMessageStyle.sentBubble.color
-            bubbleView.backgroundColor = ALKMessageStyle.sentBubble.color
-        }
+        bubbleView.setBubbleStyle(ALKMessageStyle.sentBubble, isReceiverSide: false)
         setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 

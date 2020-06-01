@@ -10,6 +10,7 @@ import Kingfisher
 import UIKit
 
 class ALKFriendVideoCell: ALKVideoCell {
+    let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -39,7 +40,7 @@ class ALKFriendVideoCell: ALKVideoCell {
         nameLabel.setStyle(ALKMessageStyle.displayName)
         if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-            bubbleView.backgroundColor = ALKMessageStyle.receivedBubble.color
+            bubbleView.backgroundColor = appSettingsUserDefaults.getReceivedMessageBackgroundColor()
         } else {
             photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius

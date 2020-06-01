@@ -186,37 +186,6 @@ public struct ALKConfiguration {
     /// Use this to configure channel detail view like changing member name label color, title font etc.
     public var channelDetail = ALKChannelDetailViewConfiguration()
 
-    /// Navigation bar's background color. It will be used in all the
-    /// ViewControllers where navigation bar is visible.
-    @available(*, deprecated, message: "Use UIAppearance for customization.")
-    public var navigationBarBackgroundColor = UIColor.navigationOceanBlue() {
-        didSet {
-            let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
-            navigationBarProxy.barTintColor = navigationBarBackgroundColor
-        }
-    }
-
-    /// Navigation bar's tint color. It will be used in all the
-    /// ViewControllers where navigation bar is visible.
-    @available(*, deprecated, message: "Use UIAppearance for customization.")
-    public var navigationBarItemColor = UIColor.navigationTextOceanBlue() {
-        didSet {
-            let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
-            navigationBarProxy.tintColor = navigationBarItemColor
-        }
-    }
-
-    /// Navigation bar's title color. It will be used in all the
-    /// ViewControllers where navigation bar is visible.
-    @available(*, deprecated, message: "Use UIAppearance for customization.")
-    public var navigationBarTitleColor = UIColor.black {
-        didSet {
-            let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
-            navigationBarProxy.titleTextAttributes =
-                [NSAttributedString.Key.foregroundColor: navigationBarTitleColor]
-        }
-    }
-
     /// Date cell and  information cell  background color
     @available(*, deprecated, message: "Use ALKMessageStyle for customization.")
     public var conversationViewCustomCellBackgroundColor = UIColor.gray {

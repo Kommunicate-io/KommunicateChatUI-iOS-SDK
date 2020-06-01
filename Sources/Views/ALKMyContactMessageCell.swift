@@ -57,7 +57,7 @@ class ALKMyContactMessageCell: ALKContactMessageBaseCell {
         super.setupStyle()
         contactView.setStyle(
             itemColor: ALKMessageStyle.sentMessage.text,
-            bubbleStyle: ALKMessageStyle.sentBubble
+            bubbleStyle: ALKMessageStyle.sentBubble, isReceiverSide: false
         )
         setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }

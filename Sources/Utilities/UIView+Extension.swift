@@ -17,11 +17,14 @@ extension UIView {
         addSubview(bottomBorderView)
     }
 
-    func setBubbleStyle(_ style: ALKMessageStyle.Bubble) {
+    func setBubbleStyle(_ style: ALKMessageStyle.Bubble, isReceiverSide: Bool) {
         layer.cornerRadius = style.cornerRadius
         tintColor = style.color
-        backgroundColor = style.color
-        layer.borderColor = style.border.color.cgColor
-        layer.borderWidth = style.border.width
+        if style.style == .round {
+            layer.borderColor = style.border.color.cgColor
+            layer.borderWidth = style.border.width
+        }
+        let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+        backgroundColor = isReceiverSide ? appSettingsUserDefaults.getReceivedMessageBackgroundColor() : appSettingsUserDefaults.getSentMessageBackgroundColor()
     }
 }

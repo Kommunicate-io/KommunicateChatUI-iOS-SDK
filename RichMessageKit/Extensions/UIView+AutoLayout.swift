@@ -15,7 +15,7 @@ extension UIView {
         }
     }
 
-     func constraint(withIdentifier: String) -> NSLayoutConstraint? {
+    func constraint(withIdentifier: String) -> NSLayoutConstraint? {
         return constraints.filter { $0.identifier == withIdentifier }.first
     }
 }
