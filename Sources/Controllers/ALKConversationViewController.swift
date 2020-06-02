@@ -160,6 +160,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     var contentOffsetDictionary: [AnyHashable: AnyObject]!
 
     public required init(configuration: ALKConfiguration) {
+        alMqttConversationService = ALMQTTConversationService.sharedInstance()
         super.init(configuration: configuration)
         localizedStringFileName = configuration.localizedStringFileName
         contactService = ALContactService()
@@ -361,7 +362,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.addSubview(activityIndicator)
         setUpRightNavigationButtons()
         setupNavigation()
-        alMqttConversationService = ALMQTTConversationService.sharedInstance()
         if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
@@ -1038,6 +1038,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func subscribeChannelToMqtt() {
+        guard viewModel != nil, alMqttConversationService != nil else { return }
         let channelService = ALChannelService()
         if viewModel.isGroup, let groupId = viewModel.channelKey, !channelService.isChannelLeft(groupId), !ALChannelService.isChannelDeleted(groupId) {
             if !viewModel.isOpenGroup {

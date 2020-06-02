@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+[CM-276] Fixed a crash in MQTT subscription
+
 ## [5.5.0] - 2020-05-25
 
 ### Enhancements
