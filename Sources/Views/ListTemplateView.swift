@@ -24,7 +24,6 @@ class ListTemplateElementView: UIView {
         label.numberOfLines = 1
         label.autoresizingMask = .flexibleLeftMargin
         label.font = ListTemplateElementView.font
-        label.textColor = UIColor(red: 86, green: 84, blue: 84)
         return label
     }()
 
@@ -33,16 +32,16 @@ class ListTemplateElementView: UIView {
         label.numberOfLines = 2
         label.autoresizingMask = .flexibleLeftMargin
         label.font = ListTemplateElementView.font
-        label.textColor = UIColor(red: 121, green: 116, blue: 116)
         return label
     }()
 
     var item: ListTemplate.Element?
     var selected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)?
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        setupStyle()
         setupAction()
     }
 
@@ -86,6 +85,12 @@ class ListTemplateElementView: UIView {
         subtitle.leadingAnchor.constraint(equalTo: title.leadingAnchor).isActive = true
         subtitle.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -10).isActive = true
         subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
+    }
+
+    private func setupStyle() {
+        let style = ALKListTemplateCell.ListStyle.shared
+        title.textColor = style.listTemplateElementViewStyle.titleTextColor
+        subtitle.textColor = style.listTemplateElementViewStyle.subtitleTextColor
     }
 
     @objc private func tapped() {
@@ -139,9 +144,7 @@ class ListTemplateView: UIView {
         let label = UILabel()
         label.numberOfLines = 1
         label.font = ListTemplateView.headerFont
-        label.backgroundColor = .white
         label.textAlignment = .center
-        label.textColor = UIColor(red: 32, green: 31, blue: 31)
         return label
     }()
 
@@ -150,6 +153,7 @@ class ListTemplateView: UIView {
 
     lazy var headerImageHeight = self.headerImage.heightAnchor.constraint(equalToConstant: ListTemplateView.imageHeight)
     lazy var headerTextHeight = self.headerText.heightAnchor.constraint(equalToConstant: ListTemplateView.textHeight)
+    let listStyle = ALKListTemplateCell.ListStyle.shared
 
     var item: ListTemplate?
     var selected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)?
@@ -159,6 +163,7 @@ class ListTemplateView: UIView {
         setupElements()
         setupButtons()
         setupConstraints()
+        setupStyle()
     }
 
     required init?(coder _: NSCoder) {
@@ -250,15 +255,17 @@ class ListTemplateView: UIView {
     }
 
     private func setupButtons() {
+        let buttonTextColor = listStyle.actionButton.text
+        let buttonBackgroundColor = listStyle.actionButton.background
         actionButtons = (0 ... 7).map {
             let button = UIButton()
-            button.setTitleColor(UIColor(red: 85, green: 83, blue: 183), for: .normal)
+            button.setTitleColor(buttonTextColor, for: .normal)
             button.setFont(font: UIFont.font(.bold(size: 15.0)))
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.titleLabel?.numberOfLines = 1
             button.tag = $0
-            button.backgroundColor = .white
+            button.backgroundColor = buttonBackgroundColor
             button.layoutIfNeeded()
             return button
         }
@@ -307,5 +314,10 @@ class ListTemplateView: UIView {
         buttonStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         buttonStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         buttonStackView.topAnchor.constraint(equalTo: elementStackView.bottomAnchor, constant: 1).isActive = true
+    }
+
+    private func setupStyle() {
+        headerText.textColor = listStyle.headerText.text
+        headerText.backgroundColor = listStyle.headerText.background
     }
 }

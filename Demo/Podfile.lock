@@ -1,10 +1,10 @@
 PODS:
-  - Applozic (7.3.0):
-    - SDWebImage (~> 5.1.0)
+  - Applozic (7.6.0):
+    - SDWebImage (~> 5.7.2)
   - ApplozicSwift (5.5.0):
     - ApplozicSwift/Complete (= 5.5.0)
   - ApplozicSwift/Complete (5.5.0):
-    - Applozic (~> 7.3.0)
+    - Applozic (~> 7.6.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 5.13.0)
     - MGSwipeTableCell (~> 1.6.11)
@@ -14,22 +14,22 @@ PODS:
   - iOSSnapshotTestCase/Core (6.2.0)
   - iOSSnapshotTestCase/SwiftSupport (6.2.0):
     - iOSSnapshotTestCase/Core
-  - Kingfisher (5.13.2):
-    - Kingfisher/Core (= 5.13.2)
-  - Kingfisher/Core (5.13.2)
+  - Kingfisher (5.13.4):
+    - Kingfisher/Core (= 5.13.4)
+  - Kingfisher/Core (5.13.4)
   - MGSwipeTableCell (1.6.11)
-  - Nimble (8.0.7)
-  - Nimble-Snapshots (8.1.1):
-    - Nimble-Snapshots/Core (= 8.1.1)
-  - Nimble-Snapshots/Core (8.1.1):
+  - Nimble (8.0.9)
+  - Nimble-Snapshots (8.2.0):
+    - Nimble-Snapshots/Core (= 8.2.0)
+  - Nimble-Snapshots/Core (8.2.0):
     - iOSSnapshotTestCase (~> 6.0)
     - Nimble (~> 8.0)
   - Quick (2.2.0)
-  - SDWebImage (5.1.1):
-    - SDWebImage/Core (= 5.1.1)
-  - SDWebImage/Core (5.1.1)
-  - SwiftFormat/CLI (0.44.6)
-  - SwiftLint (0.39.1)
+  - SDWebImage (5.7.4):
+    - SDWebImage/Core (= 5.7.4)
+  - SDWebImage/Core (5.7.4)
+  - SwiftFormat/CLI (0.44.13)
+  - SwiftLint (0.39.2)
 
 DEPENDENCIES:
   - ApplozicSwift (from `../ApplozicSwift.podspec`)
@@ -57,18 +57,18 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: 9fffca38afaf77ced5196619e00a4c67b074ecfc
-  ApplozicSwift: e9fe86679b7b86ba6c670ad6750ab2deab07fd66
+  Applozic: eb60851aac3a74632bafac64ad0e7cefc956250c
+  ApplozicSwift: cd1be1766af03f7a889d598c4e7b3e672d913cdf
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
-  Kingfisher: d342c8354c10c3d85a27d6d4c42c41285924b898
+  Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
   MGSwipeTableCell: b804e4e450dee439c42250be90bd50458bf67fce
-  Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
-  Nimble-Snapshots: 5058fb9b459e64371f54a0f8d9dde6f33db490a0
+  Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
+  Nimble-Snapshots: 7a1133b2dcce853ecdf1026f0a17fedf03bc41c9
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
-  SDWebImage: 96d7f03415ccb28d299d765f93557ff8a617abd8
-  SwiftFormat: 226f259067268a452772fc2bd635bbcecb5ecb09
-  SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
+  SDWebImage: 48b88379b798fd1e4298f95bb25d2cdabbf4deb3
+  SwiftFormat: 87e745cb2f6509894a44ac4f311a8722a9ebcb8b
+  SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
 
 PODFILE CHECKSUM: 37b1748ae38c7d600b4859d10af77ebc84042008
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.2

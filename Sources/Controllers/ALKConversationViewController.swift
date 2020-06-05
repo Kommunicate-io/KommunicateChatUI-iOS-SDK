@@ -1487,6 +1487,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         MessageTheme.receivedMessage.time = ALKMessageStyle.time
         MessageTheme.sentMessage.time = ALKMessageStyle.time
         setSentMessageStatus()
+
+        /// Rich Message button primary color
+        ALKRichMessageStyle.primaryColor = appSettingsUserDefaults.getButtonPrimaryColor()
     }
 
     func setSentMessageStatus() {

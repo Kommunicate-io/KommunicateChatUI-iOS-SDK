@@ -23,10 +23,13 @@ class ViewController: UIViewController {
     }
 
     @IBAction func logoutAction(_: UIButton) {
-        let registerUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
-        registerUserClientService.logout { _, _ in
+        guard let applicationKey = ALUserDefaultsHandler.getApplicationKey() else {
+            return
         }
-        dismiss(animated: false, completion: nil)
+        let chatManager = ALChatManager(applicationKey: applicationKey as NSString)
+        chatManager.logoutUser { _ in
+            self.dismiss(animated: false, completion: nil)
+        }
     }
 
     @IBAction func launchChatList(_: Any) {

@@ -92,6 +92,10 @@ public extension UIColor {
         return UIColor(netHex: 0x19A5E4)
     }
 
+    static func actionButtonColor() -> UIColor {
+        return UIColor(red: 85, green: 83, blue: 183)
+    }
+
     func toHexString() -> String {
         var r: CGFloat = 0
         var g: CGFloat = 0

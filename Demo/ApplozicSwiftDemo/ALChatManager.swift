@@ -105,12 +105,15 @@ class ALChatManager: NSObject {
         return true
     }
 
-    func logoutUser() {
+    func logoutUser(completion: @escaping (Bool) -> Void) {
         let registerUserClientService = ALRegisterUserClientService()
         if let _ = ALUserDefaultsHandler.getDeviceKeyString() {
             registerUserClientService.logout(completionHandler: {
                 _, _ in
                 NSLog("Applozic logout")
+                let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+                appSettingsUserDefaults.clear()
+                completion(true)
             })
         }
     }

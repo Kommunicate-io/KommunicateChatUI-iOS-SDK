@@ -1,5 +1,24 @@
 ## Migration Guides
 
+### Migrating from versions <= 5.5.0
+
+#### Removed the deprecated configuration for navigation bar
+
+The configuration for changing `navigationBarTitleColor`, `navigationBarBackgroundColor`, `navigationBarItemColor` has been removed from `ALKConfiguration`.
+
+Instead use `UINavigationBar.appearance` to change the navigation bar title, background and bar item color
+
+```swift
+let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+      /// Background color
+      navigationBarProxy.barTintColor
+          = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0)
+      /// Title text color
+      navigationBarProxy.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+      navigationBarProxy.isTranslucent = false
+      /// Icons tint color
+      navigationBarProxy.tintColor = .white
+```
 ### Migrating from versions <= 5.1.1
 
 #### Date separator and channel info messages style customization

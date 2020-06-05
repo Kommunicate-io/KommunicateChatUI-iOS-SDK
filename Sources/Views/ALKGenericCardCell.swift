@@ -119,15 +119,12 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
     open var overlayText: UILabel = {
         let label = UILabel(frame: .zero)
-        label.backgroundColor = UIColor.white
-        label.textColor = UIColor(red: 13, green: 13, blue: 14)
         label.font = Font.overlayText
         label.numberOfLines = 1
         label.textAlignment = .center
         label.layer.cornerRadius = 5
         label.clipsToBounds = true
         label.layer.masksToBounds = false
-        label.layer.shadowColor = UIColor.black.cgColor
         label.layer.shadowOpacity = 0.5
         label.layer.shadowOffset = .zero
         return label
@@ -136,7 +133,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var ratingLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.textColor = UIColor(red: 0, green: 0, blue: 0)
         label.font = Font.rating
         label.numberOfLines = 1
         return label
@@ -147,7 +143,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
         label.text = ""
         label.numberOfLines = 1
         label.font = Font.title
-        label.textColor = UIColor(red: 20, green: 19, blue: 19)
         return label
     }()
 
@@ -156,7 +151,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
         label.text = ""
         label.numberOfLines = 1
         label.font = Font.subtitle
-        label.textColor = UIColor(red: 86, green: 84, blue: 84)
         return label
     }()
 
@@ -204,6 +198,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         super.init(frame: frame)
         setUpButtons()
         setupConstraints()
+        setupStyle()
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -269,6 +264,17 @@ open class ALKGenericCardCell: UICollectionViewCell {
         guard let buttons = card.buttons, !buttons.isEmpty else { return }
         updateViewFor(buttons)
         contentView.layoutIfNeeded()
+    }
+
+    private func setupStyle() {
+        let style = CardStyle.shared
+        titleLabel.textColor = style.titleLabel.textColor
+        overlayText.textColor = style.overlayLabel.textColor
+        overlayText.layer.shadowColor = style.overlayLabel.shadowColor
+        overlayText.backgroundColor = style.overlayLabel.background
+        ratingLabel.textColor = style.ratingLabel.textColor
+        subtitleLabel.textColor = style.subtitleLabel.textColor
+        descriptionLabel.textColor = style.descriptionLabel.textColor
     }
 
     private func setTitle(_ text: String?) {
@@ -353,9 +359,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
     }
 
     private func setUpButtons() {
+        let style = CardStyle.shared
         actionButtons = (0 ..< maxButtonCount).map {
             let button = UIButton()
-            button.setTitleColor(UIColor(netHex: 0x5C5AA7), for: .normal)
+            button.setTitleColor(style.actionButton.textColor, for: .normal)
             button.setFont(font: Font.button)
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)

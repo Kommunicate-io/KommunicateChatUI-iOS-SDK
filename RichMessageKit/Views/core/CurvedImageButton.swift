@@ -13,20 +13,6 @@ import UIKit
 public class CurvedImageButton: UIView {
     /// Configuration to change UI properties of `CurvedImageButton`
     public struct Config {
-        public struct Color {
-            /// Used for text color
-            public var text = UIColor(red: 85, green: 83, blue: 183)
-
-            /// Used for border color of view
-            public var border = UIColor(red: 85, green: 83, blue: 183).cgColor
-
-            /// Used for background color of view
-            public var background = UIColor.clear
-
-            /// Used for tint color of image
-            public var tint = UIColor(red: 85, green: 83, blue: 183)
-        }
-
         /// Padding of view.
         public var padding = Padding(left: 14, right: 14, top: 8, bottom: 8)
 
@@ -38,12 +24,6 @@ public class CurvedImageButton: UIView {
         /// If image is nil then size will be 0.
         public var imageSize = CGSize(width: 12, height: 12)
 
-        /// Font for text inside view.
-        public var font = UIFont.systemFont(ofSize: 14)
-
-        /// Instance of `Color` type that can be used to change the colors used in view.
-        public var color = Color()
-
         var spaceWithoutText: CGFloat {
             return padding.left + padding.right + textImageSpace + imageSize.width
         }
@@ -53,12 +33,6 @@ public class CurvedImageButton: UIView {
 
         /// Minimum height of the view.
         var minHeight: CGFloat = 35
-
-        /// Corner radius of view.
-        var cornerRadius: CGFloat = 15
-
-        /// Border width of view.
-        var borderWidth: CGFloat = 2
 
         public init() {}
     }
@@ -120,7 +94,7 @@ public class CurvedImageButton: UIView {
         let titleWidth =
             title
                 .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                          font: config.font)
+                                          font: CurvedImageButton.QuickReplyButtonStyle.shared.font)
                 .width
                 .rounded(.up)
         let buttonWidth = titleWidth + config.spaceWithoutText
@@ -134,7 +108,7 @@ public class CurvedImageButton: UIView {
         let titleHeight =
             title
                 .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                          font: config.font)
+                                          font: CurvedImageButton.QuickReplyButtonStyle.shared.font)
                 .height
                 .rounded(.up)
         let buttonHeight = titleHeight + config.padding.top + config.padding.bottom
@@ -155,7 +129,7 @@ public class CurvedImageButton: UIView {
             config.imageSize = CGSize(width: 0, height: 0)
         }
         let textSize = text.rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                                     font: config.font)
+                                                     font: CurvedImageButton.QuickReplyButtonStyle.shared.font)
         let labelWidth = textSize.width.rounded(.up)
         let labelHeight = textSize.height.rounded(.up) + config.padding.top + config.padding.bottom
         return CGSize(width: max(labelWidth + config.spaceWithoutText, config.minWidth),
@@ -176,20 +150,21 @@ public class CurvedImageButton: UIView {
     }
 
     private func setupView() {
-        backgroundColor = config.color.background
-        layer.cornerRadius = config.cornerRadius
-        layer.borderWidth = config.borderWidth
-        layer.borderColor = config.color.border
+        let style = CurvedImageButton.QuickReplyButtonStyle.shared
+        backgroundColor = style.buttonColor.background
+        layer.cornerRadius = style.cornerRadius
+        layer.borderWidth = style.borderWidth
+        layer.borderColor = style.buttonColor.border
         clipsToBounds = true
 
         label.text = title
-        label.textColor = config.color.text
-        label.font = config.font
+        label.textColor = style.buttonColor.text
+        label.font = style.font
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
-        imageView.tintColor = config.color.tint
         imageView.image = image?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = style.buttonColor.tint
 
         frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
     }

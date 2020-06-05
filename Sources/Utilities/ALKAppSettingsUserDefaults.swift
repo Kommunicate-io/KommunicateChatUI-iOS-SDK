@@ -97,6 +97,22 @@ public struct ALKAppSettingsUserDefaults {
         return ALKMessageStyle.receivedBubble.color
     }
 
+    /// This method is used to set the button primary color in rich messages
+    public func setButtonPrimaryColor(color: UIColor) {
+        let appSettings = getDefaultAppSettings()
+        appSettings.buttonPrimaryColor = color.toHexString()
+        setAppSettings(appSettings: appSettings)
+    }
+
+    /// Button primary color
+    public func getButtonPrimaryColor() -> UIColor {
+        if let appSettings = getAppSettings(),
+            let buttonPrimaryColor = appSettings.buttonPrimaryColor {
+            return UIColor(hexString: buttonPrimaryColor)
+        }
+        return UIColor.actionButtonColor()
+    }
+
     /// If you want to override all the app settings then you can use this method.
     public func setAppSettings(appSettings: ALKAppSettings) {
         let data = NSKeyedArchiver.archivedData(withRootObject: appSettings)
@@ -111,12 +127,19 @@ public struct ALKAppSettingsUserDefaults {
             setAppSettings(appSettings: appSettings)
         } else {
             /// Keep the sent message or received message background color . If some one set from MessageStyle
-            if let settings = existingAppSettings, let existingSentMessageBackgroundColor = settings.sentMessageBackgroundColor {
+            if let settings = existingAppSettings,
+                let existingSentMessageBackgroundColor = settings.sentMessageBackgroundColor {
                 appSettings.sentMessageBackgroundColor = existingSentMessageBackgroundColor
             }
 
-            if let settings = existingAppSettings, let existingReceivedMessageBackgroundColor = settings.receivedMessageBackgroundColor {
+            if let settings = existingAppSettings,
+                let existingReceivedMessageBackgroundColor = settings.receivedMessageBackgroundColor {
                 appSettings.receivedMessageBackgroundColor = existingReceivedMessageBackgroundColor
+            }
+
+            if let settings = existingAppSettings,
+                let existingButtonPrimaryColor = settings.buttonPrimaryColor {
+                appSettings.buttonPrimaryColor = existingButtonPrimaryColor
             }
             setAppSettings(appSettings: appSettings)
         }
@@ -161,6 +184,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         static let sentMessageBackgroundColor = "sentMessageBackgroundColor"
         static let receivedMessageBackgroundColor = "receivedMessageBackgroundColor"
         static let attachmentIconsTintColor = "attachmentIconsTintColor"
+        static let buttonPrimaryColor = "buttonPrimaryColor"
     }
 
     var primaryColor: String
@@ -172,6 +196,7 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var sentMessageBackgroundColor: String?
     public var receivedMessageBackgroundColor: String?
     public var attachmentIconsTintColor: String?
+    public var buttonPrimaryColor: String?
 
     // MARK: - Public Initialization
 
@@ -186,6 +211,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         sentMessageBackgroundColor = coder.decodeObject(forKey: CoderKey.sentMessageBackgroundColor) as? String
         receivedMessageBackgroundColor = coder.decodeObject(forKey: CoderKey.receivedMessageBackgroundColor) as? String
         attachmentIconsTintColor = coder.decodeObject(forKey: CoderKey.attachmentIconsTintColor) as? String
+        buttonPrimaryColor = coder.decodeObject(forKey: CoderKey.buttonPrimaryColor) as? String
     }
 
     // MARK: - Public methods
@@ -197,5 +223,6 @@ public class ALKAppSettings: NSObject, NSCoding {
         coder.encode(sentMessageBackgroundColor, forKey: CoderKey.sentMessageBackgroundColor)
         coder.encode(receivedMessageBackgroundColor, forKey: CoderKey.receivedMessageBackgroundColor)
         coder.encode(attachmentIconsTintColor, forKey: CoderKey.attachmentIconsTintColor)
+        coder.encode(buttonPrimaryColor, forKey: CoderKey.buttonPrimaryColor)
     }
 }

@@ -8,7 +8,7 @@
 import Kingfisher
 import UIKit
 
-// MARK: - `ALKListTemplateCell` for sender side.
+// MARK: - `ALKMyMessageListTemplateCell` for sender side.
 
 public class ALKMyMessageListTemplateCell: ALKListTemplateCell {
     enum Padding {
@@ -124,7 +124,7 @@ public class ALKMyMessageListTemplateCell: ALKListTemplateCell {
     }
 }
 
-// MARK: - `ALKListTemplateCell` for receiver side.
+// MARK: - `ALKFriendMessageListTemplateCell` for receiver side.
 
 public class ALKFriendMessageListTemplateCell: ALKListTemplateCell {
     enum Padding {
@@ -191,6 +191,7 @@ public class ALKFriendMessageListTemplateCell: ALKListTemplateCell {
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
     public override func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
+        super.update(viewModel: viewModel)
         let isMessageEmpty = viewModel.isMessageEmpty
 
         let messageWidth = maxWidth -

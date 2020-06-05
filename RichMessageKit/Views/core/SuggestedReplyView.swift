@@ -16,21 +16,10 @@ import UIKit
 public class SuggestedReplyView: UIView {
     // MARK: Public properties
 
-    /// Configuration for SuggestedReplyView.
-    /// It will configure font and color of suggested reply buttons.
-    public struct SuggestedReplyConfig {
-        public var font = UIFont.systemFont(ofSize: 14)
-        public var color = UIColor(red: 85, green: 83, blue: 183)
-        public init() {}
-    }
-
     // MARK: Internal properties
 
     // This is used to align the view to left or right. Gets value from message.isMyMessage
     var alignLeft: Bool = true
-
-    let font: UIFont
-    let color: UIColor
     weak var delegate: Tappable?
 
     var model: SuggestedReplyMessage?
@@ -51,9 +40,7 @@ public class SuggestedReplyView: UIView {
     /// - Parameters:
     ///   - maxWidth: Max Width to constrain view.
     /// Gives information about the title and index of quick reply selected. Indexing starts from 1.
-    public init(config: SuggestedReplyConfig = SuggestedReplyConfig()) {
-        font = config.font
-        color = config.color
+    public init() {
         super.init(frame: .zero)
         setupConstraints()
     }
@@ -71,7 +58,7 @@ public class SuggestedReplyView: UIView {
         self.model = model
         /// Set frame size.
         let width = maxWidth
-        let height = SuggestedReplyView.rowHeight(model: model, maxWidth: width, font: font)
+        let height = SuggestedReplyView.rowHeight(model: model, maxWidth: width)
         let size = CGSize(width: width, height: height)
         frame.size = size
 
@@ -89,9 +76,8 @@ public class SuggestedReplyView: UIView {
     ///   - font: Font for suggested replies. Pass the custom SuggestedReplyConfig font used while initialization.
     /// - Returns: Returns height of view based on passed parameters.
     public static func rowHeight(model: SuggestedReplyMessage,
-                                 maxWidth: CGFloat,
-                                 font: UIFont = SuggestedReplyConfig().font) -> CGFloat {
-        return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth, font: font)
+                                 maxWidth: CGFloat) -> CGFloat {
+        return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
 
     // MARK: Private methods

@@ -49,8 +49,7 @@ public class FAQMessageView: UIView {
         return label
     }()
 
-    fileprivate lazy var buttons = SuggestedReplyView()
-
+    fileprivate var buttons: SuggestedReplyView
     fileprivate let style: FAQMessageStyle
     fileprivate let alignLeft: Bool
 
@@ -70,6 +69,7 @@ public class FAQMessageView: UIView {
     public init(frame: CGRect, faqStyle: FAQMessageStyle, alignLeft: Bool) {
         style = faqStyle
         self.alignLeft = alignLeft
+        buttons = SuggestedReplyView()
         super.init(frame: frame)
         buttons.delegate = self
         setupStyle()
@@ -104,6 +104,7 @@ public class FAQMessageView: UIView {
     ///   - model: Model used to update the view.
     ///   - maxWidth: maximum allowable width for the view.
     ///   - style: style used to configure view, use the same value passed while initialization.
+    ///   - quickReplyButtonStyle : Quick reply button style for changing the color, font etc.
     /// - Returns: Exact height of the view.
     public class func rowHeight(model: FAQMessage, maxWidth: CGFloat, style: FAQMessageStyle) -> CGFloat {
         let padding = style.bubble.padding
