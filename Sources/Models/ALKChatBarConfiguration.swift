@@ -26,6 +26,9 @@ public struct ALKChatBarConfiguration {
         case some([AttachmentType])
     }
 
+    /// If true then button tint color will be disabled for attachment buttons, send button.
+    public var disableButtonTintColor = false
+
     /// Use this to set the `AttachmentOptions` you want to show.
     /// By default it is set to `all`.
     public var optionsToShow: AttachmentOptions = .all
