@@ -64,7 +64,6 @@
 		A9689F3EBF610E59F6BC5E5B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */; };
 		A9B38F7A98B445FD419D5FA2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA3A089EAEC1F40F41CC5FD4 /* SystemConfiguration.framework */; };
 		B353444C79B56DFB7ADEB988 /* Pods_ApplozicSwiftDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C9689504B728B0E535C944 /* Pods_ApplozicSwiftDemoTests.framework */; };
-		C192F2ABACE1F4DEF41476E5 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF069CE1A9CFB11FBE3AF815 /* AssetsLibrary.framework */; };
 		C61979B123B4DAFE00D70B3F /* TestCaseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61979B023B4DAFE00D70B3F /* TestCaseInfo.swift */; };
 		C6987E5223992CCB009B12C9 /* ApplozicSwiftGroupSendMessageUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6987E5123992CCB009B12C9 /* ApplozicSwiftGroupSendMessageUITest.swift */; };
 		C6BE923423FD623D007D4C5F /* ApplozicSwiftMemberUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6BE923323FD623C007D4C5F /* ApplozicSwiftMemberUITests.swift */; };
@@ -184,7 +183,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				146FC441BE00A406AB5AECD0 /* BuddyBuildSDK.framework in Frameworks */,
-				C192F2ABACE1F4DEF41476E5 /* AssetsLibrary.framework in Frameworks */,
 				220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */,
 				1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */,
 				A9B38F7A98B445FD419D5FA2 /* SystemConfiguration.framework in Frameworks */,
@@ -451,6 +449,7 @@
 					8B36D0E31F3DC5E900FEFFD2 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = C25JNDCBM4;
+						LastSwiftMigration = 1150;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -464,12 +463,14 @@
 					8B36D0F71F3DC5EA00FEFFD2 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = C25JNDCBM4;
+						LastSwiftMigration = 1150;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 8B36D0E31F3DC5E900FEFFD2;
 					};
 					8B36D1021F3DC5EA00FEFFD2 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = C25JNDCBM4;
+						LastSwiftMigration = 1150;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 8B36D0E31F3DC5E900FEFFD2;
 					};
@@ -903,7 +904,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -927,7 +928,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -941,7 +942,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applozic.ApplozicSwiftDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ApplozicSwiftDemo.app/ApplozicSwiftDemo";
 			};
 			name = Debug;
@@ -956,7 +957,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applozic.ApplozicSwiftDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ApplozicSwiftDemo.app/ApplozicSwiftDemo";
 			};
 			name = Release;
@@ -969,7 +970,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applozic.ApplozicSwiftDemoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = ApplozicSwiftDemo;
 			};
 			name = Debug;
@@ -982,7 +983,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applozic.ApplozicSwiftDemoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = ApplozicSwiftDemo;
 			};
 			name = Release;

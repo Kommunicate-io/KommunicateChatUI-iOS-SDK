@@ -108,6 +108,8 @@ open class AudioRecordButton: UIButton {
         case AVAudioSession.RecordPermission.granted:
             // mic access ok...
             isAllow = true
+        @unknown default:
+            print("Unknown Microphone Permission state")
         }
 
         return isAllow
@@ -193,6 +195,8 @@ open class AudioRecordButton: UIButton {
                 delegate?.cancelRecordingAudio()
                 cancelAudioRecord()
             }
+        @unknown default:
+            print("Unknown Microphone Permission state")
         }
     }
 

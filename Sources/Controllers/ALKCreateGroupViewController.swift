@@ -332,6 +332,9 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         let channelUser = ALChannelUser()
         channelUser.role = role
         channelUser.userId = member.id
+        guard let channelUserDictionary = channelUser.dictionary() else {
+            return
+        }
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
         cell?.channelDetailConfig = configuration.channelDetail
@@ -344,7 +347,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             isUpdatingMetaData: false,
             metadata: nil,
             orChildKeys: nil,
-            orChannelUsers: [channelUser.dictionary()]
+            orChannelUsers: [channelUserDictionary]
         ) { error in
             guard error == nil else {
                 print("Error while making admin \(String(describing: error))")
@@ -605,7 +608,7 @@ extension ALKCreateGroupViewController: ALKSelectParticipantToAddProtocol {
     func selectedParticipant(selectedList: [ALKFriendViewModel], addedList: [ALKFriendViewModel]) {
         groupList = selectedList
         self.addedList = addedList
-        createGroupPress(btnCreateGroup)
+        createGroupPress(btnCreateGroup as Any)
     }
 }
 

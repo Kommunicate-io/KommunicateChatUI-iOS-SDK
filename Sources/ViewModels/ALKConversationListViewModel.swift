@@ -129,7 +129,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     public func remove(message: ALMessage) {
         let messageToDelete = allMessages.filter { ($0 as? ALMessage) == message }
         guard let messageDel = messageToDelete.first as? ALMessage,
-            let index = (allMessages as? [ALMessage])?.index(of: messageDel) else {
+            let index = (allMessages as? [ALMessage])?.firstIndex(of: messageDel) else {
             return
         }
         allMessages.remove(at: index)
@@ -176,7 +176,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
                 }
             }
 
-            if let firstElement = messagePresent.first, let index = allMessages.index(of: firstElement) {
+            if let firstElement = messagePresent.first, let index = allMessages.firstIndex(of: firstElement) {
                 allMessages[index] = currentMessage
                 self.allMessages[index] = currentMessage
             } else {
@@ -192,7 +192,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     public func updateStatusFor(userDetail: ALUserDetail) {
         guard let alMessages = allMessages as? [ALMessage], let userId = userDetail.userId else { return }
         let messages = alMessages.filter { ($0.contactId != nil) ? $0.contactId == userId : false }
-        guard let firstMessage = messages.first, let index = alMessages.index(of: firstMessage) else { return }
+        guard let firstMessage = messages.first, let index = alMessages.firstIndex(of: firstMessage) else { return }
         delegate?.rowUpdatedAt(position: index)
     }
 

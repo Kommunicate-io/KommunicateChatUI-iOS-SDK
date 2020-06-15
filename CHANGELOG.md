@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Migrated to Swift 5
+
 ## [5.6.0] - 2020-06-08
 
 ### Fixes

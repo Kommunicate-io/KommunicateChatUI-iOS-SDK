@@ -13,6 +13,6 @@ class ALMessageDBServiceMock: ALMessageDBService {
     static var lastMessage: ALMessage! = MockMessage().message
 
     override func getMessages(_: NSMutableArray!) {
-        delegate.getMessagesArray([ALMessageDBServiceMock.lastMessage])
+        delegate.getMessagesArray([ALMessageDBServiceMock.lastMessage as Any])
     }
 }

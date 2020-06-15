@@ -242,7 +242,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         NSLog("Messages with attachment: ", messages)
 
         guard let viewModel = viewModel as? ALKMessageModel,
-            let currentIndex = messageModels.index(of: viewModel) else { return }
+            let currentIndex = messageModels.firstIndex(of: viewModel) else { return }
         vc.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex, localizedStringFileName: localizedStringFileName)
         UIViewController.topViewController()?.present(nav, animated: true, completion: {
             self.playButton.isEnabled = true

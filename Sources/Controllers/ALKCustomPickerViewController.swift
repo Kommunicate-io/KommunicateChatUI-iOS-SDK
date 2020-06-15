@@ -103,6 +103,8 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                     // whatever
                 }
             }
+        @unknown default:
+            print("Unknown Permission for photo Library")
         }
     }
 

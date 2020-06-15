@@ -32,7 +32,7 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
     func remove(message: ALMessage) {
         let messageToDelete = allMessages.filter { $0 == message }
         guard let messageDel = messageToDelete.first,
-            let index = allMessages.index(of: messageDel) else {
+            let index = allMessages.firstIndex(of: messageDel) else {
             return
         }
         allMessages.remove(at: index)

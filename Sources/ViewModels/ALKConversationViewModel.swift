@@ -639,7 +639,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func updateSendStatus(message: ALMessage) {
         let filteredList = alMessages.filter { $0 == message }
-        if let alMessage = filteredList.first, let index = alMessages.index(of: alMessage) {
+        if let alMessage = filteredList.first, let index = alMessages.firstIndex(of: alMessage) {
             alMessage.sentToServer = true
             alMessages[index] = alMessage
             messageModels[index] = alMessage.messageModel
@@ -803,8 +803,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         do {
             try alHandler?.managedObjectContext.save()
         } catch {}
-        print("content type: ", alMessage.fileMeta.contentType)
-        print("file path: ", alMessage.imageFilePath)
+        print("content type: ", alMessage.fileMeta.contentType ?? "")
+        print("file path: ", alMessage.imageFilePath ?? "")
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
             urlStr, error in
             guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else {
@@ -1072,7 +1072,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func getIndexpathFor(message: ALKMessageModel) -> IndexPath? {
-        guard let index = messageModels.index(of: message)
+        guard let index = messageModels.firstIndex(of: message)
         else { return nil }
         return IndexPath(row: 0, section: index)
     }
@@ -1581,7 +1581,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if !filteredList.isEmpty {
             let message = filteredList.first
             message?.status = status as NSNumber
-            guard let model = message?.messageModel, let index = messageModels.index(of: model) else { return }
+            guard let model = message?.messageModel, let index = messageModels.firstIndex(of: model) else { return }
             messageModels[index] = model
             delegate?.updateMessageAt(indexPath: IndexPath(row: 0, section: index))
         }

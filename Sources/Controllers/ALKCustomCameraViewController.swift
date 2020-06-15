@@ -256,6 +256,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                     // whatever
                 }
             }
+        @unknown default:
+            print("Unknown Photo Library Permission state")
         }
     }
 

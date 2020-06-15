@@ -383,7 +383,7 @@ extension ALKConversationListViewController: ALMessagesDelegate {
     }
 
     public func updateMessageList(_ messagesArray: NSMutableArray!) {
-        print("updated message array: ", messagesArray)
+        print("updated message array is: ", messagesArray ?? "empty")
     }
 }
 
@@ -444,7 +444,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
 
     open func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
-        print("sync call: ", alMessage.message)
+        print("sync call: ", alMessage.message ?? "empty")
         guard let message = alMessage else { return }
         let viewController = navigationController?.visibleViewController as? ALKConversationViewController
         if let vm = viewController?.viewModel, vm.contactId != nil || vm.channelKey != nil,
