@@ -8,6 +8,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 - Migrated to Swift 5
 
+### Fixes
+- [CM-281] Fixed "no results found" error when opening a location message.
+
 ## [5.6.0] - 2020-06-08
 
 ### Fixes

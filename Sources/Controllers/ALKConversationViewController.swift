@@ -1755,7 +1755,7 @@ extension ALKConversationViewController: ALKShareLocationViewControllerDelegate 
 extension ALKConversationViewController: ALKLocationCellDelegate {
     func displayLocation(location: ALKLocationPreviewViewModel) {
         let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
-        let locationString = String(format: "https://maps.google.com/maps?q=loc:%@", latLonString)
+        let locationString = String(format: "https://maps.google.com/maps?q=%@", latLonString)
         guard let locationUrl = URL(string: locationString) else { return }
         UIApplication.shared.open(locationUrl)
     }
