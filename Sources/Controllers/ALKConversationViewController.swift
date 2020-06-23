@@ -58,11 +58,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var loadingIndicator = ALKLoadingIndicator(frame: .zero)
 
+    /// See configuration.
+    var isGroupDetailActionEnabled = true
+
     /// Check if view is loaded from notification
     private var isViewLoadedFromTappingOnNotification: Bool = false
-
-    /// See configuration.
-    private var isGroupDetailActionEnabled = true
 
     /// See configuration.
     private var isProfileTapActionEnabled = true
@@ -1325,7 +1325,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    @objc private func showParticipantListChat() {
+    func showParticipantListChat() {
         guard let channelKey = viewModel.channelKey else { return }
         let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
         if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
@@ -1995,39 +1995,5 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadVideo(view: cell, indexPath: indexPath)
             }
         }
-    }
-}
-
-extension ALKConversationViewController: NavigationBarCallbacks {
-    open func titleTapped() {
-        if let contact = contactDetails(), let contactId = contact.userId {
-            let info: [String: Any] =
-                ["Id": contactId,
-                 "Name": contact.getDisplayName() ?? "",
-                 "Controller": self]
-
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UserProfileSelected"), object: info)
-        }
-        guard isGroupDetailActionEnabled else {
-            if viewModel != nil, let channelKey = viewModel.channelKey {
-                let info: [String: Any] =
-                    ["ChannelKey": channelKey,
-                     "Controller": self]
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ChannelDetailSelected"), object: info)
-            }
-            return
-        }
-        showParticipantListChat()
-    }
-
-    private func contactDetails() -> ALContact? {
-        guard viewModel != nil else { return nil }
-        guard
-            viewModel.channelKey == nil,
-            viewModel.conversationProxy == nil,
-            let contactId = viewModel.contactId else {
-            return nil
-        }
-        return ALContactService().loadContact(byKey: "userId", value: contactId)
     }
 }
