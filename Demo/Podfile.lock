@@ -1,10 +1,10 @@
 PODS:
-  - Applozic (7.7.0):
+  - Applozic (7.8.0):
     - SDWebImage (~> 5.7.2)
   - ApplozicSwift (5.7.0):
     - ApplozicSwift/Complete (= 5.7.0)
   - ApplozicSwift/Complete (5.7.0):
-    - Applozic (~> 7.7.0)
+    - Applozic (~> 7.8.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 5.14.0)
     - MGSwipeTableCell (~> 1.6.11)
@@ -57,8 +57,8 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  Applozic: 055c1c646237644b6bac18efcb15214b85f243ff
-  ApplozicSwift: 1d1780d1e3870772f3ed5d9d0dbde9ea0d770bc8
+  Applozic: 7716e2dd8054dfcba2ca55f53ff6be3a9ae29190
+  ApplozicSwift: a1a2f433c0bdb58eebc1438b903ac4bc6f67f9f4
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Kingfisher: 7b64389a43139c903ec434788344c288217c792d
   MGSwipeTableCell: b804e4e450dee439c42250be90bd50458bf67fce
@@ -71,4 +71,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 37b1748ae38c7d600b4859d10af77ebc84042008
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

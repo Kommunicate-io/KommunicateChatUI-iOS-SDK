@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+- [CM-354] Fixed audio playing issue when changing chat threads.
+
 ## [5.7.0] - 2020-06-23
 
 ### Enhancements

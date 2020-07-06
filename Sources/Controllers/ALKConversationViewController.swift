@@ -77,7 +77,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate var mqttRetryCount = 0
     fileprivate let maxMqttRetryCount = 3
 
-    fileprivate let audioPlayer = ALKAudioPlayer()
+    fileprivate var audioPlayer = ALKAudioPlayer()
 
     fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
     fileprivate lazy var typingNoticeView = TypingNotice(localizedStringFileName: configuration.localizedStringFileName)
@@ -1712,6 +1712,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     public func clearAndReloadTable() {
         viewModel.clearViewModel()
         tableView.reloadData()
+        audioPlayer.stopAudio()
+        audioPlayer = ALKAudioPlayer()
     }
 
     public func updateConversationProfile() {
