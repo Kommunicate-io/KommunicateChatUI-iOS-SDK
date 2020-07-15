@@ -102,7 +102,7 @@ extension ALMessage: ALKChatViewModelProtocol {
             return isMessageEmpty ? "FAQ" : message
         case .quickReply:
             return isMessageEmpty ? "Message" : message
-        case .button:
+        case .button, .form:
             return isMessageEmpty ? "Message" : message
         case .listTemplate:
             return isMessageEmpty ? "Message" : message
@@ -376,6 +376,8 @@ extension ALMessage {
             return .cardTemplate
         case "11":
             return .allButtons
+        case "12":
+            return .form
         default:
             return .text
         }

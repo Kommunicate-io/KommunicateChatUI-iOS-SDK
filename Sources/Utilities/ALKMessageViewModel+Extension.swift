@@ -113,4 +113,14 @@ extension ALKMessageViewModel {
         }
         return SuggestedReplyMessage(suggestion: buttons, message: messageDetails())
     }
+
+    func formTemplate() -> FormTemplate? {
+        guard let payload = payloadFromMetadata() else { return nil }
+        do {
+            return try FormTemplate(payload: payload)
+        } catch let error {
+            print("Error while decoding form template: \(error.localizedDescription)")
+            return nil
+        }
+    }
 }

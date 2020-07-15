@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- [CM-22] Add form template support in the rich messages.
+
 ## [5.7.1] - 2020-07-06
 
 ### Fixes

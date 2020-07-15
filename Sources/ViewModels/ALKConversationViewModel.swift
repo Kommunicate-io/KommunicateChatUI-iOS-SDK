@@ -434,6 +434,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
                         .rowHeight(model: model)
                         .cached(with: cacheIdentifier)
             }
+        case .form:
+            return 0
         }
     }
 

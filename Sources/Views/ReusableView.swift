@@ -28,6 +28,7 @@ extension ReusableView where Self: UIView {
 extension UICollectionViewCell: ReusableView {}
 
 extension UITableViewCell: ReusableView {}
+extension UITableViewHeaderFooterView: ReusableView {}
 
 protocol NibLoadableView: AnyObject {
     static var nibName: String { get }
@@ -55,6 +56,25 @@ extension UITableView {
         }
 
         return cell
+    }
+
+    func register<T: UITableViewHeaderFooterView>(_: T.Type) {
+        register(T.self, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
+    }
+
+    func registerNib<T: UITableViewHeaderFooterView>(_: T.Type, bundle: Bundle? = nil) {
+        register(
+            UINib(nibName: String(describing: T.self), bundle: bundle),
+            forHeaderFooterViewReuseIdentifier: T.reuseIdentifier
+        )
+    }
+
+    func dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
+        guard let view = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier) as? T
+            else {
+                fatalError("Could not dequeue cell with identifier: \(T.reuseIdentifier)")
+        }
+        return view
     }
 }
 

@@ -486,11 +486,51 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+        case .form:
+            guard message.formTemplate() != nil else { return UITableViewCell() }
+            if message.isMyMessage {
+                let cell: ALKMyFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.activeTextFieldChanged = { textField in
+                    self.activeTextField = textField
+                }
+                cell.update(viewModel: message)
+                return cell
+            } else {
+                let cell: ALKFriendFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.activeTextFieldChanged = { textField in
+                    self.activeTextField = textField
+                }
+                cell.update(viewModel: message)
+                cell.tapped = { [weak self] index, name, submitData in
+                    guard let weakSelf = self else { return }
+                    weakSelf.formSubmitButtonSelected(formSubmitData: submitData,
+                                                      messageModel: message,
+                                                      isButtonClickDisabled:
+                        weakSelf.configuration.disableRichMessageButtonAction)
+                }
+                return cell
+            }
         }
     }
 
     public func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
+        if let message = viewModel.messageForRow(indexPath: indexPath),
+            message.messageType == .form,
+            message.formTemplate() != nil {
+            return UITableView.automaticDimension
+        } else {
+            return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
+        }
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let message = viewModel.messageForRow(indexPath: indexPath),
+            message.messageType == .form,
+            message.formTemplate() != nil {
+            return UITableView.automaticDimension
+        } else {
+            return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
+        }
     }
 
     public func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
