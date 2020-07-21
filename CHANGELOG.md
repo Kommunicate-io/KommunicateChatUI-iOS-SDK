@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+- Fixed the issue where form data submit was using data from previous cell.
+
 ## [5.8.0] - 2020-07-15
 
 ### Enhancements

@@ -50,6 +50,7 @@ class ALKMyFormCell: ALKFormCell {
     }
 
     override func update(viewModel: ALKMessageViewModel) {
+        self.identifier = viewModel.identifier
         let isMessageEmpty = viewModel.isMessageEmpty
         let maxWidth = UIScreen.main.bounds.width
         let messageWidth = maxWidth - (ChatCellPadding.SentMessage.Message.left +

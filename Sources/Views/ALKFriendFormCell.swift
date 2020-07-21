@@ -80,6 +80,7 @@ class ALKFriendFormCell: ALKFormCell {
     }
 
     override func update(viewModel: ALKMessageViewModel) {
+        self.identifier = viewModel.identifier
         super.update(viewModel: viewModel)
         let isMessageEmpty = viewModel.isMessageEmpty
         let maxWidth = UIScreen.main.bounds.width
