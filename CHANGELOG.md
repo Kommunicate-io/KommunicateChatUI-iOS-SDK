@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+- Fixed the issue in attachments download.
+
 ## [5.8.1] - 2020-07-23
 
 ### Fixes

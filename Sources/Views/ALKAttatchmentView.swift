@@ -78,8 +78,7 @@ class ALKAttatchmentView: UIView {
             return
         }
 
-        // For email attachments url is to be used directly
-        if messageObject.source == emailSourceType, let url = messageObject.fileMetaInfo?.url {
+        if let url = messageObject.fileMetaInfo?.url {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = self
             let task = ALKDownloadTask(downloadUrl: url, fileName: messageObject.fileMetaInfo?.name)
