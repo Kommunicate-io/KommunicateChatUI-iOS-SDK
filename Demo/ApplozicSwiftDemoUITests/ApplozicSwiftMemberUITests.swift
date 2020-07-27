@@ -37,7 +37,9 @@ class ApplozicSwiftMemberUITests: XCTestCase {
     func testMakeGroupAdminInGroup() {
         let groupName = "DemoGroupForMakeGroupAdmin"
         let app = beforeStartTest_CreateAGroup_And_EnterInConversation(groupName: groupName)
-        app.navigationBars[AppScreen.myChatScreen].staticTexts[groupName].tap()
+        let nameOfGroup = app.navigationBars[AppScreen.myChatScreen]
+        waitFor(object: nameOfGroup) { $0.isHittable }
+        nameOfGroup.staticTexts[groupName].tap()
         let path = Bundle(for: ApplozicSwiftGroupSendMessageUITest.self).url(forResource: "Info", withExtension: "plist")
         let dict = NSDictionary(contentsOf: path!) as? [String: Any]
         guard let member2Name = dict?[GroupData.groupMember2] as? String
@@ -54,14 +56,14 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         waitFor(object: saveChangesButton) { $0.isHittable }
         saveChangesButton.tap()
         sleep(1)
-        let isGroupDeleted = deleteAGroup_FromConversationList(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForMakeGroupAdmin")
     }
 
     func testRemoveMemberFromGroup() {
         let groupName = "DemoGroupForRemoveMember"
         let app = beforeStartTest_CreateAGroup_And_EnterInConversation(groupName: groupName)
-        app.navigationBars[AppScreen.myChatScreen].staticTexts[groupName].tap()
+        let nameOfGroup = app.navigationBars[AppScreen.myChatScreen]
+        waitFor(object: nameOfGroup) { $0.isHittable }
+        nameOfGroup.staticTexts[groupName].tap()
         let path = Bundle(for: ApplozicSwiftGroupSendMessageUITest.self).url(forResource: "Info", withExtension: "plist")
         let dict = NSDictionary(contentsOf: path!) as? [String: Any]
         guard let member2Name = dict?[GroupData.groupMember2] as? String else {
@@ -80,14 +82,14 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         waitFor(object: saveChangesButton) { $0.isHittable }
         saveChangesButton.tap()
         sleep(1)
-        let isGroupDeleted = deleteAGroup_FromConversationList(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForRemoveMember")
     }
 
     func testAddMemberInGroup() {
         let groupName = "DemoGroupForAddMember"
         let app = beforeStartTest_CreateAGroup_And_EnterInConversation(groupName: groupName)
-        app.navigationBars[AppScreen.myChatScreen].staticTexts[groupName].tap()
+        let nameOfGroup = app.navigationBars[AppScreen.myChatScreen]
+        waitFor(object: nameOfGroup) { $0.isHittable }
+        nameOfGroup.staticTexts[groupName].tap()
         let path = Bundle(for: ApplozicSwiftGroupSendMessageUITest.self).url(forResource: "Info", withExtension: "plist")
         let dict = NSDictionary(contentsOf: path!) as? [String: Any]
         guard let member3Name = dict?[GroupData.groupMember3] as? String else {
@@ -104,8 +106,6 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         waitFor(object: inviteButton) { $0.isHittable }
         inviteButton.tap()
         sleep(1)
-        let isGroupDeleted = deleteAGroup_FromConversationList(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForAddMember")
     }
 
     private func login() {
@@ -152,14 +152,17 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         return app
     }
 
-    private func deleteAGroup_FromConversationList(app: XCUIApplication) -> Bool {
+    override func tearDown() {
+        super.tearDown()
+        deleteAGroup_FromConversationList()
+    }
+
+    private func deleteAGroup_FromConversationList() {
+        let app = XCUIApplication()
         let back = app.navigationBars[AppScreen.myChatScreen].buttons[InAppButton.ConversationScreen.back]
         waitFor(object: back) { $0.isHittable }
         back.tap()
         let outerChatScreenTableView = app.tables[AppScreen.conversationList]
-        if outerChatScreenTableView.cells.allElementsBoundByIndex.isEmpty {
-            return false
-        }
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
         let swippableleave = app.buttons[InAppButton.ConversationScreen.swippableDelete]
         waitFor(object: swippableleave) { $0.isHittable }
@@ -167,9 +170,6 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         let leave = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.leave]
         waitFor(object: leave) { $0.isHittable }
         leave.tap()
-        if outerChatScreenTableView.cells.allElementsBoundByIndex.isEmpty {
-            return false
-        }
         sleep(5)
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
         let swippableDelete2 = app.buttons[InAppButton.ConversationScreen.swippableDelete]
@@ -178,6 +178,5 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         let remove = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.remove]
         waitFor(object: remove) { $0.isHittable }
         remove.tap()
-        return true
     }
 }

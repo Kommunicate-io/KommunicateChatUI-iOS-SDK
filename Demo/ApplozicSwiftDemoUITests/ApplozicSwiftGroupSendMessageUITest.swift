@@ -43,8 +43,6 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         inputView.tap()
         inputView.typeText(GroupData.typeText) // typeing message
         app.buttons[InAppButton.ConversationScreen.send].tap() // sending message in group
-        let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForImage")
     }
 
     func testSendImageInGroup() {
@@ -71,8 +69,6 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         let doneButton = app.buttons[InAppButton.ConversationScreen.done]
         waitFor(object: doneButton) { $0.exists }
         doneButton.tap()
-        let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForImage")
     }
 
     func testSendContactInGroup() {
@@ -92,8 +88,6 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         let selectcontact = app.tables[InAppButton.ConversationScreen.selectcontact] // selection any conatct and than sending
         waitFor(object: selectcontact) { $0.exists }
         selectcontact.tap()
-        let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForImage")
     }
 
     func testSendLocationInGroup() {
@@ -113,8 +107,6 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         let sendLocation = app.buttons[InAppButton.ConversationScreen.sendLocation] // sending current location
         waitFor(object: sendLocation) { $0.exists }
         sendLocation.tap()
-        let isGroupDeleted = deleteAGroup_FromConversationList_After_SendMessageInGroup(app: app) // leave the group and delete group
-        XCTAssertTrue(isGroupDeleted, "Failed to delete group DemoGroupForLocation")
     }
 
     private func login() {
@@ -161,14 +153,17 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         return app
     }
 
-    private func deleteAGroup_FromConversationList_After_SendMessageInGroup(app: XCUIApplication) -> Bool {
+    override func tearDown() {
+        super.tearDown()
+        deleteAGroup_FromConversationList_After_SendMessageInGroup()
+    }
+
+    private func deleteAGroup_FromConversationList_After_SendMessageInGroup() {
+        let app = XCUIApplication()
         let back = app.navigationBars[AppScreen.myChatScreen].buttons[InAppButton.ConversationScreen.back]
         waitFor(object: back) { $0.exists }
         back.tap()
         let outerChatScreenTableView = app.tables[AppScreen.conversationList]
-        if outerChatScreenTableView.cells.allElementsBoundByIndex.isEmpty {
-            return false
-        }
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
         let swippableDelete1 = app.buttons[InAppButton.ConversationScreen.swippableDelete]
         waitFor(object: swippableDelete1) { $0.exists }
@@ -176,9 +171,6 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         let leave = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.leave] // app.buttons[InAppButton.CreatingGroup.leave]
         waitFor(object: leave) { $0.exists }
         leave.tap()
-        if outerChatScreenTableView.cells.allElementsBoundByIndex.isEmpty {
-            return false
-        }
         sleep(5)
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
         let swippableDelete2 = app.buttons[InAppButton.ConversationScreen.swippableDelete]
@@ -187,7 +179,6 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         let remove = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.remove] // app.buttons[InAppButton.CreatingGroup.remove]
         waitFor(object: remove) { $0.exists }
         remove.tap()
-        return true
     }
 }
 
