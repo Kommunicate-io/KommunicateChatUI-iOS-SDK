@@ -597,6 +597,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             navigationBar.setupAppearance(navBar)
         }
         var items: [UIBarButtonItem] = navigationItem.leftBarButtonItems ?? []
+        guard !items.contains(where: { $0.customView == navigationBar }) else { return }
         items.append(UIBarButtonItem(customView: navigationBar))
         navigationItem.leftBarButtonItems = items
     }

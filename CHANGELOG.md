@@ -7,6 +7,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Enhancements
 - [CM-384] Added document sharing support.
+### Fixes
+- [CM-417] Fixed a crash that occurred in iOS 13.5 after going back from the group detail or document viewer to a conversation thread.
 
 ## [5.8.2] - 2020-07-24
 
