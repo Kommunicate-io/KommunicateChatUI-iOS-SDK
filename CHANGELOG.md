@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- [CM-384] Added document sharing support.
+
 ## [5.8.2] - 2020-07-24
 
 ### Fixes

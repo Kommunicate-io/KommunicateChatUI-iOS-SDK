@@ -83,6 +83,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 12)
         label.isOpaque = true
+        label.textColor = .black
         return label
     }()
 
@@ -91,6 +92,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 12)
         label.isOpaque = true
+        label.textColor = .black
         return label
     }()
 
@@ -184,12 +186,10 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     @objc func openWKWebView(gesture _: UITapGestureRecognizer) {
-        guard let filePath = viewModel?.filePath, ALKFileUtils().isSupportedFileType(filePath: filePath) else {
-            let errorMessage = (viewModel?.filePath != nil) ? "File type is not supported" : "File is not downloaded"
-            print(errorMessage)
+        guard (viewModel?.filePath) != nil else {
+            print("File is not downloaded")
             return
         }
-
         let docViewController = ALKDocumentViewerController()
         docViewController.filePath = viewModel?.filePath ?? ""
         docViewController.fileName = viewModel?.fileMetaInfo?.name ?? ""

@@ -59,16 +59,6 @@ class ALKFileUtils: NSObject {
         return docDirPath.appendingPathComponent(fileName)
     }
 
-    func isSupportedFileType(filePath: String?) -> Bool {
-        guard filePath != nil else {
-            return false
-        }
-
-        let pathExtension = getDocumentDirectory(fileName: filePath ?? "").pathExtension
-        let fileTypes = ["docx", "pdf", "doc", "java", "js", "txt", "html", "xlsx", "xls", "ppt", "pptx"]
-        return fileTypes.contains(pathExtension)
-    }
-
     func getThumbnail(filePath: URL) -> UIImage? {
         do {
             let asset = AVURLAsset(url: filePath, options: nil)

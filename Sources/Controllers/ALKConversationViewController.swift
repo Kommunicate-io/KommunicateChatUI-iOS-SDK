@@ -89,6 +89,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate var localizedStringFileName: String!
     fileprivate var profanityFilter: ProfanityFilter?
     var activeTextField: UITextField?
+    var documentManager = ALKDocumentManager()
 
     fileprivate enum ActionType: String {
         case link
@@ -699,6 +700,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if viewModel.showPoweredByMessage() { chatBar.showPoweredByMessage() }
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: view)
+        documentManager.delegate = self
         chatBar.action = { [weak self] action in
 
             guard let weakSelf = self else {
@@ -847,6 +849,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             case .shareContact:
                 weakSelf.shareContact()
+            case .showDocumentPicker:
+                weakSelf.documentManager.showPicker(from: weakSelf)
             default:
                 print("Not available")
             }

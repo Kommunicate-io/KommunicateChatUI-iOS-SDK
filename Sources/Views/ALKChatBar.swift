@@ -39,6 +39,7 @@ open class ALKChatBar: UIView, Localizable {
         case more(UIButton)
         case cameraButtonClicked(UIButton)
         case shareContact
+        case showDocumentPicker
     }
 
     public var action: ((ActionType) -> Void)?
@@ -156,6 +157,12 @@ open class ALKChatBar: UIView, Localizable {
         return button
     }()
 
+    open var documentButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "documentButtonInConversationScreen"
+        return button
+    }()
+
     open var lineImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "line", in: Bundle.applozic, compatibleWith: nil))
         return imageView
@@ -257,6 +264,8 @@ open class ALKChatBar: UIView, Localizable {
             action?(.showLocation)
         case contactButton:
             action?(.shareContact)
+        case documentButton:
+            action?(.showDocumentPicker)
         default: break
         }
     }
@@ -292,6 +301,7 @@ open class ALKChatBar: UIView, Localizable {
         galleryButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        documentButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
         let buttonTintColor = appSettingsUserDefaults.getAttachmentIconsTintColor()
         setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons, tintColor: buttonTintColor)
@@ -343,6 +353,7 @@ open class ALKChatBar: UIView, Localizable {
         galleryButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         locationButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        documentButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
     }
 
     private var isNeedInitText = true
@@ -407,6 +418,8 @@ open class ALKChatBar: UIView, Localizable {
                 return photoButton
             case .video:
                 return videoButton
+            case .document:
+                return documentButton
             }
         }
 
@@ -662,6 +675,8 @@ open class ALKChatBar: UIView, Localizable {
                 setup(image: buttonIcons[AttachmentType.video] ?? nil, to: videoButton)
             case .location:
                 setup(image: buttonIcons[AttachmentType.location] ?? nil, to: locationButton)
+            case .document:
+                setup(image: buttonIcons[AttachmentType.document] ?? nil, to: documentButton)
             }
         }
     }

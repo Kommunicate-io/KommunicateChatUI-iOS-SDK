@@ -1352,6 +1352,27 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return names
     }
 
+    func sendFile(at url: URL, fileName: String, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
+        var fileData: Data?
+        do {
+            fileData = try Data(contentsOf: url)
+        } catch let error {
+            print("Failed to read the content of the file at path: \(url) due to error: \(error.localizedDescription)")
+        }
+        guard fileData != nil else { return (nil, nil) }
+        guard let alMessage = processAttachment(
+            filePath: url,
+            text: "",
+            contentType: Int(ALMESSAGE_CONTENT_ATTACHMENT),
+            metadata: metadata,
+            fileName: fileName
+            ) else {
+                return (nil, nil)
+        }
+        addToWrapper(message: alMessage)
+        return (alMessage, IndexPath(row: 0, section: messageModels.count - 1))
+    }
+
     // MARK: - Private Methods
 
     private func updateGroupInfo(
@@ -1515,20 +1536,27 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return info
     }
 
-    private func processAttachment(filePath: URL, text _: String, contentType: Int, isVideo _: Bool = false, metadata: [AnyHashable: Any]?) -> ALMessage? {
+    private func processAttachment(
+        filePath: URL,
+        text _: String,
+        contentType: Int,
+        isVideo _: Bool = false,
+        metadata: [AnyHashable: Any]?,
+        fileName: String? = nil
+    ) -> ALMessage? {
         let alMessage = getMessageToPost()
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
         alMessage.contentType = Int16(contentType)
         alMessage.fileMeta = getFileMetaInfo()
         alMessage.imageFilePath = filePath.lastPathComponent
-        alMessage.fileMeta.name = String(format: "AUD-5-%@", filePath.lastPathComponent)
-        if let contactId = contactId {
+        alMessage.fileMeta.name = fileName ?? String(format: "AUD-5-%@", filePath.lastPathComponent)
+        if fileName == nil, let contactId = contactId {
             alMessage.fileMeta.name = String(format: "%@-5-%@", contactId, filePath.lastPathComponent)
         }
         let pathExtension = filePath.pathExtension
         let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue()
         let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as String?
-        alMessage.fileMeta.contentType = mimetype
+        alMessage.fileMeta.contentType = mimetype ?? "application/zip"
         if contentType == ALMESSAGE_CONTENT_VCARD {
             alMessage.fileMeta.contentType = "text/x-vcard"
         }
