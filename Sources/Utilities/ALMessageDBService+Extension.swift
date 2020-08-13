@@ -15,10 +15,9 @@ extension ALMessageDBService {
             return
         }
         dbMessage.filePath = filePath
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            print("Not saved due to error \(error)")
+        let error = alHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
         }
     }
 }

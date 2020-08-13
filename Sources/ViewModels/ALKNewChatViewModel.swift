@@ -96,9 +96,8 @@ public final class ALKNewChatViewModel {
         fetchReq.predicate = predicate
         var contactList = [ALKContactProtocol]()
         do {
-            let list = try dbHandler?.managedObjectContext.fetch(fetchReq)
-            if let db = list {
-                for dbContact in db {
+            if let fetchedContacts = try dbHandler?.execute(fetchReq as? NSFetchRequest<NSFetchRequestResult>) as? [DB_CONTACT] {
+                for dbContact in fetchedContacts {
                     let contact = ALContact()
                     contact.userId = dbContact.userId
                     contact.fullName = dbContact.fullName

@@ -111,7 +111,6 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         button.press(forDuration: 0.8)
         button.press(forDuration: 0.9)
         XCTAssertEqual(app.tables.cells.count, numberOfCells)
-        afterTest_DeleteConversation(app: app)
     }
 
     func testAudioRecordButton_SwipeLeftShouldCancelRecording() {
@@ -131,7 +130,6 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         finishPoint = chatbar.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0))
         startPoint.press(forDuration: 2, thenDragTo: finishPoint)
         XCTAssertEqual(app.tables.cells.count, numberOfCells)
-        afterTest_DeleteConversation(app: app)
     }
 
     func testAudioRecordButton_SwipeUpShouldCancelRecording() {
@@ -146,7 +144,6 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         let finishPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
         startPoint.press(forDuration: 5, thenDragTo: finishPoint)
         XCTAssertEqual(app.tables.cells.count, numberOfCells)
-        afterTest_DeleteConversation(app: app)
     }
 
     private func login() {

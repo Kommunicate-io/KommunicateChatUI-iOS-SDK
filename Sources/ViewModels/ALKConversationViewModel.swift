@@ -804,15 +804,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
-        var dbMessage: DB_Message?
-        do {
-            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
-        } catch {}
-        dbMessage?.inProgress = 1
-        dbMessage?.isUploadFailed = 0
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {}
+        guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
+            return
+        }
+
+        dbMessage.inProgress = 1
+        dbMessage.isUploadFailed = 0
+
+        let error =  alHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
+            return
+        }
+
         print("content type: ", alMessage.fileMeta.contentType ?? "")
         print("file path: ", alMessage.imageFilePath ?? "")
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
@@ -844,13 +848,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alMessage = alMessages[indexPath.section]
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
-        var dbMessage: DB_Message?
-        do {
-            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
-        } catch {
-            NSLog("Message not found")
-        }
-        guard let dbMessagePresent = dbMessage, let message = messageService.createMessageEntity(dbMessagePresent) else { return }
+        guard  let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
+            let message = messageService.createMessageEntity(dbMessage) else { return }
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
         if ALApplozicSettings.isS3StorageServiceEnabled() {
@@ -860,10 +859,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
             message.fileMeta.populate(fileMeta)
         }
         message.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
-            NSLog("Not saved due to error")
+
+        let error =  alHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
+            return
         }
 
         send(alMessage: message) {
@@ -937,17 +937,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
-        var dbMessage: DB_Message?
-        do {
-            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
-        } catch {
+
+        guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
             return
         }
-        dbMessage?.inProgress = 1
-        dbMessage?.isUploadFailed = 0
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {
+
+        dbMessage.inProgress = 1
+        dbMessage.isUploadFailed = 0
+        let error =  alHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
             return
         }
         NSLog("content type: ", alMessage.fileMeta.contentType)
@@ -974,15 +973,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
-        var dbMessage: DB_Message?
-        do {
-            dbMessage = try messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message
-        } catch {}
-        dbMessage?.inProgress = 1
-        dbMessage?.isUploadFailed = 0
-        do {
-            try alHandler?.managedObjectContext.save()
-        } catch {}
+        guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
+            return
+        }
+        dbMessage.inProgress = 1
+        dbMessage.isUploadFailed = 0
+        let error =  alHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
+            return
+        }
         NSLog("content type: ", alMessage.fileMeta.contentType)
         NSLog("file path: ", alMessage.imageFilePath)
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
@@ -1569,15 +1569,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
         let dbHandler = ALDBHandler.sharedInstance()
         let messageService = ALMessageDBService()
-        let messageEntity = messageService.createMessageEntityForDBInsertion(with: alMessage)
-        do {
-            try dbHandler?.managedObjectContext.save()
-        } catch {
-            NSLog("Not saved due to error")
+
+        guard let messageEntity = messageService.createMessageEntityForDBInsertion(with: alMessage) else {
             return nil
         }
-        alMessage.msgDBObjectId = messageEntity?.objectID
-        return alMessage
+        let error =  dbHandler?.saveContext()
+
+        if error == nil {
+            alMessage.msgDBObjectId = messageEntity.objectID
+            return alMessage
+        }
+        print("Not saved due to error \(String(describing: error))")
+        return nil
     }
 
     private func createJson(dict: [String: String]) -> String? {

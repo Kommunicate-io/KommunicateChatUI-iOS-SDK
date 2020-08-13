@@ -166,7 +166,8 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
             fetchReq.predicate = predicate
             do {
                 var models = [ALKFriendViewModel]()
-                if let fetchedContacts = try dbHandler?.managedObjectContext.fetch(fetchReq) {
+
+                if let fetchedContacts = try dbHandler?.execute(fetchReq as? NSFetchRequest<NSFetchRequestResult>) as? [DB_CONTACT] {
                     for dbContact in fetchedContacts {
                         let contact = ALContact()
                         contact.userId = dbContact.userId
