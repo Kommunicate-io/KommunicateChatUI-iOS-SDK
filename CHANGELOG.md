@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+- Fixed issue where message metadata coming as nil in some cases.
+
 ## [5.9.0] - 2020-08-14
 
 ### Enhancements
