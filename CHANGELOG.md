@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- [CM-426] Increased the line limit of form selection items.
+
 ### Fixes
 - Fixed issue where message metadata coming as nil in some cases.
 

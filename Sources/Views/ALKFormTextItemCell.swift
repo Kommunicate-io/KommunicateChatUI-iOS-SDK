@@ -76,7 +76,7 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
         let label = UILabel(frame: .zero)
         label.font = Font.normal(size: 17).font()
         label.textColor = .text(.gray7E)
-        label.numberOfLines = 1
+        label.numberOfLines = 3
         label.textAlignment = .left
         return label
     }()

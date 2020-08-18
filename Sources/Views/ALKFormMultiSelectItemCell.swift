@@ -22,7 +22,7 @@ class ALKFormMultiSelectItemCell: UITableViewCell {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 17).font()
         label.textColor = .black
-        label.numberOfLines = 1
+        label.numberOfLines = 4
         label.textAlignment = .left
         return label
     }()
@@ -48,10 +48,21 @@ class ALKFormMultiSelectItemCell: UITableViewCell {
     private func addConstraints() {
         addViewsForAutolayout(views: [nameLabel])
         nameLabel.layout {
-            $0.leading == leadingAnchor + 10
-            $0.trailing == trailingAnchor - 30
-            $0.top == topAnchor + 10
-            $0.bottom <= bottomAnchor - 10
+            $0.leading == leadingAnchor + Size.nameLabel.leading
+            $0.trailing == trailingAnchor + Size.nameLabel.trailing
+            $0.top == topAnchor + Size.nameLabel.top
+            $0.bottom <= bottomAnchor + Size.nameLabel.bottom
+        }
+    }
+}
+
+private extension ALKFormMultiSelectItemCell {
+    enum Size {
+        enum nameLabel {
+            static let top: CGFloat = 10
+            static let bottom: CGFloat = -10
+            static let leading: CGFloat = 10
+            static let trailing: CGFloat = -40
         }
     }
 }
