@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Removed the line limit of form selection items to allow dynamic text of any size.
+
 ## [5.9.1] - 2020-08-18
 
 ### Enhancements

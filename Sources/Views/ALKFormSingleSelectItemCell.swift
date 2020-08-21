@@ -22,7 +22,7 @@ class ALKFormSingleSelectItemCell: UITableViewCell {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 17).font()
         label.textColor = .black
-        label.numberOfLines = 4
+        label.numberOfLines = 0
         label.textAlignment = .left
         return label
     }()
