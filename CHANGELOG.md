@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- [CM-213] Added support for sharing photos saved on iCloud.
+
 ## [5.9.2] - 2020-08-21
 
 ### Enhancements

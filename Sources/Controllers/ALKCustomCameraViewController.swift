@@ -41,6 +41,13 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     var cameraOutput: Any? = {
         AVCapturePhotoOutput()
     }()
+    lazy var imageRequestOptions: PHImageRequestOptions = {
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .opportunistic
+        options.version = .current
+        options.isNetworkAccessAllowed = true
+        return options
+    }()
 
     @IBOutlet private var previewView: UIView!
     @IBOutlet private var btnCapture: UIButton!
@@ -52,22 +59,28 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     // If we find a device we'll store it here for later use
     private var captureDevice: AVCaptureDevice?
     private var captureDeviceInput: AVCaptureDeviceInput?
+    fileprivate let indicatorSize = ALKActivityIndicator.Size(width: 50, height: 50)
+    fileprivate lazy var activityIndicator = ALKActivityIndicator(
+        frame: .zero,
+        backgroundColor: .lightGray,
+        indicatorColor: .white,
+        size: indicatorSize
+    )
     fileprivate var isUserControlEnable = true
 
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = localizedString(forKey: "Camera", withDefaultValue: SystemMessage.LabelName.Camera, fileName: localizedStringFileName)
         btnSwitchCam.isHidden = true
         checkPhotoLibraryPermission()
         reloadCamera()
+        addConstraints()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         setupNavigation()
         setupView()
     }
@@ -192,6 +205,15 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     private func setupView() {
         btnCapture.imageView?.tintColor = UIColor.white
         btnSwitchCam.imageView?.tintColor = UIColor.white
+    }
+
+    private func addConstraints() {
+        view.addViewsForAutolayout(views: [activityIndicator])
+        view.bringSubviewToFront(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: indicatorSize.width).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: indicatorSize.height).isActive = true
     }
 
     private func reloadCamera() {
@@ -482,12 +504,18 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
     // MARK: UICollectionViewDelegate
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // grab all the images
         let asset = allPhotos.object(at: indexPath.item)
-        PHCachingImageManager.default().requestImageData(for: asset, options: nil) { imageData, _, _, _ in
-            let image = UIImage(data: imageData!)
+        activityIndicator.startAnimating()
+        PHCachingImageManager.default().requestImageData(
+            for: asset,
+            options: imageRequestOptions
+        ) { imageData, _, _, _ in
+            self.activityIndicator.stopAnimating()
+            guard let imageData = imageData, let image = UIImage(data: imageData) else {
+                self.showImageExportFailureAlert()
+                return
+            }
             self.selectedImage = image
-
             switch self.cameraMode {
             case .cropOption:
                 self.performSegue(withIdentifier: "goToCropImageView", sender: nil)
@@ -538,5 +566,32 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
 
     func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, insetForSectionAt _: Int) -> UIEdgeInsets {
         return CollectionViewEnvironment.Spacing.inset
+    }
+}
+
+extension ALKCustomCameraViewController {
+    func showImageExportFailureAlert() {
+        let alertTitle = self.localizedString(
+            forKey: "PhotoAlbumFailureTitle",
+            withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle,
+            fileName: self.localizedStringFileName
+        )
+        let alertMessage = self.localizedString(
+            forKey: "VideoExportError",
+            withDefaultValue: SystemMessage.Warning.videoExportError,
+            fileName: self.localizedStringFileName
+        )
+        let buttonTitle = self.localizedString(
+            forKey: "OkMessage",
+            withDefaultValue: SystemMessage.ButtonName.ok,
+            fileName: self.localizedStringFileName
+        )
+        let alert = UIAlertController(
+            title: alertTitle,
+            message: alertMessage,
+            preferredStyle: UIAlertController.Style.alert
+        )
+        alert.addAction(UIAlertAction(title: buttonTitle, style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
 }
