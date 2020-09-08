@@ -504,7 +504,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
             notificationView.noDataConnectionNotificationView()
             return
         }
-        if let url = message.fileMetaInfo?.url {
+        // if ALApplozicSettings.isS3StorageServiceEnabled or ALApplozicSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
+        let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
+
+        if let url = message.fileMetaInfo?.url,
+            !serviceEnabled {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
             let task = ALKDownloadTask(downloadUrl: url, fileName: message.fileMetaInfo?.name)
@@ -811,7 +815,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         dbMessage.inProgress = 1
         dbMessage.isUploadFailed = 0
 
-        let error =  alHandler?.saveContext()
+        let error = alHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
             return
@@ -848,7 +852,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alMessage = alMessages[indexPath.section]
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
-        guard  let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
+        guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
             let message = messageService.createMessageEntity(dbMessage) else { return }
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
@@ -860,7 +864,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         message.status = NSNumber(integerLiteral: Int(SENT.rawValue))
 
-        let error =  alHandler?.saveContext()
+        let error = alHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
             return
@@ -944,7 +948,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
         dbMessage.inProgress = 1
         dbMessage.isUploadFailed = 0
-        let error =  alHandler?.saveContext()
+        let error = alHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
             return
@@ -978,7 +982,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         dbMessage.inProgress = 1
         dbMessage.isUploadFailed = 0
-        let error =  alHandler?.saveContext()
+        let error = alHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
             return
@@ -1356,7 +1360,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var fileData: Data?
         do {
             fileData = try Data(contentsOf: url)
-        } catch let error {
+        } catch {
             print("Failed to read the content of the file at path: \(url) due to error: \(error.localizedDescription)")
         }
         guard fileData != nil else { return (nil, nil) }
@@ -1366,8 +1370,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             contentType: Int(ALMESSAGE_CONTENT_ATTACHMENT),
             metadata: metadata,
             fileName: fileName
-            ) else {
-                return (nil, nil)
+        ) else {
+            return (nil, nil)
         }
         addToWrapper(message: alMessage)
         return (alMessage, IndexPath(row: 0, section: messageModels.count - 1))
@@ -1573,7 +1577,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let messageEntity = messageService.createMessageEntityForDBInsertion(with: alMessage) else {
             return nil
         }
-        let error =  dbHandler?.saveContext()
+        let error = dbHandler?.saveContext()
 
         if error == nil {
             alMessage.msgDBObjectId = messageEntity.objectID

@@ -57,37 +57,45 @@ class ALKHTTPManager: NSObject {
     }
 
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?) -> Void) {
-        guard var request = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.absoluteString, paramString: nil) as URLRequest? else { return }
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.absoluteString, paramString: nil) as NSMutableURLRequest? else { return }
 
-        let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
-        let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
-        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-        var body = Data()
-        let fileParamConstant = "file"
-        let imageData = image.pngData()
-
-        if let data = imageData as Data? {
-            print("data present")
-            body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-            body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, "imge_123_profile").data(using: .utf8)!)
-            body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
-            body.append(data)
-            body.append(String(format: "\r\n").data(using: .utf8)!)
-        }
-
-        body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
-        request.httpBody = body
-        request.url = uploadURL
-
-        let task = URLSession.shared.dataTask(with: request) {
-            data, _, error in
-            if error == nil {
-                completion(data)
-            } else {
-                completion(nil)
+        ALResponseHandler.authenticateRequest(postURLRequest) { urlRequest, error in
+            guard error == nil,
+                var request = urlRequest as URLRequest? else {
+                print("Failed to upload the profile image")
+                return
             }
+
+            let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
+            let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+            var body = Data()
+            let fileParamConstant = "file"
+            let imageData = image.pngData()
+
+            if let data = imageData as Data? {
+                print("data present")
+                body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
+                body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, "imge_123_profile").data(using: .utf8)!)
+                body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
+                body.append(data)
+                body.append(String(format: "\r\n").data(using: .utf8)!)
+            }
+
+            body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+            request.httpBody = body
+            request.url = uploadURL
+
+            let task = URLSession.shared.dataTask(with: request) {
+                data, _, error in
+                if error == nil {
+                    completion(data)
+                } else {
+                    completion(nil)
+                }
+            }
+            task.resume()
         }
-        task.resume()
     }
 
     func downloadAttachment(task: ALKDownloadTask) {
@@ -148,31 +156,40 @@ class ALKHTTPManager: NSObject {
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
 
-        guard var request = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as URLRequest? else { return }
-        if FileManager.default.fileExists(atPath: filePath.path) {
-            let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
-            let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
-            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-            var body = Data()
-            let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
-            let imageData = NSData(contentsOfFile: filePath.path)
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
 
-            if let data = imageData as Data? {
-                print("data present")
-                body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-                body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, task.fileName ?? "").data(using: .utf8)!)
-                body.append(String(format: "Content-Type:%@\r\n\r\n", task.contentType ?? "").data(using: .utf8)!)
-                body.append(data)
-                body.append(String(format: "\r\n").data(using: .utf8)!)
+        ALResponseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
+            guard error == nil,
+                var request = urlRequest as URLRequest? else {
+                print("Failed to upload the attachment")
+                return
             }
 
-            body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
-            request.httpBody = body
-            request.url = task.url
-            let configuration = URLSessionConfiguration.default
-            session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-            let dataTask = session?.dataTask(with: request)
-            dataTask?.resume()
+            if FileManager.default.fileExists(atPath: filePath.path) {
+                let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
+                let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
+                request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+                var body = Data()
+                let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
+                let imageData = NSData(contentsOfFile: filePath.path)
+
+                if let data = imageData as Data? {
+                    print("data present")
+                    body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
+                    body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, task.fileName ?? "").data(using: .utf8)!)
+                    body.append(String(format: "Content-Type:%@\r\n\r\n", task.contentType ?? "").data(using: .utf8)!)
+                    body.append(data)
+                    body.append(String(format: "\r\n").data(using: .utf8)!)
+                }
+
+                body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+                request.httpBody = body
+                request.url = task.url
+                let configuration = URLSessionConfiguration.default
+                self?.session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+                let dataTask = self?.session?.dataTask(with: request)
+                dataTask?.resume()
+            }
         }
     }
 

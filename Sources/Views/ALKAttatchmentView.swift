@@ -77,8 +77,11 @@ class ALKAttatchmentView: UIView {
         guard let messageObject = message else {
             return
         }
+        // if ALApplozicSettings.isS3StorageServiceEnabled or ALApplozicSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
+        let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
 
-        if let url = messageObject.fileMetaInfo?.url {
+        if let url = messageObject.fileMetaInfo?.url,
+            !serviceEnabled {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = self
             let task = ALKDownloadTask(downloadUrl: url, fileName: messageObject.fileMetaInfo?.name)
