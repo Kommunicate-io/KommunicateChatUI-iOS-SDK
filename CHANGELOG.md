@@ -5,6 +5,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+## [5.10.0] - 2020-09-09
+
 ### Enhancements
 - [CM-213] Added support for sharing photos saved on iCloud.
 
@@ -442,6 +444,7 @@ The mute icon image can be changed from outside using below code.
 - [CS-108] Add support for contacts group.
 
 ### Fixes
+- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
