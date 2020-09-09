@@ -116,12 +116,24 @@ open class ALKChatBar: UIView, Localizable {
         return view
     }()
 
-    open var micButton: AudioRecordButton = {
-        let button = AudioRecordButton(frame: CGRect())
-        button.layer.masksToBounds = true
-        button.accessibilityIdentifier = "MicButton"
-        return button
-    }()
+    #if SPEECH_REC
+        open lazy var micButton: SpeechToTextButton = {
+            let button = SpeechToTextButton(
+                textView: textView,
+                localizedStringFileName: configuration.localizedStringFileName
+            )
+            button.layer.masksToBounds = true
+            button.accessibilityIdentifier = "MicButton"
+            return button
+        }()
+    #else
+        open var micButton: AudioRecordButton = {
+            let button = AudioRecordButton(frame: CGRect())
+            button.layer.masksToBounds = true
+            button.accessibilityIdentifier = "MicButton"
+            return button
+        }()
+    #endif
 
     open var photoButton: UIButton = {
         let bt = UIButton(type: .custom)
@@ -584,10 +596,14 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     func stopRecording() {
+        #if SPEECH_REC
+        toggleButtonInChatBar(hide: false)
+        #else
         soundRec.userDidStopRecording()
         micButton.isSelected = false
         soundRec.isHidden = true
         resetToDefaultPlaceholderText()
+        #endif
     }
 
     func hideAudioOptionInChatBar() {
@@ -698,8 +714,9 @@ extension ALKChatBar: UITextViewDelegate {
         } else {
             placeHolder.isHidden = true
             placeHolder.alpha = 0
-
-            toggleButtonInChatBar(hide: false)
+            if micButton.states != .recording {
+                toggleButtonInChatBar(hide: false)
+            }
             updateTextViewHeight(textView: textView, text: textView.text)
         }
 
@@ -800,7 +817,9 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
 
 extension ALKChatBar: ALKAudioRecorderViewProtocol {
     public func cancelAudioRecording() {
+        #if !SPEECH_REC
         micButton.cancelAudioRecord()
+        #endif
         stopRecording()
     }
 }

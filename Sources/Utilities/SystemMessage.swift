@@ -25,6 +25,7 @@ struct SystemMessage: Localizable {
         static let PleaseAllowMic = localizedString(forKey: "AllowSoundRecordingMessage")
         static let SlideToCancel = localizedString(forKey: "SlideToCancelMessage")
         static let Recording = localizedString(forKey: "RecordingMessage")
+        static let SpeechToTextPlaceholder = localizedString(forKey: "SpeechToTextPlaceholder")
     }
 
     struct Map {
