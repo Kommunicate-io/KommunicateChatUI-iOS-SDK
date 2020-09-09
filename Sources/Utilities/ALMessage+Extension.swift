@@ -97,17 +97,15 @@ extension ALMessage: ALKChatViewModelProtocol {
         case .video:
             return "Video"
         case .html:
-            return "Text"
+            return "Message"
         case .faqTemplate:
             return isMessageEmpty ? "FAQ" : message
-        case .quickReply:
-            return isMessageEmpty ? "Message" : message
-        case .button, .form:
-            return isMessageEmpty ? "Message" : message
-        case .listTemplate:
-            return isMessageEmpty ? "Message" : message
-        case .cardTemplate:
-            return isMessageEmpty ? "Message" : message
+        case .button,
+             .form,
+             .quickReply,
+             .listTemplate,
+             .cardTemplate:
+            return latestRichMessageText()
         case .imageMessage:
             return isMessageEmpty ? "Photo" : message
         case .email:
@@ -216,7 +214,7 @@ extension ALMessage {
         case ALMESSAGE_CHANNEL_NOTIFICATION:
             return .information
         case ALMESSAGE_CONTENT_TEXT_HTML:
-            return .html
+            return richMessageType()
         case ALMESSAGE_CONTENT_VCARD:
             return .contact
         default:
@@ -359,7 +357,14 @@ extension ALMessage {
             let contentType = metadata["contentType"] as? String, contentType == "300",
             let templateId = metadata["templateId"] as? String
         else {
-            return .text
+            switch Int32(self.contentType) {
+            case ALMESSAGE_CONTENT_DEFAULT:
+                return .text
+            case ALMESSAGE_CONTENT_TEXT_HTML:
+                return .html
+            default:
+                return .text
+            }
         }
         switch templateId {
         case "3":
@@ -380,6 +385,17 @@ extension ALMessage {
             return .form
         default:
             return .text
+        }
+    }
+
+    func latestRichMessageText() -> String {
+        switch Int32(contentType) {
+        case ALMESSAGE_CONTENT_DEFAULT:
+            return isMessageEmpty ? "Message" : message
+        case ALMESSAGE_CONTENT_TEXT_HTML:
+            return "Message"
+        default:
+            return isMessageEmpty ? "Message" : message
         }
     }
 }
@@ -412,12 +428,15 @@ extension ALMessage {
         messageModel.isReplyMessage = isAReplyMessage()
         messageModel.metadata = metadata as? [String: Any]
         messageModel.source = source
+        if let messageContentType = Message.ContentType(rawValue: contentType) {
+            messageModel.contentType = messageContentType
+        }
         return messageModel
     }
 }
 
 extension ALMessage {
-    open override func isEqual(_ object: Any?) -> Bool {
+    override open func isEqual(_ object: Any?) -> Bool {
         if let object = object as? ALMessage, let objectKey = object.key, let key = self.key {
             return key == objectKey
         } else {

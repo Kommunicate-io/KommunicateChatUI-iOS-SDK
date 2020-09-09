@@ -8,14 +8,16 @@
 import Foundation
 
 extension ALKMessageViewModel {
-    private func messageDetails() -> Message {
+    func messageDetails() -> Message {
         return Message(
+            identifier: identifier,
             text: message,
             isMyMessage: isMyMessage,
             time: time!,
             displayName: displayName,
             status: messageStatus(),
-            imageURL: avatarURL
+            imageURL: avatarURL,
+            contentType: contentType
         )
     }
 
@@ -118,7 +120,7 @@ extension ALKMessageViewModel {
         guard let payload = payloadFromMetadata() else { return nil }
         do {
             return try FormTemplate(payload: payload)
-        } catch let error {
+        } catch {
             print("Error while decoding form template: \(error.localizedDescription)")
             return nil
         }

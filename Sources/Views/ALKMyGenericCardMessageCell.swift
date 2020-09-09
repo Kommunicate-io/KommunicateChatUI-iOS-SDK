@@ -6,7 +6,7 @@
 //
 
 open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
-    enum Padding {
+    enum ViewPadding {
         enum StateView {
             static let top: CGFloat = 3
             static let right: CGFloat = 2
@@ -20,6 +20,12 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
             static let top: CGFloat = 2
             static let maxWidth: CGFloat = 200
         }
+
+        static let maxWidth = UIScreen.main.bounds.width
+        static let messageViewPadding = Padding(left: ChatCellPadding.SentMessage.Message.left,
+                                                right: ChatCellPadding.SentMessage.Message.right,
+                                                top: 0,
+                                                bottom: 0)
     }
 
     fileprivate var timeLabel: UILabel = {
@@ -38,10 +44,14 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    var messageView = ALKMyMessageView()
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.sentMessage.bubble,
+        messageStyle: MessageTheme.sentMessage.message,
+        maxWidth: ViewPadding.maxWidth
+    )
     lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
 
@@ -49,18 +59,21 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open override func update(viewModel: ALKMessageViewModel, width: CGFloat) {
+    override open func update(viewModel: ALKMessageViewModel, width: CGFloat) {
         self.viewModel = viewModel
 
         let isMessageEmpty = viewModel.isMessageEmpty
-        let messageWidth = width -
-            (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
+        let model = viewModel.messageDetails()
 
-        messageViewHeight.constant = isMessageEmpty ? 0 : ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        messageViewHeight.constant = isMessageEmpty ? 0 :
+            SentMessageViewSizeCalculator().rowHeight(messageModel: model,
+                                                      maxWidth: ViewPadding.maxWidth,
+                                                      padding: ViewPadding.messageViewPadding)
         if !isMessageEmpty {
-            messageView.update(viewModel: viewModel)
+            messageView.update(model: model)
         }
-        messageView.updateHeightOfView(hideView: isMessageEmpty, viewModel: viewModel, maxWidth: width)
+
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
 
         super.update(viewModel: viewModel, width: width)
 
@@ -69,7 +82,7 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
         timeLabel.setStyle(ALKMessageStyle.time)
 
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
 
@@ -92,7 +105,7 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
         contentView.bringSubviewToFront(timeLabel)
 
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leftPadding).isActive = true
+        messageView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: leftPadding).isActive = true
         messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
         messageViewHeight.isActive = true
 
@@ -103,32 +116,34 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
         collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKGenericCardBaseCell.cardTopPadding).isActive = true
         collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: CommonConstraintIdentifier.collectionView.rawValue).isActive = true
-        stateView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Padding.StateView.top).isActive = true
-        stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor, constant: -1 * Padding.StateView.right).isActive = true
-        stateView.heightAnchor.constraint(equalToConstant: Padding.StateView.height).isActive = true
-        stateView.widthAnchor.constraint(equalToConstant: Padding.StateView.width).isActive = true
-        timeLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Padding.TimeLabel.top).isActive = true
-        timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: Padding.TimeLabel.left).isActive = true
+        stateView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: ViewPadding.StateView.top).isActive = true
+        stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor, constant: -1 * ViewPadding.StateView.right).isActive = true
+        stateView.heightAnchor.constraint(equalToConstant: ViewPadding.StateView.height).isActive = true
+        stateView.widthAnchor.constraint(equalToConstant: ViewPadding.StateView.width).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: ViewPadding.TimeLabel.top).isActive = true
+        timeLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: ViewPadding.TimeLabel.left).isActive = true
         timeLabelWidth.isActive = true
         timeLabelHeight.isActive = true
-        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Padding.TimeLabel.right).isActive = true
+        timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * ViewPadding.TimeLabel.right).isActive = true
     }
 
-    public override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override public class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         var height: CGFloat = 0
+        let model = viewModel.messageDetails()
+
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
 
         if !viewModel.isMessageEmpty {
-            let messageWidth = width -
-                (ChatCellPadding.SentMessage.Message.left + ChatCellPadding.SentMessage.Message.right)
-            height = ALKMyMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+            height = SentMessageViewSizeCalculator().rowHeight(messageModel: model,
+                                                               maxWidth: ViewPadding.maxWidth,
+                                                               padding: ViewPadding.messageViewPadding)
         }
 
         let cardHeight = super.cardHeightFor(message: viewModel, width: width)
-        return cardHeight + height + 10 + timeLabelSize.height.rounded(.up) + Padding.TimeLabel.top // Extra padding below view. Change this for club/unclub
+        return cardHeight + height + 10 + timeLabelSize.height.rounded(.up) + ViewPadding.TimeLabel.top // Extra padding below view. Change this for club/unclub
     }
 
     private func setupCollectionView() {
@@ -160,7 +175,7 @@ open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
         collectionView.constraint(withIdentifier: CommonConstraintIdentifier.collectionView.rawValue)?.constant = collectionViewHeight
     }
 
-    open override func draw(_ rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         super.draw(rect)
         guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft else {
             return

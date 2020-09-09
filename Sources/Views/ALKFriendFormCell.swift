@@ -5,21 +5,11 @@
 //  Created by Mukesh on 09/07/20.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class ALKFriendFormCell: ALKFormCell {
-    enum ConstraintIdentifier {
-        enum NameLabel {
-            static let height = "NameLabelHeight"
-        }
-
-        enum AvatarImageView {
-            static let height = "AvatarImageViewHeight"
-        }
-    }
-
-    enum Padding {
+    enum ViewPadding {
         enum NameLabel {
             static let top: CGFloat = 6
             static let leading: CGFloat = 57
@@ -39,6 +29,12 @@ class ALKFriendFormCell: ALKFormCell {
             static var bottom: CGFloat = 2.0
             static let maxWidth: CGFloat = 200
         }
+
+        static var maxWidth = UIScreen.main.bounds.width
+        static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
+                                                right: ChatCellPadding.ReceivedMessage.Message.right,
+                                                top: ChatCellPadding.ReceivedMessage.Message.top,
+                                                bottom: 0)
     }
 
     fileprivate var timeLabel: UILabel = {
@@ -65,7 +61,12 @@ class ALKFriendFormCell: ALKFormCell {
         return label
     }()
 
-    fileprivate var messageView = ALKFriendMessageView()
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.receivedMessage.bubble,
+        messageStyle: MessageTheme.receivedMessage.message,
+        maxWidth: ViewPadding.maxWidth
+    )
+
     fileprivate var submitButtonView = UIView(frame: .zero)
 
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
@@ -80,18 +81,30 @@ class ALKFriendFormCell: ALKFormCell {
     }
 
     override func update(viewModel: ALKMessageViewModel) {
-        self.identifier = viewModel.identifier
+        identifier = viewModel.identifier
         super.update(viewModel: viewModel)
         let isMessageEmpty = viewModel.isMessageEmpty
-        let maxWidth = UIScreen.main.bounds.width
-        let messageWidth = maxWidth - (ChatCellPadding.ReceivedMessage.Message.left +
-            ChatCellPadding.ReceivedMessage.Message.right)
-        messageViewHeight.constant = isMessageEmpty ? 0 : ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        let model = viewModel.messageDetails()
+
+        messageViewHeight.constant = isMessageEmpty ? 0 :
+            ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
+
         if !isMessageEmpty {
-            messageView.update(viewModel: viewModel)
+            messageView.update(model: model)
         }
-        messageView.updateHeightOfViews(hideView: isMessageEmpty, viewModel: viewModel, maxWidth: maxWidth)
-        showNameAndAvatarImageView(isMessageEmpty: isMessageEmpty, viewModel: viewModel)
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+
+        if let url = viewModel.avatarURL {
+            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+        } else {
+            avatarImageView.image = placeHolder
+        }
+
+        nameLabel.text = viewModel.displayName
+        nameLabel.setStyle(ALKMessageStyle.displayName)
+
         if let submitButton = submitButton, submitButtonView.subviews.isEmpty {
             submitButtonViewHeight.constant = submitButton.buttonHeight()
             submitButtonView.addSubview(submitButton)
@@ -99,7 +112,7 @@ class ALKFriendFormCell: ALKFormCell {
         timeLabel.setStyle(ALKMessageStyle.time)
         timeLabel.text = viewModel.time
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
@@ -114,20 +127,20 @@ class ALKFriendFormCell: ALKFormCell {
             messageView,
             itemListView,
             submitButtonView,
-            timeLabel
+            timeLabel,
         ])
-        nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Padding.NameLabel.top).isActive = true
-        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.NameLabel.leading).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.NameLabel.trailing).isActive = true
-        nameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.NameLabel.height).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.NameLabel.top).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.NameLabel.leading).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ViewPadding.NameLabel.trailing).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: ViewPadding.NameLabel.height).isActive = true
 
-        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.AvatarImageView.top).isActive = true
-        avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.AvatarImageView.leading).isActive = true
-        avatarImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.AvatarImageView.height).isActive = true
-        avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImageView.width).isActive = true
+        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.AvatarImageView.top).isActive = true
+        avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.AvatarImageView.leading).isActive = true
+        avatarImageView.heightAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.height).isActive = true
+        avatarImageView.widthAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.width).isActive = true
 
-        timeLabel.leadingAnchor.constraint(equalTo: itemListView.leadingAnchor, constant: Padding.TimeLabel.leading).isActive = true
-        timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Padding.TimeLabel.bottom)
+        timeLabel.leadingAnchor.constraint(equalTo: itemListView.leadingAnchor, constant: ViewPadding.TimeLabel.leading).isActive = true
+        timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -ViewPadding.TimeLabel.bottom)
             .isActive = true
         timeLabelWidth.isActive = true
         timeLabelHeight.isActive = true
@@ -135,48 +148,24 @@ class ALKFriendFormCell: ALKFormCell {
 
         let leftPadding = ChatCellPadding.ReceivedMessage.Message.left
         let rightPadding = ChatCellPadding.ReceivedMessage.Message.right
-        let widthPadding = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
-        let templateLeftPadding = leftPadding + 64 - widthPadding
+        let templateLeftPadding = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
         messageViewHeight.isActive = true
         submitButtonViewHeight.isActive = true
         messageView.layout {
             $0.top == nameLabel.bottomAnchor
-            $0.leading == leadingAnchor + leftPadding
-            $0.trailing == trailingAnchor - rightPadding
+            $0.leading == avatarImageView.trailingAnchor + leftPadding
+            $0.trailing <= trailingAnchor - rightPadding
         }
         itemListView.layout {
             $0.top == messageView.bottomAnchor + ChatCellPadding.ReceivedMessage.MessageButton.top
             $0.bottom == submitButtonView.topAnchor - ChatCellPadding.ReceivedMessage.MessageButton.bottom
-            $0.leading == messageView.leadingAnchor + templateLeftPadding
+            $0.leading == avatarImageView.trailingAnchor + templateLeftPadding
             $0.trailing == trailingAnchor - ChatCellPadding.ReceivedMessage.MessageButton.right
         }
         submitButtonView.layout {
             $0.bottom == timeLabel.topAnchor - ChatCellPadding.ReceivedMessage.MessageButton.bottom
             $0.leading == itemListView.leadingAnchor
             $0.trailing == itemListView.trailingAnchor
-        }
-    }
-
-    private func showNameAndAvatarImageView(isMessageEmpty: Bool, viewModel: ALKMessageViewModel) {
-        nameLabel
-            .constraint(withIdentifier: ConstraintIdentifier.NameLabel.height)?
-            .constant = isMessageEmpty ? Padding.NameLabel.height : 0
-        avatarImageView
-            .constraint(withIdentifier: ConstraintIdentifier.AvatarImageView.height)?
-            .constant = isMessageEmpty ? Padding.AvatarImageView.height : 0
-
-        if isMessageEmpty {
-            let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-
-            if let url = viewModel.avatarURL {
-                let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-                avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-            } else {
-                avatarImageView.image = placeHolder
-            }
-
-            nameLabel.text = viewModel.displayName
-            nameLabel.setStyle(ALKMessageStyle.displayName)
         }
     }
 }

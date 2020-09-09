@@ -64,9 +64,11 @@ public protocol ALKMessageViewModel {
     var isReplyMessage: Bool { get }
     var metadata: [String: Any]? { get }
     var source: Int16 { get }
+    var contentType: Message.ContentType { get }
 }
 
 public class ALKMessageModel: ALKMessageViewModel {
+    public var contentType: Message.ContentType = Message.ContentType.text
     public var message: String? = ""
     public var isMyMessage: Bool = false
     public var messageType: ALKMessageType = .text

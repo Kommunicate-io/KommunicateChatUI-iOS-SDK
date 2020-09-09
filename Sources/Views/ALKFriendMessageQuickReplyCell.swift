@@ -7,17 +7,7 @@
 
 import Kingfisher
 public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
-    enum ConstraintIdentifier {
-        enum NameLabel {
-            static let height = "NameLabelHeight"
-        }
-
-        enum AvatarImageView {
-            static let height = "AvatarImageViewHeight"
-        }
-    }
-
-    enum Padding {
+    enum ViewPadding {
         enum NameLabel {
             static let top: CGFloat = 6
             static let leading: CGFloat = 57
@@ -37,6 +27,12 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
             static var bottom: CGFloat = 2.0
             static let maxWidth: CGFloat = 200
         }
+
+        static let maxWidth = UIScreen.main.bounds.width
+        static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
+                                                right: ChatCellPadding.ReceivedMessage.Message.right,
+                                                top: ChatCellPadding.ReceivedMessage.Message.top,
+                                                bottom: 0)
     }
 
     fileprivate var timeLabel: UILabel = {
@@ -66,9 +62,13 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    var messageView = ALKFriendMessageView()
-    var quickReplyView = SuggestedReplyView()
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.receivedMessage.bubble,
+        messageStyle: MessageTheme.receivedMessage.message,
+        maxWidth: ViewPadding.maxWidth
+    )
 
+    var quickReplyView = SuggestedReplyView()
     var quickReplySelected: ((_ index: Int, _ title: String) -> Void)?
 
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
@@ -86,25 +86,34 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
     public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         let isMessageEmpty = viewModel.isMessageEmpty
 
-        let messageWidth = maxWidth -
-            (ChatCellPadding.ReceivedMessage.Message.left + ChatCellPadding.ReceivedMessage.Message.right)
-
-        messageViewHeight.constant = isMessageEmpty ? 0 : ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+        let model = viewModel.messageDetails()
+        messageViewHeight.constant = isMessageEmpty ? 0 : ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
 
         if !isMessageEmpty {
-            messageView.update(viewModel: viewModel)
+            messageView.update(model: model)
         }
 
-        showNameAndAvatarImageView(isMessageEmpty: isMessageEmpty, viewModel: viewModel)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
 
-        messageView.updateHeightOfViews(hideView: isMessageEmpty, viewModel: viewModel, maxWidth: maxWidth)
+        if let url = viewModel.avatarURL {
+            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+        } else {
+            avatarImageView.image = placeHolder
+        }
+
+        nameLabel.text = viewModel.displayName
+        nameLabel.setStyle(ALKMessageStyle.displayName)
+
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
+
         guard let suggestedReplies = viewModel.suggestedReply() else {
             quickReplyView.isHidden = true
             return
         }
         timeLabel.text = viewModel.time
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
 
@@ -112,7 +121,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
         timeLabel.setStyle(ALKMessageStyle.time)
         let quickReplyViewWidth = maxWidth -
-            (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right)
+            (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
         quickReplyView.update(model: suggestedReplies, maxWidth: quickReplyViewWidth)
     }
 
@@ -121,18 +130,17 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
         var height: CGFloat = 0
 
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
 
         let minimumHeight: CGFloat = 60 // 55 is avatar image... + padding
 
         if isMessageEmpty {
-            height += Padding.NameLabel.height + Padding.NameLabel.top + ChatCellPadding.ReceivedMessage.Message.top
+            height += ViewPadding.NameLabel.height + ViewPadding.NameLabel.top + ChatCellPadding.ReceivedMessage.Message.top
         } else {
-            let messageWidth = maxWidth -
-                (ChatCellPadding.ReceivedMessage.Message.left + ChatCellPadding.ReceivedMessage.Message.right)
-            height = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth) + ChatCellPadding.ReceivedMessage.Message.top
+            height = ReceivedMessageViewSizeCalculator().rowHeight(messageModel: viewModel.messageDetails(), maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding) + ViewPadding.NameLabel.height +
+                ViewPadding.NameLabel.top
         }
 
         guard let suggestedReplies = viewModel.suggestedReply() else {
@@ -140,35 +148,35 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
         }
 
         let quickReplyViewWidth = maxWidth -
-            (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right)
+            (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
         return height
             + SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
             + ChatCellPadding.ReceivedMessage.QuickReply.top
             + ChatCellPadding.ReceivedMessage.QuickReply.bottom + timeLabelSize.height.rounded(.up)
-            + Padding.TimeLabel.bottom
+            + ViewPadding.TimeLabel.bottom
     }
 
     private func setupConstraints() {
         contentView.addViewsForAutolayout(views: [messageView, quickReplyView, timeLabel, nameLabel, avatarImageView])
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Padding.NameLabel.top),
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.NameLabel.leading),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.NameLabel.trailing),
-            nameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.NameLabel.height),
-            avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.AvatarImageView.top),
-            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.AvatarImageView.leading),
-            avatarImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.AvatarImageView.height),
-            avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImageView.width),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.NameLabel.top),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.NameLabel.leading),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ViewPadding.NameLabel.trailing),
+            nameLabel.heightAnchor.constraint(equalToConstant: ViewPadding.NameLabel.height),
+            avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.AvatarImageView.top),
+            avatarImageView.heightAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.height),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.AvatarImageView.leading),
+            avatarImageView.widthAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.width),
             messageView.topAnchor.constraint(
                 equalTo: nameLabel.bottomAnchor,
                 constant: ChatCellPadding.ReceivedMessage.Message.top
             ),
             messageView.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor,
+                equalTo: avatarImageView.trailingAnchor,
                 constant: ChatCellPadding.ReceivedMessage.Message.left
             ),
             messageView.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor,
+                lessThanOrEqualTo: contentView.trailingAnchor,
                 constant: -1 * ChatCellPadding.ReceivedMessage.Message.right
             ),
             messageViewHeight,
@@ -188,35 +196,12 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
                 equalTo: timeLabel.topAnchor,
                 constant: -ChatCellPadding.ReceivedMessage.QuickReply.bottom
             ),
-            timeLabel.leadingAnchor.constraint(equalTo: quickReplyView.leadingAnchor, constant: Padding.TimeLabel.leading),
-            timeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1 * Padding.TimeLabel.bottom),
+            timeLabel.leadingAnchor.constraint(equalTo: quickReplyView.leadingAnchor, constant: ViewPadding.TimeLabel.leading),
+            timeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1 * ViewPadding.TimeLabel.bottom),
             timeLabelWidth,
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
         ])
-    }
-
-    private func showNameAndAvatarImageView(isMessageEmpty: Bool, viewModel: ALKMessageViewModel) {
-        nameLabel
-            .constraint(withIdentifier: ConstraintIdentifier.NameLabel.height)?
-            .constant = isMessageEmpty ? Padding.NameLabel.height : 0
-        avatarImageView
-            .constraint(withIdentifier: ConstraintIdentifier.AvatarImageView.height)?
-            .constant = isMessageEmpty ? Padding.AvatarImageView.height : 0
-
-        if isMessageEmpty {
-            let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-
-            if let url = viewModel.avatarURL {
-                let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-                avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-            } else {
-                avatarImageView.image = placeHolder
-            }
-
-            nameLabel.text = viewModel.displayName
-            nameLabel.setStyle(ALKMessageStyle.displayName)
-        }
     }
 }
 

@@ -58,12 +58,14 @@ class ALKQuickReplyViewSnapshotTests: QuickSpec {
             buttons.append(SuggestedReplyMessage.Suggestion(title: name, reply: reply))
         }
         let message = Message(
+            identifier: UUID().uuidString,
             text: "",
             isMyMessage: true,
             time: "",
             displayName: "",
             status: .read,
-            imageURL: nil
+            imageURL: nil,
+            contentType: Message.ContentType.text
         )
         return SuggestedReplyMessage(suggestion: buttons, message: message)
     }

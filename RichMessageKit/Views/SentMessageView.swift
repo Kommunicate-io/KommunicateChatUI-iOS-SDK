@@ -62,13 +62,12 @@ public class SentMessageView: UIView {
     /// - Parameters:
     ///   - model: Model containing information to update view.
     public func update(model: Message) {
-        let message = model.text ?? ""
         /// Set frame
         let height = SentMessageView.rowHeight(model: model, maxWidth: maxWidth, padding: padding)
         frame.size = CGSize(width: maxWidth, height: height)
 
         // Set message
-        messageView.update(model: message)
+        messageView.update(model: model)
     }
 
     /// It's used to get exact height of messageView.
@@ -99,7 +98,7 @@ public class SentMessageView: UIView {
         ])
     }
 
-    func updateHeightOfView(hideView: Bool, model: String?) {
-        messageView.updateHeighOfView(hideView: hideView, model: model ?? "")
+    func updateHeightOfView(hideView: Bool, model: Message) {
+        messageView.updateHeighOfView(hideView: hideView, model: model)
     }
 }

@@ -10,17 +10,7 @@ import Foundation
 import Kingfisher
 
 open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
-    enum ConstraintIdentifier {
-        enum NameLabel {
-            static let height = "NameLabelHeight"
-        }
-
-        enum AvatarImageView {
-            static let height = "AvatarImageViewHeight"
-        }
-    }
-
-    enum Padding {
+    enum ViewPadding {
         enum NameLabel {
             static let top: CGFloat = 6
             static let leading: CGFloat = 57
@@ -40,6 +30,11 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
             static var top: CGFloat = 2.0
             static let maxWidth: CGFloat = 200
         }
+        static let maxWidth = UIScreen.main.bounds.width
+        static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
+                                                right: ChatCellPadding.ReceivedMessage.Message.right,
+                                                top: ChatCellPadding.ReceivedMessage.Message.top,
+                                                bottom: 0)
     }
 
     fileprivate var timeLabel: UILabel = {
@@ -69,7 +64,12 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    var messageView = ALKFriendMessageView()
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.receivedMessage.bubble,
+        messageStyle: MessageTheme.receivedMessage.message,
+        maxWidth: ViewPadding.maxWidth
+    )
+    // fileprivate var messageViewPadding: Padding
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -82,32 +82,38 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
 
     open override func update(viewModel: ALKMessageViewModel, width: CGFloat) {
         let isMessageEmpty = viewModel.isMessageEmpty
+        let model = viewModel.messageDetails()
 
-        let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
-            ChatCellPadding.ReceivedMessage.Message.right)
-
-        messageViewHeight.constant = isMessageEmpty ? 0 : ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
-
+        messageViewHeight.constant = isMessageEmpty ? 0 :
+            ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
         if !isMessageEmpty {
-            messageView.update(viewModel: viewModel)
+            messageView.update(model: model)
+        }
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+
+        if let url = viewModel.avatarURL {
+            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+        } else {
+            avatarImageView.image = placeHolder
         }
 
-        messageView.updateHeightOfViews(hideView: isMessageEmpty, viewModel: viewModel, maxWidth: width)
+        nameLabel.text = viewModel.displayName
+        nameLabel.setStyle(ALKMessageStyle.displayName)
 
-        showNameAndAvatarImageView(isMessageEmpty: isMessageEmpty, viewModel: viewModel)
-
-        layoutIfNeeded()
         super.update(viewModel: viewModel, width: width)
 
         timeLabel.setStyle(ALKMessageStyle.time)
         timeLabel.text = viewModel.time
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
 
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
+        layoutIfNeeded()
     }
 
     override func setupViews() {
@@ -117,32 +123,30 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         contentView.addViewsForAutolayout(views: [collectionView, messageView, nameLabel, avatarImageView, timeLabel])
         contentView.bringSubviewToFront(messageView)
 
-        nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Padding.NameLabel.top).isActive = true
-        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.NameLabel.leading).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.NameLabel.trailing).isActive = true
-        nameLabel.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.NameLabel.height).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.NameLabel.top).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.NameLabel.leading).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ViewPadding.NameLabel.trailing).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: ViewPadding.NameLabel.height).isActive = true
 
-        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: Padding.AvatarImageView.top).isActive = true
-        avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.AvatarImageView.leading).isActive = true
-        avatarImageView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.AvatarImageView.height).isActive = true
-        avatarImageView.widthAnchor.constraint(equalToConstant: Padding.AvatarImageView.width).isActive = true
+        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.AvatarImageView.top).isActive = true
+        avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.AvatarImageView.leading).isActive = true
+        avatarImageView.heightAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.height).isActive = true
+        avatarImageView.widthAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.width).isActive = true
 
         let leftPadding = ChatCellPadding.ReceivedMessage.Message.left
         let rightPadding = ChatCellPadding.ReceivedMessage.Message.right
         messageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
-        messageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leftPadding).isActive = true
-        messageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
+        messageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: leftPadding).isActive = true
+        messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
         messageViewHeight.isActive = true
 
-        let width = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
-        let templateLeftPadding = leftPadding + 64 - width
-
-        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: templateLeftPadding).isActive = true
+        let templateLeftPadding = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
+        collectionView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: templateLeftPadding).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ALKFriendGenericCardMessageCell.cardTopPadding).isActive = true
         collectionView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: CommonConstraintIdentifier.collectionView.rawValue).isActive = true
-        timeLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor, constant: Padding.TimeLabel.leading).isActive = true
-        timeLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: Padding.TimeLabel.top).isActive = true
+        timeLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor, constant: ViewPadding.TimeLabel.leading).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: ViewPadding.TimeLabel.top).isActive = true
         timeLabelWidth.isActive = true
         timeLabelHeight.isActive = true
         timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor).isActive = true
@@ -153,20 +157,26 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         var height: CGFloat = 0
 
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
-            Padding.TimeLabel.maxWidth,
+            ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
 
         if isMessageEmpty {
-            height += Padding.NameLabel.top + Padding.NameLabel.height
+            height += ViewPadding.NameLabel.top +
+                ViewPadding.NameLabel.height
         } else {
-            let messageWidth = width - (ChatCellPadding.ReceivedMessage.Message.left +
-                ChatCellPadding.ReceivedMessage.Message.right)
-            height = ALKFriendMessageView.rowHeight(viewModel: viewModel, width: messageWidth)
+            let model = viewModel.messageDetails()
+            height = ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding) +
+                ViewPadding.NameLabel.top +
+                ViewPadding.NameLabel.height
         }
 
         let cardHeight = super.cardHeightFor(message: viewModel, width: width)
-        return cardHeight + height + 10 + timeLabelSize.height.rounded(.up) + Padding.TimeLabel.top // Extra 10 below complete view. Modify this for club/unclub.
+        return cardHeight +
+            height +
+            10 +
+            timeLabelSize.height.rounded(.up) +
+            ViewPadding.TimeLabel.top // Extra 10 below complete view. Modify this for club/unclub.
     }
 
     private func setupCollectionView() {
@@ -176,28 +186,5 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-    }
-
-    private func showNameAndAvatarImageView(isMessageEmpty: Bool, viewModel: ALKMessageViewModel) {
-        nameLabel
-            .constraint(withIdentifier: ConstraintIdentifier.NameLabel.height)?
-            .constant = isMessageEmpty ? Padding.NameLabel.height : 0
-        avatarImageView
-            .constraint(withIdentifier: ConstraintIdentifier.AvatarImageView.height)?
-            .constant = isMessageEmpty ? Padding.AvatarImageView.height : 0
-
-        if isMessageEmpty {
-            let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-
-            if let url = viewModel.avatarURL {
-                let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-                avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-            } else {
-                avatarImageView.image = placeHolder
-            }
-
-            nameLabel.text = viewModel.displayName
-            nameLabel.setStyle(ALKMessageStyle.displayName)
-        }
     }
 }

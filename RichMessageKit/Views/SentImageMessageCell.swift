@@ -113,10 +113,10 @@ public class SentImageMessageCell: UITableViewCell {
         messageViewHeight.constant = isMessageEmpty ? 0 : SentMessageViewSizeCalculator().rowHeight(messageModel: model.message, maxWidth: Config.maxWidth, padding: messageViewPadding)
 
         if !isMessageEmpty {
-            messageView.update(model: model.message.text ?? "")
+            messageView.update(model: model.message)
         }
 
-        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message.text ?? "")
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
 
         imageBubbleHeight.constant = ImageBubbleSizeCalculator().rowHeight(model: model, maxWidth: Config.maxWidth)
 
