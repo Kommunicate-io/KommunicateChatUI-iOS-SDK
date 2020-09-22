@@ -185,6 +185,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
         emptyCellView.conversationLabel.text = noConversationLabelText
         emptyCellView.startNewConversationButtonIcon.isHidden = configuration.hideEmptyStateStartNewButtonInConversationList
+        emptyCellView.contentView.backgroundColor = .white
 
         if !configuration.hideEmptyStateStartNewButtonInConversationList {
             if let tap = emptyCellView.gestureRecognizers?.first {
