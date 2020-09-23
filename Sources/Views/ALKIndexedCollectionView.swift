@@ -12,7 +12,7 @@ open class ALKIndexedCollectionView: UICollectionView {
     open var indexPath: IndexPath!
     open var viewModel: ALKMessageViewModel?
 
-    public required override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+    override public required init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
     }
 

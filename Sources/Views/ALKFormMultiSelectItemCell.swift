@@ -36,12 +36,12 @@ class ALKFormMultiSelectItemCell: UITableViewCell {
         addConstraints()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     @objc private func onSelection() {
-        accessoryType = (accessoryType == .none) ? .checkmark:.none
+        accessoryType = (accessoryType == .none) ? .checkmark : .none
         cellSelected?()
     }
 

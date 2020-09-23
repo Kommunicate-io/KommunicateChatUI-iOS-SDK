@@ -92,7 +92,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     var alContactService = ALContactService()
     var conversationService = ALConversationService()
 
-    public override init() {
+    override public init() {
         super.init()
     }
 

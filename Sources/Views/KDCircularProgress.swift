@@ -190,7 +190,7 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
 
     private var animationCompletionBlock: ((Bool) -> Void)?
 
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setInitialValues()
         refreshValues()
@@ -209,15 +209,15 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
         refreshValues()
     }
 
-    public override func awakeFromNib() {
+    override public func awakeFromNib() {
         checkAndSetIBColors()
     }
 
-    public override class var layerClass: AnyClass {
+    override public class var layerClass: AnyClass {
         return KDCircularProgressViewLayer.self
     }
 
-    public override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         radius = (frame.size.width / 2.0) * 0.8
     }
@@ -315,19 +315,19 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
         }
     }
 
-    public override func didMoveToWindow() {
+    override public func didMoveToWindow() {
         if let window = window {
             progressLayer.contentsScale = window.screen.scale
         }
     }
 
-    public override func willMove(toSuperview newSuperview: UIView?) {
+    override public func willMove(toSuperview newSuperview: UIView?) {
         if newSuperview == nil, isAnimating() {
             pauseAnimation()
         }
     }
 
-    public override func prepareForInterfaceBuilder() {
+    override public func prepareForInterfaceBuilder() {
         setInitialValues()
         refreshValues()
         checkAndSetIBColors()

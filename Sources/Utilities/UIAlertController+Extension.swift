@@ -16,7 +16,7 @@ extension UIAlertController {
                                           style: .destructive,
                                           handler: { _ in
                                               discardAction()
-        })
+                                          })
         alert.addAction(cancelButton)
         alert.addAction(discardButton)
         return alert
@@ -31,7 +31,7 @@ extension UIAlertController {
                                                discardTitle: discardTitle,
                                                discardAction: {
                                                    lastAction()
-            })
+                                               })
             presenter.present(alert, animated: true, completion: nil)
         } else {
             lastAction()

@@ -211,14 +211,14 @@ open class ALKMyMessageCell: ALKMessageCell {
         ])
     }
 
-    open override func setupStyle() {
+    override open func setupStyle() {
         super.setupStyle()
         messageView.setStyle(ALKMessageStyle.sentMessage)
         bubbleView.setStyle(ALKMessageStyle.sentBubble, isReceiverSide: false)
         setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
-    open override func update(viewModel: ALKMessageViewModel) {
+    override open func update(viewModel: ALKMessageViewModel) {
         super.update(
             viewModel: viewModel,
             messageStyle: ALKMessageStyle.sentMessage,

@@ -370,7 +370,7 @@ open class ALKChatBar: UIView, Localizable {
 
     private var isNeedInitText = true
 
-    open override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         if isNeedInitText {
@@ -597,12 +597,12 @@ open class ALKChatBar: UIView, Localizable {
 
     func stopRecording() {
         #if SPEECH_REC
-        toggleButtonInChatBar(hide: false)
+            toggleButtonInChatBar(hide: false)
         #else
-        soundRec.userDidStopRecording()
-        micButton.isSelected = false
-        soundRec.isHidden = true
-        resetToDefaultPlaceholderText()
+            soundRec.userDidStopRecording()
+            micButton.isSelected = false
+            soundRec.isHidden = true
+            resetToDefaultPlaceholderText()
         #endif
     }
 
@@ -818,7 +818,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
 extension ALKChatBar: ALKAudioRecorderViewProtocol {
     public func cancelAudioRecording() {
         #if !SPEECH_REC
-        micButton.cancelAudioRecord()
+            micButton.cancelAudioRecord()
         #endif
         stopRecording()
     }

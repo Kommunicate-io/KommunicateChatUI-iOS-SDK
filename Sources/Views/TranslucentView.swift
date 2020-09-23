@@ -168,7 +168,7 @@ extension TranslucentView {
         return red == 0.0 && green == 0.0 && blue == 0.0 && alpha == 0.0
     }
 
-    open override var frame: CGRect {
+    override open var frame: CGRect {
         set {
             if self.toolbarContainerClipView == nil {
                 super.frame = newValue
@@ -198,7 +198,7 @@ extension TranslucentView {
         }
     }
 
-    open override var bounds: CGRect {
+    override open var bounds: CGRect {
         set {
             var rect = newValue
             rect.origin = CGPoint.zero
@@ -222,7 +222,7 @@ extension TranslucentView {
         }
     }
 
-    open override var backgroundColor: UIColor! {
+    override open var backgroundColor: UIColor! {
         set {
             if self.initComplete {
                 self.ilColorBG = newValue
@@ -239,7 +239,7 @@ extension TranslucentView {
         }
     }
 
-    open override var subviews: [UIView] {
+    override open var subviews: [UIView] {
         if self.initComplete {
             var array = super.subviews as [UIView]
 
@@ -261,7 +261,7 @@ extension TranslucentView {
         }
     }
 
-    open override func sendSubviewToBack(_ view: UIView) {
+    override open func sendSubviewToBack(_ view: UIView) {
         if initComplete {
             insertSubview(view, aboveSubview: toolbarContainerClipView!)
         } else {
@@ -269,7 +269,7 @@ extension TranslucentView {
         }
     }
 
-    open override func insertSubview(_ view: UIView, at index: Int) {
+    override open func insertSubview(_ view: UIView, at index: Int) {
         if initComplete {
             super.insertSubview(view, at: index + 1)
         } else {
@@ -277,7 +277,7 @@ extension TranslucentView {
         }
     }
 
-    open override func exchangeSubview(at index1: Int, withSubviewAt index2: Int) {
+    override open func exchangeSubview(at index1: Int, withSubviewAt index2: Int) {
         if initComplete {
             super.exchangeSubview(at: index1 + 1, withSubviewAt: index2 + 1)
         } else {

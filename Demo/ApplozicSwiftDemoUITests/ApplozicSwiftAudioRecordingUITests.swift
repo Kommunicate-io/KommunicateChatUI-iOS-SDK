@@ -168,7 +168,7 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         let dict = NSDictionary(contentsOf: path!) as? [String: Any]
         app.buttons["Launch Chat"].tap()
         sleep(2)
-        app.navigationBars["My Chats"].buttons["fill 214"].tap()
+        app.navigationBars["My Chats"].buttons[InAppButton.CreatingGroup.newChat].tap()
         sleep(3)
         let searchField = app.searchFields["Search"]
         searchField.tap()

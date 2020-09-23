@@ -50,7 +50,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         super.init(configuration: configuration)
     }
 
-    public override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
         ALUserDefaultsHandler.setContactServerCallIsDone(false)
@@ -60,7 +60,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         }
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)

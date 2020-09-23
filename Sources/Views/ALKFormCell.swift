@@ -17,6 +17,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
             activeTextFieldChanged?(activeTextField)
         }
     }
+
     var activeTextFieldChanged: ((UITextField?) -> Void)?
     var formDataCacheStore = ALKFormDataCache.shared
 
@@ -43,6 +44,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
             setUpSubmitButton(title: submitButtonTitle)
         }
     }
+
     override func setupViews() {
         super.setupViews()
         setUpTableView()
@@ -56,19 +58,20 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
     }
+
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
         guard let text = textField.text,
             !text.trim().isEmpty,
-            let formSubmitData = self.formData else {
-                if let data =  self.formData {
-                    data.textFields.removeValue(forKey: textField.tag)
-                    self.formData = data
-                }
-                return
+            let formSubmitData = formData else {
+            if let data = formData {
+                data.textFields.removeValue(forKey: textField.tag)
+                formData = data
+            }
+            return
         }
         formSubmitData.textFields[textField.tag] = text
-        self.formData = formSubmitData
+        formData = formSubmitData
     }
 
     private func setUpTableView() {
@@ -99,11 +102,11 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
 }
 
 extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in _: UITableView) -> Int {
         return items.count
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items[section].rowCount
     }
 
@@ -129,7 +132,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             let cell: ALKFormSingleSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.cellSelected = {
                 if let formSubmitData = self.formData {
-                    if formSubmitData.singleSelectFields[indexPath.section]  == indexPath.row {
+                    if formSubmitData.singleSelectFields[indexPath.section] == indexPath.row {
                         formSubmitData.singleSelectFields.removeValue(forKey: indexPath.section)
                     } else {
                         formSubmitData.singleSelectFields[indexPath.section] = indexPath.row
@@ -155,7 +158,6 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             }
             let cell: ALKFormMultiSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.cellSelected = {
-
                 if let formDataSubmit = self.formData {
                     if var array = formDataSubmit.multiSelectFields[indexPath.section] {
                         if array.contains(indexPath.row) {
@@ -195,7 +197,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
         return headerView
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let item = items[section]
         guard !item.sectionTitle.isEmpty else { return 0 }
         return UITableView.automaticDimension
@@ -204,10 +206,10 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
 
 extension ALKFormCell: Tappable {
     func didTap(index: Int?, title: String) {
-        self.endEditing(true)
+        endEditing(true)
         print("tapped submit button in the form")
         guard let tapped = tapped, let index = index else { return }
-        tapped(index, title, self.formData)
+        tapped(index, title, formData)
     }
 }
 
@@ -219,13 +221,13 @@ class NestedCellTableView: UITableView {
 
     override var contentSize: CGSize {
         didSet {
-            self.invalidateIntrinsicContentSize()
+            invalidateIntrinsicContentSize()
         }
     }
 }
 
 class FormDataSubmit {
     var textFields = [Int: String]()
-    var singleSelectFields = [Int : Int]()
-    var multiSelectFields = [Int : [Int]]()
+    var singleSelectFields = [Int: Int]()
+    var multiSelectFields = [Int: [Int]]()
 }

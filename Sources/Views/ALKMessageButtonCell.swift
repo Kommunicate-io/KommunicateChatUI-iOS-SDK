@@ -21,6 +21,7 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             static let bottom: CGFloat = 2
             static let maxWidth: CGFloat = 200
         }
+
         static let maxWidth = UIScreen.main.bounds.width
         static let messageViewPadding = Padding(left: ChatCellPadding.SentMessage.Message.left,
                                                 right: ChatCellPadding.SentMessage.Message.right,
@@ -93,7 +94,7 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 
-    open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         var height: CGFloat = 0
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
             ViewPadding.TimeLabel.maxWidth,
@@ -176,6 +177,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             static var bottom: CGFloat = 2.0
             static let maxWidth: CGFloat = 200
         }
+
         static let maxWidth = UIScreen.main.bounds.width
         static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
                                                 right: ChatCellPadding.ReceivedMessage.Message.right,
@@ -274,7 +276,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         buttonView.update(model: dict, maxWidth: buttonWidth)
     }
 
-    open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let isMessageEmpty = viewModel.isMessageEmpty
         var height: CGFloat = 0
 
@@ -297,7 +299,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             return minimumHeight + 10 // Paddding
         }
 
-        let buttonWidth = width - (ChatCellPadding.ReceivedMessage.MessageButton.left + ChatCellPadding.ReceivedMessage.MessageButton.right )
+        let buttonWidth = width - (ChatCellPadding.ReceivedMessage.MessageButton.left + ChatCellPadding.ReceivedMessage.MessageButton.right)
         let buttonHeight = SuggestedReplyView.rowHeight(model: dict, maxWidth: buttonWidth)
         return height
             + buttonHeight
@@ -351,7 +353,6 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
         ])
     }
-
 }
 
 extension ALKFriendMessageButtonCell: Tappable {

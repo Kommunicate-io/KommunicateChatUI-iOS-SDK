@@ -71,8 +71,8 @@ extension UITableView {
 
     func dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
         guard let view = dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier) as? T
-            else {
-                fatalError("Could not dequeue cell with identifier: \(T.reuseIdentifier)")
+        else {
+            fatalError("Could not dequeue cell with identifier: \(T.reuseIdentifier)")
         }
         return view
     }

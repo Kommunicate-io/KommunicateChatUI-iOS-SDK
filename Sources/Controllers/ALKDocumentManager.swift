@@ -22,7 +22,7 @@ class ALKDocumentManager: NSObject {
             kUTTypeSpreadsheet as String,
             kUTTypePDF as String,
             "com.microsoft.word.doc",
-            "com.microsoft.excel.xls"
+            "com.microsoft.excel.xls",
         ]
         let importMenu = UIDocumentPickerViewController(documentTypes: types, in: .import)
         importMenu.delegate = self
@@ -32,7 +32,7 @@ class ALKDocumentManager: NSObject {
 }
 
 extension ALKDocumentManager: UIDocumentPickerDelegate, UINavigationControllerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+    func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         print("Documents selected: \(urls.description)")
         let url = urls[0]
         let isSecuredURL = url.startAccessingSecurityScopedResource() == true
@@ -52,10 +52,10 @@ extension ALKDocumentManager: UIDocumentPickerDelegate, UINavigationControllerDe
                     try FileManager.default.removeItem(atPath: newFileURL.path)
                 }
                 try FileManager.default.moveItem(atPath: readableFileURL.path, toPath: newFileURL.path)
-            } catch let error {
+            } catch {
                 print(error)
             }
-            if (isSecuredURL) {
+            if isSecuredURL {
                 url.stopAccessingSecurityScopedResource()
             }
             delegate?.documentSelected(at: newFileURL, fileName: fileName)

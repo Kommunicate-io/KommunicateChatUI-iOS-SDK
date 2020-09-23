@@ -160,7 +160,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         setupConstraints()
     }
 
-    public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+    override public func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         guard viewModel != nil else {
             return
@@ -174,7 +174,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         badgeNumberView.setBackgroundColor(.background(.main))
     }
 
-    public override func setSelected(_ selected: Bool, animated: Bool) {
+    override public func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         guard viewModel != nil else {
             return
@@ -450,7 +450,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         comingSoonDelegate = delegate
     }
 
-    public override func setEditing(_ editing: Bool, animated: Bool) {
+    override public func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
     }
 

@@ -96,7 +96,7 @@ public enum Color {
         case blueFF = 0xFF00_7AFF
         case black00 = 0xFF00_0000
         case grayD4 = 0xC3CDD4
-        case gray7E = 0xFF67757E
+        case gray7E = 0xFF67_757E
     }
 
     public enum Background: Int64 {

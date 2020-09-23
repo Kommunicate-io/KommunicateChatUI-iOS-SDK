@@ -191,7 +191,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
 
 class ALKTappableView: UIView {
     // To highlight when long pressed
-    open override var canBecomeFirstResponder: Bool {
+    override open var canBecomeFirstResponder: Bool {
         return true
     }
 }

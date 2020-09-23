@@ -41,6 +41,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     var cameraOutput: Any? = {
         AVCapturePhotoOutput()
     }()
+
     lazy var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
@@ -571,20 +572,20 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
 
 extension ALKCustomCameraViewController {
     func showImageExportFailureAlert() {
-        let alertTitle = self.localizedString(
+        let alertTitle = localizedString(
             forKey: "PhotoAlbumFailureTitle",
             withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle,
-            fileName: self.localizedStringFileName
+            fileName: localizedStringFileName
         )
-        let alertMessage = self.localizedString(
+        let alertMessage = localizedString(
             forKey: "VideoExportError",
             withDefaultValue: SystemMessage.Warning.videoExportError,
-            fileName: self.localizedStringFileName
+            fileName: localizedStringFileName
         )
-        let buttonTitle = self.localizedString(
+        let buttonTitle = localizedString(
             forKey: "OkMessage",
             withDefaultValue: SystemMessage.ButtonName.ok,
-            fileName: self.localizedStringFileName
+            fileName: localizedStringFileName
         )
         let alert = UIAlertController(
             title: alertTitle,
@@ -592,6 +593,6 @@ extension ALKCustomCameraViewController {
             preferredStyle: UIAlertController.Style.alert
         )
         alert.addAction(UIAlertAction(title: buttonTitle, style: .default))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

@@ -124,7 +124,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
                                                                  discardTitle: discardTitle,
                                                                  discardAction: {
                                                                      completion()
-            })
+                                                                 })
             present(alert, animated: true, completion: nil)
         } else {
             completion()
