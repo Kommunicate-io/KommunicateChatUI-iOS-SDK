@@ -24,7 +24,7 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         addObserver()
     }
 
-    open override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if navigationController?.viewControllers.first != self {
@@ -45,7 +45,7 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         }
     }
 
-    open override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         checkPricingPackage()
     }

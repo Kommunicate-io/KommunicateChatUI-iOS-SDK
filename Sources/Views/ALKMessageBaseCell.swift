@@ -11,7 +11,7 @@ import UIKit
 
 class ALKImageView: UIImageView {
     // To highlight when long pressed
-    open override var canBecomeFirstResponder: Bool {
+    override open var canBecomeFirstResponder: Bool {
         return true
     }
 }

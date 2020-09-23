@@ -68,7 +68,7 @@ open class AudioRecordButton: UIButton {
         recordButton.addGestureRecognizer(longPress)
     }
 
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
         setupRecordButton()
@@ -78,7 +78,7 @@ open class AudioRecordButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         if state == .none {
             return recordButton.intrinsicContentSize
         } else {

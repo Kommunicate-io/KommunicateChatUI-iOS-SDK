@@ -57,7 +57,7 @@ public class ReceivedButtonsCell: UITableViewCell {
 
     // MARK: - Initializer
 
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         messageViewPadding = Padding(left: Config.padding.left,
                                      right: Config.padding.right,
                                      top: Config.padding.top,

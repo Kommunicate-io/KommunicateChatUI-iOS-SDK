@@ -380,7 +380,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         dbMessage.fileMetaInfo.thumbnailFilePath = filePath
 
         let dbHandler = ALDBHandler.sharedInstance()
-        let error =  dbHandler?.saveContext()
+        let error = dbHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
         }

@@ -11,7 +11,7 @@ public class ALKAccountSuspensionController: UIViewController {
     /// When the close button is tapped this will be called.
     public var closePressed: (() -> Void)?
 
-    public override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
     }

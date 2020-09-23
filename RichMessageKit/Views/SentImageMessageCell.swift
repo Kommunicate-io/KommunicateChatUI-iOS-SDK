@@ -82,7 +82,7 @@ public class SentImageMessageCell: UITableViewCell {
 
     // MARK: - Initializer
 
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         messageViewPadding = Padding(left: Config.MessageView.leftPadding,
                                      right: Config.MessageView.rightPadding,
                                      top: Config.MessageView.topPadding,

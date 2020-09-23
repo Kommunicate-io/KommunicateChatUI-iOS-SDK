@@ -12,14 +12,14 @@ public class ALKBaseNavigationViewController: UINavigationController {
     static var statusBarStyle: UIStatusBarStyle = .lightContent
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
 
-    public override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         setNeedsStatusBarAppearanceUpdate()
         setupAppearance()
     }
 
-    public override var preferredStatusBarStyle: UIStatusBarStyle {
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
         return ALKBaseNavigationViewController.statusBarStyle
     }
 

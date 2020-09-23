@@ -5,8 +5,8 @@
 //  Created by Mukesh on 07/08/20.
 //
 
-import UIKit
 import Applozic
+import UIKit
 
 extension ALKConversationViewController: ALKDocumentManagerDelegate {
     func documentSelected(at url: URL, fileName: String) {
@@ -16,10 +16,10 @@ extension ALKConversationViewController: ALKDocumentManagerDelegate {
             metadata: configuration.messageMetadata
         )
         guard message != nil, let newIndexPath = indexPath else { return }
-        self.tableView.beginUpdates()
-        self.tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
-        self.tableView.endUpdates()
-        self.tableView.scrollToBottom(animated: false)
+        tableView.beginUpdates()
+        tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
+        tableView.endUpdates()
+        tableView.scrollToBottom(animated: false)
         guard let cell = tableView.cellForRow(at: newIndexPath) as? ALKMyDocumentCell else { return }
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()

@@ -30,6 +30,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
             static var top: CGFloat = 2.0
             static let maxWidth: CGFloat = 200
         }
+
         static let maxWidth = UIScreen.main.bounds.width
         static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
                                                 right: ChatCellPadding.ReceivedMessage.Message.right,
@@ -72,7 +73,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
     // fileprivate var messageViewPadding: Padding
     lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
 
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
 
@@ -80,7 +81,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open override func update(viewModel: ALKMessageViewModel, width: CGFloat) {
+    override open func update(viewModel: ALKMessageViewModel, width: CGFloat) {
         let isMessageEmpty = viewModel.isMessageEmpty
         let model = viewModel.messageDetails()
 
@@ -152,7 +153,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor).isActive = true
     }
 
-    open override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         let isMessageEmpty = viewModel.isMessageEmpty
         var height: CGFloat = 0
 

@@ -11,14 +11,14 @@ import UIKit
 open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
     open var cardTemplate: [CardTemplate]?
 
-    open override func setMessage(viewModel: ALKMessageViewModel) {
+    override open func setMessage(viewModel: ALKMessageViewModel) {
         super.setMessage(viewModel: viewModel)
         // set card template
         guard let templates = ALKGenericCardCollectionView.getCardTemplate(message: viewModel) else { return }
         cardTemplate = templates
     }
 
-    open override class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override open class func rowHeightFor(message: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         guard let template = getCardTemplate(message: message),
             let card = template.first
         else {
@@ -190,11 +190,11 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var card: CardTemplate!
     open var buttonSelected: ((_ index: Int, _ name: String, _ card: CardTemplate) -> Void)?
 
-    open override func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
     }
 
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setUpButtons()
         setupConstraints()
@@ -445,7 +445,7 @@ public class VerticalAlignLabel: UILabel {
         }
     }
 
-    public override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines: Int) -> CGRect {
+    override public func textRect(forBounds bounds: CGRect, limitedToNumberOfLines: Int) -> CGRect {
         let rect = super.textRect(forBounds: bounds, limitedToNumberOfLines: limitedToNumberOfLines)
 
         if UIView.userInterfaceLayoutDirection(for: .unspecified) == .rightToLeft {
@@ -469,7 +469,7 @@ public class VerticalAlignLabel: UILabel {
         }
     }
 
-    public override func drawText(in rect: CGRect) {
+    override public func drawText(in rect: CGRect) {
         let textRect = self.textRect(forBounds: rect, limitedToNumberOfLines: numberOfLines)
         super.drawText(in: textRect)
     }
@@ -488,11 +488,11 @@ public class InsetLabel: UILabel {
         self.init(insets: insets)
     }
 
-    public override func drawText(in _: CGRect) {
+    override public func drawText(in _: CGRect) {
         super.drawText(in: frame.inset(by: insets))
     }
 
-    public override var intrinsicContentSize: CGSize {
+    override public var intrinsicContentSize: CGSize {
         var size = super.intrinsicContentSize
         size.width += insets.left + insets.right
         size.height += insets.top + insets.bottom

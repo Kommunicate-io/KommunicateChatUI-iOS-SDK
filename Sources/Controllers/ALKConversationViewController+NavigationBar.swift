@@ -5,8 +5,8 @@
 //  Created by Mukesh on 22/06/20.
 //
 
-import Foundation
 import Applozic
+import Foundation
 
 extension ALKConversationViewController: NavigationBarCallbacks {
     open func titleTapped() {
@@ -36,7 +36,7 @@ extension ALKConversationViewController: NavigationBarCallbacks {
             viewModel.channelKey == nil,
             viewModel.conversationProxy == nil,
             let contactId = viewModel.contactId else {
-                return nil
+            return nil
         }
         return ALContactService().loadContact(byKey: "userId", value: contactId)
     }

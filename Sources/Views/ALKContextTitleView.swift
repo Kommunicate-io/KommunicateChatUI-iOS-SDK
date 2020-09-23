@@ -57,7 +57,7 @@ open class ALKContextTitleView: UIView, ALKContextTitleViewType {
 
     // MARK: - Initialization
 
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setupConstraints()
     }

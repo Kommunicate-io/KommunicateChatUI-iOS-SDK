@@ -28,7 +28,7 @@ public class CustomSearchBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         searchBar.frame = bounds
     }
@@ -39,13 +39,13 @@ public class CustomSearchBar: UIView {
     }
 
     @discardableResult
-    public override func becomeFirstResponder() -> Bool {
+    override public func becomeFirstResponder() -> Bool {
         searchBar.becomeFirstResponder()
         return super.becomeFirstResponder()
     }
 
     @discardableResult
-    public override func resignFirstResponder() -> Bool {
+    override public func resignFirstResponder() -> Bool {
         searchBar.resignFirstResponder()
         return super.resignFirstResponder()
     }

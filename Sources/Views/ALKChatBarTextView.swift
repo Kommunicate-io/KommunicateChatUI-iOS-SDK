@@ -11,7 +11,7 @@ import UIKit
 open class ALKChatBarTextView: UITextView {
     weak var overrideNextResponder: UIResponder?
 
-    open override var next: UIResponder? {
+    override open var next: UIResponder? {
         if let overrideNextResponder = self.overrideNextResponder {
             return overrideNextResponder
         }
@@ -19,7 +19,7 @@ open class ALKChatBarTextView: UITextView {
         return super.next
     }
 
-    open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if overrideNextResponder != nil {
             return false
         }
@@ -27,7 +27,7 @@ open class ALKChatBarTextView: UITextView {
         return super.canPerformAction(action, withSender: sender)
     }
 
-    open override var text: String! {
+    override open var text: String! {
         get { return super.text }
         set {
             let didChange = super.text != newValue
@@ -38,7 +38,7 @@ open class ALKChatBarTextView: UITextView {
         }
     }
 
-    open override var attributedText: NSAttributedString! {
+    override open var attributedText: NSAttributedString! {
         get { return super.attributedText }
         set {
             let didChange = super.attributedText != newValue
@@ -49,7 +49,7 @@ open class ALKChatBarTextView: UITextView {
         }
     }
 
-    open override var delegate: UITextViewDelegate? {
+    override open var delegate: UITextViewDelegate? {
         get { return self }
         set { _ = newValue } // To satisfy the linter otherwise this would be an empty setter
     }
