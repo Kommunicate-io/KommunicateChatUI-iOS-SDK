@@ -17,6 +17,7 @@ enum AppPermission {
     }
 
     enum AlertButton {
+        static let allowAllPhotos = "Allow Access to All Photos"
         static let allow = "Allow"
         static let ok = "OK"
         static let allowLoation = "Allow While Using App"
@@ -30,7 +31,7 @@ enum InAppButton {
     }
 
     enum CreatingGroup {
-        static let newChat = "fill 214"
+        static let newChat = "NewChatButton"
         static let createGroup = "Create Group"
         static let addParticipant = "Add participants"
         static let invite = "InviteButton"

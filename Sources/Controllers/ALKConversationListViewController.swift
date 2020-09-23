@@ -50,6 +50,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             style: .plain,
             target: self, action: #selector(compose)
         )
+        barButton.accessibilityIdentifier = "NewChatButton"
         return barButton
     }()
 
