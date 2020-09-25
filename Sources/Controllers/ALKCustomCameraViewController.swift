@@ -131,7 +131,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         let cameraOutput = self.cameraOutput as? AVCapturePhotoOutput
         if let connection = cameraOutput?.connection(with: AVMediaType.video) {
             if connection.isVideoOrientationSupported,
-                let orientation = AVCaptureVideoOrientation(orientation: UIDevice.current.orientation) {
+                let orientation = AVCaptureVideoOrientation(orientation: UIDevice.current.orientation)
+            {
                 connection.videoOrientation = orientation
             }
 
@@ -163,7 +164,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 forJPEGSampleBuffer: buffer,
                 previewPhotoSampleBuffer: nil
             ),
-            let image = UIImage(data: data) {
+            let image = UIImage(data: data)
+        {
             selectedImage = image
             switch cameraMode {
             case .cropOption:
@@ -447,7 +449,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     }
 
     private func enableCameraControl(inSec: Double) {
-        let disT: DispatchTime = DispatchTime.now() + inSec
+        let disT = DispatchTime.now() + inSec
         DispatchQueue.main.asyncAfter(deadline: disT) {
             self.isUserControlEnable = true
         }
@@ -498,7 +500,7 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
         struct Spacing {
             static let lineitem: CGFloat = 5.0
             static let interitem: CGFloat = 0.0
-            static let inset: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 6.0, bottom: 0.0, right: 6.0)
+            static let inset = UIEdgeInsets(top: 0.0, left: 6.0, bottom: 0.0, right: 6.0)
         }
     }
 
@@ -540,7 +542,7 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ALKPhotoCollectionCell", for: indexPath) as! ALKPhotoCollectionCell
 
         let asset = allPhotos.object(at: indexPath.item)
-        let thumbnailSize: CGSize = CGSize(width: 200, height: 200)
+        let thumbnailSize = CGSize(width: 200, height: 200)
         option.isSynchronous = true
         PHCachingImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: option, resultHandler: { image, _ in
             cell.imgPreview.image = image

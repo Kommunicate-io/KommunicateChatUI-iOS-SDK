@@ -549,6 +549,7 @@ open class ALKChatBar: UIView, Localizable {
         bringSubviewToFront(frameView)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -680,7 +681,8 @@ open class ALKChatBar: UIView, Localizable {
             var image = image?.imageFlippedForRightToLeftLayoutDirection()
             image = image?.scale(with: size)
             if tintColor != nil,
-                !chatBarConfiguration.disableButtonTintColor {
+                !chatBarConfiguration.disableButtonTintColor
+            {
                 image = image?.withRenderingMode(.alwaysTemplate)
                 button.imageView?.tintColor = tintColor
             }

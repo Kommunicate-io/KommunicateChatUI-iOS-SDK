@@ -35,7 +35,8 @@ extension ALKConversationViewController: NavigationBarCallbacks {
         guard
             viewModel.channelKey == nil,
             viewModel.conversationProxy == nil,
-            let contactId = viewModel.contactId else {
+            let contactId = viewModel.contactId
+        else {
             return nil
         }
         return ALContactService().loadContact(byKey: "userId", value: contactId)

@@ -9,7 +9,7 @@ import Foundation
 import WebKit
 
 class ALKWebViewController: UIViewController, WKNavigationDelegate {
-    var wkWebView: WKWebView = WKWebView()
+    var wkWebView = WKWebView()
     let htmlString: String?
     let url: URL?
     let navTitle: String
@@ -23,6 +23,7 @@ class ALKWebViewController: UIViewController, WKNavigationDelegate {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

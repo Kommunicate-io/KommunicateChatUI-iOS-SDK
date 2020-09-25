@@ -45,6 +45,7 @@ public class SuggestedReplyView: UIView {
         setupConstraints()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -76,7 +77,8 @@ public class SuggestedReplyView: UIView {
     ///   - font: Font for suggested replies. Pass the custom SuggestedReplyConfig font used while initialization.
     /// - Returns: Returns height of view based on passed parameters.
     public static func rowHeight(model: SuggestedReplyMessage,
-                                 maxWidth: CGFloat) -> CGFloat {
+                                 maxWidth: CGFloat) -> CGFloat
+    {
         return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
 

@@ -516,7 +516,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     public func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let message = viewModel.messageForRow(indexPath: indexPath),
             message.messageType == .form,
-            message.formTemplate() != nil {
+            message.formTemplate() != nil
+        {
             return UITableView.automaticDimension
         } else {
             return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
@@ -526,7 +527,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     public func tableView(_: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if let message = viewModel.messageForRow(indexPath: indexPath),
             message.messageType == .form,
-            message.formTemplate() != nil {
+            message.formTemplate() != nil
+        {
             return UITableView.automaticDimension
         } else {
             return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
@@ -674,7 +676,8 @@ extension ALKConversationViewController: UICollectionViewDataSource, UICollectio
 
         guard let message = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: collectionView.tag)),
             let template = ALKGenericCardCollectionView.getCardTemplate(message: message),
-            template.count > indexPath.row else {
+            template.count > indexPath.row
+        else {
             return UICollectionViewCell()
         }
 

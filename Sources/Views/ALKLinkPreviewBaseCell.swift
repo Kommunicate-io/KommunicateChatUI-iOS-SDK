@@ -31,7 +31,8 @@ class ALKLinkPreviewBaseCell: ALKMessageCell {
 
     override class func messageHeight(viewModel: ALKMessageViewModel,
                                       width: CGFloat, font: UIFont, mentionStyle: Style,
-                                      displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
+                                      displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat
+    {
         return super.messageHeight(viewModel: viewModel, width: width, font: font, mentionStyle: mentionStyle, displayNames: displayNames)
     }
 

@@ -251,7 +251,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                              width: CGFloat,
                              font: UIFont,
                              mentionStyle: Style,
-                             displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
+                             displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat
+    {
         dummyMessageView.font = font
 
         /// Check if message is nil
@@ -266,7 +267,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                     defaultAttributes: dummyMessageView.typingAttributes,
                     mentionAttributes: mentionStyle.toAttributes,
                     displayNames: displayNames
-                ) {
+                )
+            {
                 return TextViewSizeCalculator.height(dummyMessageView, attributedText: attributedText, maxWidth: width)
             }
             return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
@@ -439,7 +441,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 defaultAttributes: [:],
                 mentionAttributes: mentionStyle.toAttributes,
                 displayNames: displayNames
-            ) {
+            )
+        {
             replyMessageLabel.attributedText = attributedText
         } else {
             replyMessageLabel.text =
@@ -456,7 +459,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 defaultAttributes: messageView.typingAttributes,
                 mentionAttributes: mentionStyle.toAttributes,
                 displayNames: displayNames
-            ) {
+            )
+        {
             messageView.attributedText = attributedText
         } else {
             messageView.text = viewModel.message

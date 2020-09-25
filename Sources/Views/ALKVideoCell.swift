@@ -11,7 +11,8 @@ import AVKit
 import UIKit
 
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
+{
     enum State {
         case download
         case downloading(progress: Double, totalCount: Int64)

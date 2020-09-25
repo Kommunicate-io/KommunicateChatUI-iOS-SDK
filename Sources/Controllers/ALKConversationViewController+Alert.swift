@@ -55,7 +55,8 @@ extension ALKConversationViewController: ALAlertButtonClickProtocol {
     }
 
     func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
-                          message: ALKMessageViewModel) {
+                          message: ALKMessageViewModel)
+    {
         switch action {
         case .reply:
             print("Reply selected")

@@ -24,7 +24,8 @@ public enum ALKVoiceCellState {
 }
 
 class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
+{
     var soundPlayerView: UIView = {
         let mv = UIView()
         mv.contentMode = .scaleAspectFill

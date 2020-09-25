@@ -70,6 +70,7 @@
             setupRecordButton()
         }
 
+        @available(*, unavailable)
         public required init?(coder _: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
@@ -190,7 +191,7 @@
                 }
             case .ended, .failed, .possible, .cancelled:
                 stopRecording()
-        @unknown default:
+            @unknown default:
                 print("Unknown Microphone Permission state")
             }
         }

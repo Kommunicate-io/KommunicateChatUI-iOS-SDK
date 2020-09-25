@@ -99,7 +99,8 @@ public class MessageView: UIView {
     ///   - maxWidth: Maximum width to constrain current view.
     public init(bubbleStyle: MessageBubbleStyle,
                 messageStyle: Style,
-                maxWidth: CGFloat) {
+                maxWidth: CGFloat)
+    {
         self.bubbleStyle = bubbleStyle
         padding = bubbleStyle.padding
         self.messageStyle = messageStyle
@@ -109,6 +110,7 @@ public class MessageView: UIView {
         setupConstraints()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -156,7 +158,8 @@ public class MessageView: UIView {
     public static func rowHeight(model: Message,
                                  maxWidth: CGFloat,
                                  font: UIFont,
-                                 padding: Padding?) -> CGFloat {
+                                 padding: Padding?) -> CGFloat
+    {
         guard let padding = padding else {
             print("❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌")
             print("😱😱😱😱😱😱😱😱 Padding is not passed from outside.")

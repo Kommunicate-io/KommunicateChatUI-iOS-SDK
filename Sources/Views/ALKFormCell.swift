@@ -63,7 +63,8 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         activeTextField = nil
         guard let text = textField.text,
             !text.trim().isEmpty,
-            let formSubmitData = formData else {
+            let formSubmitData = formData
+        else {
             if let data = formData {
                 data.textFields.removeValue(forKey: textField.tag)
                 formData = data
@@ -145,7 +146,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
 
             if let formDataSubmit = formData,
                 let singleSelectFields = formDataSubmit.singleSelectFields[indexPath.section],
-                singleSelectFields == indexPath.row {
+                singleSelectFields == indexPath.row
+            {
                 cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none
@@ -179,7 +181,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             }
 
             if let formDataSubmit = formData,
-                let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row) {
+                let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
+            {
                 cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none

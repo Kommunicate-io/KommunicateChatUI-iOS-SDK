@@ -14,7 +14,8 @@ import UIKit
 // MARK: - ALKPhotoCell
 
 class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
+{
     var photoView: UIImageView = {
         let mv = UIImageView()
         mv.backgroundColor = .clear

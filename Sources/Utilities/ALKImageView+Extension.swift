@@ -22,7 +22,8 @@ extension ALKImageView {
 
     func imageBubble(for _: ALKMessageStyle.BubbleStyle,
                      isReceiverSide: Bool,
-                     showHangOverImage: Bool) -> UIImage? {
+                     showHangOverImage: Bool) -> UIImage?
+    {
         var imageTitle = showHangOverImage ? "chat_bubble_red_hover" : "chat_bubble_red"
         // We can rotate the above image but loading the required
         // image would be faster and we already have both the images.

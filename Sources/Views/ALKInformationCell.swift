@@ -67,6 +67,7 @@ final class ALKInformationCell: UITableViewCell {
         setupStyle()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -87,7 +87,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open var isOpenGroup: Bool {
         let alChannelService = ALChannelService()
         guard let channelKey = channelKey,
-            let alchannel = alChannelService.getChannelByKey(channelKey) else {
+            let alchannel = alChannelService.getChannelByKey(channelKey)
+        else {
             return false
         }
         return alchannel.type == 6
@@ -480,12 +481,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
             let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
             let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             if let json = jsonResult as? [String: Any],
-                let templates = json["templates"] as? [Any] {
+                let templates = json["templates"] as? [Any]
+            {
                 NSLog("Template json: ", json.description)
                 var templateModels: [ALKTemplateMessageModel] = []
                 for element in templates {
                     if let template = element as? [String: Any],
-                        let model = ALKTemplateMessageModel(json: template) {
+                        let model = ALKTemplateMessageModel(json: template)
+                    {
                         templateModels.append(model)
                     }
                 }
@@ -508,7 +511,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
 
         if let url = message.fileMetaInfo?.url,
-            !serviceEnabled {
+            !serviceEnabled
+        {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
             let task = ALKDownloadTask(downloadUrl: url, fileName: message.fileMetaInfo?.name)
@@ -910,7 +914,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let groupId = message.groupId,
             groupId == channelKey,
             !message.isMyMessage,
-            message.deviceKey != ALUserDefaultsHandler.getDeviceKeyString() else {
+            message.deviceKey != ALUserDefaultsHandler.getDeviceKeyString()
+        else {
             return
         }
         addMessagesToList([message])
@@ -1261,7 +1266,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if let metadata = msg.metadata,
                     let replyKey = metadata.value(forKey: AL_MESSAGE_REPLY_KEY) as? String,
                     messageDb.getMessageByKey("key", value: replyKey) == nil,
-                    !replyMessageKeys.contains(replyKey) {
+                    !replyMessageKeys.contains(replyKey)
+                {
                     replyMessageKeys.add(replyKey)
                 }
             }
@@ -1411,7 +1417,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(),
             messageList.count > 1,
-            let first = alMessages.first {
+            let first = alMessages.first
+        {
             time = first.createdAtTime
         }
         let messageListRequest = MessageListRequest()

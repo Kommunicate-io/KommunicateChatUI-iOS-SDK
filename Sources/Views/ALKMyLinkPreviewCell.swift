@@ -258,7 +258,8 @@ class ALKMyLinkPreviewCell: ALKLinkPreviewBaseCell {
 
     class func rowHeigh(viewModel: ALKMessageViewModel,
                         width: CGFloat,
-                        displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
+                        displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat
+    {
         /// Calculating messageHeight
         let leftSpacing = Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
         let rightSpacing = Padding.BubbleView.right + bubbleViewRightPadding
@@ -278,7 +279,8 @@ class ALKMyLinkPreviewCell: ALKLinkPreviewBaseCell {
 
         var isReplyMessage = false
         if let metadata = viewModel.metadata,
-            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil {
+            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil
+        {
             isReplyMessage = true
         }
 

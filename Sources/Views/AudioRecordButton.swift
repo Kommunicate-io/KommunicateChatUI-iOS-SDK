@@ -38,7 +38,7 @@ open class AudioRecordButton: UIButton {
     fileprivate var audioFilename: URL!
     private var audioPlayer: AVAudioPlayer?
 
-    let recordButton: UIButton = UIButton(type: .custom)
+    let recordButton = UIButton(type: .custom)
 
     func setAudioRecDelegate(recorderDelegate: ALKAudioRecorderProtocol?) {
         delegate = recorderDelegate
@@ -74,6 +74,7 @@ open class AudioRecordButton: UIButton {
         setupRecordButton()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

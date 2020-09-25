@@ -73,6 +73,7 @@ open class ALKConversationNavBar: UIView, Localizable {
         setupActions()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

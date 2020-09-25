@@ -35,10 +35,10 @@ public struct MessageStyle {
 /// Message view theme.
 public struct MessageTheme {
     /// Message style for sent message
-    public static var sentMessage: MessageStyle = MessageStyle()
+    public static var sentMessage = MessageStyle()
 
     /// Message style for received message
-    public static var receivedMessage: MessageStyle = MessageStyle()
+    public static var receivedMessage = MessageStyle()
 
     /// Style for sent message status icon like read, delivered etc.
     public static var messageStatus = SentMessageStatus()

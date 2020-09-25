@@ -129,7 +129,8 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     public func remove(message: ALMessage) {
         let messageToDelete = allMessages.filter { ($0 as? ALMessage) == message }
         guard let messageDel = messageToDelete.first as? ALMessage,
-            let index = (allMessages as? [ALMessage])?.firstIndex(of: messageDel) else {
+            let index = (allMessages as? [ALMessage])?.firstIndex(of: messageDel)
+        else {
             return
         }
         allMessages.remove(at: index)

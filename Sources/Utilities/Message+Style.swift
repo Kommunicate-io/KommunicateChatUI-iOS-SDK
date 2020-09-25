@@ -86,7 +86,7 @@ public enum ALKMessageStyle {
         }
 
         public struct Border {
-            public var color: UIColor = UIColor.clear
+            public var color = UIColor.clear
             public var width: CGFloat = 0
         }
 
@@ -101,7 +101,7 @@ public enum ALKMessageStyle {
 
         /// For setting border to bubble.
         /// Note: Only works when `BubbleStyle` is `round`
-        public var border: Border = Border()
+        public var border = Border()
 
         /// Width padding which will be used for message view's
         /// right and left padding.

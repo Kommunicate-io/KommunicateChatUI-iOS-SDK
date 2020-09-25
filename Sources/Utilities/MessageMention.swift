@@ -172,7 +172,8 @@ struct MessageMentionDecoder {
 
     private func mentionsInMetadata() -> [Mention] {
         guard let containsMentions =
-            metadata[MessageMention.MetadataKey.Mention] as? String else {
+            metadata[MessageMention.MetadataKey.Mention] as? String
+        else {
             return []
         }
         let data = containsMentions.data
@@ -183,7 +184,8 @@ struct MessageMentionDecoder {
         for i in 0 ..< mentionsMetadata.count {
             guard let userId = mentionsMetadata[i]["userId"] as? String,
                 let indices = mentionsMetadata[i]["indices"] as? [Int],
-                indices.count == 2 else {
+                indices.count == 2
+            else {
                 continue
             }
             let range = NSRange(
@@ -192,7 +194,8 @@ struct MessageMentionDecoder {
             )
             // Check if it's a valid range and starts with the prefix
             if let validRange = Range(range, in: message),
-                message[validRange].starts(with: MessageMention.Prefix) {
+                message[validRange].starts(with: MessageMention.Prefix)
+            {
                 mentions.append((MessageMention.Prefix + userId, range))
             }
         }

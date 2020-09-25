@@ -37,6 +37,7 @@ open class ALKTemplateMessagesView: UIView {
         setupViews()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

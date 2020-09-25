@@ -253,7 +253,8 @@ public class ALKFriendMessageListTemplateCell: ALKListTemplateCell {
     }
 
     override public class func rowHeight(viewModel: ALKMessageViewModel,
-                                         maxWidth: CGFloat) -> CGFloat {
+                                         maxWidth: CGFloat) -> CGFloat
+    {
         let isMessageEmpty = viewModel.isMessageEmpty
         var height: CGFloat = 0
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
@@ -348,13 +349,15 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         setupConstraints()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     public func update(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) {
         guard let metadata = viewModel.metadata,
-            let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata) else {
+            let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
+        else {
             listTemplateView.isHidden = true
             layoutIfNeeded()
             return
@@ -367,7 +370,8 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) -> CGFloat {
         guard let metadata = viewModel.metadata,
-            let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata) else {
+            let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
+        else {
             return CGFloat(0)
         }
         return ListTemplateView.rowHeight(template: template)

@@ -60,6 +60,7 @@ class TypingNotice: UIView, Localizable {
         createUI()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

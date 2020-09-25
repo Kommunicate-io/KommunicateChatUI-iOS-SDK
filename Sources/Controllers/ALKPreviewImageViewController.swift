@@ -16,6 +16,7 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
         localizedStringFileName = configuration.localizedStringFileName
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

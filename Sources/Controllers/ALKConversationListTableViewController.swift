@@ -76,7 +76,8 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     public init(viewModel: ALKConversationListViewModelProtocol,
                 dbService: ALMessageDBService,
                 configuration: ALKConfiguration,
-                showSearch: Bool) {
+                showSearch: Bool)
+    {
         self.viewModel = viewModel
         self.configuration = configuration
         self.showSearch = showSearch
@@ -85,6 +86,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -179,7 +181,8 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
     override public func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         guard !hideNoConversationView,
-            let emptyCellView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ALKEmptyView.reuseIdentifier) as? ALKEmptyView else {
+            let emptyCellView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ALKEmptyView.reuseIdentifier) as? ALKEmptyView
+        else {
             return nil
         }
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)

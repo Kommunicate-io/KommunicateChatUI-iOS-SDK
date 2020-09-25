@@ -66,7 +66,8 @@ public class CurvedImageButton: UIView {
     public init(title: String,
                 image: UIImage? = nil,
                 config: Config = Config(),
-                maxWidth: CGFloat = UIScreen.main.bounds.width) {
+                maxWidth: CGFloat = UIScreen.main.bounds.width)
+    {
         self.title = title
         self.image = image
         self.config = config
@@ -81,6 +82,7 @@ public class CurvedImageButton: UIView {
         setupAction()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -122,7 +124,8 @@ public class CurvedImageButton: UIView {
     public class func buttonSize(text: String,
                                  image: UIImage? = nil,
                                  maxWidth: CGFloat = UIScreen.main.bounds.width,
-                                 config: Config = Config()) -> CGSize {
+                                 config: Config = Config()) -> CGSize
+    {
         var config = config
         if image == nil {
             config.textImageSpace = 0

@@ -103,6 +103,7 @@ open class ALKReplyMessageView: UIView, Localizable {
         setUpViews()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -117,7 +118,8 @@ open class ALKReplyMessageView: UIView, Localizable {
                 defaultAttributes: Theme.message.toAttributes,
                 mentionAttributes: Theme.mention.toAttributes,
                 displayNames: displayNames
-            ) {
+            )
+        {
             messageLabel.attributedText = attributedText
         } else {
             messageLabel.text = getMessageText()

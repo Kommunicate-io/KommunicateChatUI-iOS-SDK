@@ -332,7 +332,8 @@ class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
 
         var isReplyMessage = false
         if let metadata = viewModel.metadata,
-            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil {
+            metadata[AL_MESSAGE_REPLY_KEY] as? String != nil
+        {
             isReplyMessage = true
         }
 

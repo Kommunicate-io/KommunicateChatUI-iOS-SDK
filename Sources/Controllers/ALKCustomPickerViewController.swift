@@ -276,7 +276,7 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
         struct Spacing {
             static let lineitem: CGFloat = 5.0
             static let interitem: CGFloat = 0.0
-            static let inset: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 3.0, bottom: 0.0, right: 3.0)
+            static let inset = UIEdgeInsets(top: 0.0, left: 3.0, bottom: 0.0, right: 3.0)
         }
     }
 
@@ -320,7 +320,7 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
         if asset.mediaType == .video {
             cell.videoIcon.isHidden = false
         }
-        let thumbnailSize: CGSize = CGSize(width: 200, height: 200)
+        let thumbnailSize = CGSize(width: 200, height: 200)
         option.isSynchronous = true
         PHCachingImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: option, resultHandler: { image, _ in
             cell.imgPreview.image = image

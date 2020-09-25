@@ -24,6 +24,7 @@ open class ALKTemplateMessageCell: UICollectionViewCell {
         setupUI()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

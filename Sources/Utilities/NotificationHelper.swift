@@ -147,7 +147,8 @@ public class NotificationHelper {
             return true
         default:
             if let searchVC = topVC as? UISearchController,
-                searchVC.searchResultsController as? ALKSearchResultViewController != nil {
+                searchVC.searchResultsController as? ALKSearchResultViewController != nil
+            {
                 return true
             }
             return false
@@ -169,7 +170,8 @@ public class NotificationHelper {
             refreshConversation(vc, with: notification)
         default:
             if let searchVC = topVC as? UISearchController,
-                let vc = searchVC.presentingViewController as? ALKConversationListViewController {
+                let vc = searchVC.presentingViewController as? ALKConversationListViewController
+            {
                 openConversationFromListVC(vc, notification: notification)
                 return
             }
@@ -215,7 +217,8 @@ public class NotificationHelper {
     }
 
     private func findControllerInStack(_ vc: UIViewController,
-                                       completion: @escaping () -> Void) {
+                                       completion: @escaping () -> Void)
+    {
         guard !String(describing: vc.classForCoder).hasPrefix("ALKConversation") else {
             completion()
             return

@@ -72,6 +72,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         localizedStringFileName = configuration.localizedStringFileName
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -321,7 +322,8 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         if let viewController = conversationViewController,
             viewController.viewModel != nil,
             viewController.viewModel.contactId == message.contactId,
-            viewController.viewModel.channelKey == message.groupId {
+            viewController.viewModel.channelKey == message.groupId
+        {
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
@@ -451,7 +453,8 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         if let vm = viewController?.viewModel, vm.contactId != nil || vm.channelKey != nil,
             let visibleController = navigationController?.visibleViewController,
             visibleController.isKind(of: ALKConversationViewController.self),
-            isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
+            isNewMessageForActiveThread(alMessage: alMessage, vm: vm)
+        {
             viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
         } else if !isMessageSentByLoggedInUser(alMessage: alMessage) {
@@ -465,7 +468,8 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             }
         }
         if let visibleController = navigationController?.visibleViewController,
-            visibleController.isKind(of: ALKConversationListViewController.self) {
+            visibleController.isKind(of: ALKConversationListViewController.self)
+        {
             sync(message: alMessage)
         }
     }

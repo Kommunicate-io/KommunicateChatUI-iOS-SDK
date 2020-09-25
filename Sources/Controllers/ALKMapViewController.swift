@@ -80,9 +80,9 @@ extension ALKMapViewController: CLLocationManagerDelegate {
         let longitude = userLoction.coordinate.longitude
         let latDelta: CLLocationDegrees = 0.05
         let lonDelta: CLLocationDegrees = 0.05
-        let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
         let location: CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
-        let region: MKCoordinateRegion = MKCoordinateRegion(center: location, span: span)
+        let region = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(region, animated: true)
         mapView.showsUserLocation = true
     }

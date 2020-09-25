@@ -9,10 +9,10 @@ import Foundation
 import WebKit
 
 class ALKDocumentViewerController: UIViewController, WKNavigationDelegate {
-    var webView: WKWebView = WKWebView()
+    var webView = WKWebView()
     var fileName: String = ""
     var filePath: String = ""
-    var fileUrl: URL = URL(fileURLWithPath: "")
+    var fileUrl = URL(fileURLWithPath: "")
 
     let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
@@ -20,6 +20,7 @@ class ALKDocumentViewerController: UIViewController, WKNavigationDelegate {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

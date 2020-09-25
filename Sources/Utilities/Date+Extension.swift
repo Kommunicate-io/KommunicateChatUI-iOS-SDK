@@ -14,7 +14,7 @@ extension Date {
      Today, Yesterday, Wednesday, Tuesday, Monday, Sunday, Fri, Feb 24, Jun 3, 2016 (for previous year), Etc.
      */
     func stringCompareCurrentDate(showTodayTime: Bool = false) -> String {
-        let calendar: Calendar = Calendar.current
+        let calendar = Calendar.current
         let toDate: Date = calendar.startOfDay(for: Date())
         let fromDate: Date = calendar.startOfDay(for: self)
         let unitFlags: Set<Calendar.Component> = [.day]

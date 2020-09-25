@@ -42,6 +42,7 @@ class ALKFormTextItemCell: UITableViewCell {
         addConstraints()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -87,6 +88,7 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
         addConstraints()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

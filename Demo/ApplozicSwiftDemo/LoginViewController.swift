@@ -28,7 +28,7 @@ class LoginViewController: UIViewController {
 
     @IBAction func getStartedBtn(_: AnyObject) {
         let appId = ALChatManager.applicationId
-        let alUser: ALUser = ALUser()
+        let alUser = ALUser()
         alUser.applicationId = appId
 
         if ALChatManager.isNilOrEmpty(userName.text as NSString?) {

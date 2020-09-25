@@ -15,7 +15,7 @@ public final class Geocode: CustomStringConvertible {
     var displayName: String = defaultFormattedAddress
     var formattedAddress: String = defaultFormattedAddress
     var placeIdentifier: String = ""
-    var location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+    var location = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     var addressComponents = [[String: AnyObject]]()
 
     public required init(coordinates: CLLocationCoordinate2D) {

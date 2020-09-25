@@ -34,7 +34,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
         return bt
     }()
 
-    var image: UIImage = UIImage()
+    var image = UIImage()
 
     var imageViewTopConstraint: NSLayoutConstraint?
     var imageViewBottomConstraint: NSLayoutConstraint?
@@ -46,6 +46,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
         self.image = image
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

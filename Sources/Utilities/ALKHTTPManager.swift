@@ -44,7 +44,7 @@ class ALKHTTPManager: NSObject {
     var downloadCompleted: ((_ task: ALKDownloadTask) -> Void)?
 
     var length: Int64 = 0
-    var buffer: NSMutableData = NSMutableData()
+    var buffer = NSMutableData()
     var session: URLSession?
     var uploadTask: ALKUploadTask?
     var downloadTask: ALKDownloadTask?
@@ -61,7 +61,8 @@ class ALKHTTPManager: NSObject {
 
         ALResponseHandler.authenticateRequest(postURLRequest) { urlRequest, error in
             guard error == nil,
-                var request = urlRequest as URLRequest? else {
+                var request = urlRequest as URLRequest?
+            else {
                 print("Failed to upload the profile image")
                 return
             }
@@ -160,7 +161,8 @@ class ALKHTTPManager: NSObject {
 
         ALResponseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
             guard error == nil,
-                var request = urlRequest as URLRequest? else {
+                var request = urlRequest as URLRequest?
+            else {
                 print("Failed to upload the attachment")
                 return
             }

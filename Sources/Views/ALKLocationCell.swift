@@ -15,7 +15,8 @@ protocol ALKLocationCellDelegate: AnyObject {
 }
 
 class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
+{
     weak var delegate: ALKLocationCellDelegate?
 
     // MARK: - Declare Variables or Types

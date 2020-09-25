@@ -32,7 +32,8 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
     func remove(message: ALMessage) {
         let messageToDelete = allMessages.filter { $0 == message }
         guard let messageDel = messageToDelete.first,
-            let index = allMessages.firstIndex(of: messageDel) else {
+            let index = allMessages.firstIndex(of: messageDel)
+        else {
             return
         }
         allMessages.remove(at: index)
@@ -89,7 +90,8 @@ class SearchResultViewModel: BaseMessageViewModel {
     }
 
     func searchMessage(with key: String,
-                       _ completion: @escaping ((_ result: Bool) -> Void)) {
+                       _ completion: @escaping ((_ result: Bool) -> Void))
+    {
         searchMessages(with: key) { messages, error in
             guard let messages = messages, error == nil else {
                 print("Error \(String(describing: error)) while searching messages")

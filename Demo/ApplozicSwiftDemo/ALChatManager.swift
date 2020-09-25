@@ -57,7 +57,7 @@ class ALChatManager: NSObject {
         print("DEVICE_TOKEN_STRING :: \(deviceTokenString)")
 
         if ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
-            let alRegisterUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
+            let alRegisterUserClientService = ALRegisterUserClientService()
             alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { response, _ in
                 print("REGISTRATION_RESPONSE :: \(String(describing: response))")
             })
@@ -70,7 +70,7 @@ class ALChatManager: NSObject {
     // ----------------------
     func connectUser(_ alUser: ALUser, completion: @escaping (_ response: ALRegistrationResponse?, _ error: NSError?) -> Void) {
         _ = ALChatLauncher(applicationId: getApplicationKey() as String)
-        let registerUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
+        let registerUserClientService = ALRegisterUserClientService()
         registerUserClientService.initWithCompletion(alUser, withCompletion: { response, error in
             guard error == nil else {
                 completion(nil, error as NSError?)
@@ -100,7 +100,8 @@ class ALChatManager: NSObject {
 
     func isUserPresent() -> Bool {
         guard let _ = ALUserDefaultsHandler.getApplicationKey() as String?,
-            let _ = ALUserDefaultsHandler.getUserId() as String? else {
+            let _ = ALUserDefaultsHandler.getUserId() as String?
+        else {
             return false
         }
         return true
@@ -297,11 +298,13 @@ class ALChatManager: NSObject {
     private func chatTitleUsing(userId: String?, groupId: NSNumber?) -> String {
         if let contactId = userId,
             let contact = ALContactDBService().loadContact(byKey: "userId", value: contactId),
-            let name = contact.getDisplayName() {
+            let name = contact.getDisplayName()
+        {
             return name
         }
         if let channelKey = groupId,
-            let channel = ALChannelService().getChannelByKey(channelKey) {
+            let channel = ALChannelService().getChannelByKey(channelKey)
+        {
             return channel.name
         }
         return "No name"

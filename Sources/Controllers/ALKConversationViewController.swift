@@ -20,7 +20,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard viewModel != nil else { return }
             if updatedVM.contactId == viewModel.contactId,
                 updatedVM.channelKey == viewModel.channelKey,
-                updatedVM.conversationProxy == viewModel.conversationProxy {
+                updatedVM.conversationProxy == viewModel.conversationProxy
+            {
                 isFirstTime = false
             } else {
                 isFirstTime = true
@@ -79,7 +80,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     fileprivate var audioPlayer = ALKAudioPlayer()
 
-    fileprivate let moreBar: ALKMoreBar = ALKMoreBar(frame: .zero)
+    fileprivate let moreBar = ALKMoreBar(frame: .zero)
     fileprivate lazy var typingNoticeView = TypingNotice(localizedStringFileName: configuration.localizedStringFileName)
     fileprivate var alMqttConversationService: ALMQTTConversationService!
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
@@ -192,7 +193,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 guard
                     let weakSelf = self,
                     weakSelf.chatBar.isTextViewFirstResponder,
-                    let keyboardSize = (keyboardFrameValue as? NSValue)?.cgRectValue else {
+                    let keyboardSize = (keyboardFrameValue as? NSValue)?.cgRectValue
+                else {
                     self?.scrollTableViewUpForActiveField(notification: notification)
                     return
                 }
@@ -315,7 +317,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey,
                 let channel = alChannelService.getChannelByKey(key),
-                channel.name != nil else {
+                channel.name != nil
+            else {
                 return
             }
             let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel)
@@ -1161,7 +1164,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func richButtonSelected(index: Int,
                             title: String,
                             message: ALKMessageViewModel,
-                            isButtonClickDisabled: Bool) {
+                            isButtonClickDisabled: Bool)
+    {
         guard !isButtonClickDisabled else {
             return
         }
@@ -1465,13 +1469,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let formData = formSubmitData,
             !formData.multiSelectFields.isEmpty ||
             !formData.textFields.isEmpty ||
-            !formData.singleSelectFields.isEmpty else {
+            !formData.singleSelectFields.isEmpty
+        else {
             print("Invalid empty form data for submit")
             return
         }
 
         guard !isButtonClickDisabled,
-            let formTemplate = messageModel.formTemplate() else {
+            let formTemplate = messageModel.formTemplate()
+        else {
             return
         }
         var postFormData = [String: Any]()
@@ -1483,13 +1489,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             if element.contentType == .hidden,
                 let elementData = element.data,
                 let hiddenName = elementData.name,
-                let hiddenValue = elementData.value {
+                let hiddenValue = elementData.value
+            {
                 postFormData[hiddenName] = hiddenValue
             }
 
             if element.contentType == .submit,
                 let elementData = element.data,
-                let action = elementData.action {
+                let action = elementData.action
+            {
                 if let formTemplateRequest = action.requestType {
                     requestType = formTemplateRequest
                 }
@@ -1557,7 +1565,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         if let type = requestType,
-            type == "postBackToBotPlatform" {
+            type == "postBackToBotPlatform"
+        {
             if let messageString = message {
                 viewModel.send(message: messageString, metadata: chatContextData)
             }
@@ -1763,7 +1772,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         isChannelLeft()
 
         if isViewLoadedFromTappingOnNotification {
-            let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+            let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             if let lastMessage = viewModel.messageModels.last {
                 reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
             }
@@ -1771,7 +1780,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             isViewLoadedFromTappingOnNotification = false
         } else {
             if tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0) { // 1 for recent added msg and 1 because it starts with 0
-                let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+                let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
                 if let lastMessage = viewModel.messageModels.last {
                     reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
                 }
@@ -1807,7 +1816,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     // This happens when chatbar's header height increases later on.
     public func showLastMessage() {
         if tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0) {
-            let indexPath: IndexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+            let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)
         }
     }

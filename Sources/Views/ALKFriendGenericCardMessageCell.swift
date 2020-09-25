@@ -77,6 +77,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -181,7 +182,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
     }
 
     private func setupCollectionView() {
-        let layout: TopAlignedFlowLayout = TopAlignedFlowLayout()
+        let layout = TopAlignedFlowLayout()
         layout.minimumInteritemSpacing = 10
         layout.scrollDirection = .horizontal
         collectionView = ALKGenericCardCollectionView(frame: .zero, collectionViewLayout: layout)

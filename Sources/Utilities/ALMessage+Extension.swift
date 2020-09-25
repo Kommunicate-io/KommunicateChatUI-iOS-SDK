@@ -304,30 +304,35 @@ extension ALMessage {
                     with: messageData,
                     options: .mutableContainers
                 ),
-                let messageJSON = jsonObject as? [String: Any] else {
+                let messageJSON = jsonObject as? [String: Any]
+            else {
                 return nil
             }
             guard let lat = messageJSON["lat"],
-                let lon = messageJSON["lon"] else {
+                let lon = messageJSON["lon"]
+            else {
                 return nil
             }
             return (lat, lon)
         }
 
         guard let message = message,
-            let (lat, lon) = getCoordinates(from: message) else {
+            let (lat, lon) = getCoordinates(from: message)
+        else {
             return nil
         }
         // Check if type is double or string
         if let lat = lat as? Double,
-            let lon = lon as? Double {
+            let lon = lon as? Double
+        {
             let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
             return Geocode(coordinates: location)
         } else {
             guard let latString = lat as? String,
                 let lonString = lon as? String,
                 let lat = Double(latString),
-                let lon = Double(lonString) else {
+                let lon = Double(lonString)
+            else {
                 return nil
             }
             let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)

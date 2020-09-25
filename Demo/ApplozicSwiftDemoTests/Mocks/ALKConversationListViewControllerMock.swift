@@ -18,10 +18,6 @@ class ALKConversationListViewControllerMock: ALKConversationListViewController, 
         super.init(configuration: configuration)
     }
 
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     deinit {
         onDeinitialized?()
     }

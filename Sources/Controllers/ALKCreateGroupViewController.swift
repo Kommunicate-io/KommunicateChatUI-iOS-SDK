@@ -252,7 +252,8 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
 
     func setCurrentGroupSelected(groupId: NSNumber,
                                  groupProfile: String?,
-                                 delegate: ALKCreateGroupChatAddFriendProtocol) {
+                                 delegate: ALKCreateGroupChatAddFriendProtocol)
+    {
         groupDelegate = delegate
         self.groupId = groupId
         groupName = ALChannelService().getChannelByKey(groupId)?.name ?? ""
@@ -614,7 +615,7 @@ extension ALKCreateGroupViewController: ALKSelectParticipantToAddProtocol {
 
 extension ALKCreateGroupViewController {
     override func hideKeyboard() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+        let tap = UITapGestureRecognizer(
             target: self,
             action: #selector(ALKCreateGroupViewController.dismissKeyboard)
         )

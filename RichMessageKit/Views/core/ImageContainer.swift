@@ -51,6 +51,7 @@ public class ImageContainer: UIView {
         setupStyle()
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -80,7 +81,8 @@ public class ImageContainer: UIView {
     /// - Returns: Height of view based on width and model
     public static func rowHeight(model: ImageMessage,
                                  maxWidth: CGFloat,
-                                 font _: UIFont = UIFont()) -> CGFloat {
+                                 font _: UIFont = UIFont()) -> CGFloat
+    {
         return ImageBubbleSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
 

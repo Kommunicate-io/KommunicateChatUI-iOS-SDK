@@ -68,12 +68,12 @@ public protocol ALKMessageViewModel {
 }
 
 public class ALKMessageModel: ALKMessageViewModel {
-    public var contentType: Message.ContentType = Message.ContentType.text
+    public var contentType = Message.ContentType.text
     public var message: String? = ""
     public var isMyMessage: Bool = false
     public var messageType: ALKMessageType = .text
     public var identifier: String = ""
-    public var date: Date = Date()
+    public var date = Date()
     public var time: String?
     public var avatarURL: URL?
     public var displayName: String?
@@ -129,7 +129,8 @@ extension ALKMessageViewModel {
     private var mentionParser: MessageMentionDecoder? {
         guard let message = message,
             let metadata = metadata,
-            !metadata.isEmpty else {
+            !metadata.isEmpty
+        else {
             return nil
         }
         let mentionParser = MessageMentionDecoder(message: message, metadata: metadata)
@@ -148,7 +149,8 @@ extension ALKMessageViewModel {
                 displayNamesOfUsers: names,
                 attributesForMention: mentionAttributes,
                 defaultAttributes: defaultAttributes
-            ) else {
+            )
+        else {
             return nil
         }
         return attributedText

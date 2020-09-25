@@ -36,8 +36,8 @@ public struct ImageBubbleStyle {
 
 public struct ImageBubbleTheme {
     /// `ImageBubbleStyle` for sent message
-    public static var sentMessage: ImageBubbleStyle = ImageBubbleStyle()
+    public static var sentMessage = ImageBubbleStyle()
 
     /// `ImageBubbleStyle` for received message
-    public static var receivedMessage: ImageBubbleStyle = ImageBubbleStyle()
+    public static var receivedMessage = ImageBubbleStyle()
 }

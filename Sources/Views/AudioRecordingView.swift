@@ -42,7 +42,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
     }()
 
     lazy var slideView: UIStackView = {
-        let stackView: UIStackView = UIStackView(arrangedSubviews: [self.leftArrow, self.slideToCancel])
+        let stackView = UIStackView(arrangedSubviews: [self.leftArrow, self.slideToCancel])
         stackView.alignment = .fill
         stackView.axis = .horizontal
         stackView.distribution = .fill
@@ -77,7 +77,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
     }()
 
     lazy var recordingView: UIStackView = {
-        let stackView: UIStackView = UIStackView(arrangedSubviews: [self.recordingLabel, self.recordingValue])
+        let stackView = UIStackView(arrangedSubviews: [self.recordingLabel, self.recordingValue])
         stackView.alignment = .leading
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
@@ -120,6 +120,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
         animateView()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -217,7 +218,8 @@ open class ALKAudioRecorderView: UIView, Localizable {
             return
         }
         if slideView.frame.origin.x <= recordingViewStartLocation,
-            redDot.frame.origin.x + (location.x - previousGestureLocation) <= redDotStartLocation {
+            redDot.frame.origin.x + (location.x - previousGestureLocation) <= redDotStartLocation
+        {
             recordingView.frame.origin.x += (location.x - previousGestureLocation)
             redDot.frame.origin.x += (location.x - previousGestureLocation)
             if recordingView.frame.origin.x <= 0.0 {
@@ -236,7 +238,8 @@ open class ALKAudioRecorderView: UIView, Localizable {
         }
         let slideViewEnd = slideView.frame.origin.x + slideView.frame.size.width
         if slideViewEnd >= recordingViewStartLocation,
-            redDot.frame.origin.x + (location.x - previousGestureLocation) >= redDotStartLocation {
+            redDot.frame.origin.x + (location.x - previousGestureLocation) >= redDotStartLocation
+        {
             recordingView.frame.origin.x += (location.x - previousGestureLocation)
             redDot.frame.origin.x += (location.x - previousGestureLocation)
             if recordingView.frame.origin.x + recordingView.frame.size.width >= redDotStartLocation + 30 {

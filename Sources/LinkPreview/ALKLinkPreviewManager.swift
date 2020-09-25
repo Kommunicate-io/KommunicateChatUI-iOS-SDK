@@ -11,7 +11,8 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
     private let responseMainQueue: DispatchQueue
 
     init(workBckQueue: DispatchQueue = DispatchQueue.global(qos: .background),
-         responseMainQueue: DispatchQueue = DispatchQueue.main) {
+         responseMainQueue: DispatchQueue = DispatchQueue.main)
+    {
         self.workBckQueue = workBckQueue
         self.responseMainQueue = responseMainQueue
     }
@@ -46,7 +47,8 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
 
                 if let data = data, let urlResponse = response,
                     let encoding = urlResponse.textEncodingName,
-                    let source = NSString(data: data, encoding: CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(encoding as CFString))) {
+                    let source = NSString(data: data, encoding: CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(encoding as CFString)))
+                {
                     linkPreview = weakSelf.parseHtmlAndUpdateLinkPreviewMeta(text: source as String, baseUrl: url.absoluteString)
 
                 } else {
@@ -111,9 +113,11 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                     metatag.range(of: "name=\"\(tag)") != nil ||
                     metatag.range(of: "name='\(tag)") != nil ||
                     metatag.range(of: "itemprop=\"\(tag)") != nil ||
-                    metatag.range(of: "itemprop='\(tag)") != nil {
+                    metatag.range(of: "itemprop='\(tag)") != nil
+                {
                     if let key = LinkPreviewMeta.Key(rawValue: tag),
-                        result.value(for: key) == nil {
+                        result.value(for: key) == nil
+                    {
                         if let value = LinkPreviewRegex.pregMatchFirst(metatag, pattern: LinkPreviewRegex.Pattern.Meta.content, index: 2) {
                             let value = value.decodedHtml.extendedTrim
                             if tag == "image" {
@@ -133,7 +137,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         let links = LinkPreviewRegex.pregMatchAll(text, pattern: LinkPreviewRegex.Pattern.Link.tag, index: 1)
         // swiftlint:disable:next opening_brace
         let filters = [{ (link: String) -> Bool
-                in link.range(of: "apple-touch") != nil
+            in link.range(of: "apple-touch") != nil
         }, { (link: String) -> Bool
             in link.range(of: "shortcut") != nil
         }, { (link: String) -> Bool
