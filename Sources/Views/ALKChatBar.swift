@@ -706,6 +706,10 @@ open class ALKChatBar: UIView, Localizable {
             }
         }
     }
+
+    func setDefaultText(_ text: String) {
+        textView.text = text
+    }
 }
 
 extension ALKChatBar: UITextViewDelegate {

@@ -677,6 +677,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func configureChatBar() {
+        chatBar.setDefaultText(viewModel.prefilledMessage ?? "")
         if viewModel.isOpenGroup {
             chatBar.updateMediaViewVisibility(hide: true)
             chatBar.hideMicButton()
@@ -999,7 +1000,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let notificationView = ALNotificationView(alMessage: message, withAlertMessage: message.message)
             notificationView?.showNativeNotificationWithcompletionHandler {
                 _ in
+
                 self.viewModel.contactId = nil
+                self.viewModel.prefilledMessage = nil
                 self.viewModel.channelKey = groupId
                 self.viewModel.isFirstTime = true
                 self.refreshViewController()
@@ -1010,6 +1013,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 _ in
                 self.viewModel.contactId = contactId
                 self.viewModel.channelKey = nil
+                self.viewModel.prefilledMessage = nil
                 self.viewModel.isFirstTime = true
                 self.refreshViewController()
             }
