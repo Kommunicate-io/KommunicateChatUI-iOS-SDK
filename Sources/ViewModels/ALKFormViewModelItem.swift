@@ -12,6 +12,9 @@ enum FormViewModelItemType {
     case password
     case singleselect
     case multiselect
+    case date
+    case time
+    case dateTimeLocal
 }
 
 protocol FormViewModelItem {
@@ -107,6 +110,39 @@ class FormViewModelPasswordItem: FormViewModelItem {
     }
 }
 
+class FormViewModelDateItem: FormViewModelItem {
+    var type: FormViewModelItemType {
+        return .date
+    }
+
+    let label: String
+    init(label: String) {
+        self.label = label
+    }
+}
+
+class FormViewModelDateTimeLocalItem: FormViewModelItem {
+    var type: FormViewModelItemType {
+        return .dateTimeLocal
+    }
+
+    let label: String
+    init(label: String) {
+        self.label = label
+    }
+}
+
+class FormViewModelTimeItem: FormViewModelItem {
+    var type: FormViewModelItemType {
+        return .time
+    }
+
+    let label: String
+    init(label: String) {
+        self.label = label
+    }
+}
+
 extension FormTemplate {
     var viewModeItems: [FormViewModelItem] {
         var items: [FormViewModelItem] = []
@@ -144,6 +180,18 @@ extension FormTemplate {
                 items.append(FormViewModelMultiselectItem(name: name,
                                                           title: title,
                                                           options: options))
+            case .time:
+                guard let elementData = element.data,
+                    let label = elementData.label else { return }
+                items.append(FormViewModelTimeItem(label: label))
+            case .date:
+                guard let elementData = element.data,
+                    let label = elementData.label else { return }
+                items.append(FormViewModelDateItem(label: label))
+            case .dateTimeLocal:
+                guard let elementData = element.data,
+                    let label = elementData.label else { return }
+                items.append(FormViewModelDateTimeLocalItem(label: label))
             default:
                 print("\(element.contentType) form template type is not part of the form list view")
             }

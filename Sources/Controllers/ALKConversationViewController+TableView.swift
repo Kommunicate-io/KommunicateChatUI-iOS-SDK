@@ -444,7 +444,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 if let filePath = message.filePath {
                     cell.updateContactDetails(key: message.identifier, filePath: filePath)
                 }
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 if message.filePath == nil {
                     attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
@@ -490,6 +489,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             guard message.formTemplate() != nil else { return UITableViewCell() }
             if message.isMyMessage {
                 let cell: ALKMyFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.activeTextFieldChanged = { textField in
                     self.activeTextField = textField
                 }
@@ -497,6 +497,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.activeTextFieldChanged = { textField in
                     self.activeTextField = textField
                 }

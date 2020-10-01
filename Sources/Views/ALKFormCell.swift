@@ -5,6 +5,7 @@
 //  Created by Mukesh on 08/07/20.
 //
 
+import Applozic
 import UIKit
 
 class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
@@ -55,6 +56,49 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         template = viewModel.formTemplate()
     }
 
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        guard let key = identifier else {
+            return false
+        }
+        let item = items[textField.tag]
+
+        if item.type == .time {
+            let datePickerVC = ALKFormDatePickerViewController(delegate: self,
+                                                               messageKey: key,
+                                                               position: textField.tag,
+                                                               datePickerMode: .time,
+                                                               localizedStringFileName: localizedStringFileName)
+            let pushAssist = ALPushAssist()
+            let topVC = pushAssist.topViewController
+            datePickerVC.modalPresentationStyle = .overCurrentContext
+            topVC?.present(datePickerVC, animated: true, completion: nil)
+            return false
+        } else if item.type == .date {
+            let datePickerVC = ALKFormDatePickerViewController(delegate: self,
+                                                               messageKey: key,
+                                                               position: textField.tag,
+                                                               datePickerMode: .date,
+                                                               localizedStringFileName: localizedStringFileName)
+            let pushAssist = ALPushAssist()
+            let topVC = pushAssist.topViewController
+            datePickerVC.modalPresentationStyle = .overCurrentContext
+            topVC?.present(datePickerVC, animated: true, completion: nil)
+            return false
+        } else if item.type == .dateTimeLocal {
+            let datePickerVC = ALKFormDatePickerViewController(delegate: self,
+                                                               messageKey: key,
+                                                               position: textField.tag,
+                                                               datePickerMode: .dateAndTime,
+                                                               localizedStringFileName: localizedStringFileName)
+            let pushAssist = ALPushAssist()
+            let topVC = pushAssist.topViewController
+            datePickerVC.modalPresentationStyle = .overCurrentContext
+            topVC?.present(datePickerVC, animated: true, completion: nil)
+            return false
+        }
+        return true
+    }
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
     }
@@ -92,6 +136,9 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         itemListView.register(ALKFormPasswordItemCell.self)
         itemListView.register(ALKFormSingleSelectItemCell.self)
         itemListView.register(ALKFormMultiSelectItemCell.self)
+        itemListView.register(ALKFormDateItemCell.self)
+        itemListView.register(ALKFormTimeItemCell.self)
+        itemListView.register(ALKFormDateTimeItemCell.self)
     }
 
     private func setUpSubmitButton(title: String) {
@@ -189,6 +236,58 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             }
             cell.item = multiselectItem.options[indexPath.row]
             return cell
+
+        case .date:
+            guard let dateSelectItem = item as? FormViewModelDateItem else {
+                return UITableViewCell()
+            }
+            let cell: ALKFormDateItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.item = dateSelectItem
+            cell.valueTextField.delegate = self
+            cell.valueTextField.tag = indexPath.section
+            if let timeInMillSecs = formData?.dateFields[indexPath.section] {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "dd-MM-yyyy"
+                let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
+                let stringDate = formatter.string(from: date)
+                cell.valueTextField.text = stringDate
+            }
+            return cell
+        case .time:
+            guard let timeSelectItem = item as? FormViewModelTimeItem else {
+                return UITableViewCell()
+            }
+            let cell: ALKFormTimeItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.item = timeSelectItem
+            cell.valueTextField.delegate = self
+            cell.valueTextField.tag = indexPath.section
+
+            if let timeInMillSecs = formData?.dateFields[indexPath.section] {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "hh:mm a"
+                let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
+                let stringDate = formatter.string(from: date)
+                cell.valueTextField.text = stringDate
+            }
+            return cell
+        case .dateTimeLocal:
+            guard let dateTimeSelectItem = item as? FormViewModelDateTimeLocalItem else {
+                return UITableViewCell()
+            }
+
+            let cell: ALKFormDateTimeItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.item = dateTimeSelectItem
+            cell.valueTextField.delegate = self
+            cell.valueTextField.tag = indexPath.section
+
+            if let timeInMillSecs = formData?.dateFields[indexPath.section] {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "dd-MM-yyyy hh:mm a"
+                let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
+                let stringDate = formatter.string(from: date)
+                cell.valueTextField.text = stringDate
+            }
+            return cell
         }
     }
 
@@ -216,6 +315,39 @@ extension ALKFormCell: Tappable {
     }
 }
 
+extension ALKFormCell: ALKDatePickerButtonClickProtocol {
+    func confirmButtonClick(position: Int,
+                            date: Date,
+                            messageKey: String,
+                            datePickerMode: UIDatePicker.Mode)
+    {
+        guard identifier == messageKey else { return }
+
+        var timeInMillSecs: Int64 = 0
+
+        switch datePickerMode {
+        case .time:
+            timeInMillSecs = Int64(date.timeIntervalSince1970 * 1000)
+        case .date:
+            timeInMillSecs = Int64(date.timeIntervalSince1970 * 1000)
+        case .dateAndTime:
+            timeInMillSecs = Int64(date.timeIntervalSince1970 * 1000)
+        default:
+            break
+        }
+        guard let formSubmitData = formData,
+            timeInMillSecs > 0,
+            position < itemListView.numberOfSections
+        else {
+            print("Can't be updated due to incorrect index")
+            return
+        }
+        formSubmitData.dateFields[position] = timeInMillSecs
+        formData = formSubmitData
+        itemListView.reloadSections([position], with: .fade)
+    }
+}
+
 class NestedCellTableView: UITableView {
     override var intrinsicContentSize: CGSize {
         self.layoutIfNeeded()
@@ -233,4 +365,5 @@ class FormDataSubmit {
     var textFields = [Int: String]()
     var singleSelectFields = [Int: Int]()
     var multiSelectFields = [Int: [Int]]()
+    var dateFields = [Int: Int64]()
 }

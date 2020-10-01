@@ -1469,7 +1469,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let formData = formSubmitData,
             !formData.multiSelectFields.isEmpty ||
             !formData.textFields.isEmpty ||
-            !formData.singleSelectFields.isEmpty
+            !formData.singleSelectFields.isEmpty ||
+            !formData.dateFields.isEmpty
         else {
             print("Invalid empty form data for submit")
             return
@@ -1549,6 +1550,26 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             let data = json(from: selectedArray)
             postFormData[multiSelect.name] = data
+        }
+
+        for (position, timeInMillSecs) in formData.dateFields {
+            let element = viewModelItems[position]
+            switch element.type {
+            case .time:
+                if let formViewModelTimeItem = element as? FormViewModelTimeItem {
+                    postFormData[formViewModelTimeItem.label] = String(timeInMillSecs)
+                }
+            case .date:
+                if let formViewModelDateItem = element as? FormViewModelDateItem {
+                    postFormData[formViewModelDateItem.label] = String(timeInMillSecs)
+                }
+            case .dateTimeLocal:
+                if let formViewModelDateTimeLocalItem = element as? FormViewModelDateTimeLocalItem {
+                    postFormData[formViewModelDateTimeLocalItem.label] = String(timeInMillSecs)
+                }
+            default:
+                break
+            }
         }
 
         guard let formJsonValue = ALUtilityClass.generateJsonString(from: postFormData) else {

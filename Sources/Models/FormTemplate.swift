@@ -46,6 +46,9 @@ extension FormTemplate.Element {
         case singleSelect = "radio"
         case hidden
         case submit
+        case date
+        case time
+        case dateTimeLocal = "datetime-local"
         case unknown
     }
 
