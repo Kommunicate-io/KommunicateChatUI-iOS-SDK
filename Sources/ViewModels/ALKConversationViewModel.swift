@@ -66,6 +66,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         return true
     }
+
     // Prefilled message for chatbox.
     open var prefilledMessage: String?
 

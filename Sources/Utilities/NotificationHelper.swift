@@ -122,9 +122,10 @@ public class NotificationHelper {
     ///   - notification: notification that is tapped.
     public func refreshConversation(_ viewController: ALKConversationViewController, with notification: NotificationData) {
         viewController.unsubscribingChannel()
-        if !self.isChatThreadIsOpen(notification,
-                                    userId: viewController.viewModel.contactId,
-                                    groupId: viewController.viewModel.channelKey) {
+        if !isChatThreadIsOpen(notification,
+                               userId: viewController.viewModel.contactId,
+                               groupId: viewController.viewModel.channelKey)
+        {
             viewController.viewModel.prefilledMessage = nil
         }
         viewController.viewModel.contactId = notification.userId
@@ -157,7 +158,7 @@ public class NotificationHelper {
             return true
         default:
             if let searchVC = topVC as? UISearchController,
-               searchVC.searchResultsController as? ALKSearchResultViewController != nil
+                searchVC.searchResultsController as? ALKSearchResultViewController != nil
             {
                 return true
             }
