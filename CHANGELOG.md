@@ -6,7 +6,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ## [Unreleased]
 
 ### Fixes
-- Fixed issue where in form UI tap was not recognized in iOS 14.
+- Fixed an issue where button tap in form template was not working in iOS 14.
+- [CM-481] Sender's profile image and name will be shown in the all buttons rich message template.
 
 ## [5.10.0] - 2020-09-09
 

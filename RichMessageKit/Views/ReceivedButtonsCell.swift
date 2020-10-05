@@ -8,60 +8,76 @@
 import UIKit
 
 public class ReceivedButtonsCell: UITableViewCell {
-    // MARK: - Public properties
+    enum ViewPadding {
+        enum NameLabel {
+            static let top: CGFloat = 6
+            static let leading: CGFloat = 57
+            static let trailing: CGFloat = 57
+            static let height: CGFloat = 17
+        }
+
+        enum AvatarImageView {
+            static let top: CGFloat = 18
+            static let leading: CGFloat = 9
+            static let height: CGFloat = 37
+            static let width: CGFloat = 37
+        }
+
+        enum TimeLabel {
+            static var leading: CGFloat = 2.0
+            static var bottom: CGFloat = 2.0
+            static let maxWidth: CGFloat = 200
+        }
+
+        static let maxWidth = UIScreen.main.bounds.width
+        static let messageViewPadding = Padding(
+            left: ChatCellPadding.ReceivedMessage.Message.left,
+            right: ChatCellPadding.ReceivedMessage.Message.right,
+            top: ChatCellPadding.ReceivedMessage.Message.top,
+            bottom: 0
+        )
+    }
 
     public var tapped: ((_ index: Int, _ name: String) -> Void)?
 
-    public struct Config {
-        public static var buttonTopPadding: CGFloat = 4
-        public static var padding = Padding(left: 10, right: 60, top: 10, bottom: 10)
-        public static var maxWidth = UIScreen.main.bounds.width
-        public static var buttonWidth = maxWidth -
-            (padding.left + padding.right
-                + ProfileImage.width
-                + ReceivedMessageView.Config.MessageView.leftPadding)
-        public struct ProfileImage {
-            public static var width: CGFloat = 37.0
-            public static var height: CGFloat = 37.0
-            /// Top padding of `ProfileImage` from `DisplayName`
-            public static var topPadding: CGFloat = 2.0
-        }
-
-        public struct TimeLabel {
-            /// Left padding of `TimeLabel` from `MessageView`
-            public static var leftPadding: CGFloat = 2.0
-            public static var maxWidth: CGFloat = 200.0
-        }
-
-        public struct DisplayName {
-            public static var height: CGFloat = 16.0
-
-            /// Left padding of `DisplayName` from `ProfileImage`
-            public static var leftPadding: CGFloat = 10.0
-
-            /// Right padding of `DisplayName` from `ReceivedMessageView`. Used as lessThanOrEqualTo
-            public static var rightPadding: CGFloat = 20.0
-        }
-    }
-
     // MARK: - Fileprivate properties
+    fileprivate var avatarImageView: UIImageView = {
+        let imv = UIImageView()
+        imv.contentMode = .scaleAspectFill
+        imv.clipsToBounds = true
+        let layer = imv.layer
+        layer.cornerRadius = 18.5
+        layer.masksToBounds = true
+        imv.isUserInteractionEnabled = true
+        return imv
+    }()
+
+    fileprivate var nameLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.isOpaque = true
+        return label
+    }()
+
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.isOpaque = true
+        return lb
+    }()
 
     fileprivate lazy var buttons = SuggestedReplyView()
-    fileprivate lazy var messageView = ReceivedMessageView(
-        frame: .zero,
-        padding: messageViewPadding,
-        maxWidth: Config.maxWidth
+    fileprivate lazy var messageView = MessageView(
+        bubbleStyle: MessageTheme.receivedMessage.bubble,
+        messageStyle: MessageTheme.receivedMessage.message,
+        maxWidth: ViewPadding.maxWidth
     )
     fileprivate lazy var messageViewHeight = messageView.heightAnchor.constraint(equalToConstant: 0)
-    fileprivate var messageViewPadding: Padding
+    fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
     // MARK: - Initializer
 
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        messageViewPadding = Padding(left: Config.padding.left,
-                                     right: Config.padding.right,
-                                     top: Config.padding.top,
-                                     bottom: Config.buttonTopPadding)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         buttons.delegate = self
         setupConstraints()
@@ -78,17 +94,50 @@ public class ReceivedButtonsCell: UITableViewCell {
     /// - Parameter model: object that conforms to `SuggestedReplyMessage`
     public func update(model: SuggestedReplyMessage) {
         guard !model.message.isMyMessage else {
-            print("😱😱😱Inconsistent information passed to the view.😱😱😱")
-            print("For ReceivedMessage value of isMyMessage should be false")
+            print("For Received view isMyMessage should be false")
             return
         }
-        messageView.update(model: model.message)
-        messageViewHeight.constant = ReceivedMessageView.rowHeight(
-            model: model.message,
-            maxWidth: Config.maxWidth,
-            padding: messageViewPadding
+
+        let isMessageEmpty = model.message.isMessageEmpty()
+        messageViewHeight.constant =
+            isMessageEmpty ? 0 : ReceivedMessageViewSizeCalculator().rowHeight(
+                messageModel: model.message,
+                maxWidth: ViewPadding.maxWidth,
+                padding: ViewPadding.messageViewPadding
+            )
+
+        if !isMessageEmpty {
+            messageView.update(model: model.message)
+        }
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+
+        if let url = model.message.imageURL {
+            ImageCache.downloadImage(url: url) { [weak self] image in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    self?.avatarImageView.image = image
+                }
+            }
+        } else {
+            avatarImageView.image = placeHolder
+        }
+
+        nameLabel.text = model.message.displayName
+        nameLabel.setStyle(ALKMessageStyle.displayName)
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
+        timeLabel.text = model.message.time
+        let timeLabelSize = model.message.time.rectWithConstrainedWidth(
+            ViewPadding.TimeLabel.maxWidth,
+            font: ALKMessageStyle.time.font
         )
-        buttons.update(model: model, maxWidth: Config.buttonWidth)
+
+        timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
+        timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
+        timeLabel.setStyle(ALKMessageStyle.time)
+
+        let buttonsWidth = ViewPadding.maxWidth -
+            (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
+        buttons.update(model: model, maxWidth: buttonsWidth)
     }
 
     /// It is used to get exact height of `ReceivedButtonsCell` using messageModel, width and padding
@@ -97,31 +146,73 @@ public class ReceivedButtonsCell: UITableViewCell {
     ///   - model: object that conforms to `SuggestedReplyMessage`
     /// - Returns: exact height of the view.
     public static func rowHeight(model: SuggestedReplyMessage) -> CGFloat {
-        let messageViewPadding = Padding(left: Config.padding.left,
-                                         right: Config.padding.right,
-                                         top: Config.padding.top,
-                                         bottom: Config.buttonTopPadding)
-        let messageHeight = ReceivedMessageView.rowHeight(model: model.message, maxWidth: Config.maxWidth, padding: messageViewPadding)
-        let buttonHeight = SuggestedReplyView.rowHeight(model: model, maxWidth: Config.buttonWidth)
-        return messageHeight + buttonHeight + Config.padding.bottom
+        let isMessageEmpty = model.message.isMessageEmpty()
+        var height: CGFloat = 0
+
+        let timeLabelSize = model.message.time.rectWithConstrainedWidth(
+            ViewPadding.TimeLabel.maxWidth,
+            font: ALKMessageStyle.time.font
+        )
+        if isMessageEmpty {
+            height += ViewPadding.NameLabel.height + ViewPadding.NameLabel.top + ChatCellPadding.ReceivedMessage.Message.top
+        } else {
+            height = ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model.message, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding) + ViewPadding.NameLabel.height +
+                ViewPadding.NameLabel.top
+        }
+
+        let quickReplyViewWidth = ViewPadding.maxWidth -
+            (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
+        return height
+            + SuggestedReplyView.rowHeight(model: model, maxWidth: quickReplyViewWidth)
+            + ChatCellPadding.ReceivedMessage.QuickReply.top
+            + ChatCellPadding.ReceivedMessage.QuickReply.bottom + timeLabelSize.height.rounded(.up)
+            + ViewPadding.TimeLabel.bottom
     }
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [messageView, buttons])
-        let leadingMargin =
-            Config.padding.left
-                + Config.ProfileImage.width
-                + ReceivedMessageView.Config.MessageView.leftPadding
+        contentView.addViewsForAutolayout(views: [messageView, buttons, timeLabel, nameLabel, avatarImageView])
         NSLayoutConstraint.activate([
-            messageView.topAnchor.constraint(equalTo: topAnchor),
-            messageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            messageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.NameLabel.top),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.NameLabel.leading),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ViewPadding.NameLabel.trailing),
+            nameLabel.heightAnchor.constraint(equalToConstant: ViewPadding.NameLabel.height),
+            avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.AvatarImageView.top),
+            avatarImageView.heightAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.height),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.AvatarImageView.leading),
+            avatarImageView.widthAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.width),
+            messageView.topAnchor.constraint(
+                equalTo: nameLabel.bottomAnchor,
+                constant: ChatCellPadding.ReceivedMessage.Message.top
+            ),
+            messageView.leadingAnchor.constraint(
+                equalTo: avatarImageView.trailingAnchor,
+                constant: ChatCellPadding.ReceivedMessage.Message.left
+            ),
+            messageView.trailingAnchor.constraint(
+                lessThanOrEqualTo: contentView.trailingAnchor,
+                constant: -1 * ChatCellPadding.ReceivedMessage.Message.right
+            ),
             messageViewHeight,
-
-            buttons.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: 0),
-            buttons.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
-            buttons.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingMargin),
-            buttons.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * Config.padding.bottom),
+            buttons.topAnchor.constraint(
+                equalTo: messageView.bottomAnchor,
+                constant: ChatCellPadding.ReceivedMessage.QuickReply.top
+            ),
+            buttons.leadingAnchor.constraint(
+                equalTo: messageView.leadingAnchor
+            ),
+            buttons.trailingAnchor.constraint(
+                lessThanOrEqualTo: contentView.trailingAnchor,
+                constant: -ChatCellPadding.ReceivedMessage.Message.right
+            ),
+            buttons.bottomAnchor.constraint(
+                equalTo: timeLabel.topAnchor,
+                constant: -ChatCellPadding.ReceivedMessage.QuickReply.bottom
+            ),
+            timeLabel.leadingAnchor.constraint(equalTo: buttons.leadingAnchor, constant: ViewPadding.TimeLabel.leading),
+            timeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1 * ViewPadding.TimeLabel.bottom),
+            timeLabelWidth,
+            timeLabelHeight,
+            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
         ])
     }
 }
