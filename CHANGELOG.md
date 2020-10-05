@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+- Fixed issue where in form UI tap was not recognized in iOS 14.
+
 ## [5.10.0] - 2020-09-09
 
 ### Enhancements
