@@ -67,10 +67,14 @@ public class NotificationHelper {
             let topVC = ALPushAssist().topViewController as? ALKConversationViewController,
             let viewModel = topVC.viewModel
         else {
-            guard let topVC = ALPushAssist().topViewController as? ALKReplyController else {
+            guard let topVC = ALPushAssist().topViewController,
+                let navVC = topVC.presentingViewController as? ALKBaseNavigationViewController,
+                let conversationViewController = navVC.topViewController as? ALKConversationViewController,
+                let viewModel = conversationViewController.viewModel
+            else {
                 return false
             }
-            return isChatThreadIsOpen(notification, userId: topVC.userId, groupId: topVC.groupId)
+            return isChatThreadIsOpen(notification, userId: viewModel.contactId, groupId: viewModel.channelKey)
         }
         return isChatThreadIsOpen(notification, userId: viewModel.contactId, groupId: viewModel.channelKey)
     }

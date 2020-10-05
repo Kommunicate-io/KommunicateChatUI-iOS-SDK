@@ -205,11 +205,11 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
         }
     }
 
-    @objc private  func tappedCancel() {
+    @objc private func tappedCancel() {
         dismiss(animated: true, completion: nil)
     }
 
-    @objc private  func tappedConfirmButton() {
+    @objc private func tappedConfirmButton() {
         delegate?.confirmButtonClick(position: position,
                                      date: uiDatePicker.date,
                                      messageKey: messageKey,

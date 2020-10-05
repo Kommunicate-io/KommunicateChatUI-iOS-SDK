@@ -1132,7 +1132,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
         else {
-            let controller = ALKReplyController(userId: viewModel.contactId, groupId: viewModel.channelKey, messageKey: replyId, configuration: configuration)
+            let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
             controller.modalPresentationStyle = .overCurrentContext
             present(controller, animated: true, completion: nil)
             return
