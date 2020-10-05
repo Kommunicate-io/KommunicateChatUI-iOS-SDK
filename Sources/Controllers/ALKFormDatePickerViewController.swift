@@ -12,7 +12,7 @@ import Foundation
 }
 
 class ALKFormDatePickerViewController: UIViewController, Localizable {
-    public struct Padding {
+    struct Padding {
         struct ModelView {
             static let left: CGFloat = 30.0
             static let right: CGFloat = 30.0
@@ -84,7 +84,8 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
 
     private lazy var confirmButton: UIButton = {
         let button = UIButton()
-        let title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done,
+        let title = localizedString(forKey: "DoneButton",
+                                    withDefaultValue: SystemMessage.ButtonName.Done,
                                     fileName: localizedStringFileName).uppercased()
         button.setTitle(title, for: .normal)
         button.isUserInteractionEnabled = true
@@ -96,9 +97,9 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
 
     private lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let title = localizedString(forKey: "CapitalLetterCancelText", withDefaultValue: SystemMessage.ButtonName.CapitalLetterCancelText,
+        let title = localizedString(forKey: "CapitalLetterCancelText",
+                                    withDefaultValue: SystemMessage.ButtonName.CapitalLetterCancelText,
                                     fileName: localizedStringFileName)
-
         button.setTitle(title, for: .normal)
         button.isUserInteractionEnabled = true
         button.setFont(font: Font.normal(size: 16.0).font())
@@ -138,7 +139,7 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
         setupViews()
     }
 
-    func addConstraints() {
+    private func addConstraints() {
         view.addViewsForAutolayout(views: [modalView])
         modalView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         modalView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -Padding.ModelView.bottomY).isActive = true
@@ -181,29 +182,38 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
         confirmButton.addTarget(self, action: #selector(tappedConfirmButton), for: .touchUpInside)
     }
 
-    func setupViews() {
+    private func setupViews() {
         view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
         view.isOpaque = false
         view.isUserInteractionEnabled = true
         uiDatePicker.datePickerMode = datePickerMode
         switch datePickerMode {
         case .time:
-            popupTitle.text = "Select time"
+            popupTitle.text = localizedString(forKey: "DatePickerTimeTitle",
+                                              withDefaultValue: SystemMessage.LabelName.DatePickerTimeTitle,
+                                              fileName: localizedStringFileName)
         case .date:
-            popupTitle.text = "Select date"
+            popupTitle.text = localizedString(forKey: "DatePickerDateTitle",
+                                              withDefaultValue: SystemMessage.LabelName.DatePickerDateTitle,
+                                              fileName: localizedStringFileName)
         case .dateAndTime:
-            popupTitle.text = "Select date and time"
+            popupTitle.text = localizedString(forKey: "DatePickerDateAndTimeTitle",
+                                              withDefaultValue: SystemMessage.LabelName.DatePickerDateAndTimeTitle,
+                                              fileName: localizedStringFileName)
         default:
-            popupTitle.text = "Select date"
+            popupTitle.text = ""
         }
     }
 
-    @objc func tappedCancel() {
+    @objc private  func tappedCancel() {
         dismiss(animated: true, completion: nil)
     }
 
-    @objc func tappedConfirmButton() {
-        delegate?.confirmButtonClick(position: position, date: uiDatePicker.date, messageKey: messageKey, datePickerMode: datePickerMode)
+    @objc private  func tappedConfirmButton() {
+        delegate?.confirmButtonClick(position: position,
+                                     date: uiDatePicker.date,
+                                     messageKey: messageKey,
+                                     datePickerMode: datePickerMode)
         dismiss(animated: true, completion: nil)
     }
 }

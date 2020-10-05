@@ -162,6 +162,9 @@ struct SystemMessage: Localizable {
         static let Report = localizedString(forKey: "Report")
         static let You = localizedString(forKey: "You")
         static let Admin = localizedString(forKey: "Admin")
+        static let DatePickerTimeTitle = localizedString(forKey: "DatePickerTimeTitle")
+        static let DatePickerDateTitle = localizedString(forKey: "DatePickerDateTitle")
+        static let DatePickerDateAndTimeTitle = localizedString(forKey: "DatePickerDateAndTimeTitle")
     }
 
     struct Mute {

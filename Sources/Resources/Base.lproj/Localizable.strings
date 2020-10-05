@@ -150,3 +150,7 @@ FailedToLoadLink = "Failed to load a link";
 
 /* Speech to text */
 SpeechToTextPlaceholder = "(Go ahead, I'm listening)";
+
+DatePickerTimeTitle = "Select time";
+DatePickerDateTitle = "Select date";
+DatePickerDateAndTimeTitle = "Select date and time";
