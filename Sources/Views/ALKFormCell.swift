@@ -61,42 +61,39 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
             return false
         }
         let item = items[textField.tag]
+        var formDatePickerViewController : ALKFormDatePickerViewController?
 
-        if item.type == .time {
-            let datePickerVC = ALKFormDatePickerViewController(delegate: self,
-                                                               messageKey: key,
-                                                               position: textField.tag,
-                                                               datePickerMode: .time,
-                                                               localizedStringFileName: localizedStringFileName)
-            let pushAssist = ALPushAssist()
-            let topVC = pushAssist.topViewController
-            datePickerVC.modalPresentationStyle = .overCurrentContext
-            topVC?.present(datePickerVC, animated: true, completion: nil)
-            return false
-        } else if item.type == .date {
-            let datePickerVC = ALKFormDatePickerViewController(delegate: self,
-                                                               messageKey: key,
-                                                               position: textField.tag,
-                                                               datePickerMode: .date,
-                                                               localizedStringFileName: localizedStringFileName)
-            let pushAssist = ALPushAssist()
-            let topVC = pushAssist.topViewController
-            datePickerVC.modalPresentationStyle = .overCurrentContext
-            topVC?.present(datePickerVC, animated: true, completion: nil)
-            return false
-        } else if item.type == .dateTimeLocal {
-            let datePickerVC = ALKFormDatePickerViewController(delegate: self,
-                                                               messageKey: key,
-                                                               position: textField.tag,
-                                                               datePickerMode: .dateAndTime,
-                                                               localizedStringFileName: localizedStringFileName)
-            let pushAssist = ALPushAssist()
-            let topVC = pushAssist.topViewController
-            datePickerVC.modalPresentationStyle = .overCurrentContext
-            topVC?.present(datePickerVC, animated: true, completion: nil)
-            return false
+        switch item.type {
+        case .time:
+            formDatePickerViewController = ALKFormDatePickerViewController(delegate: self,
+                                                                           messageKey: key,
+                                                                           position: textField.tag,
+                                                                           datePickerMode: .time,
+                                                                           localizedStringFileName: localizedStringFileName)
+        case .date:
+            formDatePickerViewController = ALKFormDatePickerViewController(delegate: self,
+                                                                           messageKey: key,
+                                                                           position: textField.tag,
+                                                                           datePickerMode: .date,
+                                                                           localizedStringFileName: localizedStringFileName)
+        case .dateTimeLocal:
+            formDatePickerViewController = ALKFormDatePickerViewController(delegate: self,
+                                                                           messageKey: key,
+                                                                           position: textField.tag,
+                                                                           datePickerMode: .dateAndTime,
+                                                                           localizedStringFileName: localizedStringFileName)
+        default:
+            return true
         }
-        return true
+
+        guard let datePickerVC = formDatePickerViewController,
+              let topVC = ALPushAssist().topViewController else {
+            return true
+        }
+
+        datePickerVC.modalPresentationStyle = .overCurrentContext
+        topVC.present(datePickerVC, animated: true, completion: nil)
+        return false
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -251,6 +248,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                 let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
                 let stringDate = formatter.string(from: date)
                 cell.valueTextField.text = stringDate
+            } else {
+                cell.valueTextField.text = ""
             }
             return cell
         case .time:
@@ -268,6 +267,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                 let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
                 let stringDate = formatter.string(from: date)
                 cell.valueTextField.text = stringDate
+            } else {
+                cell.valueTextField.text = ""
             }
             return cell
         case .dateTimeLocal:
@@ -286,6 +287,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                 let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
                 let stringDate = formatter.string(from: date)
                 cell.valueTextField.text = stringDate
+            } else {
+                cell.valueTextField.text = ""
             }
             return cell
         }
