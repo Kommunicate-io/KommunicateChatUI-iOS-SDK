@@ -494,6 +494,18 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     self.activeTextField = textField
                 }
                 cell.update(viewModel: message)
+                cell.onTapOfDateSelect = { [weak self] index,
+                    delegate,
+                    datePickerMode,
+                    identifier in
+                    guard let weakSelf = self,
+                        let pickerButtonClickProtocol = delegate else { return }
+                    weakSelf.showDatePickerController(delegate: pickerButtonClickProtocol,
+                                                      identifier: identifier,
+                                                      position: index,
+                                                      datePickerMode: datePickerMode,
+                                                      localizedStringFileName: cell.localizedStringFileName)
+                }
                 return cell
             } else {
                 let cell: ALKFriendFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -508,6 +520,19 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                                                       messageModel: message,
                                                       isButtonClickDisabled:
                                                       weakSelf.configuration.disableRichMessageButtonAction)
+                }
+
+                cell.onTapOfDateSelect = { [weak self] index,
+                    delegate,
+                    datePickerMode,
+                    identifier in
+                    guard let weakSelf = self,
+                        let pickerButtonClickProtocol = delegate else { return }
+                    weakSelf.showDatePickerController(delegate: pickerButtonClickProtocol,
+                                                      identifier: identifier,
+                                                      position: index,
+                                                      datePickerMode: datePickerMode,
+                                                      localizedStringFileName: cell.localizedStringFileName)
                 }
                 return cell
             }

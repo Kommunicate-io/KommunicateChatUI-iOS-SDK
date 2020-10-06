@@ -16,7 +16,7 @@ class ALKFormDateItemCell: ALKFormDateBaseCell {
             }
             nameLabel.text = item.label
             valueTextField.attributedPlaceholder =
-                NSAttributedString(string: "dd-MM-yyyy")
+                NSAttributedString(string: Date.is24HrsFormate() ? Date.Formates.Date.twentyfour : Date.Formates.Date.twelve)
             valueTextField.placeholderColor = .lightGray
         }
     }
@@ -30,7 +30,7 @@ class ALKFormTimeItemCell: ALKFormDateBaseCell {
             }
             nameLabel.text = item.label
             valueTextField.attributedPlaceholder =
-                NSAttributedString(string: "hh:mm a")
+                NSAttributedString(string: Date.is24HrsFormate() ? Date.Formates.Time.twentyfour : Date.Formates.Time.twelve)
             valueTextField.placeholderColor = .lightGray
         }
     }
@@ -44,7 +44,7 @@ class ALKFormDateTimeItemCell: ALKFormDateBaseCell {
             }
             nameLabel.text = item.label
             valueTextField.attributedPlaceholder =
-                NSAttributedString(string: "dd-MM-yyyy hh:mm a")
+                NSAttributedString(string: Date.is24HrsFormate() ? Date.Formates.DateAndTime.twentyfour : Date.Formates.DateAndTime.twelve)
             valueTextField.placeholderColor = .lightGray
         }
     }

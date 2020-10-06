@@ -5,11 +5,13 @@
 //  Created by Mukesh on 08/07/20.
 //
 
-import Applozic
 import UIKit
 
 class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
     public var tapped: ((_ index: Int, _ name: String, _ formDataSubmit: FormDataSubmit?) -> Void)?
+
+    public var onTapOfDateSelect: ((_ index: Int, _ delegate: ALKDatePickerButtonClickProtocol?, _ datePickerMode: UIDatePicker.Mode, _ identifier: String) -> Void)?
+
     let itemListView = NestedCellTableView()
     var submitButton: CurvedImageButton?
     var identifier: String?
@@ -61,38 +63,25 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
             return false
         }
         let item = items[textField.tag]
-        var formDatePickerViewController : ALKFormDatePickerViewController?
-
+        var datePickerMode: UIDatePicker.Mode?
         switch item.type {
         case .time:
-            formDatePickerViewController = ALKFormDatePickerViewController(delegate: self,
-                                                                           messageKey: key,
-                                                                           position: textField.tag,
-                                                                           datePickerMode: .time,
-                                                                           localizedStringFileName: localizedStringFileName)
+            datePickerMode = .time
         case .date:
-            formDatePickerViewController = ALKFormDatePickerViewController(delegate: self,
-                                                                           messageKey: key,
-                                                                           position: textField.tag,
-                                                                           datePickerMode: .date,
-                                                                           localizedStringFileName: localizedStringFileName)
+            datePickerMode = .date
         case .dateTimeLocal:
-            formDatePickerViewController = ALKFormDatePickerViewController(delegate: self,
-                                                                           messageKey: key,
-                                                                           position: textField.tag,
-                                                                           datePickerMode: .dateAndTime,
-                                                                           localizedStringFileName: localizedStringFileName)
+            datePickerMode = .dateAndTime
         default:
             return true
         }
 
-        guard let datePickerVC = formDatePickerViewController,
-              let topVC = ALPushAssist().topViewController else {
+        guard let pickerMode = datePickerMode,
+            let dateSelectTap = onTapOfDateSelect
+        else {
             return true
         }
 
-        datePickerVC.modalPresentationStyle = .overCurrentContext
-        topVC.present(datePickerVC, animated: true, completion: nil)
+        dateSelectTap(textField.tag, self, pickerMode, key)
         return false
     }
 
@@ -243,11 +232,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.valueTextField.delegate = self
             cell.valueTextField.tag = indexPath.section
             if let timeInMillSecs = formData?.dateFields[indexPath.section] {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "dd-MM-yyyy"
-                let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
-                let stringDate = formatter.string(from: date)
-                cell.valueTextField.text = stringDate
+                let dateFormate = Date.is24HrsFormate() ? Date.Formates.Date.twentyfour : Date.Formates.Date.twelve
+                cell.valueTextField.text = Date.formatedDate(formateString: dateFormate, timeInMillSecs: timeInMillSecs)
             } else {
                 cell.valueTextField.text = ""
             }
@@ -262,11 +248,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.valueTextField.tag = indexPath.section
 
             if let timeInMillSecs = formData?.dateFields[indexPath.section] {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "hh:mm a"
-                let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
-                let stringDate = formatter.string(from: date)
-                cell.valueTextField.text = stringDate
+                let timeFormate = Date.is24HrsFormate() ? Date.Formates.Time.twentyfour : Date.Formates.Time.twelve
+                cell.valueTextField.text = Date.formatedDate(formateString: timeFormate, timeInMillSecs: timeInMillSecs)
             } else {
                 cell.valueTextField.text = ""
             }
@@ -282,11 +265,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.valueTextField.tag = indexPath.section
 
             if let timeInMillSecs = formData?.dateFields[indexPath.section] {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "dd-MM-yyyy hh:mm a"
-                let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
-                let stringDate = formatter.string(from: date)
-                cell.valueTextField.text = stringDate
+                let dateTimeFromate = Date.is24HrsFormate() ? Date.Formates.DateAndTime.twentyfour : Date.Formates.DateAndTime.twelve
+                cell.valueTextField.text = Date.formatedDate(formateString: dateTimeFromate, timeInMillSecs: timeInMillSecs)
             } else {
                 cell.valueTextField.text = ""
             }

@@ -1705,6 +1705,21 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard message.messageType == .form else { return }
         updateMessageAt(indexPath: indexPath)
     }
+
+    func showDatePickerController(delegate: ALKDatePickerButtonClickProtocol,
+                                  identifier: String,
+                                  position: Int,
+                                  datePickerMode: UIDatePicker.Mode,
+                                  localizedStringFileName: String)
+    {
+        let datePickerVC = ALKFormDatePickerViewController(delegate: delegate,
+                                                           messageKey: identifier,
+                                                           position: position,
+                                                           datePickerMode: datePickerMode,
+                                                           localizedStringFileName: localizedStringFileName)
+        datePickerVC.modalPresentationStyle = .overCurrentContext
+        present(datePickerVC, animated: true, completion: nil)
+    }
 }
 
 extension ALKConversationViewController: CNContactPickerDelegate {
