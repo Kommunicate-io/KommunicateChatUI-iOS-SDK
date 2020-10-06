@@ -44,6 +44,7 @@ public class ReceivedButtonsCell: UITableViewCell {
     fileprivate var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
+        imv.image = UIImage(named: "contact-placeholder", in: Bundle.richMessageKit, compatibleWith: nil)
         imv.clipsToBounds = true
         let layer = imv.layer
         layer.cornerRadius = 18.5
@@ -109,8 +110,6 @@ public class ReceivedButtonsCell: UITableViewCell {
         if !isMessageEmpty {
             messageView.update(model: model.message)
         }
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-
         if let url = model.message.imageURL {
             ImageCache.downloadImage(url: url) { [weak self] image in
                 guard let image = image else { return }
@@ -118,22 +117,20 @@ public class ReceivedButtonsCell: UITableViewCell {
                     self?.avatarImageView.image = image
                 }
             }
-        } else {
-            avatarImageView.image = placeHolder
         }
 
         nameLabel.text = model.message.displayName
-        nameLabel.setStyle(ALKMessageStyle.displayName)
+        nameLabel.setStyle(MessageTheme.receivedMessage.displayName)
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
         timeLabel.text = model.message.time
         let timeLabelSize = model.message.time.rectWithConstrainedWidth(
             ViewPadding.TimeLabel.maxWidth,
-            font: ALKMessageStyle.time.font
+            font: MessageTheme.receivedMessage.time.font
         )
 
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
-        timeLabel.setStyle(ALKMessageStyle.time)
+        timeLabel.setStyle(MessageTheme.receivedMessage.time)
 
         let buttonsWidth = ViewPadding.maxWidth -
             (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
@@ -151,7 +148,7 @@ public class ReceivedButtonsCell: UITableViewCell {
 
         let timeLabelSize = model.message.time.rectWithConstrainedWidth(
             ViewPadding.TimeLabel.maxWidth,
-            font: ALKMessageStyle.time.font
+            font: MessageTheme.receivedMessage.time.font
         )
         if isMessageEmpty {
             height += ViewPadding.NameLabel.height + ViewPadding.NameLabel.top + ChatCellPadding.ReceivedMessage.Message.top
