@@ -12,6 +12,9 @@ enum FormViewModelItemType {
     case password
     case singleselect
     case multiselect
+    case date
+    case time
+    case dateTimeLocal
 }
 
 protocol FormViewModelItem {
@@ -80,16 +83,22 @@ class FormViewModelMultiselectItem: FormViewModelItem {
 }
 
 class FormViewModelTextItem: FormViewModelItem {
+    typealias Validation = FormTemplate.Validation
     var type: FormViewModelItemType {
         return .text
     }
 
     let label: String
     let placeholder: String?
+    let validation: Validation?
 
-    init(label: String, placeholder: String?) {
+    init(label: String,
+         placeholder: String?,
+         validation: Validation?)
+    {
         self.label = label
         self.placeholder = placeholder
+        self.validation = validation
     }
 }
 
@@ -107,6 +116,39 @@ class FormViewModelPasswordItem: FormViewModelItem {
     }
 }
 
+class FormViewModelDateItem: FormViewModelItem {
+    var type: FormViewModelItemType {
+        return .date
+    }
+
+    let label: String
+    init(label: String) {
+        self.label = label
+    }
+}
+
+class FormViewModelDateTimeLocalItem: FormViewModelItem {
+    var type: FormViewModelItemType {
+        return .dateTimeLocal
+    }
+
+    let label: String
+    init(label: String) {
+        self.label = label
+    }
+}
+
+class FormViewModelTimeItem: FormViewModelItem {
+    var type: FormViewModelItemType {
+        return .time
+    }
+
+    let label: String
+    init(label: String) {
+        self.label = label
+    }
+}
+
 extension FormTemplate {
     var viewModeItems: [FormViewModelItem] {
         var items: [FormViewModelItem] = []
@@ -118,7 +160,8 @@ extension FormTemplate {
                     let placeHolder = elementData.placeholder else { return }
                 items.append(FormViewModelTextItem(
                     label: label,
-                    placeholder: placeHolder
+                    placeholder: placeHolder,
+                    validation: elementData.validation
                 ))
             case .password:
                 guard let elementData = element.data,
@@ -144,6 +187,18 @@ extension FormTemplate {
                 items.append(FormViewModelMultiselectItem(name: name,
                                                           title: title,
                                                           options: options))
+            case .time:
+                guard let elementData = element.data,
+                    let label = elementData.label else { return }
+                items.append(FormViewModelTimeItem(label: label))
+            case .date:
+                guard let elementData = element.data,
+                    let label = elementData.label else { return }
+                items.append(FormViewModelDateItem(label: label))
+            case .dateTimeLocal:
+                guard let elementData = element.data,
+                    let label = elementData.label else { return }
+                items.append(FormViewModelDateTimeLocalItem(label: label))
             default:
                 print("\(element.contentType) form template type is not part of the form list view")
             }

@@ -444,7 +444,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 if let filePath = message.filePath {
                     cell.updateContactDetails(key: message.identifier, filePath: filePath)
                 }
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 if message.filePath == nil {
                     attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
                 }
@@ -490,23 +489,62 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             guard message.formTemplate() != nil else { return UITableViewCell() }
             if message.isMyMessage {
                 let cell: ALKMyFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.activeTextFieldChanged = { textField in
                     self.activeTextField = textField
                 }
                 cell.update(viewModel: message)
+                cell.onTapOfDateSelect = { [weak self] index,
+                    delegate,
+                    datePickerMode,
+                    identifier in
+                    guard let weakSelf = self,
+                        let pickerButtonClickProtocol = delegate else { return }
+                    weakSelf.showDatePickerController(delegate: pickerButtonClickProtocol,
+                                                      identifier: identifier,
+                                                      position: index,
+                                                      datePickerMode: datePickerMode,
+                                                      localizedStringFileName: cell.localizedStringFileName)
+                }
                 return cell
             } else {
                 let cell: ALKFriendFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.activeTextFieldChanged = { textField in
                     self.activeTextField = textField
                 }
                 cell.update(viewModel: message)
                 cell.tapped = { [weak self] _, _, submitData in
                     guard let weakSelf = self else { return }
-                    weakSelf.formSubmitButtonSelected(formSubmitData: submitData,
-                                                      messageModel: message,
-                                                      isButtonClickDisabled:
-                                                      weakSelf.configuration.disableRichMessageButtonAction)
+
+                    // If not valid reload the table view section for a form to show the error message below the text fields.
+                    if !cell.isFormDataValid() {
+                        weakSelf.reloadSectionFor(identifier: message.identifier)
+                    } else {
+                        // The form data is valid to reload the existing form cell to remove error labels in the form.
+                        if let validationFields = submitData?.validationFields,
+                            !validationFields.isEmpty
+                        {
+                            weakSelf.reloadSectionFor(identifier: message.identifier)
+                        }
+                        weakSelf.formSubmitButtonSelected(formSubmitData: submitData,
+                                                          messageModel: message,
+                                                          isButtonClickDisabled:
+                                                          weakSelf.configuration.disableRichMessageButtonAction)
+                    }
+                }
+
+                cell.onTapOfDateSelect = { [weak self] index,
+                    delegate,
+                    datePickerMode,
+                    identifier in
+                    guard let weakSelf = self,
+                        let pickerButtonClickProtocol = delegate else { return }
+                    weakSelf.showDatePickerController(delegate: pickerButtonClickProtocol,
+                                                      identifier: identifier,
+                                                      position: index,
+                                                      datePickerMode: datePickerMode,
+                                                      localizedStringFileName: cell.localizedStringFileName)
                 }
                 return cell
             }
@@ -604,6 +642,16 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.collectionView.setContentOffset(CGPoint(x: collectionViewOffsetFromIndex(index), y: 0), animated: false)
             }
         }
+    }
+
+    func reloadSectionFor(identifier: String) {
+        guard let index = viewModel.sectionFor(identifier: identifier),
+            index < tableView.numberOfSections
+        else {
+            print("Can't be updated form cell due to incorrect index")
+            return
+        }
+        tableView.reloadSections([index], with: .fade)
     }
 
     // MARK: Paging

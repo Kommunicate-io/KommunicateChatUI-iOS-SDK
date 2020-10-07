@@ -9,6 +9,23 @@
 import Foundation
 
 extension Date {
+    enum Formates {
+        enum Time {
+            static let twelve = "hh:mm a"
+            static let twentyfour = "HH:mm"
+        }
+
+        enum DateAndTime {
+            static let twelve = "dd/MM/yyyy, hh:mm a"
+            static let twentyfour = "MM/dd/yyyy, HH:mm"
+        }
+
+        enum Date {
+            static let twelve = "dd/MM/yyyy"
+            static let twentyfour = "MM/dd/yyyy"
+        }
+    }
+
     /**
      @abstract Example - Assuming today is Friday 20 September 2017, we would show:
      Today, Yesterday, Wednesday, Tuesday, Monday, Sunday, Fri, Feb 24, Jun 3, 2016 (for previous year), Etc.
@@ -39,5 +56,19 @@ extension Date {
         }
 
         return dateFormatter.string(from: self)
+    }
+
+    static func is24HrsFormate() -> Bool {
+        let formatter = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: Locale.current)!
+        return !formatter.contains("a")
+    }
+
+    static func formatedDate(formateString: String,
+                             timeInMillSecs: Int64) -> String
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = formateString
+        let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))
+        return formatter.string(from: date)
     }
 }

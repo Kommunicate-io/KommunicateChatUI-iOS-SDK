@@ -1132,7 +1132,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
         else {
-            let controller = ALKReplyController(userId: viewModel.contactId, groupId: viewModel.channelKey, messageKey: replyId, configuration: configuration)
+            let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
             controller.modalPresentationStyle = .overCurrentContext
             present(controller, animated: true, completion: nil)
             return
@@ -1469,7 +1469,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let formData = formSubmitData,
             !formData.multiSelectFields.isEmpty ||
             !formData.textFields.isEmpty ||
-            !formData.singleSelectFields.isEmpty
+            !formData.singleSelectFields.isEmpty ||
+            !formData.dateFields.isEmpty
         else {
             print("Invalid empty form data for submit")
             return
@@ -1511,8 +1512,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
 
-        guard let viewModelItems = messageModel.formTemplate()?.viewModeItems
-        else { return }
+        let viewModelItems = formTemplate.viewModeItems
         for (pos, text) in formData.textFields {
             let element = viewModelItems[pos]
             switch element.type {
@@ -1549,6 +1549,26 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
             let data = json(from: selectedArray)
             postFormData[multiSelect.name] = data
+        }
+
+        for (position, timeInMillSecs) in formData.dateFields {
+            let element = viewModelItems[position]
+            switch element.type {
+            case .time:
+                if let formViewModelTimeItem = element as? FormViewModelTimeItem {
+                    postFormData[formViewModelTimeItem.label] = String(timeInMillSecs)
+                }
+            case .date:
+                if let formViewModelDateItem = element as? FormViewModelDateItem {
+                    postFormData[formViewModelDateItem.label] = String(timeInMillSecs)
+                }
+            case .dateTimeLocal:
+                if let formViewModelDateTimeLocalItem = element as? FormViewModelDateTimeLocalItem {
+                    postFormData[formViewModelDateTimeLocalItem.label] = String(timeInMillSecs)
+                }
+            default:
+                break
+            }
         }
 
         guard let formJsonValue = ALUtilityClass.generateJsonString(from: postFormData) else {
@@ -1683,6 +1703,21 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func reloadIfFormMessage(message: ALKMessageModel, indexPath: IndexPath) {
         guard message.messageType == .form else { return }
         updateMessageAt(indexPath: indexPath)
+    }
+
+    func showDatePickerController(delegate: ALKDatePickerButtonClickProtocol,
+                                  identifier: String,
+                                  position: Int,
+                                  datePickerMode: UIDatePicker.Mode,
+                                  localizedStringFileName: String)
+    {
+        let datePickerVC = ALKFormDatePickerViewController(delegate: delegate,
+                                                           messageKey: identifier,
+                                                           position: position,
+                                                           datePickerMode: datePickerMode,
+                                                           localizedStringFileName: localizedStringFileName)
+        datePickerVC.modalPresentationStyle = .overCurrentContext
+        present(datePickerVC, animated: true, completion: nil)
     }
 }
 
