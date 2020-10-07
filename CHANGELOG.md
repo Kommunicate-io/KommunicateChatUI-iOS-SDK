@@ -7,6 +7,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Enhancements
 - [CM-402] Date picker support in form template.
+- [CM-402] Text validation support in form template.
 
 ## [5.10.2] - 2020-10-06
 

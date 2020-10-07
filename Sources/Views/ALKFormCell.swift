@@ -8,6 +8,11 @@
 import UIKit
 
 class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
+    enum FormData {
+        static let valid = 1
+        static let inValid = 2
+    }
+
     public var tapped: ((_ index: Int, _ name: String, _ formDataSubmit: FormDataSubmit?) -> Void)?
 
     public var onTapOfDateSelect: ((_ index: Int, _ delegate: ALKDatePickerButtonClickProtocol?, _ datePickerMode: UIDatePicker.Mode, _ identifier: String) -> Void)?
@@ -33,7 +38,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         }
         set(newFormData) {
             guard let key = identifier,
-                let formData = newFormData else { return }
+                  let formData = newFormData else { return }
             formDataCacheStore.set(formData, for: key)
         }
     }
@@ -76,7 +81,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         }
 
         guard let pickerMode = datePickerMode,
-            let dateSelectTap = onTapOfDateSelect
+              let dateSelectTap = onTapOfDateSelect
         else {
             return true
         }
@@ -92,8 +97,8 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
         guard let text = textField.text,
-            !text.trim().isEmpty,
-            let formSubmitData = formData
+              !text.trim().isEmpty,
+              let formSubmitData = formData
         else {
             if let data = formData {
                 data.textFields.removeValue(forKey: textField.tag)
@@ -152,12 +157,33 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.item = item
             cell.valueTextField.delegate = self
             cell.valueTextField.tag = indexPath.section
+            if let formDataSubmit = formData,
+               let text = formDataSubmit.textFields[indexPath.section]
+            {
+                cell.valueTextField.text = text
+            } else {
+                cell.valueTextField.text = ""
+            }
+            if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
+                let formViewModelTextItem = item as? FormViewModelTextItem
+                cell.errorLabel.text = formViewModelTextItem?.validation?.errorText ?? localizedString(forKey: "InvalidDatErrorInForm", withDefaultValue: SystemMessage.UIError.InvalidDatErrorInForm, fileName: localizedStringFileName)
+                cell.errorLabel.isHidden = false
+            } else {
+                cell.errorLabel.isHidden = true
+            }
             return cell
         case .password:
             let cell: ALKFormPasswordItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.item = item
             cell.valueTextField.delegate = self
             cell.valueTextField.tag = indexPath.section
+            if let formDataSubmit = formData,
+               let text = formDataSubmit.textFields[indexPath.section]
+            {
+                cell.valueTextField.text = text
+            } else {
+                cell.valueTextField.text = ""
+            }
             return cell
         case .singleselect:
             guard let singleselectItem = item as? FormViewModelSingleselectItem else {
@@ -178,8 +204,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.item = singleselectItem.options[indexPath.row]
 
             if let formDataSubmit = formData,
-                let singleSelectFields = formDataSubmit.singleSelectFields[indexPath.section],
-                singleSelectFields == indexPath.row
+               let singleSelectFields = formDataSubmit.singleSelectFields[indexPath.section],
+               singleSelectFields == indexPath.row
             {
                 cell.accessoryType = .checkmark
             } else {
@@ -214,7 +240,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             }
 
             if let formDataSubmit = formData,
-                let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
+               let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
             {
                 cell.accessoryType = .checkmark
             } else {
@@ -319,8 +345,8 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
             break
         }
         guard let formSubmitData = formData,
-            timeInMillSecs > 0,
-            position < itemListView.numberOfSections
+              timeInMillSecs > 0,
+              position < itemListView.numberOfSections
         else {
             print("Can't be updated due to incorrect index")
             return
@@ -328,6 +354,43 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
         formSubmitData.dateFields[position] = timeInMillSecs
         formData = formSubmitData
         itemListView.reloadSections([position], with: .fade)
+    }
+}
+
+extension ALKFormCell {
+    func isFormDataValid() -> Bool {
+        var isValid: Bool = true
+
+        guard let formDataSubmit = formData,
+              let viewModelItems = template?.viewModeItems
+        else {
+            return false
+        }
+        // Loop and match all the text types for validation and mark them as valid or inValid.
+        for index in 0 ..< viewModelItems.count {
+            let element = viewModelItems[index]
+
+            switch element.type {
+            case .text:
+                let textFieldModel = element as? FormViewModelTextItem
+                let enteredText = formDataSubmit.textFields[index] ?? ""
+
+                if let validation = textFieldModel?.validation,
+                   let regxPattern = validation.regex
+                {
+                    do {
+                        isValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
+                        formDataSubmit.validationFields[index] = isValid ? FormData.valid : FormData.inValid
+                        formData = formDataSubmit
+                    } catch {
+                        print("Error while matching text: \(error.localizedDescription)")
+                    }
+                }
+            default:
+                break
+            }
+        }
+        return isValid
     }
 }
 
@@ -349,4 +412,5 @@ class FormDataSubmit {
     var singleSelectFields = [Int: Int]()
     var multiSelectFields = [Int: [Int]]()
     var dateFields = [Int: Int64]()
+    var validationFields = [Int: Int]()
 }

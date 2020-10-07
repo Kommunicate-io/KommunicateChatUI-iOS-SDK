@@ -108,6 +108,7 @@ struct SystemMessage: Localizable {
 
     struct UIError {
         static let unspecifiedLocation = localizedString(forKey: "UnspecifiedLocation")
+        static let InvalidDatErrorInForm = localizedString(forKey: "InvalidDatErrorInForm")
     }
 
     struct PhotoAlbum {

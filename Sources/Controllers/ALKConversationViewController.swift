@@ -1512,8 +1512,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
 
-        guard let viewModelItems = messageModel.formTemplate()?.viewModeItems
-        else { return }
+        let viewModelItems = formTemplate.viewModeItems
         for (pos, text) in formData.textFields {
             let element = viewModelItems[pos]
             switch element.type {

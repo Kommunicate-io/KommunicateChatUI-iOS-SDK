@@ -34,6 +34,23 @@ class ALKFormTextItemCell: UITableViewCell {
         return textfield
     }()
 
+    private lazy var errorStackView: UIStackView = {
+        let labelStackView = UIStackView()
+        labelStackView.axis = .horizontal
+        labelStackView.alignment = .fill
+        labelStackView.distribution = .fillEqually
+        labelStackView.backgroundColor = UIColor.white
+        return labelStackView
+    }()
+
+    let errorLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.textColor = .red
+        label.font = Font.normal(size: 15).font()
+        label.textAlignment = .left
+        return label
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         valueTextField.textColor = .black
@@ -48,7 +65,9 @@ class ALKFormTextItemCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [nameLabel, valueTextField])
+        addViewsForAutolayout(views: [nameLabel, valueTextField, errorStackView])
+        errorStackView.addArrangedSubview(errorLabel)
+        errorStackView.bringSubviewToFront(errorLabel)
         nameLabel.layout {
             $0.leading == leadingAnchor + 10
             $0.trailing == trailingAnchor - 30
@@ -58,6 +77,11 @@ class ALKFormTextItemCell: UITableViewCell {
             $0.leading == nameLabel.leadingAnchor
             $0.trailing == nameLabel.trailingAnchor
             $0.top == nameLabel.bottomAnchor + 5
+        }
+        errorStackView.layout {
+            $0.leading == nameLabel.leadingAnchor
+            $0.trailing == nameLabel.trailingAnchor
+            $0.top == valueTextField.bottomAnchor + 5
             $0.bottom <= bottomAnchor - 10
         }
     }

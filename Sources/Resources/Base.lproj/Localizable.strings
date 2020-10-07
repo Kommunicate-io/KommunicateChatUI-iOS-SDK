@@ -154,3 +154,6 @@ SpeechToTextPlaceholder = "(Go ahead, I'm listening)";
 DatePickerTimeTitle = "Select time";
 DatePickerDateTitle = "Select date";
 DatePickerDateAndTimeTitle = "Select date and time";
+
+/* Form UI*/
+InvalidDatErrorInForm = "Please enter valid data";

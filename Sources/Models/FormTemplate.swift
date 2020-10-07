@@ -19,6 +19,7 @@ struct FormTemplate: Decodable {
         let label, placeholder, name, value, title, type: String?
         let action: Action?
         let options: [Option]?
+        let validation: Validation?
     }
 
     struct Option: Decodable {
@@ -27,6 +28,10 @@ struct FormTemplate: Decodable {
 
     struct Action: Decodable {
         let formAction, message, requestType: String?
+    }
+
+    struct Validation: Decodable {
+        let regex, errorText: String?
     }
 }
 

@@ -83,16 +83,22 @@ class FormViewModelMultiselectItem: FormViewModelItem {
 }
 
 class FormViewModelTextItem: FormViewModelItem {
+    typealias Validation = FormTemplate.Validation
     var type: FormViewModelItemType {
         return .text
     }
 
     let label: String
     let placeholder: String?
+    let validation: Validation?
 
-    init(label: String, placeholder: String?) {
+    init(label: String,
+         placeholder: String?,
+         validation: Validation?)
+    {
         self.label = label
         self.placeholder = placeholder
+        self.validation = validation
     }
 }
 
@@ -154,7 +160,8 @@ extension FormTemplate {
                     let placeHolder = elementData.placeholder else { return }
                 items.append(FormViewModelTextItem(
                     label: label,
-                    placeholder: placeHolder
+                    placeholder: placeHolder,
+                    validation: elementData.validation
                 ))
             case .password:
                 guard let elementData = element.data,
