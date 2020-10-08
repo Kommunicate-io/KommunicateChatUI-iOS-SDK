@@ -67,6 +67,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return true
     }
 
+    // Prefilled message for chatbox.
+    open var prefilledMessage: String?
+
     open var isContextBasedChat: Bool {
         guard conversationProxy == nil else { return true }
         guard
@@ -121,12 +124,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         contactId: String?,
         channelKey: NSNumber?,
         conversationProxy: ALConversationProxy? = nil,
-        localizedStringFileName: String!
+        localizedStringFileName: String!,
+        prefilledMessage: String? = nil
     ) {
         self.contactId = contactId
         self.channelKey = channelKey
         self.conversationProxy = conversationProxy
         self.localizedStringFileName = localizedStringFileName
+        self.prefilledMessage = prefilledMessage
     }
 
     // MARK: - Public methods
