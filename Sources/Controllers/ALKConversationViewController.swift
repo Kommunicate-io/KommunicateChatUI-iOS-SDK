@@ -91,6 +91,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate var profanityFilter: ProfanityFilter?
     var activeTextField: UITextField?
     var documentManager = ALKDocumentManager()
+    var photoPicker = ALKPhotoPicker()
 
     fileprivate enum ActionType: String {
         case link
@@ -706,6 +707,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         chatBar.accessibilityIdentifier = "chatBar"
         chatBar.setComingSoonDelegate(delegate: view)
         documentManager.delegate = self
+        photoPicker.delegate = self
         chatBar.action = { [weak self] action in
 
             guard let weakSelf = self else {
@@ -830,11 +832,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     ALUtilityClass.showAlertMessage(msg, andTitle: title)
                 }
             case .showImagePicker:
-                guard let vc = ALKCustomPickerViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
-                else {
-                    return
+                if #available(iOS 14, *) {
+                    weakSelf.photoPicker.openGallery(from: weakSelf)
+                } else {
+                    guard let vc = ALKCustomPickerViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
+                    else {
+                        return
+                    }
+                    weakSelf.present(vc, animated: false, completion: nil)
                 }
-                weakSelf.present(vc, animated: false, completion: nil)
             case .showLocation:
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.applozic)
 
