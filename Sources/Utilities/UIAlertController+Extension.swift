@@ -46,16 +46,16 @@ extension UIAlertController {
 
     func addActivityIndicator() {
         let vc = UIViewController()
-        vc.preferredContentSize = CGSize(width: 40,height: 40)
+        vc.preferredContentSize = CGSize(width: 40, height: 40)
         ActivityIndicatorData.activityIndicator.color = UIColor.blue
         ActivityIndicatorData.activityIndicator.startAnimating()
         vc.view.addSubview(ActivityIndicatorData.activityIndicator)
-        self.setValue(vc, forKey: "contentViewController")
+        setValue(vc, forKey: "contentViewController")
     }
 
     func dismissActivityIndicator(_ completion: (() -> Void)?) {
         ActivityIndicatorData.activityIndicator.stopAnimating()
-        self.dismiss(animated: false) {
+        dismiss(animated: false) {
             completion?()
         }
     }
@@ -73,11 +73,11 @@ extension UIViewController {
             preferredStyle: UIAlertController.Style.alert
         )
         activityAlert.activityIndicatorAlert!.addActivityIndicator()
-        var topController:UIViewController = UIApplication.shared.keyWindow!.rootViewController!
-        while ((topController.presentedViewController) != nil) {
+        var topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
+        while topController.presentedViewController != nil {
             topController = topController.presentedViewController!
         }
-        topController.present(activityAlert.activityIndicatorAlert!, animated:true, completion:nil)
+        topController.present(activityAlert.activityIndicatorAlert!, animated: true, completion: nil)
     }
 
     func dismissIPActivityAlert(completion: (() -> Void)?) {
