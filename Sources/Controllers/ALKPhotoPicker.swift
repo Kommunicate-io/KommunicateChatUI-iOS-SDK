@@ -9,14 +9,15 @@ import Foundation
 import PhotosUI
 
 class ALKPhotoPicker: NSObject, Localizable {
-    static var SelectionLimit = 10
     weak var delegate: ALKCustomPickerDelegate?
 
     private var localizationFileName: String
+    private var selectionLimit: Int
     private var loadingTitle: String = ""
 
-    init(localizationFileName: String) {
+    init(localizationFileName: String, selectionLimit: Int) {
         self.localizationFileName = localizationFileName
+        self.selectionLimit = selectionLimit
         super.init()
         loadingTitle = localizedString(
             forKey: "ExportLoadingIndicatorText",
@@ -28,7 +29,7 @@ class ALKPhotoPicker: NSObject, Localizable {
     @available(iOS 14, *)
     func openGallery(from controller: UIViewController) {
         var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = ALKPhotoPicker.SelectionLimit
+        configuration.selectionLimit = selectionLimit
         configuration.filter = .any(of: [.images, .videos])
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self

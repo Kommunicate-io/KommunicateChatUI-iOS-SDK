@@ -91,7 +91,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate var profanityFilter: ProfanityFilter?
     var activeTextField: UITextField?
     var documentManager = ALKDocumentManager()
-    lazy var photoPicker = ALKPhotoPicker(localizationFileName: localizedStringFileName)
+    lazy var photoPicker = ALKPhotoPicker(
+        localizationFileName: localizedStringFileName,
+        selectionLimit: configuration.chatBar.photosSelectionLimit
+    )
 
     fileprivate enum ActionType: String {
         case link
