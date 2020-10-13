@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         var config = ALKConfiguration()
         // Change config based on requirement like:
         // config.isTapOnNavigationBarEnabled = false
+        config.isNewSystemPhotosUIEnabled = true
         return config
     }()
 
