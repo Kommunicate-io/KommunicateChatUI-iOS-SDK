@@ -38,3 +38,50 @@ extension UIAlertController {
         }
     }
 }
+
+extension UIAlertController {
+    private struct ActivityIndicatorData {
+        static var activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+    }
+
+    func addActivityIndicator() {
+        let vc = UIViewController()
+        vc.preferredContentSize = CGSize(width: 40,height: 40)
+        ActivityIndicatorData.activityIndicator.color = UIColor.blue
+        ActivityIndicatorData.activityIndicator.startAnimating()
+        vc.view.addSubview(ActivityIndicatorData.activityIndicator)
+        self.setValue(vc, forKey: "contentViewController")
+    }
+
+    func dismissActivityIndicator(_ completion: (() -> Void)?) {
+        ActivityIndicatorData.activityIndicator.stopAnimating()
+        self.dismiss(animated: false) {
+            completion?()
+        }
+    }
+}
+
+extension UIViewController {
+    private struct activityAlert {
+        static var activityIndicatorAlert: UIAlertController?
+    }
+
+    func displayIPActivityAlert(title: String) {
+        activityAlert.activityIndicatorAlert = UIAlertController(
+            title: title,
+            message: nil,
+            preferredStyle: UIAlertController.Style.alert
+        )
+        activityAlert.activityIndicatorAlert!.addActivityIndicator()
+        var topController:UIViewController = UIApplication.shared.keyWindow!.rootViewController!
+        while ((topController.presentedViewController) != nil) {
+            topController = topController.presentedViewController!
+        }
+        topController.present(activityAlert.activityIndicatorAlert!, animated:true, completion:nil)
+    }
+
+    func dismissIPActivityAlert(completion: (() -> Void)?) {
+        activityAlert.activityIndicatorAlert!.dismissActivityIndicator(completion)
+        activityAlert.activityIndicatorAlert = nil
+    }
+}

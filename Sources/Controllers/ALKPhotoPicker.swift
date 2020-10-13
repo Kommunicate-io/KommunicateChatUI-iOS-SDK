@@ -8,12 +8,22 @@
 import Foundation
 import PhotosUI
 
-class ALKPhotoPicker: NSObject {
+class ALKPhotoPicker: NSObject, Localizable {
     static var SelectionLimit = 10
     weak var delegate: ALKCustomPickerDelegate?
 
-    fileprivate let indicatorSize = ALKActivityIndicator.Size(width: 50, height: 50)
-    fileprivate lazy var activityIndicator = ALKActivityIndicator(frame: .zero, backgroundColor: .lightGray, indicatorColor: .white, size: indicatorSize)
+    private var localizationFileName: String
+    private var loadingTitle: String = ""
+
+    init(localizationFileName: String) {
+        self.localizationFileName = localizationFileName
+        super.init()
+        loadingTitle = localizedString(
+            forKey: "ExportLoadingIndicatorText",
+            withDefaultValue: SystemMessage.Information.ExportLoadingIndicatorText,
+            fileName: localizationFileName
+        )
+    }
 
     @available(iOS 14, *)
     func openGallery(from controller: UIViewController) {
@@ -51,20 +61,9 @@ class ALKPhotoPicker: NSObject {
                     provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { url, error in
                         if let error = error {
                             print("Failed to export video due to error: \(error)")
-                        } else if let url = url {
-                            print("Video exported: \(url.description)")
-                            let fileName = url.lastPathComponent
-                            let uniqueFileName = "\(Int(Date().timeIntervalSince1970 * 1000))-\(fileName)"
-                            let newFileURL = ALKFileUtils().getDocumentDirectory(fileName: uniqueFileName)
-                            do {
-                                if FileManager.default.fileExists(atPath: newFileURL.path) {
-                                    try FileManager.default.removeItem(atPath: newFileURL.path)
-                                }
-                                try FileManager.default.moveItem(atPath: url.path, toPath: newFileURL.path)
-                                selectedVideosPath.append(newFileURL.path)
-                            } catch {
-                                print("Failed to export video due to error: \(error)")
-                            }
+                        } else if let url = url, let newURL = ALKFileUtils().moveFileToDocuments(fileURL: url) {
+                            selectedVideosPath.append(newURL.path)
+                            print("Video exported: \(newURL.description)")
                         }
                         exportGroup.leave()
                     }
@@ -81,55 +80,12 @@ class ALKPhotoPicker: NSObject {
 @available(iOS 14, *)
 extension ALKPhotoPicker: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.displayIPActivityAlert()
+        picker.displayIPActivityAlert(title: loadingTitle)
         export(results: results) { images, videos in
             picker.dismissIPActivityAlert {
                 picker.dismiss(animated: true)
                 self.delegate?.filesSelected(images: images, videos: videos)
             }
         }
-    }
-}
-
-extension UIAlertController {
-    private struct ActivityIndicatorData {
-        static var activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-    }
-
-    func addActivityIndicator() {
-        let vc = UIViewController()
-        vc.preferredContentSize = CGSize(width: 40,height: 40)
-        ActivityIndicatorData.activityIndicator.color = UIColor.blue
-        ActivityIndicatorData.activityIndicator.startAnimating()
-        vc.view.addSubview(ActivityIndicatorData.activityIndicator)
-        self.setValue(vc, forKey: "contentViewController")
-    }
-
-    func dismissActivityIndicator(_ completion: (() -> Void)?) {
-        ActivityIndicatorData.activityIndicator.stopAnimating()
-        self.dismiss(animated: false) {
-            completion?()
-        }
-    }
-}
-
-extension UIViewController {
-    private struct activityAlert {
-        static var activityIndicatorAlert: UIAlertController?
-    }
-
-    func displayIPActivityAlert() {
-        activityAlert.activityIndicatorAlert = UIAlertController(title: NSLocalizedString("Exporting...", comment: ""), message: nil , preferredStyle: UIAlertController.Style.alert)
-        activityAlert.activityIndicatorAlert!.addActivityIndicator()
-        var topController:UIViewController = UIApplication.shared.keyWindow!.rootViewController!
-        while ((topController.presentedViewController) != nil) {
-            topController = topController.presentedViewController!
-        }
-        topController.present(activityAlert.activityIndicatorAlert!, animated:true, completion:nil)
-    }
-
-    func dismissIPActivityAlert(completion: (() -> Void)?) {
-        activityAlert.activityIndicatorAlert!.dismissActivityIndicator(completion)
-        activityAlert.activityIndicatorAlert = nil
     }
 }
