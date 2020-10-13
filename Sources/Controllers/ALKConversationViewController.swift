@@ -832,7 +832,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     ALUtilityClass.showAlertMessage(msg, andTitle: title)
                 }
             case .showImagePicker:
-                if #available(iOS 14, *) {
+                if #available(iOS 14, *), weakSelf.configuration.isNewSystemPhotosUIEnabled {
                     weakSelf.photoPicker.openGallery(from: weakSelf)
                 } else {
                     guard let vc = ALKCustomPickerViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)

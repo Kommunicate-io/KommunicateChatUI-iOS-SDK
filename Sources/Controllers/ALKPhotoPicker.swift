@@ -80,6 +80,10 @@ class ALKPhotoPicker: NSObject, Localizable {
 @available(iOS 14, *)
 extension ALKPhotoPicker: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        guard !results.isEmpty else {
+            picker.dismiss(animated: true)
+            return
+        }
         picker.displayIPActivityAlert(title: loadingTitle)
         export(results: results) { images, videos in
             picker.dismissIPActivityAlert {
