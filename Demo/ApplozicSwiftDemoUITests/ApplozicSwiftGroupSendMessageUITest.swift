@@ -51,10 +51,22 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         let openPhotos = app.buttons[InAppButton.ConversationScreen.openPhotos]
         waitFor(object: openPhotos) { $0.exists }
         app.buttons[InAppButton.ConversationScreen.openPhotos].tap() // Click on photo button
-        let thirdImageInFirstRow = app.scrollViews.images.element(boundBy: 2)
+        addUIInterruptionMonitor(withDescription: AppPermission.AlertMessage.accessPhoto) { (alerts) -> Bool in
+            if alerts.buttons[AppPermission.AlertButton.allowAllPhotos].exists {
+                alerts.buttons[AppPermission.AlertButton.allowAllPhotos].tap()
+                return true
+            }
+            return false
+        }
+        app.tap()
+        let allImages = app.collectionViews.children(matching: .cell)
+        let thirdImageInFirstRow = allImages.element(boundBy: 2)
         waitFor(object: thirdImageInFirstRow) { $0.exists }
         thirdImageInFirstRow.tap()
-        let doneButton = app.buttons[InAppButton.ConversationScreen.add]
+        let selectPhoto = app.navigationBars[InAppButton.ConversationScreen.selectPhoto]
+        waitFor(object: selectPhoto) { $0.exists }
+        selectPhoto.tap()
+        let doneButton = app.buttons[InAppButton.ConversationScreen.done]
         waitFor(object: doneButton) { $0.exists }
         doneButton.tap()
     }

@@ -34,7 +34,7 @@ public struct ALKChatBarConfiguration {
     /// Maximum limit should be less than 30
     public var photosSelectionLimit: Int = 10 {
         didSet {
-            guard photosSelectionLimit < 1 || photosSelectionLimit > 30  else { return }
+            guard photosSelectionLimit < 1 || photosSelectionLimit > 30 else { return }
             print("Error: Photos selection limit should be set b/w 1 & 30")
             photosSelectionLimit = 10
         }
