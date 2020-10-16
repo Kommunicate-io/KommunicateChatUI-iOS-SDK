@@ -30,5 +30,6 @@ public struct ListTemplate: Codable {
         public let url: String?
         public let type: String?
         public let text: String?
+        public let updateLanguage: String?
     }
 }
