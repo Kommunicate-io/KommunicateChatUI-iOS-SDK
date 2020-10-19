@@ -14,10 +14,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ```swift
 // Text view's placeholder style
-config.chatBar.placeHolderStyle = Style(font: UIFont.systemFont(ofSize: 16), text: .black)
+ALKChatBarConfiguration.TextView.placeholder = Style(font: .font(.normal(size: 16)), text: .gray)
 
 // Text view's text style
-config.chatBar.textViewStyle = Style(font: UIFont.systemFont(ofSize: 18), text: .red)
+ALKChatBarConfiguration.TextView.text = Style(font: .font(.normal(size: 18)), text: .black)
 ```
 
 ## [5.10.2] - 2020-10-06
