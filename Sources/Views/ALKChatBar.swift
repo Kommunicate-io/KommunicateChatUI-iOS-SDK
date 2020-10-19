@@ -105,8 +105,8 @@ open class ALKChatBar: UIView, Localizable {
 
     open lazy var placeHolder: UITextView = {
         let view = UITextView()
-        view.setFont(chatBarConfiguration.placeHolderStyle.font)
-        view.setTextColor(chatBarConfiguration.placeHolderStyle.text)
+        view.setFont(ALKChatBarConfiguration.TextView.placeholder.font)
+        view.setTextColor(ALKChatBarConfiguration.TextView.placeholder.text)
         view.text = localizedString(forKey: "ChatHere", withDefaultValue: SystemMessage.Information.ChatHere, fileName: configuration.localizedStringFileName)
         view.isUserInteractionEnabled = false
         view.isScrollEnabled = false
@@ -120,8 +120,7 @@ open class ALKChatBar: UIView, Localizable {
         open lazy var micButton: SpeechToTextButton = {
             let button = SpeechToTextButton(
                 textView: textView,
-                localizedStringFileName: configuration.localizedStringFileName,
-                placeHolderStyle: chatBarConfiguration.placeHolderStyle
+                localizedStringFileName: configuration.localizedStringFileName
             )
             button.layer.masksToBounds = true
             button.accessibilityIdentifier = "MicButton"
@@ -230,8 +229,8 @@ open class ALKChatBar: UIView, Localizable {
         style.lineSpacing = 4.0
         let attrs = [
             NSAttributedString.Key.paragraphStyle: style,
-            NSAttributedString.Key.font: self.chatBarConfiguration.textViewStyle.font,
-            NSAttributedString.Key.foregroundColor: self.chatBarConfiguration.textViewStyle.text,
+            NSAttributedString.Key.font: ALKChatBarConfiguration.TextView.text.font,
+            NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.text.text,
         ]
         return attrs
     }() {

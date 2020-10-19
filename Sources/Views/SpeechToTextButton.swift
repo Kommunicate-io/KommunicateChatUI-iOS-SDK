@@ -44,7 +44,6 @@
             return button
         }()
 
-        private var placeHolderStyle: Style
         private lazy var speechRecognizer = SFSpeechRecognizer()
         private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
         private var recognitionTask: SFSpeechRecognitionTask?
@@ -56,17 +55,16 @@
                 fileName: self.localizedStringFileName
             )
             let attributes: [NSAttributedString.Key: Any] = [
-                NSAttributedString.Key.font: placeHolderStyle.font,
-                NSAttributedString.Key.foregroundColor: placeHolderStyle.text,
+                NSAttributedString.Key.font: ALKChatBarConfiguration.TextView.placeholder.font,
+                NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.placeholder.text,
             ]
             let styledText = NSAttributedString(string: placeholderText, attributes: attributes)
             return styledText
         }()
 
-        public init(textView: UITextView, localizedStringFileName: String, placeHolderStyle: Style) {
+        public init(textView: UITextView, localizedStringFileName: String) {
             self.textView = textView
             self.localizedStringFileName = localizedStringFileName
-            self.placeHolderStyle = placeHolderStyle
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             setupRecordButton()
