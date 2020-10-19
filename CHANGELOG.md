@@ -9,6 +9,16 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [CM-402] Date picker support in form template.
 - [CM-402] Text validation support in form template.
 - [CM-451] Add support for setting a prefilled message to send before launching a chat.
+- [CM-480] Added config for changing textview's text and placeholder style
+ </br> Use the below config to change the style:
+
+```swift
+// Text view's placeholder style
+ALKChatBarConfiguration.TextView.placeholder = Style(font: .font(.normal(size: 16)), text: .gray)
+
+// Text view's text style
+ALKChatBarConfiguration.TextView.text = Style(font: .font(.normal(size: 18)), text: .black)
+```
 
 ## [5.10.2] - 2020-10-06
 

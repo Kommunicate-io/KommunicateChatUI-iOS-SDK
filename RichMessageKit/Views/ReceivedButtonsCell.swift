@@ -41,6 +41,7 @@ public class ReceivedButtonsCell: UITableViewCell {
     public var tapped: ((_ index: Int, _ name: String) -> Void)?
 
     // MARK: - Fileprivate properties
+
     fileprivate var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill

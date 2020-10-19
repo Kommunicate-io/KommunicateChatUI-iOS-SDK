@@ -55,8 +55,8 @@
                 fileName: self.localizedStringFileName
             )
             let attributes: [NSAttributedString.Key: Any] = [
-                NSAttributedString.Key.font: textView.font ?? Font.normal(size: 14).font(),
-                NSAttributedString.Key.foregroundColor: UIColor.color(Color.Text.gray9B),
+                NSAttributedString.Key.font: ALKChatBarConfiguration.TextView.placeholder.font,
+                NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.placeholder.text,
             ]
             let styledText = NSAttributedString(string: placeholderText, attributes: attributes)
             return styledText

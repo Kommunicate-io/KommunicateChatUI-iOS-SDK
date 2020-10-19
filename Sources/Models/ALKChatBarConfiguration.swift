@@ -34,6 +34,20 @@ public struct ALKChatBarConfiguration {
     /// By default it is set to `all`.
     public var optionsToShow: AttachmentOptions = .all
 
+    /// Style for textview's text and placeholder
+    public enum TextView {
+        /// Style for place holder.
+        public static var placeholder = Style(
+            font: Font.normal(size: 14).font(),
+            text: .text(.gray9B)
+        )
+        /// Style for text view.
+        public static var text = Style(
+            font: Font.normal(size: 16.0).font(),
+            text: .text(.black00)
+        )
+    }
+
     private(set) var attachmentIcons: [AttachmentType: UIImage?] = {
         // This way we'll get an error when we have added a
         // new option but its icon is not present.
