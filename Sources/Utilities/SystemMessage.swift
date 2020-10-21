@@ -47,6 +47,7 @@ struct SystemMessage: Localizable {
         static let ReportAlertMessage = localizedString(forKey: "ReportAlertMessage")
         static let ReportInfoMessage = localizedString(forKey: "ReplyInfoMessage")
         static let FailedToLoadLink = localizedString(forKey: "FailedToLoadLink")
+        static let ExportLoadingIndicatorText = localizedString(forKey: "ExportLoadingIndicatorText")
     }
 
     struct Update {

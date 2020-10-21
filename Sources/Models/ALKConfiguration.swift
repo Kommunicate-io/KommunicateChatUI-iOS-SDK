@@ -148,6 +148,11 @@ public struct ALKConfiguration {
     // If true, then link preview will be disabled
     public var isLinkPreviewDisabled: Bool = false
 
+    /// If true, then the new iOS Photos UI would be shown in iOS 14+ devices.
+    /// It handles content restrictions in iOS 14 and above.
+    /// Default value is false.
+    public var isNewSystemPhotosUIEnabled = false
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {

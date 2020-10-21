@@ -72,4 +72,20 @@ class ALKFileUtils: NSObject {
             return nil
         }
     }
+
+    func moveFileToDocuments(fileURL: URL) -> URL? {
+        let fileName = fileURL.lastPathComponent
+        let uniqueFileName = "\(Int(Date().timeIntervalSince1970 * 1000))-\(fileName)"
+        let newFileURL = getDocumentDirectory(fileName: uniqueFileName)
+        do {
+            if FileManager.default.fileExists(atPath: newFileURL.path) {
+                try FileManager.default.removeItem(atPath: newFileURL.path)
+            }
+            try FileManager.default.moveItem(atPath: fileURL.path, toPath: newFileURL.path)
+            return newFileURL
+        } catch {
+            print("Failed to export video due to error: \(error)")
+            return nil
+        }
+    }
 }

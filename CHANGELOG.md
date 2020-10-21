@@ -9,6 +9,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [CM-402] Date picker support in form template.
 - [CM-402] Text validation support in form template.
 - [CM-451] Add support for setting a prefilled message to send before launching a chat.
+<<<<<<< HEAD
 - [CM-480] Added config for changing textview's text and placeholder style
  </br> Use the below config to change the style:
 
@@ -19,6 +20,9 @@ ALKChatBarConfiguration.TextView.placeholder = Style(font: .font(.normal(size: 1
 // Text view's text style
 ALKChatBarConfiguration.TextView.text = Style(font: .font(.normal(size: 18)), text: .black)
 ```
+=======
+- [CM-411] Show new Photos UI in iOS 14+ devices to send images/videos without giving full access to the library.
+>>>>>>> Add config to enable photos UI
 
 ## [5.10.2] - 2020-10-06
 
