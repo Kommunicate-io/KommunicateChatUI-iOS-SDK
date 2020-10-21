@@ -58,7 +58,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Applozic: e4c3d4a50d9feaa105608d9d8219686b6639b55b
-  ApplozicSwift: 6d739edcfd725bbbeb39b3704d0f87359b368488
+  ApplozicSwift: e3934a8752f718a41a690e4d53d6d35d26fc760d
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
   MGSwipeTableCell: b804e4e450dee439c42250be90bd50458bf67fce

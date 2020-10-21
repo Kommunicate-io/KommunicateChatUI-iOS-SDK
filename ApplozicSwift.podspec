@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.source = { :git => 'https://github.com/AppLozic/ApplozicSwift.git', :tag => s.version }
 
   s.ios.deployment_target = '10.0'
-  s.swift_version = '4.2'
+  s.swift_version = '5.0'
 
   s.default_subspec = 'Complete'
 
