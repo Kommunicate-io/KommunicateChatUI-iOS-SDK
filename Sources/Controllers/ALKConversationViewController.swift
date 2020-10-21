@@ -1169,9 +1169,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard index < template.count, index >= 0 else { return }
         let dict = template[index]
         let metadata = dict["replyMetadata"] as? [String: Any]
-
+        let languageCode = dict["updateLanguage"] as? String
         /// Use metadata
-        sendQuickReply(title, metadata: metadata)
+        sendQuickReply(title, metadata: metadata, languageCode: languageCode)
     }
 
     func richButtonSelected(index: Int,
@@ -1196,7 +1196,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             submitButtonSelected(metadata: action, text: ackMessage)
         case "quickReply":
             let ackMessage = action["message"] as? String ?? title
-            sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any])
+            let languageCode = action["updateLanguage"] as? String
+            sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any], languageCode: languageCode)
         default:
             print("Do nothing")
         }
@@ -1243,8 +1244,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         case ActionType.quickReply.rawValue:
             let text = action.text ?? defaultText
             guard let msg = text else { return }
-            sendQuickReply(msg, metadata: nil)
-
+            let languageCode = action.updateLanguage
+            sendQuickReply(msg, metadata: nil, languageCode: languageCode)
         default:
             print("Action type is neither \"link\" nor \"quick_reply\"")
             var infoDict = [String: Any]()
@@ -1283,7 +1284,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             submitButtonSelected(metadata: dict, text: payload.text ?? "")
         case CardTemplateActionType.quickReply.rawValue:
             let text = buttons[tag].action?.payload?.message ?? buttons[tag].name
-            sendQuickReply(text, metadata: nil)
+            let languageCode = buttons[tag].action?.payload?.updateLanguage
+            sendQuickReply(text, metadata: nil, languageCode: languageCode)
         default:
             /// Action not defined. Post notification outside.
             sendNotification(withName: "GenericRichCardButtonSelected", buttonName: title, buttonIndex: tag, template: message.payloadFromMetadata() ?? [], messageKey: message.identifier)
@@ -1371,7 +1373,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         isProfileTapActionEnabled = configuration.isProfileTapActionEnabled
     }
 
-    private func sendQuickReply(_ text: String, metadata: [String: Any]?) {
+    open func sendQuickReply(_ text: String, metadata: [String: Any]?, languageCode _: String?) {
         var customMetadata = metadata ?? [String: Any]()
 
         guard let messageMetadata = configuration.messageMetadata as? [String: Any] else {

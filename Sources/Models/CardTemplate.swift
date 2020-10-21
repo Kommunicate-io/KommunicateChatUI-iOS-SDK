@@ -35,6 +35,7 @@ public struct CardTemplate: Codable {
         public let title: String?
         public let message: String?
         public let text: String?
+        public let updateLanguage: String?
         public let formAction: String?
         public let requestType: String?
         public let formData: CardTemplate.FormData?
@@ -54,7 +55,7 @@ public class Util {
         if let cardButtons = genericCard.buttons {
             buttons = [CardTemplate.Button]()
             for btn in cardButtons {
-                let payload = CardTemplate.Payload(url: nil, title: btn.name, message: btn.action, text: btn.data, formAction: nil, requestType: nil, formData: nil)
+                let payload = CardTemplate.Payload(url: nil, title: btn.name, message: btn.action, text: btn.data, updateLanguage: nil, formAction: nil, requestType: nil, formData: nil)
                 let action = CardTemplate.Action(type: "ALKGenericCard", payload: payload)
                 let button = CardTemplate.Button(name: btn.name, action: action)
                 buttons!.append(button)
