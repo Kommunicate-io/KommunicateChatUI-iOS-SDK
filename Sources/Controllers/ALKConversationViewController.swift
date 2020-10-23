@@ -444,7 +444,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         accountVC.closePressed = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
-        present(accountVC, animated: false, completion: nil)
+        present(accountVC, animated: true, completion: nil)
         registerUserClientService.syncAccountStatus { response, error in
             guard error == nil, let response = response, response.isRegisteredSuccessfully() else {
                 print("Failed to sync the account package status")
@@ -769,7 +769,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                         style: .cancel,
                         handler: nil
                     ))
-                    weakSelf.present(alert, animated: false, completion: nil)
+                    weakSelf.present(alert, animated: true, completion: nil)
                     button.isUserInteractionEnabled = true
                     return
                 }
@@ -818,7 +818,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                                 imagePicker.allowsEditing = true
                                 imagePicker.sourceType = .camera
                                 imagePicker.mediaTypes = [kUTTypeMovie as String]
-                                UIViewController.topViewController()?.present(imagePicker, animated: false, completion: nil)
+                                UIViewController.topViewController()?.present(imagePicker, animated: true, completion: nil)
                             } else {
                                 let msg = weakSelf.localizedString(
                                     forKey: "EnableCameraPermissionMessage",
@@ -842,7 +842,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     else {
                         return
                     }
-                    weakSelf.present(vc, animated: false, completion: nil)
+                    weakSelf.present(vc, animated: true, completion: nil)
                 }
             case .showLocation:
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.applozic)
@@ -858,7 +858,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     button.isUserInteractionEnabled = true
                     return
                 }
-                weakSelf.present(vc, animated: false, completion: nil)
+                weakSelf.present(vc, animated: true, completion: nil)
                 button.isUserInteractionEnabled = true
 
             case .shareContact:

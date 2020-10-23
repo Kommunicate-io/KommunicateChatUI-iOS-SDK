@@ -132,17 +132,17 @@ class ALChatManager: NSObject {
         let conversationVC = ALKConversationListViewController(configuration: configuration)
         let navVC = ALKBaseNavigationViewController(rootViewController: conversationVC)
         navVC.modalPresentationStyle = .fullScreen
-        viewController.present(navVC, animated: false, completion: nil)
+        viewController.present(navVC, animated: true, completion: nil)
     }
 
     func launch(viewController: UIViewController, from vc: UIViewController) {
         let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
         guard vc.navigationController != nil else {
-            vc.present(navVC, animated: false, completion: nil)
+            vc.present(navVC, animated: true, completion: nil)
             return
         }
         vc.modalPresentationStyle = .fullScreen
-        vc.navigationController?.pushViewController(viewController, animated: false)
+        vc.navigationController?.pushViewController(viewController, animated: true)
     }
 
     func launchChatWith(contactId: String, from viewController: UIViewController, configuration: ALKConfiguration, prefilledMessage: String? = nil) {

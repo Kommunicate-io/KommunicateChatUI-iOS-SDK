@@ -194,7 +194,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         docViewController.filePath = viewModel?.filePath ?? ""
         docViewController.fileName = viewModel?.fileMetaInfo?.name ?? ""
         let pushAssist = ALPushAssist()
-        pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: false)
+        pushAssist.topViewController.navigationController?.pushViewController(docViewController, animated: true)
     }
 
     class func commonHeightPadding() -> CGFloat {

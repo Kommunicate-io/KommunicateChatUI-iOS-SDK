@@ -140,13 +140,13 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
     }
 
     @IBAction private func sendPhotoPress(_: Any) {
-        navigationController?.dismiss(animated: false, completion: {
+        navigationController?.dismiss(animated: true, completion: {
             self.customCamDelegate?.customCameraDidTakePicture(cropedImage: self.image)
         })
     }
 
     @IBAction private func close(_: Any) {
-        _ = navigationController?.popViewController(animated: false)
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

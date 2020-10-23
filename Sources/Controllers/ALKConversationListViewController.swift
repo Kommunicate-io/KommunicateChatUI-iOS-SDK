@@ -343,7 +343,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         accountVC.closePressed = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
-        present(accountVC, animated: false, completion: nil)
+        present(accountVC, animated: true, completion: nil)
         registerUserClientService.syncAccountStatus { response, error in
             guard error == nil, let response = response, response.isRegisteredSuccessfully() else {
                 print("Failed to sync the account package status")
@@ -365,7 +365,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         } else {
             // push conversation VC
             conversationVC.viewWillLoadFromTappingOnNotification()
-            navigationController?.pushViewController(conversationVC, animated: false)
+            navigationController?.pushViewController(conversationVC, animated: true)
         }
     }
 
@@ -543,7 +543,7 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
         viewController.viewModel = convViewModel
         viewController.individualLaunch = false
-        navigationController?.pushViewController(viewController, animated: false)
+        navigationController?.pushViewController(viewController, animated: true)
     }
 
     public func emptyChatCellTapped() {

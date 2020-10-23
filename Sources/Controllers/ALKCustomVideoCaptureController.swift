@@ -281,7 +281,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
     }
 
     @IBAction private func dismissCameraPress(_: Any) {
-        navigationController?.dismiss(animated: false, completion: nil)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
 
     private func enableCameraControl(inSec: Double) {

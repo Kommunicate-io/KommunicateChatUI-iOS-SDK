@@ -221,7 +221,7 @@ public class NotificationHelper {
                 self.handleNotificationTap(notification)
             }
         } else {
-            vc.dismiss(animated: false) {
+            vc.dismiss(animated: true) {
                 self.findChatVC(notification)
             }
         }
@@ -236,12 +236,12 @@ public class NotificationHelper {
         }
         guard
             vc.navigationController != nil,
-            vc.navigationController?.popViewController(animated: false) == nil
+            vc.navigationController?.popViewController(animated: true) == nil
         else {
             completion()
             return
         }
-        vc.dismiss(animated: false) {
+        vc.dismiss(animated: true) {
             completion()
         }
     }

@@ -108,7 +108,7 @@ final class ALKCustomCropImageViewController: ALKBaseViewController, Localizable
             cropImgPress(Any.self)
         }
 
-        navigationController?.dismiss(animated: false, completion: {
+        navigationController?.dismiss(animated: true, completion: {
             self.customCamDelegate?.customCameraDidTakePicture(cropedImage: self.imageCroped)
         })
     }

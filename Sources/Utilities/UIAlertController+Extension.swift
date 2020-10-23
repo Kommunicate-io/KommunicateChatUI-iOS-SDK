@@ -57,7 +57,7 @@ extension UIAlertController {
 
     func dismissActivityIndicator(_ completion: (() -> Void)?) {
         ActivityIndicatorData.activityIndicator.stopAnimating()
-        dismiss(animated: false) {
+        dismiss(animated: true) {
             completion?()
         }
     }
