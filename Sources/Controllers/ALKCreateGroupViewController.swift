@@ -435,7 +435,7 @@ extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
             localizedStringFileName: localizedStringFileName
         )
 
-        let conversationVC = ALKConversationViewController(configuration: configuration)
+        let conversationVC = ALKConversationViewController(configuration: configuration, individualLaunch: true)
         conversationVC.viewModel = conversationViewModel
         navigationController?.pushViewController(conversationVC, animated: true)
     }
@@ -573,7 +573,7 @@ extension ALKCreateGroupViewController: ALKAddParticipantProtocol {
             localizedStringFileName: localizedStringFileName
         )
 
-        let conversationVC = ALKConversationViewController(configuration: configuration)
+        let conversationVC = ALKConversationViewController(configuration: configuration, individualLaunch: true)
         conversationVC.viewModel = viewModel
         navigationController?.pushViewController(conversationVC, animated: true)
     }

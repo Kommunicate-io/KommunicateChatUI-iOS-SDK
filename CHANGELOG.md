@@ -11,6 +11,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Fixes
 - Fixed an issue where back button action in the conversation screen was not opening correct screen.
+- Fixed an issue where in some cases conversation was not switching when we open it through notification from background.
 
 ## [5.11.0] - 2020-10-27
 

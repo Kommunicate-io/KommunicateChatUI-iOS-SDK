@@ -294,7 +294,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
         let viewController: ALKConversationViewController!
         if conversationViewController == nil {
-            viewController = ALKConversationViewController(configuration: configuration)
+            viewController = ALKConversationViewController(configuration: configuration, individualLaunch: false)
             viewController.viewModel = conversationViewModel
         } else {
             viewController = conversationViewController
@@ -540,7 +540,7 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
         }
-        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
+        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration, individualLaunch: false)
         viewController.viewModel = convViewModel
         viewController.individualLaunch = false
         navigationController?.pushViewController(viewController, animated: true)

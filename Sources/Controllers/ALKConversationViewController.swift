@@ -166,8 +166,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     var contentOffsetDictionary: [AnyHashable: AnyObject]!
 
-    public required init(configuration: ALKConfiguration) {
+    public init(configuration: ALKConfiguration,
+                individualLaunch: Bool)
+    {
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
+        self.individualLaunch = individualLaunch
         super.init(configuration: configuration)
         localizedStringFileName = configuration.localizedStringFileName
         contactService = ALContactService()
@@ -178,6 +181,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    @available(*, unavailable)
+    public required init(configuration _: ALKConfiguration) {
+        fatalError("init(configuration:) has not been implemented")
     }
 
     public func viewWillLoadFromTappingOnNotification() {
@@ -341,6 +349,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { [weak self] _ in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             weakSelf.viewModel.sendKeyboardDoneTyping()
+        }
+
+        if individualLaunch {
+            NotificationCenter.default.addObserver(self, selector: #selector(pushNotification(notification:)), name: Notification.Name("pushNotification"), object: nil)
         }
     }
 
@@ -932,6 +944,30 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.prepareController()
     }
 
+    @objc open func pushNotification(notification: NSNotification) {
+        print("Push notification received in ALKConversationViewController: ", notification.object ?? "")
+        let (notifData, _) = NotificationHelper().notificationInfo(notification as Notification)
+        guard
+            isViewLoaded,
+            view.window != nil,
+            let notificationData = notifData,
+            !NotificationHelper().isNotificationForActiveThread(notificationData)
+        else { return }
+        unsubscribingChannel()
+        viewModel.contactId = notificationData.userId
+        viewModel.channelKey = notificationData.groupId
+        var convProxy: ALConversationProxy?
+        if let convId = notificationData.conversationId,
+            let conversationProxy = ALConversationService().getConversationByKey(convId)
+        {
+            convProxy = conversationProxy
+        }
+        viewModel.conversationProxy = convProxy
+        viewModel.prefilledMessage = nil
+        viewWillLoadFromTappingOnNotification()
+        refreshViewController()
+    }
+
     /// Call this before changing viewModel contents
     public func unsubscribingChannel() {
         guard viewModel != nil, alMqttConversationService != nil else { return }
@@ -1115,7 +1151,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let receiverId = messageVM.receiverId else { return }
 
         let vm = ALKConversationViewModel(contactId: receiverId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
-        let conversationVC = ALKConversationViewController(configuration: configuration)
+        let conversationVC = ALKConversationViewController(configuration: configuration, individualLaunch: true)
         conversationVC.viewModel = vm
         navigationController?.pushViewController(conversationVC, animated: true)
     }

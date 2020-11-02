@@ -15,7 +15,9 @@ class ALKConversationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         conversationVC = ALKConversationViewController(
-            configuration: ALKConfiguration())
+            configuration: ALKConfiguration(),
+            individualLaunch: true
+        )
     }
 
     func testObserver_WhenInitializing() {
@@ -25,11 +27,7 @@ class ALKConversationViewControllerTests: XCTestCase {
 
             init(expectation: XCTestExpectation) {
                 rootExpectation = expectation
-                super.init(configuration: ALKConfiguration())
-            }
-
-            required init(configuration: ALKConfiguration) {
-                super.init(configuration: configuration)
+                super.init(configuration: ALKConfiguration(), individualLaunch: true)
             }
 
             required init?(coder aDecoder: NSCoder) {
@@ -46,7 +44,7 @@ class ALKConversationViewControllerTests: XCTestCase {
     }
 
     func testTypingStatusInGroup_UseDisplayName() {
-        let conversationVC = ALKConversationViewControllerMock(configuration: ALKConfiguration())
+        let conversationVC = ALKConversationViewControllerMock(configuration: ALKConfiguration(), individualLaunch: true)
         conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         conversationVC.contactService = ALContactServiceMock()
         conversationVC.showTypingLabel(status: true, userId: "demoUserId")
@@ -56,7 +54,7 @@ class ALKConversationViewControllerTests: XCTestCase {
     func testTypingStatusInGroup_UseSomebody() {
         var configuration = ALKConfiguration()
         configuration.showNameWhenUserTypesInGroup = false
-        let conversationVC = ALKConversationViewControllerMock(configuration: configuration)
+        let conversationVC = ALKConversationViewControllerMock(configuration: configuration, individualLaunch: true)
         conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: 000, localizedStringFileName: ALKConfiguration().localizedStringFileName)
         conversationVC.contactService = ALContactServiceMock()
         conversationVC.showTypingLabel(status: true, userId: "demoUserId")

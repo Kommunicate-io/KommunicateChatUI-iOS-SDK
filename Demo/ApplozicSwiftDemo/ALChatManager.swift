@@ -153,7 +153,7 @@ class ALChatManager: NSObject {
         }
         title = title.isEmpty ? "No name" : title
         let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName, prefilledMessage: prefilledMessage)
-        let conversationViewController = ALKConversationViewController(configuration: configuration)
+        let conversationViewController = ALKConversationViewController(configuration: configuration, individualLaunch: true)
         conversationViewController.viewModel = convViewModel
         launch(viewController: conversationViewController, from: viewController)
     }
@@ -163,7 +163,7 @@ class ALChatManager: NSObject {
         alChannelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) { channel in
             guard let channel = channel, let key = channel.key else { return }
             let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key, localizedStringFileName: configuration.localizedStringFileName, prefilledMessage: prefilledMessage)
-            let conversationViewController = ALKConversationViewController(configuration: configuration)
+            let conversationViewController = ALKConversationViewController(configuration: configuration, individualLaunch: true)
             conversationViewController.viewModel = convViewModel
             self.launch(viewController: conversationViewController, from: viewController)
         }
@@ -174,7 +174,7 @@ class ALChatManager: NSObject {
         let userId = conversationProxy.userId
         let groupId = conversationProxy.groupId
         let convViewModel = ALKConversationViewModel(contactId: userId, channelKey: groupId, conversationProxy: conversationProxy, localizedStringFileName: configuration.localizedStringFileName)
-        let conversationViewController = ALKConversationViewController(configuration: configuration)
+        let conversationViewController = ALKConversationViewController(configuration: configuration, individualLaunch: true)
         conversationViewController.viewModel = convViewModel
         launch(viewController: conversationViewController, from: viewController)
     }

@@ -101,7 +101,7 @@ extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
         )
         convViewModel.isSearch = true
 
-        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration)
+        let viewController = conversationViewController ?? ALKConversationViewController(configuration: configuration, individualLaunch: false)
         viewController.viewModel = convViewModel
         viewController.individualLaunch = false
         conversationViewController = viewController
