@@ -10,19 +10,19 @@ struct ChatCellPadding {
     struct SentMessage {
         struct Message {
             static let left: CGFloat = 95
-            static let right: CGFloat = 25
+            static let right: CGFloat = 10
         }
 
         struct QuickReply {
             static let left: CGFloat = 75
             static let top: CGFloat = 5
-            static let right: CGFloat = 25
+            static let right: CGFloat = 10
             static let bottom: CGFloat = 5
         }
 
         struct MessageButton {
             static let left: CGFloat = 75
-            static let right: CGFloat = 25
+            static let right: CGFloat = 10
             static let top: CGFloat = 5
             static let bottom: CGFloat = 5
         }
