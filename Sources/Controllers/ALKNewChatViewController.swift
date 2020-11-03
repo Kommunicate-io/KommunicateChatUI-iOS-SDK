@@ -108,9 +108,11 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         tableView.register(ALKFriendNewChatCell.self)
     }
 
-    private func launch(_ conversationVC: ALKConversationViewController) {
-        // Remove current VC from the stack
-        var navControllers = navigationController?.viewControllers.dropLast() ?? []
+    private func launch(_ conversationVC: ALKConversationViewController, fromCreateGroup: Bool) {
+        // Remove the last 3 VC from the stack in case of fromCreateGroup is true
+        // If fromCreateGroup false remove last VC
+        // and ALKConversationViewController
+        var navControllers = navigationController?.viewControllers.dropLast(fromCreateGroup ? 3 : 1) ?? []
         navControllers.append(conversationVC)
         navigationController?.setViewControllers(navControllers, animated: true)
     }
@@ -157,7 +159,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
         let conversationVC = ALKConversationViewController(configuration: configuration)
         conversationVC.viewModel = viewModel
 
-        launch(conversationVC)
+        launch(conversationVC, fromCreateGroup: false)
         self.tableView.deselectRow(at: indexPath, animated: true)
         self.tableView.isUserInteractionEnabled = true
     }
@@ -230,8 +232,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key, localizedStringFileName: self.configuration.localizedStringFileName)
             let conversationVC = ALKConversationViewController(configuration: self.configuration)
             conversationVC.viewModel = viewModel
-            _ = self.navigationController?.popToViewController(self, animated: true)
-            self.launch(conversationVC)
+            self.launch(conversationVC, fromCreateGroup: true)
             self.tableView.isUserInteractionEnabled = true
         })
     }
