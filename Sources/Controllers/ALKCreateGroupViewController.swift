@@ -247,7 +247,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         guard
             let vc = ALKCustomCameraViewController.makeInstanceWith(delegate: self, and: configuration)
         else { return }
-        present(vc, animated: false, completion: nil)
+        present(vc, animated: true, completion: nil)
     }
 
     func setCurrentGroupSelected(groupId: NSNumber,

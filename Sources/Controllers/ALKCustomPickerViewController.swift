@@ -212,12 +212,12 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                 )
                 alert.addAction(UIAlertAction(title: buttonTitle, style: UIAlertAction.Style.default, handler: { _ in
                     self.delegate?.filesSelected(images: images, videos: videos)
-                    self.navigationController?.dismiss(animated: false, completion: nil)
+                    self.navigationController?.dismiss(animated: true, completion: nil)
                 }))
                 self.present(alert, animated: true, completion: nil)
             } else {
                 self.delegate?.filesSelected(images: images, videos: videos)
-                self.navigationController?.dismiss(animated: false, completion: nil)
+                self.navigationController?.dismiss(animated: true, completion: nil)
             }
         }
     }
@@ -265,7 +265,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     }
 
     @IBAction func dismissAction(_: UIBarButtonItem) {
-        navigationController?.dismiss(animated: false, completion: nil)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
 }
 

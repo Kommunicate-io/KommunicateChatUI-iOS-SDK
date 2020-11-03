@@ -99,7 +99,7 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController, Localiza
     }
 
     @IBAction private func close(_: Any) {
-        _ = navigationController?.popViewController(animated: false)
+        _ = navigationController?.popViewController(animated: true)
     }
 
     @IBAction func playButtonAction(_: UIButton) {

@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         }
         let chatManager = ALChatManager(applicationKey: applicationKey as NSString)
         chatManager.logoutUser { _ in
-            self.dismiss(animated: false, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
 
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
         let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
         nav.modalPresentationStyle = .fullScreen
-        present(nav, animated: false, completion: nil)
+        present(nav, animated: true, completion: nil)
 //        Use this to check sample for custom push notif. Comment above lines.
 //        let vc = ContainerViewController()
 //        let nav = ALKBaseNavigationViewController(rootViewController: vc)

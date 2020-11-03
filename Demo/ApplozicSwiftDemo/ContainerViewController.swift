@@ -46,7 +46,7 @@ class ContainerViewController: UIViewController {
 //            self.present(navVC, animated: true, completion: nil)
             let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
             let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
-            present(nav, animated: false, completion: nil)
+            present(nav, animated: true, completion: nil)
         case .profile:
             print("Profile")
         }
@@ -59,7 +59,7 @@ class ContainerViewController: UIViewController {
 //        let navVC = UINavigationController(rootViewController: vc)
 //        self.present(navVC, animated: true, completion: nil)
         let nav = ALKBaseNavigationViewController(rootViewController: viewController)
-        present(nav, animated: false, completion: nil)
+        present(nav, animated: true, completion: nil)
     }
 }
 

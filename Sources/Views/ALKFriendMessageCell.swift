@@ -340,7 +340,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
         let emailWebViewController = ALKWebViewController(htmlString: viewModel?.message ?? "", url: nil, title: text)
         let pushAssist = ALPushAssist()
-        pushAssist.topViewController.navigationController?.pushViewController(emailWebViewController, animated: false)
+        pushAssist.topViewController.navigationController?.pushViewController(emailWebViewController, animated: true)
     }
 
     // MARK: - ChatMenuCell

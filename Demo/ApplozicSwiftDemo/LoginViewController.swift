@@ -58,7 +58,7 @@ class LoginViewController: UIViewController {
                 self.addContacts()
                 NSLog("[REGISTRATION] Applozic user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")
-                self.present(vc!, animated: false, completion: nil)
+                self.present(vc!, animated: true, completion: nil)
             } else {
                 NSLog("[REGISTRATION] Applozic user registration error: %@", error.debugDescription)
             }
