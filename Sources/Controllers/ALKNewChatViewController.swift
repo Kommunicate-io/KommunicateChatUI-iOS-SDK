@@ -111,7 +111,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
     private func launch(_ conversationVC: ALKConversationViewController, fromCreateGroup: Bool) {
         // Remove the last 3 VC from the stack in case of fromCreateGroup is true
         // If fromCreateGroup false remove last VC
-        // and ALKConversationViewController
+        // and Add ALKConversationViewController
         var navControllers = navigationController?.viewControllers.dropLast(fromCreateGroup ? 3 : 1) ?? []
         navControllers.append(conversationVC)
         navigationController?.setViewControllers(navControllers, animated: true)
