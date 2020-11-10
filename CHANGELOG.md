@@ -10,7 +10,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [CM-507] Enable screen transition animations in all screens.
 
 ### Fixes
-- Fixed an issue where group create navigation back stack was misconfigured.
+- Fixed an issue where back button action in the conversation screen was not opening correct screen.
 
 ## [5.11.0] - 2020-10-27
 
