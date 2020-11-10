@@ -9,6 +9,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 - [CM-486] Show time, state and correct message view's left padding in the all buttons rich message template.
 - [CM-507] Enable screen transition animations in all screens.
 
+### Fixes
+- Fixed an issue where back button action in the conversation screen was not opening correct screen.
+
 ## [5.11.0] - 2020-10-27
 
 ### Enhancements
