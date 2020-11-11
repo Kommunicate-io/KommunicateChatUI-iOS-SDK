@@ -156,7 +156,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
 
         let viewModel = ALKConversationViewModel(contactId: friendViewModel.friendUUID, channelKey: nil, localizedStringFileName: configuration.localizedStringFileName)
 
-        let conversationVC = ALKConversationViewController(configuration: configuration)
+        let conversationVC = ALKConversationViewController(configuration: configuration, individualLaunch: true)
         conversationVC.viewModel = viewModel
 
         launch(conversationVC, fromCreateGroup: false)
@@ -230,7 +230,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTable"), object: list)
 
             let viewModel = ALKConversationViewModel(contactId: nil, channelKey: alChannel.key, localizedStringFileName: self.configuration.localizedStringFileName)
-            let conversationVC = ALKConversationViewController(configuration: self.configuration)
+            let conversationVC = ALKConversationViewController(configuration: self.configuration, individualLaunch: true)
             conversationVC.viewModel = viewModel
             self.launch(conversationVC, fromCreateGroup: true)
             self.tableView.isUserInteractionEnabled = true

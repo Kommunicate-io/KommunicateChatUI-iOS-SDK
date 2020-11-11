@@ -13,8 +13,10 @@ class ALKConversationViewControllerMock: ALKConversationViewController {
     var testDisplayName: String!
     var onDeinitialized: (() -> Void)?
 
-    required init(configuration: ALKConfiguration) {
-        super.init(configuration: configuration)
+    override public init(configuration: ALKConfiguration,
+                         individualLaunch: Bool)
+    {
+        super.init(configuration: configuration, individualLaunch: individualLaunch)
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -20,7 +20,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
 
             beforeEach {
                 let contactId = "testExample"
-                conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
+                conversationVC = ALKConversationViewController(configuration: ALKConfiguration(), individualLaunch: true)
                 let convVM = ALKConversationViewModelMock(contactId: contactId, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
 
                 let firstMessage = MockMessage().message
@@ -102,7 +102,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
             var navigationController: UINavigationController!
 
             func prepareController() {
-                conversationVC = ALKConversationViewController(configuration: configuration)
+                conversationVC = ALKConversationViewController(configuration: configuration, individualLaunch: true)
                 conversationVC.viewModel = ALKConversationViewModelMock(contactId: "demoUserId", channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()
@@ -148,7 +148,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
             var navigationController: UINavigationController!
 
             beforeEach {
-                let conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
+                let conversationVC = ALKConversationViewController(configuration: ALKConfiguration(), individualLaunch: true)
                 conversationVC.viewModel = ALKConversationViewModelMock(contactId: nil, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
                 conversationVC.beginAppearanceTransition(true, animated: false)
                 conversationVC.endAppearanceTransition()
@@ -167,7 +167,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
 
             func prepareController(isSenderSide: Bool) {
                 let contactId = "testExample"
-                conversationVC = ALKConversationViewController(configuration: ALKConfiguration())
+                conversationVC = ALKConversationViewController(configuration: ALKConfiguration(), individualLaunch: true)
                 let convVM = ALKConversationViewModelMock(contactId: contactId, channelKey: nil, localizedStringFileName: ALKConfiguration().localizedStringFileName)
 
                 let emailMessage = MockMessage().message
