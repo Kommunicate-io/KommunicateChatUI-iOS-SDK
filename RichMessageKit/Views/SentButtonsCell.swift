@@ -95,16 +95,16 @@ public class SentButtonsCell: UITableViewCell {
 
         // Set time
         timeLabel.text = model.message.time
-        timeLabel.setStyle(ALKMessageStyle.time)
+        timeLabel.setStyle(MessageTheme.sentMessage.time)
 
         let timeLabelSize = model.message.time.rectWithConstrainedWidth(
             ViewPadding.TimeLabel.maxWidth,
-            font: ALKMessageStyle.time.font
+            font: MessageTheme.sentMessage.time.font
         )
 
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
-        setStatusStyle(model: model, statusView: stateView, ALKMessageStyle.messageStatus)
+        setStatusStyle(model: model, statusView: stateView, MessageTheme.messageStatus)
     }
 
     /// It is used to get exact height of `SentButtonsCell` using messageModel, width and padding
@@ -118,7 +118,7 @@ public class SentButtonsCell: UITableViewCell {
 
         let timeLabelSize = model.message.time.rectWithConstrainedWidth(
             ViewPadding.TimeLabel.maxWidth,
-            font: ALKMessageStyle.time.font
+            font: MessageTheme.sentMessage.time.font
         )
 
         if !isMessageEmpty {
@@ -177,7 +177,7 @@ public class SentButtonsCell: UITableViewCell {
     func setStatusStyle(
         model: SuggestedReplyMessage,
         statusView: UIImageView,
-        _ style: ALKMessageStyle.SentMessageStatus,
+        _ style: MessageTheme.SentMessageStatus,
         _ size: CGSize = CGSize(width: 17, height: 9)
     ) {
         guard let status = model.message.status,
