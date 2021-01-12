@@ -403,7 +403,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     func menuReport(_: Any) {
-        menuAction?(.reportMessage)
+        menuAction?(.report)
     }
 }
 

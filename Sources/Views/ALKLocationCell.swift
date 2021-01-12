@@ -186,7 +186,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     func menuReport(_: Any) {
-        menuAction?(.reportMessage)
+        menuAction?(.report)
     }
 }
 

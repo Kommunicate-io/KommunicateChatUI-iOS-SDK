@@ -54,22 +54,25 @@ extension ALKConversationViewController: ALAlertButtonClickProtocol {
         alPushAssist.topViewController.present(alert, animated: true, completion: nil)
     }
 
-    func menuItemSelected(action: ALKChatBaseCell<ALKMessageViewModel>.MenuActionType,
-                          message: ALKMessageViewModel)
-    {
+    func menuItemSelected(
+        action: ALKChatBaseCell<ALKMessageViewModel>.MenuOption,
+        message: ALKMessageViewModel
+    ){
         switch action {
         case .reply:
             print("Reply selected")
             viewModel.setSelectedMessageToReply(message)
             replyMessageView.update(message: message)
             showReplyMessageView()
-        case .reportMessage:
+        case .report:
             let muteConversationVC = ALKAlertViewController(action: ALKAlertViewController.Action.reportMessage, delegate: self, messageKey: message.identifier, configuration: configuration)
             let title = localizedString(forKey: "ReportAlertTitle", withDefaultValue: SystemMessage.Information.ReportAlertTitle, fileName: configuration.localizedStringFileName)
             let message = localizedString(forKey: "ReportAlertMessage", withDefaultValue: SystemMessage.Information.ReportAlertMessage, fileName: configuration.localizedStringFileName)
             muteConversationVC.updateTitleAndMessage(title, message: message)
             muteConversationVC.modalPresentationStyle = .overCurrentContext
             present(muteConversationVC, animated: true, completion: nil)
+        case .copy:
+            UIPasteboard.general.string = message.message ?? ""
         }
     }
 }

@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+
+- Added an option to show/hide different message menu options.
+
 ## [5.11.1] - 2020-12-01
 
 ### Enhancements

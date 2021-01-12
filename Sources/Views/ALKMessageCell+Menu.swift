@@ -9,7 +9,7 @@ import Foundation
 
 extension ALKMessageCell: ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
     func menuCopy(_: Any) {
-        UIPasteboard.general.string = viewModel?.message ?? ""
+        menuAction?(.copy)
     }
 
     func menuReply(_: Any) {
@@ -17,6 +17,6 @@ extension ALKMessageCell: ALKCopyMenuItemProtocol, ALKReplyMenuItemProtocol, ALK
     }
 
     func menuReport(_: Any) {
-        menuAction?(.reportMessage)
+        menuAction?(.report)
     }
 }
