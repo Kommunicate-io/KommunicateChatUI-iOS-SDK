@@ -9,7 +9,14 @@
 import UIKit
 
 open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
+    public enum MenuOption {
+        case copy
+        case reply
+        case report
+    }
+
     var localizedStringFileName: String!
+    var menuOptionsToShow: [MenuOption] = []
     var showReport: Bool = false
 
     public func setLocalizedStringFileName(_ localizedStringFileName: String) {
@@ -24,16 +31,9 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
 
     var avatarTapped: (() -> Void)?
 
-    /// Actions available on menu where callbacks
-    /// needs to be send are defined here.
-    enum MenuActionType {
-        case reply
-        case reportMessage
-    }
-
     /// It will be invoked when one of the actions
     /// is selected.
-    var menuAction: ((MenuActionType) -> Void)?
+    var menuAction: ((MenuOption) -> Void)?
 
     func update(chatBar: ALKChatBar) {
         self.chatBar = chatBar
@@ -112,7 +112,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     }
 
     func getCopyMenuItem(copyItem: Any) -> UIMenuItem? {
-        guard let copyMenuItem = copyItem as? ALKCopyMenuItemProtocol else {
+        guard menuOptionsToShow.contains(.copy), let copyMenuItem = copyItem as? ALKCopyMenuItemProtocol else {
             return nil
         }
         let title = localizedString(forKey: "Copy", withDefaultValue: SystemMessage.LabelName.Copy, fileName: localizedStringFileName)
@@ -121,7 +121,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     }
 
     func getReplyMenuItem(replyItem: Any) -> UIMenuItem? {
-        guard let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else {
+        guard menuOptionsToShow.contains(.reply), let replyMenuItem = replyItem as? ALKReplyMenuItemProtocol else {
             return nil
         }
         let title = localizedString(forKey: "Reply", withDefaultValue: SystemMessage.LabelName.Reply, fileName: localizedStringFileName)
@@ -130,7 +130,9 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     }
 
     func getReportMessageItem(reportMessageItem: Any) -> UIMenuItem? {
-        guard let reportMessageMenuItem = reportMessageItem as? ALKReportMessageMenuItemProtocol else {
+        guard menuOptionsToShow.contains(.report),
+              let reportMessageMenuItem = reportMessageItem as? ALKReportMessageMenuItemProtocol
+        else {
             return nil
         }
         let title = localizedString(forKey: "Report", withDefaultValue: SystemMessage.LabelName.Report, fileName: localizedStringFileName)

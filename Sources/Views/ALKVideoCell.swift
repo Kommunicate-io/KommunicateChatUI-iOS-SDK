@@ -214,7 +214,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     func menuReport(_: Any) {
-        menuAction?(.reportMessage)
+        menuAction?(.report)
     }
 
     @objc private func downloadButtonAction(_: UIButton) {

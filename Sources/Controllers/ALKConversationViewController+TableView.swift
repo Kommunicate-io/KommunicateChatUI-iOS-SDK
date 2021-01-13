@@ -48,13 +48,14 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .text, .html, .email:
             if !configuration.isLinkPreviewDisabled, message.messageType == .text, ALKLinkPreviewManager.extractURLAndAddInCache(from: message.message, identifier: message.identifier) != nil {
                 var cell = ALKLinkPreviewBaseCell()
+                cell.menuOptionsToShow = configuration.messageMenuOptions
                 if message.isMyMessage {
                     cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyLinkPreviewCell
                     cell.showReport = false
                     necessarySetupForMessageCell(cell: cell, message: message)
                 } else {
                     cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendLinkPreviewCell
-                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.showReport = true
                     cell.avatarTapped = { [weak self] in
                         guard let currentModel = cell.viewModel else { return }
                         self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
@@ -70,12 +71,14 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 if message.isMyMessage {
                     let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyMessageCell
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
                     cell.showReport = false
                     necessarySetupForMessageCell(cell: cell, message: message)
                     return cell
                 } else {
                     let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendMessageCell
-                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
+                    cell.showReport = true
                     cell.avatarTapped = { [weak self] in
                         guard let currentModel = cell.viewModel else { return }
                         self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
@@ -93,6 +96,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     // Set the value to nil so that previous image gets removed before reuse
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                     cell.photoView.image = nil
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
                     cell.showReport = false
                     cell.update(viewModel: message)
                     cell.uploadTapped = { [weak self]
@@ -115,6 +119,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                 } else {
                     let cell: ALKMyPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
                     cell.showReport = false
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                     cell.update(viewModel: message)
@@ -132,7 +137,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 if message.ratio < 1 {
                     let cell: ALKFriendPhotoPortalCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                     cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
+                    cell.showReport = true
                     cell.update(viewModel: message)
                     cell.downloadTapped = { [weak self]
                         _ in
@@ -149,7 +155,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
                 } else {
                     let cell: ALKFriendPhotoLandscapeCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                    cell.showReport = configuration.isReportMessageEnabled
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
+                    cell.showReport = true
                     cell.menuAction = { [weak self] action in
                         self?.menuItemSelected(action: action, message: message)
                     }
@@ -165,6 +172,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             if message.isMyMessage {
                 let cell: ALKMyVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.downloadTapped = { [weak self] _ in
@@ -178,7 +186,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendVoiceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.showReport = configuration.isReportMessageEnabled
+                cell.menuOptionsToShow = configuration.messageMenuOptions
+                cell.showReport = true
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.downloadTapped = { [weak self] _ in
                     self?.attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
@@ -197,6 +206,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .location:
             if message.isMyMessage {
                 let cell: ALKMyLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
@@ -209,7 +219,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendLocationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.showReport = configuration.isReportMessageEnabled
+                cell.menuOptionsToShow = configuration.messageMenuOptions
+                cell.showReport = true
                 cell.update(viewModel: message)
                 cell.setDelegate(locDelegate: self)
                 cell.avatarTapped = { [weak self] in
@@ -229,6 +240,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .video:
             if message.isMyMessage {
                 let cell: ALKMyVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
@@ -252,7 +264,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.showReport = configuration.isReportMessageEnabled
+                cell.menuOptionsToShow = configuration.messageMenuOptions
+                cell.showReport = true
                 cell.update(viewModel: message)
                 cell.downloadTapped = { [weak self]
                     _ in
@@ -271,6 +284,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
             if message.isMyMessage {
                 let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyGenericCardMessageCell
+                cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
@@ -281,7 +295,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendGenericCardMessageCell
-                cell.showReport = configuration.isReportMessageEnabled
+                cell.menuOptionsToShow = configuration.messageMenuOptions
+                cell.showReport = true
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: ALKGenericCardCell.self)
                 cell.update(viewModel: message, width: UIScreen.main.bounds.width)
@@ -382,6 +397,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
                 let cell: ALKMyDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = false
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)
@@ -402,7 +418,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 return cell
             } else {
                 let cell: ALKFriendDocumentCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.showReport = configuration.isReportMessageEnabled
+                cell.menuOptionsToShow = configuration.messageMenuOptions
+                cell.showReport = true
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message)
                 cell.update(chatBar: chatBar)

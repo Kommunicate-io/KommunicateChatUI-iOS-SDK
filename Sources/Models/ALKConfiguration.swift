@@ -106,9 +106,6 @@ public struct ALKConfiguration {
     /// If true, swipe action in chatcell to delete/mute conversation will be disabled.
     public var disableSwipeInChatCell: Bool = false
 
-    /// If true, then the message report option will be visible.
-    public var isReportMessageEnabled = false
-
     /// Use this to customize chat input bar items like attachment
     /// button icons or their visibility.
     public var chatBar = ALKChatBarConfiguration()
@@ -152,6 +149,9 @@ public struct ALKConfiguration {
     /// It handles content restrictions in iOS 14 and above.
     /// Default value is false.
     public var isNewSystemPhotosUIEnabled = false
+
+    /// Set the message menu options to show on the message long tap.
+    public var messageMenuOptions: [ALKMessageCell.MenuOption] = [.copy, .reply]
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
@@ -210,6 +210,15 @@ public struct ALKConfiguration {
             let dateCellStyle = ALKMessageStyle.dateSeparator
             ALKMessageStyle.infoMessage = Style(font: infoMessageStyle.font, text: conversationViewCustomCellTextColor, background: conversationViewCustomCellBackgroundColor)
             ALKMessageStyle.dateSeparator = Style(font: dateCellStyle.font, text: conversationViewCustomCellTextColor, background: conversationViewCustomCellBackgroundColor)
+        }
+    }
+
+    /// If true, then the message report option will be visible.
+    @available(*, deprecated, message: "Use messageMenuOptions to show/hide different menu options.")
+    public var isReportMessageEnabled = false {
+        didSet {
+            guard isReportMessageEnabled, !messageMenuOptions.contains(.report) else { return }
+            messageMenuOptions.append(.report)
         }
     }
 
