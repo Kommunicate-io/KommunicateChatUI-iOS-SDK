@@ -294,6 +294,12 @@ open class ALKChatBar: UIView, Localizable {
     private weak var comingSoonDelegate: UIView?
 
     var chatIdentifier: String?
+    var bottomBackgroundColor: UIColor = .background(.grayEF) {
+        didSet {
+            bottomGrayView.backgroundColor = bottomBackgroundColor
+            backgroundColor = bottomBackgroundColor
+        }
+    }
 
     private func initializeView() {
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
@@ -304,7 +310,8 @@ open class ALKChatBar: UIView, Localizable {
         soundRec.setAudioRecViewDelegate(recorderDelegate: self)
         textView.typingAttributes = defaultTextAttributes
         textView.add(delegate: self)
-        backgroundColor = .background(.grayEF)
+        bottomGrayView.backgroundColor = bottomBackgroundColor
+        backgroundColor = bottomBackgroundColor
         translatesAutoresizingMaskIntoConstraints = false
 
         plusButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)

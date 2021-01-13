@@ -8,6 +8,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 
 - Added an option to show/hide different message menu options.
+- Now, chat bar's attachment color config will be applied to the bottom part of the chat bar as well.
 
 ## [5.11.1] - 2020-12-01
 
