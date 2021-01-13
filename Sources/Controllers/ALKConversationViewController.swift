@@ -708,7 +708,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         chatBar.grayView.backgroundColor = configuration.backgroundColor
 
         // Update background view's color which contains all the attachment options.
-        chatBar.bottomGrayView.backgroundColor = configuration.chatBarAttachmentViewBackgroundColor
+        chatBar.bottomBackgroundColor = configuration.chatBarAttachmentViewBackgroundColor
 
         chatBar.poweredByMessageLabel.attributedText =
             NSAttributedString(string: "Powered by Applozic")
