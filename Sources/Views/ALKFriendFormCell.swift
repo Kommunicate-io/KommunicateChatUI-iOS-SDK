@@ -30,7 +30,9 @@ class ALKFriendFormCell: ALKFormCell {
             static let maxWidth: CGFloat = 200
         }
 
-        static var maxWidth = UIScreen.main.bounds.width
+        static let maxWidth = UIScreen.main.bounds.width
+            - (ViewPadding.AvatarImageView.width + ViewPadding.AvatarImageView.leading)
+
         static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
                                                 right: ChatCellPadding.ReceivedMessage.Message.right,
                                                 top: ChatCellPadding.ReceivedMessage.Message.top,
@@ -64,7 +66,7 @@ class ALKFriendFormCell: ALKFormCell {
     fileprivate lazy var messageView = MessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
-        maxWidth: ViewPadding.maxWidth
+        maxWidth: ViewPadding.maxWidth - (ViewPadding.messageViewPadding.left + ViewPadding.messageViewPadding.right)
     )
 
     fileprivate var submitButtonView = UIView(frame: .zero)

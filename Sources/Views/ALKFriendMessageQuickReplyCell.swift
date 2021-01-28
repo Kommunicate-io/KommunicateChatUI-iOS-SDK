@@ -29,6 +29,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
         }
 
         static let maxWidth = UIScreen.main.bounds.width
+            - (ViewPadding.AvatarImageView.width + ViewPadding.AvatarImageView.leading)
         static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
                                                 right: ChatCellPadding.ReceivedMessage.Message.right,
                                                 top: ChatCellPadding.ReceivedMessage.Message.top,
@@ -65,7 +66,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
     fileprivate lazy var messageView = MessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
-        maxWidth: ViewPadding.maxWidth
+        maxWidth: ViewPadding.maxWidth - (ViewPadding.messageViewPadding.left + ViewPadding.messageViewPadding.right)
     )
 
     var quickReplyView = SuggestedReplyView()

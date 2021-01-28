@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+
+- Fixed an issue where message part of the quick reply and form template was getting truncated from the bottom.
+
 ## [5.12.0] - 2021-01-18
 
 ### Enhancements
