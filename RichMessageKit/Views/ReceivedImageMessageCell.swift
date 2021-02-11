@@ -8,11 +8,6 @@
 import UIKit
 
 public class ReceivedImageMessageCell: UITableViewCell {
-    // MARK: - Public properties
-
-    /// It is used to inform the delegate that the image is tapped. URL of tapped image is sent.
-    public var delegate: Tappable?
-
     public struct Config {
         public static var maxWidth = UIScreen.main.bounds.width
 
@@ -108,6 +103,8 @@ public class ReceivedImageMessageCell: UITableViewCell {
 
     fileprivate var imageUrl: String?
 
+    var imageTapped: (() -> Void)?
+
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         messageViewPadding = Padding(left: Config.MessageView.leftPadding,
                                      right: Config.MessageView.rightPadding,
@@ -187,7 +184,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [avatarImageView, nameLabel, messageView, imageBubble, timeLabel])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageView, imageBubble, timeLabel])
         let nameRightPadding = max(Config.MessageView.rightPadding, Config.DisplayName.rightPadding)
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: Config.ProfileImage.topPadding),
@@ -217,20 +214,12 @@ public class ReceivedImageMessageCell: UITableViewCell {
         ])
     }
 
-    @objc private func imageTapped() {
-        guard let delegate = delegate else {
-            print("❌❌❌ Delegate is not set. To handle image click please set delegate.❌❌❌")
-            return
-        }
-        guard let imageUrl = imageUrl else {
-            print("😱😱😱 ImageUrl is found nil. 😱😱😱")
-            return
-        }
-        delegate.didTap(index: 0, title: imageUrl)
+    @objc private func imageTapAction() {
+        imageTapped?()
     }
 
     private func setupGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapAction))
         tapGesture.numberOfTapsRequired = 1
         imageBubble.addGestureRecognizer(tapGesture)
     }

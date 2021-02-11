@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6Qw-CT-Hx8">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6Qw-CT-Hx8">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Preview Image View Controller-->
         <scene sceneID="Qbz-nv-kcz">
             <objects>
-                <viewController storyboardIdentifier="PreviewImageViewController" id="T7c-VG-5fK" customClass="PreviewImageViewController" customModule="sampleapp_completeswift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PreviewImageViewController" id="T7c-VG-5fK" customClass="ALKPreviewImageViewController" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FNY-tx-eBm"/>
                         <viewControllerLayoutGuide type="bottom" id="JnI-lM-Svd"/>
@@ -33,16 +32,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ftw-Ej-5KW">
-                        <barButtonItem key="leftBarButtonItem" image="icon_close_white" id="MhS-8Y-H3M">
-                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="icon_close_white" id="MhS-8Y-H3M">
                             <connections>
                                 <action selector="dismissPress:" destination="T7c-VG-5fK" id="t7y-vK-obr"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="icon_download" id="sUK-4p-9hk">
-                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="downlaodImgPress:" destination="T7c-VG-5fK" id="Pne-LC-pEL"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -57,7 +49,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="816-hg-X2G">
             <objects>
-                <navigationController storyboardIdentifier="PreviewImageNavigationViewController" id="6Qw-CT-Hx8" customClass="ALBaseNavigationViewController" customModule="sampleapp_completeswift" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PreviewImageNavigationViewController" id="6Qw-CT-Hx8" customClass="ALKBaseNavigationViewController" customModule="ApplozicSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="SjS-fh-lRq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -73,6 +65,5 @@
     </scenes>
     <resources>
         <image name="icon_close_white" width="16" height="16"/>
-        <image name="icon_download" width="18" height="21"/>
     </resources>
 </document>

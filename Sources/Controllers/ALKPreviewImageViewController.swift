@@ -9,17 +9,6 @@
 import UIKit
 
 final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
-    var localizedStringFileName: String!
-
-    required init(configuration: ALKConfiguration) {
-        super.init(configuration: configuration)
-        localizedStringFileName = configuration.localizedStringFileName
-    }
-
-    @available(*, unavailable)
-    public required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     // to be injected
     var viewModel: ALKPreviewImageViewModel?
@@ -50,39 +39,16 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-//        DispatchQueue.main.async { [weak self] in
-//            guard let weakSelf = self else { return }
-//            MBProgressHUD.showAdded(to: weakSelf.fakeView, animated: true)
-//        }
-//
-//        viewModel?.prepareActualImage(successBlock: { [weak self] in
-//            guard let weakSelf = self else { return }
-//
-//            DispatchQueue.main.async {
-//                weakSelf.setupView()
-//                weakSelf.updateMinZoomScaleForSize(size: weakSelf.view.bounds.size)
-//                weakSelf.updateConstraintsForSize(size: weakSelf.view.bounds.size)
-//
-//                MBProgressHUD.hide(for: weakSelf.fakeView, animated: true)
-//            }
-//
-//            }, failBlock: { [weak self] (errorMessage)  in
-//                guard let weakSelf = self else { return }
-//
-//                DispatchQueue.main.async {
-//                    MBProgressHUD.hide(for: weakSelf.fakeView, animated: true)
-//
-//                    weakSelf.view.makeToast(errorMessage, duration: 3.0, position: .center)
-//                    weakSelf.perform(#selector(weakSelf.dismissPress(_:)), with: nil, afterDelay: 3)
-//                }
-//        })
     }
 
     private func setupNavigation() {
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        guard let navVC = navigationController else { return }
-        navVC.navigationBar.shadowImage = UIImage()
-        navVC.navigationBar.isTranslucent = true
+        guard let viewModel = viewModel else { return }
+        let title = self.localizedString(forKey: "RichMessageImagePreviewTitle", withDefaultValue: SystemMessage.PhotoAlbum.PreviewTitle, fileName: viewModel.localizedStringFileName)
+        navigationItem.title = title
+        let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
+        button.tintColor = UINavigationBar.appearance().tintColor
+        navigationItem.rightBarButtonItem = button
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -164,19 +130,19 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
         guard let viewModel = viewModel else { return }
 
         let showSuccessAlert: () -> Void = {
-            let photoAlbumSuccessTitleMsg = self.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: self.localizedStringFileName)
-            let photoAlbumSuccessMsg = self.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: self.localizedStringFileName)
+            let photoAlbumSuccessTitleMsg = self.localizedString(forKey: "PhotoAlbumSuccessTitle", withDefaultValue: SystemMessage.PhotoAlbum.SuccessTitle, fileName: viewModel.localizedStringFileName)
+            let photoAlbumSuccessMsg = self.localizedString(forKey: "PhotoAlbumSuccess", withDefaultValue: SystemMessage.PhotoAlbum.Success, fileName: viewModel.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumSuccessTitleMsg, message: photoAlbumSuccessMsg, preferredStyle: UIAlertController.Style.alert)
-            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: self.localizedStringFileName)
+            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
 
         let showFailureAlert: (Error) -> Void = { _ in
-            let photoAlbumFailureTitleMsg = self.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: self.localizedStringFileName)
-            let photoAlbumFailMsg = self.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: self.localizedStringFileName)
+            let photoAlbumFailureTitleMsg = self.localizedString(forKey: "PhotoAlbumFailureTitle", withDefaultValue: SystemMessage.PhotoAlbum.FailureTitle, fileName: viewModel.localizedStringFileName)
+            let photoAlbumFailMsg = self.localizedString(forKey: "PhotoAlbumFail", withDefaultValue: SystemMessage.PhotoAlbum.Fail, fileName: viewModel.localizedStringFileName)
             let alert = UIAlertController(title: photoAlbumFailureTitleMsg, message: photoAlbumFailMsg, preferredStyle: UIAlertController.Style.alert)
-            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: self.localizedStringFileName)
+            let photoAlbumOkMsg = self.localizedString(forKey: "PhotoAlbumOk", withDefaultValue: SystemMessage.PhotoAlbum.Ok, fileName: viewModel.localizedStringFileName)
             alert.addAction(UIAlertAction(title: photoAlbumOkMsg, style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }

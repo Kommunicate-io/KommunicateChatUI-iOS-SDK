@@ -158,3 +158,5 @@ DatePickerDateAndTimeTitle = "Select date and time";
 
 /* Form UI*/
 InvalidDatErrorInForm = "Please enter valid data";
+
+RichMessageImagePreviewTitle = "Image";
