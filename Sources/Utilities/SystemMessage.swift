@@ -118,6 +118,7 @@ struct SystemMessage: Localizable {
         static let SuccessTitle = localizedString(forKey: "PhotoAlbumSuccessTitle")
         static let FailureTitle = localizedString(forKey: "PhotoAlbumFailureTitle")
         static let Ok = localizedString(forKey: "PhotoAlbumOk")
+        static let PreviewTitle = localizedString(forKey: "RichMessageImagePreviewTitle")
     }
 
     struct Message {

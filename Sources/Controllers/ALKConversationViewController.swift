@@ -1346,6 +1346,17 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    func openRichMessageImageView(imageUrl: URL) {
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.previewImage, bundle: Bundle.applozic)
+        guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController,
+              let vc = nav.viewControllers.first as? ALKPreviewImageViewController else {
+            return
+        }
+        vc.configuration = self.configuration
+        vc.viewModel = ALKPreviewImageViewModel(imageUrl: imageUrl, localizedStringFileName: self.configuration.localizedStringFileName)
+        UIViewController.topViewController()?.present(nav, animated: true, completion: nil)
+    }
+
     func collectionViewOffsetFromIndex(_ index: Int) -> CGFloat {
         let value = contentOffsetDictionary[index]
         let horizontalOffset = CGFloat(value != nil ? value!.floatValue : 0)

@@ -473,10 +473,18 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             guard let imageMessage = message.imageMessage() else { return UITableViewCell() }
             if message.isMyMessage {
                 let cell: SentImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.imageTapped = {
+                    guard let imageUrl = URL(string: imageMessage.url) else { return }
+                    self.openRichMessageImageView(imageUrl: imageUrl)
+                }
                 cell.update(model: imageMessage)
                 return cell
             } else {
                 let cell: ReceivedImageMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.imageTapped = {
+                    guard let imageUrl = URL(string: imageMessage.url) else { return }
+                    self.openRichMessageImageView(imageUrl: imageUrl)
+                }
                 cell.update(model: imageMessage)
                 return cell
             }

@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+
+- Now, images in image rich message(templateId = 9) can be tapped and previewed just like normal attachment messages.
+
 ## [5.12.1] - 2021-02-01
 
 ### Fixes

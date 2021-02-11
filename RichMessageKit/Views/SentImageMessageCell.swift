@@ -8,11 +8,6 @@
 import UIKit
 
 public class SentImageMessageCell: UITableViewCell {
-    // MARK: - Public properties
-
-    /// It is used to inform the delegate that the image is tapped. URL of tapped image is sent.
-    public var delegate: Tappable?
-
     public enum Config {
         public static var maxWidth = UIScreen.main.bounds.width
 
@@ -79,6 +74,8 @@ public class SentImageMessageCell: UITableViewCell {
     fileprivate lazy var imageBubbleHeight = imageBubble.heightAnchor.constraint(equalToConstant: 0)
 
     fileprivate var imageUrl: String?
+
+    var imageTapped: (() -> Void)?
 
     // MARK: - Initializer
 
@@ -150,7 +147,7 @@ public class SentImageMessageCell: UITableViewCell {
     }
 
     private func setupConstraints() {
-        addViewsForAutolayout(views: [messageView, imageBubble, timeLabel, stateView])
+        contentView.addViewsForAutolayout(views: [messageView, imageBubble, timeLabel, stateView])
 
         NSLayoutConstraint.activate([
             messageView.topAnchor.constraint(equalTo: topAnchor, constant: Config.MessageView.topPadding),
@@ -174,24 +171,6 @@ public class SentImageMessageCell: UITableViewCell {
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(equalTo: stateView.leadingAnchor, constant: -1 * Config.TimeLabel.rightPadding),
         ])
-    }
-
-    @objc private func imageTapped() {
-        guard let delegate = delegate else {
-            print("❌❌❌ Delegate is not set. To handle image click please set delegate.❌❌❌")
-            return
-        }
-        guard let imageUrl = imageUrl else {
-            print("😱😱😱 ImageUrl is found nil. 😱😱😱")
-            return
-        }
-        delegate.didTap(index: 0, title: imageUrl)
-    }
-
-    private func setupGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
-        tapGesture.numberOfTapsRequired = 1
-        imageBubble.addGestureRecognizer(tapGesture)
     }
 
     func setStatusStyle(
@@ -222,5 +201,15 @@ public class SentImageMessageCell: UITableViewCell {
             stateViewWidth.constant = 0
             stateViewHeight.constant = 0
         }
+    }
+
+    @objc private func imageTapAction() {
+        imageTapped?()
+    }
+
+    private func setupGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapAction))
+        tapGesture.numberOfTapsRequired = 1
+        imageBubble.addGestureRecognizer(tapGesture)
     }
 }
