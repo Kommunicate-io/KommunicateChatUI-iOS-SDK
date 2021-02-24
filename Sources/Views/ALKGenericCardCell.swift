@@ -97,6 +97,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
             public static let width: CGFloat = 80
             public static let height: CGFloat = 35
         }
+        /// The number of lines for the card description label. The default value for this is 3.
+        public static var descriptionMaxLines = 3
     }
 
     enum ConstraintIdentifier: String {
@@ -157,7 +159,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var descriptionLabel: VerticalAlignLabel = {
         let label = VerticalAlignLabel()
         label.text = ""
-        label.numberOfLines = 3
+        label.numberOfLines = ALKGenericCardCell.Config.descriptionMaxLines
         label.font = Font.description
         label.textColor = UIColor(red: 121, green: 116, blue: 116)
         return label
@@ -235,7 +237,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         let subtitleHeight = textHeight(card.subtitle, size: subtitleConstraint, font: Font.subtitle)
 
         let descriptionConstraint = CGSize(width: maxWidth, height: Font.description.lineHeight)
-        let descriptionHeight = textHeight(card.description, size: descriptionConstraint, font: Font.description) * CGFloat(3)
+        let descriptionHeight = textHeight(card.description, size: descriptionConstraint, font: Font.description) * CGFloat(ALKGenericCardCell.Config.descriptionMaxLines)
 
         let totalButtonHeight = Config.buttonHeight * CGFloat(card.buttons?.count ?? 0)
 
@@ -345,7 +347,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         descriptionLabel.isHidden = false
         descriptionLabel.text = description
         let descriptionConstraint = CGSize(width: 200, height: Font.description.lineHeight * 1)
-        let height = description.rectWithConstrainedSize(descriptionConstraint, font: Font.description).height.rounded(.up) * CGFloat(3)
+        let height = description.rectWithConstrainedSize(descriptionConstraint, font: Font.description).height.rounded(.up) * CGFloat(ALKGenericCardCell.Config.descriptionMaxLines)
         descriptionLabel.constraint(withIdentifier: ConstraintIdentifier.descriptionView.rawValue)?.constant = height
     }
 
