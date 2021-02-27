@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+
+- Added an option to change the number of lines of the card template's description label.
+
 ## [5.13.0] - 2021-02-16
 
 ### Enhancements
