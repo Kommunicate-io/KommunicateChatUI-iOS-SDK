@@ -49,3 +49,23 @@ extension NSMutableAttributedString {
 extension NSAttributedString.Key {
     public static let secondaryFont = NSAttributedString.Key("ALKSecondaryFont")
 }
+
+extension NSMutableAttributedString {
+
+    /// Replaces the base font with the given font, while preserving traits like bold and italic
+    func setBaseFont(baseFont: UIFont, preserveFontSizes: Bool = false) {
+        let baseDescriptor = baseFont.fontDescriptor
+        let wholeRange = NSRange(location: 0, length: length)
+        beginEditing()
+        enumerateAttribute(.font, in: wholeRange, options: []) { object, range, _ in
+            guard let font = object as? UIFont else { return }
+            let traits = font.fontDescriptor.symbolicTraits
+            guard let descriptor = baseDescriptor.withSymbolicTraits(traits) else { return }
+            let newSize = preserveFontSizes ? descriptor.pointSize : baseDescriptor.pointSize
+            let newFont = UIFont(descriptor: descriptor, size: newSize)
+            self.removeAttribute(.font, range: range)
+            self.addAttribute(.font, value: newFont, range: range)
+        }
+        endEditing()
+    }
+}

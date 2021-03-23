@@ -215,8 +215,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         DispatchQueue.global(qos: .utility).async {
             guard let attributedText = ALKMessageCell.attributedStringFrom(message, for: viewModel.identifier) else { return }
             let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
-            htmlMessage.addAttribute(NSAttributedString.Key.font, value: messageStyle.font, range: NSRange(location: 0, length: attributedText.length))
-            htmlMessage.addAttribute(NSAttributedString.Key.foregroundColor, value: messageStyle.text, range: NSRange(location: 0, length: attributedText.length))
+            htmlMessage.setBaseFont(baseFont: messageStyle.font)
             DispatchQueue.main.async {
                 self.messageView.attributedText = htmlMessage
             }
@@ -280,7 +279,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 return 0
             }
             let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
-            htmlMessage.addAttribute(NSAttributedString.Key.font, value: font, range: NSRange(location: 0, length: attributedText.length))
+            htmlMessage.setBaseFont(baseFont: font)
             dummyAttributedMessageView.font = font
             let height = TextViewSizeCalculator.height(
                 dummyAttributedMessageView,
@@ -293,7 +292,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 return ALKEmailTopView.height
             }
             let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
-            htmlMessage.addAttribute(NSAttributedString.Key.font, value: font, range: NSRange(location: 0, length: attributedText.length))
+            htmlMessage.setBaseFont(baseFont: font)
             dummyAttributedMessageView.font = font
             let height = ALKEmailTopView.height + ALKEmailBottomView.Padding.View.height +
                 TextViewSizeCalculator.height(
