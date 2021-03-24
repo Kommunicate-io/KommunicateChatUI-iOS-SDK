@@ -213,9 +213,11 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
         /// Comes here for html and email
         DispatchQueue.global(qos: .utility).async {
-            let attributedText = ALKMessageCell.attributedStringFrom(message, for: viewModel.identifier)
+            guard let attributedText = ALKMessageCell.attributedStringFrom(message, for: viewModel.identifier) else { return }
+            let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
+            htmlMessage.setBaseFont(baseFont: messageStyle.font)
             DispatchQueue.main.async {
-                self.messageView.attributedText = attributedText
+                self.messageView.attributedText = htmlMessage
             }
         }
     }
@@ -276,10 +278,12 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
                 return 0
             }
+            let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
+            htmlMessage.setBaseFont(baseFont: font)
             dummyAttributedMessageView.font = font
             let height = TextViewSizeCalculator.height(
                 dummyAttributedMessageView,
-                attributedText: attributedText,
+                attributedText: htmlMessage,
                 maxWidth: width
             )
             return height
@@ -287,11 +291,13 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
                 return ALKEmailTopView.height
             }
+            let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
+            htmlMessage.setBaseFont(baseFont: font)
             dummyAttributedMessageView.font = font
             let height = ALKEmailTopView.height + ALKEmailBottomView.Padding.View.height +
                 TextViewSizeCalculator.height(
                     dummyAttributedMessageView,
-                    attributedText: attributedText,
+                    attributedText: htmlMessage,
                     maxWidth: width
                 )
             return height

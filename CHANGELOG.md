@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+
+- Now, message style options like font and text color will be applied to HTML messages as well.
+
 ## [5.14.0] - 2021-02-27
 
 ### Enhancements
