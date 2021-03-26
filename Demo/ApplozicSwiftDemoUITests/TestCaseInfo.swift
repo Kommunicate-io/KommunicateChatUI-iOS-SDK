@@ -61,7 +61,8 @@ enum InAppButton {
         static let sendLocation = "Send Location"
         static let done = "Done"
         static let add = "Add"
-        static let swippableDelete = "SwippableDeleteIcon"
+        static let swippableDelete = "Delete"
+        static let swippableLeave = "Leave"
     }
 }
 

@@ -7,7 +7,7 @@
 
 import ApplozicCore
 import Foundation
-
+import SwipeCellKit
 /**
  A delegate used to notify the receiver of the click events in `ConversationListTableViewController`
  */
@@ -42,8 +42,8 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         viewModel: self.viewModel,
         cellConfigurator: { message, tableCell in
             let cell = tableCell as! ALKChatCell
-            cell.update(viewModel: message, identity: nil, disableSwipe: self.configuration.disableSwipeInChatCell)
-            cell.chatCellDelegate = self
+            cell.update(viewModel: message, identity: nil)
+            cell.delegate = self
         }
     )
     public weak var delegate: ALKConversationListTableViewDelegate?
@@ -144,8 +144,8 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                 return UITableViewCell()
             }
             let cell: ALKChatCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ALKChatCell
-            cell.update(viewModel: chat, identity: nil, disableSwipe: configuration.disableSwipeInChatCell)
-            cell.chatCellDelegate = self
+            cell.update(viewModel: chat, identity: nil)
+            cell.delegate = self
             return cell
         }
         return dataSource.tableView(tableView, cellForRowAt: indexPath)
@@ -326,15 +326,13 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
     }
 }
 
-// MARK: - ALKChatCell DELEGATE
+// MARK: - ALKChatCell Actions
 
-extension ALKConversationListTableViewController: ALKChatCellDelegate {
+extension ALKConversationListTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    public func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel _: ALKChatViewModelProtocol) {
+    public func chatCellAction(indexPath: IndexPath, action: ALKChatCellAction, viewModel _: ALKChatViewModelProtocol) {
         switch action {
         case .delete:
-
-            guard let indexPath = tableView.indexPath(for: cell) else { return }
 
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else { return }
@@ -466,9 +464,6 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
 
         case .mute:
-            guard let indexPath = tableView.indexPath(for: cell) else {
-                return
-            }
 
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
@@ -480,9 +475,7 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
 
         case .unmute:
-            guard let indexPath = tableView.indexPath(for: cell) else {
-                return
-            }
+
             if searchActive {
                 guard let conversation = searchFilteredChat[indexPath.row] as? ALMessage else {
                     return
@@ -493,7 +486,6 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
             }
         case .block:
             guard
-                let indexPath = tableView.indexPath(for: cell),
                 let conversation = messageFor(indexPath: indexPath),
                 let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
             else {
@@ -516,7 +508,6 @@ extension ALKConversationListTableViewController: ALKChatCellDelegate {
 
         case .unblock:
             guard
-                let indexPath = tableView.indexPath(for: cell),
                 let conversation = messageFor(indexPath: indexPath),
                 let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactIds)
             else {
@@ -776,6 +767,103 @@ public extension ALKConversationListTableViewController {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset - reloadDistance
         if distanceFromBottom < height {
             delegate?.scrolledToBottom()
+        }
+    }
+}
+
+// MARK: - SWIPE TABLE VIEW CELL DELEGATE
+
+extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
+    public func tableView(_: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard !configuration.disableSwipeInChatCell,
+              let message = viewModel.chatFor(indexPath: indexPath) as? ALMessage
+        else {
+            return []
+        }
+
+        switch orientation {
+        case .right:
+            let conversationMuted = isConversationMuted(viewModel: message)
+            let muteAction = SwipeAction(style: .destructive, title: nil) { _, indexPath in
+                self.chatCellAction(indexPath: indexPath, action: conversationMuted ? .unmute : .mute, viewModel: message)
+            }
+            muteAction.backgroundColor = UIColor(netHex: 0x999999)
+
+            if conversationMuted {
+                muteAction.image = UIImage(named: "icon_mute_inactive", in: Bundle.applozic, compatibleWith: nil)
+                let unmute = localizedString(forKey: "UnmuteButton", withDefaultValue: SystemMessage.Mute.UnmuteButton, fileName: configuration.localizedStringFileName)
+                muteAction.title = unmute
+            } else {
+                muteAction.image = UIImage(named: "icon_mute_active", in: Bundle.applozic, compatibleWith: nil)
+                let mute = localizedString(forKey: "MuteButton", withDefaultValue: SystemMessage.Mute.MuteButton, fileName: configuration.localizedStringFileName)
+                muteAction.title = mute
+            }
+            return [muteAction]
+
+        case .left:
+            let deleteButton = SwipeAction(style: .destructive, title: nil) { _, indexPath in
+                self.chatCellAction(indexPath: indexPath, action: .delete, viewModel: message)
+            }
+
+            deleteButton.image = UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil)
+
+            deleteButton.backgroundColor = UIColor.mainRed()
+
+            if !message.isGroupChat || (message.channelKey != nil && ALChannelService().isChannelLeft(message.channelKey)) {
+                let deleteTitle = localizedString(forKey: "DeleteButtonName", withDefaultValue: SystemMessage.ButtonName.Delete, fileName: configuration.localizedStringFileName)
+                deleteButton.title = deleteTitle
+            } else {
+                let leaveTitle = localizedString(forKey: "LeaveButtonName", withDefaultValue: SystemMessage.ButtonName.Leave, fileName: configuration.localizedStringFileName)
+                deleteButton.title = leaveTitle
+            }
+
+            guard !message.isGroupChat else {
+                return [deleteButton]
+            }
+
+            guard let contact = ALContactService().loadContact(byKey: "userId", value: message.contactId) else {
+                return [deleteButton]
+            }
+
+            let blockButton = SwipeAction(style: .destructive, title: nil) { _, indexPath in
+                self.chatCellAction(indexPath: indexPath, action: contact.block ? .unblock : .block, viewModel: message)
+            }
+
+            blockButton.image = UIImage(named: "icon_block", in: Bundle.applozic, compatibleWith: nil)
+
+            if contact.block {
+                blockButton.backgroundColor = UIColor(red: 111, green: 115, blue: 247)
+                let unblockTitle = localizedString(forKey: "UnblockTitle", withDefaultValue: SystemMessage.Block.UnblockTitle, fileName: configuration.localizedStringFileName)
+                blockButton.title = unblockTitle
+            } else {
+                blockButton.backgroundColor = UIColor(red: 248, green: 139, blue: 139)
+                let block = localizedString(forKey: "BlockTitle", withDefaultValue: SystemMessage.Block.BlockTitle, fileName: configuration.localizedStringFileName)
+                blockButton.title = block
+            }
+            return [deleteButton, blockButton]
+        }
+    }
+
+    private func isConversationMuted(viewModel: ALKChatViewModelProtocol) -> Bool {
+        if let channelKey = viewModel.channelKey,
+           let channel = ALChannelService().getChannelByKey(channelKey)
+        {
+            if channel.isNotificationMuted() {
+                return true
+            } else {
+                return false
+            }
+        } else if let contactId = viewModel.contactId,
+                  let contact = ALContactService().loadContact(byKey: "userId", value: contactId)
+        {
+            if contact.isNotificationMuted() {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            // Conversation is not for user or channel
+            return true
         }
     }
 }

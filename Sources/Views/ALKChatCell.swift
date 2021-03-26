@@ -9,7 +9,7 @@
 import ApplozicCore
 import Foundation
 import Kingfisher
-import MGSwipeTableCell
+import SwipeCellKit
 import UIKit
 
 public protocol ALKChatViewModelProtocol {
@@ -41,11 +41,7 @@ public enum ALKChatCellAction {
     case unblock
 }
 
-public protocol ALKChatCellDelegate: AnyObject {
-    func chatCell(cell: ALKChatCell, action: ALKChatCellAction, viewModel: ALKChatViewModelProtocol)
-}
-
-public final class ALKChatCell: MGSwipeTableCell, Localizable {
+public final class ALKChatCell: SwipeTableViewCell, Localizable {
     enum ConstraintIdentifier: String {
         case iconWidthIdentifier = "iconViewWidth"
     }
@@ -152,8 +148,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
         return view
     }()
 
-    public weak var chatCellDelegate: ALKChatCellDelegate?
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -213,7 +207,7 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
     var viewModel: ALKChatViewModelProtocol?
 
-    public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil, disableSwipe: Bool) {
+    public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
 
@@ -244,11 +238,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
             emailIcon.constraint(withIdentifier: ConstraintIdentifier.iconWidthIdentifier.rawValue)?.constant = 0
         }
 
-        if !disableSwipe {
-            setupLeftSwippableButtons(viewModel)
-            setupRightSwippableButtons(viewModel)
-        }
-
         // get unread count of message and set badgenumber
         let unreadMsgCount = viewModel.totalNumberOfUnreadMessages
         let numberText: String = (unreadMsgCount < 1000 ? "\(unreadMsgCount)" : "999+")
@@ -275,94 +264,6 @@ public final class ALKChatCell: MGSwipeTableCell, Localizable {
 
             onlineStatusView.isHidden = !contact.connected
         }
-    }
-
-    private func setupLeftSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
-        leftSwipeSettings.transition = .static
-
-        let deleteButton = MGSwipeButton(type: .system)
-        deleteButton.backgroundColor = UIColor.mainRed()
-        deleteButton.setImage(UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-        deleteButton.tintColor = .white
-        deleteButton.accessibilityIdentifier = "SwippableDeleteIcon"
-        deleteButton.frame = CGRect(x: 0, y: 0, width: 69, height: 69)
-        if !viewModel.isGroupChat || (viewModel.channelKey != nil && ALChannelService().isChannelLeft(viewModel.channelKey)) {
-            let leaveTitle = localizedString(forKey: "DeleteButtonName", withDefaultValue: SystemMessage.ButtonName.Delete, fileName: localizationFileName)
-            deleteButton.setTitle(leaveTitle, for: .normal)
-        } else {
-            let leaveTitle = localizedString(forKey: "LeaveButtonName", withDefaultValue: SystemMessage.ButtonName.Leave, fileName: localizationFileName)
-            deleteButton.setTitle(leaveTitle, for: .normal)
-        }
-        deleteButton.alignVertically()
-        deleteButton.callback = { [weak self] _ in
-            guard let strongSelf = self else { return true }
-            guard let viewModel = strongSelf.viewModel else { return true }
-            strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: .delete, viewModel: viewModel)
-            return true
-        }
-
-        guard !viewModel.isGroupChat else {
-            leftButtons = [deleteButton]
-            return
-        }
-        ALUserService().getUserDetail(viewModel.contactId, withCompletion: { contact in
-            guard let contact = contact else {
-                self.leftButtons = [deleteButton]
-                return
-            }
-            let blockButton = MGSwipeButton(type: .system)
-            blockButton.setImage(UIImage(named: "icon_block", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-            blockButton.tintColor = .white
-            blockButton.frame = CGRect(x: 70, y: 0, width: 69, height: 69)
-            if !contact.block {
-                blockButton.backgroundColor = UIColor(red: 248, green: 139, blue: 139)
-                let block = self.localizedString(forKey: "BlockTitle", withDefaultValue: SystemMessage.Block.BlockTitle, fileName: self.localizationFileName)
-                blockButton.setTitle(block, for: .normal)
-            } else {
-                blockButton.backgroundColor = UIColor(red: 111, green: 115, blue: 247)
-                let unblock = self.localizedString(forKey: "UnblockTitle", withDefaultValue: SystemMessage.Block.UnblockTitle, fileName: self.localizationFileName)
-                blockButton.setTitle(unblock, for: .normal)
-            }
-            blockButton.alignVertically()
-            let action: ALKChatCellAction = contact.block ? .unblock : .block
-            blockButton.callback = { [weak self] _ in
-                guard
-                    let strongSelf = self,
-                    let viewModel = strongSelf.viewModel
-                else { return true }
-                strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: action, viewModel: viewModel)
-                return true
-            }
-            self.leftButtons = [deleteButton, blockButton]
-        })
-    }
-
-    private func setupRightSwippableButtons(_ viewModel: ALKChatViewModelProtocol) {
-        let muteButton = MGSwipeButton(type: .custom)
-        muteButton.backgroundColor = UIColor(netHex: 0x999999)
-        if isConversationMuted(viewModel: viewModel) {
-            muteButton.setImage(UIImage(named: "icon_mute_inactive", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-            let unmute = localizedString(forKey: "UnmuteButton", withDefaultValue: SystemMessage.Mute.UnmuteButton, fileName: localizationFileName)
-            muteButton.setTitle(unmute, for: .normal)
-        } else {
-            muteButton.setImage(UIImage(named: "icon_mute_active", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-            let mute = localizedString(forKey: "MuteButton", withDefaultValue: SystemMessage.Mute.MuteButton, fileName: localizationFileName)
-            muteButton.setTitle(mute, for: .normal)
-        }
-        muteButton.frame = CGRect(x: 0, y: 0, width: 69, height: 69)
-        muteButton.alignVertically()
-        muteButton.callback = { [weak self] _ in
-            guard let strongSelf = self else { return true }
-            guard let viewModel = strongSelf.viewModel else { return true }
-            if strongSelf.isConversationMuted(viewModel: viewModel) {
-                strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: .unmute, viewModel: viewModel)
-            } else {
-                strongSelf.chatCellDelegate?.chatCell(cell: strongSelf, action: .mute, viewModel: viewModel)
-            }
-            return true
-        }
-        rightButtons = [muteButton]
-        rightSwipeSettings.transition = .static
     }
 
     private func placeholderImage(_ placeholderImage: UIImage? = nil, viewModel: ALKChatViewModelProtocol) -> UIImage? {
