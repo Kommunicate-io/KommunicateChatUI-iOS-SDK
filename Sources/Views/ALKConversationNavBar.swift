@@ -7,7 +7,10 @@
 
 import Foundation
 import Kingfisher
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 @objc public protocol NavigationBarCallbacks: AnyObject {
     @objc func titleTapped()
 }
@@ -42,7 +45,7 @@ open class ALKConversationNavBar: UIView, Localizable {
 
     var onlineStatusIcon: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(165, green: 170, blue: 165)
+        view.backgroundColor = UIColor(red: 165, green: 170, blue: 165)
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
         return view
@@ -51,7 +54,7 @@ open class ALKConversationNavBar: UIView, Localizable {
     var onlineStatusText: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "HelveticaNeue", size: 12) ?? UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor(113, green: 110, blue: 110)
+        label.textColor = UIColor(red: 113, green: 110, blue: 110)
         return label
     }()
 
@@ -105,10 +108,10 @@ open class ALKConversationNavBar: UIView, Localizable {
     func updateStatus(isOnline: Bool, lastSeenAt: NSNumber?) {
         if isOnline {
             onlineStatusText.text = localizedString(forKey: "Online", withDefaultValue: SystemMessage.UserStatus.Online, fileName: configuration.localizedStringFileName)
-            onlineStatusIcon.backgroundColor = UIColor(28, green: 222, blue: 20)
+            onlineStatusIcon.backgroundColor = UIColor(red: 28, green: 222, blue: 20)
         } else {
             showLastSeen(lastSeenAt)
-            onlineStatusIcon.backgroundColor = UIColor(165, green: 170, blue: 165)
+            onlineStatusIcon.backgroundColor = UIColor(red: 165, green: 170, blue: 165)
         }
     }
 

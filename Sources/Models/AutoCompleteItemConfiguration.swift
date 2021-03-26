@@ -6,6 +6,10 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 /// AutoComplete configuration for each prefix.
 public struct AutoCompleteItemConfiguration {

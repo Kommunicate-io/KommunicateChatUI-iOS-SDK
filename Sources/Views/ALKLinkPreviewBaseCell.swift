@@ -1,6 +1,8 @@
 import ApplozicCore
 import Foundation
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKLinkPreviewBaseCell: ALKMessageCell {
     var url: String?
     let linkView = ALKLinkView()

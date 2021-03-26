@@ -6,6 +6,10 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 public struct ALKConfiguration {
     /// If enabled then tapping on navigation bar in

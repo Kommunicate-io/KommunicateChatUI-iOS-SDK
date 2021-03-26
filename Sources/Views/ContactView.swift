@@ -6,6 +6,7 @@
 //
 
 import Contacts
+import UIKit
 
 struct ContactModel {
     let identifier: String

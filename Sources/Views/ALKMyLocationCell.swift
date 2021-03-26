@@ -7,6 +7,10 @@
 //
 
 import Foundation
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
+import UIKit
 
 final class ALKMyLocationCell: ALKLocationCell {
     // MARK: - Declare Variables or Types

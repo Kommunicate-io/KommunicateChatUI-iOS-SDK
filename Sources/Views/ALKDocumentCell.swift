@@ -103,7 +103,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var frameUIView: UIView = {
         let uiView = UIView()
-        uiView.backgroundColor = UIColor(231, green: 231, blue: 232)
+        uiView.backgroundColor = UIColor(red: 231, green: 231, blue: 232)
         return uiView
     }()
 

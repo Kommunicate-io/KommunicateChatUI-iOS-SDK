@@ -7,6 +7,10 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 public enum ALKMessageStyle {
     public static var displayName = Style(
         font: UIFont.font(.normal(size: 14)),

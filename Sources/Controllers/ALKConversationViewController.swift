@@ -12,7 +12,9 @@ import ContactsUI
 import MobileCoreServices
 import SafariServices
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 // swiftlint:disable:next type_body_length
 open class ALKConversationViewController: ALKBaseViewController, Localizable {
     var timerTask = Timer()
@@ -1768,7 +1770,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    func setStatus(statusIcon: ALKMessageStyle.StatusIcon, status: MessageStatus) {
+    func setStatus(statusIcon: ALKMessageStyle.StatusIcon, status: ALKMessageStatus) {
         switch statusIcon {
         case let .templateImageWithTint(image, tintColor):
             MessageTheme.messageStatus.set(icon: .templateImageWithTint(image: image, tintColor: tintColor), for: status)

@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
-class SentMessageViewSizeCalculator {
-    func rowHeight(messageModel: Message, maxWidth: CGFloat, padding: Padding) -> CGFloat {
+public class SentMessageViewSizeCalculator {
+    public init() {}
+    public func rowHeight(messageModel: Message, maxWidth: CGFloat, padding: Padding) -> CGFloat {
         let totalWidthPadding = padding.left + padding.right
 
         let messageWidth = maxWidth - totalWidthPadding

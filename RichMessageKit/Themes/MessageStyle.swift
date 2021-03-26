@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct MessageStyle {
     /// Style for display name
@@ -45,7 +46,7 @@ public enum MessageTheme {
 }
 
 public extension MessageTheme {
-    typealias MessageStatusType = MessageStatus
+    typealias MessageStatusType = ALKMessageStatus
 
     enum StatusIcon {
         case templateImageWithTint(image: UIImage, tintColor: UIColor)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct MessageBubbleStyle {
     public var color: UIColor

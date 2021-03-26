@@ -8,7 +8,9 @@
 
 import Foundation
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 extension UIView {
     func setBackgroundColor(_ color: UIColor) {
         backgroundColor = color

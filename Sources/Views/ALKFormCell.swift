@@ -6,7 +6,9 @@
 //
 
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
     enum FormData {
         static let valid = 1

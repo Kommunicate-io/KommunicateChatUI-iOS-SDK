@@ -8,7 +8,7 @@
 import Foundation
 
 /// Gives infomation about message status.
-public enum MessageStatus: CaseIterable {
+public enum ALKMessageStatus: CaseIterable {
     case pending
     case sent
     case delivered
@@ -28,6 +28,26 @@ public struct Message {
         case audio = 8
         case video = 9
         case actionMessage = 10
+    }
+
+    public init(
+        identifier: String,
+        text: String?,
+        isMyMessage: Bool,
+        time: String,
+        displayName: String?,
+        status: ALKMessageStatus?,
+        imageURL: URL?,
+        contentType: Message.ContentType
+    ) {
+        self.identifier = identifier
+        self.text = text
+        self.isMyMessage = isMyMessage
+        self.time = time
+        self.displayName = displayName
+        self.status = status
+        self.imageURL = imageURL
+        self.contentType = contentType
     }
 
     /// Identifier of the message
@@ -52,7 +72,7 @@ public struct Message {
     /// Status of message whether it is in pending/sent/delivered/read state.
     ///
     /// - Important: Mandatory for sent message.
-    public var status: MessageStatus?
+    public var status: ALKMessageStatus?
 
     /// Image url of sender.
     public var imageURL: URL?

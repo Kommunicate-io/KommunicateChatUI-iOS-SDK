@@ -11,7 +11,9 @@ import AVFoundation
 import Contacts
 import Foundation
 import MobileCoreServices
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 public protocol ALKConversationViewModelDelegate: AnyObject {
     func loadingStarted()
     func loadingFinished(error: Error?)

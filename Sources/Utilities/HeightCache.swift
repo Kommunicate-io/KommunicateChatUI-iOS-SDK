@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// A Utility to cache height for messages.
 class HeightCache {

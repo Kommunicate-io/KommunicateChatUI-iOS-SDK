@@ -6,6 +6,10 @@
 //
 
 import Kingfisher
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
     enum ViewPadding {
         enum StateView {

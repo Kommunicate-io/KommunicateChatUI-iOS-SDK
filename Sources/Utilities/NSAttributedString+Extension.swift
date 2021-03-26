@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension NSAttributedString {
     func replacingCharacters(in range: NSRange, with attributedString: NSAttributedString) -> NSMutableAttributedString {
@@ -51,7 +52,6 @@ public extension NSAttributedString.Key {
 }
 
 extension NSMutableAttributedString {
-
     /// Replaces the base font with the given font, while preserving traits like bold and italic
     func setBaseFont(baseFont: UIFont, preserveFontSizes: Bool = false) {
         let baseDescriptor = baseFont.fontDescriptor

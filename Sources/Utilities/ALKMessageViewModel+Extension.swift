@@ -6,6 +6,10 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 extension ALKMessageViewModel {
     func messageDetails() -> Message {
@@ -62,7 +66,7 @@ extension ALKMessageViewModel {
         )
     }
 
-    func messageStatus() -> MessageStatus {
+    func messageStatus() -> ALKMessageStatus {
         if isAllRead {
             return .read
         } else if isAllReceived {

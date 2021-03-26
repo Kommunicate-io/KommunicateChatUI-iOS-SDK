@@ -11,6 +11,9 @@ import AVFoundation
 import Foundation
 import UIKit
 import WebKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSource {
     public func numberOfSections(in _: UITableView) -> Int {

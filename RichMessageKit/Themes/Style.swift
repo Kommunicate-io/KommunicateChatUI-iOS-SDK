@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// It is used to set set style for a view.
 public struct Style {

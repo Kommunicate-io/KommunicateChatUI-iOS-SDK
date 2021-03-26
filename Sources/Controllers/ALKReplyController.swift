@@ -6,7 +6,9 @@
 //
 
 import Foundation
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 import ApplozicCore
 import Kingfisher
 
@@ -154,7 +156,7 @@ class ALKReplyController: UIViewController, Localizable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
+        view.backgroundColor = UIColor(red: 10, green: 10, blue: 10, alpha: 0.2)
         view.isOpaque = false
         setupViews()
         proccessAndUpdateView()

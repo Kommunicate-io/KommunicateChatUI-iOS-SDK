@@ -7,7 +7,9 @@
 
 import Kingfisher
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKFriendFormCell: ALKFormCell {
     enum ViewPadding {
         enum NameLabel {

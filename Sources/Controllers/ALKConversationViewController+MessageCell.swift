@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension ALKConversationViewController: ALKMessageCellDelegate {
     public func urlTapped(url: URL, message _: ALKMessageViewModel) {

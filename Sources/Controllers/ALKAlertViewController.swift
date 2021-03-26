@@ -5,9 +5,8 @@
 //  Created by apple on 01/07/19.
 //
 
-import Foundation
-
 import ApplozicCore
+import Foundation
 
 class ALKAlertViewController: UIViewController, Localizable {
     public enum Action {
@@ -121,7 +120,7 @@ class ALKAlertViewController: UIViewController, Localizable {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
+        view.backgroundColor = UIColor(red: 10, green: 10, blue: 10, alpha: 0.2)
         view.isOpaque = false
     }
 

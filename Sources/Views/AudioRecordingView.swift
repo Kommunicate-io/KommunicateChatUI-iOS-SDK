@@ -5,9 +5,9 @@
 //  Created by Shivam Pokhriyal on 17/08/18.
 //
 
-import Foundation
-
 import AVFoundation
+import Foundation
+import UIKit
 
 public protocol ALKAudioRecorderViewProtocol: AnyObject {
     func cancelAudioRecording()

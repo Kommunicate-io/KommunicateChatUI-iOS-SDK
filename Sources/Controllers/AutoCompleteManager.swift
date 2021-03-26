@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 public protocol AutoCompletionDelegate: AnyObject {
     func didMatch(prefix: String, message: String)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class ALKEmptyView: UITableViewHeaderFooterView {
     static let reuseIdentifier = "EmptyChatCell"

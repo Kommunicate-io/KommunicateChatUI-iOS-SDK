@@ -9,7 +9,9 @@
 import ApplozicCore
 import AVKit
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
 {

@@ -13,4 +13,10 @@ public struct ImageMessage {
     public var url: String
 
     public var message: Message
+
+    public init(caption: String?, url: String, message: Message) {
+        self.caption = caption
+        self.url = url
+        self.message = message
+    }
 }

@@ -32,4 +32,9 @@ public struct SuggestedReplyMessage {
     public var suggestion: [Suggestion]
 
     public var message: Message
+
+    public init(suggestion: [Suggestion], message: Message) {
+        self.suggestion = suggestion
+        self.message = message
+    }
 }

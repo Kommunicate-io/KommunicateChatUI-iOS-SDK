@@ -7,7 +7,9 @@
 
 import ApplozicCore
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 /* Reply message view to be used in the
  bottom (above chat bar) when replying
  to a message */

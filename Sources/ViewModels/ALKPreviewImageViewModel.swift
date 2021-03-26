@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class ALKPreviewImageViewModel: NSObject, Localizable {
     var localizedStringFileName: String

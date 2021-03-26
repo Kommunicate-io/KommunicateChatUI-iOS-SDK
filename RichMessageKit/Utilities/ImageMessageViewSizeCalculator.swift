@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class ImageMessageViewSizeCalculator {
     func rowHeight(model: ImageMessage, maxWidth: CGFloat) -> CGFloat {

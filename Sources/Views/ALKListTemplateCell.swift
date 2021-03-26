@@ -7,6 +7,9 @@
 
 import Kingfisher
 import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 // MARK: - `ALKMyMessageListTemplateCell` for sender side.
 
