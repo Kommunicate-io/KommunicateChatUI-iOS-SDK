@@ -74,6 +74,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     private var bottomConstraint: NSLayoutConstraint?
     private var leftMoreBarConstraint: NSLayoutConstraint?
     private var typingNoticeViewHeighConstaint: NSLayoutConstraint?
+    private var backgroundViewChatBarBottomConstraint: NSLayoutConstraint?
+    private var backgroundViewBottomConstraint: NSLayoutConstraint?
+    private var replyViewChatBarBottomConstraint: NSLayoutConstraint?
+    private var replyViewBottomConstraint: NSLayoutConstraint?
     var isJustSent: Bool = false
 
     // MQTT connection retry
@@ -165,6 +169,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         view.backgroundColor = UIColor.gray
         return view
     }()
+
+    public var isChatBarHidden: Bool = false {
+        didSet {
+            chatBar.isHidden = isChatBarHidden
+            backgroundViewChatBarBottomConstraint?.isActive = !isChatBarHidden
+            replyViewChatBarBottomConstraint?.isActive = !isChatBarHidden
+            backgroundViewBottomConstraint?.isActive = isChatBarHidden
+            replyViewBottomConstraint?.isActive = isChatBarHidden
+            let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+            moveTableViewToBottom(indexPath: indexPath)
+        }
+    }
 
     var contentOffsetDictionary: [AnyHashable: AnyObject]!
 
@@ -551,7 +567,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         backgroundView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        backgroundView.bottomAnchor.constraint(equalTo: chatBar.topAnchor).isActive = true
+        var bottomAnchor: NSLayoutYAxisAnchor {
+            if #available(iOS 11.0, *) {
+                return view.safeAreaLayoutGuide.bottomAnchor
+            } else {
+                return view.bottomAnchor
+            }
+        }
+        backgroundViewChatBarBottomConstraint = backgroundView.bottomAnchor.constraint(equalTo: chatBar.topAnchor)
+        backgroundViewChatBarBottomConstraint?.isActive = true
+        backgroundViewBottomConstraint = backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         let contextViewTopCons = contextTitleView.topAnchor.constraint(equalTo: view.topAnchor)
         contextViewTopCons.priority = .init(rawValue: 750)
         contextViewTopCons.isActive = true
@@ -597,10 +622,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             identifier: ConstraintIdentifier.replyMessageViewHeight
         )
         .isActive = true
-        replyMessageView.bottomAnchor.constraint(
-            equalTo: chatBar.topAnchor,
-            constant: 0
-        ).isActive = true
+        replyViewChatBarBottomConstraint = replyMessageView.bottomAnchor.constraint(equalTo: chatBar.topAnchor, constant: 0)
+        replyViewChatBarBottomConstraint?.isActive = true
+        replyViewBottomConstraint = replyMessageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0)
 
         unreadScrollButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         unreadScrollButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
