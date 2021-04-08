@@ -9,6 +9,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 - Using the ApplozicCore pod in place of Applozic pod, Now all the Import of Applozic will be changed to ApplozicCore.
 
+### Fixes
+
+- Fixed the date-time issue format issue where the calendar submission format for iOS is matched with the web.
+
 ## [5.15.0] - 2021-03-24
 
 ### Enhancements
