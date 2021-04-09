@@ -16,7 +16,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Applozic", url: "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git", .branch("spm-test-core")),
+        .package(name: "Applozic", url: "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git", .exact("8.1.0")),
         .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", "5.14.0" ..< "5.15.0"),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
     ],

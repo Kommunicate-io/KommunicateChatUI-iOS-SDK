@@ -1,9 +1,9 @@
 PODS:
-  - ApplozicCore (8.0.0)
+  - ApplozicCore (8.1.0)
   - ApplozicSwift (5.15.0):
     - ApplozicSwift/Complete (= 5.15.0)
   - ApplozicSwift/Complete (5.15.0):
-    - ApplozicCore (~> 8.0.0)
+    - ApplozicCore (~> 8.1.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 5.14.0)
     - SwipeCellKit (~> 2.7.1)
@@ -52,8 +52,8 @@ EXTERNAL SOURCES:
     :path: "../ApplozicSwift.podspec"
 
 SPEC CHECKSUMS:
-  ApplozicCore: 4b510e13ba44772f168c8900af0811a7e651e723
-  ApplozicSwift: 1c30ee954e333a77c08bf91e36f04c317d8d3b64
+  ApplozicCore: db1ccbf9e98788a7a32550486831b13019f29dad
+  ApplozicSwift: 1b2452a1a35f853d6d1ca16c75ee0b8111039ad1
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
   Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
