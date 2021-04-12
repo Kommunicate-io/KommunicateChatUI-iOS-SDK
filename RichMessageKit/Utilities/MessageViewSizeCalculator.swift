@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MessageViewSizeCalculator {
     func height(_ textView: UITextView,

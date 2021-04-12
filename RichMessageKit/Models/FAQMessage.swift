@@ -17,6 +17,19 @@ public struct FAQMessage {
     public var buttonLabel: String?
 
     public var buttons: [String]
+
+    public init(message: Message,
+                title: String?,
+                description: String?,
+                buttonLabel: String?,
+                buttons: [String])
+    {
+        self.message = message
+        self.title = title
+        self.description = description
+        self.buttonLabel = buttonLabel
+        self.buttons = buttons
+    }
 }
 
 extension FAQMessage {

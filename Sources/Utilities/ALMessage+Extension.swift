@@ -8,7 +8,9 @@
 
 import ApplozicCore
 import Foundation
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 let friendsMessage = "4"
 let myMessage = "5"
 

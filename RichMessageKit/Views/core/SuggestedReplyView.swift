@@ -20,7 +20,7 @@ public class SuggestedReplyView: UIView {
 
     // This is used to align the view to left or right. Gets value from message.isMyMessage
     var alignLeft: Bool = true
-    weak var delegate: Tappable?
+    public weak var delegate: Tappable?
 
     var model: SuggestedReplyMessage?
 

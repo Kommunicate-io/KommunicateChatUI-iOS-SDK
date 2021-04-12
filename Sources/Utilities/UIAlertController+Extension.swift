@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension UIAlertController {
     static func makeCancelDiscardAlert(title: String, message: String, cancelTitle: String, discardTitle: String, discardAction: @escaping () -> Void) -> UIAlertController {

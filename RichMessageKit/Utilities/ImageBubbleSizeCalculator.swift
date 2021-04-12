@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class ImageBubbleSizeCalculator {
     func rowHeight(model: ImageMessage, maxWidth: CGFloat) -> CGFloat {

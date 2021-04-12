@@ -164,16 +164,16 @@ class ApplozicSwiftMemberUITests: XCTestCase {
         back.tap()
         let outerChatScreenTableView = app.tables[AppScreen.conversationList]
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
-        let swippableleave = app.buttons[InAppButton.ConversationScreen.swippableDelete]
+        let swippableleave = app.buttons[InAppButton.ConversationScreen.swippableLeave]
         waitFor(object: swippableleave) { $0.isHittable }
-        outerChatScreenTableView.buttons[InAppButton.ConversationScreen.swippableDelete].tap()
+        outerChatScreenTableView.buttons[InAppButton.ConversationScreen.swippableLeave].tap()
         let leave = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.leave]
         waitFor(object: leave) { $0.isHittable }
         leave.tap()
         sleep(5)
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
-        let swippableDelete2 = app.buttons[InAppButton.ConversationScreen.swippableDelete]
-        waitFor(object: swippableDelete2) { $0.isHittable }
+        let swippableDelete = app.buttons[InAppButton.ConversationScreen.swippableDelete]
+        waitFor(object: swippableDelete) { $0.isHittable }
         outerChatScreenTableView.buttons[InAppButton.ConversationScreen.swippableDelete].tap()
         let remove = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.remove]
         waitFor(object: remove) { $0.isHittable }

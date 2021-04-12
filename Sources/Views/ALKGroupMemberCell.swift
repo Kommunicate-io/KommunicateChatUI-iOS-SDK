@@ -7,7 +7,10 @@
 
 import Foundation
 import Kingfisher
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 struct GroupMemberInfo {
     let id: String
     let name: String

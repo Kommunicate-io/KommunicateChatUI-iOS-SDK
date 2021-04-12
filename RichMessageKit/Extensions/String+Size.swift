@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import UIKit
 
-extension String {
+public extension String {
     func rectWithConstrainedWidth(_ width: CGFloat, font: UIFont) -> CGRect {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
         let boundingBox = (self as NSString).boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)

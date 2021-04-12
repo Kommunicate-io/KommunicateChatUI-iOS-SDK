@@ -6,6 +6,10 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 // MARK: - ALKRichMessageStyle
 
@@ -32,7 +36,7 @@ public extension ALKListTemplateCell {
     /// `ListStyle` struct is used for config the sent and received list template color style
     struct ListStyle: ColorProtocol {
         static var shared = ListStyle()
-        static func setPrimaryColor(primaryColor: UIColor) {
+        public static func setPrimaryColor(primaryColor: UIColor) {
             ALKListTemplateCell.ListStyle.shared.setColor(primaryColor)
         }
 
@@ -77,7 +81,7 @@ public extension ALKGenericCardCell {
     /// `CardStyle` struct is used for config the sent and received  card template color style
     struct CardStyle: ColorProtocol {
         static var shared = CardStyle()
-        static func setPrimaryColor(primaryColor: UIColor) {
+        public static func setPrimaryColor(primaryColor: UIColor) {
             CardStyle.shared.setColor(primaryColor: primaryColor)
         }
 

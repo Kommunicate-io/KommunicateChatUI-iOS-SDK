@@ -8,6 +8,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 
 - Using the ApplozicCore pod in place of Applozic pod, Now all the Import of Applozic will be changed to ApplozicCore.
+- Added the support for Swift Package Manager.
 
 ### Fixes
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class SuggestedReplyViewSizeCalculator {
     func rowHeight(model: SuggestedReplyMessage, maxWidth: CGFloat) -> CGFloat {

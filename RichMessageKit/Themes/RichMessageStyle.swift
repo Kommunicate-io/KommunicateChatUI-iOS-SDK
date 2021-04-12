@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import UIKit
 
-protocol ColorProtocol {
+public protocol ColorProtocol {
     static func setPrimaryColor(primaryColor: UIColor)
 }
 
@@ -15,7 +16,7 @@ public extension CurvedImageButton {
     struct QuickReplyButtonStyle: ColorProtocol {
         static var shared = QuickReplyButtonStyle()
 
-        static func setPrimaryColor(primaryColor: UIColor) {
+        public static func setPrimaryColor(primaryColor: UIColor) {
             QuickReplyButtonStyle.shared.setColor(primaryColor)
         }
 

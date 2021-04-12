@@ -9,7 +9,9 @@
 import ApplozicCore
 import Foundation
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 // swiftlint:disable:next type_body_length
 open class ALKChatBar: UIView, Localizable {
     var configuration: ALKConfiguration!

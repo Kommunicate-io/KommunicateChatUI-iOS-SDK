@@ -4,7 +4,10 @@
 //
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
     enum ViewPadding {
         enum StateView {

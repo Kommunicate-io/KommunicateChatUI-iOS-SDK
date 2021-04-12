@@ -1,6 +1,9 @@
 import Foundation
 import Kingfisher
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKLinkView: UIView, Localizable {
     enum CommonPadding {
         enum View {

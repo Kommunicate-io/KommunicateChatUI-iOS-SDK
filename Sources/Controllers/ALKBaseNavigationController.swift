@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public class ALKBaseNavigationViewController: UINavigationController {
     static var statusBarStyle: UIStatusBarStyle = .lightContent

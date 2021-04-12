@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UILabel {
+public extension UILabel {
     func setStyle(_ style: Style) {
         font = style.font
         textColor = style.text

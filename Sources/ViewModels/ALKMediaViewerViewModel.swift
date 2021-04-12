@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 protocol ALKMediaViewerViewModelDelegate: AnyObject {
     func reloadView()

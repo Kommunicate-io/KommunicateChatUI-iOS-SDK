@@ -6,6 +6,10 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 /// A type that can be used to configure channel detail view like changing member name label color, title font etc.
 public struct ALKChannelDetailViewConfiguration {

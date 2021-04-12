@@ -8,7 +8,9 @@
 import ApplozicCore
 import Kingfisher
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKImageView: UIImageView {
     // To highlight when long pressed
     override open var canBecomeFirstResponder: Bool {

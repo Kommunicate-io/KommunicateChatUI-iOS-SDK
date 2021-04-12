@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import UIKit
 
-extension NSLayoutDimension {
+public extension NSLayoutDimension {
     func constraintEqualToAnchor(constant: CGFloat, identifier: String) -> NSLayoutConstraint {
         let constraint = self.constraint(equalToConstant: constant)
         constraint.identifier = identifier

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension ALKConversationViewController: AutoCompletionDelegate {
     public func didMatch(prefix: String, message: String) {

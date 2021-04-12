@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
     public func numberOfSections(in _: UITableView) -> Int {

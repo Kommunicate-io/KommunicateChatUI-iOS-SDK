@@ -75,7 +75,7 @@ public class SentImageMessageCell: UITableViewCell {
 
     fileprivate var imageUrl: String?
 
-    var imageTapped: (() -> Void)?
+    public var imageTapped: (() -> Void)?
 
     // MARK: - Initializer
 

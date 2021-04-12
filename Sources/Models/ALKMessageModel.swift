@@ -8,6 +8,9 @@
 
 import ApplozicCore
 import Foundation
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 // MARK: - MessageType
 
@@ -166,7 +169,7 @@ extension ALKMessageViewModel {
 }
 
 public extension ALKMessageViewModel {
-    var status: MessageStatus {
+    var status: ALKMessageStatus {
         if isAllRead {
             return .read
         } else if isAllReceived {

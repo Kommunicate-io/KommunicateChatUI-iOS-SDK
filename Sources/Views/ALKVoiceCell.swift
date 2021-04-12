@@ -7,7 +7,9 @@
 //
 
 import Foundation
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 import ApplozicCore
 import AVFoundation
 import Kingfisher

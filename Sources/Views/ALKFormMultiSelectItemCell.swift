@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class ALKFormMultiSelectItemCell: UITableViewCell {
     var cellSelected: (() -> Void)?

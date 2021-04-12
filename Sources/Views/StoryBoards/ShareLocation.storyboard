@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ekZ-mf-7SD">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ekZ-mf-7SD">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Base Navigation View Controller-->
         <scene sceneID="KdP-m9-S0z">
             <objects>
-                <navigationController id="ekZ-mf-7SD" customClass="ALBaseNavigationViewController" customModule="sampleapp_completeswift" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="ekZ-mf-7SD" customClass="ALBaseNavigationViewController" customModule="ApplozicSwift" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="IkB-fz-FOO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -33,7 +31,7 @@
         <!--Share Location-->
         <scene sceneID="L5L-4t-1Ur">
             <objects>
-                <viewController storyboardIdentifier="ShareLocationViewController" id="g1v-O6-33i" customClass="ShareLocationViewController" customModule="sampleapp_completeswift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ShareLocationViewController" id="g1v-O6-33i" customClass="ShareLocationViewController" customModule="ApplozicSwift" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ipR-mj-5E0"/>
                         <viewControllerLayoutGuide type="bottom" id="G4f-cj-kgg"/>
@@ -43,18 +41,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zpG-FB-gnW" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="icon_share_location" translatesAutoresizingMaskIntoConstraints="NO" id="ugq-cN-hg9" userLabel="pin">
-                                <rect key="frame" x="175" y="293.5" width="24" height="40"/>
+                                <rect key="frame" x="175.5" y="293.5" width="24" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="d1G-zr-TVC"/>
                                     <constraint firstAttribute="height" constant="40" id="szm-bj-ar9"/>
                                 </constraints>
                             </imageView>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="bg_share_location" translatesAutoresizingMaskIntoConstraints="NO" id="deE-Px-iwD">
-                                <rect key="frame" x="120" y="250.5" width="136" height="43"/>
+                                <rect key="frame" x="119.5" y="250.5" width="136" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="136" id="PnN-5K-1zf"/>
                                     <constraint firstAttribute="width" secondItem="deE-Px-iwD" secondAttribute="height" multiplier="111:35" id="T4j-cb-fJ5"/>
@@ -71,8 +69,8 @@
                                     <action selector="locateMe" destination="g1v-O6-33i" eventType="touchUpInside" id="Tso-3C-jOS"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECp-iX-d0i">
-                                <rect key="frame" x="130" y="250.5" width="116" height="33"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECp-iX-d0i">
+                                <rect key="frame" x="129.5" y="250.5" width="116" height="33"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                 <state key="normal" title="Share location">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -82,7 +80,7 @@
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="cqp-0O-qEr">
-                                <rect key="frame" x="178" y="256.5" width="20" height="20"/>
+                                <rect key="frame" x="177.5" y="257" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

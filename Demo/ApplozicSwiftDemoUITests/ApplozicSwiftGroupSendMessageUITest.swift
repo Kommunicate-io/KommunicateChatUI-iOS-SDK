@@ -165,16 +165,16 @@ class ApplozicSwiftGroupSendMessageUITest: XCTestCase {
         back.tap()
         let outerChatScreenTableView = app.tables[AppScreen.conversationList]
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
-        let swippableDelete1 = app.buttons[InAppButton.ConversationScreen.swippableDelete]
-        waitFor(object: swippableDelete1) { $0.exists }
-        outerChatScreenTableView.buttons[InAppButton.ConversationScreen.swippableDelete].tap()
+        let swippableLeave = app.buttons[InAppButton.ConversationScreen.swippableLeave]
+        waitFor(object: swippableLeave) { $0.exists }
+        outerChatScreenTableView.buttons[InAppButton.ConversationScreen.swippableLeave].tap()
         let leave = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.leave] // app.buttons[InAppButton.CreatingGroup.leave]
         waitFor(object: leave) { $0.exists }
         leave.tap()
         sleep(5)
         outerChatScreenTableView.cells.allElementsBoundByIndex.first?.swipeRight()
-        let swippableDelete2 = app.buttons[InAppButton.ConversationScreen.swippableDelete]
-        waitFor(object: swippableDelete2) { $0.exists }
+        let swippableDelete = app.buttons[InAppButton.ConversationScreen.swippableDelete]
+        waitFor(object: swippableDelete) { $0.exists }
         outerChatScreenTableView.buttons[InAppButton.ConversationScreen.swippableDelete].tap()
         let remove = app.alerts.scrollViews.otherElements.buttons[InAppButton.CreatingGroup.remove] // app.buttons[InAppButton.CreatingGroup.remove]
         waitFor(object: remove) { $0.exists }

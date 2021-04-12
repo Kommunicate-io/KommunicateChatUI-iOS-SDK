@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+
 /// `ALKAppSettingsUserDefaults` is used for handling the app settings and storing the data
 public struct ALKAppSettingsUserDefaults {
     // MARK: - Internal properties

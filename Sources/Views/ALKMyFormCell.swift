@@ -6,7 +6,10 @@
 //
 
 import Foundation
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKMyFormCell: ALKFormCell {
     enum ViewPadding {
         enum StateView {

@@ -8,7 +8,9 @@
 import ApplozicCore
 import Foundation
 import Kingfisher
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
     enum ViewPadding {
         enum NameLabel {

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension CGSize {
     static func getSizeAndScaleNotMoreThan(_ originalSize: CGSize, maximumSize: CGSize, aspectRatio _: Bool) -> (CGSize, CGFloat) {

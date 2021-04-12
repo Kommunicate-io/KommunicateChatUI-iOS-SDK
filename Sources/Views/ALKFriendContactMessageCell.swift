@@ -6,7 +6,10 @@
 //
 
 import Kingfisher
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 class ALKFriendContactMessageCell: ALKContactMessageBaseCell {
     enum Padding {
         enum Name {

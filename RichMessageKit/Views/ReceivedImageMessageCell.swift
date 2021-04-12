@@ -103,7 +103,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
 
     fileprivate var imageUrl: String?
 
-    var imageTapped: (() -> Void)?
+    public var imageTapped: (() -> Void)?
 
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         messageViewPadding = Padding(left: Config.MessageView.leftPadding,

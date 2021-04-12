@@ -10,6 +10,10 @@ import Foundation
 
 extension Bundle {
     static var applozic: Bundle {
-        return Bundle(for: ALKConversationListViewController.self)
+        #if SWIFT_PACKAGE
+            return Bundle.module
+        #else
+            return Bundle(for: ALKConversationListViewController.self)
+        #endif
     }
 }

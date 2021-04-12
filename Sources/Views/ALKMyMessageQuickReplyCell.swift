@@ -6,7 +6,10 @@
 //
 
 import Foundation
-
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 public class ALKMyMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
     enum ViewPadding {
         enum StateView {

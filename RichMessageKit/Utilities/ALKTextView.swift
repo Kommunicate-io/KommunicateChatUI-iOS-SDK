@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 /// This disables selection in UITextView.
 /// https://stackoverflow.com/a/44878203/6671572
-class ALKTextView: UITextView {
+public class ALKTextView: UITextView {
     override open func point(inside point: CGPoint, with _: UIEvent?) -> Bool {
         guard let pos = closestPosition(to: point) else { return false }
         guard let range = tokenizer.rangeEnclosingPosition(pos, with: .character, inDirection: .layout(.left)) else { return false }

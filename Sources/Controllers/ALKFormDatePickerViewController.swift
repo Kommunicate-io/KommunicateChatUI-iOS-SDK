@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 @objc protocol ALKDatePickerButtonClickProtocol {
     func confirmButtonClick(position: Int, date: Date, messageKey: String, datePickerMode: UIDatePicker.Mode)
@@ -183,7 +184,7 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
     }
 
     private func setupViews() {
-        view.backgroundColor = UIColor(10, green: 10, blue: 10, alpha: 0.2)
+        view.backgroundColor = UIColor(red: 10, green: 10, blue: 10, alpha: 0.2)
         view.isOpaque = false
         view.isUserInteractionEnabled = true
         uiDatePicker.datePickerMode = datePickerMode

@@ -7,7 +7,6 @@
 //
 
 import Kingfisher
-import MGSwipeTableCell
 import UIKit
 
 protocol ALKFriendCellProtocol: AnyObject {
@@ -16,7 +15,7 @@ protocol ALKFriendCellProtocol: AnyObject {
     func deleteFriend(atIndex: IndexPath)
 }
 
-class ALKFriendCell: MGSwipeTableCell {
+class ALKFriendCell: UITableViewCell {
     @IBOutlet var imgDisplay: UIImageView!
     @IBOutlet var lblDisplayName: UILabel!
 
@@ -36,22 +35,6 @@ class ALKFriendCell: MGSwipeTableCell {
         imgDisplay.clipsToBounds = true
 
         lblDisplayName.textColor = .text(.black00)
-    }
-
-    func setFriendCellDelegate(cellDelegate: ALKFriendCellProtocol, indexPath: IndexPath) {
-        delegateFriendCell = cellDelegate
-        self.indexPath = indexPath
-
-        // configure left buttons
-        let btnDelete = MGSwipeButton(title: "", icon: UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil), backgroundColor: .background(.main), callback: {
-            (_: MGSwipeTableCell!) -> Bool in
-            self.delegateFriendCell.deleteFriend(atIndex: self.indexPath)
-            return true
-        })
-
-        btnDelete.frame.size = CGSize(width: 48, height: 48)
-        leftButtons = [btnDelete]
-        leftSwipeSettings.transition = MGSwipeTransition.rotate3D
     }
 
     func update(friend: ALKIdentityProtocol) {

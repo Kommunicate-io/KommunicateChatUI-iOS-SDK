@@ -6,6 +6,10 @@
 //
 
 import Kingfisher
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
     enum ViewPadding {
         enum NameLabel {

@@ -6,9 +6,13 @@
 //
 
 import Foundation
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 public extension ALKMessageStyle {
-    typealias MessageStatusType = MessageStatus
+    typealias MessageStatusType = ALKMessageStatus
 
     enum StatusIcon {
         case templateImageWithTint(image: UIImage, tintColor: UIColor)

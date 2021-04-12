@@ -9,6 +9,10 @@ import Foundation
 
 extension Bundle {
     static var richMessageKit: Bundle {
-        return Bundle(for: SuggestedReplyView.self)
+        #if SWIFT_PACKAGE
+            return Bundle.module
+        #else
+            return Bundle(for: SuggestedReplyView.self)
+        #endif
     }
 }
