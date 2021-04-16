@@ -167,5 +167,5 @@ GroupDescriptionHeaderTitle = "Group Description";
 
 /* Group Description VC */
 GroupDescriptionVCTitle = "Group Description";
-RemainingCharactersInfo = "Remaining characters";
+RemainingCharactersInfo = "Remaining characters: %@";
 AddGroupDescriptionPlaceHolder = "Add group description";

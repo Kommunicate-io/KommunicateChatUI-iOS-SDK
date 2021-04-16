@@ -35,7 +35,7 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
             static let maxHeight: CGFloat = 350.0
         }
 
-        enum RemaingStackView {
+        enum RemainingStackView {
             static let top: CGFloat = 0.0
             static let left: CGFloat = 0.0
             static let right: CGFloat = 0.0
@@ -63,7 +63,7 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
         return textView
     }()
 
-    private let remaingLabel: UILabel = {
+    private let remainingLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.black
         label.numberOfLines = 1
@@ -74,11 +74,11 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
     }()
 
     private lazy var stackViewForLabel: UIStackView = {
-        let button = UIStackView(arrangedSubviews: [self.remaingLabel])
-        button.axis = .horizontal
-        button.alignment = .center
-        button.distribution = .fillEqually
-        return button
+        let stackView = UIStackView(arrangedSubviews: [self.remainingLabel])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        return stackView
     }()
 
     init(channelKey: NSNumber,
@@ -198,10 +198,10 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
             constant: 0, identifier: ConstraintIdentifier.descriptionTextViewHeight
         ).isActive = true
 
-        stackViewForLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: Padding.RemaingStackView.top).isActive = true
-        stackViewForLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.RemaingStackView.right).isActive = true
-        stackViewForLabel.heightAnchor.constraint(equalToConstant: Padding.RemaingStackView.height).isActive = true
-        stackViewForLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.RemaingStackView.left).isActive = true
+        stackViewForLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: Padding.RemainingStackView.top).isActive = true
+        stackViewForLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Padding.RemainingStackView.right).isActive = true
+        stackViewForLabel.heightAnchor.constraint(equalToConstant: Padding.RemainingStackView.height).isActive = true
+        stackViewForLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Padding.RemainingStackView.left).isActive = true
     }
 
     private func startLoadingIndicator() {
@@ -241,10 +241,11 @@ extension ALKGroupDescriptionController: UITextViewDelegate {
             return
         }
         if textView.text.count >= CharacterLimit.soft {
-            remaingLabel.isHidden = false
-            remaingLabel.text = remaingCharactersText + String(CharacterLimit.hard - textView.text.count)
+            remainingLabel.isHidden = false
+            let formatedRemainingText = String(format: remaingCharactersText, String(CharacterLimit.hard - textView.text.count))
+            remainingLabel.text = formatedRemainingText
         } else {
-            remaingLabel.isHidden = true
+            remainingLabel.isHidden = true
         }
 
         let size = CGSize(width: view.frame.width, height: .greatestFiniteMagnitude)
