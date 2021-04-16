@@ -24,7 +24,7 @@ extension Date {
             static let twelve = "dd/MM/yyyy"
             static let twentyfour = "MM/dd/yyyy"
         }
-        
+
         enum DateTimeForForm {
             static let formFormat = "yyyy-MM-dd'T'HH:mm"
         }

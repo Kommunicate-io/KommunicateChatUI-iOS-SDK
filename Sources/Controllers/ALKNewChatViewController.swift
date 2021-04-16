@@ -208,7 +208,7 @@ extension ALKNewChatViewController: UISearchBarDelegate {
 // MARK: - CreateGroupChatAddFriendProtocol
 
 extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
-    func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String?, friendsAdded _: [ALKFriendViewModel]) {
+    func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String?, friendsAdded _: [ALKFriendViewModel], groupDescription: String?) {
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
 
         // Server call
@@ -217,7 +217,14 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
         let membersList = NSMutableArray()
         _ = friendsSelected.map { membersList.add($0.friendUUID as Any) }
 
-        newChannel.createChannel(groupName, orClientChannelKey: nil, andMembersList: membersList, andImageLink: groupImgUrl, withCompletion: {
+        let metaData = NSMutableDictionary()
+        if let descriptionText = groupDescription,
+           !descriptionText.trim().isEmpty
+        {
+            metaData[ALKGroupDescriptionViewModel.GroupDescription.key] = descriptionText
+        }
+
+        newChannel.createChannel(groupName, orClientChannelKey: nil, andMembersList: membersList, andImageLink: groupImgUrl, channelType: Int16(PUBLIC.rawValue), andMetaData: metaData, withCompletion: {
             channel, error in
             guard let alChannel = channel else {
                 print("error creating group", error.debugDescription)

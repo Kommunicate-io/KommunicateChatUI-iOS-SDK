@@ -53,5 +53,8 @@ public struct ALKChannelDetailViewConfiguration {
         text: UIColor.black
     )
 
+    /// If true, then group description edit willl be disabled.
+    public var disableGroupDescriptionEdit = false
+
     public init() {}
 }

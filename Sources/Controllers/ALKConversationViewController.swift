@@ -1662,7 +1662,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
             case .dateTimeLocal:
                 if let formViewModelDateTimeLocalItem = element as? FormViewModelDateTimeLocalItem {
-                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.formFormat , timeInMillSecs: timeInMillSecs)
+                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.formFormat, timeInMillSecs: timeInMillSecs)
                     postFormData[formViewModelDateTimeLocalItem.label] = String(formattedDate)
                 }
             default:
@@ -2068,7 +2068,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 }
 
 extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
-    func createGroupGetFriendInGroupList(friendsSelected _: [ALKFriendViewModel], groupName: String, groupImgUrl: String?, friendsAdded: [ALKFriendViewModel]) {
+    func createGroupGetFriendInGroupList(friendsSelected _: [ALKFriendViewModel], groupName: String, groupImgUrl: String?, friendsAdded: [ALKFriendViewModel], groupDescription _: String?) {
         if viewModel.isGroup {
             viewModel.updateGroup(groupName: groupName, groupImage: groupImgUrl, friendsAdded: friendsAdded)
             _ = navigationController?.popToViewController(self, animated: true)

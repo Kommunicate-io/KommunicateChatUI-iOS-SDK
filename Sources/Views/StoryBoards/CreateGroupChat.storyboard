@@ -47,7 +47,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Gov-eO-1OI">
-                                <rect key="frame" x="0.0" y="154" width="414" height="562"/>
+                                <rect key="frame" x="0.0" y="115" width="414" height="601"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="safeArea" id="Hwt-Xi-PvC">
                                     <size key="itemSize" width="0.0" height="0.0"/>
@@ -76,18 +76,6 @@
                                     <action selector="createGroupPress:" destination="qX5-gu-8Uq" eventType="touchUpInside" id="jEV-JZ-q2O"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SSr-MN-y3H">
-                                <rect key="frame" x="17" y="113" width="377" height="22"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Participants">
-                                        <attributes>
-                                            <color key="NSColor" red="0.87843137250000003" green="0.035294117649999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="18" name="HelveticaNeue-Thin"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iZl-Im-4xG" userLabel="img group">
                                 <rect key="frame" x="21" y="17" width="68" height="68"/>
                                 <subviews>
@@ -143,20 +131,17 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="SSr-MN-y3H" firstAttribute="leading" secondItem="3N8-iZ-Yps" secondAttribute="leading" constant="17" id="3Wy-xQ-dSc"/>
                             <constraint firstItem="gcl-Y4-Il5" firstAttribute="top" secondItem="ivP-m5-RML" secondAttribute="bottom" constant="34" id="7Vl-k3-DTk"/>
                             <constraint firstItem="iZl-Im-4xG" firstAttribute="top" secondItem="ivP-m5-RML" secondAttribute="bottom" constant="17" id="C83-aQ-s0J"/>
                             <constraint firstItem="iZl-Im-4xG" firstAttribute="leading" secondItem="3N8-iZ-Yps" secondAttribute="leading" constant="21" id="EEp-EB-bGy"/>
                             <constraint firstItem="gcl-Y4-Il5" firstAttribute="leading" secondItem="iZl-Im-4xG" secondAttribute="trailing" constant="15" id="EyO-Yh-YLq"/>
-                            <constraint firstItem="Gov-eO-1OI" firstAttribute="top" secondItem="SSr-MN-y3H" secondAttribute="bottom" constant="19" id="If6-Hq-ndW"/>
-                            <constraint firstItem="0Hx-Nj-Yql" firstAttribute="top" secondItem="Gov-eO-1OI" secondAttribute="bottom" constant="8" id="Kza-dq-0HA"/>
                             <constraint firstItem="0Hx-Nj-Yql" firstAttribute="centerX" secondItem="3N8-iZ-Yps" secondAttribute="centerX" id="QkU-FJ-y7A"/>
                             <constraint firstAttribute="trailing" secondItem="gcl-Y4-Il5" secondAttribute="trailing" constant="20" id="ZXu-02-dCP"/>
-                            <constraint firstItem="SSr-MN-y3H" firstAttribute="top" secondItem="gcl-Y4-Il5" secondAttribute="bottom" constant="45" id="aRc-Dg-PMZ"/>
-                            <constraint firstItem="Gov-eO-1OI" firstAttribute="leading" secondItem="3N8-iZ-Yps" secondAttribute="leading" id="bsQ-Pn-uUL"/>
+                            <constraint firstItem="0Hx-Nj-Yql" firstAttribute="top" secondItem="Gov-eO-1OI" secondAttribute="bottom" constant="8" id="ZZV-p9-rVD"/>
                             <constraint firstItem="PD6-Ww-nL9" firstAttribute="top" secondItem="0Hx-Nj-Yql" secondAttribute="bottom" constant="20" id="i3g-NC-cSt"/>
-                            <constraint firstItem="SSr-MN-y3H" firstAttribute="trailing" secondItem="3N8-iZ-Yps" secondAttribute="trailingMargin" id="meO-l9-ypQ"/>
-                            <constraint firstAttribute="trailing" secondItem="Gov-eO-1OI" secondAttribute="trailing" id="vTq-gE-MMc"/>
+                            <constraint firstItem="Gov-eO-1OI" firstAttribute="centerX" secondItem="0Hx-Nj-Yql" secondAttribute="centerX" id="isX-HV-Eal"/>
+                            <constraint firstItem="Gov-eO-1OI" firstAttribute="leading" secondItem="3N8-iZ-Yps" secondAttribute="leadingMargin" constant="-20" id="oB8-ub-iZO"/>
+                            <constraint firstItem="Gov-eO-1OI" firstAttribute="top" secondItem="iZl-Im-4xG" secondAttribute="bottom" constant="30" id="rhB-PY-BhW"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Create Group" id="XE3-Zm-BH7">
@@ -171,7 +156,6 @@
                         <outlet property="btnCreateGroup" destination="0Hx-Nj-Yql" id="mOs-NJ-0RR"/>
                         <outlet property="editLabel" destination="VxQ-Vk-SIV" id="FVK-46-cTi"/>
                         <outlet property="imgGroupProfile" destination="4BZ-iS-r4C" id="Ou0-ol-0z9"/>
-                        <outlet property="participantsLabel" destination="SSr-MN-y3H" id="Sok-DX-ea0"/>
                         <outlet property="tblParticipants" destination="Gov-eO-1OI" id="vZr-2A-UXp"/>
                         <outlet property="txtfGroupName" destination="gcl-Y4-Il5" id="gcn-Cd-hp1"/>
                         <outlet property="viewGroupImg" destination="iZl-Im-4xG" id="YZY-X6-Epn"/>
@@ -180,7 +164,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wsm-mB-Fcc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-522.39999999999998" y="78.710644677661179"/>
+            <point key="canvasLocation" x="-523.1884057971015" y="78.348214285714278"/>
         </scene>
         <!--Add to Group-->
         <scene sceneID="EyI-b1-1uh">

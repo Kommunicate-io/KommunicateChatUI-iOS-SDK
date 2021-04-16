@@ -145,11 +145,15 @@ struct SystemMessage: Localizable {
         static let createGroupTitle = localizedString(forKey: "CreateGroupTitle")
         static let editGroupTitle = localizedString(forKey: "EditGroupTitle")
         static let emailWebViewTitle = localizedString(forKey: "EmailWebViewTitle")
+        static let groupDescriptionVCTitle = localizedString(forKey: "GroupDescriptionVCTitle")
     }
 
     enum LabelName {
         static let Edit = localizedString(forKey: "Edit")
         static let Participants = localizedString(forKey: "Participants")
+        static let GroupDescription = localizedString(forKey: "GroupDescriptionHeaderTitle")
+        static let AddGroupDescriptionPlaceHolder = localizedString(forKey: "AddGroupDescriptionPlaceHolder")
+        static let RemainingCharactersInfo = localizedString(forKey: "RemainingCharactersInfo")
         static let TypeGroupName = localizedString(forKey: "TypeGroupName")
         static let SendPhoto = localizedString(forKey: "SendPhoto")
         static let Settings = localizedString(forKey: "Settings")
