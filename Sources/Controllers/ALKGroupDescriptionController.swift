@@ -121,6 +121,8 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
         guard existingGroupDescriptionText != trimmedDescriptionText,
               descriptionTextView.textColor != UIColor.lightGray
         else {
+            /// If the text is same will pod the view controller
+            popViewController()
             return
         }
 
