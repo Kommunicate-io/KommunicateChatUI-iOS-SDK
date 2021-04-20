@@ -42,6 +42,9 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         viewModel: self.viewModel,
         cellConfigurator: { message, tableCell in
             let cell = tableCell as! ALKChatCell
+            cell.displayNames = { _ in
+                message.displayNames()
+            }
             cell.update(viewModel: message, identity: nil)
             cell.delegate = self
         }

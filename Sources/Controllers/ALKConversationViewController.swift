@@ -1662,7 +1662,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
             case .dateTimeLocal:
                 if let formViewModelDateTimeLocalItem = element as? FormViewModelDateTimeLocalItem {
-                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.formFormat , timeInMillSecs: timeInMillSecs)
+                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.formFormat, timeInMillSecs: timeInMillSecs)
                     postFormData[formViewModelDateTimeLocalItem.label] = String(formattedDate)
                 }
             default:

@@ -193,6 +193,10 @@ extension ALMessage: ALKChatViewModelProtocol {
     public var isMessageEmpty: Bool {
         return message == nil || message != nil && message.trim().isEmpty
     }
+
+    public var messageMetadata: NSMutableDictionary? {
+        return metadata
+    }
 }
 
 extension ALMessage {
