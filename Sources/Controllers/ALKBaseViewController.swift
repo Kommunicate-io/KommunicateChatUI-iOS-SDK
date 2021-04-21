@@ -26,8 +26,9 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        if navigationController?.viewControllers.first != self {
+        /// Add the back button in case if first view controller is not same as current VC OR
+        /// Add the back button in case if first view controller is  ALKConversationViewController and current VC is ALKConversationViewController
+        if let vc = navigationController?.viewControllers.first, vc != self || vc.isKind(of: ALKConversationViewController.self) {
             var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
             backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
             let backButton = UIBarButtonItem(
