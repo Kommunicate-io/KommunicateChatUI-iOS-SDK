@@ -39,6 +39,17 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         }
     }
 
+    enum GroupNameEditString: Localizable {
+        case alert
+        func okButtonTitle(localizedStringFileName: String) -> String {
+            return localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.ButtonName.ok, fileName: localizedStringFileName)
+        }
+
+        func fillGroupNameTitle(localizedStringFileName: String) -> String {
+            return localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, fileName: localizedStringFileName)
+        }
+    }
+
     enum CollectionViewSection {
         static let groupDescription = 0
         static let addMemeber = 1
@@ -455,26 +466,18 @@ extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
 
 extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == CollectionViewSection.groupDescription {
+        switch indexPath.section {
+        case CollectionViewSection.groupDescription:
             guard !configuration.channelDetail.disableGroupDescriptionEdit else {
                 return
             }
-            let groupDescriptionVC = ALKGroupDescriptionController(channelKey: viewModel.groupId, configuration: configuration, isFromGroupCreate: addContactMode == .newChat)
-            if addContactMode == .newChat {
-                groupDescriptionVC.delegate = self
-            }
-            navigationController?.pushViewController(groupDescriptionVC, animated: true)
-        } else if indexPath.section == CollectionViewSection.addMemeber {
+            showGroupDescriptionViewController()
+        case CollectionViewSection.addMemeber:
             guard
                 let groupName = txtfGroupName.text?.trimmingCharacters(in: .whitespacesAndNewlines),
                 groupName.lengthOfBytes(using: .utf8) > 1
             else {
-                let msg = localizedString(forKey: "FillGroupName", withDefaultValue: SystemMessage.Warning.FillGroupName, fileName: localizedStringFileName)
-                let alert = UIAlertController(title: nil, message: msg, preferredStyle: .alert)
-                let okButton = localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.ButtonName.ok, fileName: localizedStringFileName)
-                let action = UIAlertAction(title: okButton, style: .default, handler: nil)
-                alert.addAction(action)
-                present(alert, animated: true, completion: nil)
+                showGroupNameEmptyAlertView()
                 return
             }
 
@@ -483,17 +486,14 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
             } else {
                 performSegue(withIdentifier: "goToSelectFriendToAdd", sender: nil)
             }
-        } else {
+        case CollectionViewSection.participants:
             guard
                 let viewModel = viewModel,
                 let options = viewModel.optionsForCell(at: indexPath.row)
             else { return }
-            let memberInfo = viewModel.rowAt(index: indexPath.row)
-            let optionMenu = UIAlertController(title: nil, message: memberInfo.name, preferredStyle: .actionSheet)
-            options.forEach {
-                optionMenu.addAction($0.value(localizationFileName: localizedStringFileName, index: indexPath.row, delegate: self))
-            }
-            present(optionMenu, animated: true, completion: nil)
+            showParticpentsTapActionView(options: options, row: indexPath.row, groupViewModel: viewModel)
+        default:
+            break
         }
     }
 
@@ -616,6 +616,32 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
             // Fallback on earlier versions
             return CGSize(width: UIScreen.main.bounds.width, height: height)
         }
+    }
+
+    private func showGroupNameEmptyAlertView() {
+        let alert = UIAlertController(title: nil, message: GroupNameEditString.alert.fillGroupNameTitle(localizedStringFileName: localizedStringFileName), preferredStyle: .alert)
+        let action = UIAlertAction(title: GroupNameEditString.alert.okButtonTitle(localizedStringFileName: localizedStringFileName), style: .default, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+
+    private func showGroupDescriptionViewController() {
+        let groupDescriptionVC = ALKGroupDescriptionController(channelKey: viewModel.groupId, configuration: configuration, isFromGroupCreate: addContactMode == .newChat)
+        if addContactMode == .newChat {
+            groupDescriptionVC.delegate = self
+        }
+        navigationController?.pushViewController(groupDescriptionVC, animated: true)
+    }
+
+    func showParticpentsTapActionView(options: [Options],
+                                      row: Int,
+                                      groupViewModel : ALKCreateGroupViewModel) {
+        let memberInfo = groupViewModel.rowAt(index: row)
+        let optionMenu = UIAlertController(title: nil, message: memberInfo.name, preferredStyle: .actionSheet)
+        options.forEach {
+            optionMenu.addAction($0.value(localizationFileName: localizedStringFileName, index: row, delegate: self))
+        }
+        present(optionMenu, animated: true, completion: nil)
     }
 }
 
