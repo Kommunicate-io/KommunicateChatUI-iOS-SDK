@@ -26,19 +26,14 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        /// Add the back button in case if first view controller is not same as current VC OR
-        /// Add the back button in case if first view controller is  ALKConversationViewController and current VC is ALKConversationViewController
-        if let vc = navigationController?.viewControllers.first, vc != self || vc.isKind(of: ALKConversationViewController.self) {
-            var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
-            backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
-            let backButton = UIBarButtonItem(
-                image: backImage,
-                style: .plain,
-                target: self,
-                action: #selector(backTapped)
-            )
-            backButton.accessibilityIdentifier = "conversationBackButton"
-            navigationItem.leftBarButtonItem = backButton
+        // Add the back button in case if first view controller is nil or is not same as current VC OR
+        // Add the back button in case if first view controller is  ALKConversationViewController and current VC is ALKConversationViewController
+        if navigationController?.viewControllers.first != self {
+            navigationItem.leftBarButtonItem = backBarButtonItem()
+        } else if let vc = navigationController?.viewControllers.first,
+                  vc.isKind(of: ALKConversationViewController.self)
+        {
+            navigationItem.leftBarButtonItem = backBarButtonItem()
         }
 
         if configuration.hideNavigationBarBottomLine {
@@ -77,4 +72,17 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     }
 
     open func showAccountSuspensionView() {}
+
+    func backBarButtonItem() -> UIBarButtonItem {
+        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
+        let backButton = UIBarButtonItem(
+            image: backImage,
+            style: .plain,
+            target: self,
+            action: #selector(backTapped)
+        )
+        backButton.accessibilityIdentifier = "conversationBackButton"
+        return backButton
+    }
 }
