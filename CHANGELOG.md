@@ -5,6 +5,9 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Added the group description support 
+
 ## [6.0.0] - 2021-04-12
 
 ### Enhancements

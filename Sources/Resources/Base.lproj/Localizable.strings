@@ -163,3 +163,9 @@ RichMessageImagePreviewTitle = "Image";
 
 EnableCameraPermissionMessage = "Enable Contact Permission";
 
+GroupDescriptionHeaderTitle = "Group Description";
+
+/* Group Description VC */
+GroupDescriptionVCTitle = "Group Description";
+RemainingCharactersInfo = "Remaining characters: %@";
+AddGroupDescriptionPlaceHolder = "Add group description";
