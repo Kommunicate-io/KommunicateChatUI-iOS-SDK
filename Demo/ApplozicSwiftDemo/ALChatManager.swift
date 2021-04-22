@@ -137,6 +137,7 @@ class ALChatManager: NSObject {
 
     func launch(viewController: UIViewController, from vc: UIViewController) {
         let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
+        navVC.modalPresentationStyle = .fullScreen
         guard vc.navigationController != nil else {
             vc.present(navVC, animated: true, completion: nil)
             return

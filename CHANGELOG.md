@@ -6,7 +6,12 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ## [Unreleased]
 
 ### Enhancements
-- Added the group description support 
+
+- Added the group description support.
+
+### Fixes
+
+- Fixed an issue where back button was not visible for direct launch of one to one or group chat.
 
 ## [6.0.0] - 2021-04-12
 
