@@ -29,6 +29,62 @@ public protocol ALKChatViewModelProtocol {
     var messageType: ALKMessageType { get }
     var channelType: Int16 { get }
     var isMessageEmpty: Bool { get }
+    var messageMetadata: NSMutableDictionary? { get }
+}
+
+extension ALKChatViewModelProtocol {
+    var containsMentions: Bool {
+        // Only check when it's a group
+        guard channelKey != nil, let mentionParser = mentionParser else {
+            return false
+        }
+        return mentionParser.containsMentions
+    }
+
+    var mentionedUserIds: Set<String>? {
+        return mentionParser?.mentionedUserIds()
+    }
+
+    private var mentionParser: MessageMentionDecoder? {
+        guard let message = theLastMessage,
+              let metadata = messageMetadata as? [String: Any],
+              !metadata.isEmpty
+        else {
+            return nil
+        }
+        let mentionParser = MessageMentionDecoder(message: message, metadata: metadata)
+        return mentionParser
+    }
+
+    func attributedTextWithMentions(
+        defaultAttributes: [NSAttributedString.Key: Any],
+        mentionAttributes: [NSAttributedString.Key: Any],
+        displayNames: ((Set<String>) -> ([String: String]?))?
+    ) -> NSAttributedString? {
+        guard containsMentions,
+              let userIds = mentionedUserIds,
+              let names = displayNames?(userIds),
+              let attributedText = mentionParser?.messageWithMentions(
+                  displayNamesOfUsers: names,
+                  attributesForMention: mentionAttributes,
+                  defaultAttributes: defaultAttributes
+              )
+        else {
+            return nil
+        }
+        return attributedText
+    }
+
+    func displayNames() -> [String: String]? {
+        let alConactService = ALContactService()
+        var names: [String: String] = [:]
+
+        mentionedUserIds?.forEach {
+            let contact = alConactService.loadContact(byKey: "userId", value: $0)
+            names[$0] = contact?.getDisplayName()
+        }
+        return names
+    }
 }
 
 public enum ALKChatCellAction {
@@ -60,6 +116,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     public var localizationFileName: String = "Localizable"
+    var displayNames: ((Set<String>) -> ([String: String]?))?
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -81,7 +138,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         return label
     }()
 
-    private var locationLabel: UILabel = {
+    private var messageLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 1
@@ -227,7 +284,24 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
         let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
         nameLabel.text = name
-        locationLabel.text = viewModel.theLastMessage
+
+        let attrs: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.font: messageLabel.font ?? Font.normal(size: 14.0).font(),
+            NSAttributedString.Key.foregroundColor: messageLabel.textColor ?? UIColor(netHex: 0x9B9B9B),
+        ]
+
+        if let attributedText = viewModel
+            .attributedTextWithMentions(
+                defaultAttributes: [:],
+                mentionAttributes: attrs as [NSAttributedString.Key: Any],
+                displayNames: displayNames
+            )
+        {
+            messageLabel.attributedText = attributedText
+        } else {
+            messageLabel.text = viewModel.theLastMessage
+        }
+
         muteIcon.isHidden = !isConversationMuted(viewModel: viewModel)
 
         if viewModel.messageType == .email {
@@ -279,8 +353,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, locationLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
-
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
@@ -298,11 +371,11 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
         emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
 
-        // setup constraint of mood
-        locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
-        locationLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        locationLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
-        locationLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
+        // setup constraint of mood'
+        messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
+        messageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
+        messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
         // setup constraint of line
         lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -311,7 +384,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
 
         muteIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19).isActive = true
-        muteIcon.centerYAnchor.constraint(equalTo: locationLabel.centerYAnchor).isActive = true
+        muteIcon.centerYAnchor.constraint(equalTo: messageLabel.centerYAnchor).isActive = true
         muteIcon.widthAnchor.constraint(equalToConstant: 15.0).isActive = true
         muteIcon.heightAnchor.constraint(equalToConstant: 15.0).isActive = true
 
