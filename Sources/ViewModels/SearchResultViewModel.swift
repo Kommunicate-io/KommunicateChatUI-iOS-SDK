@@ -104,7 +104,7 @@ class SearchResultViewModel: BaseMessageViewModel {
                 .sorted(by: {
                     Int(truncating: $0.createdAtTime) > Int(truncating: $1.createdAtTime)
                 }).filter {
-                    ($0.groupId != nil || $0.contactId != nil)
+                    $0.groupId != nil || $0.contactId != nil
                 }.map {
                     self.allMessages.append($0)
                 }

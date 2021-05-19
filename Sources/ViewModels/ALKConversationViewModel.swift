@@ -212,7 +212,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
 
         guard let members = alChannel.membersId else { return [] }
-        let membersId = members.map { ($0 as? String) }
+        let membersId = members.map { $0 as? String }
         let alContactDbService = ALContactDBService()
         let alContacts = membersId.map { alContactDbService.loadContact(byKey: "userId", value: $0) }
         let models = alContacts.filter { $0?.userId != ALUserDefaultsHandler.getUserId() }.map { ALKFriendViewModel(identity: $0!) }
@@ -550,7 +550,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
             let task = ALKDownloadTask(downloadUrl: fileUrl, fileName: message.fileMetaInfo?.name)
             task.identifier = message.identifier
             task.totalBytesExpectedToDownload = message.size
-            httpManager.downloadAttachment(task: task)
             httpManager.downloadCompleted = { [weak self] task in
                 guard let weakSelf = self, let identifier = task.identifier else { return }
                 var msg = weakSelf.messageForRow(identifier: identifier)
@@ -560,6 +559,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     msg?.filePath = task.filePath
                 }
             }
+            httpManager.downloadAttachment(task: task)
         }
     }
 
@@ -693,7 +693,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
-                return
             })
         } else {
             ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: { _, error in
@@ -818,8 +817,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func uploadVideo(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
-
-        let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
@@ -834,29 +831,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
             print("Not saved due to error \(String(describing: error))")
             return
         }
-
         print("content type: ", alMessage.fileMeta.contentType ?? "")
         print("file path: ", alMessage.imageFilePath ?? "")
-        clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
-            urlStr, error in
-            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else {
-                NSLog("error sending video %@", error.debugDescription)
-                return
+        let uploadManager = ALKVideoUploadManager()
+        uploadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
+        uploadManager.uploadCompleted = { [weak self] responseDict, task in
+            if task.uploadError == nil, task.completed {
+                self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
             }
-            NSLog("URL TO UPLOAD VIDEO AT PATH %@ IS %@", alMessage.imageFilePath ?? "", url.description)
-            let downloadManager = ALKHTTPManager()
-            downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
-            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
-            task.identifier = alMessage.identifier
-            task.contentType = alMessage.fileMeta.contentType
-            task.filePath = alMessage.imageFilePath
-            downloadManager.uploadAttachment(task: task)
-            downloadManager.uploadCompleted = { [weak self] responseDict, task in
-                if task.uploadError == nil, task.completed {
-                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
-                }
-            }
-        })
+        }
+        uploadManager.uploadVideo(alMessage: alMessage)
     }
 
     // FIXME: Remove indexpath from this call and add message id param. Currently there is an unneccessary dependency on the indexpath.
@@ -870,12 +854,22 @@ open class ALKConversationViewModel: NSObject, Localizable {
               let message = messageService.createMessageEntity(dbMessage) else { return }
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
+
         if ALApplozicSettings.isS3StorageServiceEnabled() {
             message.fileMeta.populate(fileInfo)
         } else {
             guard let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
             message.fileMeta.populate(fileMeta)
         }
+        if let contentType = dbMessage.fileMetaInfo.contentType, contentType.hasPrefix("video") {
+            let thumbnailUrl = dbMessage.fileMetaInfo.thumbnailUrl
+            let thumbnailBlobKeyString = dbMessage.fileMetaInfo.thumbnailBlobKeyString
+            message.fileMeta.thumbnailBlobKey = thumbnailBlobKeyString
+            message.fileMeta.thumbnailUrl = thumbnailUrl
+            dbMessage.fileMetaInfo.thumbnailBlobKeyString = thumbnailBlobKeyString
+            dbMessage.fileMetaInfo.thumbnailUrl = thumbnailUrl
+        }
+
         message.status = NSNumber(integerLiteral: Int(SENT.rawValue))
 
         let error = alHandler?.saveContext()
@@ -974,7 +968,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             urlStr, error in
             guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else { return }
             let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
-            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
             let downloadManager = ALKHTTPManager()
@@ -1008,7 +1002,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             urlStr, error in
             guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else { return }
             let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
-            task.identifier = String(format: "section: %i, row: %i", indexPath.section, indexPath.row)
+            task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
             let downloadManager = ALKHTTPManager()

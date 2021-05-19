@@ -21,7 +21,7 @@ class ApplozicSwiftMemberUITests: XCTestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        addUIInterruptionMonitor(withDescription: AppPermission.AlertMessage.accessNotificationInApplication) { (alerts) -> Bool in
+        addUIInterruptionMonitor(withDescription: AppPermission.AlertMessage.accessNotificationInApplication) { alerts -> Bool in
             if alerts.buttons[AppPermission.AlertButton.allow].exists {
                 alerts.buttons[AppPermission.AlertButton.allow].tap()
             }

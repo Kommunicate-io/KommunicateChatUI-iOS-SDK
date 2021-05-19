@@ -250,7 +250,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.uploadTapped = { [weak self]
                     _ in
                     // upload
-                    self?.attachmentViewDidTapUpload(view: cell, indexPath: indexPath)
+                    self?.attachmentViewDidTapUploadVideo(view: cell, indexPath: indexPath)
                 }
                 cell.uploadCompleted = { [weak self]
                     responseDict in

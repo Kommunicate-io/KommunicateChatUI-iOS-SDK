@@ -1158,6 +1158,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.uploadImage(view: view, indexPath: indexPath)
     }
 
+    func attachmentViewDidTapUploadVideo(view: UIView, indexPath: IndexPath) {
+        guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
+            let notificationView = ALNotificationView()
+            notificationView.noDataConnectionNotificationView()
+            return
+        }
+        viewModel.uploadVideo(view: view, indexPath: indexPath)
+    }
+
     func attachmentUploadDidCompleteWith(response: Any?, indexPath: IndexPath) {
         viewModel.uploadAttachmentCompleted(responseDict: response, indexPath: indexPath)
     }
@@ -1829,7 +1838,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     private func showAlertForApplicationSettings(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-        let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }

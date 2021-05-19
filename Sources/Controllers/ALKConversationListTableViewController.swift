@@ -255,7 +255,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
 extension ALKConversationListTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
     func filterContentForSearchText(searchText: String, scope _: String = "All") {
-        searchFilteredChat = viewModel.getChatList().filter { (chatViewModel) -> Bool in
+        searchFilteredChat = viewModel.getChatList().filter { chatViewModel -> Bool in
             guard let conversation = chatViewModel as? ALMessage else {
                 return false
             }
@@ -279,7 +279,7 @@ extension ALKConversationListTableViewController: UISearchResultsUpdating, UISea
     }
 
     public func searchBar(_: UISearchBar, textDidChange searchText: String) {
-        searchFilteredChat = viewModel.getChatList().filter { (chatViewModel) -> Bool in
+        searchFilteredChat = viewModel.getChatList().filter { chatViewModel -> Bool in
             guard let conversation = chatViewModel as? ALMessage else {
                 return false
             }
@@ -373,7 +373,6 @@ extension ALKConversationListTableViewController {
                                 ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
                                 weakSelf.viewModel.remove(message: conversation)
                                 weakSelf.tableView.reloadData()
-                                return
                             })
                         } else if ALChannelService.isChannelDeleted(conversation.groupId) {
                             let channelDbService = ALChannelDBService()
@@ -433,7 +432,6 @@ extension ALKConversationListTableViewController {
                                 ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
                                 weakSelf.viewModel.remove(message: conversation)
                                 weakSelf.tableView.reloadData()
-                                return
                             })
                         } else if ALChannelService.isChannelDeleted(conversation.groupId) {
                             let channelDbService = ALChannelDBService()
