@@ -21,6 +21,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case downloading(progress: Double, totalCount: Int64)
         case downloaded(filePath: String)
         case upload(filePath: String)
+        case uploaded
     }
 
     var photoView: UIImageView = {
@@ -262,7 +263,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case .download:
             uploadButton.isHidden = true
             downloadButton.isHidden = false
-            photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
             playButton.isHidden = true
             progressView.isHidden = true
             loadThumbnail()
@@ -289,6 +289,11 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             let path = docDirPath.appendingPathComponent(filePath)
             let fileUtills = ALKFileUtils()
             photoView.image = fileUtills.getThumbnail(filePath: path)
+        case .uploaded:
+            uploadButton.isHidden = true
+            downloadButton.isHidden = true
+            progressView.isHidden = true
+            playButton.isHidden = false
         }
     }
 
@@ -297,7 +302,8 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             return
         }
         guard ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled() else {
-            photoView.kf.setImage(with: message.thumbnailURL)
+            let placeHolder = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+            photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolder)
             return
         }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
@@ -306,6 +312,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
                       let url = url
                 else {
                     print("Error downloading thumbnail url")
+                    self.photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
                     return
                 }
                 let httpManager = ALKHTTPManager()
@@ -327,7 +334,8 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     func setPhotoViewImageFromFileURL(_ fileURL: URL) {
         let provider = LocalFileImageDataProvider(fileURL: fileURL)
-        photoView.kf.setImage(with: provider)
+        let placeHolder = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        photoView.kf.setImage(with: provider, placeholder: placeHolder)
     }
 
     fileprivate func convertToDegree(total: Int64, written: Int64) -> Double {
@@ -360,7 +368,7 @@ extension ALKVideoCell: ALKHTTPManagerUploadDelegate {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
         if task.uploadError == nil, task.completed == true, task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: State.downloaded(filePath: task.filePath ?? ""))
+                self.updateView(for: .uploaded)
             }
         } else {
             DispatchQueue.main.async {

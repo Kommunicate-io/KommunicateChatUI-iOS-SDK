@@ -75,7 +75,7 @@ class ALKFriendVideoCell: ALKVideoCell {
         photoView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -56).isActive = true
         photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
 
-        photoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
+        photoView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 6).isActive = true
         photoView.widthAnchor.constraint(equalToConstant: width * 0.60).isActive = true
 
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2).isActive = true
