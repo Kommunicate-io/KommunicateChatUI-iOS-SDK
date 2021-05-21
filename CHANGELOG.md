@@ -8,6 +8,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ### Enhancements
 
 - Added the group description support.
+- Added the support for showing video thumbnail.
 
 ### Fixes
 

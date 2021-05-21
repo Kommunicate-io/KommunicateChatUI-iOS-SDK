@@ -66,7 +66,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
             let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, fileName: localizedStringFileName)
             let alertController = UIAlertController(title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
             let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
                 guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                     return
                 }
@@ -162,7 +162,7 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
             let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, fileName: localizedStringFileName)
             let alertController = UIAlertController(title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
             let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { (_) -> Void in
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
                 guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                     return
                 }

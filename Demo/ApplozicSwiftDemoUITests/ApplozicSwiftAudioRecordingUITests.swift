@@ -18,7 +18,7 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
         continueAfterFailure = false
 
         // This is important to ensure that the notification permission popup is handled when the app launches for the first time.
-        addUIInterruptionMonitor(withDescription: "“ApplozicSwiftDemo” Would Like to Send You Notifications") { (alerts) -> Bool in
+        addUIInterruptionMonitor(withDescription: "“ApplozicSwiftDemo” Would Like to Send You Notifications") { alerts -> Bool in
             if alerts.buttons["Allow"].exists {
                 alerts.buttons["Allow"].tap()
             }
@@ -53,7 +53,7 @@ class ApplozicSwiftAudioRecordingUITest: XCTestCase {
 
         // This will handle microphone permission in new xcode
         button.press(forDuration: 0.5)
-        addUIInterruptionMonitor(withDescription: "“ApplozicSwiftDemo” Would Like to Access the Microphone") { (alerts) -> Bool in
+        addUIInterruptionMonitor(withDescription: "“ApplozicSwiftDemo” Would Like to Access the Microphone") { alerts -> Bool in
             if alerts.buttons["OK"].exists {
                 alerts.buttons["OK"].tap()
             }

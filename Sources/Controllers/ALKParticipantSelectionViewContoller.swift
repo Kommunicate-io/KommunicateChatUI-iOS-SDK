@@ -248,7 +248,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     // MARK: - Other
 
     private func getNewGroupMemberCount() -> Int {
-        return datasource.getDatasource(state: .full).filter { (friendViewModel) -> Bool in
+        return datasource.getDatasource(state: .full).filter { friendViewModel -> Bool in
             friendViewModel.getIsSelected() == true && !isInPreviousFriendGroup(fri: friendViewModel)
         }.count
     }

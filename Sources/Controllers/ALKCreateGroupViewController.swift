@@ -635,7 +635,8 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
 
     func showParticpentsTapActionView(options: [Options],
                                       row: Int,
-                                      groupViewModel : ALKCreateGroupViewModel) {
+                                      groupViewModel: ALKCreateGroupViewModel)
+    {
         let memberInfo = groupViewModel.rowAt(index: row)
         let optionMenu = UIAlertController(title: nil, message: memberInfo.name, preferredStyle: .actionSheet)
         options.forEach {

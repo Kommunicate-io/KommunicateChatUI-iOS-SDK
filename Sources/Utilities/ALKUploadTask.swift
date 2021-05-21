@@ -18,6 +18,7 @@ public class ALKUploadTask {
     public var contentType: String?
     public var uploadError: Error?
     public var filePath: String?
+    public var thumbnailPath: String?
     public var identifier: String?
 
     public init(url: URL, fileName: String) {

@@ -8,6 +8,7 @@
 
 import ApplozicCore
 import AVKit
+import Kingfisher
 import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit
@@ -19,7 +20,8 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case download
         case downloading(progress: Double, totalCount: Int64)
         case downloaded(filePath: String)
-        case upload
+        case upload(filePath: String)
+        case uploaded
     }
 
     var photoView: UIImageView = {
@@ -131,7 +133,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
                     updateView(for: State.download)
                 }
             } else {
-                updateView(for: .upload)
+                updateView(for: .upload(filePath: viewModel.filePath ?? ""))
             }
         } else {
             if let filePath = viewModel.filePath, !filePath.isEmpty {
@@ -261,18 +263,15 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case .download:
             uploadButton.isHidden = true
             downloadButton.isHidden = false
-            photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
             playButton.isHidden = true
             progressView.isHidden = true
-        case let .downloaded(filePath):
+            loadThumbnail()
+        case .downloaded:
             uploadButton.isHidden = true
             downloadButton.isHidden = true
             progressView.isHidden = true
             playButton.isHidden = false
-            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let path = docDirPath.appendingPathComponent(filePath)
-            let fileUtills = ALKFileUtils()
-            photoView.image = fileUtills.getThumbnail(filePath: path)
+            loadThumbnail()
         case let .downloading(progress, _):
             // show progress bar
             print("downloading")
@@ -280,20 +279,81 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             downloadButton.isHidden = true
             progressView.isHidden = false
             progressView.angle = progress
-            photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
-        case .upload:
+        case let .upload(filePath):
             downloadButton.isHidden = true
             progressView.isHidden = true
             playButton.isHidden = true
             photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
             uploadButton.isHidden = false
+            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = docDirPath.appendingPathComponent(filePath)
+            let fileUtills = ALKFileUtils()
+            photoView.image = fileUtills.getThumbnail(filePath: path)
+        case .uploaded:
+            uploadButton.isHidden = true
+            downloadButton.isHidden = true
+            progressView.isHidden = true
+            playButton.isHidden = false
         }
+    }
+
+    func loadThumbnail() {
+        guard let message = viewModel, let metadata = message.fileMetaInfo else {
+            return
+        }
+        guard ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled() else {
+            let placeHolder = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+            photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolder)
+            return
+        }
+        guard let thumbnailPath = metadata.thumbnailFilePath else {
+            ALMessageClientService().downloadImageThumbnailUrl(metadata.thumbnailUrl, blobKey: metadata.thumbnailBlobKey) { url, error in
+                guard error == nil,
+                      let url = url
+                else {
+                    print("Error downloading thumbnail url")
+                    self.photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+                    return
+                }
+                let httpManager = ALKHTTPManager()
+                httpManager.downloadDelegate = self
+                let task = ALKDownloadTask(downloadUrl: url, fileName: metadata.name)
+                task.identifier = ThumbnailIdentifier.addPrefix(to: message.identifier)
+                httpManager.downloadAttachment(task: task)
+            }
+            return
+        }
+        setThumbnail(thumbnailPath)
+    }
+
+    fileprivate func setThumbnail(_ path: String) {
+        let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let path = docDirPath.appendingPathComponent(path)
+        setPhotoViewImageFromFileURL(path)
+    }
+
+    func setPhotoViewImageFromFileURL(_ fileURL: URL) {
+        let provider = LocalFileImageDataProvider(fileURL: fileURL)
+        let placeHolder = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        photoView.kf.setImage(with: provider, placeholder: placeHolder)
     }
 
     fileprivate func convertToDegree(total: Int64, written: Int64) -> Double {
         let divergence = Double(total) / 360.0
         let degree = Double(written) / divergence
         return degree
+    }
+
+    fileprivate func updateThumbnailPath(_ key: String, filePath: String) {
+        let messageKey = ThumbnailIdentifier.removePrefix(from: key)
+        guard let dbMessage = ALMessageDBService().getMessageByKey("key", value: messageKey) as? DB_Message else { return }
+        dbMessage.fileMetaInfo.thumbnailFilePath = filePath
+
+        let dbHandler = ALDBHandler.sharedInstance()
+        let error = dbHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
+        }
     }
 }
 
@@ -308,11 +368,14 @@ extension ALKVideoCell: ALKHTTPManagerUploadDelegate {
         NSLog("VIDEO CELL DATA UPLOADED FOR PATH: %@", viewModel?.filePath ?? "")
         if task.uploadError == nil, task.completed == true, task.filePath != nil {
             DispatchQueue.main.async {
-                self.updateView(for: State.downloaded(filePath: task.filePath ?? ""))
+                self.updateView(for: .uploaded)
             }
         } else {
             DispatchQueue.main.async {
-                self.updateView(for: .upload)
+                guard let path = task.filePath else {
+                    return
+                }
+                self.updateView(for: .upload(filePath: path))
             }
         }
     }
@@ -329,6 +392,13 @@ extension ALKVideoCell: ALKHTTPManagerDownloadDelegate {
     func dataDownloadingFinished(task: ALKDownloadTask) {
         guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, viewModel != nil else {
             updateView(for: .download)
+            return
+        }
+        guard !ThumbnailIdentifier.hasPrefix(in: identifier) else {
+            DispatchQueue.main.async {
+                self.setThumbnail(filePath)
+            }
+            updateThumbnailPath(identifier, filePath: filePath)
             return
         }
         ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
