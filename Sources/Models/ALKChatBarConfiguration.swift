@@ -19,6 +19,7 @@ public enum AttachmentType: CaseIterable, Equatable {
     case video
     case location
     case document
+    case giphy
 }
 
 /// A type that can be used to configure chat bar items
@@ -80,6 +81,8 @@ public struct ALKChatBarConfiguration {
                 icons[.location] = UIImage(named: "location_new", in: Bundle.applozic, compatibleWith: nil)
             case .document:
                 icons[.document] = UIImage(named: "ic_alk_document", in: Bundle.applozic, compatibleWith: nil)
+            case .giphy:
+                icons[.giphy] = UIImage(named: "giphyIcon", in: Bundle.applozic, compatibleWith: nil)
             }
         }
         return icons

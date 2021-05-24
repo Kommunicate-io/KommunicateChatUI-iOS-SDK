@@ -42,6 +42,7 @@ open class ALKChatBar: UIView, Localizable {
         case cameraButtonClicked(UIButton)
         case shareContact
         case showDocumentPicker
+        case showGiphyView
     }
 
     public var action: ((ActionType) -> Void)?
@@ -187,6 +188,12 @@ open class ALKChatBar: UIView, Localizable {
         return button
     }()
 
+    open var giphyButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "giphyButtonInConversationScreen"
+        return button
+    }()
+
     open var lineImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "line", in: Bundle.applozic, compatibleWith: nil))
         return imageView
@@ -291,6 +298,8 @@ open class ALKChatBar: UIView, Localizable {
             action?(.shareContact)
         case documentButton:
             action?(.showDocumentPicker)
+        case giphyButton:
+            action?(.showGiphyView)
         default: break
         }
     }
@@ -334,6 +343,8 @@ open class ALKChatBar: UIView, Localizable {
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         documentButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        giphyButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+
         let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
         let buttonTintColor = appSettingsUserDefaults.getAttachmentIconsTintColor()
         setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons, tintColor: buttonTintColor)
@@ -452,6 +463,8 @@ open class ALKChatBar: UIView, Localizable {
                 return videoButton
             case .document:
                 return documentButton
+            case .giphy:
+                return giphyButton
             }
         }
 
@@ -653,6 +666,8 @@ open class ALKChatBar: UIView, Localizable {
         plusButton.isUserInteractionEnabled = enabled
         contactButton.isUserInteractionEnabled = enabled
         textView.isUserInteractionEnabled = enabled
+        documentButton.isUserInteractionEnabled = enabled
+        giphyButton.isUserInteractionEnabled = enabled
     }
 
     func disableChat(message: String) {
@@ -723,6 +738,8 @@ open class ALKChatBar: UIView, Localizable {
                 setup(image: buttonIcons[AttachmentType.location] ?? nil, to: locationButton)
             case .document:
                 setup(image: buttonIcons[AttachmentType.document] ?? nil, to: documentButton)
+            case .giphy:
+                setup(image: buttonIcons[AttachmentType.giphy] ?? nil, to: giphyButton)
             }
         }
     }

@@ -157,13 +157,12 @@ final class ALKMediaViewerViewController: UIViewController {
 
     func showPhotoView(message: ALKMessageViewModel) {
         guard let filePath = message.filePath,
-              let url = viewModel?.getURLFor(name: filePath),
-              let imageData = try? Data(contentsOf: url),
-              let image = UIImage(data: imageData)
+              let url = viewModel?.getURLFor(name: filePath)
         else {
             return
         }
-        imageView.image = image
+        let provider = LocalFileImageDataProvider(fileURL: url)
+        imageView.kf.setImage(with: provider)
         imageView.sizeToFit()
         playButton.isHidden = true
         audioPlayButton.isHidden = true
