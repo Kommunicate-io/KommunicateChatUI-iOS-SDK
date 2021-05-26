@@ -5,8 +5,8 @@ PODS:
   - ApplozicSwift/Complete (6.1.0):
     - ApplozicCore (~> 8.1.0)
     - ApplozicSwift/RichMessageKit
-    - Kingfisher (~> 6.3.0)
     - Giphy (~> 2.1.8)
+    - Kingfisher (~> 6.3.0)
     - SwipeCellKit (~> 2.7.1)
   - ApplozicSwift/RichMessageKit (6.1.0)
   - Giphy (2.1.8):
