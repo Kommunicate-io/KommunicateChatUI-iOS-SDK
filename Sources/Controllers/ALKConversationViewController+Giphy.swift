@@ -33,47 +33,46 @@ extension ALKConversationViewController: GiphyDelegate {
                   let data = try? Data(contentsOf: actualURL)
             else {
                 DispatchQueue.main.async {
-                    self.dismissIPActivityAlertViewController(giphyViewController: giphyViewController)
+                    giphyViewController.dismissIPActivityAlert {
+                        giphyViewController.dismiss(animated: true)
+                    }
                 }
                 return
             }
 
             DispatchQueue.main.async {
-                self.dismissIPActivityAlertViewController(giphyViewController: giphyViewController)
-                do {
-                    let fileName = "GIF-\(Date().timeIntervalSince1970 * 1000).gif"
+                giphyViewController.dismissIPActivityAlert {
+                    giphyViewController.dismiss(animated: true) {
+                        do {
+                            let fileName = "GIF-\(Date().timeIntervalSince1970 * 1000).gif"
 
-                    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let pathURL = documentsURL.appendingPathComponent(fileName)
-                    try data.write(to: pathURL)
+                            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                            let pathURL = documentsURL.appendingPathComponent(fileName)
+                            try data.write(to: pathURL)
 
-                    let (message, indexPath) = self.viewModel.sendFile(
-                        at: pathURL,
-                        fileName: fileName,
-                        metadata: self.configuration.messageMetadata
-                    )
+                            let (message, indexPath) = self.viewModel.sendFile(
+                                at: pathURL,
+                                fileName: fileName,
+                                metadata: self.configuration.messageMetadata
+                            )
 
-                    guard message != nil, let newIndexPath = indexPath else { return }
+                            guard message != nil, let newIndexPath = indexPath else { return }
 
-                    self.tableView.beginUpdates()
-                    self.tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
-                    self.tableView.endUpdates()
-                    self.tableView.scrollToBottom(animated: false)
+                            self.tableView.beginUpdates()
+                            self.tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
+                            self.tableView.endUpdates()
+                            self.tableView.scrollToBottom(animated: false)
 
-                    guard let cell = self.tableView.cellForRow(at: newIndexPath) as? ALKPhotoCell else { return }
+                            guard let cell = self.tableView.cellForRow(at: newIndexPath) as? ALKPhotoCell else { return }
 
-                    self.viewModel.uploadImage(view: cell, indexPath: newIndexPath)
-                } catch {
-                    print("Error in exporting giphy: ", error)
+                            self.viewModel.uploadImage(view: cell, indexPath: newIndexPath)
+                        } catch {
+                            print("Error in exporting giphy: ", error)
+                        }
+                    }
                 }
             }
         }
         task.resume()
-    }
-
-    func dismissIPActivityAlertViewController(giphyViewController: GiphyViewController) {
-        giphyViewController.dismissIPActivityAlert {
-            giphyViewController.dismiss(animated: true)
-        }
     }
 }
