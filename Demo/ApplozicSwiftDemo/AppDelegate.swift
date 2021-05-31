@@ -14,13 +14,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
 
-    static let config: ALKConfiguration = {
-        var config = ALKConfiguration()
-        // Change config based on requirement like:
-        // config.isTapOnNavigationBarEnabled = false
-        return config
-    }()
-
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BuddyBuildSDK.setup()
 
@@ -36,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         ///       If you want to try this in our sample, then comment lines in ViewController's launchChatList method.
         ///       Finally, Uncomment below line
         /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
-        ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(AppDelegate.config)
+        ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(ALChatManager.defaultConfiguration)
         let alApplocalNotificationHnadler = ALAppLocalNotifications.appLocalNotificationHandler()
         alApplocalNotificationHnadler?.dataConnectionNotificationHandler()
 

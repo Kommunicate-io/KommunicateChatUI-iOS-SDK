@@ -23,23 +23,12 @@ class ViewController: UIViewController {
     }
 
     @IBAction func logoutAction(_: UIButton) {
-        guard let applicationKey = ALUserDefaultsHandler.getApplicationKey() else {
-            return
-        }
-        let chatManager = ALChatManager(applicationKey: applicationKey as NSString)
-        chatManager.logoutUser { _ in
+        ALChatManager.shared.logoutUser { _ in
             self.dismiss(animated: true, completion: nil)
         }
     }
 
     @IBAction func launchChatList(_: Any) {
-        let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
-        let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
-        nav.modalPresentationStyle = .fullScreen
-        present(nav, animated: true, completion: nil)
-//        Use this to check sample for custom push notif. Comment above lines.
-//        let vc = ContainerViewController()
-//        let nav = ALKBaseNavigationViewController(rootViewController: vc)
-//        self.present(nav, animated: false, completion: nil)
+        ALChatManager.shared.launchChatList(from: self)
     }
 }

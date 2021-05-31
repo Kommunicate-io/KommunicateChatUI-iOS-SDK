@@ -44,7 +44,7 @@ class ContainerViewController: UIViewController {
 //            let vc = ConversationContainerViewController()
 //            let navVC = UINavigationController(rootViewController: vc)
 //            self.present(navVC, animated: true, completion: nil)
-            let conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
+            let conversationVC = ALKConversationListViewController(configuration: ALChatManager.defaultConfiguration)
             let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
             present(nav, animated: true, completion: nil)
         case .profile:
@@ -64,7 +64,7 @@ class ContainerViewController: UIViewController {
 }
 
 class ConversationContainerViewController: UIViewController {
-    lazy var conversationVC = ALKConversationListViewController(configuration: AppDelegate.config)
+    lazy var conversationVC = ALKConversationListViewController(configuration: ALChatManager.defaultConfiguration)
 
     override func viewDidLoad() {
         super.viewDidLoad()

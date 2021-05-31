@@ -114,7 +114,7 @@ class PushNotificationHandler {
                 guard let top = pushAssistant.topViewController as? ContainerViewController else {
                     return
                 }
-                let listVC = NotificationHelper().getConversationVCToLaunch(notification: notificationData, configuration: AppDelegate.config)
+                let listVC = NotificationHelper().getConversationVCToLaunch(notification: notificationData, configuration: ALChatManager.defaultConfiguration)
                 top.openConversationFromNotification(listVC)
             }
         case let vc as ViewController:
