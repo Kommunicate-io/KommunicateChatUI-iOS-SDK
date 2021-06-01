@@ -143,9 +143,11 @@ class ListTemplateView: UIView {
 
     let headerText: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 1
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = ListTemplateView.headerFont
         label.textAlignment = .center
+        label.sizeToFit()
         return label
     }()
 
@@ -195,8 +197,8 @@ class ListTemplateView: UIView {
             headerTextHeight.constant = 0
             return
         }
-        headerTextHeight.constant = ListTemplateView.textHeight
         headerText.text = text
+        headerTextHeight.constant = text.getHeightFor(withConstrainedWidth: headerText.frame.width, font: ListTemplateView.headerFont)
     }
 
     private func updateButtons(_ buttons: [ListTemplate.Button]?) {
@@ -321,5 +323,14 @@ class ListTemplateView: UIView {
     private func setupStyle() {
         headerText.textColor = listStyle.headerText.text
         headerText.backgroundColor = listStyle.headerText.background
+    }
+}
+
+extension String {
+    func getHeightFor(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
+
+        return ceil(boundingBox.height + 10)
     }
 }
