@@ -162,8 +162,24 @@ final class ALKMediaViewerViewController: UIViewController {
             return
         }
         let provider = LocalFileImageDataProvider(fileURL: url)
-        imageView.kf.setImage(with: provider)
-        imageView.sizeToFit()
+        imageView.kf.setImage(
+            with: provider,
+            placeholder: nil,
+            options: [
+                .cacheOriginalImage,
+            ]
+        ) {
+            [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success:
+                self.imageView.sizeToFit()
+                self.updateMinZoomScaleForSize(size: self.windowSize())
+                self.updateConstraintsForSize(size: self.windowSize())
+            case let .failure(error):
+                print("Failed to load the local image: \(error.localizedDescription)")
+            }
+        }
         playButton.isHidden = true
         audioPlayButton.isHidden = true
         audioIcon.isHidden = true
@@ -203,8 +219,6 @@ final class ALKMediaViewerViewController: UIViewController {
             print("Photo type")
             updateTitle(title: viewModel.getTitle())
             showPhotoView(message: message)
-            updateMinZoomScaleForSize(size: windowSize())
-            updateConstraintsForSize(size: windowSize())
             let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
             let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
             button.tintColor = UINavigationBar.appearance().tintColor
