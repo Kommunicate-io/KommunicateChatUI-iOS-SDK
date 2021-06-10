@@ -170,4 +170,4 @@ GroupDescriptionVCTitle = "Group Description";
 RemainingCharactersInfo = "Remaining characters: %@";
 AddGroupDescriptionPlaceHolder = "Add group description";
 
-ExportLoadingIndicatorTextForGiphy = "Exporting giphy...";
+ExportLoadingIndicatorTextForGiphy = "Exporting...";

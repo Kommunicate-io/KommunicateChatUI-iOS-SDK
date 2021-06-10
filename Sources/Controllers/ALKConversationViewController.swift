@@ -905,7 +905,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.documentManager.showPicker(from: weakSelf)
             case .showGiphyView:
                 let giphy = GiphyViewController()
-                giphy.mediaTypeConfig = [.gifs]
+                giphy.mediaTypeConfig = [.gifs, .stickers]
                 giphy.theme = GPHTheme(type: .lightBlur)
                 giphy.shouldLocalizeSearch = true
                 giphy.delegate = self

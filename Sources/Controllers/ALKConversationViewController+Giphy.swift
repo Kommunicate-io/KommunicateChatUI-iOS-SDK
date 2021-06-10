@@ -14,11 +14,12 @@ extension ALKConversationViewController: GiphyDelegate {
     }
 
     public func didSelectMedia(giphyViewController: GiphyViewController, media: GPHMedia) {
-        let giphyDownloadURL = media.images?.looping?.gifUrl ?? media.images?.downsized?.gifUrl ?? media.images?.preview?.gifUrl
+        let giphyDownloadURL = media.images?.downsized?.gifUrl ?? media.images?.preview?.gifUrl ?? media.images?.looping?.gifUrl
 
         guard let urlString = giphyDownloadURL,
               let giphyURL = URL(string: urlString)
         else {
+            giphyViewController.dismiss(animated: true)
             return
         }
         let infoMessage = localizedString(forKey: "ExportLoadingIndicatorTextForGiphy", withDefaultValue: SystemMessage.Warning.exportLoadingIndicatorTextForGiphy, fileName: configuration.localizedStringFileName)
