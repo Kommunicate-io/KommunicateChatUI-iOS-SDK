@@ -197,8 +197,8 @@ class ListTemplateView: UIView {
             headerTextHeight.constant = 0
             return
         }
+        headerTextHeight.constant = text.heightWithConstrainedWidth(headerText.frame.width, font: ListTemplateView.headerFont)
         headerText.text = text
-        headerTextHeight.constant = text.getHeightFor(withConstrainedWidth: headerText.frame.width, font: ListTemplateView.headerFont)
     }
 
     private func updateButtons(_ buttons: [ListTemplate.Button]?) {
@@ -234,6 +234,12 @@ class ListTemplateView: UIView {
     }
 
     static func rowHeight(template: ListTemplate) -> CGFloat {
+        
+        let leftSpacing = ALKMyMessageCell.Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
+        let rightSpacing = ALKMyMessageCell.Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
+        let messageWidth = UIScreen.main.bounds.width - (leftSpacing + rightSpacing)
+        textHeight = (template.headerText?.heightWithConstrainedWidth(messageWidth, font: ListTemplateView.headerFont))!
+        
         var height: CGFloat = 0
         height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
         height += template.headerText != nil ? textHeight : CGFloat(0)
@@ -323,14 +329,5 @@ class ListTemplateView: UIView {
     private func setupStyle() {
         headerText.textColor = listStyle.headerText.text
         headerText.backgroundColor = listStyle.headerText.background
-    }
-}
-
-extension String {
-    func getHeightFor(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
-
-        return ceil(boundingBox.height + 10)
     }
 }
