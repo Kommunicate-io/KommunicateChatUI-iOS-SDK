@@ -11,6 +11,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 - Added the group description support.
 - Added the support for showing video thumbnail.
+- Add support for sharing giphy in chat.
 
 ### Fixes
 
