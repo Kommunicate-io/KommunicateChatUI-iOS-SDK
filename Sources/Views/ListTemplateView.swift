@@ -143,9 +143,11 @@ class ListTemplateView: UIView {
 
     let headerText: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 1
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = ListTemplateView.headerFont
         label.textAlignment = .center
+        label.sizeToFit()
         return label
     }()
 
@@ -195,7 +197,7 @@ class ListTemplateView: UIView {
             headerTextHeight.constant = 0
             return
         }
-        headerTextHeight.constant = ListTemplateView.textHeight
+        headerTextHeight.constant = text.heightWithConstrainedWidth(headerText.frame.width, font: ListTemplateView.headerFont)
         headerText.text = text
     }
 
@@ -232,6 +234,15 @@ class ListTemplateView: UIView {
     }
 
     static func rowHeight(template: ListTemplate) -> CGFloat {
+        
+        let leftSpacing = ALKMyMessageCell.Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding + ALKMyMessageCell.Padding.ReplyMessageLabel.right + ALKMyMessageCell.Padding.BubbleView.right
+        let rightSpacing = ALKMyMessageCell.Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
+        let messageWidth = UIScreen.main.bounds.width - (leftSpacing + rightSpacing)
+        
+        if template.headerText != nil {
+            textHeight = (template.headerText!.heightWithConstrainedWidth(messageWidth, font: ListTemplateView.headerFont))
+        }
+        
         var height: CGFloat = 0
         height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
         height += template.headerText != nil ? textHeight : CGFloat(0)
