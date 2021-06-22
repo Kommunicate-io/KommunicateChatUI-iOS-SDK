@@ -5,14 +5,16 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+- Added support for sharing giphy in chat.
+- Added support to set list template card height based on header label text in a ListTemplate Message.
+
 ## [6.1.0] - 2021-06-01
 
 ### Enhancements
 
 - Added the group description support.
 - Added the support for showing video thumbnail.
-- Add support for sharing giphy in chat.
-- Add support to set list template card height based on header label text in a ListTemplate Message
 
 ### Fixes
 
@@ -535,31 +537,4 @@ The mute icon image can be changed from outside using below code.
 - [CS-108] Add support for contacts group.
 
 ### Fixes
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
-- [AL-2885] Fixed a crash when tapping on add member in Create group screen.
 - [AL-2885] Fixed a crash when tapping on add member in Create group screen.
