@@ -157,29 +157,14 @@ final class ALKMediaViewerViewController: UIViewController {
 
     func showPhotoView(message: ALKMessageViewModel) {
         guard let filePath = message.filePath,
-              let url = viewModel?.getURLFor(name: filePath)
+              let url = viewModel?.getURLFor(name: filePath),
+              let imageData = try? Data(contentsOf: url),
+              let image = UIImage(data: imageData)
         else {
             return
         }
-        let provider = LocalFileImageDataProvider(fileURL: url)
-        imageView.kf.setImage(
-            with: provider,
-            placeholder: nil,
-            options: [
-                .cacheOriginalImage,
-            ]
-        ) {
-            [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success:
-                self.imageView.sizeToFit()
-                self.updateMinZoomScaleForSize(size: self.windowSize())
-                self.updateConstraintsForSize(size: self.windowSize())
-            case let .failure(error):
-                print("Failed to load the local image: \(error.localizedDescription)")
-            }
-        }
+        imageView.image = image
+        imageView.sizeToFit()
         playButton.isHidden = true
         audioPlayButton.isHidden = true
         audioIcon.isHidden = true
@@ -219,6 +204,8 @@ final class ALKMediaViewerViewController: UIViewController {
             print("Photo type")
             updateTitle(title: viewModel.getTitle())
             showPhotoView(message: message)
+            updateMinZoomScaleForSize(size: windowSize())
+            updateConstraintsForSize(size: windowSize())
             let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
             let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
             button.tintColor = UINavigationBar.appearance().tintColor

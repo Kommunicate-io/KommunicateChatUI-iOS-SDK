@@ -152,8 +152,7 @@ public class NotificationHelper {
              "SelectProfilePicViewController",
              "CNContactPickerViewController",
              "CAMImagePickerCameraViewController",
-             "UIDocumentPickerViewController",
-             "GiphyViewController":
+             "UIDocumentPickerViewController":
             return true
         case _ where topVCName.hasPrefix("ALK"):
             return true

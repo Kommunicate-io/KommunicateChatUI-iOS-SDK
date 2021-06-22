@@ -9,7 +9,6 @@ import ApplozicCore
 import AVFoundation
 import AVKit
 import ContactsUI
-import GiphyUISDK
 import MobileCoreServices
 import SafariServices
 import UIKit
@@ -903,13 +902,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.shareContact()
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
-            case .showGiphyView:
-                let giphy = GiphyViewController()
-                giphy.mediaTypeConfig = [.gifs, .stickers]
-                giphy.theme = GPHTheme(type: .lightBlur)
-                giphy.shouldLocalizeSearch = true
-                giphy.delegate = self
-                self?.present(giphy, animated: true, completion: nil)
             default:
                 print("Not available")
             }
@@ -2037,8 +2029,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    @objc func customButtonEvent(_ sender: UIBarButtonItem) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationViewNavigationTap), object: self, userInfo: ["identifier": sender.tag])
+    @objc func customButtonEvent(_ sender: AnyObject) {
+        guard let identifier = sender.tag else {
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationViewNavigationTap), object: self, userInfo: ["identifier": identifier])
     }
 
     @objc func refreshButtonAction(_: UIBarButtonItem) {
