@@ -6,7 +6,6 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 ## [Unreleased]
 
 ### Enhancements
-- Added support for sharing giphy in chat.
 - Added support to set list template card height based on header label text in a ListTemplate Message.
 
 ## [6.1.0] - 2021-06-01
