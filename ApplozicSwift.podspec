@@ -26,5 +26,6 @@ Pod::Spec.new do |s|
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
     complete.dependency 'ApplozicCore', '~> 8.1.0'
     complete.dependency 'ApplozicSwift/RichMessageKit'
+    complete.dependency 'Giphy', '~>2.1.8'
   end
 end

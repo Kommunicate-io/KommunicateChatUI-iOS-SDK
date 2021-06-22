@@ -11,7 +11,8 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 - Added the group description support.
 - Added the support for showing video thumbnail.
-- Added code to set header label height based on header label text in a ListTemplate Message
+- Add support for sharing giphy in chat.
+- Add support to set list template card height based on header label text in a ListTemplate Message
 
 ### Fixes
 

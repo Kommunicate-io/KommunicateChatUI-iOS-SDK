@@ -19,13 +19,15 @@ let package = Package(
         .package(name: "Applozic", url: "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git", .exact("8.1.0")),
         .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("6.3.0")),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
+        .package(name: "GiphyUISDK", url: "https://github.com/Giphy/giphy-ios-sdk.git", .exact("2.1.8")),
     ],
     targets: [
         .target(name: "ApplozicSwift",
                 dependencies: ["RichMessageKit",
                                .product(name: "ApplozicCore", package: "Applozic"),
                                "Kingfisher",
-                               "SwipeCellKit"],
+                               "SwipeCellKit",
+                               "GiphyUISDK"],
                 path: "Sources",
                 exclude: ["Extras"],
                 linkerSettings: [
