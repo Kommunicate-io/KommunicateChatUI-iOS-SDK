@@ -89,9 +89,6 @@ extension ALMessage: ALKChatViewModelProtocol {
         case .text:
             return message
         case .photo:
-            if fileMeta.contentType.contains("image/gif") {
-                return "GIF"
-            }
             return "Photo"
         case .location:
             return "Location"

@@ -5,27 +5,15 @@ PODS:
   - ApplozicSwift/Complete (6.1.0):
     - ApplozicCore (~> 8.1.0)
     - ApplozicSwift/RichMessageKit
-    - Giphy (~> 2.1.8)
     - Kingfisher (~> 6.3.0)
     - SwipeCellKit (~> 2.7.1)
   - ApplozicSwift/RichMessageKit (6.1.0)
-  - Giphy (2.1.8):
-    - libwebp
   - iOSSnapshotTestCase (6.2.0):
     - iOSSnapshotTestCase/SwiftSupport (= 6.2.0)
   - iOSSnapshotTestCase/Core (6.2.0)
   - iOSSnapshotTestCase/SwiftSupport (6.2.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (6.3.0)
-  - libwebp (1.2.0):
-    - libwebp/demux (= 1.2.0)
-    - libwebp/mux (= 1.2.0)
-    - libwebp/webp (= 1.2.0)
-  - libwebp/demux (1.2.0):
-    - libwebp/webp
-  - libwebp/mux (1.2.0):
-    - libwebp/demux
-  - libwebp/webp (1.2.0)
   - Nimble (9.2.0)
   - Nimble-Snapshots (9.1.0):
     - Nimble-Snapshots/Core (= 9.1.0)
@@ -48,10 +36,8 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - ApplozicCore
-    - Giphy
     - iOSSnapshotTestCase
     - Kingfisher
-    - libwebp
     - Nimble
     - Nimble-Snapshots
     - Quick
@@ -65,11 +51,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   ApplozicCore: db1ccbf9e98788a7a32550486831b13019f29dad
-  ApplozicSwift: 144c7389042f153a6aba5253a81030750c189e45
-  Giphy: ef5125f9b47c259b59244803a6ffe763f4f4a7bf
+  ApplozicSwift: 64efa4fb810e573245456b68fc9b8042151f957e
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Kingfisher: 6c3df386db71d82c0817a429d2c9421a77396529
-  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   Nimble: 4f4a345c80b503b3ea13606a4f98405974ee4d0b
   Nimble-Snapshots: 6605431525245f967ca9d558bb12a49da3d040e3
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
@@ -79,4 +63,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7cd8036cac3115d76f0c61b841fb9b9686f4a5f5
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.9.3

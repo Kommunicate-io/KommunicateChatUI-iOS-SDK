@@ -11,30 +11,12 @@
         }
       },
       {
-        "package": "GiphyUISDK",
-        "repositoryURL": "https://github.com/Giphy/giphy-ios-sdk.git",
-        "state": {
-          "branch": null,
-          "revision": "2ae2602db7b8d16c84e4bc11cea33fe24ff610df",
-          "version": "2.1.8"
-        }
-      },
-      {
         "package": "Kingfisher",
         "repositoryURL": "https://github.com/onevcat/Kingfisher.git",
         "state": {
           "branch": null,
           "revision": "44450a8f564d7c0165f736ba2250649ff8d3e556",
           "version": "6.3.0"
-        }
-      },
-      {
-        "package": "libwebp",
-        "repositoryURL": "https://github.com/SDWebImage/libwebp-Xcode",
-        "state": {
-          "branch": null,
-          "revision": "289862b9466243cdec407997d4cb8ba529359a99",
-          "version": "1.2.0"
         }
       },
       {
