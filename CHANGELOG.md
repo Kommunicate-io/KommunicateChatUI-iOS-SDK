@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+
+- Added support for iOS 15.
+
 ## [6.3.0] - 2021-08-25
 
 ### Fixes

@@ -91,6 +91,9 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         automaticallyAdjustsScrollViewInsets = false
 
         registerCell()

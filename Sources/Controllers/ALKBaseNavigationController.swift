@@ -34,5 +34,18 @@ public class ALKBaseNavigationViewController: UINavigationController {
         if navigationBarProxy.backgroundImage(for: .default) == nil {
             navigationBarProxy.barTintColor = appSettingsUserDefaults.getAppBarTintColor()
         }
+        if #available(iOS 13.0, *) {
+            let navBarAppearance = UINavigationBarAppearance()
+            navBarAppearance.configureWithOpaqueBackground()
+            navBarAppearance.titleTextAttributes =
+                navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.black]
+            if navigationBarProxy.backgroundImage(for: .default) == nil {
+                navBarAppearance.backgroundColor = appSettingsUserDefaults.getAppBarTintColor()
+            } else {
+                navBarAppearance.backgroundImage = navigationBarProxy.backgroundImage(for: .default)
+            }
+            navigationBarProxy.standardAppearance = navBarAppearance
+            navigationBarProxy.scrollEdgeAppearance = navigationBarProxy.standardAppearance
+        }
     }
 }
