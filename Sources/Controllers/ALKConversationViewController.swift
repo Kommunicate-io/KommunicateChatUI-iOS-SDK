@@ -1249,6 +1249,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                             message: ALKMessageViewModel,
                             isButtonClickDisabled: Bool)
     {
+        guard let template = message.payloadFromMetadata() else { return }
+        sendNotification(withName: "RichMessageButtonSelected", buttonName: title, buttonIndex: index, template: template, messageKey: message.identifier)
+
         guard !isButtonClickDisabled else {
             return
         }
