@@ -326,10 +326,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
     // MARK: - Private helper methods
 
     private class func attributedStringFrom(_ text: String, for id: String) -> NSAttributedString? {
-        if let attributedString = attributedStringCache.object(forKey: id as NSString) {
+        if !id.isEmpty, let attributedString = attributedStringCache.object(forKey: id as NSString) {
             return attributedString
         }
-        guard let htmlText = text.data(using: .utf8, allowLossyConversion: false) else {
+        guard !text.isEmpty, let htmlText = text.data(using: .utf8, allowLossyConversion: false) else {
             print("🤯🤯🤯Could not create UTF8 formatted data from \(text)")
             return nil
         }
