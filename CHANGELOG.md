@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Enhancements
+
+- Added support tp post a notification when a rich message button is selected
+
 ## [6.1.1] - 2021-06-22
 
 ### Enhancements
