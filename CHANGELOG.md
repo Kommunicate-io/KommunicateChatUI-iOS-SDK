@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+
+- Fix for firebasecrash regarding attributed strings
+
 ## [6.1.1] - 2021-06-22
 
 ### Enhancements
