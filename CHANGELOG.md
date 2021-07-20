@@ -7,7 +7,11 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ### Enhancements
 
-- Added support tp post a notification when a rich message button is selected
+- Added support to post a notification when a rich message button is selected
+
+### Fixes
+
+- Fix for firebasecrash regarding attributed strings
 
 ## [6.1.1] - 2021-06-22
 
