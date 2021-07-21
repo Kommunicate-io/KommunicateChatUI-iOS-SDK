@@ -86,7 +86,7 @@ public class SuggestedReplyView: UIView {
         return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
     
-    public func resetView(model: SuggestedReplyMessage) {
+    private func resetView(model: SuggestedReplyMessage) {
         if model.suggestion.count != 0  {
             SuggestedReplyView.didTapSuggestedReply = false
             mainStackView.isHidden = false
