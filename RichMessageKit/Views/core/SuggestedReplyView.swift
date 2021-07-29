@@ -96,6 +96,7 @@ public class SuggestedReplyView: UIView {
     // MARK: Private methods
 
     private func setupConstraints() {
+        SuggestedReplyView.didTapSuggestedReply = false
         addViewsForAutolayout(views: [mainStackView])
         NSLayoutConstraint.activate([
             mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
