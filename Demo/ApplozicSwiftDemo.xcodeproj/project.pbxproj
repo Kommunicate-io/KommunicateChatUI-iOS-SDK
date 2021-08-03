@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		12CC6156BFE67AF416EDF485 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F504D2CB3F5D0E6D22C39A8 /* AVFoundation.framework */; };
-		146FC441BE00A406AB5AECD0 /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 084DD25F4E6E25CFBBA2EA78 /* BuddyBuildSDK.framework */; };
 		19BB518C9B7B907025C26B4D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1309D324746FFC327EC8AF /* QuartzCore.framework */; };
 		1A0B17EF21819FF800B19187 /* ALKConversationViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0B17EE21819FF800B19187 /* ALKConversationViewControllerMock.swift */; };
 		1A2E788721726E7200CF35AE /* ALKConversationListViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E788621726E7200CF35AE /* ALKConversationListViewControllerTests.swift */; };
@@ -182,7 +181,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				146FC441BE00A406AB5AECD0 /* BuddyBuildSDK.framework in Frameworks */,
 				220BF2CF75D988AA9548A8F7 /* CoreText.framework in Frameworks */,
 				1B1006694583C03E21C37526 /* CoreTelephony.framework in Frameworks */,
 				A9B38F7A98B445FD419D5FA2 /* SystemConfiguration.framework in Frameworks */,
