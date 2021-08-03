@@ -65,12 +65,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Couldn’t register: \(error)")
     }
-    
+
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+        ALChatManager.shared.application(application, didReceiveRemoteNotification: userInfo) { result in
+            // Proccess your own notification here.
+            completionHandler(result)
+        }
+    }
+
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
         // Pass the notifiation to applozic method for proccessing.
         ALChatManager.shared.userNotificationCenter(center, willPresent: notification) { options in
-            // Proccess your own notification.
+            // Proccess your own notification here.
             completionHandler(options)
         }
     }
@@ -79,7 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         // Pass the response to applozic method for proccessing notification.
         ALChatManager.shared.userNotificationCenter(center, didReceive: response) {
-            // Proccess your own notification.
+            // Proccess your own notification here.
             completionHandler()
         }
     }
