@@ -199,9 +199,7 @@ extension SuggestedReplyView: Tappable {
         let replyToBeSend = suggestion.reply ?? title
         self.delegate?.didTap(index: index, title: replyToBeSend)
         
-        guard let appSettings = ALKAppSettingsUserDefaults().getAppSettings() else { return }
-        
-        if appSettings.hidePostCTAEnabled {
+        if UserDefaults.standard.bool(forKey: "HidePostCTAEnabled") {
             SuggestedReplyView.didTapSuggestedReply = true
             SuggestedReplyView.messageIdentifier = (model?.message.identifier)!
             model?.suggestion.removeAll()
