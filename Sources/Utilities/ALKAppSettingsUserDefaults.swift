@@ -149,6 +149,7 @@ public struct ALKAppSettingsUserDefaults {
             }
             setAppSettings(appSettings: appSettings)
         }
+        UserDefaults.standard.set(appSettings.hidePostCTAEnabled, forKey: "HidePostCTAEnabled")
     }
 
     /// This method will be used for getting the app settings data
