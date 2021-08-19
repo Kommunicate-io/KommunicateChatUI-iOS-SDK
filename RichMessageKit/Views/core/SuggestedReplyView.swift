@@ -14,6 +14,10 @@ import UIKit
 /// Pass custom `SuggestedReplyConfig` to modify font and color of view.
 /// - NOTE: It uses an array of dictionary where each dictionary should have `title` key which will be used as button text.
 public class SuggestedReplyView: UIView {
+    
+    static var didTapSuggestedReply = false
+    static var messageIdentifier = String()
+    
     // MARK: Public properties
 
     // MARK: Internal properties
@@ -81,10 +85,18 @@ public class SuggestedReplyView: UIView {
     {
         return SuggestedReplyViewSizeCalculator().rowHeight(model: model, maxWidth: maxWidth)
     }
+    
+    private func resetView(model: SuggestedReplyMessage) {
+        if model.suggestion.count != 0  {
+            SuggestedReplyView.didTapSuggestedReply = false
+            mainStackView.isHidden = false
+        }
+    }
 
     // MARK: Private methods
 
     private func setupConstraints() {
+        SuggestedReplyView.didTapSuggestedReply = false
         addViewsForAutolayout(views: [mainStackView])
         NSLayoutConstraint.activate([
             mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -95,6 +107,11 @@ public class SuggestedReplyView: UIView {
     }
 
     private func setupSuggestedReplyButtons(_ suggestedMessage: SuggestedReplyMessage, maxWidth: CGFloat) {
+        
+        if model?.suggestion.count != 0 && SuggestedReplyView.messageIdentifier != model?.message.identifier {
+            resetView(model: suggestedMessage)
+        }
+        
         mainStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
@@ -177,8 +194,16 @@ public class SuggestedReplyView: UIView {
 
 extension SuggestedReplyView: Tappable {
     public func didTap(index: Int?, title: String) {
+        
         guard let index = index, let suggestion = model?.suggestion[index] else { return }
         let replyToBeSend = suggestion.reply ?? title
-        delegate?.didTap(index: index, title: replyToBeSend)
+        self.delegate?.didTap(index: index, title: replyToBeSend)
+        
+        if UserDefaults.standard.bool(forKey: "HidePostCTAEnabled") {
+            SuggestedReplyView.didTapSuggestedReply = true
+            SuggestedReplyView.messageIdentifier = (model?.message.identifier)!
+            model?.suggestion.removeAll()
+            mainStackView.isHidden = true
+        }
     }
 }

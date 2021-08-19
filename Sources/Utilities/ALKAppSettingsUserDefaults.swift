@@ -149,6 +149,7 @@ public struct ALKAppSettingsUserDefaults {
             }
             setAppSettings(appSettings: appSettings)
         }
+        UserDefaults.standard.set(appSettings.hidePostCTAEnabled, forKey: "HidePostCTAEnabled")
     }
 
     /// This method will be used for getting the app settings data
@@ -191,6 +192,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         static let receivedMessageBackgroundColor = "receivedMessageBackgroundColor"
         static let attachmentIconsTintColor = "attachmentIconsTintColor"
         static let buttonPrimaryColor = "buttonPrimaryColor"
+        static let hidePostCTAEnabled = "hidePostCTAEnabled"
     }
 
     var primaryColor: String
@@ -203,6 +205,7 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var receivedMessageBackgroundColor: String?
     public var attachmentIconsTintColor: String?
     public var buttonPrimaryColor: String?
+    public var hidePostCTAEnabled: Bool = false
 
     // MARK: - Public Initialization
 
@@ -218,6 +221,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         receivedMessageBackgroundColor = coder.decodeObject(forKey: CoderKey.receivedMessageBackgroundColor) as? String
         attachmentIconsTintColor = coder.decodeObject(forKey: CoderKey.attachmentIconsTintColor) as? String
         buttonPrimaryColor = coder.decodeObject(forKey: CoderKey.buttonPrimaryColor) as? String
+        hidePostCTAEnabled = coder.decodeBool(forKey: CoderKey.hidePostCTAEnabled)
     }
 
     // MARK: - Public methods
@@ -230,5 +234,6 @@ public class ALKAppSettings: NSObject, NSCoding {
         coder.encode(receivedMessageBackgroundColor, forKey: CoderKey.receivedMessageBackgroundColor)
         coder.encode(attachmentIconsTintColor, forKey: CoderKey.attachmentIconsTintColor)
         coder.encode(buttonPrimaryColor, forKey: CoderKey.buttonPrimaryColor)
+        coder.encode(hidePostCTAEnabled, forKey: CoderKey.hidePostCTAEnabled)
     }
 }
