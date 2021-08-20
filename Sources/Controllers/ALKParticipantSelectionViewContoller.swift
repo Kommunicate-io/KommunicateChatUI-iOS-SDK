@@ -28,6 +28,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
     fileprivate let searchController = UISearchController(searchResultsController: nil)
 
+    let channelService = ALChannelService()
     // MARK: - Data Stuff
 
     fileprivate var datasource = ALKFriendDatasource()
@@ -143,7 +144,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
     func getAllFriends(completion: @escaping () -> Void) {
         if ALApplozicSettings.isContactsGroupEnabled() {
-            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
+            channelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
 
                 guard let alChannel = channel else {
                     completion()

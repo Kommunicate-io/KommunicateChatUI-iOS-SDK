@@ -272,7 +272,8 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func updateUserDetail(userId: String, completion: @escaping (Bool) -> Void) {
-        ALUserService.updateUserDetail(userId, withCompletion: {
+        let userService = ALUserService()
+        userService.updateUserDetail(userId, withCompletion: {
             userDetail in
             guard let detail = userDetail else {
                 completion(false)

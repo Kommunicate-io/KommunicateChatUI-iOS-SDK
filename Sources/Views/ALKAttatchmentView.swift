@@ -146,7 +146,7 @@ class ALKAttatchmentView: UIView {
 
     func getMapImageURL() -> URL? {
         guard message?.contentType == Int16(ALMESSAGE_CONTENT_LOCATION) else { return nil }
-        let url = ALUtilityClass.getLocationUrl(message) as String
+        let url = ALUtilityClass.getLocationURL(message) as String
         return URL(string: url)
     }
 }

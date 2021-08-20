@@ -1104,7 +1104,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     func updateUserDetail(_ userId: String) {
-        ALUserService.updateUserDetail(userId, withCompletion: {
+        let alUserService = ALUserService()
+        alUserService.updateUserDetail(userId, withCompletion: {
             userDetail in
             guard userDetail != nil else { return }
             guard

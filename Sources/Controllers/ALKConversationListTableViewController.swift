@@ -363,14 +363,16 @@ extension ALKConversationListTableViewController {
                 let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
                     guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
                     self?.startLoadingIndicator()
+                    let messageService = ALMessageService()
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
+
                         if channelService.isChannelLeft(conversation.groupId) {
-                            ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                            messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                                 _, error in
                                 self?.stopLoadingIndicator()
                                 guard error == nil else { return }
-                                ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
+                                channelService.setUnreadCountZeroForGroupID(conversation.groupId)
                                 weakSelf.viewModel.remove(message: conversation)
                                 weakSelf.tableView.reloadData()
                             })
@@ -392,7 +394,7 @@ extension ALKConversationListTableViewController {
                             })
                         }
                     } else {
-                        ALMessageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
+                        messageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
                             _, error in
                             self?.stopLoadingIndicator()
                             guard error == nil else { return }
@@ -419,17 +421,18 @@ extension ALKConversationListTableViewController {
                     style: .cancel,
                     handler: nil
                 )
+                let messageService = ALMessageService()
                 let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
                     guard let weakSelf = self else { return }
                     self?.startLoadingIndicator()
                     if conversation.isGroupChat {
                         let channelService = ALChannelService()
                         if channelService.isChannelLeft(conversation.groupId) {
-                            ALMessageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                            messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                                 _, error in
                                 self?.stopLoadingIndicator()
                                 guard error == nil else { return }
-                                ALChannelService.setUnreadCountZeroForGroupID(conversation.groupId)
+                                channelService.setUnreadCountZeroForGroupID(conversation.groupId)
                                 weakSelf.viewModel.remove(message: conversation)
                                 weakSelf.tableView.reloadData()
                             })
@@ -450,7 +453,7 @@ extension ALKConversationListTableViewController {
                             })
                         }
                     } else {
-                        ALMessageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
+                        messageService.deleteMessageThread(conversation.contactIds, orChannelKey: nil, withCompletion: {
                             _, error in
                             self?.stopLoadingIndicator()
                             guard error == nil else { return }

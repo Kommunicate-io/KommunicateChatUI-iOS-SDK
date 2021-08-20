@@ -21,6 +21,7 @@ class ALKVideoUploadManager: NSObject {
 
     func uploadVideo(alMessage: ALMessage) {
         let messageService = ALMessageDBService()
+        let responseHandler = ALResponseHandler()
         guard let dbMessage = messageService.getMessageByKey("key", value: alMessage.key) as? DB_Message else {
             return
         }
@@ -78,7 +79,7 @@ class ALKVideoUploadManager: NSObject {
 
                 guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
 
-                ALResponseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
+                responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
                     guard let weakSelf = self,
                           error == nil,
                           var request = urlRequest as URLRequest?
