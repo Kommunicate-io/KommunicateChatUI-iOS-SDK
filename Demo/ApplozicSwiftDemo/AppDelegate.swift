@@ -14,24 +14,13 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
 
-    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        BuddyBuildSDK.setup()
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
         navigationBarProxy.barTintColor
             = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0) // light nav blue
         navigationBarProxy.isTranslucent = false
-
-        /// Use this for Customizing notification.
-        /// - NOTE:
-        ///       Before using, comment ALKPushNotification line and remove
-        ///       ALApplozicSetting.setListOfViewController from ALChatManager.
-        ///       If you want to try this in our sample, then comment lines in ViewController's launchChatList method.
-        ///       Finally, Uncomment below line
-        /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
-        ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(ALChatManager.defaultConfiguration)
-        let alApplocalNotificationHnadler = ALAppLocalNotifications.appLocalNotificationHandler()
-        alApplocalNotificationHnadler?.dataConnectionNotificationHandler()
 
         if ALUserDefaultsHandler.isLoggedIn() {
             // Get login screen from storyboard and present it
@@ -42,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
 
         UNUserNotificationCenter.current().delegate = self
-        registerForNotification()
+        ALChatManager.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         return true
     }
 
@@ -55,73 +44,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("APP_ENTER_IN_BACKGROUND")
     }
 
-    func applicationWillEnterForeground(_: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         print("APP_ENTER_IN_FOREGROUND")
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        ALChatManager.shared.applicationWillEnterForeground(application)
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(_: UIApplication) {
-        ALDBHandler.sharedInstance().saveContext()
+    func applicationWillTerminate(_ application: UIApplication) {
+        ALChatManager.shared.applicationWillTerminate(application: application)
     }
 
-    func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("DEVICE_TOKEN_DATA :: \(deviceToken.description)") // (SWIFT = 3) : TOKEN PARSING
-
-        var deviceTokenString: String = ""
-        for i in 0 ..< deviceToken.count {
-            deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
-        }
-        print("DEVICE_TOKEN_STRING :: \(deviceTokenString)")
-
-        if ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
-            let alRegisterUserClientService = ALRegisterUserClientService()
-            alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { response, _ in
-                print("REGISTRATION_RESPONSE :: \(String(describing: response))")
-            })
-        }
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        // Register device token to applozic server.
+        ALChatManager.shared.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
     }
 
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Couldn’t register: \(error)")
     }
 
-    func registerForNotification() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _, _ in
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+        ALChatManager.shared.application(application, didReceiveRemoteNotification: userInfo) { result in
+            // Process your own notification here.
+            completionHandler(result)
         }
-        UIApplication.shared.registerForRemoteNotifications()
     }
 
-    func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let service = ALPushNotificationService()
-        guard !service.isApplozicNotification(notification.request.content.userInfo) else {
-            service.notificationArrived(to: UIApplication.shared, with: notification.request.content.userInfo)
-            completionHandler([])
-            return
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+
+        // Pass the notification to applozic method for processing.
+        ALChatManager.shared.userNotificationCenter(center, willPresent: notification) { options in
+            // Process your own notification here.
+            completionHandler(options)
         }
-        completionHandler([])
     }
 
-    func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let service = ALPushNotificationService()
-        let dict = response.notification.request.content.userInfo
-        guard !service.isApplozicNotification(dict) else {
-            switch UIApplication.shared.applicationState {
-            case .active:
-                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_ACTIVE.rawValue))
-            case .background:
-                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_BACKGROUND.rawValue))
-            case .inactive:
-                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_INACTIVE.rawValue))
-            @unknown default:
-                print("Unknown application state in appdelegate")
-            }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+
+        // Pass the response to applozic method for processing notification.
+        ALChatManager.shared.userNotificationCenter(center, didReceive: response) {
+            // Process your own notification here.
             completionHandler()
-            return
         }
-        completionHandler()
     }
 }

@@ -1,6 +1,5 @@
 //
 //  ALChatManager.swift
-//  sampleapp-completeswift
 //
 //  Created by Mukesh Thawani on 04/05/17.
 //  Copyright © 2017 Applozic. All rights reserved.
@@ -58,10 +57,11 @@ import UIKit
         }
     }
 
-    // ----------------------
-    // Call This at time of your app's user authentication OR User registration.
-    // This will register your User at applozic server.
-    // ----------------------
+    /// This method used for Authentication OR User Registration to applozic server
+    /// It create a new user in applozic if user doesn't exist OR it will login to the existing user.
+    /// - Parameters:
+    ///   - alUser: Pass ALUser object.
+    ///   - completion: Completion Handler will have ALRegistrationResponse in case of successful login else it will have Error in case of any error in login or registration.
     @objc func connectUser(_ alUser: ALUser, completion: @escaping (_ response: ALRegistrationResponse?, _ error: NSError?) -> Void) {
         ALUserDefaultsHandler.setApplicationKey(getApplicationKey() as String)
         let registerUserClientService = ALRegisterUserClientService()
@@ -106,7 +106,7 @@ import UIKit
         if let _ = ALUserDefaultsHandler.getDeviceKeyString() {
             registerUserClientService.logout(completionHandler: {
                 _, _ in
-                NSLog("Applozic logout")
+                print("Applozic logout")
                 let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
                 appSettingsUserDefaults.clear()
                 completion(true)
@@ -114,6 +114,7 @@ import UIKit
         }
     }
 
+    /// Add the default chat settings here
     func defaultChatViewSettings() {
         ALUserDefaultsHandler.setGoogleMapAPIKey("AIzaSyCOacEeJi-ZWLLrOtYyj3PKMTOFEG7HDlw") // REPLACE WITH YOUR GOOGLE MAPKEY
         ALApplozicSettings.setListOfViewControllers([ALKConversationListViewController.description(), ALKConversationViewController.description()])
@@ -122,6 +123,9 @@ import UIKit
         ALApplozicSettings.setSwiftFramework(true)
     }
 
+
+    /// Use this method for launching conversation list screen.
+    /// - Parameter viewController: Pass the UIViewController.
     @objc func launchChatList(from viewController: UIViewController) {
         let conversationVC = ALKConversationListViewController(configuration: ALChatManager.defaultConfiguration)
         let navVC = ALKBaseNavigationViewController(rootViewController: conversationVC)
@@ -129,17 +133,11 @@ import UIKit
         viewController.present(navVC, animated: true, completion: nil)
     }
 
-    func launch(viewController: UIViewController, from vc: UIViewController) {
-        let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
-        navVC.modalPresentationStyle = .fullScreen
-        guard vc.navigationController != nil else {
-            vc.present(navVC, animated: true, completion: nil)
-            return
-        }
-        vc.modalPresentationStyle = .fullScreen
-        vc.navigationController?.pushViewController(viewController, animated: true)
-    }
-
+    /// Use this method for launching 1-to-1 chat conversation.
+    /// - Parameters:
+    ///   - contactId: Pass userId of whom for conversation needs to be launched.
+    ///   - viewController: Pass the UIViewController.
+    ///   - prefilledMessage: Pass the prefilled Message in case if this needs to prefilled in chat box else it will be nil.
     @objc func launchChatWith(contactId: String, from viewController: UIViewController, prefilledMessage: String? = nil) {
         let alContactDbService = ALContactDBService()
         var title = ""
@@ -153,6 +151,12 @@ import UIKit
         launch(viewController: conversationViewController, from: viewController)
     }
 
+
+    /// Use this method to launch the group chat conversation.
+    /// - Parameters:
+    ///   - clientGroupId: Pass the clientGroupId for launching Group/Channel conversation.
+    ///   - viewController: Pass the UIViewController.
+    ///   - prefilledMessage: Pass the prefilled Message in case if this needs to prefilled in chat box else it will be nil.
     @objc func launchGroupWith(clientGroupId: String, from viewController: UIViewController, prefilledMessage: String? = nil) {
         let alChannelService = ALChannelService()
         alChannelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) { channel in
@@ -175,7 +179,7 @@ import UIKit
     }
 
     /// Use [launchGroupOfTwo](x-source-tag://GroupOfTwo) method instead.
-    func createAndLaunchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration _: ALKConfiguration) {
+    func createAndLaunchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration: ALKConfiguration) {
         let conversationService = ALConversationService()
         conversationService.createConversation(conversationProxy) { error, response in
             guard let proxy = response, error == nil else {
@@ -303,6 +307,133 @@ import UIKit
         return "No name"
     }
 
+    /// This method is used for updating APN's device token to applozic server.
+    /// - Parameters:
+    ///   - application: Pass the UIApplication object.
+    ///   - deviceToken: Pass the device token data.
+    @objc func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+
+        print("Device token data :: \(String(describing: deviceToken.description))")
+        var deviceTokenString: String = ""
+        for i in 0..<deviceToken.count {
+            deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
+        }
+        print("Device token :: \(String(describing: deviceToken.description))")
+        if (ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString) {
+            let alRegisterUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
+            alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { (response, error) in
+                if error != nil {
+                    print("Error in Registration: " + error!.localizedDescription)
+                    return
+                }
+                print("Registration Response :: \(String(describing: response))")
+            })
+        }
+    }
+
+    /// Use this method in AppDelegate didFinishLaunchingWithOptions for register totification and data connection handlers.
+    /// - Parameters:
+    ///   - application: Pass UIApplication object.
+    ///   - launchOptions: Pass the Launch Options Key.
+    /// - Returns: True for the didFinishLaunchingWithOptions setup.
+    @objc func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        // Register for push notification.
+        registerForNotification()
+
+        /// Use this for Customizing notification.
+        /// - NOTE:
+        ///       Before using, comment ALKPushNotification line and remove
+        ///       ALApplozicSetting.setListOfViewController from ALChatManager.
+        ///       If you want to try this in our sample, then comment lines in ViewController's launchChatList method.
+        ///       Finally, Uncomment below line
+        /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
+        ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(ALChatManager.defaultConfiguration)
+        let alApplocalNotificationHnadler = ALAppLocalNotifications.appLocalNotificationHandler()
+        alApplocalNotificationHnadler?.dataConnectionNotificationHandler()
+    }
+
+
+    /// Use this method in AppDelegate applicationWillEnterForeground to reset the unread badge count in App.
+    /// - Parameter application: Pass the UIApplication object.
+    @objc func applicationWillEnterForeground(_ application: UIApplication) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+
+
+    /// Use this method in AppDelegate applicationWillTerminate to save the context of the database.
+    /// - Parameter application: Pass the UIApplication object.
+    @objc func applicationWillTerminate(application: UIApplication) {
+        ALDBHandler.sharedInstance().saveContext()
+    }
+
+    /// Use this method for proccessing the notificiation of background.
+    /// - Parameters:
+    ///   - application: Pass UIApplication object.
+    ///   - userInfo: Pass the userInfo dictionary of notification.
+    ///   - completionHandler: Use the completionHandler UIBackgroundFetchResult and pass it to didReceiveRemoteNotification completion.
+    @objc func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("Received notification With Completion :: \(userInfo.description)")
+        let service = ALPushNotificationService()
+        guard !service.isApplozicNotification(userInfo) else {
+            service.notificationArrived(to: application, with: userInfo)
+            completionHandler(UIBackgroundFetchResult.newData)
+            return
+        }
+        completionHandler(UIBackgroundFetchResult.newData)
+    }
+
+    /// Use this method for proccessing local notification data of UNUserNotificationCenter.
+    /// - Parameters:
+    ///   - center: Pass UNUserNotificationCenter object.
+    ///   - notification: Pass the UNNotificationResponse object.
+    ///   - completionHandler: Completion Handler call back will have UNNotificationPresentationOptions if notification is proccessed it will be empty else it will have other options.
+    @objc func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let service = ALPushNotificationService()
+        guard !service.isApplozicNotification(notification.request.content.userInfo) else {
+            service.notificationArrived(to: UIApplication.shared, with: notification.request.content.userInfo)
+            completionHandler([])
+            return
+        }
+        completionHandler([.sound, .badge, .alert])
+    }
+
+    /// Use this method for proccessing User Notification Center response in didReceive method of UNUserNotificationCenter.
+    /// - Parameters:
+    ///   - center: Pass UNUserNotificationCenter object.
+    ///   - response: Pass the UNNotificationResponse object.
+    ///   - completionHandler: Completion Handler call back will be called after proccessing notification.
+    @objc func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let service = ALPushNotificationService()
+        let dict = response.notification.request.content.userInfo
+        guard !service.isApplozicNotification(dict) else {
+            switch UIApplication.shared.applicationState {
+            case .active:
+                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_ACTIVE.rawValue))
+            case .background:
+                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_BACKGROUND.rawValue))
+            case .inactive:
+                service.processPushNotification(dict, updateUI: NSNumber(value: APP_STATE_INACTIVE.rawValue))
+            @unknown default:
+                print("unknown state in push notification")
+            }
+            completionHandler()
+            return
+        }
+        completionHandler()
+    }
+
+    /// Use this method for register notification.
+    @objc func registerForNotification() {
+        UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+
+            if granted {
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
+        }
+    }
+
     /// Setup your configuration here
     static let defaultConfiguration: ALKConfiguration = {
         var config = ALKConfiguration()
@@ -310,4 +441,10 @@ import UIKit
         // config.isTapOnNavigationBarEnabled = false
         return config
     }()
+
+    private func launch(viewController: UIViewController, from vc: UIViewController) {
+        let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
+        navVC.modalPresentationStyle = .fullScreen
+        vc.present(navVC, animated: true, completion: nil)
+    }
 }
