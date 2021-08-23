@@ -544,7 +544,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
         mqttRetryCount += 1
 
-        print("Retrying MQTT connection in ALKConversationListVC after seconds: %.f@", intervalSeconds)
+        print("Retrying MQTT connection in ALKConversationListVC after seconds:", String(format: "%.f", intervalSeconds))
 
         DispatchQueue.main.asyncAfter(deadline: .now() + intervalSeconds) { [weak self] in
             guard let weakSelf = self,
