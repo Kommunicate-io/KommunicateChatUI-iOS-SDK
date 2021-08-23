@@ -5,6 +5,10 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Fixes
+
+- Fixed a potential MQTT retry issue where it was causing an outage on servers.
+
 ## [6.2.1] - 2021-08-19
 
 ### Enhancements

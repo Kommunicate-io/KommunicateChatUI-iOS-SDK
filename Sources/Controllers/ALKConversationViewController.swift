@@ -262,7 +262,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.bottomConstraint?.constant = 0
                 let duration = (notification
                     .userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?
-                    .doubleValue ?? 0.05
+                                    .doubleValue ?? 0.05
                 UIView.animate(withDuration: duration, animations: {
                     view?.layoutIfNeeded()
                 }, completion: { _ in
@@ -2285,11 +2285,31 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     }
 
     public func mqttConnectionClosed() {
-        if viewModel.isOpenGroup, mqttRetryCount < maxMqttRetryCount {
-            subscribeChannelToMqtt()
-        }
         print("ALKConversationVC mqtt connection closed.")
-        alMqttConversationService.retryConnection()
+        if mqttRetryCount >= maxMqttRetryCount {
+            return
+        }
+        guard shouldRetryConnectionToMQTT() else { return }
+        var intervalSeconds = 0.0
+
+        if mqttRetryCount == 1 {
+            intervalSeconds = Double(Int.random(in: 1 ... 10) * 60)
+        } else if mqttRetryCount == 2 {
+            intervalSeconds = Double(Int.random(in: 11 ... 20) * 60)
+        }
+        
+        mqttRetryCount += 1
+
+        print("Retrying MQTT connection in ALKConversationVC after seconds: %.f@", intervalSeconds)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + intervalSeconds) { [weak self] in
+            guard let weakSelf = self,
+                  weakSelf.shouldRetryConnectionToMQTT()
+            else {
+                return
+            }
+            weakSelf.alMqttConversationService.subscribeToConversation()
+        }
     }
 
     public func reloadData(forUserBlockNotification _: String!, andBlockFlag _: Bool) {
@@ -2301,6 +2321,12 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         guard let userId = userId else { return }
         print("update user detail")
         viewModel.updateUserDetail(userId)
+    }
+
+    private func shouldRetryConnectionToMQTT() -> Bool {
+        guard ALDataNetworkConnection.checkDataNetworkAvailable(),
+              UIApplication.shared.applicationState != .background else { return false }
+        return true
     }
 }
 

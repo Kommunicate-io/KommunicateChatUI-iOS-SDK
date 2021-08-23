@@ -14,9 +14,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
         let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
         navigationBarProxy.barTintColor
             = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0) // light nav blue
@@ -66,9 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("Couldn’t register: \(error)")
     }
 
-
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         ALChatManager.shared.application(application, didReceiveRemoteNotification: userInfo) { result in
             // Process your own notification here.
             completionHandler(result)
@@ -76,7 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-
         // Pass the notification to applozic method for processing.
         ALChatManager.shared.userNotificationCenter(center, willPresent: notification) { options in
             // Process your own notification here.
@@ -85,7 +80,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-
         // Pass the response to applozic method for processing notification.
         ALChatManager.shared.userNotificationCenter(center, didReceive: response) {
             // Process your own notification here.

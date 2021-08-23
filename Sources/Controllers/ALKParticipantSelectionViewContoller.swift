@@ -29,6 +29,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     fileprivate let searchController = UISearchController(searchResultsController: nil)
 
     let channelService = ALChannelService()
+
     // MARK: - Data Stuff
 
     fileprivate var datasource = ALKFriendDatasource()
