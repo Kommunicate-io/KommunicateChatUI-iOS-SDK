@@ -58,8 +58,8 @@ class ALKHTTPManager: NSObject {
 
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?) -> Void) {
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: uploadURL.absoluteString, paramString: nil) as NSMutableURLRequest? else { return }
-
-        ALResponseHandler.authenticateRequest(postURLRequest) { urlRequest, error in
+        let responseHandler = ALResponseHandler()
+        responseHandler.authenticateRequest(postURLRequest) { urlRequest, error in
             guard error == nil,
                   var request = urlRequest as URLRequest?
             else {
@@ -158,8 +158,8 @@ class ALKHTTPManager: NSObject {
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
 
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
-
-        ALResponseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
+        let responseHandler = ALResponseHandler()
+        responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
             guard error == nil,
                   var request = urlRequest as URLRequest?
             else {

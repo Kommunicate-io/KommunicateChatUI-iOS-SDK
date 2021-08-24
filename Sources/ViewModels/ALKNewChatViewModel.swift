@@ -39,7 +39,8 @@ public final class ALKNewChatViewModel {
 
     func getContacts(userService: ALUserService = ALUserService(), completion: @escaping () -> Void) {
         if ALApplozicSettings.isContactsGroupEnabled() {
-            ALChannelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
+            let channelService = ALChannelService()
+            channelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
 
                 guard let alChannel = channel else {
                     completion()
