@@ -234,15 +234,14 @@ class ListTemplateView: UIView {
     }
 
     static func rowHeight(template: ListTemplate) -> CGFloat {
-        
         let leftSpacing = ALKMyMessageCell.Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding + ALKMyMessageCell.Padding.ReplyMessageLabel.right + ALKMyMessageCell.Padding.BubbleView.right
         let rightSpacing = ALKMyMessageCell.Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
         let messageWidth = UIScreen.main.bounds.width - (leftSpacing + rightSpacing)
-        
+
         if template.headerText != nil {
             textHeight = (template.headerText!.heightWithConstrainedWidth(messageWidth, font: ListTemplateView.headerFont))
         }
-        
+
         var height: CGFloat = 0
         height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
         height += template.headerText != nil ? textHeight : CGFloat(0)

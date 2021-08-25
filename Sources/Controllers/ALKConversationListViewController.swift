@@ -59,6 +59,10 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     fileprivate var localizedStringFileName: String!
 
+    // MQTT connection retry
+    fileprivate var mqttRetryCount = 0
+    fileprivate let maxMqttRetryCount = 3
+
     public required init(configuration: ALKConfiguration) {
         conversationListTableViewController = ALKConversationListTableViewController(
             viewModel: viewModel,
@@ -524,7 +528,39 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
     open func mqttConnectionClosed() {
         print("ALKConversationListVC mqtt connection closed.")
-        alMqttConversationService.retryConnection()
+
+        if mqttRetryCount >= maxMqttRetryCount {
+            return
+        }
+        guard shouldRetryConnectionToMQTT() else { return }
+
+        var intervalSeconds = 0.0
+
+        if mqttRetryCount == 1 {
+            intervalSeconds = Double(Int.random(in: 1 ... 10) * 60)
+        } else if mqttRetryCount == 2 {
+            intervalSeconds = Double(Int.random(in: 11 ... 20) * 60)
+        }
+
+        mqttRetryCount += 1
+
+        print("Retrying MQTT connection in ALKConversationListVC after seconds:", String(format: "%.f", intervalSeconds))
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + intervalSeconds) { [weak self] in
+            guard let weakSelf = self,
+                  weakSelf.shouldRetryConnectionToMQTT()
+            else {
+                return
+            }
+
+            weakSelf.alMqttConversationService.subscribeToConversation()
+        }
+    }
+
+    private func shouldRetryConnectionToMQTT() -> Bool {
+        guard ALDataNetworkConnection.checkDataNetworkAvailable(),
+              UIApplication.shared.applicationState != .background else { return false }
+        return true
     }
 }
 

@@ -224,13 +224,21 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             metaData[ALKGroupDescriptionViewModel.GroupDescription.key] = descriptionText
         }
 
-        newChannel.createChannel(groupName, orClientChannelKey: nil, andMembersList: membersList, andImageLink: groupImgUrl, channelType: Int16(PUBLIC.rawValue), andMetaData: metaData, withCompletion: {
-            channel, error in
-            guard let alChannel = channel else {
-                print("error creating group", error.debugDescription)
+        let channelInfo = ALChannelInfo()
+        channelInfo.groupName = groupName
+        channelInfo.groupMemberList = membersList
+        channelInfo.imageUrl = groupImgUrl
+        channelInfo.type = Int16(PUBLIC.rawValue)
+        channelInfo.metadata = metaData
+
+        newChannel.createChannel(with: channelInfo) { response, error in
+            guard error == nil, let alChannel = response?.alChannel else {
+                print("Error while creating channel : \(String(describing: error))")
                 return
             }
+
             print("group created")
+
             let message = ALMessage()
             message.groupId = alChannel.key
             let list = NSMutableArray(object: message)
@@ -241,6 +249,6 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             conversationVC.viewModel = viewModel
             self.launch(conversationVC, fromCreateGroup: true)
             self.tableView.isUserInteractionEnabled = true
-        })
+        }
     }
 }

@@ -10,15 +10,14 @@ import UIKit
 
 class SuggestedReplyViewSizeCalculator {
     func rowHeight(model: SuggestedReplyMessage, maxWidth: CGFloat) -> CGFloat {
-        
-        if SuggestedReplyView.didTapSuggestedReply && SuggestedReplyView.messageIdentifier == model.message.identifier {
+        if SuggestedReplyView.didTapSuggestedReply, SuggestedReplyView.messageIdentifier == model.message.identifier {
             return 0
         } else {
             var width: CGFloat = 0
             var totalHeight: CGFloat = 0
             var size = CGSize(width: 0, height: 0)
             var prevHeight: CGFloat = 0
-            
+
             for suggestion in model.suggestion {
                 let title = suggestion.title
                 if suggestion.type == .link {
@@ -34,7 +33,7 @@ class SuggestedReplyViewSizeCalculator {
                     prevHeight = 0
                     continue
                 }
-                
+
                 if width + currWidth >= maxWidth {
                     totalHeight += prevHeight + 10 // 10 padding between buttons
                     width = currWidth

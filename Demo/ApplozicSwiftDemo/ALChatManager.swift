@@ -123,7 +123,6 @@ import UIKit
         ALApplozicSettings.setSwiftFramework(true)
     }
 
-
     /// Use this method for launching conversation list screen.
     /// - Parameter viewController: Pass the UIViewController.
     @objc func launchChatList(from viewController: UIViewController) {
@@ -150,7 +149,6 @@ import UIKit
         conversationViewController.viewModel = convViewModel
         launch(viewController: conversationViewController, from: viewController)
     }
-
 
     /// Use this method to launch the group chat conversation.
     /// - Parameters:
@@ -179,7 +177,7 @@ import UIKit
     }
 
     /// Use [launchGroupOfTwo](x-source-tag://GroupOfTwo) method instead.
-    func createAndLaunchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration: ALKConfiguration) {
+    func createAndLaunchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration _: ALKConfiguration) {
         let conversationService = ALConversationService()
         conversationService.createConversation(conversationProxy) { error, response in
             guard let proxy = response, error == nil else {
@@ -218,14 +216,21 @@ import UIKit
         channelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) {
             channel in
             guard let channel = channel else {
-                channelService.createChannel(userId, orClientChannelKey: clientGroupId, andMembersList: [userId], andImageLink: nil, channelType: Int16(GROUP_OF_TWO.rawValue), andMetaData: metadata, withCompletion: { channel, error in
-                    guard error == nil, let channel = channel else {
+                let channelInfo = ALChannelInfo()
+                channelInfo.clientGroupId = clientGroupId
+                channelInfo.groupName = userId
+                channelInfo.groupMemberList = [userId]
+                channelInfo.type = Int16(GROUP_OF_TWO.rawValue)
+                channelInfo.metadata = metadata
+
+                channelService.createChannel(with: channelInfo) { response, error in
+                    guard error == nil, let channel = response?.alChannel else {
                         print("Error while creating channel : \(String(describing: error))")
                         return
                     }
                     ALChannelDBService().addMember(toChannel: userId, andChannelKey: channel.key)
                     self.launchGroupWith(clientGroupId: clientGroupId, from: viewController)
-                })
+                }
                 return
             }
             if channel.metadata == metadata {
@@ -311,17 +316,16 @@ import UIKit
     /// - Parameters:
     ///   - application: Pass the UIApplication object.
     ///   - deviceToken: Pass the device token data.
-    @objc func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-
+    @objc func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("Device token data :: \(String(describing: deviceToken.description))")
         var deviceTokenString: String = ""
-        for i in 0..<deviceToken.count {
+        for i in 0 ..< deviceToken.count {
             deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
         }
         print("Device token :: \(String(describing: deviceToken.description))")
-        if (ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString) {
-            let alRegisterUserClientService: ALRegisterUserClientService = ALRegisterUserClientService()
-            alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { (response, error) in
+        if ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
+            let alRegisterUserClientService = ALRegisterUserClientService()
+            alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { response, error in
                 if error != nil {
                     print("Error in Registration: " + error!.localizedDescription)
                     return
@@ -336,7 +340,7 @@ import UIKit
     ///   - application: Pass UIApplication object.
     ///   - launchOptions: Pass the Launch Options Key.
     /// - Returns: True for the didFinishLaunchingWithOptions setup.
-    @objc func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+    @objc func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) {
         // Register for push notification.
         registerForNotification()
 
@@ -352,17 +356,15 @@ import UIKit
         alApplocalNotificationHnadler?.dataConnectionNotificationHandler()
     }
 
-
     /// Use this method in AppDelegate applicationWillEnterForeground to reset the unread badge count in App.
     /// - Parameter application: Pass the UIApplication object.
-    @objc func applicationWillEnterForeground(_ application: UIApplication) {
+    @objc func applicationWillEnterForeground(_: UIApplication) {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
-
     /// Use this method in AppDelegate applicationWillTerminate to save the context of the database.
     /// - Parameter application: Pass the UIApplication object.
-    @objc func applicationWillTerminate(application: UIApplication) {
+    @objc func applicationWillTerminate(application _: UIApplication) {
         ALDBHandler.sharedInstance().saveContext()
     }
 
@@ -387,7 +389,7 @@ import UIKit
     ///   - center: Pass UNUserNotificationCenter object.
     ///   - notification: Pass the UNNotificationResponse object.
     ///   - completionHandler: Completion Handler call back will have UNNotificationPresentationOptions if notification is proccessed it will be empty else it will have other options.
-    @objc func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    @objc func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let service = ALPushNotificationService()
         guard !service.isApplozicNotification(notification.request.content.userInfo) else {
             service.notificationArrived(to: UIApplication.shared, with: notification.request.content.userInfo)
@@ -402,7 +404,7 @@ import UIKit
     ///   - center: Pass UNUserNotificationCenter object.
     ///   - response: Pass the UNNotificationResponse object.
     ///   - completionHandler: Completion Handler call back will be called after proccessing notification.
-    @objc func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    @objc func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let service = ALPushNotificationService()
         let dict = response.notification.request.content.userInfo
         guard !service.isApplozicNotification(dict) else {
@@ -424,7 +426,7 @@ import UIKit
 
     /// Use this method for register notification.
     @objc func registerForNotification() {
-        UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { granted, _ in
 
             if granted {
                 DispatchQueue.main.async {
