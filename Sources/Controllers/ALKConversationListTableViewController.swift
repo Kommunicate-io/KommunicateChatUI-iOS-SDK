@@ -167,6 +167,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             }
             delegate?.tapped(message, at: indexPath.row)
         } else {
+            ALMessageService.syncMessages()
             guard let message = viewModel.chatFor(indexPath: indexPath) else {
                 return
             }
