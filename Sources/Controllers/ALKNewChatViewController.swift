@@ -94,8 +94,6 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
-        automaticallyAdjustsScrollViewInsets = false
-
         registerCell()
     }
 

@@ -5,7 +5,7 @@ PODS:
   - ApplozicSwift/Complete (6.3.0):
     - ApplozicCore (~> 8.3.0)
     - ApplozicSwift/RichMessageKit
-    - Kingfisher (~> 6.3.0)
+    - Kingfisher (~> 7.0.0)
     - SwipeCellKit (~> 2.7.1)
   - ApplozicSwift/RichMessageKit (6.3.0)
   - iOSSnapshotTestCase (6.2.0):
@@ -13,8 +13,8 @@ PODS:
   - iOSSnapshotTestCase/Core (6.2.0)
   - iOSSnapshotTestCase/SwiftSupport (6.2.0):
     - iOSSnapshotTestCase/Core
-  - Kingfisher (6.3.1)
-  - Nimble (9.2.0)
+  - Kingfisher (7.0.0)
+  - Nimble (9.2.1)
   - Nimble-Snapshots (9.1.1):
     - Nimble-Snapshots/Core (= 9.1.1)
   - Nimble-Snapshots/Core (9.1.1):
@@ -22,7 +22,7 @@ PODS:
     - Nimble
   - Quick (4.0.0)
   - SwiftFormat/CLI (0.48.11)
-  - SwiftLint (0.43.1)
+  - SwiftLint (0.44.0)
   - SwipeCellKit (2.7.1)
 
 DEPENDENCIES:
@@ -51,16 +51,16 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   ApplozicCore: 120b38ee62ae0edc54a7c40e7d5a5390d7d751b2
-  ApplozicSwift: 7b3c30539a0d714e2ab5d87a8e4a7ff09397f6bb
+  ApplozicSwift: 011690e660fd2b269f94ed9fb19eedf3250a98f8
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
-  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
-  Nimble: 4f4a345c80b503b3ea13606a4f98405974ee4d0b
+  Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
+  Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Nimble-Snapshots: 881d47f238c5462f38ffcccb1747b17c633b2c18
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   SwiftFormat: 938e5865a118c49d63c7a290ddad86335f9e585f
-  SwiftLint: 99f82d07b837b942dd563c668de129a03fc3fb52
+  SwiftLint: e96c0a8c770c7ebbc4d36c55baf9096bb65c4584
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
-PODFILE CHECKSUM: 7cd8036cac3115d76f0c61b841fb9b9686f4a5f5
+PODFILE CHECKSUM: 9a874e12d07e3a4f667b64f8e8bf3aebd8218b41
 
 COCOAPODS: 1.10.1

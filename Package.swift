@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "ApplozicSwift",
     defaultLocalization: "en",
-    platforms: [.iOS(.v10)],
+    platforms: [.iOS(.v12)],
     products: [
         .library(
             name: "ApplozicSwift",
@@ -17,7 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Applozic", url: "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git", .exact("8.3.0")),
-        .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("6.3.0")),
+        .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("7.0.0")),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
     ],
     targets: [

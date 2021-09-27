@@ -101,7 +101,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
     private func setupSearchBar() {
         searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.barTintColor = .white
         searchController.searchBar.applySearchBarStyle()
