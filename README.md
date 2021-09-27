@@ -54,12 +54,12 @@ exact solutions.
 
 - Install the following:
 
-* [Xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) 12.0 or later
+* [Xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) 13.0 or later
 * [CocoaPods](https://cocoapods.org/) 1.9.0 or later
 
 - Make sure that your project meets these requirements:
 
-* Your project must target iOS 10 or later.
+* Your project must target iOS 12 or later.
 *  Set up a physical or simulator iOS device to run your app
 - [Sign-Up](https://www.applozic.com/signup.html?utm_source=github&utm_medium=readme&utm_campaign=ios) or Login to get your Applozic's [API key/App Id](https://console.applozic.com/settings). <br>
 
@@ -98,7 +98,7 @@ Copy-paste the following code in the file and Save
 ```ruby
 source 'https://github.com/CocoaPods/Specs'
 use_frameworks!  # Required to add 
-platform :ios, '10.0'
+platform :ios, '12.0'
 
 target 'TARGET_NAME' do
 pod 'ApplozicSwift'  # Required to add 

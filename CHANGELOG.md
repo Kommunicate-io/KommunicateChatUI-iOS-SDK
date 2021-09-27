@@ -5,8 +5,15 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 ## [Unreleased]
 
+### Project
+
+- Minimum deployment target version to iOS 12. Minimum Xcode version to Xcode 13 #403
+
 ### Enhancements
+
 - Added support for iOS 15.
+
+### Changed
 
 ## [6.3.0] - 2021-08-25
 
