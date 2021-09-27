@@ -116,6 +116,9 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             forHeaderFooterViewReuseIdentifier:
             ALKEmptyView.reuseIdentifier
         )
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         tableView.estimatedRowHeight = 0
     }
 

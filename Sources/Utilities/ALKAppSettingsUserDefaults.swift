@@ -118,7 +118,10 @@ public struct ALKAppSettingsUserDefaults {
 
     /// If you want to override all the app settings then you can use this method.
     public func setAppSettings(appSettings: ALKAppSettings) {
-        let data = NSKeyedArchiver.archivedData(withRootObject: appSettings)
+        guard let data = try? NSKeyedArchiver.archivedData(withRootObject: appSettings, requiringSecureCoding: false) else {
+            print("Failed to set the app settings in UserDefaults")
+            return
+        }
         UserDefaults.standard.set(data, forKey: appSettingsKey)
     }
 
@@ -154,7 +157,9 @@ public struct ALKAppSettingsUserDefaults {
 
     /// This method will be used for getting the app settings data
     public func getAppSettings() -> ALKAppSettings? {
-        guard let data = UserDefaults.standard.object(forKey: appSettingsKey) as? Data, let appSettings = NSKeyedUnarchiver.unarchiveObject(with: data) as? ALKAppSettings else {
+        guard let data = UserDefaults.standard.object(forKey: appSettingsKey) as? Data,
+              let appSettings = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? ALKAppSettings
+        else {
             return nil
         }
         return appSettings

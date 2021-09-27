@@ -136,7 +136,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 connection.videoOrientation = orientation
             }
 
-            let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecJPEG])
+            let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
 
             if connection.isActive {
                 cameraOutput?.capturePhoto(with: settings, delegate: self)
@@ -149,22 +149,12 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         }
     }
 
-    public func photoOutput(
-        _: AVCapturePhotoOutput,
-        didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
-        previewPhoto _: CMSampleBuffer?,
-        resolvedSettings _: AVCaptureResolvedPhotoSettings,
-        bracketSettings _: AVCaptureBracketedStillImageSettings?,
-        error: Swift.Error?
-    ) {
+    func photoOutput(_: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error = error {
-            print(error)
-        } else if let buffer = photoSampleBuffer,
-                  let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(
-                      forJPEGSampleBuffer: buffer,
-                      previewPhotoSampleBuffer: nil
-                  ),
-                  let image = UIImage(data: data)
+            print("Error in camera photo output", error)
+        } else if
+            let data = photo.fileDataRepresentation(),
+            let image = UIImage(data: data)
         {
             selectedImage = image
             switch cameraMode {
@@ -339,7 +329,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
                 captureSession.addInput(captureDeviceInput)
                 let cameraOutput = self.cameraOutput as? AVCapturePhotoOutput
-                cameraOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecJPEG])], completionHandler: nil)
+                cameraOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
 
                 if captureSession.canAddOutput(cameraOutput!) {
                     captureSession.addOutput(cameraOutput!)
@@ -419,7 +409,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 try captureSession.addInput(AVCaptureDeviceInput(device: newCam))
                 let cameraOutput = self.cameraOutput as? AVCapturePhotoOutput
 
-                cameraOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecJPEG])], completionHandler: nil)
+                cameraOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
 
                 if captureSession.canAddOutput(cameraOutput!) {
                     captureSession.addOutput(cameraOutput!)

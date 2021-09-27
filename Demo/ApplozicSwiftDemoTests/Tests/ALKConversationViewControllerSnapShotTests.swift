@@ -212,6 +212,7 @@ class ALKConversationViewControllerSnapshotTests: QuickSpec {
             let appearance = UINavigationBarAppearance()
             appearance.backgroundColor = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0)
             navigationController.navigationBar.standardAppearance = appearance
+            navigationController.navigationBar.scrollEdgeAppearance = appearance
         } else {
             navigationController.navigationBar.barTintColor = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0)
         }
