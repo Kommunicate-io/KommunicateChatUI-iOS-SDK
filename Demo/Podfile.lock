@@ -1,13 +1,13 @@
 PODS:
   - ApplozicCore (8.3.0)
-  - ApplozicSwift (6.3.0):
-    - ApplozicSwift/Complete (= 6.3.0)
-  - ApplozicSwift/Complete (6.3.0):
+  - ApplozicSwift (6.4.0):
+    - ApplozicSwift/Complete (= 6.4.0)
+  - ApplozicSwift/Complete (6.4.0):
     - ApplozicCore (~> 8.3.0)
     - ApplozicSwift/RichMessageKit
     - Kingfisher (~> 7.0.0)
     - SwipeCellKit (~> 2.7.1)
-  - ApplozicSwift/RichMessageKit (6.3.0)
+  - ApplozicSwift/RichMessageKit (6.4.0)
   - iOSSnapshotTestCase (6.2.0):
     - iOSSnapshotTestCase/SwiftSupport (= 6.2.0)
   - iOSSnapshotTestCase/Core (6.2.0)
@@ -51,7 +51,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   ApplozicCore: 120b38ee62ae0edc54a7c40e7d5a5390d7d751b2
-  ApplozicSwift: 011690e660fd2b269f94ed9fb19eedf3250a98f8
+  ApplozicSwift: c2d53a93dadf1f477f51d86f313236c5cc626d62
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
@@ -63,4 +63,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9a874e12d07e3a4f667b64f8e8bf3aebd8218b41
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.9.3
