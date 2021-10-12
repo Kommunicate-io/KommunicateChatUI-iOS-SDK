@@ -9,7 +9,7 @@ import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
-class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
+class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UITextViewDelegate {
     enum FormData {
         static let valid = 1
         static let inValid = 2
