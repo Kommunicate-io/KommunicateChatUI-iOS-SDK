@@ -27,8 +27,14 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
             activeTextFieldChanged?(activeTextField)
         }
     }
+    var activeTextView: UITextView? {
+        didSet {
+            activeTextViewChanged?(activeTextView)
+        }
+    }
 
     var activeTextFieldChanged: ((UITextField?) -> Void)?
+    var activeTextViewChanged: ((UITextView?) -> Void)?
     var formDataCacheStore = ALKFormDataCache.shared
 
     var formData: FormDataSubmit? {
@@ -111,6 +117,32 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         formSubmitData.textFields[textField.tag] = text
         formData = formSubmitData
     }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        activeTextView = textView
+        textView.text = nil
+        textView.textColor = .black
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        activeTextView = nil
+        guard let text = textView.text,
+              !text.trim().isEmpty,
+              let formSubmitData = formData
+        else {
+            if let data = formData {
+                data.textViews.removeValue(forKey: textView.tag)
+                formData = data
+            }
+            return
+        }
+        formSubmitData.textViews[textView.tag] = text
+        formData = formSubmitData
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return true
+    }
 
     private func setUpTableView() {
         itemListView.backgroundColor = .white
@@ -126,6 +158,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate {
         itemListView.tableFooterView = UIView(frame: .zero)
         itemListView.register(ALKFormItemHeaderView.self)
         itemListView.register(ALKFormTextItemCell.self)
+        itemListView.register(ALKFormTextAreaItemCell.self)
         itemListView.register(ALKFormPasswordItemCell.self)
         itemListView.register(ALKFormSingleSelectItemCell.self)
         itemListView.register(ALKFormMultiSelectItemCell.self)
@@ -169,6 +202,19 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
                 let formViewModelTextItem = item as? FormViewModelTextItem
                 cell.errorLabel.text = formViewModelTextItem?.validation?.errorText ?? localizedString(forKey: "InvalidDatErrorInForm", withDefaultValue: SystemMessage.UIError.InvalidDatErrorInForm, fileName: localizedStringFileName)
+                cell.errorLabel.isHidden = false
+            } else {
+                cell.errorLabel.isHidden = true
+            }
+            return cell
+        case .textarea:
+            let cell: ALKFormTextAreaItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.item = item
+            cell.valueTextField.delegate = self
+            cell.valueTextField.tag = indexPath.section
+            if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
+                let formViewModelTextAreaItem = item as? FormViewModelTextAreaItem
+                cell.errorLabel.text = formViewModelTextAreaItem?.validation?.errorText ?? localizedString(forKey: "InvalidDatErrorInForm", withDefaultValue: SystemMessage.UIError.InvalidDatErrorInForm, fileName: localizedStringFileName)
                 cell.errorLabel.isHidden = false
             } else {
                 cell.errorLabel.isHidden = true
@@ -388,6 +434,22 @@ extension ALKFormCell {
                         print("Error while matching text: \(error.localizedDescription)")
                     }
                 }
+                
+            case .textarea:
+                let textFieldModel = element as? FormViewModelTextAreaItem
+                let enteredText = formDataSubmit.textViews[index] ?? ""
+
+                if let validation = textFieldModel?.validation,
+                   let regxPattern = validation.regex
+                {
+                    do {
+                        isValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
+                        formDataSubmit.validationFields[index] = isValid ? FormData.valid : FormData.inValid
+                        formData = formDataSubmit
+                    } catch {
+                        print("Error while matching text: \(error.localizedDescription)")
+                    }
+                }
             default:
                 break
             }
@@ -411,6 +473,7 @@ class NestedCellTableView: UITableView {
 
 class FormDataSubmit {
     var textFields = [Int: String]()
+    var textViews = [Int: String]()
     var singleSelectFields = [Int: Int]()
     var multiSelectFields = [Int: [Int]]()
     var dateFields = [Int: Int64]()

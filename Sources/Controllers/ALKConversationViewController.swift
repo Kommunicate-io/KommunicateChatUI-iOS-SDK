@@ -1628,6 +1628,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 if let textModel = element as? FormViewModelTextItem {
                     postFormData[textModel.label] = text
                 }
+            case .textarea:
+                if let textModel = element as? FormViewModelTextAreaItem {
+                    postFormData[textModel.title] = text
+                }
             case .password:
                 if let passwordModel = element as? FormViewModelPasswordItem {
                     postFormData[passwordModel.label] = text

@@ -46,6 +46,7 @@ extension FormTemplate {
 extension FormTemplate.Element {
     enum ContentType: String {
         case text
+        case textarea
         case password
         case multiselect = "checkbox"
         case singleSelect = "radio"
