@@ -87,6 +87,88 @@ class ALKFormTextItemCell: UITableViewCell {
     }
 }
 
+class ALKFormTextAreaItemCell: UITableViewCell {
+    var item: FormViewModelItem? {
+        didSet {
+            guard let item = item as? FormViewModelTextAreaItem else {
+                return
+            }
+            nameLabel.text = item.title
+            valueTextField.text = item.placeholder
+            valueTextField.textColor = .lightGray
+        }
+    }
+
+    let nameLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.font = Font.medium(size: 15).font()
+        label.textColor = .black
+        label.numberOfLines = 1
+        label.textAlignment = .left
+        return label
+    }()
+
+    let valueTextField: UITextView = {
+        let textfield = UITextView(frame: .zero)
+        textfield.font = Font.medium(size: 17).font()
+        return textfield
+    }()
+
+    private lazy var errorStackView: UIStackView = {
+        let labelStackView = UIStackView()
+        labelStackView.axis = .horizontal
+        labelStackView.alignment = .fill
+        labelStackView.distribution = .fillEqually
+        labelStackView.backgroundColor = UIColor.white
+        return labelStackView
+    }()
+
+    let errorLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.textColor = .red
+        label.font = Font.normal(size: 15).font()
+        label.textAlignment = .left
+        return label
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        valueTextField.textColor = .black
+        contentView.backgroundColor = .clear
+        addConstraints()
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func addConstraints() {
+        addViewsForAutolayout(views: [nameLabel, valueTextField, errorStackView])
+        valueTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        valueTextField.text = "new1"
+        errorStackView.addArrangedSubview(errorLabel)
+        errorStackView.bringSubviewToFront(errorLabel)
+        nameLabel.layout {
+            $0.leading == leadingAnchor + 10
+            $0.trailing == trailingAnchor - 30
+            $0.top == topAnchor + 10
+        }
+        valueTextField.layout {
+            $0.leading == nameLabel.leadingAnchor
+            $0.trailing == nameLabel.trailingAnchor
+            $0.top == nameLabel.bottomAnchor + 10
+        }
+        errorStackView.layout {
+            $0.leading == nameLabel.leadingAnchor
+            $0.trailing == nameLabel.trailingAnchor
+            $0.top == valueTextField.bottomAnchor + 10
+            $0.bottom <= bottomAnchor - 10
+        }
+    }
+}
+
+
 class ALKFormItemHeaderView: UITableViewHeaderFooterView {
     var item: FormViewModelItem? {
         didSet {

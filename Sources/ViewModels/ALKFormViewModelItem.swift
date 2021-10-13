@@ -9,6 +9,7 @@ import Foundation
 
 enum FormViewModelItemType {
     case text
+    case textarea
     case password
     case singleselect
     case multiselect
@@ -102,6 +103,26 @@ class FormViewModelTextItem: FormViewModelItem {
     }
 }
 
+class FormViewModelTextAreaItem: FormViewModelItem {
+    typealias Validation = FormTemplate.Validation
+    var type: FormViewModelItemType {
+        return .textarea
+    }
+
+    let title: String
+    let placeholder: String?
+    let validation: Validation?
+
+    init(title: String,
+         placeholder: String?,
+         validation: Validation?)
+    {
+        self.title = title
+        self.placeholder = placeholder
+        self.validation = validation
+    }
+}
+
 class FormViewModelPasswordItem: FormViewModelItem {
     var type: FormViewModelItemType {
         return .password
@@ -160,6 +181,15 @@ extension FormTemplate {
                       let placeHolder = elementData.placeholder else { return }
                 items.append(FormViewModelTextItem(
                     label: label,
+                    placeholder: placeHolder,
+                    validation: elementData.validation
+                ))
+            case .textarea:
+                guard let elementData = element.data,
+                      let title = elementData.title,
+                      let placeHolder = elementData.placeholder else { return }
+                items.append(FormViewModelTextAreaItem(
+                    title: title,
                     placeholder: placeHolder,
                     validation: elementData.validation
                 ))
