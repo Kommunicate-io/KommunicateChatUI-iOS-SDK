@@ -27,7 +27,7 @@ struct FormTemplate: Decodable {
     }
 
     struct Action: Decodable {
-        let formAction, message, requestType: String?
+        let formAction, message, requestType: String?,postFormDataAsMessage: String?
     }
 
     struct Validation: Decodable {
