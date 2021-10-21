@@ -1591,7 +1591,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         var postFormData = [String: Any]()
         var requestType: String?
-        var postFormDataAsMessage: String?
         var formAction: String?
         var message: String?
         var isFormDataReplytoChat = false
@@ -1619,11 +1618,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 if let formTemplateMessage = action.message {
                     message = formTemplateMessage
                 }
-                if let formTemplatePostFormDataAsMessage = action.postFormDataAsMessage{
-                    postFormDataAsMessage = formTemplatePostFormDataAsMessage
-                    if postFormDataAsMessage == "true" {
-                        isFormDataReplytoChat = true
-                    }
+                if let formTemplatePostFormDataAsMessage = action.postFormDataAsMessage, formTemplatePostFormDataAsMessage == "true" {
+                    isFormDataReplytoChat = true
                 }
             }
         }
@@ -1705,68 +1701,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         
         if isFormDataReplytoChat {
-            var postBackMessageString = ""
-            for item in viewModelItems {
-                switch item.type {
-                case .text:
-                    if let textModelItem = item as? FormViewModelTextItem {
-                        postBackMessageString.append("\(textModelItem.label) :\(postFormData[textModelItem.label] ?? "")\n")
-                    }
-                case .password:
-                    if let passwordItemModel = item as? FormViewModelPasswordItem {
-                        postBackMessageString.append("\(passwordItemModel.label) :\(postFormData[passwordItemModel.label] ?? "")\n")
-                    }
-                case .singleselect:
-                    if let singleSelectionItemModel = item as? FormViewModelSingleselectItem {
-                        postBackMessageString.append("\(singleSelectionItemModel.name) : \(postFormData[singleSelectionItemModel.name]  ?? "")\n")
-                    }
-                case .multiselect:
-                    if let multiSelectionItemModel = item as? FormViewModelMultiselectItem {
-                        var multiSelectString : String
-                        if postFormData[multiSelectionItemModel.name] != nil {
-                            multiSelectString = postFormData[multiSelectionItemModel.name] as? String ?? ""
+            sendPostSubmittedFormDataAsMessage(message: message, messageModel: messageModel, postFormData: postFormData, chatContextData: chatContextData)
 
-                            let characterSet = CharacterSet(charactersIn: "][ \"")
-                            multiSelectString = multiSelectString.components(separatedBy: characterSet).joined(separator: "")
-                            postBackMessageString.append("\(multiSelectionItemModel.name) : \(multiSelectString) \n")
-                            
-                        }else{
-                            postBackMessageString.append("\(multiSelectionItemModel.name) : \n")
-                        }
-                    }
-                case .time:
-                    if let timeItemModel = item as? FormViewModelTimeItem {
-                        postBackMessageString.append("\(timeItemModel.label) : \(postFormData[timeItemModel.label] ?? "")\n")
-                    }
-                case .date:
-                    if let dateItemModel = item as? FormViewModelDateItem {
-                        postBackMessageString.append("\(dateItemModel.label) : \(postFormData[dateItemModel.label] ?? "")\n")
-                    }
-                case .dateTimeLocal:
-                    if let dateTimeLocalItemModel = item as? FormViewModelDateTimeLocalItem {
-                        if postFormData[dateTimeLocalItemModel.label] != nil {
-                            postBackMessageString.append("\(dateTimeLocalItemModel.label) : \(postFormData[dateTimeLocalItemModel.label] ?? "")\n")
-
-                        }else{
-                            postBackMessageString.append("\(dateTimeLocalItemModel.label) : \n")
-                        }
-                    }
-                default:
-                    print("\(item.type) form template type is not part of the form list view")
-                }
-            }
-            for element in formTemplate.elements {
-                if element.contentType == .hidden,
-                   let elementData = element.data,
-                   let hiddenName = elementData.name{
-                    postBackMessageString.append("\(hiddenName) : \(postFormData[hiddenName] ?? "")\n")
-                    break
-                }
-            }
-            message?.append("\n \(postBackMessageString)")
-            if let messageString = message {
-                viewModel.send(message: messageString, metadata: chatContextData)
-            }
         } else {
             if let messageString = message {
                 viewModel.send(message: messageString, metadata: chatContextData)
@@ -1797,7 +1733,83 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
     }
+    
+    //Send Post Submitted Form Data As A Message
+    func sendPostSubmittedFormDataAsMessage(message: String?,messageModel: ALKMessageViewModel, postFormData: [String:Any],chatContextData: [String:Any]!){
+        
+        guard let formTemplate = messageModel.formTemplate()
+        else {
+            print("Failed to get formtemplate")
+            return
+        }
+        let viewModelItems = formTemplate.viewModeItems
+        
+        var postBackMessageString = ""
+        
+        if let messageString = message {
+            postBackMessageString.append("\(messageString)\n")
+        }
+        for item in viewModelItems {
+            switch item.type {
+            case .text:
+                if let textModelItem = item as? FormViewModelTextItem {
+                    postBackMessageString.append("\(textModelItem.label) : \(postFormData[textModelItem.label] ?? "")\n")
+                }
+            case .password:
+                if let passwordItemModel = item as? FormViewModelPasswordItem {
+                    postBackMessageString.append("\(passwordItemModel.label) : \(postFormData[passwordItemModel.label] ?? "")\n")
+                }
+            case .singleselect:
+                if let singleSelectionItemModel = item as? FormViewModelSingleselectItem {
+                    postBackMessageString.append("\(singleSelectionItemModel.name) : \(postFormData[singleSelectionItemModel.name]  ?? "")\n")
+                }
+            case .multiselect:
+                if let multiSelectionItemModel = item as? FormViewModelMultiselectItem {
+                    var multiSelectString : String
+                    if postFormData[multiSelectionItemModel.name] != nil {
+                        multiSelectString = postFormData[multiSelectionItemModel.name] as? String ?? ""
 
+                        let characterSet = CharacterSet(charactersIn: "][ \"")
+                        multiSelectString = multiSelectString.components(separatedBy: characterSet).joined(separator: "")
+                        postBackMessageString.append("\(multiSelectionItemModel.name) : \(multiSelectString) \n")
+                        
+                    }else{
+                        postBackMessageString.append("\(multiSelectionItemModel.name) : \n")
+                    }
+                }
+            case .time:
+                if let timeItemModel = item as? FormViewModelTimeItem {
+                    postBackMessageString.append("\(timeItemModel.label) : \(postFormData[timeItemModel.label] ?? "")\n")
+                }
+            case .date:
+                if let dateItemModel = item as? FormViewModelDateItem {
+                    postBackMessageString.append("\(dateItemModel.label) : \(postFormData[dateItemModel.label] ?? "")\n")
+                }
+            case .dateTimeLocal:
+                if let dateTimeLocalItemModel = item as? FormViewModelDateTimeLocalItem {
+                    if postFormData[dateTimeLocalItemModel.label] != nil {
+                        postBackMessageString.append("\(dateTimeLocalItemModel.label) : \(postFormData[dateTimeLocalItemModel.label] ?? "")\n")
+
+                    }else{
+                        postBackMessageString.append("\(dateTimeLocalItemModel.label) : \n")
+                    }
+                }
+            default:
+                print("\(item.type) form template type is not part of the form list view")
+            }
+        }
+        for element in formTemplate.elements {
+            if element.contentType == .hidden,
+               let elementData = element.data,
+               let hiddenName = elementData.name{
+                postBackMessageString.append("\(hiddenName) : \(postFormData[hiddenName] ?? "")\n")
+                break
+            }
+        }
+       
+        viewModel.send(message: postBackMessageString, metadata: chatContextData)
+    }
+   
     func getUpdateMessageMetadata(with info: [String: Any]) -> [String: Any]? {
         var metadata = [String: Any]()
         do {
