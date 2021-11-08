@@ -44,6 +44,19 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         checkPricingPackage()
+        checkForLanguageDirection()
+    }
+    
+    func checkForLanguageDirection(){
+        let language = NSLocale.preferredLanguages[0]
+        let laguageArray = language.split(separator: "-")
+        if laguageArray.count > 0 {
+            let lanCode = laguageArray[0]
+            if (lanCode == "ar" || lanCode == "he" || lanCode == "fa") {
+                UIView.appearance().semanticContentAttribute = .forceRightToLeft
+
+            }
+        }
     }
 
     @objc func backTapped() {
