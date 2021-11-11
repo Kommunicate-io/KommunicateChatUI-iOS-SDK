@@ -49,13 +49,10 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     
     func checkForLanguageDirection(){
         let language = NSLocale.preferredLanguages[0]
-        let laguageArray = language.split(separator: "-")
-        if laguageArray.count > 0 {
-            let lanCode = laguageArray[0]
-            if (lanCode == "ar" || lanCode == "he" || lanCode == "fa") {
-                UIView.appearance().semanticContentAttribute = .forceRightToLeft
-
-            }
+        let direction = NSLocale.characterDirection(forLanguage: language)
+      
+        if direction == NSLocale.LanguageDirection.rightToLeft {
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
         }
     }
 
