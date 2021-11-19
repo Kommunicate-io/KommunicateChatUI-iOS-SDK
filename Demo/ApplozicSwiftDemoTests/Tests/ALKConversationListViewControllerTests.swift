@@ -8,7 +8,7 @@
 
 import ApplozicCore
 import XCTest
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 class ALKConversationListViewControllerTests: XCTestCase {
     var conversationListVC: ALKConversationListViewController!
 

@@ -8,7 +8,7 @@
 
 /// This is a sample to illustrate usage of custom in-app notifications.
 
-import ApplozicSwift
+import KommunicateChatUI_iOS_SDK
 import UIKit
 
 enum Menu: String {
@@ -216,15 +216,15 @@ extension UIViewController {
     }
 
     func add(_ child: UIViewController) {
-        addChild(child)
+        addChildViewController(child)
         view.addSubview(child.view)
-        child.didMove(toParent: self)
+        child.didMove(toParentViewController: self)
     }
 
     func remove() {
         guard parent != nil else { return }
-        willMove(toParent: nil)
+        willMove(toParentViewController: nil)
         view.removeFromSuperview()
-        removeFromParent()
+        removeFromParentViewController()
     }
 }

@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
-  s.name = 'ApplozicSwift'
+  s.name = 'KommunicateChatUI-iOS-SDK'
   s.version = '6.4.0'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
-  s.summary = 'Applozic Swift Kit'
+  s.summary = 'KommunicateChatUI-iOS-SDK Kit'
   s.homepage = 'https://github.com/AppLozic/ApplozicSwift'
   s.social_media_url = 'http://twitter.com/AppLozic'
   s.authors = { 'Applozic Inc.' => 'support@applozic.com' }
@@ -25,6 +25,6 @@ Pod::Spec.new do |s|
     complete.dependency 'Kingfisher', '~> 7.0.0'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
     complete.dependency 'ApplozicCore', '~> 8.3.0'
-    complete.dependency 'ApplozicSwift/RichMessageKit'
+    complete.dependency 'KommunicateChatUI-iOS-SDK/RichMessageKit'
   end
 end

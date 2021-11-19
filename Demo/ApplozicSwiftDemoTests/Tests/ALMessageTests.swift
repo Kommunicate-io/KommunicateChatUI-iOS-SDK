@@ -9,7 +9,7 @@
 import XCTest
 
 import ApplozicCore
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class ALMessageTests: XCTestCase {
     override func setUp() {

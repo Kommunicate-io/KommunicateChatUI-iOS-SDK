@@ -42,7 +42,7 @@ class ALKLinkView: UIView, Localizable {
 
     var titleLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
-        label.textColor = UIColor(red: 20, green: 19, blue: 19)
+        label.textColor = UIColor(red: 20, green: 19, blue: 19, alpha: 0)
         label.font = UIFont.font(.medium(size: 18))
         label.numberOfLines = 2
         return label
@@ -58,7 +58,7 @@ class ALKLinkView: UIView, Localizable {
     var descriptionLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 3
-        label.textColor = UIColor(red: 121, green: 116, blue: 116)
+        label.textColor = UIColor(red: 121, green: 116, blue: 116, alpha: 0)
         label.font = UIFont.font(.light(size: 14))
         return label
     }()

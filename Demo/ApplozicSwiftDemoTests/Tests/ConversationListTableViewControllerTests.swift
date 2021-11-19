@@ -9,7 +9,7 @@
 import ApplozicCore
 import Foundation
 import XCTest
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class ConversationListTableViewControllerTests: XCTestCase {
     var conversationVM: ALKConversationViewModel!

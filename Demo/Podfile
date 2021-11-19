@@ -1,15 +1,15 @@
-project 'ApplozicSwiftDemo.xcodeproj'
-source 'https://github.com/CocoaPods/Specs.git'
+project 'KommunicateChatUI-iOS-SDK-Demo.xcodeproj'
+source ‘https://cdn.cocoapods.org/’
 platform :ios, '12.0'
 use_frameworks!
 
-target 'ApplozicSwiftDemo' do
-    pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
+target 'KommunicateChatUI-iOS-SDK-Demo' do
+    pod 'KommunicateChatUI-iOS-SDK', :path => '../KommunicateChatUI-iOS-SDK.podspec'
     pod 'SwiftLint'
 end
 
-target 'ApplozicSwiftDemoTests' do
-    pod 'ApplozicSwift', :path => '../ApplozicSwift.podspec'
+target 'KommunicateChatUI-iOS-SDK-DemoTests' do
+    pod 'KommunicateChatUI-iOS-SDK', :path => '../KommunicateChatUI-iOS-SDK.podspec'
     pod 'Nimble'
     pod 'Quick'
     pod 'Nimble-Snapshots'

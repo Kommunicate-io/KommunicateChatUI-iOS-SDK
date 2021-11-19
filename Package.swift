@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ApplozicSwift",
+    name: "KommunicateChatUI-iOS-SDK",
     defaultLocalization: "en",
     platforms: [.iOS(.v12)],
     products: [
