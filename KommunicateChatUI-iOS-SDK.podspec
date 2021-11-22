@@ -1,13 +1,12 @@
 Pod::Spec.new do |s|
   s.name = 'KommunicateChatUI-iOS-SDK'
-  s.version = '6.4.0'
+  s.version = '0.0.1'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
   s.summary = 'KommunicateChatUI-iOS-SDK Kit'
-  s.homepage = 'https://github.com/AppLozic/ApplozicSwift'
-  s.social_media_url = 'http://twitter.com/AppLozic'
-  s.authors = { 'Applozic Inc.' => 'support@applozic.com' }
+  s.homepage = 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK'
+  s.author = { 'Mukesh Thawani' => 'mukesh@applozic.com' }
 
-  s.source = { :git => 'https://github.com/AppLozic/ApplozicSwift.git', :tag => s.version }
+  s.source = { :git => 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK', :tag => s.version }
 
   s.ios.deployment_target = '12.0'
   s.swift_version = '5.0'
