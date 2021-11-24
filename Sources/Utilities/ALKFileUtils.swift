@@ -5,7 +5,7 @@
 //  Created by Sunil on 14/03/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import AVFoundation
 import Contacts
 import Foundation

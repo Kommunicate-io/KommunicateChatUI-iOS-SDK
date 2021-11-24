@@ -6,7 +6,7 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 import XCTest
 @testable import KommunicateChatUI_iOS_SDK

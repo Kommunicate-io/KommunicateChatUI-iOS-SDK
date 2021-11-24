@@ -8,7 +8,7 @@
 
 import XCTest
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 @testable import KommunicateChatUI_iOS_SDK
 
 class ALMessageTests: XCTestCase {

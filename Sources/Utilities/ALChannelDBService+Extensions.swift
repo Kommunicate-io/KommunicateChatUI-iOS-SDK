@@ -5,7 +5,7 @@
 //  Created by Mukesh on 19/09/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 extension ALChannelDBService {

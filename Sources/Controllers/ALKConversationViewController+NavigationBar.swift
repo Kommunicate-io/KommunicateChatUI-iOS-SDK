@@ -5,7 +5,7 @@
 //  Created by Mukesh on 22/06/20.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 extension ALKConversationViewController: NavigationBarCallbacks {

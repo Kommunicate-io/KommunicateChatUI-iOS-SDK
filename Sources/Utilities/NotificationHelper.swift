@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 25/03/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 
 public class NotificationHelper {
     /// Stores information about the notification that arrives

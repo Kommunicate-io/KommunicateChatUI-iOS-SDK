@@ -1,19 +1,19 @@
 PODS:
-  - ApplozicCore (8.3.0)
   - iOSSnapshotTestCase (8.0.0):
     - iOSSnapshotTestCase/SwiftSupport (= 8.0.0)
   - iOSSnapshotTestCase/Core (8.0.0)
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (7.0.0)
-  - KommunicateChatUI-iOS-SDK (6.4.0):
-    - KommunicateChatUI-iOS-SDK/Complete (= 6.4.0)
-  - KommunicateChatUI-iOS-SDK/Complete (6.4.0):
-    - ApplozicCore (~> 8.3.0)
+  - KommunicateChatUI-iOS-SDK (0.0.1):
+    - KommunicateChatUI-iOS-SDK/Complete (= 0.0.1)
+  - KommunicateChatUI-iOS-SDK/Complete (0.0.1):
     - Kingfisher (~> 7.0.0)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
+    - KommunicateCore-iOS-SDK (~> 0.0.1)
     - SwipeCellKit (~> 2.7.1)
-  - KommunicateChatUI-iOS-SDK/RichMessageKit (6.4.0)
+  - KommunicateChatUI-iOS-SDK/RichMessageKit (0.0.1)
+  - KommunicateCore-iOS-SDK (0.0.1)
   - Nimble (9.2.1)
   - Nimble-Snapshots (9.3.0):
     - Nimble-Snapshots/Core (= 9.3.0)
@@ -35,9 +35,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - ApplozicCore
     - iOSSnapshotTestCase
     - Kingfisher
+    - KommunicateCore-iOS-SDK
     - Nimble
     - Nimble-Snapshots
     - Quick
@@ -50,10 +50,10 @@ EXTERNAL SOURCES:
     :path: "../KommunicateChatUI-iOS-SDK.podspec"
 
 SPEC CHECKSUMS:
-  ApplozicCore: 120b38ee62ae0edc54a7c40e7d5a5390d7d751b2
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
-  KommunicateChatUI-iOS-SDK: 7a43244fff677a3218f3f6f36918e285b7cb7dcf
+  KommunicateChatUI-iOS-SDK: 3c4a733263c82076fb5d7679501d87a66adb3cfb
+  KommunicateCore-iOS-SDK: 4d58a8c2497da24e173eb87906fedece9a9a4bb4
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Nimble-Snapshots: 97270cd48f0e6eebd6c80ccf7dd35d4e57fb9997
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
