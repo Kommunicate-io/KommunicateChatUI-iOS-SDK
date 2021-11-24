@@ -7,8 +7,8 @@ let package = Package(
     platforms: [.iOS(.v12)],
     products: [
         .library(
-            name: "ApplozicSwift",
-            targets: ["ApplozicSwift"]
+            name: "KommunicateChatUI-iOS-SDK",
+            targets: ["KommunicateChatUI-iOS-SDK"]
         ),
         .library(
             name: "RichMessageKit",
@@ -16,14 +16,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Applozic", url: "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git", .exact("8.3.0")),
+        .package(name: "KommunicateCore-iOS-SDK", url: "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK.git", .exact("0.0.1")),
         .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("7.0.0")),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
     ],
     targets: [
-        .target(name: "ApplozicSwift",
+        .target(name: "KommunicateChatUI-iOS-SDK",
                 dependencies: ["RichMessageKit",
-                               .product(name: "ApplozicCore", package: "Applozic"),
+                               .product(name: "KommunicateCore-iOS-SDK", package: "KommunicateCore-iOS-SDK"),
                                "Kingfisher",
                                "SwipeCellKit"],
                 path: "Sources",
