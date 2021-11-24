@@ -1,6 +1,5 @@
 ![header-ios](https://user-images.githubusercontent.com/24476344/43458226-0f1219b4-94e7-11e8-9b00-ca89b2da8952.png)
 
-[![Version](https://img.shields.io/cocoapods/v/Kommunicate.svg?style=flat)](http://cocoapods.org/pods/Kommunicate)
 [![License](https://img.shields.io/cocoapods/l/Kommunicate.svg?style=flat)](http://cocoapods.org/pods/Kommunicate)
 [![Platform](https://img.shields.io/cocoapods/p/Kommunicate.svg?style=flat)](http://cocoapods.org/pods/Kommunicate)
 
