@@ -4,6 +4,7 @@ The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Al
 
 
 ## [Unreleased]
+- Send Post Submitted Form Data As Message
 
 ## [6.4.0] - 2021-09-28
 
