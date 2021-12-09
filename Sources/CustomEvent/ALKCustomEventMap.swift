@@ -1,14 +1,11 @@
 //
-        //
-        // ALKCustomEventMap.swift
-        // ApplozicSwift
-        //
-        // Created by ___Sathyan Elangovan___ on 09/12/21
-       
-    
-
+//
+// ALKCustomEventMap.swift
+// ApplozicSwift
+//
+// Created by ___Sathyan Elangovan___ on 09/12/21
 import Foundation
-struct ALKCustomEventMap {
+public struct ALKCustomEventMap {
     public static let EVENT_ON_MESSAGE_SEND: String = "ON_MESSAGE_SEND"
     public static let EVENT_ON_FAQ_CLICK: String = "ON_FAQ_CLICK"
     public static let EVENT_ON_GREETING_MESSAGE_NOTIFICATION_CLICK: String = "ON_GREETING_MESSAGE_NOTIFICATION_CLICK"

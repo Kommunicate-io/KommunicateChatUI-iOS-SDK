@@ -1259,6 +1259,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
+        ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_RICH_MESSAGE_CLICK, value: title)
         switch type {
         case "link":
             linkButtonSelected(action)

@@ -168,6 +168,7 @@ open class AudioRecordButton: UIButton {
 
         switch gesture.state {
         case .began:
+            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_VOICE_ICON_CLICK, value: nil)
             if checkMicrophonePermission() == false {
                 delegate?.permissionNotGrant()
             } else {
