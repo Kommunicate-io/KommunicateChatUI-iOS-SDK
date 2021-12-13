@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import ApplozicCore
-import ApplozicSwift
+import KommunicateCore_iOS_SDK
+import KommunicateChatUI_iOS_SDK
 import UIKit
 
 class ViewController: UIViewController {

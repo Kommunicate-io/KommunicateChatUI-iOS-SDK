@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 17/08/18.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import AVFoundation
 import Foundation
 

@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 import SwipeCellKit
 /**

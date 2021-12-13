@@ -6,7 +6,7 @@
 //  Copyright © 2019 Applozic. All rights reserved.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 struct MockMessage {

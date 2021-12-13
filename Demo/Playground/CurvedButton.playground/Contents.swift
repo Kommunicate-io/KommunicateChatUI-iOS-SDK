@@ -1,5 +1,5 @@
 /// Usage of `ALKCurvedButton`
-import ApplozicSwift
+import KommunicateChatUI_iOS_SDK
 import UIKit
 
 /// Using default font and color

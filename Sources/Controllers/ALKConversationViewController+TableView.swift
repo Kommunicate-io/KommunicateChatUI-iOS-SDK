@@ -6,7 +6,7 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import AVFoundation
 import Foundation
 import UIKit

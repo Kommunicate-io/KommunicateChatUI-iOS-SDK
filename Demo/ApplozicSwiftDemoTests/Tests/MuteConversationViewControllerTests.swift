@@ -6,10 +6,10 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 import XCTest
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class MuteConversationViewControllerTests: XCTestCase {
     let time_8_Hour: Int64 = 8 * 60 * 60 * 1000

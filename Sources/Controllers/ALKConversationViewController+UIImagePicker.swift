@@ -5,7 +5,7 @@
 //  Created by Mukesh on 08/11/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 extension ALKConversationViewController:

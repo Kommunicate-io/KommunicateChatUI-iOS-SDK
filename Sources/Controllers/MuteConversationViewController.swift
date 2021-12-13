@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 15/10/18.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 @objc protocol Muteable: AnyObject {

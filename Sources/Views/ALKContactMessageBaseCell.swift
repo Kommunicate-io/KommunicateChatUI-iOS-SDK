@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 19/04/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Contacts
 
 class ALKContactMessageBaseCell: ALKChatBaseCell<ALKMessageViewModel>, ALKHTTPManagerDownloadDelegate {

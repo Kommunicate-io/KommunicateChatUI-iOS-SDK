@@ -5,7 +5,7 @@
 //  Created by Mukesh Thawani on 10/10/17.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Kingfisher
 import MapKit
 import UIKit

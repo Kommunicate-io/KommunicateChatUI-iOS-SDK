@@ -10,7 +10,7 @@ import Foundation
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import AVFoundation
 import Kingfisher
 import UIKit

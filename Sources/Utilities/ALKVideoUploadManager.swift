@@ -5,7 +5,7 @@
 //  Created by Sunil on 12/05/21.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 class ALKVideoUploadManager: NSObject {

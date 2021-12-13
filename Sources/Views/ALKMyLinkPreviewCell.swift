@@ -1,4 +1,4 @@
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 class ALKMyLinkPreviewCell: ALKLinkPreviewBaseCell {

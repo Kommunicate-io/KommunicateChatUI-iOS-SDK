@@ -1,13 +1,12 @@
 Pod::Spec.new do |s|
-  s.name = 'ApplozicSwift'
-  s.version = '6.4.0'
+  s.name = 'KommunicateChatUI-iOS-SDK'
+  s.version = '0.0.1'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
-  s.summary = 'Applozic Swift Kit'
-  s.homepage = 'https://github.com/AppLozic/ApplozicSwift'
-  s.social_media_url = 'http://twitter.com/AppLozic'
-  s.authors = { 'Applozic Inc.' => 'support@applozic.com' }
+  s.summary = 'KommunicateChatUI-iOS-SDK Kit'
+  s.homepage = 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK'
+  s.author = { 'Mukesh Thawani' => 'mukesh@applozic.com' }
 
-  s.source = { :git => 'https://github.com/AppLozic/ApplozicSwift.git', :tag => s.version }
+  s.source = { :git => 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK.git', :tag => s.version }
 
   s.ios.deployment_target = '12.0'
   s.swift_version = '5.0'
@@ -24,7 +23,7 @@ Pod::Spec.new do |s|
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
     complete.dependency 'Kingfisher', '~> 7.0.0'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
-    complete.dependency 'ApplozicCore', '~> 8.3.0'
-    complete.dependency 'ApplozicSwift/RichMessageKit'
+    complete.dependency 'KommunicateCore-iOS-SDK', '~> 0.0.1'
+    complete.dependency 'KommunicateChatUI-iOS-SDK/RichMessageKit'
   end
 end

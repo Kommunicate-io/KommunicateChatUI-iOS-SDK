@@ -5,7 +5,7 @@
 //  Created by Sunil on 05/03/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 import Kingfisher
 import UIKit

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1310"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8B36D0E31F3DC5E900FEFFD2"
+               BuildableName = "KommunicateChatUI-iOS-SDK-Demo.app"
+               BlueprintName = "KommunicateChatUI-iOS-SDK-Demo"
+               ReferencedContainer = "container:KommunicateChatUI-iOS-SDK-Demo.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8B36D0F71F3DC5EA00FEFFD2"
+               BuildableName = "KommunicateChatUI-iOS-SDK-DemoTests.xctest"
+               BlueprintName = "KommunicateChatUI-iOS-SDK-DemoTests"
+               ReferencedContainer = "container:KommunicateChatUI-iOS-SDK-Demo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8B36D1021F3DC5EA00FEFFD2"
+               BuildableName = "KommunicateChatUI-iOS-SDK-DemoUITests.xctest"
+               BlueprintName = "KommunicateChatUI-iOS-SDK-DemoUITests"
+               ReferencedContainer = "container:KommunicateChatUI-iOS-SDK-Demo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8B36D0E31F3DC5E900FEFFD2"
+            BuildableName = "KommunicateChatUI-iOS-SDK-Demo.app"
+            BlueprintName = "KommunicateChatUI-iOS-SDK-Demo"
+            ReferencedContainer = "container:KommunicateChatUI-iOS-SDK-Demo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8B36D0E31F3DC5E900FEFFD2"
+            BuildableName = "KommunicateChatUI-iOS-SDK-Demo.app"
+            BlueprintName = "KommunicateChatUI-iOS-SDK-Demo"
+            ReferencedContainer = "container:KommunicateChatUI-iOS-SDK-Demo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

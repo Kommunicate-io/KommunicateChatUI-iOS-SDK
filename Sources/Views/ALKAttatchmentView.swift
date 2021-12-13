@@ -5,7 +5,7 @@
 //  Created by apple on 18/10/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 import Kingfisher
 import UIKit
