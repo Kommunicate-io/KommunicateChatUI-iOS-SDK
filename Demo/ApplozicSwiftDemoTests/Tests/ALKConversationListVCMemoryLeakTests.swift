@@ -8,7 +8,7 @@
 
 import Nimble
 import Quick
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class ALKConversationListVCMemoryLeakTests: QuickSpec {
     override func spec() {

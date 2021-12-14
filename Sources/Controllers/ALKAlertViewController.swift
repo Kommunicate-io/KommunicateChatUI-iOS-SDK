@@ -5,7 +5,7 @@
 //  Created by apple on 01/07/19.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 class ALKAlertViewController: UIViewController, Localizable {

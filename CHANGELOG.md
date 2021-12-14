@@ -1,11 +1,13 @@
 # CHANGELOG
 
-The changelog for [ApplozicSwift](https://github.com/AppLozic/ApplozicSwift). Also see the [releases](https://github.com/AppLozic/ApplozicSwift/releases) on Github.
+The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 
 ## [Unreleased]
 
 - Added support for text areas in rich message forms
+- Send Post Submitted Form Data As Message
+- Added Support for RTL Languages
 
 ## [6.4.0] - 2021-09-28
 

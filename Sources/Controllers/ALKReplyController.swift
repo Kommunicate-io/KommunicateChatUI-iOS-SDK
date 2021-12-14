@@ -9,7 +9,7 @@ import Foundation
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Kingfisher
 
 class ALKReplyController: UIViewController, Localizable {

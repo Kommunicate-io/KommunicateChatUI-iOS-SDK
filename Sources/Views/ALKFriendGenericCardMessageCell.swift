@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 05/12/18.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 import Kingfisher
 #if canImport(RichMessageKit)

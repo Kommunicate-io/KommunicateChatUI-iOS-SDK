@@ -1,5 +1,5 @@
 /// Usage of `ALKQuickReplyView`
-import ApplozicSwift
+import KommunicateChatUI_iOS_SDK
 
 func fromJSON(string: String) throws -> [[String: Any]] {
     guard let data = string.data(using: .utf8),

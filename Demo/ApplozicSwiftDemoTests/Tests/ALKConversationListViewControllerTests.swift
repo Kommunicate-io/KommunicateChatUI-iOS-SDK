@@ -6,9 +6,9 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import XCTest
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 class ALKConversationListViewControllerTests: XCTestCase {
     var conversationListVC: ALKConversationListViewController!
 

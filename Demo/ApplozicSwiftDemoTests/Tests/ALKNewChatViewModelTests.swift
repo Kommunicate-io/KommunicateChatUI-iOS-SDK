@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class ALKNewChatViewModelTests: XCTestCase {
     override func setUp() {

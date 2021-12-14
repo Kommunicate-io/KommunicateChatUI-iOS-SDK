@@ -6,7 +6,7 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import UIKit
 
 open class ALKBaseViewController: UIViewController, ALKConfigurable {
@@ -44,6 +44,16 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         checkPricingPackage()
+        checkForLanguageDirection()
+    }
+    
+    func checkForLanguageDirection(){
+        let language = NSLocale.preferredLanguages[0]
+        let direction = NSLocale.characterDirection(forLanguage: language)
+      
+        if direction == NSLocale.LanguageDirection.rightToLeft {
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
+        }
     }
 
     @objc func backTapped() {

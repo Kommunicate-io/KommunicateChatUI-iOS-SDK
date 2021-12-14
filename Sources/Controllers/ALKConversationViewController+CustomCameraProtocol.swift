@@ -5,7 +5,7 @@
 //  Created by Mukesh Thawani on 03/07/18.
 //
 
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 import Foundation
 
 extension ALKConversationViewController: ALKCustomCameraProtocol {
