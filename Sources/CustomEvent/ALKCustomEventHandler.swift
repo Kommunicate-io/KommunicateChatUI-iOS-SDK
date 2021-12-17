@@ -36,7 +36,7 @@ open class ALKCustomEventHandler {
                 return
             }
         if let callback = event.callback {
-            callback.eventTriggered(eventType:triggeredEvent, data: data)
+            callback.eventTriggered(eventName:triggeredEvent, data: data)
         }
     }
     // CAST VALUES
