@@ -280,22 +280,28 @@ open class ALKChatBar: UIView, Localizable {
         case plusButton:
             action?(.more(button))
         case photoButton:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.CAMERA_SECTION)
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.CAMERA_SECTION)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.CAMERA])
             action?(.cameraButtonClicked(button))
         case videoButton:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.VIDEO_SECTION)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.VIDEO])
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.VIDEO_SECTION)
             action?(.startVideoRecord)
         case galleryButton:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.GALLERY_SECTION)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.GALLERY])
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.GALLERY_SECTION)
             action?(.showImagePicker)
         case locationButton:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_LOCATION_ICON_CLICK, value: nil)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_LOCATION_ICON_CLICK, data:nil)
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_LOCATION_ICON_CLICK, value: nil)
             action?(.showLocation)
         case contactButton:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.CONTACT_SECTION)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.CONTACT])
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.CONTACT_SECTION)
             action?(.shareContact)
         case documentButton:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.DOCUMENT_SECTION)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.DOCUMENT])
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.DOCUMENT_SECTION)
             action?(.showDocumentPicker)
         default: break
         }
@@ -707,8 +713,7 @@ open class ALKChatBar: UIView, Localizable {
             var image = image?.imageFlippedForRightToLeftLayoutDirection()
             image = image?.scale(with: size)
             if tintColor != nil,
-               !chatBarConfiguration.disableButtonTintColor
-            {
+               !chatBarConfiguration.disableButtonTintColor {
                 image = image?.withRenderingMode(.alwaysTemplate)
                 button.imageView?.tintColor = tintColor
             }

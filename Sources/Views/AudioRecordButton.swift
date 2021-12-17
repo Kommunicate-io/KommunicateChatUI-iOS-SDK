@@ -168,7 +168,8 @@ open class AudioRecordButton: UIButton {
 
         switch gesture.state {
         case .began:
-            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_VOICE_ICON_CLICK, value: nil)
+//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_VOICE_ICON_CLICK, value: nil)
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_VOICE_ICON_CLICK, data:["UserSelection":"start"])
             if checkMicrophonePermission() == false {
                 delegate?.permissionNotGrant()
             } else {
@@ -189,9 +190,11 @@ open class AudioRecordButton: UIButton {
             if state == .none {
                 return
             }
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_VOICE_ICON_CLICK, data:["UserSelection":"stop"])
             stopAudioRecord()
 
         case .failed, .possible, .cancelled:
+            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_VOICE_ICON_CLICK, data:["UserSelection":"Failed - cancel"])
             if states == .recording {
                 stopAudioRecord()
             } else {

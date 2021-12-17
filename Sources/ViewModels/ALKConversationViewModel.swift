@@ -677,7 +677,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func send(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) {
-        ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_MESSAGE_SEND, value: nil)
+//        ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_MESSAGE_SEND, value: nil)
+        ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_MESSAGE_SEND, data:["UserSelection":["message":message,"metaData": metadata ?? ""]])
         let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
