@@ -31,12 +31,12 @@ open class ALKCustomEventHandler {
 //
 //    }
     public static func publish(triggeredEvent: ALKCustomEventMap, data:[String: Any]?) {
-        guard let event = subscribedEvents[triggeredEvent.rawValue] else {
+        guard let event = subscribedEvents[triggeredEvent] else {
                 print("Event is not subscribed")
                 return
             }
         if let callback = event.callback {
-            callback.eventTriggered(eventType:triggeredEvent.rawValue, data: data)
+            callback.eventTriggered(eventType:triggeredEvent, data: data)
         }
     }
     // CAST VALUES
@@ -54,12 +54,12 @@ open class ALKCustomEventHandler {
         case DOCUMENT = "Document"
 
     }
-     static var subscribedEvents = [String:ALKCustomEvent]()
+     static var subscribedEvents = [ALKCustomEventMap:ALKCustomEvent]()
 
     public static func setSubscribedEvents(eventsList: [ALKCustomEvent]){
         if !eventsList.isEmpty {
             for event in eventsList {
-                subscribedEvents[event.eventName.rawValue] = event
+                subscribedEvents[event.eventName] = event
             }
         } else {
             print("Subscribe Event List is Nil")
