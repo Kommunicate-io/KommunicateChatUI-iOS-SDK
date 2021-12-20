@@ -280,28 +280,22 @@ open class ALKChatBar: UIView, Localizable {
         case plusButton:
             action?(.more(button))
         case photoButton:
-//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.CAMERA_SECTION)
-            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.CAMERA])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.camera])
             action?(.cameraButtonClicked(button))
         case videoButton:
-            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.VIDEO])
-//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.VIDEO_SECTION)
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.video])
             action?(.startVideoRecord)
         case galleryButton:
-            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.GALLERY])
-//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.GALLERY_SECTION)
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.gallery])
             action?(.showImagePicker)
         case locationButton:
-            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_LOCATION_ICON_CLICK, data:nil)
-//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_LOCATION_ICON_CLICK, value: nil)
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.locationClick, data:nil)
             action?(.showLocation)
         case contactButton:
-            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.CONTACT])
-//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.CONTACT_SECTION)
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.contact])
             action?(.shareContact)
         case documentButton:
-            ALKCustomEventHandler.publish(triggeredEvent: ALKCustomEventMap.EVENT_ON_ATTACHMENT_ICON_CLICK, data:["UserSelection":ALKCustomEventHandler.ATTACHMENT_TYPE.DOCUMENT])
-//            ALKCustomEventHandler.trackEvent(trackingevent: ALKCustomEventHandler.ON_ATTACHMENT_ICON_CLICK, value: ALKCustomEventHandler.DOCUMENT_SECTION)
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.document])
             action?(.showDocumentPicker)
         default: break
         }
