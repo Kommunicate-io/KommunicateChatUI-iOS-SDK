@@ -9,7 +9,6 @@ public enum CustomEvent: String {
     case messageSend = "ON_MESSAGE_SEND"
     case faqClick = "ON_FAQ_CLICK"
     case notificationClick = "ON_NOTIFICATION_CLICK"
-    case resolveClick = "ON_RESOLVE_CLICK"
     case newConversation = "ON_START_NEW_CONVERSATION_CLICK"
     case attachmentClick = "ON_ATTACHMENT_ICON_CLICK"
     case voiceClick = "ON_VOICE_ICON_CLICK"
