@@ -1259,6 +1259,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:["UserSelection":["title":title,"template":template,"payload":payload,"action":action,"type":type]])
         switch type {
         case "link":
             linkButtonSelected(action)
