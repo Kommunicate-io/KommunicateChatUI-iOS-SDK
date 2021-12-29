@@ -76,8 +76,35 @@ final class ALKInformationCell: UITableViewCell {
 
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
+        
+        //adding rating icons to the label
+        var ratingImage = UIImage()
+        guard let feedbackString =  viewModel.metadata? ["feedback"] as? String else { return }
+        do {
+            let feedbackDictionary = try? JSONSerialization.jsonObject(with: feedbackString.data(using: .utf8)!, options: []) as? [String:Int]
+            switch feedbackDictionary!["rating"]! {
+            case 1:
+                ratingImage = UIImage(named: "sadEmoji", in: Bundle.applozic, compatibleWith: nil)!
+            case 5:
+                ratingImage = UIImage(named: "confusedEmoji", in: Bundle.applozic, compatibleWith: nil)!
+            case 10:
+                ratingImage = UIImage(named: "happyEmoji", in: Bundle.applozic, compatibleWith: nil)!
+            default:
+                print("incoreect data")
+            }
+        }
+        catch {
+           print(error)
+        }
 
-        messageView.text = viewModel.message
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = ratingImage
+        guard let attachedImage = imageAttachment.image else { return }
+        imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
+        let imageString = NSAttributedString(attachment: imageAttachment)
+        var textString = NSMutableAttributedString(string: "User " + viewModel.message! + "  ")
+        textString.append(imageString)
+        messageView.attributedText = textString
     }
 
     fileprivate func setupConstraints() {
