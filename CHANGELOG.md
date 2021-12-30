@@ -4,7 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 
 ## [Unreleased]
-
+- Fixed the Chat bar RTL support issue
 - Added support for text areas in rich message forms
 - Send Post Submitted Form Data As Message
 - Added Support for RTL Languages
