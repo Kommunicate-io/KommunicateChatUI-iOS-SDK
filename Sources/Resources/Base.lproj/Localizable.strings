@@ -169,3 +169,6 @@ GroupDescriptionHeaderTitle = "Group Description";
 GroupDescriptionVCTitle = "Group Description";
 RemainingCharactersInfo = "Remaining characters: %@";
 AddGroupDescriptionPlaceHolder = "Add group description";
+
+/* Feedback */
+RatingLabelTitle = "User";

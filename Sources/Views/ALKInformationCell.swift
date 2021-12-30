@@ -82,7 +82,8 @@ final class ALKInformationCell: UITableViewCell {
         guard let feedbackString =  viewModel.metadata? ["feedback"] as? String else { return }
         do {
             let feedbackDictionary = try? JSONSerialization.jsonObject(with: feedbackString.data(using: .utf8)!, options: []) as? [String:Int]
-            switch feedbackDictionary!["rating"]! {
+            guard let rating = feedbackDictionary?["rating"] else { return }
+            switch rating {
             case 1:
                 ratingImage = UIImage(named: "sadEmoji", in: Bundle.applozic, compatibleWith: nil)!
             case 5:
@@ -102,7 +103,8 @@ final class ALKInformationCell: UITableViewCell {
         guard let attachedImage = imageAttachment.image else { return }
         imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
-        var textString = NSMutableAttributedString(string: "User " + viewModel.message! + "  ")
+        let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.ratingLabelTitle, fileName: configuration.localizedStringFileName)
+        var textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
         textString.append(imageString)
         messageView.attributedText = textString
     }

@@ -221,4 +221,8 @@ struct SystemMessage: Localizable {
         static let RemoveFromGroup = localizedString(forKey: "RemoveFromGroup")
         static let Info = localizedString(forKey: "Info")
     }
+    
+    enum Feedback {
+        static let RatingLabelTitle = localizedString(forKey: "RatingLabelTitle")
+    }
 }
