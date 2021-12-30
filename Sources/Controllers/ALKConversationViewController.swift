@@ -1259,6 +1259,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:["UserSelection":["title":title,"template":template,"payload":payload,"action":action,"type":type]])
         switch type {
         case "link":
             linkButtonSelected(action)
@@ -1634,6 +1635,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     postFormData[textModel.label] = text
                    
                 }
+            case .textarea:
+                if let textModel = element as? FormViewModelTextAreaItem {
+                    postFormData[textModel.title] = text
+                }
             case .password:
                 if let passwordModel = element as? FormViewModelPasswordItem {
                     postFormData[passwordModel.label] = text
@@ -2003,7 +2008,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     func updateTableView() {
         let oldCount = tableView.numberOfSections
         let newCount = viewModel.numberOfSections()
-        guard newCount >= oldCount else {
+        guard newCount > oldCount else {
             tableView.reloadData()
             print("😱Tableview shouldn't have more number of sections than viewModel😱")
             return
