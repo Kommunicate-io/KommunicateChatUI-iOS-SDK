@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 public class ALKPushNotificationHandler: Localizable {
     public static let shared = ALKPushNotificationHandler()

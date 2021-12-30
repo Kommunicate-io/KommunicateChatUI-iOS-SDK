@@ -168,7 +168,6 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     }
 }
 
-
 class ALKFormItemHeaderView: UITableViewHeaderFooterView {
     var item: FormViewModelItem? {
         didSet {

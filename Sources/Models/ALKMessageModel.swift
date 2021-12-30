@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
@@ -160,7 +160,7 @@ extension ALKMessageViewModel {
     }
 
     func payloadFromMetadata() -> [[String: Any]]? {
-        guard let metadata = self.metadata, let payload = metadata["payload"] as? String else { return nil }
+        guard let metadata = metadata, let payload = metadata["payload"] as? String else { return nil }
         let data = payload.data
         let jsonArray = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
         guard let quickReplyArray = jsonArray as? [[String: Any]] else { return nil }

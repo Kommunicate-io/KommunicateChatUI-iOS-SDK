@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Kingfisher
+import KommunicateCore_iOS_SDK
 import UIKit
 
 protocol ALKCreateGroupChatAddFriendProtocol: AnyObject {
@@ -116,14 +116,14 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             queue: nil,
             using: {
                 [weak self] notification in
-                guard
-                    let weakSelf = self,
-                    let channel = notification.object as? ALChannel,
-                    channel.key == weakSelf.groupId
-                else {
-                    return
-                }
-                weakSelf.viewModel?.fetchParticipants()
+                    guard
+                        let weakSelf = self,
+                        let channel = notification.object as? ALChannel,
+                        channel.key == weakSelf.groupId
+                    else {
+                        return
+                    }
+                    weakSelf.viewModel?.fetchParticipants()
             }
         )
     }

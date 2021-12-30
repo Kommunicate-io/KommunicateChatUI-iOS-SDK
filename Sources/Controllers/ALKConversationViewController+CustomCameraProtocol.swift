@@ -5,8 +5,8 @@
 //  Created by Mukesh Thawani on 03/07/18.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 extension ALKConversationViewController: ALKCustomCameraProtocol {
     func customCameraDidTakePicture(cropedImage: UIImage) {
