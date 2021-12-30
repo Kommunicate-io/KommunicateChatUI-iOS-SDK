@@ -8,7 +8,7 @@
 
 import KommunicateCore_iOS_SDK
 import Foundation
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK_Demo
 
 class ALKConversationViewModelMock: ALKConversationViewModel {
     static var testMessages: [ALKMessageModel] = []
