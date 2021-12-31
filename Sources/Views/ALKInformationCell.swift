@@ -77,21 +77,12 @@ final class ALKInformationCell: UITableViewCell {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         
-        //adding rating icons to the label
-        var ratingImage = UIImage()
+        var rating = Int()
         guard let feedbackString =  viewModel.metadata? ["feedback"] as? String else { return }
         do {
             let feedbackDictionary = try? JSONSerialization.jsonObject(with: feedbackString.data(using: .utf8)!, options: []) as? [String:Int]
-            guard let rating = feedbackDictionary?["rating"] else { return }
-            switch rating {
-            case 1:
-                ratingImage = UIImage(named: "sadEmoji", in: Bundle.applozic, compatibleWith: nil)!
-            case 5:
-                ratingImage = UIImage(named: "confusedEmoji", in: Bundle.applozic, compatibleWith: nil)!
-            case 10:
-                ratingImage = UIImage(named: "happyEmoji", in: Bundle.applozic, compatibleWith: nil)!
-            default:
-                print("incoreect data")
+            if feedbackDictionary?["rating"] != nil {
+                rating = feedbackDictionary!["rating"]!
             }
         }
         catch {
@@ -99,12 +90,12 @@ final class ALKInformationCell: UITableViewCell {
         }
 
         let imageAttachment = NSTextAttachment()
-        imageAttachment.image = ratingImage
+        imageAttachment.image = Feedback().getRatingIconFor(rating: rating)
         guard let attachedImage = imageAttachment.image else { return }
         imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
         let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.ratingLabelTitle, fileName: configuration.localizedStringFileName)
-        var textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
+        let textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
         textString.append(imageString)
         messageView.attributedText = textString
     }

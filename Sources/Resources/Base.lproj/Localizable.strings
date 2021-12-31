@@ -172,3 +172,6 @@ AddGroupDescriptionPlaceHolder = "Add group description";
 
 /* Feedback */
 RatingLabelTitle = "User";
+SadIcon = "sadEmoji";
+ConfusedIcon = "confusedEmoji";
+HappyIcon = "happyEmoji";
