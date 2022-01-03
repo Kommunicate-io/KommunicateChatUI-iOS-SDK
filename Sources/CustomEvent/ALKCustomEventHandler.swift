@@ -16,17 +16,19 @@ public class ALKCustomEventHandler {
         - triggeredEvent : event type
         - data : data of triggered event
      */
-    public func publish(triggeredEvent: CustomEvent, data:[String: Any]?) {
-        if subscribedEvents.contains(triggeredEvent){
+    public func publish(triggeredEvent: CustomEvent, data: [String: Any]?) {
+        if subscribedEvents.contains(triggeredEvent) {
             delegate?.eventTriggered(eventName: triggeredEvent, data: data)
         }
     }
+
     // CSAT Values
     public enum CSATRating: String {
-        case  poor = "CSAT Rate: Poor"
-        case  average = "CSAT Rate: Average"
-        case  great = "CSAT Rate: Great"
+        case poor = "CSAT Rate: Poor"
+        case average = "CSAT Rate: Average"
+        case great = "CSAT Rate: Great"
     }
+
     // Attach types
     public enum AttachmentType: String {
         case contact = "Contact"
@@ -35,6 +37,7 @@ public class ALKCustomEventHandler {
         case gallery = "Gallery"
         case document = "Document"
     }
+
     var subscribedEvents = [CustomEvent]()
     /**
          This method is to subscribe the events.
@@ -42,7 +45,7 @@ public class ALKCustomEventHandler {
         - eventsList : list of event
         - eventDelegate : delegate to send the subscribed event data
      */
-    public  func setSubscribedEvents(eventsList: [CustomEvent], eventDelegate:ALKCustomEventCallback){
+    public func setSubscribedEvents(eventsList: [CustomEvent], eventDelegate: ALKCustomEventCallback) {
         delegate = eventDelegate
         subscribedEvents.removeAll()
         subscribedEvents = eventsList

@@ -15,7 +15,7 @@ target 'KommunicateChatUI-iOS-SDK-DemoTests' do
     pod 'Nimble-Snapshots'
     # Added to test target, as SwiftFormat will replace the files
     # every time we build, which will clear the undo history.
-    pod 'SwiftFormat/CLI'
+    pod 'SwiftFormat/CLI', '~> 0.48.0'
 end
 
 post_install do |installer|

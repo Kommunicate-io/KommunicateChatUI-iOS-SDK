@@ -6,8 +6,8 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 @testable import KommunicateChatUI_iOS_SDK_Demo
 
 class MuteableMock: Muteable {

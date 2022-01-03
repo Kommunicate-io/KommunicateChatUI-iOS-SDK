@@ -10,9 +10,9 @@ import Foundation
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
-import KommunicateCore_iOS_SDK
 import AVFoundation
 import Kingfisher
+import KommunicateCore_iOS_SDK
 import UIKit
 
 protocol ALKVoiceCellProtocol: AnyObject {

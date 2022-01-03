@@ -46,11 +46,11 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         checkPricingPackage()
         checkForLanguageDirection()
     }
-    
-    func checkForLanguageDirection(){
+
+    func checkForLanguageDirection() {
         let language = NSLocale.preferredLanguages[0]
         let direction = NSLocale.characterDirection(forLanguage: language)
-      
+
         if direction == NSLocale.LanguageDirection.rightToLeft {
             UIView.appearance().semanticContentAttribute = .forceRightToLeft
         }
