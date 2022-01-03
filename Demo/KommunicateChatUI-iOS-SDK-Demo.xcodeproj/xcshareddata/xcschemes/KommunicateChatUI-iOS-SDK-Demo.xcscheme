@@ -42,7 +42,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8B36D1021F3DC5EA00FEFFD2"
+               BlueprintIdentifier = "462A5E12277F0D980060B75B"
                BuildableName = "KommunicateChatUI-iOS-SDK-DemoUITests.xctest"
                BlueprintName = "KommunicateChatUI-iOS-SDK-DemoUITests"
                ReferencedContainer = "container:KommunicateChatUI-iOS-SDK-Demo.xcodeproj">
