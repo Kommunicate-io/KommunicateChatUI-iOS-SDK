@@ -22,15 +22,17 @@ final class ALKInformationCell: UITableViewCell {
         tv.textAlignment = .center
         return tv
     }()
-
-    fileprivate var bubbleView: UIView = {
-        let bv = UIView()
-        bv.backgroundColor = UIColor.clear
-        bv.layer.cornerRadius = 12
-        bv.layer.borderColor = UIColor(netHex: 0xF3F3F3).cgColor
-        bv.layer.borderWidth = 1.0
-        bv.isUserInteractionEnabled = false
-        return bv
+    
+    fileprivate var commentTextView: UITextView = {
+        let tv = UITextView()
+        tv.isEditable = false
+        tv.backgroundColor = .clear
+        tv.isSelectable = false
+        tv.isScrollEnabled = false
+        tv.isUserInteractionEnabled = false
+        tv.textAlignment = .center
+        tv.textContainer.lineBreakMode = .byWordWrapping
+        return tv
     }()
 
     func setConfiguration(configuration: ALKConfiguration) {
@@ -55,7 +57,13 @@ final class ALKInformationCell: UITableViewCell {
                                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                                                    attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
                                                                    context: nil)
-            messageHeigh = rect.height + 17
+            //get feedback dictionary for view
+            guard let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel) else { return 0 }
+            if dictionary["comments"] != nil {
+                messageHeigh = rect.height + 80
+            } else {
+                messageHeigh = rect.height + 17
+            }
             messageHeigh = ceil(messageHeigh)
         }
         return topPadding() + messageHeigh + bottomPadding()
@@ -77,18 +85,24 @@ final class ALKInformationCell: UITableViewCell {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         
-        var rating = Int()
-        guard let feedbackString =  viewModel.metadata? ["feedback"] as? String else { return }
-        do {
-            let feedbackDictionary = try? JSONSerialization.jsonObject(with: feedbackString.data(using: .utf8)!, options: []) as? [String:Int]
-            if feedbackDictionary?["rating"] != nil {
-                rating = feedbackDictionary!["rating"]!
+        guard let dictionary = getFeedback(viewModel: viewModel) else { return }
+        var ratingImage = UIImage()
+        var comment = ""
+        var rating = 0
+        
+        if dictionary["comments"] != nil {
+            contentView.subviews.forEach { subview in
+                subview.removeFromSuperview()
             }
-        }
-        catch {
-           print(error)
+            setUpConstraintsForRating()
+            setupStyle()
+            comment = dictionary["comments"]! as! String
         }
 
+        if dictionary["rating"] != nil {
+            rating = dictionary["rating"]! as! Int
+        }
+        
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = Feedback().getRatingIconFor(rating: rating)
         guard let attachedImage = imageAttachment.image else { return }
@@ -114,6 +128,21 @@ final class ALKInformationCell: UITableViewCell {
         bubbleView.leftAnchor.constraint(equalTo: messageView.leftAnchor, constant: -4).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: messageView.rightAnchor, constant: 4).isActive = true
     }
+    
+    fileprivate func setUpConstraintsForRating() {
+        contentView.addViewsForAutolayout(views: [messageView, commentTextView])
+        contentView.bringSubviewToFront(messageView)
+
+        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        messageView.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
+        
+        commentTextView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: 15).isActive = true
+        commentTextView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -8).isActive = true
+        commentTextView.centerXAnchor.constraint(equalTo: messageView.centerXAnchor).isActive = true
+        commentTextView.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
+    }
 
     func setupStyle() {
         contentView.backgroundColor = UIColor.clear
@@ -122,5 +151,11 @@ final class ALKInformationCell: UITableViewCell {
         bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
         messageView.setFont(ALKMessageStyle.infoMessage.font)
         messageView.textColor = ALKMessageStyle.infoMessage.text
+    }
+    
+    func getFeedback(viewModel: ALKMessageViewModel) -> Dictionary<String,Any>? {
+        guard let feedbackString = viewModel.metadata?["feedback"] as? String else { return nil }
+        guard let dictionary = try? JSONSerialization.jsonObject(with: feedbackString.data(using: .utf8)!, options: []) as? [String:Any] else { return nil }
+        return dictionary
     }
 }
