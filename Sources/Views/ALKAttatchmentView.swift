@@ -5,9 +5,9 @@
 //  Created by apple on 18/10/19.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
 import Kingfisher
+import KommunicateCore_iOS_SDK
 import UIKit
 
 class ALKAttatchmentView: UIView {

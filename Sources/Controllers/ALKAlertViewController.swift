@@ -5,8 +5,8 @@
 //  Created by apple on 01/07/19.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 class ALKAlertViewController: UIViewController, Localizable {
     public enum Action {

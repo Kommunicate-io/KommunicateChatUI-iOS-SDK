@@ -6,9 +6,9 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import ContactsUI
 import Foundation
+import KommunicateCore_iOS_SDK
 import UIKit
 
 /// The delegate of an `ALKConversationListViewController` object.

@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import AVFoundation
+import KommunicateCore_iOS_SDK
 import UIKit
 
 protocol ALKAudioPlayerProtocol: AnyObject {

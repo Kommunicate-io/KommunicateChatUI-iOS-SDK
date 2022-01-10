@@ -6,10 +6,10 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import AVFoundation
 import Contacts
 import Foundation
+import KommunicateCore_iOS_SDK
 import MobileCoreServices
 #if canImport(RichMessageKit)
     import RichMessageKit
@@ -677,7 +677,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func send(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) {
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data:nil)
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: nil)
         let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
