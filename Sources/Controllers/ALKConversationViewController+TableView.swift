@@ -6,9 +6,9 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import AVFoundation
 import Foundation
+import KommunicateCore_iOS_SDK
 import UIKit
 import WebKit
 #if canImport(RichMessageKit)
@@ -322,8 +322,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(model: faqMessage)
                 cell.faqSelected = {
                     [weak self] _, title in
-                    guard let weakSelf = self, let viewModel = weakSelf.viewModel else { return }
-                    viewModel.send(message: title, metadata: weakSelf.configuration.messageMetadata)
+                        guard let weakSelf = self, let viewModel = weakSelf.viewModel else { return }
+                        viewModel.send(message: title, metadata: weakSelf.configuration.messageMetadata)
                 }
                 return cell
             }

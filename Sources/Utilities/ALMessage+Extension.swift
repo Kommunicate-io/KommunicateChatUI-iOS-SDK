@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 import MapKit
 #if canImport(RichMessageKit)
     import RichMessageKit
@@ -142,7 +142,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 
     var identifier: String {
-        guard let key = self.key else {
+        guard let key = key else {
             return ""
         }
         return key
@@ -449,7 +449,7 @@ public extension ALMessage {
 
 extension ALMessage {
     override open func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? ALMessage, let objectKey = object.key, let key = self.key {
+        if let object = object as? ALMessage, let objectKey = object.key, let key = key {
             return key == objectKey
         } else {
             return false

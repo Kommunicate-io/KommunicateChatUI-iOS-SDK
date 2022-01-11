@@ -6,8 +6,8 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 class BaseMessageViewModel: ALKConversationListViewModelProtocol {
     var allMessages = [ALMessage]()

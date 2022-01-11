@@ -9,7 +9,7 @@
 import Nimble
 import Nimble_Snapshots
 import Quick
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK_Demo
 
 class ALKQuickReplyViewSnapshotTests: QuickSpec {
     override func spec() {

@@ -41,7 +41,7 @@ extension ALKMessageViewModel {
 
     func faqMessage() -> FAQMessage? {
         guard
-            let metadata = self.metadata,
+            let metadata = metadata,
             let payload = metadata["payload"] as? String,
             let json = try? JSONSerialization.jsonObject(with: payload.data, options: .allowFragments),
             let msg = json as? [String: Any]
