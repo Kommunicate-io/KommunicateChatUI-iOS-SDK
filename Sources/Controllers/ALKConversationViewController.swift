@@ -278,7 +278,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
-            weakSelf.viewModel.addMessagesToList(list)
+            weakSelf.addMessagesToList(list)
             //            weakSelf.handlePushNotification = false
         })
 
@@ -535,6 +535,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         // Disable group details for support group, open group and when user is not a member.
         navigationBar.disableTitleAction = channel.type == 10 || channel.type == 6 || !members.contains(ALUserDefaultsHandler.getUserId())
+    }
+    
+    open func addMessagesToList(_ messageList: [Any]) {
+        viewModel.addMessagesToList(messageList)
     }
 
     func prepareContextView() {
@@ -1024,7 +1028,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         if status {
-            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+            if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
+                let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+                if timerTask.isValid {
+                    Timer.scheduledTimer(timeInterval: (timeInterval + 2), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
+                } else {
+                    self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                }
+            } else {
+                timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+            }
         } else {
             timerTask.invalidate()
         }
@@ -1049,6 +1062,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     @objc public func invalidateTimerAndUpdateHeightConstraint(_: Timer?) {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
+    }
+    
+    @objc func delayedSecondTimer (timer: Timer) {
+        let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        timer.invalidate()
+        self.typingNoticeViewHeighConstaint?.constant = 0
+        Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
     }
 
     public func sync(message: ALMessage) {
