@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final class ALKInformationCell: UITableViewCell {
+final class ALKInformationCell: UITableViewCell, Localizable {
     var configuration = ALKConfiguration()
 
     fileprivate var messageView: UITextView = {
@@ -109,7 +109,7 @@ final class ALKInformationCell: UITableViewCell {
         guard let attachedImage = imageAttachment.image else { return }
         imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
-        let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.ratingLabelTitle, fileName: configuration.localizedStringFileName)
+        let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.RatingLabelTitle, fileName: configuration.localizedStringFileName)
         let textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
         textString.append(imageString)
         messageView.attributedText = textString
