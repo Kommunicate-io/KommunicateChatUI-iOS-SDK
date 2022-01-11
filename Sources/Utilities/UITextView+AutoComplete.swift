@@ -22,7 +22,7 @@ extension UITextView {
     }
 
     var wordAtCaret: (word: String, range: NSRange)? {
-        guard let caretRange = self.caretRange,
+        guard let caretRange = caretRange,
               let result = text.word(at: caretRange)
         else { return nil }
 

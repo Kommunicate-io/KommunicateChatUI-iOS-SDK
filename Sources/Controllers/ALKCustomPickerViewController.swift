@@ -160,28 +160,28 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         PHImageManager.default().requestExportSession(forVideo: asset, options: options, exportPreset: AVAssetExportPresetHighestQuality) {
             (exportSession: AVAssetExportSession?, _) in
 
-            if exportSession == nil {
-                print("COULD NOT CREATE EXPORT SESSION")
-                completion(nil)
-                return
-            }
-
-            exportSession!.outputURL = fileurl
-            exportSession!.outputFileType = AVFileType.mp4 // file type encode goes here, you can change it for other types
-
-            exportSession!.exportAsynchronously {
-                switch exportSession!.status {
-                case .completed:
-                    print("Video exported successfully")
-                    completion(fileurl.path)
-                case .failed, .cancelled:
-                    print("Error while selecting video \(String(describing: exportSession?.error))")
+                if exportSession == nil {
+                    print("COULD NOT CREATE EXPORT SESSION")
                     completion(nil)
-                default:
-                    print("Video exporting status \(String(describing: exportSession?.status))")
-                    completion(nil)
+                    return
                 }
-            }
+
+                exportSession!.outputURL = fileurl
+                exportSession!.outputFileType = AVFileType.mp4 // file type encode goes here, you can change it for other types
+
+                exportSession!.exportAsynchronously {
+                    switch exportSession!.status {
+                    case .completed:
+                        print("Video exported successfully")
+                        completion(fileurl.path)
+                    case .failed, .cancelled:
+                        print("Error while selecting video \(String(describing: exportSession?.error))")
+                        completion(nil)
+                    default:
+                        print("Video exporting status \(String(describing: exportSession?.status))")
+                        completion(nil)
+                    }
+                }
         }
     }
 

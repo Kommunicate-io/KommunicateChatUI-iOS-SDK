@@ -5,8 +5,8 @@
 //  Created by Mukesh Thawani on 27/12/17.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 open class ALKTemplateMessagesViewModel: NSObject {
     open var messageTemplates: [ALKTemplateMessageModel]

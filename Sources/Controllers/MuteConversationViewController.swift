@@ -5,8 +5,8 @@
 //  Created by Shivam Pokhriyal on 15/10/18.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 @objc protocol Muteable: AnyObject {
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)

@@ -30,7 +30,7 @@ DEPENDENCIES:
   - Nimble
   - Nimble-Snapshots
   - Quick
-  - SwiftFormat/CLI
+  - SwiftFormat/CLI (~> 0.48.0)
   - SwiftLint
 
 SPEC REPOS:
@@ -61,6 +61,6 @@ SPEC CHECKSUMS:
   SwiftLint: 06ac37e4d38c7068e0935bb30cda95f093bec761
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
-PODFILE CHECKSUM: 49965c5f01650deee0a470476b5eaf53cbc5755d
+PODFILE CHECKSUM: ceb862bddf2e495511834b44350239c68ccce94f
 
 COCOAPODS: 1.11.2

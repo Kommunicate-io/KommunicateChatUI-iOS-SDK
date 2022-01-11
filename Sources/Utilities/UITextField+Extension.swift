@@ -22,7 +22,7 @@ extension UITextField {
     }
 
     func trimmedWhitespaceText() -> String {
-        if let text = self.text {
+        if let text = text {
             return text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         return ""

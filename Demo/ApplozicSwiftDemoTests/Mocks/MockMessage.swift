@@ -6,8 +6,8 @@
 //  Copyright © 2019 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 struct MockMessage {
     var message: ALMessage = {

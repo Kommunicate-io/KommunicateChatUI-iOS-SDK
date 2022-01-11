@@ -6,9 +6,9 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import AVKit
 import Kingfisher
+import KommunicateCore_iOS_SDK
 import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit

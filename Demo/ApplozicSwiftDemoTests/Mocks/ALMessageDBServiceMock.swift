@@ -6,8 +6,8 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 class ALMessageDBServiceMock: ALMessageDBService {
     static var lastMessage: ALMessage! = MockMessage().message
