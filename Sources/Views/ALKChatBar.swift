@@ -123,7 +123,7 @@ open class ALKChatBar: UIView, Localizable {
         view.isUserInteractionEnabled = false
         view.isScrollEnabled = false
         view.scrollsToTop = false
-        view.changeTextDirection()
+        view.changePlaceHolderDirection()
         view.setBackgroundColor(.color(.none))
         return view
     }()
@@ -770,7 +770,7 @@ extension ALKChatBar: UITextViewDelegate {
         action?(.chatBarTextBeginEdit)
         guard textView.text == nil || textView.text.isEmpty else { return }
         textView.changeTextDirection()
-        placeHolder.changeTextDirection()
+        placeHolder.changePlaceHolderDirection()
     }
 
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -796,7 +796,7 @@ extension ALKChatBar: UITextViewDelegate {
         textView.reloadInputViews()
         guard textView.text == nil || textView.text.isEmpty else { return }
         textView.changeTextDirection()
-        placeHolder.changeTextDirection()
+        placeHolder.changePlaceHolderDirection()
     }
 
     func resetToDefaultPlaceholderText() {
