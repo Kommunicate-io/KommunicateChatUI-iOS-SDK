@@ -60,7 +60,7 @@ final class ALKInformationCell: UITableViewCell {
             //get feedback dictionary for view
             guard let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel) else { return 0 }
             if dictionary["comments"] != nil {
-                messageHeigh = rect.height + 80
+                messageHeigh = (rect.height + 17 + 30)
             } else {
                 messageHeigh = rect.height + 17
             }
@@ -94,12 +94,13 @@ final class ALKInformationCell: UITableViewCell {
             contentView.subviews.forEach { subview in
                 subview.removeFromSuperview()
             }
-            setUpConstraintsForRating()
-            setupStyle()
             comment = dictionary["comments"]! as! String
         }
 
         if dictionary["rating"] != nil {
+            contentView.subviews.forEach { subview in
+                subview.removeFromSuperview()
+            }
             rating = dictionary["rating"]! as! Int
         }
         
@@ -112,43 +113,67 @@ final class ALKInformationCell: UITableViewCell {
         let textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
         textString.append(imageString)
         messageView.attributedText = textString
+        commentTextView.text = comment
+        
+        setUpConstraintsForRating()
+        setupStyle()
     }
 
     fileprivate func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [messageView, bubbleView])
+        contentView.addViewsForAutolayout(views: [messageView])
         contentView.bringSubviewToFront(messageView)
 
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
         messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         messageView.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
-
-        bubbleView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: 3).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -3).isActive = true
-        bubbleView.leftAnchor.constraint(equalTo: messageView.leftAnchor, constant: -4).isActive = true
-        bubbleView.rightAnchor.constraint(equalTo: messageView.rightAnchor, constant: 4).isActive = true
     }
     
     fileprivate func setUpConstraintsForRating() {
-        contentView.addViewsForAutolayout(views: [messageView, commentTextView])
-        contentView.bringSubviewToFront(messageView)
-
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
-        messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-        messageView.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
         
-        commentTextView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: 15).isActive = true
-        commentTextView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -8).isActive = true
-        commentTextView.centerXAnchor.constraint(equalTo: messageView.centerXAnchor).isActive = true
-        commentTextView.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
+        let horizontalStackView = UIStackView()
+        let verticalStackView = UIStackView()
+        let lineViewLeft = UIView()
+        let lineViewRight = UIView()
+        
+        verticalStackView.axis  = NSLayoutConstraint.Axis.vertical
+        verticalStackView.distribution  = UIStackView.Distribution.equalSpacing
+        verticalStackView.alignment = UIStackView.Alignment.center
+        verticalStackView.spacing   = -5
+        
+        verticalStackView.addArrangedSubview(messageView)
+        if !commentTextView.text.isEmpty {
+            verticalStackView.addArrangedSubview(commentTextView)
+        }
+        
+        horizontalStackView.axis  = NSLayoutConstraint.Axis.horizontal
+        horizontalStackView.distribution  = UIStackView.Distribution.equalSpacing
+        horizontalStackView.alignment = UIStackView.Alignment.center
+        horizontalStackView.spacing   = 10
+
+        horizontalStackView.addArrangedSubview(lineViewLeft)
+        horizontalStackView.addArrangedSubview(verticalStackView)
+        horizontalStackView.addArrangedSubview(lineViewRight)
+        
+        lineViewLeft.backgroundColor = .lightGray
+        lineViewRight.backgroundColor = .lightGray
+        
+        contentView.addViewsForAutolayout(views: [horizontalStackView])
+        contentView.bringSubviewToFront(messageView)
+        
+        horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
+        
+        lineViewLeft.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        lineViewRight.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        lineViewLeft.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        lineViewRight.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
 
     func setupStyle() {
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
-
-        bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
+        
         messageView.setFont(ALKMessageStyle.infoMessage.font)
         messageView.textColor = ALKMessageStyle.infoMessage.text
     }
