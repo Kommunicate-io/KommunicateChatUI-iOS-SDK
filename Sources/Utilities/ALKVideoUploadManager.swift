@@ -5,8 +5,8 @@
 //  Created by Sunil on 12/05/21.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 class ALKVideoUploadManager: NSObject {
     weak var uploadDelegate: ALKHTTPManagerUploadDelegate?
@@ -176,7 +176,7 @@ extension ALKVideoUploadManager: URLSessionDataDelegate {
             print("UPLOAD ERROR: %@", dataTask.error.debugDescription)
             return
         }
-        guard let uploadTask = self.uploadTask else { return }
+        guard let uploadTask = uploadTask else { return }
         do {
             let responseDictionary = try JSONSerialization.jsonObject(with: data)
             print("success == \(responseDictionary)")

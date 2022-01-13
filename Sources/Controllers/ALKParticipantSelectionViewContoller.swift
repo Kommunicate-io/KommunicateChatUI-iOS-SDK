@@ -275,7 +275,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     }
 
     fileprivate func isInPreviousFriendGroup(fri: ALKFriendViewModel) -> Bool {
-        guard let friendUUID = fri.friendUUID, let friendsInGroup = self.friendsInGroup else { return false }
+        guard let friendUUID = fri.friendUUID, let friendsInGroup = friendsInGroup else { return false }
         return !friendsInGroup
             .filter { $0.id == friendUUID }
             .isEmpty

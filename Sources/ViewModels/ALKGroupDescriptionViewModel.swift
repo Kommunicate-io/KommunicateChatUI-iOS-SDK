@@ -5,8 +5,8 @@
 //  Created by Sunil on 14/04/21.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 // MARK: Group description View Model
 

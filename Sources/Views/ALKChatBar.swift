@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit
@@ -280,22 +280,22 @@ open class ALKChatBar: UIView, Localizable {
         case plusButton:
             action?(.more(button))
         case photoButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.camera])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.camera])
             action?(.cameraButtonClicked(button))
         case videoButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.video])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.video])
             action?(.startVideoRecord)
         case galleryButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.gallery])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.gallery])
             action?(.showImagePicker)
         case locationButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.locationClick, data:nil)
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.locationClick, data: nil)
             action?(.showLocation)
         case contactButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.contact])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.contact])
             action?(.shareContact)
         case documentButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data:["UserSelection":ALKCustomEventHandler.AttachmentType.document])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.document])
             action?(.showDocumentPicker)
         default: break
         }
@@ -687,7 +687,7 @@ open class ALKChatBar: UIView, Localizable {
         let fixedWidth = textView.frame.size.width
         let size = tv.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
 
-        if let textViewHeighConstrain = self.textViewHeighConstrain, size.height != textViewHeighConstrain.constant {
+        if let textViewHeighConstrain = textViewHeighConstrain, size.height != textViewHeighConstrain.constant {
             if size.height < textViewHeighMax {
                 textViewHeighConstrain.constant = size.height > textViewHeigh ? size.height : textViewHeigh
             } else if textViewHeighConstrain.constant != textViewHeighMax {
@@ -707,7 +707,8 @@ open class ALKChatBar: UIView, Localizable {
             var image = image?.imageFlippedForRightToLeftLayoutDirection()
             image = image?.scale(with: size)
             if tintColor != nil,
-               !chatBarConfiguration.disableButtonTintColor {
+               !chatBarConfiguration.disableButtonTintColor
+            {
                 image = image?.withRenderingMode(.alwaysTemplate)
                 button.imageView?.tintColor = tintColor
             }

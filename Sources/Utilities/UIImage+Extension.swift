@@ -52,7 +52,7 @@ extension UIImage {
     }
 
     func rotated(by degrees: Double, flipped: Bool = false) -> UIImage? {
-        guard let cgImage = self.cgImage else { return nil }
+        guard let cgImage = cgImage else { return nil }
 
         let transform = CGAffineTransform(rotationAngle: degrees.toRadians())
         var rect = CGRect(origin: .zero, size: size).applying(transform)

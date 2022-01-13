@@ -5,8 +5,8 @@
 //  Created by Shivam Pokhriyal on 19/04/19.
 //
 
-import KommunicateCore_iOS_SDK
 import Contacts
+import KommunicateCore_iOS_SDK
 
 class ALKContactMessageBaseCell: ALKChatBaseCell<ALKMessageViewModel>, ALKHTTPManagerDownloadDelegate {
     let contactView = ContactView(frame: .zero)

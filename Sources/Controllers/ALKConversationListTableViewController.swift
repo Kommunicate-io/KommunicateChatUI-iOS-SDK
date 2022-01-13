@@ -5,8 +5,8 @@
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 import SwipeCellKit
 /**
  A delegate used to notify the receiver of the click events in `ConversationListTableViewController`
