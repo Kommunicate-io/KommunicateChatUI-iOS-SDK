@@ -17,6 +17,7 @@
 		462A5E16277F0D980060B75B /* KommunicateChatUI_iOS_SDK_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E15277F0D980060B75B /* KommunicateChatUI_iOS_SDK_DemoUITests.swift */; };
 		462A5E18277F0D980060B75B /* KommunicateChatUI_iOS_SDK_DemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E17277F0D980060B75B /* KommunicateChatUI_iOS_SDK_DemoUITestsLaunchTests.swift */; };
 		464E2C69277E4562009AEAEB /* KommunicateChatUI_iOS_SDK_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464E2C68277E4562009AEAEB /* KommunicateChatUI_iOS_SDK_DemoTests.swift */; };
+		47FC8AE2412A9BB398B9674F /* Pods_KommunicateChatUI_iOS_SDK_DemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74F6FA0234F0B1BDF75CCFC2 /* Pods_KommunicateChatUI_iOS_SDK_DemoTests.framework */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
 		8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */; };
 		8B36D0ED1F3DC5E900FEFFD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EB1F3DC5E900FEFFD2 /* Main.storyboard */; };
@@ -153,7 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5F8139C8E7289383AB8EBEF /* Pods_KommunicateChatUI_iOS_SDK_DemoTests.framework in Frameworks */,
+				47FC8AE2412A9BB398B9674F /* Pods_KommunicateChatUI_iOS_SDK_DemoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,11 +381,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 464E2C6C277E4562009AEAEB /* Build configuration list for PBXNativeTarget "KommunicateChatUI-iOS-SDK-DemoTests" */;
 			buildPhases = (
-				026F452C0339FDBB5855090F /* [CP] Check Pods Manifest.lock */,
+				4967C25A2068F8896FD492B6 /* [CP] Check Pods Manifest.lock */,
 				464E2C62277E4562009AEAEB /* Sources */,
 				464E2C63277E4562009AEAEB /* Frameworks */,
 				464E2C64277E4562009AEAEB /* Resources */,
-				3039D8739649DC7BBC1A464D /* [CP] Embed Pods Frameworks */,
+				D0CF3B821B3BCC41DCC4A26E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -571,7 +572,46 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KommunicateChatUI-iOS-SDK-Demo/Pods-KommunicateChatUI-iOS-SDK-Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3039D8739649DC7BBC1A464D /* [CP] Embed Pods Frameworks */ = {
+		4967C25A2068F8896FD492B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KommunicateChatUI-iOS-SDK-DemoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8B06E48A22618EC300B7FA64 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
+		D0CF3B821B3BCC41DCC4A26E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -602,23 +642,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KommunicateChatUI-iOS-SDK-DemoTests/Pods-KommunicateChatUI-iOS-SDK-DemoTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		8B06E48A22618EC300B7FA64 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
