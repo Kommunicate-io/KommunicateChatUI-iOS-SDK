@@ -9,6 +9,7 @@
 import XCTest
 @testable import KommunicateChatUI_iOS_SDK
 
+
 class ALKChatBarConfigurationTests: XCTestCase {
     var chatBarConfig: ALKChatBarConfiguration!
 

@@ -9,6 +9,7 @@
 import XCTest
 @testable import KommunicateChatUI_iOS_SDK
 
+
 class TemplateDecoderTests: XCTestCase {
     struct CustomType: Decodable {
         let title: String
