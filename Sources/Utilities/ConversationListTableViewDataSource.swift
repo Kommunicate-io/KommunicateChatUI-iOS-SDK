@@ -5,8 +5,8 @@
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 public class ConversationListTableViewDataSource: NSObject, UITableViewDataSource {
     /// A closure to configure tableview cell with the message object

@@ -6,8 +6,8 @@
 //  Copyright © 2018 Applozic. All rights reserved.
 //
 
-import ApplozicSwift
 import Foundation
+import KommunicateChatUI_iOS_SDK
 import XCTest
 
 class ConversationListTest: ALKConversationListDelegate {

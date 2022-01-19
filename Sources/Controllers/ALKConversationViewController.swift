@@ -5,10 +5,10 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import AVFoundation
 import AVKit
 import ContactsUI
+import KommunicateCore_iOS_SDK
 import MobileCoreServices
 import SafariServices
 import UIKit
@@ -1259,7 +1259,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:["UserSelection":["title":title,"template":template,"payload":payload,"action":action,"type":type]])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["UserSelection": ["title": title, "template": template, "payload": payload, "action": action, "type": type]])
         switch type {
         case "link":
             linkButtonSelected(action)
@@ -1626,14 +1626,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         let viewModelItems = formTemplate.viewModeItems
-      
+
         for (pos, text) in formData.textFields {
             let element = viewModelItems[pos]
             switch element.type {
             case .text:
                 if let textModel = element as? FormViewModelTextItem {
                     postFormData[textModel.label] = text
-                   
                 }
             case .textarea:
                 if let textModel = element as? FormViewModelTextAreaItem {
@@ -1642,7 +1641,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .password:
                 if let passwordModel = element as? FormViewModelPasswordItem {
                     postFormData[passwordModel.label] = text
-
                 }
             default:
                 break
@@ -1655,7 +1653,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
             let value = singleSelectModel.options[pos].value
             postFormData[singleSelectModel.name] = value
-
         }
 
         for (section, pos) in formData.multiSelectFields {
@@ -1667,7 +1664,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 let value = multiSelect.options[selectedPos].value
                 selectedArray.append(value)
             }
-            
+
             let data = json(from: selectedArray)
             postFormData[multiSelect.name] = data
         }
@@ -1704,7 +1701,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("Failed to convert the chat context data to json")
             return
         }
-        
+
         if isFormDataReplytoChat {
             sendPostSubmittedFormDataAsMessage(message: message, messageModel: messageModel, postFormData: postFormData, chatContextData: chatContextData)
 
@@ -1738,19 +1735,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
     }
-    
-    //Send Post Submitted Form Data As A Message
-    func sendPostSubmittedFormDataAsMessage(message: String?,messageModel: ALKMessageViewModel, postFormData: [String:Any],chatContextData: [String:Any]!){
-        
+
+    // Send Post Submitted Form Data As A Message
+    func sendPostSubmittedFormDataAsMessage(message: String?, messageModel: ALKMessageViewModel, postFormData: [String: Any], chatContextData: [String: Any]!) {
         guard let formTemplate = messageModel.formTemplate()
         else {
             print("Failed to get formtemplate")
             return
         }
         let viewModelItems = formTemplate.viewModeItems
-        
+
         var postBackMessageString = ""
-        
+
         if let messageString = message {
             postBackMessageString.append("\(messageString)\n")
         }
@@ -1766,19 +1762,19 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
             case .singleselect:
                 if let singleSelectionItemModel = item as? FormViewModelSingleselectItem {
-                    postBackMessageString.append("\(singleSelectionItemModel.name) : \(postFormData[singleSelectionItemModel.name]  ?? "")\n")
+                    postBackMessageString.append("\(singleSelectionItemModel.name) : \(postFormData[singleSelectionItemModel.name] ?? "")\n")
                 }
             case .multiselect:
                 if let multiSelectionItemModel = item as? FormViewModelMultiselectItem {
-                    var multiSelectString : String
+                    var multiSelectString: String
                     if postFormData[multiSelectionItemModel.name] != nil {
                         multiSelectString = postFormData[multiSelectionItemModel.name] as? String ?? ""
 
                         let characterSet = CharacterSet(charactersIn: "][ \"")
                         multiSelectString = multiSelectString.components(separatedBy: characterSet).joined(separator: "")
                         postBackMessageString.append("\(multiSelectionItemModel.name) : \(multiSelectString) \n")
-                        
-                    }else{
+
+                    } else {
                         postBackMessageString.append("\(multiSelectionItemModel.name) : \n")
                     }
                 }
@@ -1795,7 +1791,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     if postFormData[dateTimeLocalItemModel.label] != nil {
                         postBackMessageString.append("\(dateTimeLocalItemModel.label) : \(postFormData[dateTimeLocalItemModel.label] ?? "")\n")
 
-                    }else{
+                    } else {
                         postBackMessageString.append("\(dateTimeLocalItemModel.label) : \n")
                     }
                 }
@@ -1806,15 +1802,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         for element in formTemplate.elements {
             if element.contentType == .hidden,
                let elementData = element.data,
-               let hiddenName = elementData.name{
+               let hiddenName = elementData.name
+            {
                 postBackMessageString.append("\(hiddenName) : \(postFormData[hiddenName] ?? "")\n")
                 break
             }
         }
-       
+
         viewModel.send(message: postBackMessageString, metadata: chatContextData)
     }
-   
+
     func getUpdateMessageMetadata(with info: [String: Any]) -> [String: Any]? {
         var metadata = [String: Any]()
         do {
@@ -1924,7 +1921,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     private func showAlertForApplicationSettings(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-        let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
+        let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }

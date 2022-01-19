@@ -10,7 +10,7 @@ import Nimble
 import Nimble_Snapshots
 import Quick
 import UIKit
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class ALKCurvedButtonSnapshotTests: QuickSpec {
     override func spec() {

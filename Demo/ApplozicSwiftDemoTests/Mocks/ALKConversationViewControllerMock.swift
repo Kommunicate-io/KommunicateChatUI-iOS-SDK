@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@testable import ApplozicSwift
+@testable import KommunicateChatUI_iOS_SDK
 
 class ALKConversationViewControllerMock: ALKConversationViewController {
     var testDisplayName: String!

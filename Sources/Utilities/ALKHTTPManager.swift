@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 protocol ALKHTTPManagerUploadDelegate: AnyObject {
     func dataUploaded(task: ALKUploadTask)
@@ -107,7 +107,7 @@ class ALKHTTPManager: NSObject {
         let filePath = getFilePath(using: identifier, with: fileExtension!)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-        if NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) != nil, let downloadTask = self.downloadTask {
+        if NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) != nil, let downloadTask = downloadTask {
             downloadTask.filePath = filePath
             downloadTask.completed = true
             downloadTask.isDownloading = false
@@ -136,7 +136,7 @@ class ALKHTTPManager: NSObject {
         let filePath = getFilePath(using: identifier, with: fileExtension!)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-        if NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) != nil, let downloadTask = self.downloadTask {
+        if NSData(contentsOfFile: documentsURL.appendingPathComponent(filePath).path) != nil, let downloadTask = downloadTask {
             downloadTask.filePath = filePath
             downloadTask.completed = true
             downloadTask.isDownloading = false
@@ -231,7 +231,7 @@ extension ALKHTTPManager: URLSessionDataDelegate {
                 NSLog("UPLOAD ERROR: %@", dataTask.error.debugDescription)
                 return
             }
-            guard let uploadTask = self.uploadTask else { return }
+            guard let uploadTask = uploadTask else { return }
             do {
                 let responseDictionary = try JSONSerialization.jsonObject(with: data)
                 print("success == \(responseDictionary)")
@@ -256,7 +256,7 @@ extension ALKHTTPManager: URLSessionDataDelegate {
     }
 
     func urlSession(_: URLSession, task _: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let downloadTask = self.downloadTask, let fileName = downloadTask.fileName, let identifier = downloadTask.identifier else { return }
+        guard let downloadTask = downloadTask, let fileName = downloadTask.fileName, let identifier = downloadTask.identifier else { return }
         guard error == nil else {
             DispatchQueue.main.async {
                 downloadTask.filePath = ""
@@ -285,7 +285,7 @@ extension ALKHTTPManager: URLSessionDataDelegate {
 
     func urlSession(_: URLSession, task _: URLSessionTask, didSendBodyData _: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         length += totalBytesSent
-        guard let uploadTask = self.uploadTask else { return }
+        guard let uploadTask = uploadTask else { return }
         NSLog("Did send data: \(totalBytesSent) out of total: \(totalBytesExpectedToSend)")
         uploadTask.totalBytesUploaded = totalBytesSent
         uploadTask.totalBytesExpectedToUpload = totalBytesExpectedToSend

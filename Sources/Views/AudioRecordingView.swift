@@ -101,7 +101,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
     }
 
     func animateView() {
-        UIView.animate(withDuration: 0.3, animations: { () -> Void in
+        UIView.animate(withDuration: 0.3, animations: { () in
             self.slideToCancel.alpha = 1.0
             self.recordingLabel.alpha = 1.0
             self.recordingValue.alpha = 1.0

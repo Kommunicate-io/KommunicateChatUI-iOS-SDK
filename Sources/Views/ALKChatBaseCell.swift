@@ -25,9 +25,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
 
     fileprivate weak var chatBar: ALKChatBar?
 
-    lazy var longPressGesture: UILongPressGestureRecognizer = {
-        UILongPressGestureRecognizer(target: self, action: #selector(showMenuController(withLongPress:)))
-    }()
+    lazy var longPressGesture: UILongPressGestureRecognizer = .init(target: self, action: #selector(showMenuController(withLongPress:)))
 
     var avatarTapped: (() -> Void)?
 
@@ -46,7 +44,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
     @objc func menuWillHide(_: Any) {
         NotificationCenter.default.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
 
-        if let chatBar = self.chatBar {
+        if let chatBar = chatBar {
             chatBar.textView.overrideNextResponder = nil
         }
     }
@@ -56,7 +54,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
 
-            if let chatBar = self.chatBar, chatBar.textView.isFirstResponder {
+            if let chatBar = chatBar, chatBar.textView.isFirstResponder {
                 chatBar.textView.overrideNextResponder = contentView
             } else {
                 _ = canBecomeFirstResponder

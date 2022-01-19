@@ -5,8 +5,8 @@
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 import SwipeCellKit
 /**
  A delegate used to notify the receiver of the click events in `ConversationListTableViewController`
@@ -79,8 +79,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     public init(viewModel: ALKConversationListViewModelProtocol,
                 dbService: ALMessageDBService,
                 configuration: ALKConfiguration,
-                showSearch: Bool)
-    {
+                showSearch: Bool) {
         self.viewModel = viewModel
         self.configuration = configuration
         self.showSearch = showSearch
@@ -412,7 +411,6 @@ extension ALKConversationListTableViewController {
                 present(alert, animated: true, completion: nil)
             } else if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
                 let (prefixText, buttonTitle) = prefixAndButtonTitleForDeletePopup(conversation: conversation)
-
                 let name = conversation.isGroupChat ? conversation.groupName : conversation.name
                 let text = "\(prefixText) \(name)?"
                 let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
@@ -854,16 +852,14 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
 
     private func isConversationMuted(viewModel: ALKChatViewModelProtocol) -> Bool {
         if let channelKey = viewModel.channelKey,
-           let channel = ALChannelService().getChannelByKey(channelKey)
-        {
+           let channel = ALChannelService().getChannelByKey(channelKey) {
             if channel.isNotificationMuted() {
                 return true
             } else {
                 return false
             }
         } else if let contactId = viewModel.contactId,
-                  let contact = ALContactService().loadContact(byKey: "userId", value: contactId)
-        {
+                  let contact = ALContactService().loadContact(byKey: "userId", value: contactId) {
             if contact.isNotificationMuted() {
                 return true
             } else {

@@ -65,7 +65,7 @@ class ListTemplateElementView: UIView {
     }
 
     static func height() -> CGFloat {
-        let title: String = "Dummy text"
+        let title = "Dummy text"
         let maxWidth: CGFloat = UIScreen.main.bounds.width
         let size = CGSize(width: maxWidth, height: font.lineHeight) /// Size for 1 line
         let height = title.rectWithConstrainedSize(size, font: font).height.rounded(.up)

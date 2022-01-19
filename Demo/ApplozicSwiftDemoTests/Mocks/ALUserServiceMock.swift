@@ -6,8 +6,8 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
 import Foundation
+import KommunicateCore_iOS_SDK
 
 class ALUserServiceMock: ALUserService {
     var getListOfUsersMethodCalled: Bool = false

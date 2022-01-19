@@ -27,6 +27,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
             activeTextFieldChanged?(activeTextField)
         }
     }
+
     var activeTextView: UITextView? {
         didSet {
             activeTextViewChanged?(activeTextView)
@@ -117,13 +118,13 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         formSubmitData.textFields[textField.tag] = text
         formData = formSubmitData
     }
-    
+
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextView = textView
         textView.text = nil
         textView.textColor = .black
     }
-    
+
     func textViewDidEndEditing(_ textView: UITextView) {
         activeTextView = nil
         guard let text = textView.text,
@@ -139,8 +140,8 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         formSubmitData.textViews[textView.tag] = text
         formData = formSubmitData
     }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+
+    func textView(_: UITextView, shouldChangeTextIn _: NSRange, replacementText _: String) -> Bool {
         return true
     }
 
@@ -407,7 +408,7 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
 
 extension ALKFormCell {
     func isFormDataValid() -> Bool {
-        var isValid: Bool = true
+        var isValid = true
 
         guard let formDataSubmit = formData,
               let viewModelItems = template?.viewModeItems
@@ -434,7 +435,7 @@ extension ALKFormCell {
                         print("Error while matching text: \(error.localizedDescription)")
                     }
                 }
-                
+
             case .textarea:
                 let textFieldModel = element as? FormViewModelTextAreaItem
                 let enteredText = formDataSubmit.textViews[index] ?? ""
