@@ -1,7 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-##[0.1.2] 2022-01-20
+
+## [0.1.2] 2022-01-20
 - Fixed the Stroyboard linking issue
 ## [0.1.1] - 2022-01-11
 - Fixed the Chat bar RTL support issue
