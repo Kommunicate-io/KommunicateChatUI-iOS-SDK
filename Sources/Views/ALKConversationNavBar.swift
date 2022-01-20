@@ -181,7 +181,7 @@ open class ALKConversationNavBar: UIView, Localizable {
         let lastSeen = Double(exactly: lastSeenAt) ?? 0.0
         let lastOnlineTime = Date(timeIntervalSince1970: lastSeen / 1000)
         let difference = currentTime.timeIntervalSince(lastOnlineTime)
-        var status: String = ""
+        var status = ""
         if difference < 60.0 { // Less than 1 minute
             status = localizedString(forKey: "JustNow", withDefaultValue: SystemMessage.UserStatus.JustNow, fileName: configuration.localizedStringFileName)
         } else if difference < 60.0 * 60.0 { // Less than 1 hour

@@ -6,9 +6,9 @@
 //  Copyright © 2019 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
-import KommunicateChatUI_iOS_SDK
 import Foundation
+import KommunicateChatUI_iOS_SDK
+import KommunicateCore_iOS_SDK
 
 /* Handle following cases for notification ::
  /* 1. Detailed chat screen is on top.

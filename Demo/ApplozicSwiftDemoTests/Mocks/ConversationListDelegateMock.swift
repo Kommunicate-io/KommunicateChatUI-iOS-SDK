@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateChatUI_iOS_SDK_Demo
+import KommunicateChatUI_iOS_SDK
 import XCTest
 
 class ConversationListTest: ALKConversationListDelegate {

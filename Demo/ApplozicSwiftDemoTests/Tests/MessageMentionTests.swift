@@ -7,7 +7,8 @@
 //
 
 import XCTest
-@testable import KommunicateChatUI_iOS_SDK_Demo
+@testable import KommunicateChatUI_iOS_SDK
+
 
 class MessageMentionTests: XCTestCase {
     let sampleMessage = "@testdemo9 hi @testdemo10!"

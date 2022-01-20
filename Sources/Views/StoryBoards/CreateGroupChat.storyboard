@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="OmW-gQ-Qs2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="OmW-gQ-Qs2">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -37,7 +37,7 @@
         <!--Create Group-->
         <scene sceneID="7Hu-KF-Oew">
             <objects>
-                <viewController storyboardIdentifier="ALKCreateGroupViewController" id="qX5-gu-8Uq" customClass="ALKCreateGroupViewController" customModule="ApplozicSwift" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKCreateGroupViewController" id="qX5-gu-8Uq" customClass="ALKCreateGroupViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ivP-m5-RML"/>
                         <viewControllerLayoutGuide type="bottom" id="PD6-Ww-nL9"/>
@@ -120,7 +120,7 @@
                                     <constraint firstItem="4BZ-iS-r4C" firstAttribute="leading" secondItem="iZl-Im-4xG" secondAttribute="leading" id="xyK-UA-K7n"/>
                                 </constraints>
                             </view>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Group Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-Y4-Il5" customClass="ALKGroupChatTextField" customModule="ApplozicSwift" customModuleProvider="target">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Group Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-Y4-Il5" customClass="ALKGroupChatTextField" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target">
                                 <rect key="frame" x="104" y="34" width="290" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="LQ2-B4-z0C"/>
@@ -169,7 +169,7 @@
         <!--Add to Group-->
         <scene sceneID="EyI-b1-1uh">
             <objects>
-                <viewController storyboardIdentifier="ALKParticipantSelectionViewContoller" title="Add to Group" id="CaI-s3-0mh" customClass="ALKParticipantSelectionViewContoller" customModule="ApplozicSwift" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKParticipantSelectionViewContoller" title="Add to Group" id="CaI-s3-0mh" customClass="ALKParticipantSelectionViewContoller" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="r6k-zf-CN6"/>
                         <viewControllerLayoutGuide type="bottom" id="Xom-uE-T49"/>
@@ -183,7 +183,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ALKFriendContactCell" id="T48-EN-bUk" customClass="ALKFriendContactCell" customModule="ApplozicSwift">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="69"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="69"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T48-EN-bUk" id="VFt-OT-gXS">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="69"/>

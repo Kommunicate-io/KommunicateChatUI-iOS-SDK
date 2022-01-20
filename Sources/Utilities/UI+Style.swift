@@ -78,11 +78,12 @@ extension UITextView {
         let isRTL = NSLocale.characterDirection(forLanguage: language) == .rightToLeft
         textAlignment = isRTL ? .right : .left
     }
-    //For ALK ChatBar Place Holder
-    func changePlaceHolderDirection(){
+
+    // For ALK ChatBar Place Holder
+    func changePlaceHolderDirection() {
         let language = NSLocale.preferredLanguages[0]
         let direction = NSLocale.characterDirection(forLanguage: language)
-        let isRTL =  direction == NSLocale.LanguageDirection.rightToLeft
+        let isRTL = direction == NSLocale.LanguageDirection.rightToLeft
         textAlignment = isRTL ? .right : .left
     }
 }

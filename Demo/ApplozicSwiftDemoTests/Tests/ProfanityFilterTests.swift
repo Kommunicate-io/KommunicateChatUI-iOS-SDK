@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import KommunicateChatUI_iOS_SDK_Demo
+@testable import KommunicateChatUI_iOS_SDK
 
 class ProfanityFilterTests: XCTestCase {
     var profanityFilter: ProfanityFilter = try! ProfanityFilter(

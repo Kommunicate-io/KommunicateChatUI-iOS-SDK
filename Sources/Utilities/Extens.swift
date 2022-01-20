@@ -32,7 +32,7 @@ public enum Font {
     case condensedBold(size: CGFloat)
 
     public func font() -> UIFont {
-        var option: String = ""
+        var option = ""
         var fontSize: CGFloat = 0
 
         switch self {

@@ -7,7 +7,8 @@
 //
 
 import XCTest
-@testable import KommunicateChatUI_iOS_SDK_Demo
+@testable import KommunicateChatUI_iOS_SDK
+
 
 class NSAttributedStringExtensionTests: XCTestCase {
     let charactersToRemove = CharacterSet.whitespacesAndNewlines

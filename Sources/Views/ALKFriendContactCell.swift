@@ -15,9 +15,7 @@ final class ALKFriendContactCell: UITableViewCell {
     @IBOutlet private var lblMood: UILabel!
     @IBOutlet private var imgFriendIcon: UIImageView!
 
-    private var placeHolder: UIImage? = {
-        UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
-    }()
+    private var placeHolder: UIImage? = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
 
     override func awakeFromNib() {
         super.awakeFromNib()

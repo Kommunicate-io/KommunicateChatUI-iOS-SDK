@@ -25,9 +25,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
 
     fileprivate weak var chatBar: ALKChatBar?
 
-    lazy var longPressGesture: UILongPressGestureRecognizer = {
-        UILongPressGestureRecognizer(target: self, action: #selector(showMenuController(withLongPress:)))
-    }()
+    lazy var longPressGesture: UILongPressGestureRecognizer = .init(target: self, action: #selector(showMenuController(withLongPress:)))
 
     var avatarTapped: (() -> Void)?
 

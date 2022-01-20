@@ -225,7 +225,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     func export(_ completion: @escaping ((_ images: [UIImage], _ videos: [String], _ error: Bool) -> Void)) {
         var selectedImages = [UIImage]()
         var selectedVideos = [String]()
-        var error: Bool = false
+        var error = false
         let group = DispatchGroup()
         DispatchQueue.global(qos: .background).async {
             for indexPath in self.selectedFiles {

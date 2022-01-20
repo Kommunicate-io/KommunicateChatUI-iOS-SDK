@@ -22,15 +22,13 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         return tableView
     }()
 
-    fileprivate lazy var searchBar: UISearchBar = {
-        UISearchBar.createAXSearchBar(
-            placeholder: localizedString(
-                forKey: "SearchPlaceholder",
-                withDefaultValue: SystemMessage.LabelName.SearchPlaceholder,
-                fileName: configuration.localizedStringFileName
-            )
+    fileprivate lazy var searchBar: UISearchBar = UISearchBar.createAXSearchBar(
+        placeholder: localizedString(
+            forKey: "SearchPlaceholder",
+            withDefaultValue: SystemMessage.LabelName.SearchPlaceholder,
+            fileName: configuration.localizedStringFileName
         )
-    }()
+    )
 
     fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 

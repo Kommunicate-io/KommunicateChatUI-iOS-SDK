@@ -8,7 +8,7 @@
 
 import Foundation
 import KommunicateCore_iOS_SDK
-@testable import KommunicateChatUI_iOS_SDK_Demo
+@testable import KommunicateChatUI_iOS_SDK
 
 class ConversationListTableVCMock: ALKConversationListTableViewController {
     var isMuteCalled: Bool = false

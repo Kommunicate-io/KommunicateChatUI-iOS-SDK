@@ -34,7 +34,8 @@ struct ALKGroupDescriptionViewModel {
 
         channelService.updateChannelMetaData(channelKey,
                                              orClientChannelKey: nil,
-                                             metadata: channelMetadata) { error in
+                                             metadata: channelMetadata)
+        { error in
 
             guard error == nil else {
                 completion(.failure(error!))
