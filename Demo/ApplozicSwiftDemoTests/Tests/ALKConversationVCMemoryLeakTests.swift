@@ -13,7 +13,7 @@ import Quick
 class ALKConversationVCMemoryLeakTests: QuickSpec {
     override func spec() {
         var conversationVC: ALKConversationViewControllerMock?
-        var isDeinitCalled: Bool = false
+        var isDeinitCalled = false
 
         describe("when ALKConversationViewController is dismissed") {
             beforeEach {

@@ -5,9 +5,9 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
-import KommunicateChatUI_iOS_SDK
 import Foundation
+import KommunicateChatUI_iOS_SDK
+import KommunicateCore_iOS_SDK
 import UIKit
 
 @objc class ALChatManager: NSObject {
@@ -43,7 +43,7 @@ import UIKit
         guard let deviceToken = pushNotificationTokenData else { return }
         print("DEVICE_TOKEN_DATA :: \(deviceToken.description)") // (SWIFT = 3) : TOKEN PARSING
 
-        var deviceTokenString: String = ""
+        var deviceTokenString = ""
         for i in 0 ..< deviceToken.count {
             deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
         }
@@ -318,7 +318,7 @@ import UIKit
     ///   - deviceToken: Pass the device token data.
     @objc func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("Device token data :: \(String(describing: deviceToken.description))")
-        var deviceTokenString: String = ""
+        var deviceTokenString = ""
         for i in 0 ..< deviceToken.count {
             deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
         }

@@ -38,9 +38,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     var cameraMode: ALKCameraPhotoType = .noCropOption
     let option = PHImageRequestOptions()
 
-    var cameraOutput: Any? = {
-        AVCapturePhotoOutput()
-    }()
+    var cameraOutput: Any? = AVCapturePhotoOutput()
 
     lazy var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
@@ -99,7 +97,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
             let pleaseAllowCamera = localizedString(forKey: "PleaseAllowCamera", withDefaultValue: SystemMessage.Camera.PleaseAllowCamera, fileName: localizedStringFileName)
             let alertController = UIAlertController(title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
             let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ in
                 guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                     return
                 }
@@ -290,7 +288,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
             let alertController = UIAlertController(title: camNotAvailable, message: pleaseAllowCamera, preferredStyle: .alert)
             let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
+            let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ in
                 guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                     return
                 }

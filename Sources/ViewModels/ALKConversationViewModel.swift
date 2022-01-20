@@ -1047,7 +1047,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let range = CMTimeRangeMake(start: start, duration: avAsset.duration)
         exportSession?.timeRange = range
 
-        exportSession!.exportAsynchronously(completionHandler: { () -> Void in
+        exportSession!.exportAsynchronously(completionHandler: { () in
             switch exportSession!.status {
             case .failed:
                 print("%@", exportSession?.error as Any)

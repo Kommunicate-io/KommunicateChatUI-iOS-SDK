@@ -1921,7 +1921,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     private func showAlertForApplicationSettings(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let settingsTitle = localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: localizedStringFileName)
-        let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ -> Void in
+        let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { _ in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }

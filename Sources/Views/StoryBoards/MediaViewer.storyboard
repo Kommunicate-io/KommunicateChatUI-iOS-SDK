@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bX-SG-1Dm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bX-SG-1Dm">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Media Viewer View Controller-->
         <scene sceneID="HhP-jc-ZfQ">
             <objects>
-                <viewController storyboardIdentifier="ALKMediaViewerViewController" id="5Z1-2a-SpN" customClass="ALKMediaViewerViewController" customModule="ApplozicSwift" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKMediaViewerViewController" id="5Z1-2a-SpN" customClass="ALKMediaViewerViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vOr-vd-QmO"/>
                         <viewControllerLayoutGuide type="bottom" id="XPG-aN-Vp3"/>
@@ -49,7 +49,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="AQ5-A7-Ihr">
             <objects>
-                <navigationController storyboardIdentifier="MediaViewerNavigationViewController" id="8bX-SG-1Dm" customClass="ALKBaseNavigationViewController" customModule="ApplozicSwift" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MediaViewerNavigationViewController" id="8bX-SG-1Dm" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="nw5-Ag-yUP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

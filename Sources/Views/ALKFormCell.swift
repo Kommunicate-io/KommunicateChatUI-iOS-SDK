@@ -408,7 +408,7 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
 
 extension ALKFormCell {
     func isFormDataValid() -> Bool {
-        var isValid: Bool = true
+        var isValid = true
 
         guard let formDataSubmit = formData,
               let viewModelItems = template?.viewModeItems
