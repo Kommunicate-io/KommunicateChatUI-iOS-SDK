@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 public final class ALKNewChatViewModel {
     private var localizedStringFileName: String!

@@ -10,7 +10,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="kVN-oB-KKg">
             <objects>
-                <navigationController storyboardIdentifier="CustomPickerNavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="Pbo-I6-uoz" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="CustomPickerNavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="Pbo-I6-uoz" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="PhN-S2-jdd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -28,7 +28,7 @@
         <!--Custom Picker View Controller-->
         <scene sceneID="0cr-za-uBb">
             <objects>
-                <viewController storyboardIdentifier="ALKCustomPickerViewController" id="Bbu-hj-5i4" customClass="ALKCustomPickerViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKCustomPickerViewController" id="Bbu-hj-5i4" customClass="ALKCustomPickerViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sw3-Sw-u2A"/>
                         <viewControllerLayoutGuide type="bottom" id="LJN-KY-h0l"/>
@@ -47,7 +47,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" restorationIdentifier="ALKPhotoCollectionCell" reuseIdentifier="ALKPhotoCollectionCell" id="LZu-Pb-frM" customClass="ALKPhotoCollectionCell" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" restorationIdentifier="ALKPhotoCollectionCell" reuseIdentifier="ALKPhotoCollectionCell" id="LZu-Pb-frM" customClass="ALKPhotoCollectionCell" customModule="KommunicateChatUI_iOS_SDK">
                                         <rect key="frame" x="0.0" y="0.0" width="119" height="113"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

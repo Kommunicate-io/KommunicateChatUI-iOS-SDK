@@ -7,7 +7,7 @@
 //
 
 import Kingfisher
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 import UIKit
 
 protocol ALKCreateGroupChatAddFriendProtocol: AnyObject {

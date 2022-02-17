@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 class ALContactServiceMock: ALContactService {
     override func loadContact(byKey _: String!, value _: String!) -> ALContact! {

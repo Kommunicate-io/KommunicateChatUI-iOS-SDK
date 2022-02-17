@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 public class ConversationListTableViewDataSource: NSObject, UITableViewDataSource {
     /// A closure to configure tableview cell with the message object

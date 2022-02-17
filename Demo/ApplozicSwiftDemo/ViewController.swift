@@ -7,7 +7,7 @@
 //
 
 import KommunicateChatUI_iOS_SDK
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 import UIKit
 
 class ViewController: UIViewController {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 extension ALKConversationViewController: NavigationBarCallbacks {
     open func titleTapped() {

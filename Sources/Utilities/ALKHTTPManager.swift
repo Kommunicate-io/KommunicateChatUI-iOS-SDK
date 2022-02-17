@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 protocol ALKHTTPManagerUploadDelegate: AnyObject {
     func dataUploaded(task: ALKUploadTask)

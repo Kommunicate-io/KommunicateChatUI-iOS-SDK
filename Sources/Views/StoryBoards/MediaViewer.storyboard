@@ -10,7 +10,7 @@
         <!--Media Viewer View Controller-->
         <scene sceneID="HhP-jc-ZfQ">
             <objects>
-                <viewController storyboardIdentifier="ALKMediaViewerViewController" id="5Z1-2a-SpN" customClass="ALKMediaViewerViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKMediaViewerViewController" id="5Z1-2a-SpN" customClass="ALKMediaViewerViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vOr-vd-QmO"/>
                         <viewControllerLayoutGuide type="bottom" id="XPG-aN-Vp3"/>
@@ -49,7 +49,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="AQ5-A7-Ihr">
             <objects>
-                <navigationController storyboardIdentifier="MediaViewerNavigationViewController" id="8bX-SG-1Dm" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MediaViewerNavigationViewController" id="8bX-SG-1Dm" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="nw5-Ag-yUP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

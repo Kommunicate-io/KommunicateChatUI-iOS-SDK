@@ -37,7 +37,7 @@
         <!--Create Group-->
         <scene sceneID="7Hu-KF-Oew">
             <objects>
-                <viewController storyboardIdentifier="ALKCreateGroupViewController" id="qX5-gu-8Uq" customClass="ALKCreateGroupViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKCreateGroupViewController" id="qX5-gu-8Uq" customClass="ALKCreateGroupViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ivP-m5-RML"/>
                         <viewControllerLayoutGuide type="bottom" id="PD6-Ww-nL9"/>
@@ -120,7 +120,7 @@
                                     <constraint firstItem="4BZ-iS-r4C" firstAttribute="leading" secondItem="iZl-Im-4xG" secondAttribute="leading" id="xyK-UA-K7n"/>
                                 </constraints>
                             </view>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Group Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-Y4-Il5" customClass="ALKGroupChatTextField" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type Group Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-Y4-Il5" customClass="ALKGroupChatTextField" customModule="KommunicateChatUI_iOS_SDK">
                                 <rect key="frame" x="104" y="34" width="290" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="LQ2-B4-z0C"/>
@@ -169,7 +169,7 @@
         <!--Add to Group-->
         <scene sceneID="EyI-b1-1uh">
             <objects>
-                <viewController storyboardIdentifier="ALKParticipantSelectionViewContoller" title="Add to Group" id="CaI-s3-0mh" customClass="ALKParticipantSelectionViewContoller" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKParticipantSelectionViewContoller" title="Add to Group" id="CaI-s3-0mh" customClass="ALKParticipantSelectionViewContoller" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="r6k-zf-CN6"/>
                         <viewControllerLayoutGuide type="bottom" id="Xom-uE-T49"/>

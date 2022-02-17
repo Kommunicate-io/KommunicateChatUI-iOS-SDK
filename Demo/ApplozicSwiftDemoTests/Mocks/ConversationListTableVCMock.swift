@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 @testable import KommunicateChatUI_iOS_SDK
 
 class ConversationListTableVCMock: ALKConversationListTableViewController {

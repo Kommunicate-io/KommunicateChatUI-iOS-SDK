@@ -8,7 +8,7 @@
 
 import AVFoundation
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 import UIKit
 import WebKit
 #if canImport(RichMessageKit)

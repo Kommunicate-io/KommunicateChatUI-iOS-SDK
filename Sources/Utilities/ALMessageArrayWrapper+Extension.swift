@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 20/03/19.
 //
 
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 extension ALMessageArrayWrapper {
     func contains(message: ALMessage) -> Bool {

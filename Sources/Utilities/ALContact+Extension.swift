@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 
 extension ALContact: ALKContactProtocol {
     public var friendUUID: String? {

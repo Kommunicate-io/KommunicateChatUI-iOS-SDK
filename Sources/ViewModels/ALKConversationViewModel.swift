@@ -9,7 +9,7 @@
 import AVFoundation
 import Contacts
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 import MobileCoreServices
 #if canImport(RichMessageKit)
     import RichMessageKit

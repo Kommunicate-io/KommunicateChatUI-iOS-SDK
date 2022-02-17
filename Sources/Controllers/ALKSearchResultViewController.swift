@@ -6,7 +6,7 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 import UIKit
 
 public class ALKSearchResultViewController: ALKBaseViewController {

@@ -5,7 +5,7 @@
 //  Created by Mukesh Thawani on 07/02/18.
 //
 
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit

@@ -1,5 +1,5 @@
 import Foundation
-import KommunicateCore_iOS_SDK
+import ApplozicCore
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
