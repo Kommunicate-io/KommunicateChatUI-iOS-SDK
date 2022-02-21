@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "Applozic",
-        "repositoryURL": "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git",
-        "state": {
-          "branch": null,
-          "revision": "b45a75be0ae56acf00441f755dd0d8bb0f8d41a6",
-          "version": "8.3.0"
-        }
-      },
-      {
         "package": "Kingfisher",
         "repositoryURL": "https://github.com/onevcat/Kingfisher.git",
         "state": {
