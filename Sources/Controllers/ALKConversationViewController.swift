@@ -278,16 +278,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
-            addMessagesToList(list)
+            weakSelf.addMessagesToList(list)
 //            weakSelf.viewModel.addMessagesToList(list)
             //            weakSelf.handlePushNotification = false
         })
-        
-        
-        func addMessagesToList(_ messageList: [Any]) {
-                 viewModel.addMessagesToList(messageList)
-        }
-
+   
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
             _ in
             print("notification individual chat received")
@@ -380,6 +375,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if individualLaunch {
             NotificationCenter.default.addObserver(self, selector: #selector(pushNotification(notification:)), name: Notification.Name("pushNotification"), object: nil)
         }
+    }
+    
+    open func addMessagesToList(_ messageList: [Any]) {
+        viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
@@ -1042,10 +1041,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                }
            } else {
                timerTask.invalidate()
-           }
+        }
         
         typingNoticeViewHeighConstaint?.constant = status ? 30 : 0
         view.layoutIfNeeded()
+        
         if tableView.isAtBottom {
             tableView.scrollToBottomByOfset(animated: false)
         }
