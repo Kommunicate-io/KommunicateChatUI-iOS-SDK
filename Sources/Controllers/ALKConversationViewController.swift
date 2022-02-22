@@ -279,10 +279,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
-//            weakSelf.viewModel.addMessagesToList(list)
-            //            weakSelf.handlePushNotification = false
         })
-   
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
             _ in
             print("notification individual chat received")
