@@ -2332,6 +2332,10 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             subscribeChannelToMqtt()
         }
     }
+    
+    public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
+        print("Status Changed \(contactId) \(status)")
+    }
 
     public func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
         guard let message = alMessage else { return }
