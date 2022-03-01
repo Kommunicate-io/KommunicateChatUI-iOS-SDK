@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 16/04/19.
 //
 
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 class ALKMyContactMessageCell: ALKContactMessageBaseCell {
     enum Padding {

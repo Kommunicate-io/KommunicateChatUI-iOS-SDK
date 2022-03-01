@@ -8,7 +8,7 @@
 
 import Foundation
 import KommunicateChatUI_iOS_SDK
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 /* Handle following cases for notification ::
  /* 1. Detailed chat screen is on top.

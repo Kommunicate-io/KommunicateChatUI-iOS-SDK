@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 // MARK: Group description View Model
 

@@ -16,14 +16,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "KommunicateCore-iOS-SDK", path: "/Users/sathyanelangovan/Desktop/KM Core/KommunicateCore-iOS-SDK/"),
+        .package(name: "KommunicateCoreiOSSDK", url: "https://github.com/Sathyan-Elangovan/KommunicateCore-iOS-SDK.git", .revision("a8e5784893bcf37123db38e797a5a3efd52a9c9c")),
         .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("7.0.0")),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
     ],
     targets: [
         .target(name: "KommunicateChatUI-iOS-SDK",
                 dependencies: ["RichMessageKit",
-                               .product(name: "KommunicateCore-iOS-SDK", package: "KommunicateCore-iOS-SDK"),
+                               .product(name: "KommunicateCoreiOSSDK", package: "KommunicateCoreiOSSDK"),
                                "Kingfisher",
                                "SwipeCellKit"],
                 path: "Sources",

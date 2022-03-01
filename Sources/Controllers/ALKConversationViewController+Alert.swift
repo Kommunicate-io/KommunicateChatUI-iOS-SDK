@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 extension ALKConversationViewController: ALAlertButtonClickProtocol {
     func confirmButtonClick(action: String, messageKey: String) {

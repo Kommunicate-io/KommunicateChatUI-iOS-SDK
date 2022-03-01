@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 class ALMessageDBServiceMock: ALMessageDBService {
     static var lastMessage: ALMessage! = MockMessage().message

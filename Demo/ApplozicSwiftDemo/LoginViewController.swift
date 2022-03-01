@@ -6,7 +6,7 @@
 //
 //
 
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 
 class LoginViewController: UIViewController {

@@ -5,7 +5,7 @@
 //  Created by Mukesh on 07/08/20.
 //
 
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 
 extension ALKConversationViewController: ALKDocumentManagerDelegate {

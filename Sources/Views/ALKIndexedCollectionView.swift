@@ -5,7 +5,7 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 
 open class ALKIndexedCollectionView: UICollectionView {

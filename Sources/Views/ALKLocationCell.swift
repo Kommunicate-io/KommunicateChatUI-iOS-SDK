@@ -7,7 +7,7 @@
 //
 
 import Kingfisher
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 
 protocol ALKLocationCellDelegate: AnyObject {

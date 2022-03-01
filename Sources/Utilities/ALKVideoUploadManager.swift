@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 class ALKVideoUploadManager: NSObject {
     weak var uploadDelegate: ALKHTTPManagerUploadDelegate?

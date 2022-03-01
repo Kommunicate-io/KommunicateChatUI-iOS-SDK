@@ -5,7 +5,7 @@
 //  Created by Shivam Pokhriyal on 13/05/19.
 //
 
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 extension ALMessageDBService {
     func updateDbMessageWith(key: String, value: String, filePath: String) {

@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "KommunicateCoreiOSSDK",
+        "repositoryURL": "https://github.com/Sathyan-Elangovan/KommunicateCore-iOS-SDK.git",
+        "state": {
+          "branch": null,
+          "revision": "a8e5784893bcf37123db38e797a5a3efd52a9c9c",
+          "version": null
+        }
+      },
+      {
         "package": "SwipeCellKit",
         "repositoryURL": "https://github.com/SwipeCellKit/SwipeCellKit.git",
         "state": {

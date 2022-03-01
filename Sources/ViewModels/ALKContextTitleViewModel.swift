@@ -5,7 +5,7 @@
 //  Created by Mukesh Thawani on 05/12/17.
 //
 
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 public protocol ALKContextTitleDataType {
     var titleText: String { get }

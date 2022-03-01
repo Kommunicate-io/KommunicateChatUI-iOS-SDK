@@ -8,7 +8,7 @@
 
 import Foundation
 import Kingfisher
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 
 // MARK: - ALKMyMessageCell

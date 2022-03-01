@@ -8,7 +8,7 @@
 
 import AVKit
 import Kingfisher
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit

@@ -10,7 +10,7 @@ import Foundation
     import RichMessageKit
 #endif
 import Kingfisher
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 
 class ALKReplyController: UIViewController, Localizable {
     enum ConstraintIdentifier {

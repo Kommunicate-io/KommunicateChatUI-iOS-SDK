@@ -7,7 +7,7 @@
 
 import Foundation
 import Kingfisher
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif

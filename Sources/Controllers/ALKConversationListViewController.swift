@@ -8,7 +8,7 @@
 
 import ContactsUI
 import Foundation
-import KommunicateCore_iOS_SDK
+import KommunicateCoreiOSSDK
 import UIKit
 
 /// The delegate of an `ALKConversationListViewController` object.

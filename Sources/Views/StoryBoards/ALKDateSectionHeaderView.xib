@@ -12,7 +12,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ALKDateSectionHeaderView" customModule="KommunicateChatUI_iOS_SDK"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ALKDateSectionHeaderView" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
