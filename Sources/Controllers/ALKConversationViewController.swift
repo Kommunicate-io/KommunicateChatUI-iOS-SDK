@@ -8,7 +8,7 @@
 import AVFoundation
 import AVKit
 import ContactsUI
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import MobileCoreServices
 import SafariServices
 import UIKit

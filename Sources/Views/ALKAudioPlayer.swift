@@ -7,7 +7,7 @@
 //
 
 import AVFoundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import UIKit
 
 protocol ALKAudioPlayerProtocol: AnyObject {

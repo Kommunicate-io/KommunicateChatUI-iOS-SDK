@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 public protocol ALKConversationListViewModelDelegate: AnyObject {
     func startedLoading()

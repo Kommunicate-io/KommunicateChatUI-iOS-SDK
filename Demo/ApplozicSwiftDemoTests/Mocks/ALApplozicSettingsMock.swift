@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 class ALApplozicSettingsMock: ALApplozicSettings {
     static var filterContactStatus: Bool = false

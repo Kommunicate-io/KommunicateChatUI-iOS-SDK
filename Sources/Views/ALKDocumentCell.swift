@@ -7,7 +7,7 @@
 
 import Foundation
 import Kingfisher
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import UIKit
 
 class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {

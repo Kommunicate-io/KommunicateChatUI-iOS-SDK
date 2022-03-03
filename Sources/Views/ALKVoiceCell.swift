@@ -12,7 +12,7 @@ import Foundation
 #endif
 import AVFoundation
 import Kingfisher
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import UIKit
 
 protocol ALKVoiceCellProtocol: AnyObject {

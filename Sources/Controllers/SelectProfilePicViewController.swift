@@ -7,7 +7,7 @@
 //
 
 import Kingfisher
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import UIKit
 // import VoxeetConferenceKit
 

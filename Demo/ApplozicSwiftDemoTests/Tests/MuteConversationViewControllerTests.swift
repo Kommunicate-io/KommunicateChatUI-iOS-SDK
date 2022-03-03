@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import XCTest
 @testable import KommunicateChatUI_iOS_SDK
 

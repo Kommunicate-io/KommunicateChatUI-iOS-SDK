@@ -6,7 +6,7 @@
 //
 
 import Kingfisher
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import UIKit
 
 // TODO: Handle padding for reply name and reply message when preview image isn't visible.

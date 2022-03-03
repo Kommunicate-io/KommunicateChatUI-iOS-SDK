@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 open class ALKTemplateMessagesViewModel: NSObject {
     open var messageTemplates: [ALKTemplateMessageModel]

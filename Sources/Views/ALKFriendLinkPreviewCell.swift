@@ -1,6 +1,6 @@
 import Foundation
 import Kingfisher
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
     private var avatarImageView: UIImageView = {

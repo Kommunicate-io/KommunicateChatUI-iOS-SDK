@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 public class ALKPushNotificationHandler: Localizable {
     public static let shared = ALKPushNotificationHandler()

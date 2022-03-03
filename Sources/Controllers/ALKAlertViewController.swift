@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 class ALKAlertViewController: UIViewController, Localizable {
     public enum Action {

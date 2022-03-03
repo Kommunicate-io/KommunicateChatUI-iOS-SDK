@@ -8,7 +8,7 @@
 
 import Foundation
 import Kingfisher
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import SwipeCellKit
 import UIKit
 

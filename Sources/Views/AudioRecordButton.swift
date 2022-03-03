@@ -7,7 +7,7 @@
 
 import AVFoundation
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 public protocol ALKAudioRecorderProtocol: AnyObject {
     func moveButton(location: CGPoint)

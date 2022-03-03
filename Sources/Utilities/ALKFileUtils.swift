@@ -8,7 +8,7 @@
 import AVFoundation
 import Contacts
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 class ALKFileUtils: NSObject {
     func getFileName(filePath: String?, fileMeta: ALFileMetaInfo?) -> String {

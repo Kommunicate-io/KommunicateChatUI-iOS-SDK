@@ -6,7 +6,7 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 import UIKit
 
 protocol ALKSelectParticipantToAddProtocol: AnyObject {

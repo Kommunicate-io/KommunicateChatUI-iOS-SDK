@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 class BaseMessageViewModel: ALKConversationListViewModelProtocol {
     var allMessages = [ALMessage]()

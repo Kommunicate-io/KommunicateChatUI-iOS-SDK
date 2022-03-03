@@ -6,7 +6,7 @@
 //
 
 import Contacts
-import KommunicateCoreiOSSDK
+import KommunicateCore_iOS_SDK
 
 class ALKContactMessageBaseCell: ALKChatBaseCell<ALKMessageViewModel>, ALKHTTPManagerDownloadDelegate {
     let contactView = ContactView(frame: .zero)

@@ -11,7 +11,7 @@
         <!--Share Location-->
         <scene sceneID="6FR-CW-DXl">
             <objects>
-                <viewController storyboardIdentifier="MapView" id="gjQ-qY-9vY" customClass="ALKMapViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapView" id="gjQ-qY-9vY" customClass="ALKMapViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WIy-Ji-vjS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -62,7 +62,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="ki4-nW-qC9">
             <objects>
-                <navigationController id="WSq-8e-eNR" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="WSq-8e-eNR" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wF1-Ya-Xf2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
