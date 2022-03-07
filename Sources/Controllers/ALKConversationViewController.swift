@@ -2338,6 +2338,10 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         sync(message: message)
     }
 
+    public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
+        print("sa")
+    }
+    
     public func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
         updateDeliveryReport(messageKey: messageKey, contactId: contactId, status: status)
     }

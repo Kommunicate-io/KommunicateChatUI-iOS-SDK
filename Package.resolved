@@ -12,10 +12,10 @@
       },
       {
         "package": "KommunicateCore_iOS_SDK",
-        "repositoryURL": "https://github.com/Sathyan-Elangovan/KommunicateCore-iOS-SDK.git",
+        "repositoryURL": "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK",
         "state": {
           "branch": null,
-          "revision": "fdaca8c16f47a56972710bd9d37ccf13c0266991",
+          "revision": "8220d84726f619ee4ab6291e07f1a4359f130ac4",
           "version": null
         }
       },
