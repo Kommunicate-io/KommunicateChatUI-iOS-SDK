@@ -18,4 +18,5 @@ public enum CustomEvent: String {
     case submitRatingClick = "ON_SUBMIT_RATING_CLICK"
     case restartConversationClick = "ON_RESTART_CONVERSATION_CLICK"
     case richMessageClick = "ON_RICH_MESSAGE_CLICK"
+    case resolveConversation = "ON_CONVERSATION_RESOLVE"
 }
