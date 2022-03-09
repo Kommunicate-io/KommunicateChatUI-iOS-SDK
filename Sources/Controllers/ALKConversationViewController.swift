@@ -2339,7 +2339,6 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     }
 
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
-        print("sa")
     }
     
     public func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
