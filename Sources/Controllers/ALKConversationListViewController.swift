@@ -427,7 +427,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
         print("Status Changed \(contactId) \(status)")
     }
-
+    
     open func updateUserDetail(_ userId: String!) {
         guard let userId = userId else { return }
         print("update user detail")

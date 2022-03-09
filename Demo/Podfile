@@ -5,13 +5,11 @@ use_frameworks!
 
 target 'KommunicateChatUI-iOS-SDK-Demo' do
     pod 'KommunicateChatUI-iOS-SDK', :path => '../KommunicateChatUI-iOS-SDK.podspec'
-    pod 'KommunicateCore-iOS-SDK', :git => 'https://github.com/Sathyan-Elangovan/KommunicateCore-iOS-SDK.git', :branch => 'user_online_away_listener'
     pod 'SwiftLint'
 end
 
 target 'KommunicateChatUI-iOS-SDK-DemoTests' do
     pod 'KommunicateChatUI-iOS-SDK', :path => '../KommunicateChatUI-iOS-SDK.podspec'
-    pod 'KommunicateCore-iOS-SDK', :git => 'https://github.com/Sathyan-Elangovan/KommunicateCore-iOS-SDK.git', :branch => 'user_online_away_listener'
     pod 'Nimble'
     pod 'Quick'
     pod 'Nimble-Snapshots'

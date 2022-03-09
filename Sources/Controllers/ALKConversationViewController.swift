@@ -2360,7 +2360,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         guard let message = alMessage else { return }
         sync(message: message)
     }
-
+    
     public func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
         updateDeliveryReport(messageKey: messageKey, contactId: contactId, status: status)
     }

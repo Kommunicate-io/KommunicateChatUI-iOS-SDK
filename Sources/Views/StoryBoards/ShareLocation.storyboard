@@ -10,7 +10,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="KdP-m9-S0z">
             <objects>
-                <navigationController id="ekZ-mf-7SD" customClass="ALBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="ekZ-mf-7SD" customClass="ALBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="IkB-fz-FOO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -31,7 +31,7 @@
         <!--Share Location-->
         <scene sceneID="L5L-4t-1Ur">
             <objects>
-                <viewController storyboardIdentifier="ShareLocationViewController" id="g1v-O6-33i" customClass="ShareLocationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ShareLocationViewController" id="g1v-O6-33i" customClass="ShareLocationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ipR-mj-5E0"/>
                         <viewControllerLayoutGuide type="bottom" id="G4f-cj-kgg"/>
