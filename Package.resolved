@@ -12,7 +12,7 @@
       },
       {
         "package": "KommunicateCore_iOS_SDK",
-        "repositoryURL": "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK",
+        "repositoryURL": "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK.git",
         "state": {
           "branch": null,
           "revision": "8220d84726f619ee4ab6291e07f1a4359f130ac4",
