@@ -424,9 +424,6 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         print("MQTT did connected")
     }
     
-    public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
-    }
-
     open func updateUserDetail(_ userId: String!) {
         guard let userId = userId else { return }
         print("update user detail")
