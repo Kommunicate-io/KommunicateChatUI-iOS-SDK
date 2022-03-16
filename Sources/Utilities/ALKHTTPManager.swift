@@ -157,8 +157,9 @@ class ALKHTTPManager: NSObject {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
-        task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
-        
+        if ALApplozicSettings.isS3StorageServiceEnabled() {
+            task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
+        }
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
         let responseHandler = ALResponseHandler()
         responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in

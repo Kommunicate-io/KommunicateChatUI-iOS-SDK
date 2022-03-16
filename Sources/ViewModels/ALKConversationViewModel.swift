@@ -521,7 +521,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
 
         if message.fileMetaInfo!.name.hasPrefix(awsEncryptionPrefix) {
-          ALMessageClientService().downloadImageUrl(message.fileMetaInfo?.blobKey) { fileUrl, error in
+          ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey,isS3URL: true) { fileUrl, error in
                guard error == nil, let fileUrl = fileUrl else {
                    print("Error downloading attachment :: \(String(describing: error))")
                    return
@@ -565,7 +565,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             return
         }
-        ALMessageClientService().downloadImageUrl(message.fileMetaInfo?.blobKey) { fileUrl, error in
+        
+        ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil ) { fileUrl, error in
             guard error == nil, let fileUrl = fileUrl else {
                 print("Error downloading attachment :: \(String(describing: error))")
                 return
