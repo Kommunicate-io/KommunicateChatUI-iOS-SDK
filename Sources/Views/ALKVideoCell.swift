@@ -278,6 +278,9 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             uploadButton.isHidden = true
             downloadButton.isHidden = true
             progressView.isHidden = false
+            if progress == 360.0 {
+                progressView.isHidden = true
+            }
             progressView.angle = progress
         case let .upload(filePath):
             downloadButton.isHidden = true
@@ -306,8 +309,17 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolder)
             return
         }
+        
+        /*
+            if URL is exist on metadata, then it was upload by S3 Service. if not it was uploaded by Google
+         */        if metadata.url == nil {
+            let placeHolder = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+            photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolder)
+            return
+        }
+        
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().downloadImageThumbnailUrl(metadata.thumbnailUrl, blobKey: metadata.thumbnailBlobKey) { url, error in
+            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl,isS3URL: metadata.url != nil ,blobKey: metadata.thumbnailBlobKey) { url, error in
                 guard error == nil,
                       let url = url
                 else {
@@ -385,7 +397,10 @@ extension ALKVideoCell: ALKHTTPManagerDownloadDelegate {
     func dataDownloaded(task: ALKDownloadTask) {
         NSLog("VIDEO CELL DATA UPDATED AND FILEPATH IS: %@", viewModel?.filePath ?? "")
         let total = task.totalBytesExpectedToDownload
-        let progress = convertToDegree(total: total, written: task.totalBytesDownloaded)
+        var progress = 360.0
+        if total != 0 {
+            progress = convertToDegree(total: total, written: task.totalBytesDownloaded)
+        }
         updateView(for: .downloading(progress: progress, totalCount: total))
     }
 
