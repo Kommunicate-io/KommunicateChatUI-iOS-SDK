@@ -80,7 +80,7 @@ class ALKAttatchmentView: UIView {
         }
         // if ALApplozicSettings.isS3StorageServiceEnabled or ALApplozicSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
         let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
-
+        
         if let url = messageObject.fileMetaInfo?.url,
            !serviceEnabled
         {
@@ -92,7 +92,8 @@ class ALKAttatchmentView: UIView {
             httpManager.downloadImage(task: task)
             return
         }
-        ALMessageClientService().downloadImageUrl(messageObject.fileMetaInfo?.blobKey) { fileUrl, error in
+        
+        ALMessageClientService().downloadImageUrlV2(messageObject.fileMetaInfo?.blobKey, isS3URL: messageObject.fileMetaInfo?.url != nil) { fileUrl, error in
             guard error == nil, let fileUrl = fileUrl else {
                 print("Error downloading attachment :: \(String(describing: error))")
                 return

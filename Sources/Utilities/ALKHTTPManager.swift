@@ -54,6 +54,7 @@ class ALKHTTPManager: NSObject {
         static let attachmentSuffix = "local"
         static let paramForS3Storage = "file"
         static let paramForDefaultStorage = "files[]"
+        static let AWSEncryptedPrefix = "AWS-ENCRYPTED-"
     }
 
     func upload(image: UIImage, uploadURL: URL, completion: @escaping (_ imageLink: Data?) -> Void) {
@@ -156,7 +157,9 @@ class ALKHTTPManager: NSObject {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
-
+        if ALApplozicSettings.isS3StorageServiceEnabled() {
+            task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
+        }
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
         let responseHandler = ALResponseHandler()
         responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in

@@ -10,7 +10,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="tKK-Vm-x2H">
             <objects>
-                <navigationController storyboardIdentifier="CustomVideoNavigationController" id="D0p-Ot-HfO" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="CustomVideoNavigationController" id="D0p-Ot-HfO" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="RjM-Cq-CDV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -26,7 +26,7 @@
         <!--Camera-->
         <scene sceneID="hPr-Sr-r9y">
             <objects>
-                <viewController storyboardIdentifier="ALKCustomCameraViewController" id="Zgd-Wy-eMZ" customClass="ALKCustomVideoViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKCustomCameraViewController" id="Zgd-Wy-eMZ" customClass="ALKCustomVideoViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3Ua-VA-FlR"/>
                         <viewControllerLayoutGuide type="bottom" id="S4E-eT-HDC"/>
@@ -109,7 +109,7 @@
         <!--Send Video-->
         <scene sceneID="74W-98-iWH">
             <objects>
-                <viewController storyboardIdentifier="ALKCustomVideoPreviewViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="deo-qK-cuy" customClass="ALKCustomVideoPreviewViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ALKCustomVideoPreviewViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="deo-qK-cuy" customClass="ALKCustomVideoPreviewViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BL7-wu-dt6"/>
                         <viewControllerLayoutGuide type="bottom" id="SY5-zT-7EG"/>

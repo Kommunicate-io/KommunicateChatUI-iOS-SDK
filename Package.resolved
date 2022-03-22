@@ -2,21 +2,21 @@
   "object": {
     "pins": [
       {
-        "package": "Applozic",
-        "repositoryURL": "https://github.com/AppLozic/Applozic-Chat-iOS-Framework.git",
-        "state": {
-          "branch": null,
-          "revision": "b45a75be0ae56acf00441f755dd0d8bb0f8d41a6",
-          "version": "8.3.0"
-        }
-      },
-      {
         "package": "Kingfisher",
         "repositoryURL": "https://github.com/onevcat/Kingfisher.git",
         "state": {
           "branch": null,
           "revision": "8c65ddf756c633d01d9ae01092bf72f0c66dfc60",
           "version": "7.0.0"
+        }
+      },
+      {
+        "package": "KommunicateCore_iOS_SDK",
+        "repositoryURL": "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK.git",
+        "state": {
+          "branch": null,
+          "revision": "d33f8370719d60e90fa6d6e6630f748aeaa9aa1d",
+          "version": "1.0.1"
         }
       },
       {

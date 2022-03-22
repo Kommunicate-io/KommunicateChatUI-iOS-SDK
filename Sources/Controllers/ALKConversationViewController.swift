@@ -278,10 +278,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
-            weakSelf.viewModel.addMessagesToList(list)
-            //            weakSelf.handlePushNotification = false
+            weakSelf.addMessagesToList(list)
         })
-
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
             _ in
             print("notification individual chat received")
@@ -374,6 +372,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if individualLaunch {
             NotificationCenter.default.addObserver(self, selector: #selector(pushNotification(notification:)), name: Notification.Name("pushNotification"), object: nil)
         }
+    }
+    
+    open func addMessagesToList(_ messageList: [Any]) {
+        viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
@@ -1022,15 +1024,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
-
+        
         if status {
-            timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
-        } else {
-            timerTask.invalidate()
+               if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
+                   let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+                   if timerTask.isValid {
+                       Timer.scheduledTimer(timeInterval: (timeInterval + 2), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
+                   } else {
+                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                   }
+               } else {
+                   timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+               }
+           } else {
+               timerTask.invalidate()
         }
-
+        
         typingNoticeViewHeighConstaint?.constant = status ? 30 : 0
         view.layoutIfNeeded()
+        
         if tableView.isAtBottom {
             tableView.scrollToBottomByOfset(animated: false)
         }
@@ -1050,7 +1062,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
     }
-
+    
+    @objc func delayedSecondTimer (timer: Timer) {
+            let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+            timer.invalidate()
+            self.typingNoticeViewHeighConstaint?.constant = 0
+            Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+    }
+    
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
@@ -2332,12 +2351,16 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             subscribeChannelToMqtt()
         }
     }
+    
+    public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
+        print("Status Changed \(contactId) \(status)")
+    }
 
     public func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
         guard let message = alMessage else { return }
         sync(message: message)
     }
-
+    
     public func delivered(_ messageKey: String!, contactId: String!, withStatus status: Int32) {
         updateDeliveryReport(messageKey: messageKey, contactId: contactId, status: status)
     }

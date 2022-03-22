@@ -10,7 +10,7 @@
         <!--Preview Image View Controller-->
         <scene sceneID="Qbz-nv-kcz">
             <objects>
-                <viewController storyboardIdentifier="PreviewImageViewController" id="T7c-VG-5fK" customClass="ALKPreviewImageViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PreviewImageViewController" id="T7c-VG-5fK" customClass="ALKPreviewImageViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FNY-tx-eBm"/>
                         <viewControllerLayoutGuide type="bottom" id="JnI-lM-Svd"/>
@@ -49,7 +49,7 @@
         <!--Base Navigation View Controller-->
         <scene sceneID="816-hg-X2G">
             <objects>
-                <navigationController storyboardIdentifier="PreviewImageNavigationViewController" id="6Qw-CT-Hx8" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PreviewImageNavigationViewController" id="6Qw-CT-Hx8" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="SjS-fh-lRq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

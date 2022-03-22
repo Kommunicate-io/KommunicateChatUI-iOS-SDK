@@ -20,6 +20,7 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+**/*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 
 ## Obj-C/Swift specific
 *.hmap

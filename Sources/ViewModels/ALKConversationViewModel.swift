@@ -122,7 +122,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private var typingTimerTask = Timer()
     private var groupMembers: Set<ALContact>?
-
+    private var awsEncryptionPrefix = "AWS-ENCRYPTED"
+    
     // MARK: - Initializer
 
     public required init(
@@ -519,6 +520,31 @@ open class ALKConversationViewModel: NSObject, Localizable {
         // if ALApplozicSettings.isS3StorageServiceEnabled or ALApplozicSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
         let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
 
+        if message.fileMetaInfo!.name.hasPrefix(awsEncryptionPrefix) {
+          ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey,isS3URL: true) { fileUrl, error in
+               guard error == nil, let fileUrl = fileUrl else {
+                   print("Error downloading attachment :: \(String(describing: error))")
+                   return
+               }
+               let httpManager = ALKHTTPManager()
+               httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
+               let task = ALKDownloadTask(downloadUrl: fileUrl, fileName: message.fileMetaInfo?.name)
+               task.identifier = message.identifier
+               task.totalBytesExpectedToDownload = message.size
+               httpManager.downloadCompleted = { [weak self] task in
+                   guard let weakSelf = self, let identifier = task.identifier else { return }
+                   var msg = weakSelf.messageForRow(identifier: identifier)
+                   if ThumbnailIdentifier.hasPrefix(in: identifier) {
+                       msg?.fileMetaInfo?.thumbnailFilePath = task.filePath
+                   } else {
+                       msg?.filePath = task.filePath
+                   }
+               }
+               httpManager.downloadAttachment(task: task)
+           }
+           return
+       }
+        
         if let url = message.fileMetaInfo?.url,
            !serviceEnabled
         {
@@ -539,7 +565,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             return
         }
-        ALMessageClientService().downloadImageUrl(message.fileMetaInfo?.blobKey) { fileUrl, error in
+        
+        ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil ) { fileUrl, error in
             guard error == nil, let fileUrl = fileUrl else {
                 print("Error downloading attachment :: \(String(describing: error))")
                 return
@@ -571,10 +598,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         for message in messages {
             if channelKey != nil, channelKey == message.groupId {
                 filteredArray.append(message)
-                delegate?.updateTyingStatus(status: false, userId: message.to)
             } else if message.channelKey == nil, channelKey == nil, contactId == message.to {
                 filteredArray.append(message)
-                delegate?.updateTyingStatus(status: false, userId: message.to)
             }
         }
 
