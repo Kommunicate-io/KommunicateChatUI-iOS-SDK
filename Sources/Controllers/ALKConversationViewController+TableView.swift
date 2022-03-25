@@ -640,10 +640,18 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
         // Set view style
         dateView.setupViewStyle()
+        //get the localized string for day
+        let day = getLocalizedStringForDate(date.stringCompareCurrentDate())
         // Set date text
-        dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
+        dateView.setupDate(withDateFormat: day)
         return dateView
     }
+    
+    
+    func getLocalizedStringForDate(_ dateString: String) -> String {
+        return localizedString(forKey: dateString, withDefaultValue: dateString, fileName: configuration.localizedStringFileName)
+    }
+
 
     public func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
