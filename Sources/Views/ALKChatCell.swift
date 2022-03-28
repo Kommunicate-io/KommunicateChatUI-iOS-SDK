@@ -299,7 +299,11 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         {
             messageLabel.attributedText = attributedText
         } else {
-            messageLabel.text = viewModel.theLastMessage
+            guard  let lastMessage = viewModel.theLastMessage else{
+                messageLabel.text = ""
+                return
+            }
+            messageLabel.text =  localizedString(forKey: lastMessage, withDefaultValue: lastMessage, fileName:localizationFileName)
         }
 
         muteIcon.isHidden = !isConversationMuted(viewModel: viewModel)
