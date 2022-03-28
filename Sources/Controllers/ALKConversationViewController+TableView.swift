@@ -644,12 +644,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
         return dateView
     }
-    
-    
-    func getLocalizedStringForDate(_ dateString: String) -> String {
-        return localizedString(forKey: dateString, withDefaultValue: dateString, fileName: configuration.localizedStringFileName)
-    }
-
 
     public func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
