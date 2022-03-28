@@ -640,10 +640,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
 
         // Set view style
         dateView.setupViewStyle()
-        //get the localized string for day
-        let day = getLocalizedStringForDate(date.stringCompareCurrentDate())
         // Set date text
-        dateView.setupDate(withDateFormat: day)
+        dateView.setupDate(withDateFormat: date.stringCompareCurrentDate())
         return dateView
     }
     
