@@ -22,7 +22,7 @@ PODS:
     - Nimble
   - Quick (4.0.0)
   - SwiftFormat/CLI (0.48.18)
-  - SwiftLint (0.46.5)
+  - SwiftLint (0.47.0)
   - SwipeCellKit (2.7.1)
 
 DEPENDENCIES:
@@ -58,7 +58,7 @@ SPEC CHECKSUMS:
   Nimble-Snapshots: 97270cd48f0e6eebd6c80ccf7dd35d4e57fb9997
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   SwiftFormat: 7dd2b33a0a3d61095b61c911b6d89ff962ae695c
-  SwiftLint: 2c16e8fa99dac2e440dc0c70ea74d2532048f6cf
+  SwiftLint: d41cc46a2ae58ac6d9f26954bc89f1d72e71fdef
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
 PODFILE CHECKSUM: ceb862bddf2e495511834b44350239c68ccce94f
