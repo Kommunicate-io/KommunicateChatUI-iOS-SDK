@@ -335,12 +335,30 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             photoView.kf.setImage(with: message.thumbnailURL)
             return
         }
+        let placeHolderImage = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        /* if URL is exist on metadata, then it was upload by S3 Service. if not it was uploaded by Google
+         */
+        if metadata.url == nil {
+            photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolderImage)
+            return
+        }
+        // If thumbnailblobkey is nil,set thumbnail with placeholder
+        guard let thumbnailBlobKey = metadata.thumbnailBlobKey else {
+            photoView.image = placeHolderImage
+            return
+        }
+        // If thumbanailBlobkey has spaces, remove it before create the URL.
+        var updatedBlobKey = thumbnailBlobKey
+        if thumbnailBlobKey.contains(" ") {
+            updatedBlobKey = thumbnailBlobKey.replacingOccurrences(of: " ", with: "%20")
+        }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().downloadImageThumbnailUrl(metadata.thumbnailUrl, blobKey: metadata.thumbnailBlobKey) { url, error in
+            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl, isS3URL: metadata.url != nil,blobKey: updatedBlobKey) { url, error in
                 guard error == nil,
                       let url = url
                 else {
                     print("Error downloading thumbnail url")
+                    self.photoView.image = placeHolderImage
                     return
                 }
                 let httpManager = ALKHTTPManager()
