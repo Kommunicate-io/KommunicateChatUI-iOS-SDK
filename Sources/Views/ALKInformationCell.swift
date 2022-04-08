@@ -86,7 +86,6 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         self.viewModel = viewModel
         
         guard let dictionary = getFeedback(viewModel: viewModel) else { return }
-        var ratingImage = UIImage()
         var comment = ""
         var rating = 0
         
@@ -113,7 +112,9 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         let textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
         textString.append(imageString)
         messageView.attributedText = textString
-        commentTextView.text = comment
+        if !comment.isEmpty {
+            commentTextView.text = "“\(comment)”"
+        }
         
         setUpConstraintsForRating()
         setupStyle()
@@ -176,6 +177,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         
         messageView.setFont(ALKMessageStyle.infoMessage.font)
         messageView.textColor = ALKMessageStyle.infoMessage.text
+        commentTextView.setFont(ALKMessageStyle.feedbackComment.font)
+        commentTextView.textColor = ALKMessageStyle.feedbackComment.text
     }
     
     func getFeedback(viewModel: ALKMessageViewModel) -> Dictionary<String,Any>? {

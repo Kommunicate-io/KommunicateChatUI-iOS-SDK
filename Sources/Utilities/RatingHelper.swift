@@ -14,11 +14,11 @@ class RatingHelper : Localizable {
          var imageName = String()
          switch rating {
          case 1:
-             imageName = localizedString(forKey: "SadIcon", withDefaultValue: SystemMessage.Feedback.sadIcon, fileName: configuration.localizedStringFileName)
+             imageName = "sadEmoji"
          case 5:
-             imageName = localizedString(forKey: "ConfusedIcon", withDefaultValue: SystemMessage.Feedback.confusedIcon, fileName: configuration.localizedStringFileName)
+             imageName = "confusedEmoji"
          case 10:
-             imageName = localizedString(forKey: "HappyIcon", withDefaultValue: SystemMessage.Feedback.happyIcon, fileName: configuration.localizedStringFileName)
+             imageName = "happyEmoji"
          default:
              print("incorrect data")
          }

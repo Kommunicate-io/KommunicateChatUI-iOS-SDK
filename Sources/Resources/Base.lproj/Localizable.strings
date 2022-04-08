@@ -171,4 +171,4 @@ RemainingCharactersInfo = "Remaining characters: %@";
 AddGroupDescriptionPlaceHolder = "Add group description";
 
 /* Feedback */
- RatingLabelTitle = "User";
+ RatingLabelTitle = "You";
