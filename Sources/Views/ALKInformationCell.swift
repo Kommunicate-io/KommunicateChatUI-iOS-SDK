@@ -114,6 +114,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         messageView.attributedText = textString
         if !comment.isEmpty {
             commentTextView.text = "“\(comment)”"
+        }else{
+            commentTextView.text = ""
         }
         
         setUpConstraintsForRating()
@@ -145,6 +147,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         verticalStackView.addArrangedSubview(messageView)
         if !commentTextView.text.isEmpty {
             verticalStackView.addArrangedSubview(commentTextView)
+        }else{
+            verticalStackView.removeArrangedSubview(commentTextView)
         }
         
         horizontalStackView.axis  = NSLayoutConstraint.Axis.horizontal
