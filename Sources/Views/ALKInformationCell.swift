@@ -118,7 +118,10 @@ final class ALKInformationCell: UITableViewCell, Localizable {
 
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
-        guard let feedback = getFeedback(viewModel: viewModel) else { return }
+        guard let feedback = getFeedback(viewModel: viewModel) else {
+            setupConstraints()
+            return
+        }
         
         var comment = ""
         var rating = 0
