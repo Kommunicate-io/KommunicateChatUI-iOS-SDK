@@ -11,6 +11,40 @@ import UIKit
 
 final class ALKInformationCell: UITableViewCell, Localizable {
     var configuration = ALKConfiguration()
+    
+    enum Padding {
+        
+        enum view {
+            static let top: CGFloat = 8
+            static let bottom: CGFloat = 8
+        }
+        
+        enum CommentView {
+            static let height: CGFloat = 30
+        }
+        
+        enum HorizontalStackView {
+            static let spacing: CGFloat = 10
+            static let leading: CGFloat = 10
+            static let trailing: CGFloat = -10
+        }
+
+        enum VerticalStackView {
+            static let spacing: CGFloat = -5
+        }
+        
+        enum MessageView {
+            static let top: CGFloat = 8
+            static let bottom: CGFloat = -8
+            static let width: CGFloat = 300
+            static let height: CGFloat = 17
+        }
+        
+        enum LineView {
+            static let width: CGFloat = 60
+            static let height: CGFloat = 1
+        }
+    }
 
     fileprivate var messageView: UITextView = {
         let tv = UITextView()
@@ -40,11 +74,11 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     class func topPadding() -> CGFloat {
-        return 8
+        return Padding.view.top
     }
 
     class func bottomPadding() -> CGFloat {
-        return 8
+        return Padding.view.bottom
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
@@ -57,12 +91,12 @@ final class ALKInformationCell: UITableViewCell, Localizable {
                                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                                                    attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
                                                                    context: nil)
-            //get feedback dictionary for view
+            //  Get feedback dictionary for view 
             guard let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel) else { return 0 }
             if dictionary["comments"] != nil {
-                messageHeigh = (rect.height + 17 + 30)
+                messageHeigh = (rect.height + Padding.MessageView.height + Padding.CommentView.height)
             } else {
-                messageHeigh = rect.height + 17
+                messageHeigh = rect.height + Padding.MessageView.height
             }
             messageHeigh = ceil(messageHeigh)
         }
@@ -84,56 +118,66 @@ final class ALKInformationCell: UITableViewCell, Localizable {
 
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
+        guard let feedback = getFeedback(viewModel: viewModel) else { return }
         
-        guard let dictionary = getFeedback(viewModel: viewModel) else { return }
         var comment = ""
         var rating = 0
-        
-        if dictionary["comments"] != nil {
+        if feedback["comments"] != nil {
             contentView.subviews.forEach { subview in
                 subview.removeFromSuperview()
             }
-            comment = dictionary["comments"]! as! String
+            comment = feedback["comments"]! as! String
         }
 
-        if dictionary["rating"] != nil {
+        if feedback["rating"] != nil {
             contentView.subviews.forEach { subview in
                 subview.removeFromSuperview()
             }
-            rating = dictionary["rating"]! as! Int
+            rating = feedback["rating"]! as! Int
         }
         
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = RatingHelper().getRatingIconFor(rating: rating)
-        guard let attachedImage = imageAttachment.image else { return }
+        guard let attachedImage = imageAttachment.image else {
+            let textString = getFormattedFeedbackString(viewModel)
+            setupViews(feedbackString: textString, comment: comment)
+            return
+        }
         imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
-        let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.RatingLabelTitle, fileName: configuration.localizedStringFileName)
-        let textString = NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
+        let textString = getFormattedFeedbackString(viewModel)
         textString.append(imageString)
-        messageView.attributedText = textString
+        setupViews(feedbackString: textString, comment: comment)
+    }
+    
+    fileprivate func setupViews(feedbackString: NSMutableAttributedString, comment: String){
+        messageView.attributedText = feedbackString
         if !comment.isEmpty {
             commentTextView.text = "“\(comment)”"
         }else{
             commentTextView.text = ""
         }
-        
-        setUpConstraintsForRating()
         setupStyle()
+        setUpConstraintsForRating()
+    }
+    
+    
+    fileprivate func getFormattedFeedbackString(_ viewModel: ALKMessageViewModel) -> NSMutableAttributedString {
+        let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.RatingLabelTitle, fileName: configuration.localizedStringFileName)
+        return NSMutableAttributedString(string: userLabel + " " + viewModel.message! + "  ")
     }
 
     fileprivate func setupConstraints() {
         contentView.addViewsForAutolayout(views: [messageView])
         contentView.bringSubviewToFront(messageView)
 
-        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.MessageView.top).isActive = true
+        messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Padding.MessageView.bottom).isActive = true
         messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-        messageView.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
+        messageView.widthAnchor.constraint(lessThanOrEqualToConstant: Padding.MessageView.width).isActive = true
     }
     
     fileprivate func setUpConstraintsForRating() {
-        
         let horizontalStackView = UIStackView()
         let verticalStackView = UIStackView()
         let lineViewLeft = UIView()
@@ -142,20 +186,20 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         verticalStackView.axis  = NSLayoutConstraint.Axis.vertical
         verticalStackView.distribution  = UIStackView.Distribution.equalSpacing
         verticalStackView.alignment = UIStackView.Alignment.center
-        verticalStackView.spacing   = -5
+        verticalStackView.spacing = Padding.VerticalStackView.spacing
         
         verticalStackView.addArrangedSubview(messageView)
         if !commentTextView.text.isEmpty {
             verticalStackView.addArrangedSubview(commentTextView)
-        }else{
+        } else {
             verticalStackView.removeArrangedSubview(commentTextView)
         }
         
         horizontalStackView.axis  = NSLayoutConstraint.Axis.horizontal
         horizontalStackView.distribution  = UIStackView.Distribution.equalSpacing
         horizontalStackView.alignment = UIStackView.Alignment.center
-        horizontalStackView.spacing   = 10
-
+        horizontalStackView.spacing = Padding.HorizontalStackView.spacing
+        
         horizontalStackView.addArrangedSubview(lineViewLeft)
         horizontalStackView.addArrangedSubview(verticalStackView)
         horizontalStackView.addArrangedSubview(lineViewRight)
@@ -166,13 +210,13 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         contentView.addViewsForAutolayout(views: [horizontalStackView])
         contentView.bringSubviewToFront(messageView)
         
-        horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
+        horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.HorizontalStackView.leading).isActive = true
+        horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Padding.HorizontalStackView.trailing).isActive = true
         
-        lineViewLeft.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        lineViewRight.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        lineViewLeft.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        lineViewRight.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        lineViewLeft.widthAnchor.constraint(equalToConstant: Padding.LineView.width).isActive = true
+        lineViewRight.widthAnchor.constraint(equalToConstant: Padding.LineView.width).isActive = true
+        lineViewLeft.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
+        lineViewRight.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
     }
 
     func setupStyle() {
@@ -187,7 +231,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     
     func getFeedback(viewModel: ALKMessageViewModel) -> Dictionary<String,Any>? {
         guard let feedbackString = viewModel.metadata?["feedback"] as? String else { return nil }
-        guard let dictionary = try? JSONSerialization.jsonObject(with: feedbackString.data(using: .utf8)!, options: []) as? [String:Any] else { return nil }
+        guard let data = feedbackString.data(using: .utf8),
+            let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] else { return nil }
         return dictionary
     }
 }
