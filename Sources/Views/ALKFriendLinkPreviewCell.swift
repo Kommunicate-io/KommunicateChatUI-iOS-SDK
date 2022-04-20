@@ -3,6 +3,7 @@ import Kingfisher
 import KommunicateCore_iOS_SDK
 
 class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
+    let configuration = ALKConfiguration()
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -259,6 +260,12 @@ class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
                 constant: Padding.TimeLabel.bottom
             ),
         ])
+        
+        if configuration.hideSenderName {
+            nameLabel.isHidden = true
+        } else {
+            nameLabel.isHidden = false
+        }
     }
 
     override func setupStyle() {

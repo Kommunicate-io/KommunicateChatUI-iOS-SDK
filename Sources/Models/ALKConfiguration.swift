@@ -42,6 +42,9 @@ public struct ALKConfiguration {
 
     /// Pass the name of Localizable Strings file
     public var localizedStringFileName = "Localizable"
+    
+    /// if true then sender name will be hidden on conversation
+    public var hideSenderName: Bool = true
 
     /// Send message icon in chat bar.
     public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)

@@ -11,6 +11,8 @@ import UIKit
     import RichMessageKit
 #endif
 public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel> {
+    let configuration = ALKConfiguration()
+
     enum ViewPadding {
         enum NameLabel {
             static let top: CGFloat = 6
@@ -208,6 +210,13 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
         ])
+        
+        
+         if configuration.hideSenderName {
+             nameLabel.isHidden = true
+         } else {
+             nameLabel.isHidden = false
+         }
     }
 }
 

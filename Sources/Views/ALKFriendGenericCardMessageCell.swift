@@ -12,6 +12,8 @@ import KommunicateCore_iOS_SDK
     import RichMessageKit
 #endif
 open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
+    let configuration = ALKConfiguration()
+
     enum ViewPadding {
         enum NameLabel {
             static let top: CGFloat = 6
@@ -155,6 +157,12 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         timeLabelWidth.isActive = true
         timeLabelHeight.isActive = true
         timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor).isActive = true
+        
+        if configuration.hideSenderName {
+            nameLabel.isHidden = true
+        } else {
+            nameLabel.isHidden = false
+        }
     }
 
     override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {

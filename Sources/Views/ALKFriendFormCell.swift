@@ -11,6 +11,8 @@ import UIKit
     import RichMessageKit
 #endif
 class ALKFriendFormCell: ALKFormCell {
+    let configuration = ALKConfiguration()
+
     enum ViewPadding {
         enum NameLabel {
             static let top: CGFloat = 6
@@ -170,6 +172,12 @@ class ALKFriendFormCell: ALKFormCell {
             $0.bottom == timeLabel.topAnchor - ChatCellPadding.ReceivedMessage.MessageButton.bottom
             $0.leading == itemListView.leadingAnchor
             $0.trailing == itemListView.trailingAnchor
+        }
+        let configuration = ALKConfiguration()
+        if configuration.hideSenderName {
+            nameLabel.isHidden = true
+        } else {
+            nameLabel.isHidden = false
         }
     }
 }

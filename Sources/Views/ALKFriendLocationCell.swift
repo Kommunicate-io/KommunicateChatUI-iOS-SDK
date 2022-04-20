@@ -11,7 +11,7 @@ import UIKit
 
 final class ALKFriendLocationCell: ALKLocationCell {
     // MARK: - Declare Variables or Types
-
+    let configuration = ALKConfiguration()
     // MARK: Environment in chat
 
     private var avatarImageView: UIImageView = {
@@ -58,6 +58,12 @@ final class ALKFriendLocationCell: ALKLocationCell {
 
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2.0).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2.0).isActive = true
+       
+        if configuration.hideSenderName {
+            nameLabel.isHidden = true
+        } else {
+            nameLabel.isHidden = false
+        }
     }
 
     override func setupStyle() {

@@ -12,6 +12,7 @@ import UIKit
 
 class ALKFriendDocumentCell: ALKDocumentCell {
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+    let configuration = ALKConfiguration()
     enum Padding {
         enum NameLabel {
             static let top: CGFloat = 6
@@ -86,6 +87,12 @@ class ALKFriendDocumentCell: ALKDocumentCell {
         bubbleView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.BubbleView.leading).isActive = true
         bubbleView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.BubbleView.trailing).isActive = true
         bubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Padding.BubbleView.bottom).isActive = true
+        
+        if configuration.hideSenderName {
+            nameLabel.isHidden = true
+        } else {
+            nameLabel.isHidden = false
+        }
     }
 
     override func update(viewModel: ALKMessageViewModel) {
