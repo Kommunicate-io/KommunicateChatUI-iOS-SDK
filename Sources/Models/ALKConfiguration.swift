@@ -12,6 +12,8 @@ import UIKit
 #endif
 
 public struct ALKConfiguration {
+    public var hideSenderName: Bool = false
+
     /// If enabled then tapping on navigation bar in
     /// conversation view will open the group detail screen.
     /// - NOTE: Only works in case of groups.
@@ -43,9 +45,6 @@ public struct ALKConfiguration {
     /// Pass the name of Localizable Strings file
     public var localizedStringFileName = "Localizable"
     
-    /// if true then sender name will be hidden on conversation
-    public var hideSenderName: Bool = true
-
     /// Send message icon in chat bar.
     public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
 
