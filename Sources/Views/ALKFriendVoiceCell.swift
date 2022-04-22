@@ -11,8 +11,6 @@ import Kingfisher
 import UIKit
 
 class ALKFriendVoiceCell: ALKVoiceCell {
-    let configuration = ALKConfiguration()
-
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -80,11 +78,7 @@ class ALKFriendVoiceCell: ALKVoiceCell {
 
         timeLabel.leftAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 2).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -2).isActive = true
-        if configuration.hideSenderName {
-            nameLabel.isHidden = true
-        } else {
-            nameLabel.isHidden = false
-        }
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override func update(viewModel: ALKMessageViewModel) {

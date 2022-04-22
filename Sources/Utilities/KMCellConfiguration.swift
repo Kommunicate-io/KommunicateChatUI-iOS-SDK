@@ -6,14 +6,9 @@
 //
 
 import Foundation
-
-public struct KMCellConfiguration {
-    public static let shared = KMCellConfiguration()
+/// - NOTE: Customization for message cells
+public enum KMCellConfiguration {
+    
     /// if true then incoming messsage's sender name will be hidden on conversation
-    public var hideSenderName: Bool = false
-    
-    private init(){
-        print("KmCellConfiguration instantiated")
-    }
-    
+    public static var hideSenderName = false
 }

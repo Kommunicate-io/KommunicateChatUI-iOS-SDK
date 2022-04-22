@@ -11,8 +11,6 @@ import UIKit
 
 // TODO: Handle padding for reply name and reply message when preview image isn't visible.
 open class ALKFriendMessageCell: ALKMessageCell {
-    let configuration = ALKConfiguration()
-
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -257,9 +255,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
         let linktapGesture = UITapGestureRecognizer(target: self, action: #selector(viewEmailTappedAction))
         emailBottomView.emailLinkLabel.addGestureRecognizer(linktapGesture)
-       
-        nameLabel.isHidden = KMCellConfiguration.shared.hideSenderName
-
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override func setupStyle() {

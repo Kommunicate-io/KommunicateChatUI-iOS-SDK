@@ -12,8 +12,6 @@ import UIKit
 #endif
 
 public struct ALKConfiguration {
-    public var hideSenderName: Bool = false
-
     /// If enabled then tapping on navigation bar in
     /// conversation view will open the group detail screen.
     /// - NOTE: Only works in case of groups.

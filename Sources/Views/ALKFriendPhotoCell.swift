@@ -14,7 +14,6 @@ import UIKit
 
 class ALKFriendPhotoCell: ALKPhotoCell {
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
-    let configuration = ALKConfiguration()
 
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -102,12 +101,7 @@ class ALKFriendPhotoCell: ALKPhotoCell {
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
 
         fileSizeLabel.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 0).isActive = true
-        
-        if configuration.hideSenderName {
-            nameLabel.isHidden = true
-        } else {
-            nameLabel.isHidden = false
-        }
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override func update(viewModel: ALKMessageViewModel) {
