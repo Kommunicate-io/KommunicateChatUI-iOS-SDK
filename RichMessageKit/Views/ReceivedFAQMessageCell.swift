@@ -180,6 +180,7 @@ public class ReceivedFAQMessageCell: UITableViewCell {
 
         // Set name
         nameLabel.text = model.message.displayName
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
 
         guard let url = model.message.imageURL else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
