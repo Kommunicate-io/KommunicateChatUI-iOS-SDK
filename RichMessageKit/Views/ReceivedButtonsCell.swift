@@ -212,6 +212,7 @@ public class ReceivedButtonsCell: UITableViewCell {
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
         ])
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 }
 

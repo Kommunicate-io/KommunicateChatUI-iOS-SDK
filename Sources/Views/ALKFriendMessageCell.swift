@@ -255,6 +255,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
 
         let linktapGesture = UITapGestureRecognizer(target: self, action: #selector(viewEmailTappedAction))
         emailBottomView.emailLinkLabel.addGestureRecognizer(linktapGesture)
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override func setupStyle() {

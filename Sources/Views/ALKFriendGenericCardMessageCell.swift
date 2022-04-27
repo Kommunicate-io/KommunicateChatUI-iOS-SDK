@@ -155,6 +155,7 @@ open class ALKFriendGenericCardMessageCell: ALKGenericCardBaseCell {
         timeLabelWidth.isActive = true
         timeLabelHeight.isActive = true
         timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor).isActive = true
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {

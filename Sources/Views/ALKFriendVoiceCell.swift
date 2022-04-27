@@ -78,6 +78,7 @@ class ALKFriendVoiceCell: ALKVoiceCell {
 
         timeLabel.leftAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 2).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -2).isActive = true
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override func update(viewModel: ALKMessageViewModel) {

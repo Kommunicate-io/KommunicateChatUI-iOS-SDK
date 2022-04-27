@@ -212,6 +212,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -1 * Config.TimeLabel.rightPadding),
         ])
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     @objc private func imageTapAction() {

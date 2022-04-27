@@ -3,6 +3,7 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 ## [Unreleased]
+- [CM-859] Add Customization option to hide sender name
 - [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 ## [0.2.0] - 2022-03-22
 - [CM-842] Added Support for s3 service for upload & download

@@ -171,5 +171,6 @@ class ALKFriendFormCell: ALKFormCell {
             $0.leading == itemListView.leadingAnchor
             $0.trailing == itemListView.trailingAnchor
         }
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 }
