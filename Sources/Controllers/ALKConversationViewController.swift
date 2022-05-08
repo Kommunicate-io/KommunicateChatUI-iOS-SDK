@@ -2009,7 +2009,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     // And thats why when we check whether last cell is visible or not, it gives false result since the last cell is sometimes not fully visible.
     // This is a known apple bug and has a thread in stackoverflow: https://stackoverflow.com/questions/25686490/ios-8-auto-cell-height-cant-scroll-to-last-row
     public func moveTableViewToBottom(indexPath: IndexPath) {
-        guard indexPath.section >= 0 else {
+        guard indexPath.section > 0 else {
             return
         }
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)

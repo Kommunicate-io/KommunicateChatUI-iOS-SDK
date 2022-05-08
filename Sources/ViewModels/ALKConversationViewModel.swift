@@ -1203,7 +1203,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             NSLog("messages loaded: ", messages)
             self.alMessages = messages.reversed() as! [ALMessage]
-            if !self.isFirstTime {
+            let contactService = ALContactService()
+
+            if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
+              let role = alContact.roleType,
+              role !=  NSNumber.init(value: AL_BOT.rawValue) {
                self.alMessageWrapper.addObject(toMessageArray: messages)
                let models = self.alMessages.map { $0.messageModel }
                self.messageModels = models
