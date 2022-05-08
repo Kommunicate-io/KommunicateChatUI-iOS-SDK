@@ -1203,10 +1203,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             NSLog("messages loaded: ", messages)
             self.alMessages = messages.reversed() as! [ALMessage]
-            self.alMessageWrapper.addObject(toMessageArray: messages)
-            let models = self.alMessages.map { $0.messageModel }
-            self.messageModels = models
-
+            if !self.isFirstTime {
+               self.alMessageWrapper.addObject(toMessageArray: messages)
+               let models = self.alMessages.map { $0.messageModel }
+               self.messageModels = models
+            }
+          
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             self.membersInGroup { members in
