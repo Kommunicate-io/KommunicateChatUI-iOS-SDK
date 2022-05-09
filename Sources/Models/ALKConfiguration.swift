@@ -191,7 +191,10 @@ public struct ALKConfiguration {
     /// If true then click action on Add Participant in group will disabled.
     /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
     public var disableAddParticipantButton = false
-
+    
+    /// If true then feedback will be asked only once in a conversation
+    /// if false then feedback will be asked  everytime the conversation is resolved
+    public var oneTimeRating = false
     /// Use this to configure channel detail view like changing member name label color, title font etc.
     public var channelDetail = ALKChannelDetailViewConfiguration()
 
