@@ -89,6 +89,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var messageModels: [ALKMessageModel] = []
+    let contactService = ALContactService()
 
     open var richMessages: [String: Any] = [:]
 
@@ -1203,11 +1204,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             NSLog("messages loaded: ", messages)
             self.alMessages = messages.reversed() as! [ALMessage]
-            let contactService = ALContactService()
-
-            if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
-              let role = alContact.roleType,
-              role !=  NSNumber.init(value: AL_BOT.rawValue) {
+            if !self.isConversationAssignedToBot() {
                self.alMessageWrapper.addObject(toMessageArray: messages)
                let models = self.alMessages.map { $0.messageModel }
                self.messageModels = models
@@ -1222,6 +1219,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
 
+    func isConversationAssignedToBot() -> Bool {
+        if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
+          let role = alContact.roleType,
+          role ==  NSNumber.init(value: AL_BOT.rawValue) {
+            return false
+        }
+        return true
+    }
+    
     func loadSearchMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {

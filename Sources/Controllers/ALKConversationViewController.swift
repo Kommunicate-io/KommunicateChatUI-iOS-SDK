@@ -277,7 +277,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             let msgArray = notification.object as? [ALMessage]
             print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
-            guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
+            guard let list = notification.object as? [Any], !list.isEmpty else { return }
+            guard weakSelf.isViewLoaded else{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    weakSelf.addMessagesToList(list)
+                }
+                return
+            }
             weakSelf.addMessagesToList(list)
         })
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
@@ -408,13 +414,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
-        }
-
-        if viewModel.isGroup == true {
-            let dispName = localizedString(forKey: "Somebody", withDefaultValue: SystemMessage.Chat.somebody, fileName: localizedStringFileName)
-            setTypingNoticeDisplayName(displayName: dispName)
-        } else {
-            setTypingNoticeDisplayName(displayName: title ?? "")
         }
 
         viewModel.delegate = self
