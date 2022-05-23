@@ -89,7 +89,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var messageModels: [ALKMessageModel] = []
-    let contactService = ALContactService()
 
     open var richMessages: [String: Any] = [:]
 
@@ -616,7 +615,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
-        //        print("new messages: ", models.map { $0.message })
+        print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
     }
 
@@ -1185,7 +1184,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
         conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
         return conversationProfile
     }
-
+    let contactService = ALContactService()
+    var timer = Timer()
+    var count = 0
+    var models : [ALKMessageModel] = []
     func loadMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
@@ -1204,12 +1206,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             NSLog("messages loaded: ", messages)
             self.alMessages = messages.reversed() as! [ALMessage]
+            self.alMessageWrapper.addObject(toMessageArray: messages)
+            self.models = self.alMessages.map { $0.messageModel }
+
             if !self.isConversationAssignedToBot() {
-               self.alMessageWrapper.addObject(toMessageArray: messages)
-               let models = self.alMessages.map { $0.messageModel }
-               self.messageModels = models
-            }
-          
+
+                self.loopOverTheLoadedMessageArray()
+//                    self.alMessageWrapper.addObject(toMessageArray: messages)
+//                    let models = self.alMessages.map { $0.messageModel }
+//                    self.messageModels = models
+//                }
+                
+             }
+
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             self.membersInGroup { members in
@@ -1218,16 +1227,34 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         })
     }
-
-    func isConversationAssignedToBot() -> Bool {
-        if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
-          let role = alContact.roleType,
-          role ==  NSNumber.init(value: AL_BOT.rawValue) {
-            return false
+    
+    func loopOverTheLoadedMessageArray() {
+        if count >= alMessages.count {
+            return
         }
-        return true
+        self.delegate?.updateTyingStatus(status: true, userId: "pakka10")
+        self.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) {[self] timer in
+            self.messageModels.append(models[count])
+            self.delegate?.messageUpdated()
+            self.timer.invalidate()
+            if count >= alMessages.count  {
+              count = 0
+            } else {
+              count = count + 1
+              loopOverTheLoadedMessageArray()
+            }
+      }
     }
     
+    func isConversationAssignedToBot() -> Bool {
+         if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
+           let role = alContact.roleType,
+           role ==  NSNumber.init(value: AL_BOT.rawValue) {
+             return false
+         }
+         return true
+    }
+
     func loadSearchMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {

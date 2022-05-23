@@ -1012,6 +1012,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
     }
+    func getDate() -> String {
+        let date = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return df.string(from: date)
+    }
 
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
@@ -1024,13 +1030,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         
+        print("pakka10 typing show Called at \(getDate())")
+        
         if status {
                if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
                    let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
                    if timerTask.isValid {
-                       Timer.scheduledTimer(timeInterval: (timeInterval + 2), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
+                       Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
                    } else {
-                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                       // to give some time gap between previous to next
+                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
                    }
                } else {
                    timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
@@ -1060,9 +1069,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     @objc public func invalidateTimerAndUpdateHeightConstraint(_: Timer?) {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
+        print("pakka10 typing hide Called at at \(getDate())")
+
+        
     }
     
     @objc func delayedSecondTimer (timer: Timer) {
+//        print("pakka10 typing delayedSecondTimer \(getDate())")
             let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
             timer.invalidate()
             self.typingNoticeViewHeighConstaint?.constant = 0
@@ -2008,7 +2021,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     // And thats why when we check whether last cell is visible or not, it gives false result since the last cell is sometimes not fully visible.
     // This is a known apple bug and has a thread in stackoverflow: https://stackoverflow.com/questions/25686490/ios-8-auto-cell-height-cant-scroll-to-last-row
     public func moveTableViewToBottom(indexPath: IndexPath) {
-        guard indexPath.section > 0 else {
+        guard indexPath.section >= 0 else {
             return
         }
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
