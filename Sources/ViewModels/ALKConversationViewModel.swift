@@ -178,6 +178,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         richMessages.removeAll()
         alMessageWrapper = ALMessageArrayWrapper()
         groupMembers = nil
+        count = 0
+    }
+    
+    public func containsMessage(_ message:ALMessage) -> Bool {
+        guard !alMessages.isEmpty else{
+            return false
+        }
+        return alMessages.contains(message)
     }
 
     open func groupProfileImgUrl() -> String {
@@ -1189,6 +1197,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     var count = 0
     var models : [ALKMessageModel] = []
     func loadMessages() {
+        print("pakka10 ALKVM loadMessages Called at \(getDate())")
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
             time = (messageList.firstObject as! ALMessage).createdAtTime
@@ -1205,19 +1214,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: ", messages)
+            print("pakka10 ALKVM loadmessageresponse at \(self.getDate())")
+
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
             self.models = self.alMessages.map { $0.messageModel }
 
-            if !self.isConversationAssignedToBot() {
-
+            if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0  {
+                print("pakka10 ALKVM loopOverTheLoadedMessageArray at \(self.getDate())")
                 self.loopOverTheLoadedMessageArray()
-//                    self.alMessageWrapper.addObject(toMessageArray: messages)
-//                    let models = self.alMessages.map { $0.messageModel }
-//                    self.messageModels = models
-//                }
-                
-             }
+            }else {
+                self.messageModels = self.models
+            }
 
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
@@ -1232,8 +1240,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if count >= alMessages.count {
             return
         }
-        self.delegate?.updateTyingStatus(status: true, userId: "pakka10")
-        self.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) {[self] timer in
+        self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
+        print("pakka10 ALKVM addMessageCalled at \(getDate()) ")
+       let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+            self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
             self.messageModels.append(models[count])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
@@ -1246,13 +1256,20 @@ open class ALKConversationViewModel: NSObject, Localizable {
       }
     }
     
+    func getDate() -> String {
+        let date = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return df.string(from: date)
+    }
+    
     func isConversationAssignedToBot() -> Bool {
          if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
            let role = alContact.roleType,
            role ==  NSNumber.init(value: AL_BOT.rawValue) {
-             return false
+             return true
          }
-         return true
+         return false
     }
 
     func loadSearchMessages() {

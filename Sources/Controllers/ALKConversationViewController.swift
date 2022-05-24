@@ -276,14 +276,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             notification in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             let msgArray = notification.object as? [ALMessage]
-            print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
-            guard let list = notification.object as? [Any], !list.isEmpty else { return }
-            guard weakSelf.isViewLoaded else{
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    weakSelf.addMessagesToList(list)
-                }
-                return
-            }
+            print("pakka10 ALKVC new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
+            guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
         })
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
@@ -381,7 +375,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func addMessagesToList(_ messageList: [Any]) {
-        viewModel.addMessagesToList(messageList)
+       // viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
@@ -1030,6 +1024,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         
+        guard typingNoticeViewHeighConstaint?.constant == 0 else{
+            return
+        }
         print("pakka10 typing show Called at \(getDate())")
         
         if status {
