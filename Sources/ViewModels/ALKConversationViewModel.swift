@@ -1197,7 +1197,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
     var count = 0
     var models : [ALKMessageModel] = []
     func loadMessages() {
-        print("pakka10 ALKVM loadMessages Called at \(getDate())")
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
             time = (messageList.firstObject as! ALMessage).createdAtTime
@@ -1214,14 +1213,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: ", messages)
-            print("pakka10 ALKVM loadmessageresponse at \(self.getDate())")
 
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
             self.models = self.alMessages.map { $0.messageModel }
 
             if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0  {
-                print("pakka10 ALKVM loopOverTheLoadedMessageArray at \(self.getDate())")
                 self.loopOverTheLoadedMessageArray()
             }else {
                 self.messageModels = self.models
@@ -1241,7 +1238,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
-        print("pakka10 ALKVM addMessageCalled at \(getDate()) ")
        let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
             self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
             guard count < models.count else{
@@ -1253,17 +1249,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if count >= alMessages.count  {
               count = 0
             } else {
-              count = count + 1
+              count += 1
               loopOverTheLoadedMessageArray()
             }
       }
-    }
-    
-    func getDate() -> String {
-        let date = Date()
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return df.string(from: date)
     }
     
     func isConversationAssignedToBot() -> Bool {

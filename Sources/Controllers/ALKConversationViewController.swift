@@ -276,7 +276,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             notification in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             let msgArray = notification.object as? [ALMessage]
-            print("pakka10 ALKVC new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
         })
@@ -1006,13 +1005,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
     }
-    func getDate() -> String {
-        let date = Date()
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return df.string(from: date)
-    }
-
+    
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
         /// Don't show typing status when contact is blocked
@@ -1024,10 +1017,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         
-        guard typingNoticeViewHeighConstaint?.constant == 0 else{
-            return
-        }
-        print("pakka10 typing show Called at \(getDate())")
+        guard typingNoticeViewHeighConstaint?.constant == 0 else { return }
         
         if status {
                if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
@@ -1066,13 +1056,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     @objc public func invalidateTimerAndUpdateHeightConstraint(_: Timer?) {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
-        print("pakka10 typing hide Called at at \(getDate())")
-
-        
     }
     
     @objc func delayedSecondTimer (timer: Timer) {
-//        print("pakka10 typing delayedSecondTimer \(getDate())")
             let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
             timer.invalidate()
             self.typingNoticeViewHeighConstaint?.constant = 0
