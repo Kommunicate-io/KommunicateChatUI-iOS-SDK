@@ -1244,6 +1244,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         print("pakka10 ALKVM addMessageCalled at \(getDate()) ")
        let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
             self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
+            guard count < models.count else{
+                return
+            }
             self.messageModels.append(models[count])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
