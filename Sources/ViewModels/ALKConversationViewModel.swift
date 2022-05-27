@@ -64,6 +64,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // MARK: - Outputs
 
     open var isFirstTime = true
+    var timer = Timer()
+    var messagePosition = 0
+    var modelsToBeAddedAfterDelay : [ALKMessageModel] = []
 
     open var isGroup: Bool {
         guard channelKey != nil else {
@@ -178,7 +181,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         richMessages.removeAll()
         alMessageWrapper = ALMessageArrayWrapper()
         groupMembers = nil
-        count = 0
+        messagePosition = 0
     }
     
     public func containsMessage(_ message:ALMessage) -> Bool {
@@ -1192,10 +1195,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
         return conversationProfile
     }
-    let contactService = ALContactService()
-    var timer = Timer()
-    var count = 0
-    var models : [ALKMessageModel] = []
+   
     func loadMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
@@ -1216,12 +1216,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
-            self.models = self.alMessages.map { $0.messageModel }
+            self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
 
             if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0  {
                 self.loopOverTheLoadedMessageArray()
-            }else {
-                self.messageModels = self.models
+            } else {
+                self.messageModels = self.modelsToBeAddedAfterDelay
             }
 
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
@@ -1233,29 +1233,34 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
     
+    /*
+        Since we are getting the welcome message from Api Call, we are using this method to Show Typing Delay Indicator for Welcome Messsages
+     */
     func loopOverTheLoadedMessageArray() {
-        if count >= alMessages.count {
+        if messagePosition >= alMessages.count {
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
-       let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
-            self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
-            guard count < models.count else{
+        let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
+            guard messagePosition < modelsToBeAddedAfterDelay.count else{
                 return
             }
-            self.messageModels.append(models[count])
+            self.messageModels.append(modelsToBeAddedAfterDelay[messagePosition])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
-            if count >= alMessages.count  {
-              count = 0
+            if messagePosition >= alMessages.count  {
+                messagePosition = 0
             } else {
-              count += 1
-              loopOverTheLoadedMessageArray()
+                messagePosition += 1
+                loopOverTheLoadedMessageArray()
             }
-      }
+        }
     }
     
+    
     func isConversationAssignedToBot() -> Bool {
+        let contactService = ALContactService()
          if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
            let role = alContact.roleType,
            role ==  NSNumber.init(value: AL_BOT.rawValue) {

@@ -374,7 +374,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func addMessagesToList(_ messageList: [Any]) {
-       // viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
