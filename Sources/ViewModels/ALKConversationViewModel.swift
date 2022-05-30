@@ -65,7 +65,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open var isFirstTime = true
     var timer = Timer()
-    var messagePosition = 0
+    var welcomeMessagePosition = 0
     var modelsToBeAddedAfterDelay : [ALKMessageModel] = []
 
     open var isGroup: Bool {
@@ -181,7 +181,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         richMessages.removeAll()
         alMessageWrapper = ALMessageArrayWrapper()
         groupMembers = nil
-        messagePosition = 0
+        welcomeMessagePosition = 0
     }
     
     /// This method used to check a message is present in the viewmodel.
@@ -1222,7 +1222,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
 
             if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0  {
-                self.loopOverTheLoadedMessageArray()
+                self.showTypingIndicatorForWelcomeMessage()
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
             }
@@ -1239,24 +1239,24 @@ open class ALKConversationViewModel: NSObject, Localizable {
     /*
         Since we are getting the welcome message from Api Call, we are using this method to Show Typing Delay Indicator for Welcome Messsages
      */
-    func loopOverTheLoadedMessageArray() {
-        if messagePosition >= alMessages.count {
+    func showTypingIndicatorForWelcomeMessage() {
+        if welcomeMessagePosition >= alMessages.count {
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
         let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
         self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
-            guard messagePosition < modelsToBeAddedAfterDelay.count else{
+            guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
                 return
             }
-            self.messageModels.append(modelsToBeAddedAfterDelay[messagePosition])
+            self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
-            if messagePosition >= alMessages.count  {
-                messagePosition = 0
+            if welcomeMessagePosition >= alMessages.count  {
+                welcomeMessagePosition = 0
             } else {
-                messagePosition += 1
-                loopOverTheLoadedMessageArray()
+                welcomeMessagePosition += 1
+                showTypingIndicatorForWelcomeMessage()
             }
         }
     }
