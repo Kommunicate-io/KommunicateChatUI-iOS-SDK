@@ -184,6 +184,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         messagePosition = 0
     }
     
+    /// This method used to check a message is present in the viewmodel.
+    /// - Parameters:
+    ///   - message: Pass ALMessage object.
     public func containsMessage(_ message:ALMessage) -> Bool {
         guard !alMessages.isEmpty else{
             return false
