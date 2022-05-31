@@ -4,7 +4,8 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## [Unreleased]
 - [Cm-829] Added Typing Indicator Support for Welcome Message
-- [CM-859] Add Customization option to hide sender name
+- [CM-870] Added onTimeRating flag on ALKConfiguration
+- [CM-859] Added Customization option to hide sender name
 - [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 ## [0.2.0] - 2022-03-22
 - [CM-842] Added Support for s3 service for upload & download
