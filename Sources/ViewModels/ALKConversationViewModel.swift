@@ -64,6 +64,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // MARK: - Outputs
 
     open var isFirstTime = true
+    var timer = Timer()
+    var welcomeMessagePosition = 0
+    var modelsToBeAddedAfterDelay : [ALKMessageModel] = []
 
     open var isGroup: Bool {
         guard channelKey != nil else {
@@ -178,6 +181,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
         richMessages.removeAll()
         alMessageWrapper = ALMessageArrayWrapper()
         groupMembers = nil
+        welcomeMessagePosition = 0
+    }
+    
+    /// This method used to check a message is present in the viewmodel.
+    /// - Parameters:
+    ///   - message: Pass ALMessage object.
+    public func containsMessage(_ message:ALMessage) -> Bool {
+        guard !alMessages.isEmpty else{
+            return false
+        }
+        return alMessages.contains(message)
     }
 
     open func groupProfileImgUrl() -> String {
@@ -615,7 +629,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
-        //        print("new messages: ", models.map { $0.message })
+        print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
     }
 
@@ -1184,7 +1198,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
         return conversationProfile
     }
-
+   
     func loadMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
@@ -1202,10 +1216,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: ", messages)
+
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
-            let models = self.alMessages.map { $0.messageModel }
-            self.messageModels = models
+            self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
+
+            if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0  {
+                self.showTypingIndicatorForWelcomeMessage()
+            } else {
+                self.messageModels = self.modelsToBeAddedAfterDelay
+            }
 
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
@@ -1214,6 +1234,42 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.loadingFinished(error: nil)
             }
         })
+    }
+    
+    /*
+        Since we are getting the welcome message from Api Call, we are using this method to Show Typing Delay Indicator for Welcome Messsages
+     */
+    func showTypingIndicatorForWelcomeMessage() {
+        if welcomeMessagePosition >= alMessages.count {
+            return
+        }
+        self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
+        let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
+            guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
+                return
+            }
+            self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
+            self.delegate?.messageUpdated()
+            self.timer.invalidate()
+            if welcomeMessagePosition >= alMessages.count  {
+                welcomeMessagePosition = 0
+            } else {
+                welcomeMessagePosition += 1
+                showTypingIndicatorForWelcomeMessage()
+            }
+        }
+    }
+    
+    
+    func isConversationAssignedToBot() -> Bool {
+        let contactService = ALContactService()
+         if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
+           let role = alContact.roleType,
+           role ==  NSNumber.init(value: AL_BOT.rawValue) {
+             return true
+         }
+         return false
     }
 
     func loadSearchMessages() {
