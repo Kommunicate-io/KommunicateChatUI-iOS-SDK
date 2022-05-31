@@ -3,6 +3,7 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 ## [Unreleased]
+- [Cm-829] Added Typing Indicator Support for Welcome Message
 - [CM-859] Add Customization option to hide sender name
 - [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 ## [0.2.0] - 2022-03-22
