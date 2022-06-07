@@ -1220,8 +1220,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
-
-            if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0  {
+            //Check for Conversation Assignee to show Typing Indicator
+            if !self.isConversationAssignedToBot() {
+                self.messageModels = self.modelsToBeAddedAfterDelay
+            } else if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
@@ -1261,15 +1263,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    
     func isConversationAssignedToBot() -> Bool {
+        //If Welcome message is not configured, then return false
+        guard !self.alMessages.isEmpty else { return false }
+
         let contactService = ALContactService()
-         if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
+        if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
            let role = alContact.roleType,
            role ==  NSNumber.init(value: AL_BOT.rawValue) {
-             return true
-         }
-         return false
+            return true
+        }
+        return false
     }
 
     func loadSearchMessages() {
