@@ -2,10 +2,19 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [0.2.2] - 2022-06-14
+- Upgraded KM Core SDK to 1.0.3
+- [Cm-829] Added Typing Indicator Support for Welcome Message
+- [CM-870] Added onTimeRating flag on ALKConfiguration
+- [CM-859] Added Customization option to hide sender name
+- [CM-699] Show Rating same as web
+
 ## [0.2.1] - 2022-03-31
 - [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 - [CM-773] Fixed thumbnail blobkey issues for photos & videos
+
 ## [0.2.0] - 2022-03-22
+- [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 - [CM-842] Added Support for s3 service for upload & download
 - [CM-825] Fixed SPM integration issue
 ## [0.1.2] 2022-01-20

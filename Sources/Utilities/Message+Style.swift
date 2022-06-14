@@ -55,9 +55,16 @@ public enum ALKMessageStyle {
 
     /// Style for channel info messages in chat
     public static var infoMessage = Style(
-        font: UIFont.font(.bold(size: 12.0)),
-        text: UIColor.white,
+        font: UIFont.font(.normal(size: 12)),
+        text: UIColor.gray,
         background: UIColor.gray
+    )
+
+    // Style for feedback comments
+    public static var feedbackComment = Style(
+        font: UIFont.font(.italic(size: 12)),
+        text: UIColor.lightGray,
+        background: UIColor.clear
     )
 
     /// Style for date cell in chat

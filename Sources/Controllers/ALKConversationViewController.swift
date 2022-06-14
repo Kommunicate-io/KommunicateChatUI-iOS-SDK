@@ -276,7 +276,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             notification in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             let msgArray = notification.object as? [ALMessage]
-            print("new notification received: ", msgArray?.first?.message as Any, msgArray?.count ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
         })
@@ -375,7 +374,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func addMessagesToList(_ messageList: [Any]) {
-        viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
@@ -408,13 +406,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if individualLaunch {
             alMqttConversationService.mqttConversationDelegate = self
             alMqttConversationService.subscribeToConversation()
-        }
-
-        if viewModel.isGroup == true {
-            let dispName = localizedString(forKey: "Somebody", withDefaultValue: SystemMessage.Chat.somebody, fileName: localizedStringFileName)
-            setTypingNoticeDisplayName(displayName: dispName)
-        } else {
-            setTypingNoticeDisplayName(displayName: title ?? "")
         }
 
         viewModel.delegate = self
@@ -1013,7 +1004,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
     }
-
+    
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
         /// Don't show typing status when contact is blocked
@@ -1025,13 +1016,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         
+        guard typingNoticeViewHeighConstaint?.constant == 0 else { return }
+        
         if status {
                if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
                    let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
                    if timerTask.isValid {
-                       Timer.scheduledTimer(timeInterval: (timeInterval + 2), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
+                       Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
                    } else {
-                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                       // to give some time gap between previous to next
+                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
                    }
                } else {
                    timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)

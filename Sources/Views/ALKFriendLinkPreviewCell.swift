@@ -259,6 +259,7 @@ class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
                 constant: Padding.TimeLabel.bottom
             ),
         ])
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 
     override func setupStyle() {

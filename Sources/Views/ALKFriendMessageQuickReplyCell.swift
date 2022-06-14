@@ -208,6 +208,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
             timeLabelHeight,
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
         ])
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 }
 

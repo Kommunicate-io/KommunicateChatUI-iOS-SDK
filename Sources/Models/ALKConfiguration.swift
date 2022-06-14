@@ -42,7 +42,7 @@ public struct ALKConfiguration {
 
     /// Pass the name of Localizable Strings file
     public var localizedStringFileName = "Localizable"
-
+    
     /// Send message icon in chat bar.
     public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
 
@@ -191,7 +191,10 @@ public struct ALKConfiguration {
     /// If true then click action on Add Participant in group will disabled.
     /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
     public var disableAddParticipantButton = false
-
+    
+    /// If true then feedback will be asked only once in a conversation
+    /// if false then feedback will be asked  everytime the conversation is resolved
+    public var oneTimeRating = false
     /// Use this to configure channel detail view like changing member name label color, title font etc.
     public var channelDetail = ALKChannelDetailViewConfiguration()
 

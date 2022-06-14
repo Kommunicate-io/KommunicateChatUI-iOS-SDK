@@ -5,24 +5,24 @@ PODS:
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (7.0.0)
-  - KommunicateChatUI-iOS-SDK (0.2.1):
-    - KommunicateChatUI-iOS-SDK/Complete (= 0.2.1)
-  - KommunicateChatUI-iOS-SDK/Complete (0.2.1):
+  - KommunicateChatUI-iOS-SDK (0.2.2):
+    - KommunicateChatUI-iOS-SDK/Complete (= 0.2.2)
+  - KommunicateChatUI-iOS-SDK/Complete (0.2.2):
     - Kingfisher (~> 7.0.0)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
-    - KommunicateCore-iOS-SDK (~> 1.0.1)
+    - KommunicateCore-iOS-SDK (~> 1.0.3)
     - SwipeCellKit (~> 2.7.1)
-  - KommunicateChatUI-iOS-SDK/RichMessageKit (0.2.1)
-  - KommunicateCore-iOS-SDK (1.0.1)
-  - Nimble (9.2.1)
-  - Nimble-Snapshots (9.3.0):
-    - Nimble-Snapshots/Core (= 9.3.0)
-  - Nimble-Snapshots/Core (9.3.0):
+  - KommunicateChatUI-iOS-SDK/RichMessageKit (0.2.2)
+  - KommunicateCore-iOS-SDK (1.0.3)
+  - Nimble (10.0.0)
+  - Nimble-Snapshots (9.4.0):
+    - Nimble-Snapshots/Core (= 9.4.0)
+  - Nimble-Snapshots/Core (9.4.0):
     - iOSSnapshotTestCase (~> 8.0)
     - Nimble
-  - Quick (4.0.0)
+  - Quick (5.0.1)
   - SwiftFormat/CLI (0.48.18)
-  - SwiftLint (0.47.0)
+  - SwiftLint (0.47.1)
   - SwipeCellKit (2.7.1)
 
 DEPENDENCIES:
@@ -52,15 +52,15 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
-  KommunicateChatUI-iOS-SDK: 0e2c99bb93655eb1436d989ec2679204ed83b770
-  KommunicateCore-iOS-SDK: 014466d580337c71c94fdc47f1394cf4c88fdd37
-  Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
-  Nimble-Snapshots: 97270cd48f0e6eebd6c80ccf7dd35d4e57fb9997
-  Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
+  KommunicateChatUI-iOS-SDK: 9d00e89f0a6a71c8c775fbd51426ab56d58e57a2
+  KommunicateCore-iOS-SDK: 6588c2767dc40a3a803de8c7440582ae35d9c1c9
+  Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
+  Nimble-Snapshots: ef281b908c604f78c8313587e25ea92c8ab513d7
+  Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
   SwiftFormat: 7dd2b33a0a3d61095b61c911b6d89ff962ae695c
-  SwiftLint: d41cc46a2ae58ac6d9f26954bc89f1d72e71fdef
+  SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
 PODFILE CHECKSUM: ceb862bddf2e495511834b44350239c68ccce94f
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
