@@ -8,6 +8,11 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - [CM-870] Added onTimeRating flag on ALKConfiguration
 - [CM-859] Added Customization option to hide sender name
 - [CM-699] Show Rating same as web
+
+## [0.2.1] - 2022-03-31
+- [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
+- [CM-773] Fixed thumbnail blobkey issues for photos & videos
+
 ## [0.2.0] - 2022-03-22
 - [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 - [CM-842] Added Support for s3 service for upload & download
