@@ -1891,6 +1891,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         /// Rich Message button primary color
         ALKRichMessageStyle.primaryColor = appSettingsUserDefaults.getButtonPrimaryColor()
+        
+        RMCellConfiguration.hideSenderName = KMCellConfiguration.hideSenderName
     }
 
     func setSentMessageStatus() {
