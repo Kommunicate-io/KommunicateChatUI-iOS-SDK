@@ -2,7 +2,7 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-## [0.2.2] - 2022-06-23
+## [0.2.3] - 2022-06-23
 - Upgraded KM Core SDK to 1.0.4
 - [Cm-829] Added Typing Indicator Support for Welcome Message
 - [CM-870] Added onTimeRating flag on ALKConfiguration
