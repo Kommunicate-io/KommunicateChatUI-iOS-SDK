@@ -1220,10 +1220,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
-            //Check for Conversation Assignee to show Typing Indicator
-            if !self.isConversationAssignedToBot() {
-                self.messageModels = self.modelsToBeAddedAfterDelay
-            } else if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
+            // Check for Conversation Assignee and conversation first message created time to show Typing Indicator.
+            if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval") > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
@@ -1261,6 +1259,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 showTypingIndicatorForWelcomeMessage()
             }
         }
+    }
+    
+    func isOldConversation() -> Bool {
+        let createdTimeInMilliSec = self.alMessages[0].createdAtTime as? Double ?? 0.0
+        let date = NSDate() 
+        let currentTimeInMilliSec = date.timeIntervalSince1970 * 1000
+        let diff = currentTimeInMilliSec - createdTimeInMilliSec
+        print("pakka10 time diff \(diff)")
+        // Checking time difference of 10 seconds.
+        if currentTimeInMilliSec - createdTimeInMilliSec < 10000 {
+            return false
+        }
+        return true
     }
     
     func isConversationAssignedToBot() -> Bool {
