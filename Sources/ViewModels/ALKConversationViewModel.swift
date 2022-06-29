@@ -1261,12 +1261,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
+    // Check for Old Conversation based on created time
     func isOldConversation() -> Bool {
         let createdTimeInMilliSec = self.alMessages[0].createdAtTime as? Double ?? 0.0
         let date = NSDate() 
         let currentTimeInMilliSec = date.timeIntervalSince1970 * 1000
         let diff = currentTimeInMilliSec - createdTimeInMilliSec
-        print("pakka10 time diff \(diff)")
         // Checking time difference of 10 seconds.
         if currentTimeInMilliSec - createdTimeInMilliSec < 10000 {
             return false

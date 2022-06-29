@@ -1027,10 +1027,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                        Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
                    } else {
                        // to give some time gap between previous to next
-                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
                    }
                } else {
-                   timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                   timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
                }
            } else {
                timerTask.invalidate()
@@ -1054,16 +1054,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    @objc public func invalidateTimerAndUpdateHeightConstraint(_: Timer?) {
+    @objc public func invalidateTimerAndUpdateHeightConstraint() {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
     }
     
     @objc func delayedSecondTimer (timer: Timer) {
-            let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
-            timer.invalidate()
-            self.typingNoticeViewHeighConstaint?.constant = 0
-            Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+        let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        timer.invalidate()
+        self.typingNoticeViewHeighConstaint?.constant = 0
+        Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
     }
     
     public func sync(message: ALMessage) {
