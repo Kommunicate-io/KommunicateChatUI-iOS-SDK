@@ -126,6 +126,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private var typingTimerTask = Timer()
     private var groupMembers: Set<ALContact>?
     private var awsEncryptionPrefix = "AWS-ENCRYPTED"
+    private var botDelayTime = 0
+
     
     // MARK: - Initializer
 
@@ -146,6 +148,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // MARK: - Public methods
 
     public func prepareController() {
+        let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+        botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
+        
         if isSearch {
             delegate?.loadingStarted()
             loadSearchMessages()
@@ -1221,7 +1226,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessageWrapper.addObject(toMessageArray: messages)
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
             // Check for Conversation Assignee and conversation first message created time to show Typing Indicator.
-            if self.isConversationAssignedToBot() && (UserDefaults.standard.integer(forKey: "botDelayInterval") > 0) && !self.isOldConversation() {
+            if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
@@ -1244,7 +1249,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
-        let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        let delay = TimeInterval(botDelayTime)
         self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
                 return

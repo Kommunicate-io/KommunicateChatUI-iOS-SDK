@@ -71,6 +71,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// See configuration.
     private var isProfileTapActionEnabled = true
+    
+    private var botDelayTime = 0
+
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
@@ -960,6 +963,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         checkUserBlock()
         subscribeChannelToMqtt()
         viewModel.prepareController()
+        let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+        botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
     }
 
     @objc open func pushNotification(notification: NSNotification) {
@@ -1021,8 +1026,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard typingNoticeViewHeighConstaint?.constant == 0 else { return }
         
         if status {
-               if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
-                   let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+               if botDelayTime > 0 {
+                   let timeInterval = TimeInterval(botDelayTime)
                    if timerTask.isValid {
                        Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
                    } else {
@@ -1060,7 +1065,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     @objc func delayedSecondTimer (timer: Timer) {
-        let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        let timeInterval = TimeInterval(botDelayTime)
         timer.invalidate()
         self.typingNoticeViewHeighConstaint?.constant = 0
         Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
