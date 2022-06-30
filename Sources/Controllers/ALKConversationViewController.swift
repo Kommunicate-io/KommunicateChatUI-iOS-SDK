@@ -963,8 +963,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         checkUserBlock()
         subscribeChannelToMqtt()
         viewModel.prepareController()
-        let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
-        botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
     }
 
     @objc open func pushNotification(notification: NSNotification) {
@@ -1015,30 +1013,33 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
         /// Don't show typing status when contact is blocked
-        guard
-            let contact = ALContactService().loadContact(byKey: "userId", value: userId),
+        guard let contact = ALContactService().loadContact(byKey: "userId", value: userId),
             !contact.block,
             !contact.blockBy
-        else {
-            return
+        else { return }
+        // Check For status false...disable the timer directly
+        if !status {
+            timerTask.invalidate()
+            typingNoticeViewHeighConstaint?.constant = 0
         }
         
         guard typingNoticeViewHeighConstaint?.constant == 0 else { return }
         
         if status {
-               if botDelayTime > 0 {
-                   let timeInterval = TimeInterval(botDelayTime)
-                   if timerTask.isValid {
-                       Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
-                   } else {
-                       // to give some time gap between previous to next
-                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
-                   }
+            let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+            botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
+            // Add Delay only for Bot 
+            if botDelayTime > 0 && contact.roleType == NSNumber.init(value: AL_BOT.rawValue) {
+               let timeInterval = TimeInterval(botDelayTime)
+               if timerTask.isValid {
+                   Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
                } else {
-                   timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
+                   // to give some time gap between previous to next
+                   self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
                }
            } else {
-               timerTask.invalidate()
+               timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
+           }
         }
         
         typingNoticeViewHeighConstaint?.constant = status ? 30 : 0
