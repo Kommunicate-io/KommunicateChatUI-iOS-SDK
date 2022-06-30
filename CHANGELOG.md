@@ -4,12 +4,18 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 ## [0.2.4] - 2022-06-30
 - [CM-977] Fixed Typing Indicator being shown when user opens the older conversation
 - [CM-979] Fixed Last button of Curved/Quick Reply Button not supporting multiple lines 
+
 ## [0.2.3] - 2022-06-23
 - Upgraded KM Core SDK to 1.0.4
 - [Cm-829] Added Typing Indicator Support for Welcome Message
 - [CM-870] Added onTimeRating flag on ALKConfiguration
 - [CM-859] Added Customization option to hide sender name
 - [CM-699] Show Rating same as web
+
+## [0.2.1] - 2022-03-31
+- [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
+- [CM-773] Fixed thumbnail blobkey issues for photos & videos
+
 ## [0.2.0] - 2022-03-22
 - [CM-848] Added localisation support for last message of the conversation in Conversationlist screen.
 - [CM-842] Added Support for s3 service for upload & download
