@@ -106,13 +106,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     // To get Conversation created time based on its first message.
-    open func getConversationCreatedTime() -> NSNumber? {
+    open var conversationCreatedTime: NSNumber? {
         if alMessages.isEmpty {
             return nil
         }
         return alMessages[0].createdAtTime
     }
-
+    
     private var conversationId: NSNumber? {
         return conversationProxy?.id
     }
