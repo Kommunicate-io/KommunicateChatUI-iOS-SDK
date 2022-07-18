@@ -104,7 +104,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         return alchannel.type == 6
     }
-
+    
+    // To get Conversation created time based on its first message.
+    open var conversationCreatedTime: NSNumber? {
+        if alMessages.isEmpty {
+            return nil
+        }
+        return alMessages[0].createdAtTime
+    }
+    
     private var conversationId: NSNumber? {
         return conversationProxy?.id
     }
