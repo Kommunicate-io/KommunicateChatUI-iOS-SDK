@@ -120,8 +120,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         guard let feedback = getFeedback(viewModel: viewModel) else {
-            setupStyle()
             messageView.text = viewModel.message
+            commentTextView.text = ""
             setupConstraints()
             return
         }
@@ -134,7 +134,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             }
             comment = feedback["comments"]! as! String
         }
-
+        
         if feedback["rating"] != nil {
             contentView.subviews.forEach { subview in
                 subview.removeFromSuperview()
@@ -174,6 +174,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     fileprivate func setupConstraints() {
+        contentView.subviews.forEach({ $0.removeFromSuperview() })
         contentView.addViewsForAutolayout(views: [messageView])
         contentView.bringSubviewToFront(messageView)
 
@@ -181,9 +182,13 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Padding.MessageView.bottom).isActive = true
         messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         messageView.widthAnchor.constraint(lessThanOrEqualToConstant: Padding.MessageView.width).isActive = true
+    
+        contentView.layoutSubviews()
     }
     
     fileprivate func setUpConstraintsForRating() {
+        contentView.subviews.forEach({ $0.removeFromSuperview() })
+
         let horizontalStackView = UIStackView()
         let verticalStackView = UIStackView()
         let lineViewLeft = UIView()
