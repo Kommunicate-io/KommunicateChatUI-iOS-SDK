@@ -91,10 +91,11 @@ final class ALKInformationCell: UITableViewCell, Localizable {
                                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                                                    attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
                                                                    context: nil)
-            //  Get feedback dictionary for view 
-            guard let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel) else { return 0 }
-            if dictionary["comments"] != nil {
+            //  Get feedback dictionary for view
+            if let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel),dictionary["comments"] != nil  {
                 messageHeigh = (rect.height + Padding.MessageView.height + Padding.CommentView.height)
+            } else if let message = viewModel.message , !message.isEmpty {
+                messageHeigh = (rect.height + Padding.MessageView.height)
             } else {
                 messageHeigh = rect.height + Padding.MessageView.height
             }
@@ -119,6 +120,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         guard let feedback = getFeedback(viewModel: viewModel) else {
+            setupStyle()
+            messageView.text = viewModel.message
             setupConstraints()
             return
         }
