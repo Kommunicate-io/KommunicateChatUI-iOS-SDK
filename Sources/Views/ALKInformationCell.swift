@@ -68,6 +68,18 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         tv.textContainer.lineBreakMode = .byWordWrapping
         return tv
     }()
+    
+    fileprivate var lineViewLeft : UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
+    }()
+    
+    fileprivate var lineViewRight : UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
+    }()
 
     func setConfiguration(configuration: ALKConfiguration) {
         self.configuration = configuration
@@ -94,8 +106,6 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             //  Get feedback dictionary for view
             if let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel),dictionary["comments"] != nil  {
                 messageHeigh = (rect.height + Padding.MessageView.height + Padding.CommentView.height)
-            } else if let message = viewModel.message , !message.isEmpty {
-                messageHeigh = (rect.height + Padding.MessageView.height)
             } else {
                 messageHeigh = rect.height + Padding.MessageView.height
             }
@@ -122,6 +132,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         guard let feedback = getFeedback(viewModel: viewModel) else {
             messageView.text = viewModel.message
             commentTextView.text = ""
+            lineViewLeft.isHidden = true
+            lineViewRight.isHidden = true
             setupConstraints()
             return
         }
@@ -174,7 +186,6 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     fileprivate func setupConstraints() {
-        contentView.subviews.forEach({ $0.removeFromSuperview() })
         contentView.addViewsForAutolayout(views: [messageView])
         contentView.bringSubviewToFront(messageView)
 
@@ -182,18 +193,13 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Padding.MessageView.bottom).isActive = true
         messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         messageView.widthAnchor.constraint(lessThanOrEqualToConstant: Padding.MessageView.width).isActive = true
-    
-        contentView.layoutSubviews()
     }
     
     fileprivate func setUpConstraintsForRating() {
-        contentView.subviews.forEach({ $0.removeFromSuperview() })
 
         let horizontalStackView = UIStackView()
         let verticalStackView = UIStackView()
-        let lineViewLeft = UIView()
-        let lineViewRight = UIView()
-        
+       
         verticalStackView.axis  = NSLayoutConstraint.Axis.vertical
         verticalStackView.distribution  = UIStackView.Distribution.equalSpacing
         verticalStackView.alignment = UIStackView.Alignment.center
@@ -210,7 +216,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         horizontalStackView.distribution  = UIStackView.Distribution.equalSpacing
         horizontalStackView.alignment = UIStackView.Alignment.center
         horizontalStackView.spacing = Padding.HorizontalStackView.spacing
-        
+        lineViewLeft.isHidden = false
+        lineViewRight.isHidden = false
         horizontalStackView.addArrangedSubview(lineViewLeft)
         horizontalStackView.addArrangedSubview(verticalStackView)
         horizontalStackView.addArrangedSubview(lineViewRight)
