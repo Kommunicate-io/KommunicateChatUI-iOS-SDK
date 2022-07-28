@@ -53,10 +53,17 @@ public enum ALKMessageStyle {
         background: UIColor.blue.withAlphaComponent(0.1)
     )
 
-    /// Style for channel info messages in chat
-    public static var infoMessage = Style(
+    /// Style for channel feedback messages in chat
+    public static var feedbackMessage = Style(
         font: UIFont.font(.normal(size: 12)),
         text: UIColor.gray,
+        background: UIColor.gray
+    )
+    
+    /// Style for channel info messages in chat
+    public static var infoMessage = Style(
+        font: UIFont.font(.bold(size: 12.0)),
+        text: UIColor.white,
         background: UIColor.gray
     )
 

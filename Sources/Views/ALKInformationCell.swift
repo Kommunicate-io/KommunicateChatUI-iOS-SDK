@@ -57,6 +57,16 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         return tv
     }()
     
+    fileprivate var bubbleView: UIView = {
+        let bv = UIView()
+        bv.backgroundColor = UIColor.clear
+        bv.layer.cornerRadius = 12
+        bv.layer.borderColor = UIColor(netHex: 0xF3F3F3).cgColor
+        bv.layer.borderWidth = 1.0
+        bv.isUserInteractionEnabled = false
+        return bv
+    }()
+    
     fileprivate var commentTextView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
@@ -117,7 +127,6 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
-        setupStyle()
     }
 
     @available(*, unavailable)
@@ -186,13 +195,21 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     fileprivate func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [messageView])
+        contentView.addViewsForAutolayout(views: [messageView,bubbleView])
         contentView.bringSubviewToFront(messageView)
 
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Padding.MessageView.bottom).isActive = true
         messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         messageView.widthAnchor.constraint(lessThanOrEqualToConstant: Padding.MessageView.width).isActive = true
+      
+        bubbleView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: 3).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -3).isActive = true
+        bubbleView.leftAnchor.constraint(equalTo: messageView.leftAnchor, constant: -4).isActive = true
+        bubbleView.rightAnchor.constraint(equalTo: messageView.rightAnchor, constant: 4).isActive = true
+        
+        bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
+        messageView.setFont(ALKMessageStyle.infoMessage.font)
     }
     
     fileprivate func setUpConstraintsForRating() {
