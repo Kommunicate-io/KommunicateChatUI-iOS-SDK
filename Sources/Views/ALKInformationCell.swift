@@ -210,6 +210,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         
         bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
         messageView.setFont(ALKMessageStyle.infoMessage.font)
+        contentView.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
     }
     
     fileprivate func setUpConstraintsForRating() {
@@ -253,6 +255,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         lineViewLeft.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
         lineViewRight.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
     }
+    
+    
 
     func setupStyle() {
         contentView.backgroundColor = UIColor.clear
