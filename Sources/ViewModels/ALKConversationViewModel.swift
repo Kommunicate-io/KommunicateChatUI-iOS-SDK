@@ -135,8 +135,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private var groupMembers: Set<ALContact>?
     private var awsEncryptionPrefix = "AWS-ENCRYPTED"
     private var botDelayTime = 0
-    
-    
     private var configuration : ALKConfiguration?
 
     
