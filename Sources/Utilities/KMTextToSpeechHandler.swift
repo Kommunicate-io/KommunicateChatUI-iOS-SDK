@@ -8,27 +8,46 @@
 
 import Foundation
 import AVFoundation
+import KommunicateCore_iOS_SDK
 
+// To handle Text To Speech in the conversation
 class KMTextToSpeechHandler : NSObject, AVSpeechSynthesizerDelegate  {
-    let synthesizer = AVSpeechSynthesizer()
+    let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
     var index = 0
-    override init() {
+   
+    public override init() {
         super.init()
         synthesizer.delegate = self
     }
     
-    let list = ["Hello World!","Does he have luxury cars ?","Yes , He has many luxury cars"," Is he rich ?","Does he have driving licence? ","Does he have children/kids ?","Does he have business in Chennai ? "]
-    
-    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        index += 1
-        if index < list.count {
-            speakCurrentWord()
-        }
+    func clearMessageList() {
+        messageModels.removeAll()
+        index = 0
     }
     
-    func speakCurrentWord(){
-        let utterance = AVSpeechUtterance(string: list[index])
-        synthesizer.speak(utterance)
+    public static let shared = KMTextToSpeechHandler()
+    var messageModels : [ALMessage] = []
+   
+    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        index += 1
+        guard index < messageModels.count else {return}
+        speakCurrentMessage()
+    }
+    
+     func speakCurrentMessage(){
+         guard index < messageModels.count else {return}
+         let utterance = AVSpeechUtterance(string: messageModels[index].message ?? "")
+         synthesizer.speak(utterance)
+    }
+    
+     func addMessagesToSpeech(_ list: [ALMessage]) {
+         for item in list {
+             if !messageModels.contains(item) {
+                 messageModels.append(item)
+             }
+         }
+         guard !synthesizer.isSpeaking else{return}
+         speakCurrentMessage()
     }
 
 }

@@ -135,6 +135,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private var groupMembers: Set<ALContact>?
     private var awsEncryptionPrefix = "AWS-ENCRYPTED"
     private var botDelayTime = 0
+    
+    
+    private var configuration : ALKConfiguration?
 
     
     // MARK: - Initializer
@@ -153,9 +156,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.prefilledMessage = prefilledMessage
     }
 
+    open func setConfiguration(_ config: ALKConfiguration) {
+        self.configuration = config
+    }
+    
     // MARK: - Public methods
 
     public func prepareController() {
+        KMTextToSpeechHandler.shared.clearMessageList()
         let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
         botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
         
@@ -1211,6 +1219,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
         return conversationProfile
     }
+    
+    open func checkForTextToSpeech(list: [ALMessage]) {
+        guard configuration?.enableTextToSpeechInConversation ?? false else {return}
+        KMTextToSpeechHandler.shared.addMessagesToSpeech(list)
+    }
    
     func loadMessages() {
         var time: NSNumber?
@@ -1232,12 +1245,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
+            
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
             // Check for Conversation Assignee and conversation first message created time to show Typing Indicator.
             if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
+               
+            }
+            
+            if !self.isOldConversation() {
+                self.checkForTextToSpeech(list: self.alMessages)
             }
 
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
