@@ -135,11 +135,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private var groupMembers: Set<ALContact>?
     private var awsEncryptionPrefix = "AWS-ENCRYPTED"
     private var botDelayTime = 0
-    private var configuration : ALKConfiguration?
 
-    
     // MARK: - Initializer
-
     public required init(
         contactId: String?,
         channelKey: NSNumber?,
@@ -154,10 +151,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.prefilledMessage = prefilledMessage
     }
 
-    open func setConfiguration(_ config: ALKConfiguration) {
-        self.configuration = config
-    }
-    
     // MARK: - Public methods
 
     public func prepareController() {
@@ -1218,8 +1211,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     open func checkForTextToSpeech(list: [ALMessage]) {
-        guard configuration?.enableTextToSpeechInConversation ?? false else {return}
-        KMTextToSpeechHandler.shared.addMessagesToSpeech(list)
+        KMTextToSpeech.shared.addMessagesToSpeech(list)
     }
    
     func loadMessages() {
@@ -1252,10 +1244,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                
             }
             
-            if !self.isOldConversation() {
-                self.checkForTextToSpeech(list: self.alMessages)
-            }
-
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             self.membersInGroup { members in
@@ -1293,7 +1281,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // Check for Old Conversation based on created time
     func isOldConversation() -> Bool {
         let createdTimeInMilliSec = self.alMessages[0].createdAtTime as? Double ?? 0.0
-        let date = NSDate() 
+        let date = NSDate()
         let currentTimeInMilliSec = date.timeIntervalSince1970 * 1000
         let diff = currentTimeInMilliSec - createdTimeInMilliSec
         // Checking time difference of 10 seconds.

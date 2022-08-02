@@ -157,7 +157,7 @@ public struct ALKConfiguration {
     /// Set the message menu options to show on the message long tap.
     public var messageMenuOptions: [ALKMessageCell.MenuOption] = [.copy, .reply]
     
-    // If true then TTS(Text To Speech is enabled). By default its false
+    // If true then TTS(Text To Speech) is enabled. It is false by default.
     public var enableTextToSpeechInConversation: Bool = false
 
     /// If true, contact share option in chatbar will be hidden.

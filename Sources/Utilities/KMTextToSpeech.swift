@@ -10,7 +10,7 @@ import AVFoundation
 import KommunicateCore_iOS_SDK
 
 // To handle Text To Speech in the conversation
-class KMTextToSpeechHandler : NSObject, AVSpeechSynthesizerDelegate  {
+class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
     let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
     var index = 0
     var speechStarted = false
@@ -20,7 +20,7 @@ class KMTextToSpeechHandler : NSObject, AVSpeechSynthesizerDelegate  {
         synthesizer.delegate = self
     }
     
-    public static let shared = KMTextToSpeechHandler()
+    public static let shared = KMTextToSpeech()
     var messageModels : [ALMessage] = []
    
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
@@ -47,14 +47,10 @@ class KMTextToSpeechHandler : NSObject, AVSpeechSynthesizerDelegate  {
    - list : [ALMessage]
      */
     func addMessagesToSpeech(_ list: [ALMessage]) {
-         for item in list {
-             if !messageModels.contains(item) {
-                 messageModels.append(item)
-             }
-         }
-         guard speechStarted == false, index < messageModels.count else{return}
-         speakCurrentMessage()
-         speechStarted = true
+        messageModels += list
+        guard speechStarted == false, index < messageModels.count else{return}
+        speakCurrentMessage()
+        speechStarted = true
     }
     
     // This method is to reset the message queue for the Synthesizer
