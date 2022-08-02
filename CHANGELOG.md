@@ -1,6 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [Unreleased]
+- [CM-1015] Added Text To Speech feature
 ## [0.2.4] - 2022-06-30
 - [CM-977] Fixed Typing Indicator being shown when user opens the older conversation
 - [CM-979] Fixed Last button of Curved/Quick Reply Button not supporting multiple lines 
