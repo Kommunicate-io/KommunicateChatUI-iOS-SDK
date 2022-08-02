@@ -161,7 +161,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // MARK: - Public methods
 
     public func prepareController() {
-        KMTextToSpeechHandler.shared.clearMessageList()
         let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
         botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
         
