@@ -955,6 +955,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// Call this method after proper viewModel initialization
     open func refreshViewController() {
+        KMTextToSpeechHandler.shared.resetSynthesizer()
         clearAndReloadTable()
         updateConversationProfile()
         prepareContextView()

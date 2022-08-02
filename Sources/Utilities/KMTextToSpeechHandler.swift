@@ -5,7 +5,6 @@
 //  Created by sathyan elangovan on 29/07/22.
 //
 
-
 import Foundation
 import AVFoundation
 import KommunicateCore_iOS_SDK
@@ -14,15 +13,11 @@ import KommunicateCore_iOS_SDK
 class KMTextToSpeechHandler : NSObject, AVSpeechSynthesizerDelegate  {
     let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
     var index = 0
+    var speechStarted = false
    
     public override init() {
         super.init()
         synthesizer.delegate = self
-    }
-    
-    func clearMessageList() {
-        messageModels.removeAll()
-        index = 0
     }
     
     public static let shared = KMTextToSpeechHandler()
@@ -30,24 +25,44 @@ class KMTextToSpeechHandler : NSObject, AVSpeechSynthesizerDelegate  {
    
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         index += 1
-        guard index < messageModels.count else {return}
+        guard index < messageModels.count else {return speechStarted = false}
         speakCurrentMessage()
     }
     
-     func speakCurrentMessage(){
-         guard index < messageModels.count else {return}
+    /**
+         This method is to trigger the specch from message
+        - Parameters:
+        - triggeredEvent : event type
+        - data : data of triggered event
+     */
+    func speakCurrentMessage(){
+         guard index < messageModels.count else {return speechStarted = false}
          let utterance = AVSpeechUtterance(string: messageModels[index].message ?? "")
          synthesizer.speak(utterance)
     }
     
-     func addMessagesToSpeech(_ list: [ALMessage]) {
+    /**
+    This method is to add message to existing list for the specch
+   - Parameters:
+   - list : [ALMessage]
+     */
+    func addMessagesToSpeech(_ list: [ALMessage]) {
          for item in list {
              if !messageModels.contains(item) {
                  messageModels.append(item)
              }
          }
-         guard !synthesizer.isSpeaking else{return}
+         guard speechStarted == false, index < messageModels.count else{return}
          speakCurrentMessage()
+         speechStarted = true
     }
-
+    
+    // This method is to reset the message queue for the Synthesizer
+    func resetSynthesizer() {
+        if synthesizer.isSpeaking || speechStarted {
+            synthesizer.stopSpeaking(at: .immediate)
+        }
+        messageModels.removeAll()
+        index = 0
+    }
 }
