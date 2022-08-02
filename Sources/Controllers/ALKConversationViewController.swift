@@ -215,6 +215,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         isViewLoadedFromTappingOnNotification = true
     }
     
+    // This wil stop the TTS if user taps back button in Conversation.
     open func stopTextToSpeechIfSpeaking() {
         KMTextToSpeech.shared.resetSynthesizer()
     }

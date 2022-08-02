@@ -30,7 +30,7 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
     }
     
     /**
-         This method is to trigger the specch from message
+         This method is to trigger the speech from message
         - Parameters:
         - triggeredEvent : event type
         - data : data of triggered event
