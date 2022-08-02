@@ -12,7 +12,7 @@ import KommunicateCore_iOS_SDK
 // To handle Text To Speech in the conversation
 class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
     let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
-    var index = 0
+    var messageToBeProcessed = 0
     var speechStarted = false
    
     public override init() {
@@ -21,11 +21,11 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
     }
     
     public static let shared = KMTextToSpeech()
-    var messageModels : [ALMessage] = []
+    var messageQueue : [ALMessage] = []
    
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        index += 1
-        guard index < messageModels.count else {return speechStarted = false}
+        messageToBeProcessed += 1
+        guard messageToBeProcessed < messageQueue.count else {return speechStarted = false}
         speakCurrentMessage()
     }
     
@@ -36,8 +36,8 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
         - data : data of triggered event
      */
     func speakCurrentMessage(){
-         guard index < messageModels.count else {return speechStarted = false}
-         let utterance = AVSpeechUtterance(string: messageModels[index].message ?? "")
+         guard messageToBeProcessed < messageQueue.count else {return speechStarted = false}
+         let utterance = AVSpeechUtterance(string: messageQueue[messageToBeProcessed].message ?? "")
          synthesizer.speak(utterance)
     }
     
@@ -47,8 +47,8 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
    - list : [ALMessage]
      */
     func addMessagesToSpeech(_ list: [ALMessage]) {
-        messageModels += list
-        guard speechStarted == false, index < messageModels.count else{return}
+        messageQueue += list
+        guard speechStarted == false, messageToBeProcessed < messageQueue.count else{return}
         speakCurrentMessage()
         speechStarted = true
     }
@@ -58,7 +58,7 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
         if synthesizer.isSpeaking || speechStarted {
             synthesizer.stopSpeaking(at: .immediate)
         }
-        messageModels.removeAll()
-        index = 0
+        messageQueue.removeAll()
+        messageToBeProcessed = 0
     }
 }
