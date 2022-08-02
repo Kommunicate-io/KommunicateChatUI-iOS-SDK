@@ -11,9 +11,9 @@ import KommunicateCore_iOS_SDK
 
 // To handle Text To Speech in the conversation
 class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
-    let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
-    var messageToBeProcessed = 0
-    var speechStarted = false
+    private let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
+    private var messageToBeProcessed = 0
+    private var speechStarted = false
    
     public override init() {
         super.init()
