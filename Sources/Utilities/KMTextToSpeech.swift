@@ -47,7 +47,11 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
    - list : [ALMessage]
      */
     func addMessagesToSpeech(_ list: [ALMessage]) {
-        messageQueue += list
+        for messagge in list {
+            if !messageQueue.contains(where: { $0 === messagge }) {
+                messageQueue.append(messagge)
+            }
+        }
         guard speechStarted == false, messageToBeProcessed < messageQueue.count else{return}
         speakCurrentMessage()
         speechStarted = true
