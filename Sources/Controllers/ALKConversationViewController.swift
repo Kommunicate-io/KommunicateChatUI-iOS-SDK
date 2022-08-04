@@ -71,6 +71,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// See configuration.
     private var isProfileTapActionEnabled = true
+    
+    private var botDelayTime = 0
+
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
@@ -210,6 +213,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public func viewWillLoadFromTappingOnNotification() {
         isViewLoadedFromTappingOnNotification = true
+    }
+    
+    // This wil stop the TTS if user taps back button in Conversation.
+    open func stopTextToSpeechIfSpeaking() {
+        KMTextToSpeech.shared.resetSynthesizer()
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
@@ -374,6 +382,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func addMessagesToList(_ messageList: [Any]) {
+        viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
@@ -453,6 +462,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         unsubscribingChannel()
+        self.invalidateTimerAndUpdateHeightConstraint()
+        self.viewModel.timer.invalidate()
     }
 
     override func backTapped() {
@@ -949,6 +960,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// Call this method after proper viewModel initialization
     open func refreshViewController() {
+        KMTextToSpeech.shared.resetSynthesizer()
         clearAndReloadTable()
         updateConversationProfile()
         prepareContextView()
@@ -1008,30 +1020,33 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     // Called from the parent VC
     public func showTypingLabel(status: Bool, userId: String) {
         /// Don't show typing status when contact is blocked
-        guard
-            let contact = ALContactService().loadContact(byKey: "userId", value: userId),
+        guard let contact = ALContactService().loadContact(byKey: "userId", value: userId),
             !contact.block,
             !contact.blockBy
-        else {
-            return
+        else { return }
+        // Check For status false...disable the timer directly
+        if !status {
+            timerTask.invalidate()
+            typingNoticeViewHeighConstaint?.constant = 0
         }
         
         guard typingNoticeViewHeighConstaint?.constant == 0 else { return }
         
         if status {
-               if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
-                   let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
-                   if timerTask.isValid {
-                       Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
-                   } else {
-                       // to give some time gap between previous to next
-                       self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
-                   }
+            let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+            botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
+            // Add Delay only for Bot
+            if botDelayTime > 0 && contact.roleType == NSNumber.init(value: AL_BOT.rawValue) {
+               let timeInterval = TimeInterval(botDelayTime)
+               if timerTask.isValid {
+                   Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
                } else {
-                   timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+                   // to give some time gap between previous to next
+                   self.timerTask = Timer.scheduledTimer(timeInterval: timeInterval - 0.3, target: self, selector: #selector(self.invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
                }
            } else {
-               timerTask.invalidate()
+               timerTask = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
+           }
         }
         
         typingNoticeViewHeighConstaint?.constant = status ? 30 : 0
@@ -1052,16 +1067,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    @objc public func invalidateTimerAndUpdateHeightConstraint(_: Timer?) {
+    @objc public func invalidateTimerAndUpdateHeightConstraint() {
         timerTask.invalidate()
         typingNoticeViewHeighConstaint?.constant = 0
     }
     
     @objc func delayedSecondTimer (timer: Timer) {
-            let timeInterval = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
-            timer.invalidate()
-            self.typingNoticeViewHeighConstaint?.constant = 0
-            Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint(_:)), userInfo: nil, repeats: false)
+        let timeInterval = TimeInterval(botDelayTime)
+        timer.invalidate()
+        self.typingNoticeViewHeighConstaint?.constant = 0
+        Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
     }
     
     public func sync(message: ALMessage) {
