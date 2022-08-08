@@ -2,7 +2,7 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-## [Unreleased]
+## [0.2.5] - 2022-08-08
 - Fixed Feedback, Rating Font and color mismatch issue
 - [CM-935] Added GIF support for Received messages when it expanded to fullscreen mode in conversation
 - [CM-1015] Added Text To Speech feature
