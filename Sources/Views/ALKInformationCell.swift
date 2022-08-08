@@ -57,6 +57,16 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         return tv
     }()
     
+    fileprivate var bubbleView: UIView = {
+        let bv = UIView()
+        bv.backgroundColor = UIColor.clear
+        bv.layer.cornerRadius = 12
+        bv.layer.borderColor = UIColor(netHex: 0xF3F3F3).cgColor
+        bv.layer.borderWidth = 1.0
+        bv.isUserInteractionEnabled = false
+        return bv
+    }()
+    
     fileprivate var commentTextView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
@@ -67,6 +77,18 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         tv.textAlignment = .center
         tv.textContainer.lineBreakMode = .byWordWrapping
         return tv
+    }()
+    
+    fileprivate var lineViewLeft : UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
+    }()
+    
+    fileprivate var lineViewRight : UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
     }()
 
     func setConfiguration(configuration: ALKConfiguration) {
@@ -91,9 +113,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
                                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                                                    attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
                                                                    context: nil)
-            //  Get feedback dictionary for view 
-            guard let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel) else { return 0 }
-            if dictionary["comments"] != nil {
+            //  Get feedback dictionary for view
+            if let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel),dictionary["comments"] != nil  {
                 messageHeigh = (rect.height + Padding.MessageView.height + Padding.CommentView.height)
             } else {
                 messageHeigh = rect.height + Padding.MessageView.height
@@ -106,7 +127,6 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
-        setupStyle()
     }
 
     @available(*, unavailable)
@@ -119,6 +139,10 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         guard let feedback = getFeedback(viewModel: viewModel) else {
+            messageView.text = viewModel.message
+            commentTextView.text = ""
+            lineViewLeft.isHidden = true
+            lineViewRight.isHidden = true
             setupConstraints()
             return
         }
@@ -131,7 +155,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             }
             comment = feedback["comments"]! as! String
         }
-
+        
         if feedback["rating"] != nil {
             contentView.subviews.forEach { subview in
                 subview.removeFromSuperview()
@@ -171,21 +195,30 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     fileprivate func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [messageView])
+        contentView.addViewsForAutolayout(views: [messageView,bubbleView])
         contentView.bringSubviewToFront(messageView)
 
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.MessageView.top).isActive = true
         messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Padding.MessageView.bottom).isActive = true
         messageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         messageView.widthAnchor.constraint(lessThanOrEqualToConstant: Padding.MessageView.width).isActive = true
+      
+        bubbleView.topAnchor.constraint(equalTo: messageView.topAnchor, constant: 3).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -3).isActive = true
+        bubbleView.leftAnchor.constraint(equalTo: messageView.leftAnchor, constant: -4).isActive = true
+        bubbleView.rightAnchor.constraint(equalTo: messageView.rightAnchor, constant: 4).isActive = true
+        
+        bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
+        messageView.setFont(ALKMessageStyle.infoMessage.font)
+        contentView.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
     }
     
     fileprivate func setUpConstraintsForRating() {
+
         let horizontalStackView = UIStackView()
         let verticalStackView = UIStackView()
-        let lineViewLeft = UIView()
-        let lineViewRight = UIView()
-        
+       
         verticalStackView.axis  = NSLayoutConstraint.Axis.vertical
         verticalStackView.distribution  = UIStackView.Distribution.equalSpacing
         verticalStackView.alignment = UIStackView.Alignment.center
@@ -202,7 +235,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         horizontalStackView.distribution  = UIStackView.Distribution.equalSpacing
         horizontalStackView.alignment = UIStackView.Alignment.center
         horizontalStackView.spacing = Padding.HorizontalStackView.spacing
-        
+        lineViewLeft.isHidden = false
+        lineViewRight.isHidden = false
         horizontalStackView.addArrangedSubview(lineViewLeft)
         horizontalStackView.addArrangedSubview(verticalStackView)
         horizontalStackView.addArrangedSubview(lineViewRight)
@@ -221,13 +255,15 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         lineViewLeft.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
         lineViewRight.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
     }
+    
+    
 
     func setupStyle() {
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
         
-        messageView.setFont(ALKMessageStyle.infoMessage.font)
-        messageView.textColor = ALKMessageStyle.infoMessage.text
+        messageView.setFont(ALKMessageStyle.feedbackMessage.font)
+        messageView.textColor = ALKMessageStyle.feedbackMessage.text
         commentTextView.setFont(ALKMessageStyle.feedbackComment.font)
         commentTextView.textColor = ALKMessageStyle.feedbackComment.text
     }

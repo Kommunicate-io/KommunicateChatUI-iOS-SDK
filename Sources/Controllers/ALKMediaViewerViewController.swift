@@ -163,7 +163,12 @@ final class ALKMediaViewerViewController: UIViewController {
         else {
             return
         }
-        imageView.image = image
+        // Check for GIF file extension, if its a gif, then set the url using KF.
+        if filePath.hasSuffix(".gif") {
+            imageView.kf.setImage(with: url)
+        } else {
+            imageView.image = image
+        }
         imageView.sizeToFit()
         playButton.isHidden = true
         audioPlayButton.isHidden = true

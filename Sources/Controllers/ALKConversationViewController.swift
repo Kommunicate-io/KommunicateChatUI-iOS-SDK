@@ -214,6 +214,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func viewWillLoadFromTappingOnNotification() {
         isViewLoadedFromTappingOnNotification = true
     }
+    
+    // This wil stop the TTS if user taps back button in Conversation.
+    open func stopTextToSpeechIfSpeaking() {
+        KMTextToSpeech.shared.resetSynthesizer()
+    }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     override open func addObserver() {
@@ -377,6 +382,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func addMessagesToList(_ messageList: [Any]) {
+        viewModel.addMessagesToList(messageList)
     }
 
     override open func removeObserver() {
@@ -954,6 +960,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     /// Call this method after proper viewModel initialization
     open func refreshViewController() {
+        KMTextToSpeech.shared.resetSynthesizer()
         clearAndReloadTable()
         updateConversationProfile()
         prepareContextView()
@@ -1028,7 +1035,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if status {
             let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
             botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
-            // Add Delay only for Bot 
+            // Add Delay only for Bot
             if botDelayTime > 0 && contact.roleType == NSNumber.init(value: AL_BOT.rawValue) {
                let timeInterval = TimeInterval(botDelayTime)
                if timerTask.isValid {
