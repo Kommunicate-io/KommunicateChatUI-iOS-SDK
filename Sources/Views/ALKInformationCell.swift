@@ -262,8 +262,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
         
-        messageView.setFont(ALKMessageStyle.infoMessage.font)
-        messageView.textColor = ALKMessageStyle.infoMessage.text
+        messageView.setFont(ALKMessageStyle.feedbackMessage.font)
+        messageView.textColor = ALKMessageStyle.feedbackMessage.text
         commentTextView.setFont(ALKMessageStyle.feedbackComment.font)
         commentTextView.textColor = ALKMessageStyle.feedbackComment.text
     }
