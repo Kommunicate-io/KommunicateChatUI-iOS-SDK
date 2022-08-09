@@ -64,4 +64,8 @@ extension UITableView {
         }
         return lastIndexPath == indexPath
     }
+    
+    func lastSection() -> Int {
+        return  max(numberOfSections - 1, 0)
+    }
 }

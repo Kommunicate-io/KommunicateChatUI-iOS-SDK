@@ -2042,28 +2042,26 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     @objc open func newMessagesAdded() {
+        let lastSectionBeforeUpdate = tableView.lastSection()
         updateTableView()
         // Check if current user is removed from the group
         isChannelLeft()
-
+        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
         if isViewLoadedFromTappingOnNotification {
-            let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             if let lastMessage = viewModel.messageModels.last {
                 reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
             }
             moveTableViewToBottom(indexPath: indexPath)
             isViewLoadedFromTappingOnNotification = false
-        } else {
-            let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
-            if !tableView.isLastVisibleCell(at: indexPath) {
-                if let lastMessage = viewModel.messageModels.last {
-                    reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
-                }
-                moveTableViewToBottom(indexPath: indexPath)
-            } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
-                unreadScrollButton.isHidden = false
+        } else if tableView.isCellVisible(section: lastSectionBeforeUpdate - 1, row: 0) {
+            if let lastMessage = viewModel.messageModels.last {
+                reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
             }
+            moveTableViewToBottom(indexPath: indexPath)
+        } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
+            unreadScrollButton.isHidden = false
         }
+        
         guard isViewLoaded, view.window != nil, !viewModel.isOpenGroup else {
             return
         }
