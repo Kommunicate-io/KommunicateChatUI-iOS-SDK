@@ -91,6 +91,48 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             menuController.setMenuVisible(true, animated: true)
         }
     }
+    
+    
+    func showMenuControllerForLink(_ view : UIView) {
+        NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
+
+        if let chatBar = chatBar, chatBar.textView.isFirstResponder {
+            chatBar.textView.overrideNextResponder = contentView
+        } else {
+            _ = canBecomeFirstResponder
+        }
+
+        let gestureView = view
+        guard let superView = view.superview else {return}
+        
+
+        let menuController = UIMenuController.shared
+
+        guard !menuController.isMenuVisible, gestureView.canBecomeFirstResponder else {
+            return
+        }
+
+        gestureView.becomeFirstResponder()
+
+        var menus: [UIMenuItem] = []
+
+        if let copyMenu = getCopyMenuItem(copyItem: self) {
+            menus.append(copyMenu)
+        }
+
+        if let replyMenu = getReplyMenuItem(replyItem: self) {
+            menus.append(replyMenu)
+        }
+
+        if showReport, let reportMessageMenu = getReportMessageItem(reportMessageItem: self) {
+            menus.append(reportMessageMenu)
+        }
+
+        menuController.menuItems = menus
+        menuController.setTargetRect(gestureView.frame, in: superView)
+        menuController.setMenuVisible(true, animated: true)
+    }
 
     override open var canBecomeFirstResponder: Bool {
         return true

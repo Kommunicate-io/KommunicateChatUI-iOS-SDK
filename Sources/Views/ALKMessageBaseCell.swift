@@ -477,9 +477,16 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
 }
 
 extension ALKMessageCell: UITextViewDelegate {
-    public func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction _: UITextItemInteraction) -> Bool {
+    public func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
         guard let message = viewModel else { return true }
-        delegate?.urlTapped(url: URL, message: message)
+        if interaction.rawValue == 0 {
+            print("Deteceted single  tap")
+            delegate?.urlTapped(url: URL, message: message)
+        } else if interaction.rawValue == 1 {
+            print("Detected long press")
+            showMenuControllerForLink(self)
+        }
         return false
     }
 }
+
