@@ -104,7 +104,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         return alchannel.type == 6
     }
-
+    
+    // To get Conversation created time based on its first message.
+    open var conversationCreatedTime: NSNumber? {
+        if alMessages.isEmpty {
+            return nil
+        }
+        return alMessages[0].createdAtTime
+    }
+    
     private var conversationId: NSNumber? {
         return conversationProxy?.id
     }
@@ -126,9 +134,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private var typingTimerTask = Timer()
     private var groupMembers: Set<ALContact>?
     private var awsEncryptionPrefix = "AWS-ENCRYPTED"
-    
-    // MARK: - Initializer
+    private var botDelayTime = 0
 
+    // MARK: - Initializer
     public required init(
         contactId: String?,
         channelKey: NSNumber?,
@@ -146,6 +154,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     // MARK: - Public methods
 
     public func prepareController() {
+        let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+        botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
+        
         if isSearch {
             delegate?.loadingStarted()
             loadSearchMessages()
@@ -1198,6 +1209,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
         conversationProfile.status = ALKConversationProfile.Status(isOnline: contact.connected, lastSeenAt: contact.lastSeenAt)
         return conversationProfile
     }
+    
+    open func checkForTextToSpeech(list: [ALMessage]) {
+        KMTextToSpeech.shared.addMessagesToSpeech(list)
+    }
    
     func loadMessages() {
         var time: NSNumber?
@@ -1219,16 +1234,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
             self.alMessages = messages.reversed() as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
+            
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
-            //Check for Conversation Assignee to show Typing Indicator
-            if !self.isConversationAssignedToBot() {
-                self.messageModels = self.modelsToBeAddedAfterDelay
-            } else if (UserDefaults.standard.integer(forKey: "botDelayInterval")) > 0 {
+            // Check for Conversation Assignee and conversation first message created time to show Typing Indicator.
+            if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
+               
             }
-
+            
             let showLoadEarlierOption: Bool = self.messageModels.count >= 50
             ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             self.membersInGroup { members in
@@ -1246,7 +1261,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
-        let delay = TimeInterval(UserDefaults.standard.integer(forKey: "botDelayInterval"))
+        let delay = TimeInterval(botDelayTime)
         self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
                 return
@@ -1261,6 +1276,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 showTypingIndicatorForWelcomeMessage()
             }
         }
+    }
+    
+    // Check for Old Conversation based on created time
+    func isOldConversation() -> Bool {
+        let createdTimeInMilliSec = self.alMessages[0].createdAtTime as? Double ?? 0.0
+        let date = NSDate()
+        let currentTimeInMilliSec = date.timeIntervalSince1970 * 1000
+        let diff = currentTimeInMilliSec - createdTimeInMilliSec
+        // Checking time difference of 10 seconds.
+        if currentTimeInMilliSec - createdTimeInMilliSec < 10000 {
+            return false
+        }
+        return true
     }
     
     func isConversationAssignedToBot() -> Bool {

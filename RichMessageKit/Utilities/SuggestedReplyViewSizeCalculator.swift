@@ -28,14 +28,14 @@ class SuggestedReplyViewSizeCalculator {
                 }
                 let currWidth = size.width + 10 // Button Padding
                 if currWidth >= maxWidth {
-                    totalHeight += size.height + prevHeight + 10 // 10 padding between buttons
+                    totalHeight += size.height + prevHeight + 12 // 12 padding between buttons
                     width = 0
                     prevHeight = 0
                     continue
                 }
 
                 if width + currWidth >= maxWidth {
-                    totalHeight += prevHeight + 10 // 10 padding between buttons
+                    totalHeight += prevHeight + 12 // 12 padding between buttons
                     width = currWidth
                     prevHeight = size.height
                 } else {
