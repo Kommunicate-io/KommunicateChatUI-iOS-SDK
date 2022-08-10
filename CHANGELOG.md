@@ -1,7 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-
+## [Unreleased]
+- [CM-960] Added Long press Gesture for Link Messages
 ## [0.2.2] - 2022-06-14
 - Upgraded KM Core SDK to 1.0.3
 - [Cm-829] Added Typing Indicator Support for Welcome Message

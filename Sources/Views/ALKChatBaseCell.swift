@@ -92,8 +92,8 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
         }
     }
     
-    
-    func showMenuControllerForLink(_ view : UIView) {
+    // To show Menu Controller if user long presses the Link
+    func showMenuControllerForLink(_ gestureView : UIView) {
         NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
 
@@ -103,10 +103,8 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             _ = canBecomeFirstResponder
         }
 
-        let gestureView = view
-        guard let superView = view.superview else {return}
+        guard let superView = gestureView.superview else {return}
         
-
         let menuController = UIMenuController.shared
 
         guard !menuController.isMenuVisible, gestureView.canBecomeFirstResponder else {
@@ -133,7 +131,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
         menuController.setTargetRect(gestureView.frame, in: superView)
         menuController.setMenuVisible(true, animated: true)
     }
-
+    
     override open var canBecomeFirstResponder: Bool {
         return true
     }
