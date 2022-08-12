@@ -57,4 +57,15 @@ extension UITableView {
     func isValid(indexPath: IndexPath) -> Bool {
         return indexPath.section < numberOfSections && indexPath.row < numberOfRows(inSection: indexPath.section)
     }
+    
+    func isLastVisibleCell(at indexPath: IndexPath) -> Bool {
+        guard let lastIndexPath = indexPathsForVisibleRows?.last else {
+            return false
+        }
+        return lastIndexPath == indexPath
+    }
+    
+    func lastSection() -> Int {
+        return  max(numberOfSections - 1, 0)
+    }
 }
