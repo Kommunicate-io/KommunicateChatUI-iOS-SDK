@@ -91,7 +91,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             menuController.setMenuVisible(true, animated: true)
         }
     }
-
+    
     override open var canBecomeFirstResponder: Bool {
         return true
     }

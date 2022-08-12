@@ -243,7 +243,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         bubbleView.addGestureRecognizer(longPressGesture)
         let replyTapGesture = UITapGestureRecognizer(target: self, action: #selector(replyViewTapped))
         replyView.addGestureRecognizer(replyTapGesture)
-        messageView.delegate = self
     }
 
     override func setupStyle() {
@@ -473,13 +472,5 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         } else {
             messageView.text = viewModel.message
         }
-    }
-}
-
-extension ALKMessageCell: UITextViewDelegate {
-    public func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction _: UITextItemInteraction) -> Bool {
-        guard let message = viewModel else { return true }
-        delegate?.urlTapped(url: URL, message: message)
-        return false
     }
 }
