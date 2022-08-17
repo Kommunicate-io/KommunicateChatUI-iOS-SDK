@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## [Unreleased]
 - [CM-960] Added Long press Gesture for Link Messages
+- [CM-998] Stop Exposing Reply option in Conversation
 ## [0.2.5] - 2022-08-08
 - Fixed Feedback, Rating Font and color mismatch issue
 - [CM-935] Added GIF support for Received messages when it expanded to fullscreen mode in conversation
