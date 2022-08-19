@@ -26,6 +26,12 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
 
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        guard !configuration.hideNavigationBarOnChat  else {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+            return
+        }
+        
         // Add the back button in case if first view controller is nil or is not same as current VC OR
         // Add the back button in case if first view controller is  ALKConversationViewController and current VC is ALKConversationViewController
         if navigationController?.viewControllers.first != self {
