@@ -365,10 +365,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
-            weakSelf.viewModel.currentConversationProfile(completion: { profile in
-                guard let profile = profile else { return }
-                weakSelf.navigationBar.updateView(profile: profile)
-            })
+            weakSelf.updateAssigneeDetails()
         }
 
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { [weak self] _ in
@@ -380,6 +377,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             NotificationCenter.default.addObserver(self, selector: #selector(pushNotification(notification:)), name: Notification.Name("pushNotification"), object: nil)
         }
     }
+    
+    open func updateAssigneeDetails() {
+        self.viewModel.currentConversationProfile(completion: { profile in
+            guard let profile = profile else { return }
+            self.navigationBar.updateView(profile: profile)
+        })
+    }
+
+    open func updateAssigneeOnlineStatus(userId: String){}
     
     open func addMessagesToList(_ messageList: [Any]) {
         viewModel.addMessagesToList(messageList)
@@ -2363,6 +2369,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
         print("Status Changed \(contactId) \(status)")
+        updateAssigneeOnlineStatus(userId: contactId)
     }
 
     public func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
