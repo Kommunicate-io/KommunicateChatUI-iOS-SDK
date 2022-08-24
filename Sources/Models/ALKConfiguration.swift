@@ -155,7 +155,7 @@ public struct ALKConfiguration {
     public var isNewSystemPhotosUIEnabled = false
 
     /// Set the message menu options to show on the message long tap.
-    public var messageMenuOptions: [ALKMessageCell.MenuOption] = [.copy, .reply]
+    public var messageMenuOptions: [ALKMessageCell.MenuOption] = [.copy]
     
     // If true then TTS(Text To Speech) is enabled. It is false by default.
     public var enableTextToSpeechInConversation: Bool = false
