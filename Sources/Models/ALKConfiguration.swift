@@ -160,6 +160,7 @@ public struct ALKConfiguration {
     // If true then TTS(Text To Speech) is enabled. It is false by default.
     public var enableTextToSpeechInConversation: Bool = false
     
+    // If true then Navigation bar will be hidden. By default it is false
     public var hideNavigationBarOnChat : Bool = false
 
     /// If true, contact share option in chatbar will be hidden.
