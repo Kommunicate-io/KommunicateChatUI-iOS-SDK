@@ -3,6 +3,7 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 ## [Unreleased]
+- [CM-1070] Added customization for hiding Navigation bar.
 - [CM-998] Stop Exposing Reply option in Conversation
 - [CM-989] Fixed Form Cell Height Issue
 - [CM-960] Added Long press Gesture for Link Messages
