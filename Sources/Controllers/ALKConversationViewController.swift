@@ -365,10 +365,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
-            weakSelf.viewModel.currentConversationProfile(completion: { profile in
-                guard let profile = profile else { return }
-                weakSelf.navigationBar.updateView(profile: profile)
-            })
+            weakSelf.updateAssigneeDetails()
         }
 
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { [weak self] _ in
@@ -380,6 +377,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             NotificationCenter.default.addObserver(self, selector: #selector(pushNotification(notification:)), name: Notification.Name("pushNotification"), object: nil)
         }
     }
+    
+    open func updateAssigneeDetails() {
+        self.viewModel.currentConversationProfile(completion: { profile in
+            guard let profile = profile else { return }
+            self.navigationBar.updateView(profile: profile)
+        })
+    }
+
+    open func updateAssigneeOnlineStatus(userId: String){}
     
     open func addMessagesToList(_ messageList: [Any]) {
         viewModel.addMessagesToList(messageList)
@@ -2048,28 +2054,26 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     @objc open func newMessagesAdded() {
+        let lastSectionBeforeUpdate = tableView.lastSection()
         updateTableView()
         // Check if current user is removed from the group
         isChannelLeft()
-
+        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
         if isViewLoadedFromTappingOnNotification {
-            let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             if let lastMessage = viewModel.messageModels.last {
                 reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
             }
             moveTableViewToBottom(indexPath: indexPath)
             isViewLoadedFromTappingOnNotification = false
-        } else {
-            if tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0) { // 1 for recent added msg and 1 because it starts with 0
-                let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
-                if let lastMessage = viewModel.messageModels.last {
-                    reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
-                }
-                moveTableViewToBottom(indexPath: indexPath)
-            } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
-                unreadScrollButton.isHidden = false
+        } else if tableView.isCellVisible(section: lastSectionBeforeUpdate - 1, row: 0) {
+            if let lastMessage = viewModel.messageModels.last {
+                reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
             }
+            moveTableViewToBottom(indexPath: indexPath)
+        } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
+            unreadScrollButton.isHidden = false
         }
+        
         guard isViewLoaded, view.window != nil, !viewModel.isOpenGroup else {
             return
         }
@@ -2365,6 +2369,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
         print("Status Changed \(contactId) \(status)")
+        updateAssigneeOnlineStatus(userId: contactId)
     }
 
     public func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {

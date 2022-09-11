@@ -51,13 +51,14 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         case .text, .html, .email:
             if !configuration.isLinkPreviewDisabled, message.messageType == .text, ALKLinkPreviewManager.extractURLAndAddInCache(from: message.message, identifier: message.identifier) != nil {
                 var cell = ALKLinkPreviewBaseCell()
-                cell.menuOptionsToShow = configuration.messageMenuOptions
                 if message.isMyMessage {
                     cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyLinkPreviewCell
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
                     cell.showReport = false
                     necessarySetupForMessageCell(cell: cell, message: message)
                 } else {
                     cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendLinkPreviewCell
+                    cell.menuOptionsToShow = configuration.messageMenuOptions
                     cell.showReport = true
                     cell.avatarTapped = { [weak self] in
                         guard let currentModel = cell.viewModel else { return }

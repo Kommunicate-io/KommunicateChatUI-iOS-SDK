@@ -1,7 +1,14 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-
+## [Unreleased]
+- 
+## [0.2.6] - 2022-09-09
+- [CM-1070] Added customization for hiding Navigation bar.
+- [CM-998] Stop Exposing Reply option in Conversation
+- [CM-989] Fixed Form Cell Height Issue
+- [CM-960] Added Long press Gesture for Link Messages
+- [CM-1035] Fixed Auto Scroll Issue on Conversation Screen
 ## [0.2.5] - 2022-08-08
 - Fixed Feedback, Rating Font and color mismatch issue
 - [CM-935] Added GIF support for Received messages when it expanded to fullscreen mode in conversation
