@@ -1,10 +1,10 @@
 //
-//
-// ALKCustomEventMap.swift
-// ApplozicSwift
-//
-// Created by ___Sathyan Elangovan___ on 09/12/21
+// CustomEvent.swift
+// Kommunicate
+//Created by Sathyan Elangovan on 09/12/21.
+
 import Foundation
+
 public enum CustomEvent: String {
     case messageSend = "ON_MESSAGE_SEND"
     case faqClick = "ON_FAQ_CLICK"
@@ -19,4 +19,7 @@ public enum CustomEvent: String {
     case restartConversationClick = "ON_RESTART_CONVERSATION_CLICK"
     case richMessageClick = "ON_RICH_MESSAGE_CLICK"
     case resolveConversation = "ON_CONVERSATION_RESOLVE"
+    case conversationBackPress = "ON_CONVERSARION_BACK_BUTTON_CLICK"
+    case conversationListBackPress = "ON_CONVERSATION_LIST_BACK_BUTTON_CLICK"
+    case messageReceive = "ON_MESSAGE_RECEIVE"
 }
