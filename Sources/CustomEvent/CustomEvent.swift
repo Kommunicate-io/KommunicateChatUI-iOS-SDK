@@ -19,7 +19,7 @@ public enum CustomEvent: String {
     case restartConversationClick = "ON_RESTART_CONVERSATION_CLICK"
     case richMessageClick = "ON_RICH_MESSAGE_CLICK"
     case resolveConversation = "ON_CONVERSATION_RESOLVE"
-    case conversationBackPress = "ON_CONVERSARION_BACK_CLICK"
+    case conversationBackPress = "ON_CONVERSATION_BACK_CLICK"
     case conversationListBackPress = "ON_CONVERSATION_LIST_BACK_CLICK"
     case messageReceive = "ON_MESSAGE_RECEIVE"
 }
