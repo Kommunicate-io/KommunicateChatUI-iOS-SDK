@@ -2066,9 +2066,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             moveTableViewToBottom(indexPath: indexPath)
             isViewLoadedFromTappingOnNotification = false
         } else if tableView.isCellVisible(section: lastSectionBeforeUpdate - 1, row: 0) {
-            if let lastMessage = viewModel.messageModels.last {
-                reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
-            }
             moveTableViewToBottom(indexPath: indexPath)
         } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
             unreadScrollButton.isHidden = false
