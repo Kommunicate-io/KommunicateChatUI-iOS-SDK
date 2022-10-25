@@ -95,10 +95,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
         public static var subtitleTextColor = UIColor(red: 86, green: 84, blue: 84)
         /// Used for description text color
         public static var descriptionTextColor = UIColor(red: 121, green: 116, blue: 116)
-        /// Used for background color of view
-        public static var background = UIColor.white
-        /// Shadow color of the card view
-        public static var shadowColor = UIColor.black.cgColor
+        /// Used for background color of overlay text
+        public static var overlayTextBackground = UIColor.white
+        /// Shadow color of the overlay text
+        public static var overlayTextShadowColor = UIColor.black.cgColor
     }
     
     
@@ -304,8 +304,8 @@ open class ALKGenericCardCell: UICollectionViewCell {
     private func setupStyle() {
         titleLabel.textColor = Color.titleTextColor
         overlayText.textColor = Color.overlayTextColor
-        overlayText.layer.shadowColor = Color.shadowColor
-        overlayText.backgroundColor = Color.background
+        overlayText.layer.shadowColor = Color.overlayTextShadowColor
+        overlayText.backgroundColor = Color.overlayTextBackground
         ratingLabel.textColor = Color.ratingTextColor
         subtitleLabel.textColor = Color.subtitleTextColor
         descriptionLabel.textColor = Color.descriptionTextColor
