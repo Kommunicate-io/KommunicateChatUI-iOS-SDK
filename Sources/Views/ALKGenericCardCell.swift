@@ -97,7 +97,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         public static var descriptionTextColor = UIColor(red: 121, green: 116, blue: 116)
         /// Used for background color of view
         public static var background = UIColor.white
-        /// Shadow color of the label
+        /// Shadow color of the card view
         public static var shadowColor = UIColor.black.cgColor
     }
     
@@ -123,7 +123,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         public static var titleMaxLines = 1
         /// The number of lines for the card subtitle label. The default value for this is 1.
         public static var subtitleMaxLines = 1
-        /// The value for the card cornor radius . The default value for this is 10.0.
+        /// The value for the card cornor radius. The default value for this is 10.0.
         public static var cardCornorRadius: CGFloat = 10.0
         /// Content Mode type for the card cover image. The default value for this is scaleToFill.
         public static var converImageContentMode : ContentMode = .scaleToFill
