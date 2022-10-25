@@ -123,10 +123,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
         public static var titleMaxLines = 1
         /// The number of lines for the card subtitle label. The default value for this is 1.
         public static var subtitleMaxLines = 1
-        /// The value for the card cornor radius. The default value for this is 10.0.
-        public static var cardCornorRadius: CGFloat = 10.0
+        /// The value for the card corner radius. The default value for this is 10.0.
+        public static var cardCornerRadius: CGFloat = 10.0
         /// Content Mode type for the card cover image. The default value for this is scaleToFill.
-        public static var converImageContentMode : ContentMode = .scaleToFill
+        public static var coverImageContentMode : ContentMode = .scaleToFill
 
     }
 
@@ -419,7 +419,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         view.bringSubviewToFront(overlayText)
         view.bringSubviewToFront(buttonStackView)
 
-        view.layer.cornerRadius = Config.cardCornorRadius
+        view.layer.cornerRadius = Config.cardCornerRadius
         view.clipsToBounds = true
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 1
@@ -428,7 +428,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         coverImageHeight.isActive = true
-        coverImageView.contentMode = Config.converImageContentMode
+        coverImageView.contentMode = Config.coverImageContentMode
 
         overlayText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         overlayText.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor, constant: 0).isActive = true
