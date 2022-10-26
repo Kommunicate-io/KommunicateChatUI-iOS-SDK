@@ -83,6 +83,25 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
         public static var button = UIFont.systemFont(ofSize: 15, weight: .medium)
     }
+    
+    public enum Color {
+        /// Used for overlay text color
+        public static var overlayTextColor = UIColor(red: 13, green: 13, blue: 14)
+        /// Used for rating text color
+        public static var ratingTextColor = UIColor(red: 0, green: 0, blue: 0)
+        /// Used for title text color
+        public static var titleTextColor = UIColor(red: 20, green: 19, blue: 19)
+        /// Used for subtitle text color
+        public static var subtitleTextColor = UIColor(red: 86, green: 84, blue: 84)
+        /// Used for description text color
+        public static var descriptionTextColor = UIColor(red: 121, green: 116, blue: 116)
+        /// Used for background color of overlay text
+        public static var overlayTextBackground = UIColor.white
+        /// Shadow color of the overlay text
+        public static var overlayTextShadowColor = UIColor.black.cgColor
+    }
+    
+    
 
     public enum Config {
         public static let buttonHeight: CGFloat = 40
@@ -100,6 +119,15 @@ open class ALKGenericCardCell: UICollectionViewCell {
 
         /// The number of lines for the card description label. The default value for this is 3.
         public static var descriptionMaxLines = 3
+        /// The number of lines for the card title label. The default value for this is 1.
+        public static var titleMaxLines = 1
+        /// The number of lines for the card subtitle label. The default value for this is 1.
+        public static var subtitleMaxLines = 1
+        /// The value for the card corner radius. The default value for this is 10.0.
+        public static var cardCornerRadius: CGFloat = 10.0
+        /// Content Mode type for the card cover image. The default value for this is scaleToFill.
+        public static var coverImageContentMode : ContentMode = .scaleToFill
+
     }
 
     enum ConstraintIdentifier: String {
@@ -144,7 +172,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var titleLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.numberOfLines = 1
+        label.numberOfLines = Config.titleMaxLines
         label.font = Font.title
         return label
     }()
@@ -152,7 +180,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.numberOfLines = 1
+        label.numberOfLines = Config.subtitleMaxLines
         label.font = Font.subtitle
         return label
     }()
@@ -160,7 +188,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var descriptionLabel: VerticalAlignLabel = {
         let label = VerticalAlignLabel()
         label.text = ""
-        label.numberOfLines = ALKGenericCardCell.Config.descriptionMaxLines
+        label.numberOfLines = Config.descriptionMaxLines
         label.font = Font.description
         label.textColor = UIColor(red: 121, green: 116, blue: 116)
         return label
@@ -232,10 +260,10 @@ open class ALKGenericCardCell: UICollectionViewCell {
             headerHt = headerHeight(header)
         }
         let titleConstraint = CGSize(width: maxWidth, height: Font.title.lineHeight)
-        let titleHeight = textHeight(card.title, size: titleConstraint, font: Font.title)
+        let titleHeight = textHeight(card.title, size: titleConstraint, font: Font.title) * CGFloat(ALKGenericCardCell.Config.titleMaxLines)
 
         let subtitleConstraint = CGSize(width: maxWidth, height: Font.subtitle.lineHeight)
-        let subtitleHeight = textHeight(card.subtitle, size: subtitleConstraint, font: Font.subtitle)
+        let subtitleHeight = textHeight(card.subtitle, size: subtitleConstraint, font: Font.subtitle) * CGFloat(ALKGenericCardCell.Config.subtitleMaxLines)
 
         let descriptionConstraint = CGSize(width: maxWidth, height: Font.description.lineHeight)
         let descriptionHeight = textHeight(card.description, size: descriptionConstraint, font: Font.description) * CGFloat(ALKGenericCardCell.Config.descriptionMaxLines)
@@ -265,20 +293,22 @@ open class ALKGenericCardCell: UICollectionViewCell {
         setOverlayText(card.header)
         setCoverImage(card.header)
         contentView.layoutIfNeeded()
-        guard let buttons = card.buttons, !buttons.isEmpty else { return }
+        guard let buttons = card.buttons, !buttons.isEmpty else {
+            buttonStackView.isHidden = true
+            return
+        }
         updateViewFor(buttons)
         contentView.layoutIfNeeded()
     }
 
     private func setupStyle() {
-        let style = CardStyle.shared
-        titleLabel.textColor = style.titleLabel.textColor
-        overlayText.textColor = style.overlayLabel.textColor
-        overlayText.layer.shadowColor = style.overlayLabel.shadowColor
-        overlayText.backgroundColor = style.overlayLabel.background
-        ratingLabel.textColor = style.ratingLabel.textColor
-        subtitleLabel.textColor = style.subtitleLabel.textColor
-        descriptionLabel.textColor = style.descriptionLabel.textColor
+        titleLabel.textColor = Color.titleTextColor
+        overlayText.textColor = Color.overlayTextColor
+        overlayText.layer.shadowColor = Color.overlayTextShadowColor
+        overlayText.backgroundColor = Color.overlayTextBackground
+        ratingLabel.textColor = Color.ratingTextColor
+        subtitleLabel.textColor = Color.subtitleTextColor
+        descriptionLabel.textColor = Color.descriptionTextColor
     }
 
     private func setTitle(_ text: String?) {
@@ -288,7 +318,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         }
         titleLabel.text = text
         let titleConstraint = CGSize(width: 200, height: Font.title.lineHeight)
-        let height = text.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up)
+        let height = text.rectWithConstrainedSize(titleConstraint, font: Font.title).height.rounded(.up) * CGFloat(Config.titleMaxLines)
         titleStackView.constraint(withIdentifier: ConstraintIdentifier.titleView.rawValue)?.constant = height
     }
 
@@ -299,7 +329,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         }
         subtitleLabel.text = text
         let subtitleConstraint = CGSize(width: 200, height: Font.subtitle.lineHeight)
-        let height = text.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up)
+        let height = text.rectWithConstrainedSize(subtitleConstraint, font: Font.subtitle).height.rounded(.up) * CGFloat(Config.subtitleMaxLines)
         subtitleLabel.constraint(withIdentifier: ConstraintIdentifier.subtitleView.rawValue)?.constant = height
     }
 
@@ -389,7 +419,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         view.bringSubviewToFront(overlayText)
         view.bringSubviewToFront(buttonStackView)
 
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = Config.cardCornerRadius
         view.clipsToBounds = true
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 1
@@ -398,6 +428,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         coverImageHeight.isActive = true
+        coverImageView.contentMode = Config.coverImageContentMode
 
         overlayText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         overlayText.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor, constant: 0).isActive = true
