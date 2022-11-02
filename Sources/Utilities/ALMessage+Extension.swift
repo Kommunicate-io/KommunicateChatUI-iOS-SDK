@@ -352,12 +352,12 @@ extension ALMessage {
     }
 
     private func getAttachmentType() -> ALKMessageType? {
-        guard let fileMeta = fileMeta else { return nil }
-        if fileMeta.contentType.hasPrefix("image") {
+        guard let fileMeta = fileMeta, let contentType = fileMeta.contentType else { return nil }
+        if contentType.hasPrefix("image") {
             return .photo
-        } else if fileMeta.contentType.hasPrefix("audio") {
+        } else if contentType.hasPrefix("audio") {
             return .voice
-        } else if fileMeta.contentType.hasPrefix("video") {
+        } else if contentType.hasPrefix("video") {
             return .video
         } else {
             return .document

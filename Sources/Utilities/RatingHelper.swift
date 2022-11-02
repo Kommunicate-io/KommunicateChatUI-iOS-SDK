@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+
 class RatingHelper : Localizable {
 
      var configuration = ALKConfiguration()
