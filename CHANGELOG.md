@@ -1,7 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-## [Unreleased]
+
+## [0.2.7] - 2022-11-02
 - [CM-1150] Added Customizations for Card Template
 - [CM-1135] Added events for message received, back button tap
 ## [0.2.6] - 2022-09-09
