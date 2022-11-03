@@ -105,8 +105,9 @@ class ALKFriendFormCell: ALKFormCell {
         } else {
             avatarImageView.image = placeHolder
         }
-
-        nameLabel.text = viewModel.displayName
+        // Check for Custom Bot name then update name label
+        let customBotName = KMCellConfiguration.customBotName
+        nameLabel.text = customBotName.isEmpty ? viewModel.displayName : customBotName
         nameLabel.setStyle(ALKMessageStyle.displayName)
 
         if let submitButton = submitButton, submitButtonView.subviews.isEmpty {

@@ -92,7 +92,9 @@ class ALKFriendVoiceCell: ALKVoiceCell {
         } else {
             avatarImageView.image = placeHolder
         }
-        nameLabel.text = viewModel.displayName
+        // Check for Custom Bot name then update name label
+        let customBotName = KMCellConfiguration.customBotName
+        nameLabel.text = customBotName.isEmpty ? viewModel.displayName : customBotName
     }
 
     override class func bottomPadding() -> CGFloat {

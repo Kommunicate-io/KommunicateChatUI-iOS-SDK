@@ -179,7 +179,9 @@ public class ReceivedFAQMessageCell: UITableViewCell {
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
 
         // Set name
-        nameLabel.text = model.message.displayName
+        // Check for Custom Bot name then update name label
+        let customBotName = RMCellConfiguration.customBotName
+        nameLabel.text = customBotName.isEmpty ? model.message.displayName : customBotName
         nameLabel.isHidden = RMCellConfiguration.hideSenderName
 
         guard let url = model.message.imageURL else { return }

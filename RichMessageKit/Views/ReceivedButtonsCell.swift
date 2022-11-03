@@ -120,7 +120,9 @@ public class ReceivedButtonsCell: UITableViewCell {
             }
         }
 
-        nameLabel.text = model.message.displayName
+        // Check for Custom Bot name then update name label
+        let customBotName = RMCellConfiguration.customBotName
+        nameLabel.text = customBotName.isEmpty ? model.message.displayName : customBotName
         nameLabel.setStyle(MessageTheme.receivedMessage.displayName)
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
         timeLabel.text = model.message.time

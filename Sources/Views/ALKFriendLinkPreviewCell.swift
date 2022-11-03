@@ -300,7 +300,9 @@ class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
             avatarImageView.image = placeHolder
         }
 
-        nameLabel.text = viewModel.displayName
+        // Check for Custom Bot name then update name label
+        let customBotName = KMCellConfiguration.customBotName
+        nameLabel.text = customBotName.isEmpty ? viewModel.displayName : customBotName
 
         linkView.update(url: url, identifier: viewModel.identifier)
     }

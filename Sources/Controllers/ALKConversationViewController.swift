@@ -1914,6 +1914,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         ALKRichMessageStyle.primaryColor = appSettingsUserDefaults.getButtonPrimaryColor()
         
         RMCellConfiguration.hideSenderName = KMCellConfiguration.hideSenderName
+        RMCellConfiguration.customBotName = KMCellConfiguration.customBotName
     }
 
     func setSentMessageStatus() {
