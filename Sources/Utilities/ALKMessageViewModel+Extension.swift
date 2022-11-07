@@ -18,11 +18,10 @@ extension ALKMessageViewModel {
             text: message,
             isMyMessage: isMyMessage,
             time: time!,
-            displayName: displayName,
+            displayName: fetchDisplayName(),
             status: messageStatus(),
             imageURL: avatarURL,
-            contentType: contentType,
-            contactId: contactId
+            contentType: contentType
         )
     }
 
@@ -39,6 +38,16 @@ extension ALKMessageViewModel {
             message: messageDetails()
         )
     }
+    
+    func fetchDisplayName() -> String? {
+        guard let assigneeId = contactId,
+           assigneeId == RMCellConfiguration.customizedBotId,
+              !RMCellConfiguration.customBotName.isEmpty else {
+            return displayName
+        }
+        return RMCellConfiguration.customBotName
+    }
+    
 
     func faqMessage() -> FAQMessage? {
         guard
