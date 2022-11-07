@@ -24,6 +24,13 @@ enum ChannelMetadataKey {
 let emailSourceType = 7
 
 extension ALMessage: ALKChatViewModelProtocol {
+    
+    /// To show custom bot name in conversation
+    public static var customBotName = ""
+    
+    /// BotId to be customized
+    public static var customizedBotId = ""
+    
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
         guard let alContact = alContactDbService.loadContact(byKey: "userId", value: to) else {
@@ -68,6 +75,12 @@ extension ALMessage: ALKChatViewModelProtocol {
         guard let alContact = alContact, let id = alContact.userId else {
             return ""
         }
+        
+        if id == ALMessage.customizedBotId,
+           !ALMessage.customBotName.isEmpty  {
+            return ALMessage.customBotName
+        }
+        
         guard let displayName = alContact.getDisplayName(), !displayName.isEmpty else { return id }
 
         return displayName

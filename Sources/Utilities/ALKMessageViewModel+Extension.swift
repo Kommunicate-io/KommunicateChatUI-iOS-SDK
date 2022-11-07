@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import KommunicateCore_iOS_SDK
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
@@ -41,11 +42,11 @@ extension ALKMessageViewModel {
     
     func fetchDisplayName() -> String? {
         guard let assigneeId = contactId,
-           assigneeId == RMCellConfiguration.customizedBotId,
-              !RMCellConfiguration.customBotName.isEmpty else {
+           assigneeId == ALMessage.customizedBotId,
+              !ALMessage.customBotName.isEmpty else {
             return displayName
         }
-        return RMCellConfiguration.customBotName
+        return ALMessage.customBotName
     }
     
     func faqMessage() -> FAQMessage? {

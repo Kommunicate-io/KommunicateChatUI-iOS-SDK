@@ -88,14 +88,7 @@ class ALKFriendVideoCell: ALKVideoCell {
 
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
-        // Check for Custom Bot Id then update name label
-        if let assigneeId = viewModel.contactId,
-           assigneeId == KMCellConfiguration.customizedBotId,
-           !KMCellConfiguration.customBotName.isEmpty {
-            nameLabel.text = KMCellConfiguration.customBotName
-        } else {
-            nameLabel.text = viewModel.displayName
-        }
+        nameLabel.text = viewModel.displayName
 
         let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
         guard let url = viewModel.avatarURL else {

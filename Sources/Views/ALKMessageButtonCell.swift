@@ -252,14 +252,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             avatarImageView.image = placeHolder
         }
 
-        // Check for Custom Bot Id then update name label
-        if let assigneeId = viewModel.contactId,
-           assigneeId == KMCellConfiguration.customizedBotId,
-           !KMCellConfiguration.customBotName.isEmpty {
-            nameLabel.text = KMCellConfiguration.customBotName
-        } else {
-            nameLabel.text = viewModel.displayName
-        }
+        nameLabel.text = viewModel.displayName        
         nameLabel.setStyle(ALKMessageStyle.displayName)
 
         if !isMessageEmpty {
