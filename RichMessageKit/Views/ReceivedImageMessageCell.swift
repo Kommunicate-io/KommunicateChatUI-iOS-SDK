@@ -161,8 +161,8 @@ public class ReceivedImageMessageCell: UITableViewCell {
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
 
+        // Set name
         nameLabel.text = model.message.displayName
-                
         guard let url = model.message.imageURL else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
             guard let image = image else { return }

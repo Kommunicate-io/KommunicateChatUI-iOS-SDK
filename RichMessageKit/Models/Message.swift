@@ -86,5 +86,5 @@ public struct Message {
     }
 
     /// Content type of the message.
-    public var contentType: Message.ContentType    
+    public var contentType: Message.ContentType
 }

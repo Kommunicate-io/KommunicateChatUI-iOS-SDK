@@ -121,7 +121,6 @@ public class ReceivedButtonsCell: UITableViewCell {
         }
 
         nameLabel.text = model.message.displayName
-        
         nameLabel.setStyle(MessageTheme.receivedMessage.displayName)
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
         timeLabel.text = model.message.time

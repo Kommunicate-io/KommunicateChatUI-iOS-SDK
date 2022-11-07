@@ -48,7 +48,6 @@ extension ALKMessageViewModel {
         return RMCellConfiguration.customBotName
     }
     
-
     func faqMessage() -> FAQMessage? {
         guard
             let metadata = metadata,
