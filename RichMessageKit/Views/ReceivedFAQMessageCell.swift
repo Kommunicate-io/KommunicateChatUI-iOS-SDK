@@ -177,9 +177,9 @@ public class ReceivedFAQMessageCell: UITableViewCell {
         )
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
-        
+
         // Set name
-        nameLabel.text = model.message.displayName        
+        nameLabel.text = model.message.displayName
         nameLabel.isHidden = RMCellConfiguration.hideSenderName
 
         guard let url = model.message.imageURL else { return }
