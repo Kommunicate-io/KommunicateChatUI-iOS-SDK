@@ -24,12 +24,7 @@ enum ChannelMetadataKey {
 let emailSourceType = 7
 
 extension ALMessage: ALKChatViewModelProtocol {
-    
-    /// To show custom bot name in conversation
-    public static var customBotName = ""
-    
-    /// BotId to be customized
-    public static var customizedBotId = ""
+  
     
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
@@ -70,15 +65,42 @@ extension ALMessage: ALKChatViewModelProtocol {
         }
         return avatar
     }
+    
+    func fetchChatContext() -> [String: Any]? {
+        do {
+            guard let channel = alChannel,
+                  let metadata = channel.metadata,
+                  let jsonData = metadata["KM_CHAT_CONTEXT"] as? String,!jsonData.isEmpty,
+                  let data = jsonData.data(using: .utf8),
+                  let chatContextData = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] else {return nil}
+            return chatContextData
+        } catch {
+            return nil
+        }
+    }
+    
+    func isCustomBotNameAvailable(userId: String) -> String {
+        guard let chatContext = fetchChatContext(),
+              let customBot = chatContext["bot_customization"] as? [String: String],
+              let customBotName = customBot["name"],
+              let customBotId = customBot["id"],
+              customBotId == userId,
+              !customBotName.isEmpty,
+              !customBotId.isEmpty else {  return "" }
+            
+        return customBotName
+    }
 
     public var name: String {
+      
         guard let alContact = alContact, let id = alContact.userId else {
             return ""
         }
         
-        if id == ALMessage.customizedBotId,
-           !ALMessage.customBotName.isEmpty  {
-            return ALMessage.customBotName
+        let customBotName = isCustomBotNameAvailable(userId: id)
+        // if its not empty,custom bot name is available.
+        guard customBotName.isEmpty else {
+            return customBotName
         }
         
         guard let displayName = alContact.getDisplayName(), !displayName.isEmpty else { return id }
