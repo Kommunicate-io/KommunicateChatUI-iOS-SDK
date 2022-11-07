@@ -178,7 +178,6 @@ public class ReceivedFAQMessageCell: UITableViewCell {
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
 
-        
         // Check for Custom Bot Id then update name label
         if let assigneeId = model.message.contactId,
            assigneeId == RMCellConfiguration.customizedBotId,

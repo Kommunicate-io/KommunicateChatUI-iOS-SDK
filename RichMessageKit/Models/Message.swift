@@ -50,7 +50,6 @@ public struct Message {
         self.imageURL = imageURL
         self.contentType = contentType
         self.contactId = contactId
-        
     }
 
     /// Identifier of the message
