@@ -252,7 +252,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
             avatarImageView.image = placeHolder
         }
 
-        nameLabel.text = viewModel.displayName        
+        nameLabel.text = viewModel.displayName
         nameLabel.setStyle(ALKMessageStyle.displayName)
 
         if !isMessageEmpty {

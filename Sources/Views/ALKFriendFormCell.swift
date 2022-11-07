@@ -105,7 +105,7 @@ class ALKFriendFormCell: ALKFormCell {
         } else {
             avatarImageView.image = placeHolder
         }
-        
+
         nameLabel.text = viewModel.displayName
         nameLabel.setStyle(ALKMessageStyle.displayName)
 

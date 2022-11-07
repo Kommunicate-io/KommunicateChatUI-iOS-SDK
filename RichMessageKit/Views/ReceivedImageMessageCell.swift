@@ -163,6 +163,7 @@ public class ReceivedImageMessageCell: UITableViewCell {
 
         // Set name
         nameLabel.text = model.message.displayName
+
         guard let url = model.message.imageURL else { return }
         ImageCache.downloadImage(url: url) { [weak self] image in
             guard let image = image else { return }
