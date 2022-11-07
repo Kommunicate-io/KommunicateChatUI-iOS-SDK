@@ -120,9 +120,15 @@ public class ReceivedButtonsCell: UITableViewCell {
             }
         }
 
-        // Check for Custom Bot name then update name label
-        let customBotName = RMCellConfiguration.customBotName
-        nameLabel.text = customBotName.isEmpty ? model.message.displayName : customBotName
+        // Check for Custom Bot Id then update name label
+        if let assigneeId = model.message.contactId,
+           assigneeId == RMCellConfiguration.customizedBotId,
+           !RMCellConfiguration.customBotName.isEmpty {
+            nameLabel.text = RMCellConfiguration.customBotName
+        } else {
+            nameLabel.text = model.message.displayName
+        }
+        
         nameLabel.setStyle(MessageTheme.receivedMessage.displayName)
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
         timeLabel.text = model.message.time

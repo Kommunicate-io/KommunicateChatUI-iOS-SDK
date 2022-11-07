@@ -38,7 +38,8 @@ public struct Message {
         displayName: String?,
         status: ALKMessageStatus?,
         imageURL: URL?,
-        contentType: Message.ContentType
+        contentType: Message.ContentType,
+        contactId: String?
     ) {
         self.identifier = identifier
         self.text = text
@@ -48,6 +49,8 @@ public struct Message {
         self.status = status
         self.imageURL = imageURL
         self.contentType = contentType
+        self.contactId = contactId
+        
     }
 
     /// Identifier of the message
@@ -87,4 +90,6 @@ public struct Message {
 
     /// Content type of the message.
     public var contentType: Message.ContentType
+    
+    public var contactId: String?
 }

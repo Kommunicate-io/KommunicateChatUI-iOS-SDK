@@ -21,7 +21,8 @@ extension ALKMessageViewModel {
             displayName: displayName,
             status: messageStatus(),
             imageURL: avatarURL,
-            contentType: contentType
+            contentType: contentType,
+            contactId: contactId
         )
     }
 

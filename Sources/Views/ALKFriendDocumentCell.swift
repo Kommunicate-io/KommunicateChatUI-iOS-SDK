@@ -99,9 +99,14 @@ class ALKFriendDocumentCell: ALKDocumentCell {
         } else {
             avatarImageView.image = placeHolder
         }
-        // Check for Custom Bot name then update name label
-        let customBotName = KMCellConfiguration.customBotName
-        nameLabel.text = customBotName.isEmpty ? viewModel.displayName : customBotName
+        // Check for Custom Bot Id then update name label
+        if let assigneeId = viewModel.contactId,
+           assigneeId == KMCellConfiguration.customizedBotId,
+           !KMCellConfiguration.customBotName.isEmpty {
+            nameLabel.text = KMCellConfiguration.customBotName
+        } else {
+            nameLabel.text = viewModel.displayName
+        }
     }
 
     override func setupStyle() {

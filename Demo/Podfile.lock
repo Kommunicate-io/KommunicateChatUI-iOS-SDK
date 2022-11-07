@@ -14,7 +14,6 @@ PODS:
     - SwipeCellKit (~> 2.7.1)
   - KommunicateChatUI-iOS-SDK/RichMessageKit (0.2.7)
   - KommunicateCore-iOS-SDK (1.0.6)
-
   - Nimble (10.0.0)
   - Nimble-Snapshots (9.4.0):
     - Nimble-Snapshots/Core (= 9.4.0)
