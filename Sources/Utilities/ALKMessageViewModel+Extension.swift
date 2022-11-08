@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import KommunicateCore_iOS_SDK
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
@@ -18,7 +19,7 @@ extension ALKMessageViewModel {
             text: message,
             isMyMessage: isMyMessage,
             time: time!,
-            displayName: displayName,
+            displayName: fetchDisplayName(),
             status: messageStatus(),
             imageURL: avatarURL,
             contentType: contentType
@@ -38,7 +39,22 @@ extension ALKMessageViewModel {
             message: messageDetails()
         )
     }
-
+    
+    func fetchCustomBotName(userId: String) -> String? {
+        guard let customBotId = ALApplozicSettings.getCustomizedBotId(),
+              customBotId == userId,
+              let customBotName = ALApplozicSettings.getCustomBotName()
+        else { return nil }
+        return customBotName
+    }
+    
+    func fetchDisplayName() -> String? {
+        guard let contactId = contactId, let customBotName = fetchCustomBotName(userId: contactId), !customBotName.isEmpty  else {
+            return displayName
+        }
+        return customBotName
+    }
+    
     func faqMessage() -> FAQMessage? {
         guard
             let metadata = metadata,
