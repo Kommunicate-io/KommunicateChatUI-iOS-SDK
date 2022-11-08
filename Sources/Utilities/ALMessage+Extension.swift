@@ -64,7 +64,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         return avatar
     }
     
-    func isCustomBotNameAvailable(userId: String) -> String {
+    func fetchCustomBotName(userId: String) -> String {
         guard let customBotId = ALApplozicSettings.getCustomizedBotId(),
               customBotId == userId,
               let customBotName = ALApplozicSettings.getCustomBotName()
@@ -78,7 +78,7 @@ extension ALMessage: ALKChatViewModelProtocol {
             return ""
         }
         
-        let customBotName = isCustomBotNameAvailable(userId: id)
+        let customBotName = fetchCustomBotName(userId: id)
         // if its not empty,custom bot name is available.
         guard customBotName.isEmpty else {
             return customBotName

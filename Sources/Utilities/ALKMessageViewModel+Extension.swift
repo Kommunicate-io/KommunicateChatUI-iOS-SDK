@@ -40,17 +40,16 @@ extension ALKMessageViewModel {
         )
     }
     
-    func isCustomBotNameAvailable(userId: String) -> String? {
+    func fetchCustomBotName(userId: String) -> String? {
         guard let customBotId = ALApplozicSettings.getCustomizedBotId(),
               customBotId == userId,
               let customBotName = ALApplozicSettings.getCustomBotName()
         else { return nil }
-
         return customBotName
     }
     
     func fetchDisplayName() -> String? {
-        guard let contactId = contactId, let customBotName = isCustomBotNameAvailable(userId: contactId), !customBotName.isEmpty  else {
+        guard let contactId = contactId, let customBotName = fetchCustomBotName(userId: contactId), !customBotName.isEmpty  else {
             return displayName
         }
         return customBotName
