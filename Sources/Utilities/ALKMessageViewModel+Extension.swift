@@ -40,27 +40,17 @@ extension ALKMessageViewModel {
         )
     }
     
-    func fetchChatContext() -> [String: Any]? {
-        do {
-            guard let channel = ALChannelService().getChannelByKey(channelKey),
-                  let metadata = channel.metadata,
-                  let jsonData = metadata["KM_CHAT_CONTEXT"] as? String,!jsonData.isEmpty,
-                  let data = jsonData.data(using: .utf8),
-                  let chatContextData = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] else {return nil}
-            return chatContextData
-        } catch {
-            return nil
-        }
+    func isCustomBotNameAvailable(userId: String) -> String? {
+        guard let customBotId = ALApplozicSettings.getCustomizedBotId(),
+              customBotId == userId,
+              let customBotName = ALApplozicSettings.getCustomBotName()
+        else { return nil }
+
+        return customBotName
     }
     
     func fetchDisplayName() -> String? {
-        guard let chatContext = fetchChatContext(),
-              let customBot = chatContext["bot_customization"] as? [String: String],
-              let customBotName = customBot["name"],
-              let customBotId = customBot["id"],
-              customBotId == contactId,
-              !customBotName.isEmpty,
-              !customBotId.isEmpty else {
+        guard let contactId = contactId, let customBotName = isCustomBotNameAvailable(userId: contactId), !customBotName.isEmpty  else {
             return displayName
         }
         return customBotName
