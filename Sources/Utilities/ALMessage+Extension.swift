@@ -24,8 +24,6 @@ enum ChannelMetadataKey {
 let emailSourceType = 7
 
 extension ALMessage: ALKChatViewModelProtocol {
-  
-    
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
         guard let alContact = alContactDbService.loadContact(byKey: "userId", value: to) else {
