@@ -89,11 +89,6 @@ extension ALMessage: ALKChatViewModelProtocol {
         return displayName
     }
    
-    
-  
-
-    
-
     public var groupName: String {
         guard let alChannel = alChannel else { return "" }
         let name = alChannel.name ?? ""
