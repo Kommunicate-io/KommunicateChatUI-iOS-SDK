@@ -30,7 +30,7 @@ public class KMTagView: UIView {
 
     public struct Config {
  
-        public var padding = Padding(left: 14, right: 14, top: 8, bottom: 8)
+        public var padding = Padding(left: 5, right: 5, top: 4, bottom: 4)
         public var textImageSpace: CGFloat = 10
 
         var spaceWithoutText: CGFloat {
@@ -141,11 +141,11 @@ extension KMTagView {
         }
         
         struct Color {
-            var text = UIColor(red: 60.0 / 255.0, green: 75.0 / 255.0, blue: 80 / 255.0, alpha: 1.0)
-            var background = UIColor(red: 231.0 / 255.0, green: 234.0 / 255.0, blue: 242 / 255.0, alpha: 1.0)
+            var text = UIColor(red: 0.067, green: 0.133, blue: 0.133, alpha: 1)
+            var background = UIColor(red: 0.906, green: 0.918, blue: 0.949, alpha: 1)
         }
         
-        public var font = UIFont.systemFont(ofSize: 12)
+        public var font = UIFont(name: "Roboto-Regular", size: 12) ?? UIFont.systemFont(ofSize: 12)
         public var cornerRadius: CGFloat = 3
         var labelColor = Color()
     }
