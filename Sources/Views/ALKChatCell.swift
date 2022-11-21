@@ -350,16 +350,12 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
               let tagsData = (metaData["KM_TAGS"] as? String)?.data(using: .utf8),
            let tagsArray = try? JSONDecoder().decode([KMTags].self, from: tagsData)
         {
-            print("Pakka101 \(tagsArray)")
             for tag in tagsArray {
                 currentTags.append(tag.name)
             }
         }
-        
         customTagView.tagNames = currentTags
-        
         contentView.layoutIfNeeded()
-
     }
 
     private func placeholderImage(_ placeholderImage: UIImage? = nil, viewModel: ALKChatViewModelProtocol) -> UIImage? {
