@@ -118,7 +118,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
-//        tableView.estimatedRowHeight = 0
     }
 
     override public func viewWillDisappear(_: Bool) {
@@ -239,7 +238,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     // MARK: - PRIVATE METHODS
 
     private func setupView() {
-//        tableView.estimatedRowHeight = 75
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.backgroundColor = UIColor.white
