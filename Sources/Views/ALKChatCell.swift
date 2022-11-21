@@ -205,6 +205,11 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         return view
     }()
 
+    private let customTagView: KMTagLabelsView = {
+        let v = KMTagLabelsView()
+        return v
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -339,6 +344,22 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
             onlineStatusView.isHidden = !contact.connected
         }
+        
+        var currentTags = [String]()
+        if let metaData = viewModel.messageMetadata,
+              let tagsData = (metaData["KM_TAGS"] as? String)?.data(using: .utf8),
+           let tagsArray = try? JSONDecoder().decode([KMTags].self, from: tagsData)
+        {
+            print("Pakka101 \(tagsArray)")
+            for tag in tagsArray {
+                currentTags.append(tag.name)
+            }
+        }
+        
+        customTagView.tagNames = currentTags
+        
+        contentView.layoutIfNeeded()
+
     }
 
     private func placeholderImage(_ placeholderImage: UIImage? = nil, viewModel: ALKChatViewModelProtocol) -> UIImage? {
@@ -377,6 +398,13 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         messageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
+
+        // setup constrain of custom tags view
+        customTagView.translatesAutoresizingMaskIntoConstraints = false
+        customTagView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 10).isActive = true
+        customTagView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: 0).isActive = true
+        customTagView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        customTagView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
 
         // setup constraint of line
         lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true

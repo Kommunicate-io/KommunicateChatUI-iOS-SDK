@@ -54,7 +54,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   KommunicateCore-iOS-SDK:
-    :commit: 9017b656cd04f01731bf3996042aa6dbd223d683
+    :commit: 81c0f9aec404e0aba288fea4915704885a28cc1c
     :git: https://github.com/Sathyan-Elangovan/KommunicateCore-iOS-SDK.git
 
 SPEC CHECKSUMS:
