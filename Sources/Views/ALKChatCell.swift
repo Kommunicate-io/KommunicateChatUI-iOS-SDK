@@ -109,6 +109,13 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             static let height: CGFloat = 15
             static let width: CGFloat = 24
         }
+        
+        enum TagLabelsView {
+            static let top: CGFloat = 10
+            static let left: CGFloat = 0
+            static let right: CGFloat = -8
+            static let bottom: CGFloat = -8
+        }
     }
 
     public enum Config {
@@ -205,9 +212,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         return view
     }()
 
-    private let customTagView: KMTagLabelsView = {
-        let v = KMTagLabelsView()
-        return v
+    private let tagLabelsView: KMTagLabelsView = {
+        let view = KMTagLabelsView()
+        return view
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -271,24 +278,8 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
     public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
         self.viewModel = viewModel
-        let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
 
-        if let avatarImage = viewModel.avatarImage {
-            if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
-                let resource = ImageResource(downloadURL: imgURL, cacheKey: imgStr)
-                avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
-            } else {
-                avatarImageView.image = placeHolder
-            }
-        } else if let avatar = viewModel.avatar {
-            let resource = ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
-            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-        } else {
-            avatarImageView.image = placeHolder
-        }
-
-        let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
-        nameLabel.text = name
+        updateAssigneeDetails(placeholder: placeholder)
 
         let attrs: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.font: messageLabel.font ?? Font.normal(size: 14.0).font(),
@@ -344,7 +335,32 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
             onlineStatusView.isHidden = !contact.connected
         }
-        
+        updateTagsView(viewModel: viewModel)
+    }
+    
+    private func updateAssigneeDetails(placeholder: UIImage? ) {
+        guard let viewModel = self.viewModel else{return}
+        let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
+
+        if let avatarImage = viewModel.avatarImage {
+            if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
+                let resource = ImageResource(downloadURL: imgURL, cacheKey: imgStr)
+                avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
+            } else {
+                avatarImageView.image = placeHolder
+            }
+        } else if let avatar = viewModel.avatar {
+            let resource = ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+        } else {
+            avatarImageView.image = placeHolder
+        }
+
+        let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
+        nameLabel.text = name
+    }
+    
+    private func updateTagsView(viewModel: ALKChatViewModelProtocol) {
         var currentTags = [String]()
         if let metaData = viewModel.messageMetadata,
               let tagsData = (metaData["KM_TAGS"] as? String)?.data(using: .utf8),
@@ -354,7 +370,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
                 currentTags.append(tag.name)
             }
         }
-        customTagView.tagNames = currentTags
+        tagLabelsView.tagNames = currentTags
         contentView.layoutIfNeeded()
     }
 
@@ -371,7 +387,16 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon, customTagView])
+        contentView.addViewsForAutolayout(views: [avatarImageView,
+                                                  nameLabel,
+                                                  messageLabel,
+                                                  lineView,
+                                                  muteIcon,
+                                                  badgeNumberView,
+                                                  timeLabel,
+                                                  onlineStatusView,
+                                                  emailIcon,
+                                                  tagLabelsView])
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
@@ -396,11 +421,11 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
         // setup constrain of custom tags view
-        customTagView.translatesAutoresizingMaskIntoConstraints = false
-        customTagView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 10).isActive = true
-        customTagView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: 0).isActive = true
-        customTagView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
-        customTagView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
+        tagLabelsView.translatesAutoresizingMaskIntoConstraints = false
+        tagLabelsView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: Padding.TagLabelsView.top).isActive = true
+        tagLabelsView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: Padding.TagLabelsView.left).isActive = true
+        tagLabelsView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Padding.TagLabelsView.right).isActive = true
+        tagLabelsView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: Padding.TagLabelsView.bottom).isActive = true
 
         // setup constraint of line
         lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true

@@ -8,24 +8,6 @@
 import Foundation
 import UIKit
 
-public struct Paddingg {
-    let left: CGFloat
-    let right: CGFloat
-    let top: CGFloat
-    let bottom: CGFloat
-
-    public init(left: CGFloat, right: CGFloat, top: CGFloat, bottom: CGFloat) {
-        self.left = left
-        self.right = right
-        self.top = top
-        self.bottom = bottom
-    }
-}
-
-protocol ColorProtocoll {
-    static func setPrimaryColor(primaryColor: UIColor)
-}
-
 public class KMTagView: UIView {
 
     public struct Config {
@@ -129,10 +111,10 @@ public class KMTagView: UIView {
 }
 
 extension KMTagView {
-    public struct TagLabelStyle: ColorProtocoll {
+    public struct TagLabelStyle: ColorProtocol {
         static var shared = TagLabelStyle()
 
-        static func setPrimaryColor(primaryColor: UIColor) {
+        public static func setPrimaryColor(primaryColor: UIColor) {
             TagLabelStyle.shared.setColor(primaryColor)
         }
 

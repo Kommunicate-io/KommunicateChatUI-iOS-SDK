@@ -8,17 +8,24 @@
 import Foundation
 
 class KMTagLabelsView: UIView {
+    // Struct to store TagParameters
+    struct TagParameters {
+        public let height: CGFloat
+        public let spacingX: CGFloat
+        public let spacingY: CGFloat
+
+        public init(height: CGFloat, spacingX: CGFloat, spacingY: CGFloat) {
+            self.height = height
+            self.spacingX = spacingX
+            self.spacingY = spacingY
+        }
+    }
 
     var tagNames: [String] = [] {
         didSet {
             addTagLabels()
         }
     }
-    
-    let tagHeight:CGFloat = 30
-    let tagPadding: CGFloat = 16
-    let tagSpacingX: CGFloat = 8
-    let tagSpacingY: CGFloat = 8
 
     var intrinsicHeight: CGFloat = 0
     
@@ -35,19 +42,14 @@ class KMTagLabelsView: UIView {
     }
 
     func addTagLabels() -> Void {
-        // if we already have tag labels
-        //  remove any excess (e.g. we had 5 tags, new set is only 3)
-        while self.subviews.count > tagNames.count {
-            self.subviews.forEach({ $0.removeFromSuperview() })
-        }
-                
+        self.subviews.forEach({ $0.removeFromSuperview() })
         for tag in tagNames {
             let view = KMTagView(title: tag)
             addSubview(view)
         }
 
     }
-    
+    let tagParameters = TagParameters(height: 30, spacingX: 8, spacingY: 8)
     func displayTagLabels() {
         
         var currentOriginX: CGFloat = 0
@@ -70,7 +72,7 @@ class KMTagLabelsView: UIView {
             //  "move to next row"
             if currentOriginX + label.frame.width > bounds.width {
                 currentOriginX = 0
-                currentOriginY += tagHeight + tagSpacingY
+                currentOriginY += tagParameters.height + tagParameters.spacingY
             }
             
             // set the btn frame origin
@@ -78,12 +80,12 @@ class KMTagLabelsView: UIView {
             label.frame.origin.y = currentOriginY
             
             // increment current X by btn width + spacing
-            currentOriginX += label.frame.width + tagSpacingX
+            currentOriginX += label.frame.width + tagParameters.spacingX
             
         }
         
         // update intrinsic height
-        intrinsicHeight = currentOriginY + tagHeight
+        intrinsicHeight = currentOriginY + tagParameters.height
         invalidateIntrinsicContentSize()
         
     }
