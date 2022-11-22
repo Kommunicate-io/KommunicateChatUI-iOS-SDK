@@ -387,16 +387,17 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView,
-                                                  nameLabel,
-                                                  messageLabel,
-                                                  lineView,
-                                                  muteIcon,
-                                                  badgeNumberView,
-                                                  timeLabel,
-                                                  onlineStatusView,
-                                                  emailIcon,
-                                                  tagLabelsView])
+        contentView.addViewsForAutolayout(views:
+                                            [avatarImageView,
+                                             nameLabel,
+                                             messageLabel,
+                                             lineView,
+                                             muteIcon,
+                                             badgeNumberView,
+                                             timeLabel,
+                                             onlineStatusView,
+                                             emailIcon,
+                                             tagLabelsView])
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
