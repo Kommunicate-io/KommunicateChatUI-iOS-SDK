@@ -2443,6 +2443,13 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
               UIApplication.shared.applicationState != .background else { return false }
         return true
     }
+    
+    public func handOff(toHuman conversationId: String!) {
+        guard let accountKey = ALApplozicSettings.getZendeskSdkAccountKey(), !accountKey.isEmpty else {
+            return
+        }
+        KMZendeskChatHandler.shared.initiateZendesk(key: accountKey, conversationId: conversationId)
+    }
 }
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {

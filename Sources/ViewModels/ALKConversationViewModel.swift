@@ -740,6 +740,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: { _, error in
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
+                if KMZendeskChatHandler.shared.isZendeskEnabled()  {
+                    KMZendeskChatHandler.shared.sendMessage(message: alMessage)
+                }
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
@@ -749,6 +752,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 NSLog("Message sent section: \(indexPath.section), \(String(describing: alMessage.message))")
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
+                if KMZendeskChatHandler.shared.isZendeskEnabled()  {
+                    KMZendeskChatHandler.shared.sendMessage(message: alMessage)
+                }
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
@@ -1736,6 +1742,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
             message, error in
             let newMesg = alMessage
+            if KMZendeskChatHandler.shared.isZendeskEnabled() {
+                KMZendeskChatHandler.shared.sendAttachment(message: alMessage)
+            }
             NSLog("message is: ", newMesg.key)
             NSLog("Message sent: \(String(describing: message)), \(String(describing: error))")
             if error == nil {
