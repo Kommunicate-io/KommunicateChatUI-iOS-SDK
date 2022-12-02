@@ -10,6 +10,10 @@ import ChatSDK
 import ChatProvidersSDK
 import KommunicateCore_iOS_SDK
 
+struct KommunicateURL {
+    static let attachmentURL = "https://chat.kommunicate.io/rest/ws/attachment/"
+    static let dashboardURL = "https://dashboard.kommunicate.io/conversations/"
+}
 
 public class KMZendeskChatHandler {
     
@@ -19,38 +23,34 @@ public class KMZendeskChatHandler {
     var messages:[ALMessage]? = nil
     var zenChatIntialized = false
     var userId = ""
-    var userDetailsList = [ALUserDetail]()
+    var isChatTranscriptSent = false
     
     public func initiateZendesk(key: String, conversationId: String) {
         Chat.initialize(accountKey: key)
         groupId = conversationId
         zenChatIntialized = true
-        print("Pakka101 intialized zendesk chat")
         fetchUserId()
         authenticateUser()
 
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-
+            self.sendChatInfo()
+            self.sendChatTranscript()
+            
             let connectionToken = Chat.connectionProvider?.observeConnectionStatus { [self] (connection) in
                 // Handle connection status changes
-                print("pakka101 connect status \(connection.isConnected)")
-
                 guard connection.isConnected && connectionStatus != true else {
                    self.connectToZendeskSocket()
                    return
                 }
                 connectionStatus = true
                 observeChatLogs()
-                self.sendChatInfo()
-                self.sendChatTranscript()
+                if !isChatTranscriptSent {
+                    sendChatTranscript()
+                }
+               
            }
            
        }
-    }
-    
-    func setMessages(messages : [ALMessage]) {
-        self.messages = messages
     }
     
     func fetchUserId() {
@@ -75,67 +75,57 @@ public class KMZendeskChatHandler {
             return
         }
         
-        print("Pakka101 trying to observe chat logs")
         let stateToken = Chat.chatProvider?.observeChatState { (state) in
             // Handle logs, agent events, queue position changes and other events
-            print("Pakka101 conversation state logs \(state.logs)")
         }
         chatLogToken = stateToken
     }
     
     func connectToZendeskSocket() {
-        print("Pakka101 trying to connect zendesk socket")
         Chat.connectionProvider?.connect()
     }
-    var messageBuffer = [ALMessage]()
     
     func sendMessage(message: ALMessage) {
-        
         guard Chat.connectionProvider?.status == .connected else {
-            messageBuffer.append(message)
             connectToZendeskSocket()
             return
         }
-        print("Pakka101 trying to send message to zenchat")
-        sendMessageToZendesk(message: message)
+        
+        sendMessageToZendesk(message: message.message) { (result) in
+            switch result {
+            case .success:
+                print("Message Sent to Zendesk Successfully")
+            case .failure(let error):
+                print("Failed Send the Message to Zendesk \(error)")
+            }
+        }
     }
     
-    func sendMessageToZendesk(message: ALMessage) {
-        Chat.chatProvider?.sendMessage(message.message) { (result) in
-                switch result {
-                case .success(let messageId):
-                  print("Pakka101 message sent successfully \(messageId)")
-                  // The message was successfully sent
-                case .failure(let error):
-                  // Something went wrong
-                  // You can easily retrieve the messageId to use when retrying
-                  let messageId = error.messageId
-                  print("Pakka101 message send error \(error)")
-                }
-          }
+    func sendMessageToZendesk(message: String, completionHandler: @escaping (Result<String, ChatProvidersSDK.DeliveryStatusError>) -> Void) {
+        Chat.chatProvider?.sendMessage(message) { (result) in
+            completionHandler(result)
+        }
     }
     
     func sendChatTranscript() {
-        print("Pakka101 send chat transcript called")
         let chanelKey = NSNumber(value: Int(groupId) ?? 0)
         let messageListRequest = MessageListRequest()
-        messageListRequest.userId = nil
         messageListRequest.channelKey = chanelKey
-        messageListRequest.conversationId = nil
-        messageListRequest.endTimeStamp = nil
         
         if let channel = ALChannelService().getChannelByKey(chanelKey) {
             messageListRequest.channelType = channel.type
         }
-        var transcriptString = "Transcript:\n"
+        
+        
         ALMessageClientService().getMessageList(forUser: messageListRequest, withOpenGroup: messageListRequest.channelType == 6) {[self] messages,error,userArray in
-            print("Pakka101 messages \(messages)")
             guard let messageList = messages,
                   let userDetails = userArray as? [ALUserDetail],
                   !userDetails.isEmpty,
                   let almessages = messageList.reversed() as? [ALMessage] else {
                 return
             }
+            var transcriptString = "Transcript:\n"
+
             for currentMessage in almessages {
                 guard !currentMessage.isMsgHidden() || currentMessage.isAssignmentMessage() else {continue}
                 var userName = ""
@@ -145,24 +135,20 @@ public class KMZendeskChatHandler {
                     //get the bot name
                     userName = getBotNameById(botId: currentMessage.to, userdetails: userDetails)
                 }
-                var message = getMessageForTranscript(message: currentMessage)
-                guard !userName.isEmpty && !message.isEmpty else{continue}
+                let message = getMessageForTranscript(message: currentMessage)
+                guard !userName.isEmpty && !message.isEmpty else {continue}
                 transcriptString.append("\(userName): \(message)\n")
             }
             
-            Chat.chatProvider?.sendMessage(transcriptString) { (result) in
-                    switch result {
-                    case .success(let messageId):
-                      print("Pakka101 Transcript message sent successfully \(messageId)")
-                      // The message was successfully sent
-                    case .failure(let error):
-                      // Something went wrong
-                      // You can easily retrieve the messageId to use when retrying
-                      let messageId = error.messageId
-                      print("Pakka101 Transcript message send error \(error)")
-                    }
-              }
-            
+            sendMessageToZendesk(message: transcriptString, completionHandler: { (result) in
+                switch result {
+                case .success:
+                    self.isChatTranscriptSent = true
+                    print("Chat Transcript Sent to Zendesk Successfully")
+                case .failure(let error):
+                    print("Failed Send the chat transcript to Zendesk \(error)")
+                }
+            })
         }
     }
     
@@ -180,35 +166,31 @@ public class KMZendeskChatHandler {
         if let message = message.message, !message.isEmpty {
             return message
         } else if let fileMeta = message.fileMeta, let blobkey = fileMeta.blobKey {
-            return ""
+            return "\(KommunicateURL.attachmentURL)\(blobkey)"
         } else if let metadata = message.metadata, let templateId = metadata["templateId"] {
             return "TemplateId: \(templateId)"
         }
-        
         return ""
     }
     
     func sendChatInfo() {
-        let infoString = "This chat is initiated from kommunicate widget, look for more here: https://dashboard.kommunicate.io/conversations/\(groupId)"
-        Chat.chatProvider?.sendMessage(infoString) { (result) in
-                switch result {
-                case .success(let messageId):
-                  print("Pakka101 infomessage sent successfully \(messageId)")
-                  // The message was successfully sent
-                case .failure(let error):
-                  // Something went wrong
-                  // You can easily retrieve the messageId to use when retrying
-                  let messageId = error.messageId
-                  print("Pakka101 infomessage send error \(error)")
-                }
-          }
+        let infoString = "This chat is initiated from kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
+        
+        sendMessageToZendesk(message: infoString, completionHandler: {(result) in
+            switch result {
+            case .success(let messageId):
+              print("info message sent successfully \(messageId)")
+            case .failure(let error):
+              print("Failed to send info message due to \(error)")
+            }
+        })
+
     }
     
     public func disconnectFromZendesk() {
         Chat.chatProvider?.endChat()
         chatLogToken?.cancel()
         Chat.connectionProvider?.disconnect()
-        print("Pakka101 disconnected from Zendesk Chat")
     }
     
     func sendAttachment(message:ALMessage){
@@ -218,24 +200,18 @@ public class KMZendeskChatHandler {
                 return
             }
             
-            print("pakka101 file URL \(fileUrl)")
             Chat.chatProvider?.sendFile(url:url , onProgress: { (progress) in
-                        // Do something with the progress
-                        print("Pakka101 attchment progress \(progress)")
-            
-                    }, completion: { result in
-                        switch result {
+                print("attachment progress \(progress)")}, completion: { result in
+                    switch result {
                         case .success:
-                            // The attachment was sent
-                            print("Pakka101 attchment send")
+                            print("Attachment sent to zendesk successfully")
                             break
                         case .failure(let error):
-                            // Something went wrong
-                            print("Pakka101 failed to send attachment\(error)")
+                            print("Failed to send attachment \(error)")
                             break
-                        }
-            })
-        }
+                    }
+                })
+            }
     }
         
     public func isChatGoingOn(completion: @escaping (Bool) -> Void) {
@@ -244,10 +220,9 @@ public class KMZendeskChatHandler {
         chatProvider.getChatInfo { (result) in
             switch result {
             case .success(let chatInfo):
-                print("Pakka101 isChatGoingOn \(chatInfo.isChatting)")
                 completion(chatInfo.isChatting)
             case .failure(let error):
-                print("Pakka101 Failed to get chatinfo error \(error)")
+                print("Failed to get chat info \(error)")
                 completion(false)
             }
         }
@@ -260,3 +235,4 @@ public class KMZendeskChatHandler {
         return true
     }
 }
+
