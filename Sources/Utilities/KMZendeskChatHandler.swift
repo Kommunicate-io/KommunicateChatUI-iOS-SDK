@@ -36,16 +36,18 @@ public class KMZendeskChatHandler {
             self.sendChatInfo()
             self.sendChatTranscript()
             
-            let connectionToken = Chat.connectionProvider?.observeConnectionStatus { [self] (connection) in
+            let connectionToken = Chat.connectionProvider?.observeConnectionStatus { [weak self] (connection) in
                 // Handle connection status changes
-                guard connection.isConnected && connectionStatus != true else {
-                   self.connectToZendeskSocket()
+                guard let weakSelf = self,
+                      connection.isConnected,
+                      self?.connectionStatus != true else {
+                   self?.connectToZendeskSocket()
                    return
                 }
-                connectionStatus = true
-                observeChatLogs()
-                if !isChatTranscriptSent {
-                    sendChatTranscript()
+                weakSelf.connectionStatus = true
+                weakSelf.observeChatLogs()
+                if !weakSelf.isChatTranscriptSent {
+                    weakSelf.sendChatTranscript()
                 }
            }
        }
