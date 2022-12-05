@@ -2444,11 +2444,11 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         return true
     }
     
-    public func handOff(toHuman conversationId: String!) {
+    public func handOffToZendeskAgent(conversationId: NSNumber!) {
         guard let accountKey = ALApplozicSettings.getZendeskSdkAccountKey(), !accountKey.isEmpty else {
             return
         }
-        KMZendeskChatHandler.shared.initiateZendesk(key: accountKey, conversationId: conversationId)
+        KMZendeskChatHandler.shared.initiateZendesk(key: accountKey, conversationId: conversationId.stringValue)
     }
 }
 

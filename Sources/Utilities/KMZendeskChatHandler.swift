@@ -16,8 +16,8 @@ struct KommunicateURL {
 }
 
 public class KMZendeskChatHandler {
-    
-   public static let shared = KMZendeskChatHandler()
+
+    public static let shared = KMZendeskChatHandler()
     var groupId: String = ""
     var connectionStatus = false
     var messages:[ALMessage]? = nil
@@ -47,9 +47,7 @@ public class KMZendeskChatHandler {
                 if !isChatTranscriptSent {
                     sendChatTranscript()
                 }
-               
            }
-           
        }
     }
     
@@ -116,8 +114,7 @@ public class KMZendeskChatHandler {
             messageListRequest.channelType = channel.type
         }
         
-        
-        ALMessageClientService().getMessageList(forUser: messageListRequest, withOpenGroup: messageListRequest.channelType == 6) {[self] messages,error,userArray in
+        ALMessageClientService().getMessageList(forUser: messageListRequest) { messages,error,userArray in
             guard let messageList = messages,
                   let userDetails = userArray as? [ALUserDetail],
                   !userDetails.isEmpty,
@@ -133,14 +130,14 @@ public class KMZendeskChatHandler {
                     userName = "User"
                 } else {
                     //get the bot name
-                    userName = getBotNameById(botId: currentMessage.to, userdetails: userDetails)
+                    userName = self.getBotNameById(botId: currentMessage.to, userdetails: userDetails)
                 }
-                let message = getMessageForTranscript(message: currentMessage)
+                let message = self.getMessageForTranscript(message: currentMessage)
                 guard !userName.isEmpty && !message.isEmpty else {continue}
                 transcriptString.append("\(userName): \(message)\n")
             }
             
-            sendMessageToZendesk(message: transcriptString, completionHandler: { (result) in
+            self.sendMessageToZendesk(message: transcriptString, completionHandler: { (result) in
                 switch result {
                 case .success:
                     self.isChatTranscriptSent = true
@@ -174,7 +171,7 @@ public class KMZendeskChatHandler {
     }
     
     func sendChatInfo() {
-        let infoString = "This chat is initiated from kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
+        let infoString = "This chat is initiated from Kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
         
         sendMessageToZendesk(message: infoString, completionHandler: {(result) in
             switch result {
@@ -204,7 +201,7 @@ public class KMZendeskChatHandler {
                 print("attachment progress \(progress)")}, completion: { result in
                     switch result {
                         case .success:
-                            print("Attachment sent to zendesk successfully")
+                            print("Attachment sent to zendesk successfully. URL : \(fileUrl)")
                             break
                         case .failure(let error):
                             print("Failed to send attachment \(error)")
@@ -215,8 +212,8 @@ public class KMZendeskChatHandler {
     }
         
     public func isChatGoingOn(completion: @escaping (Bool) -> Void) {
-        //This API proactively connects to web sockets for authenticated users. This connection is kept alive. You should call disconnect() on the ConnectionProvider if you don't need to keep it open.
-        guard let chatProvider = Chat.chatProvider else{return completion(false)}
+        // This API proactively connects to web sockets for authenticated users. This connection is kept alive. You should call disconnect() on the ConnectionProvider if you don't need to keep it open.
+        guard let chatProvider = Chat.chatProvider else { return completion(false) }
         chatProvider.getChatInfo { (result) in
             switch result {
             case .success(let chatInfo):
