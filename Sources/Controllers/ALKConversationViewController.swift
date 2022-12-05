@@ -1120,6 +1120,19 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 self.refreshViewController()
             }
         }
+        // If zendesk chat is integrated and the message is an assignment(to human) message , then initialize the zendesk sdk
+        guard let zendeskKey = ALApplozicSettings.getZendeskSdkAccountKey(),
+              !zendeskKey.isEmpty,
+              message.isAssignmentMessage(),
+              !message.isHiddenMessage(),
+              let groupId = message.groupId,
+              let metadata = message.metadata,
+              let assigneeId = metadata["KM_ASSIGN_TO"] as? String,
+              let contact = ALContactDBService().loadContact(byKey: "userId", value: assigneeId),
+              let assigneeRole = contact.roleType,
+              assigneeRole !=  NSNumber.init(value: AL_BOT.rawValue) else { return }
+        
+        KMZendeskChatHandler.shared.initiateZendesk(key: zendeskKey, conversationId: groupId.stringValue)
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId _: String?, status: Int32?) {
@@ -2442,13 +2455,6 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         guard ALDataNetworkConnection.checkDataNetworkAvailable(),
               UIApplication.shared.applicationState != .background else { return false }
         return true
-    }
-    
-    public func handOffToZendeskAgent(conversationId: NSNumber!) {
-        guard let accountKey = ALApplozicSettings.getZendeskSdkAccountKey(), !accountKey.isEmpty else {
-            return
-        }
-        KMZendeskChatHandler.shared.initiateZendesk(key: accountKey, conversationId: conversationId.stringValue)
     }
 }
 
