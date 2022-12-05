@@ -204,7 +204,7 @@ public class KMZendeskChatHandler {
                             print("Attachment sent to zendesk successfully. URL : \(fileUrl)")
                             break
                         case .failure(let error):
-                            print("Failed to send attachment \(error)")
+                            print("Failed to send attachment  \(fileUrl) due to \(error)")
                             break
                     }
                 })
