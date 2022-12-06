@@ -1127,10 +1127,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
               !message.isHiddenMessage(),
               let groupId = message.groupId,
               let metadata = message.metadata,
-              let assigneeId = metadata["KM_ASSIGN_TO"] as? String,
-              let contact = ALContactDBService().loadContact(byKey: "userId", value: assigneeId),
-              let assigneeRole = contact.roleType,
-              assigneeRole !=  NSNumber.init(value: AL_BOT.rawValue) else { return }
+              let _ = metadata["KM_ASSIGN_TO"] as? String else { return }
         
         KMZendeskChatHandler.shared.initiateZendesk(key: zendeskKey, conversationId: groupId.stringValue)
     }
