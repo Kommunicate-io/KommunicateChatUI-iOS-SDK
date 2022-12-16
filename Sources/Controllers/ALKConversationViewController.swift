@@ -1129,7 +1129,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
               let metadata = message.metadata,
               let _ = metadata["KM_ASSIGN_TO"] as? String else { return }
         
-        KMZendeskChatHandler.shared.initiateZendesk(key: zendeskKey, conversationId: groupId.stringValue)
+        KMZendeskChatHandler.shared.handedOffToAgent(groupId: groupId.stringValue)
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId _: String?, status: Int32?) {
