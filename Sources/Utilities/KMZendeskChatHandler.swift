@@ -13,15 +13,12 @@ import KommunicateCore_iOS_SDK
 struct KommunicateURL {
     static let attachmentURL = "https://chat.kommunicate.io/rest/ws/attachment/"
     static let dashboardURL = "https://dashboard.kommunicate.io/conversations/"
+    static let jwtURL = "https://api.kommunicate.io/rest/ws/zendesk/jwt"
 }
 
 public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
-  
-    public func getToken(_ completion: @escaping (String?, Error?) -> Void) {
-        completion(jwtToken,nil)
-    }
-    
-   public static let shared = KMZendeskChatHandler()
+
+    public static let shared = KMZendeskChatHandler()
     var groupId: String = ""
     var zenChatIntialized = false
     var userId = ""
@@ -31,14 +28,14 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     var messageBufffer = [ALMessage]()
 
     var jwtToken: String = "" {
-            didSet {
-                guard !jwtToken.isEmpty else {
-                    resetIdentity()
-                    return
-                }
-                Chat.instance?.setIdentity(authenticator: self)
+        didSet {
+            guard !jwtToken.isEmpty else {
+                resetIdentity()
+                return
             }
+            Chat.instance?.setIdentity(authenticator: self)
         }
+    }
     
     public func initiateZendesk(key: String) {
         Chat.initialize(accountKey: key)
@@ -49,6 +46,10 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     
     public func updateHandoff(_ value: Bool) {
         self.isHandOffHappened = value
+    }
+    
+    public func getToken(_ completion: @escaping (String?, Error?) -> Void) {
+        completion(jwtToken,nil)
     }
     
     func observeChatLogs() {
@@ -69,6 +70,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             guard connection.isConnected else {
                return
             }
+            processBufferMessages()
        }
     }
     
@@ -84,11 +86,11 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
         sendChatTranscript()
     }
 
-    
     public func getGroupId() -> String {
         return groupId
     }
-    public func updategroupId(_ groupId: String) {
+    
+    public func setGroupIdAndUpdateLastMessageCreatedTime(_ groupId: String) {
         self.groupId = groupId
         self.updateLastMessageCreatedTime()
     }
@@ -103,8 +105,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
         }
     }
     
-    
-    
     func authenticateUserWithJWT(name: String, email: String, externalId: String) {
         let dictionary = ["name":name, "email": email, "externalId":externalId]
 
@@ -114,7 +114,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             theParamString = String(data: aPostdata, encoding: .utf8)
         }
         
-        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: "https://api.kommunicate.io/rest/ws/zendesk/jwt", paramString: theParamString) as NSMutableURLRequest? else { return }
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: KommunicateURL.jwtURL, paramString: theParamString) as NSMutableURLRequest? else { return }
         let responseHandler = ALResponseHandler()
         
         responseHandler.authenticateAndProcessRequest(postURLRequest, andTag: "") {
@@ -128,7 +128,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             self.jwtToken = jwtKey
             // Connect to their server after authentication
             self.connectToZendeskSocket()
-
         }
     }
     
@@ -139,10 +138,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             return
         }
         connectionProvider.connect()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.observeChatLogs()
-        }
+        self.observeChatLogs()
     }
     
     func sendMessage(message: ALMessage) {
@@ -188,7 +184,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     func sendChatTranscript() {
         let channelKey = NSNumber(value: Int(groupId) ?? 0)
         guard channelKey != 0 else {
-            print("Failed to fetch messages for group Id")
+            print("Failed to fetch messages for channel key \(channelKey)")
             return
         }
      
@@ -272,8 +268,14 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     
     public func disconnectFromZendesk() {
         Chat.connectionProvider?.disconnect()
-        resetLocal()
+        resetConfiguration()
         resetIdentity()
+    }
+    
+    public func resetConfiguration() {
+        isHandOffHappened = false
+        zenChatIntialized = false
+        lastUserMessageCreatedTime = 0
     }
     
     func sendAttachment(message:ALMessage){
@@ -282,7 +284,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
                 print("Error Finding attachment URL :: \(String(describing: error))")
                 return
             }
-            print("pakka101 sendding attachment url \(url)")
 
             Chat.chatProvider?.sendFile(url:url , onProgress: { (progress) in
                 print("attachment progress \(progress)")}, completion: { result in
@@ -334,11 +335,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             }
             self.lastUserMessageCreatedTime = almessages.last?.createdAtTime ?? 0
         }
-    }
-    
-    func resetLocal() {
-        isHandOffHappened = false
-        zenChatIntialized = false
     }
     
     func processBufferMessages() {
