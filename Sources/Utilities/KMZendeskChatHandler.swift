@@ -276,6 +276,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
         isHandOffHappened = false
         zenChatIntialized = false
         lastUserMessageCreatedTime = 0
+        messageBufffer.removeAll()
     }
     
     func sendAttachment(message:ALMessage){
