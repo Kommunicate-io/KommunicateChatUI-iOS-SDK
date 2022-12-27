@@ -14,19 +14,38 @@ struct KommunicateURL {
     static let attachmentURL = "https://chat.kommunicate.io/rest/ws/attachment/"
     static let dashboardURL = "https://dashboard.kommunicate.io/conversations/"
     static let jwtURL = "https://api.kommunicate.io/rest/ws/zendesk/jwt"
+    static let sendMessage = "https://api.kommunicate.io/rest/ws/zendesk/message/send"
+    static let sendAttachment = "https://api.kommunicate.io/rest/ws/zendesk/file/send"
+    static let resolveConversation = "https://chat.kommunicate.io/rest/ws/group/status/change?groupId="
 }
 
-public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
+public protocol KMZendeskChatProtocol {
+    func initiateZendesk(key: String)
+    func updateHandoffFlag(_ value: Bool)
+    func handedOffToAgent(groupId: String)
+    func disconnectFromZendesk()
+    func resetConfiguration()
+    func endChat()
+    func setGroupId(_ groupId: String)
+}
 
+public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatProtocol {
+    
     public static let shared = KMZendeskChatHandler()
     var groupId: String = ""
     var zenChatIntialized = false
     var userId = ""
     var isChatTranscriptSent = false
     var isHandOffHappened = false
-    var lastUserMessageCreatedTime: NSNumber = 0
     var messageBufffer = [ALMessage]()
-
+    
+    var lastSyncTime: NSNumber = 0
+    var rootViewController : UIViewController? = nil
+    var chatLogToken : ObservationToken?
+    var connectionToken: ObservationToken?
+    let sendUserMessageGroup = DispatchGroup()
+    let sendAgentMessageGroup = DispatchGroup()
+    
     var jwtToken: String = "" {
         didSet {
             guard !jwtToken.isEmpty else {
@@ -38,13 +57,16 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     }
     
     public func initiateZendesk(key: String) {
+        if zenChatIntialized {
+            return
+        }
         Chat.initialize(accountKey: key)
         zenChatIntialized = true
         fetchUserId()
         authenticateUser()
     }
     
-    public func updateHandoff(_ value: Bool) {
+    public func updateHandoffFlag(_ value: Bool) {
         self.isHandOffHappened = value
     }
     
@@ -52,19 +74,61 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
         completion(jwtToken,nil)
     }
     
-    func observeChatLogs() {
-        guard Chat.connectionProvider?.status == .connected else {
-            connectToZendeskSocket()
-            return
+    public func handedOffToAgent(groupId: String) {
+        lastSyncTime = NSDate().timeIntervalSince1970 * 1000 as NSNumber
+        self.groupId = groupId
+        isHandOffHappened = true
+        sendChatInfo()
+        sendChatTranscript()
+    }
+    
+    public func setGroupId(_ groupId: String) {
+        self.groupId = groupId
+    }
+    
+    
+    public func disconnectFromZendesk() {
+        Chat.connectionProvider?.disconnect()
+        resetConfiguration()
+        resetIdentity()
+    }
+    
+    public func resetConfiguration() {
+        isHandOffHappened = false
+        zenChatIntialized = false
+        lastSyncTime = 0
+        messageBufffer.removeAll()
+        chatLogToken?.cancel()
+        connectionToken?.cancel()
+    }
+    
+    public func isZendeskEnabled() -> Bool {
+        guard let key = ALApplozicSettings.getZendeskSdkAccountKey(), !key.isEmpty, zenChatIntialized else {
+            return false
         }
-        
+        return true
+    }
+    
+    public func endChat() {
+        guard zenChatIntialized else  { return }
+        Chat.instance?.chatProvider.endChat(){ result in
+            switch result {
+            case let .success(status):
+                print("Successfully ended the zendesk chat", status)
+                self.disconnectFromZendesk()
+            case let .failure(error):
+                print("Failed to end the zendesk chat : %@", error.localizedDescription)
+            }
+        }
+    }
+    
+    func observeChatLogs() {
+        lastSyncTime = ALApplozicSettings.getZendeskLastSyncTime() ?? 0
         let stateToken = Chat.chatProvider?.observeChatState { (state) in
             // Handle logs, agent events, queue position changes and other events
             self.processChatLogs(logs: state.logs)
         }
-        // TODO: Handle Disconnection of all observe token
         chatLogToken = stateToken
-        
         let connectionToken = Chat.connectionProvider?.observeConnectionStatus { [self] (connection) in
             // Handle connection status changes
             guard connection.isConnected else {
@@ -79,22 +143,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
         self.userId = id
     }
     
-    public func handedOffToAgent(groupId: String) {
-        self.groupId = groupId
-        isHandOffHappened = true
-        sendChatInfo()
-        sendChatTranscript()
-    }
-
-    public func getGroupId() -> String {
-        return groupId
-    }
-    
-    public func setGroupIdAndUpdateLastMessageCreatedTime(_ groupId: String) {
-        self.groupId = groupId
-        self.updateLastMessageCreatedTime()
-    }
-   
     func authenticateUser() {
         let userHandler = ALUserDefaultsHandler.self
         
@@ -102,6 +150,9 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
            let name = userHandler.getDisplayName(),!name.isEmpty,
            let email = userHandler.getEmailId(),!email.isEmpty {
             authenticateUserWithJWT(name: name, email: email, externalId: externalId)
+        } else {
+            // Connect to Zendesk Socket as a visitor.
+            connectToZendeskSocket()
         }
     }
     
@@ -126,19 +177,29 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
                 return
             }
             self.jwtToken = jwtKey
-            // Connect to their server after authentication
+            // Connect to Zendesk server after authentication
             self.connectToZendeskSocket()
         }
     }
-    
-    var chatLogToken : ObservationToken?
     
     func connectToZendeskSocket() {
         guard let connectionProvider = Chat.connectionProvider else {
             return
         }
+        // Connecting to zeendesk server
         connectionProvider.connect()
         self.observeChatLogs()
+
+         connectionToken = Chat.instance?.connectionProvider.observeConnectionStatus { [self] (connection) in
+            // Handle connection status changes
+            guard connection.isConnected else {
+                print("connecting to zendesk socket")
+                connectionProvider.connect()
+               return
+            }
+            self.processBufferMessages()
+       }
+       
     }
     
     func sendMessage(message: ALMessage) {
@@ -153,7 +214,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             switch result {
             case .success:
                 print("Message Sent to Zendesk Successfully")
-                self.lastUserMessageCreatedTime = message.createdAtTime
                 if self.messageBufffer.contains(message) {
                     self.messageBufffer.remove(object: message)
                 }
@@ -164,12 +224,10 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     }
     
     func sendMessageToZendesk(message: String, completionHandler: @escaping (Result<String, ChatProvidersSDK.DeliveryStatusError>) -> Void) {
-        guard let connectionProvider = Chat.connectionProvider, connectionProvider.status == .connected else {
-            connectToZendeskSocket()
-            return
-        }
+        sendUserMessageGroup.enter()
         Chat.chatProvider?.sendMessage(message) { (result) in
             print("send message result \(result) for message \(message)")
+            self.sendUserMessageGroup.leave()
             completionHandler(result)
         }
     }
@@ -197,7 +255,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
                 return
             }
             // Set Last user Message created time
-            lastUserMessageCreatedTime = almessages.last?.createdAtTime ?? 0
             var transcriptString = "Transcript:\n"
 
             for currentMessage in almessages {
