@@ -236,13 +236,25 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     }
     
     func processChatLogs(logs: [ChatLog]) {
-        guard lastUserMessageCreatedTime != 0 else { return }
-        let filteredArray = logs.filter{$0.createdTimestamp >= TimeInterval(truncating: lastUserMessageCreatedTime)}
-        processAgentMessage(message: filteredArray)
+        let filteredArray = logs.filter{$0.createdTimestamp >= TimeInterval(truncating: lastSyncTime)}
+        for log in filteredArray {
+            if log.type == .message && log.participant == .agent {
+                print("Received Agent Message \(log.description)")
+                processAgentMessage(message: log)
+            } else if log.type == .attachmentMessage && log.participant == .agent {
+                print("Received Attachment Message \(log.description)")
+                processAgentAttachmentMessage(message: log)
+            } else if log.type == .memberLeave && log.participant == .agent {
+                print("Received Member Leave Message")
+                processAgentLeave()
+            }
+            lastSyncTime = log.createdTimestamp as NSNumber
+        }
+        // Save the last sync time
+        ALApplozicSettings.saveZendeskLastSyncTime(lastSyncTime)
     }
     
     func getMessageForTranscript(message:ALMessage) -> String {
-        //To be handled for other scenarios
         if let message = message.message, !message.isEmpty {
             return message
         } else if let fileMeta = message.fileMeta, let blobkey = fileMeta.blobKey {
@@ -254,7 +266,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
     }
     
     func sendChatInfo() {
-        let infoString = "This chat is initiated from kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
+        let infoString = "This chat is initiated from Kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
 
         sendMessageToZendesk(message: infoString, completionHandler: {(result) in
             switch result {
@@ -265,19 +277,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
             }
         })
     }
-    
-    public func disconnectFromZendesk() {
-        Chat.connectionProvider?.disconnect()
-        resetConfiguration()
-        resetIdentity()
-    }
-    
-    public func resetConfiguration() {
-        isHandOffHappened = false
-        zenChatIntialized = false
-        lastUserMessageCreatedTime = 0
-        messageBufffer.removeAll()
-    }
+   
     
     func sendAttachment(message:ALMessage){
         ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil) { fileUrl, error in
@@ -296,57 +296,88 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
                             print("Failed to send attachment \(error)")
                             break
                     }
-                })
-            }
-    }
-        
-    public func isChatGoingOn(completion: @escaping (Bool) -> Void) {
-        // This API proactively connects to web sockets for authenticated users. This connection is kept alive. You should call disconnect() on the ConnectionProvider if you don't need to keep it open.
-        guard let chatProvider = Chat.chatProvider else {
-            return completion(false)
-        }
-        chatProvider.getChatInfo { (result) in
-            switch result {
-            case .success(let chatInfo):
-                completion(chatInfo.isChatting)
-            case .failure(let error):
-                completion(false)
-            }
+            })
         }
     }
-    
-    public func isZendeskEnabled() -> Bool {
-        guard let key = ALApplozicSettings.getZendeskSdkAccountKey(), !key.isEmpty, zenChatIntialized else {
-            return false
-        }
-        return true
-    }
-    
-    func updateLastMessageCreatedTime() {
-        let channelKey = NSNumber(value: Int(groupId) ?? 0)
-        guard channelKey != 0 else {
-            print("Failed to fetch messages for group Id")
-            return
-        }
-        
-        fetchMessages(channelKey: channelKey){ messages,error,userArray in
-            guard let messageList = messages,
-                  let almessages = messageList.reversed() as? [ALMessage] else {
-                return
-            }
-            self.lastUserMessageCreatedTime = almessages.last?.createdAtTime ?? 0
-        }
-    }
-    
+            
     func processBufferMessages() {
         for message in messageBufffer {
             sendMessage(message: message)
         }
     }
     
-    func processAgentMessage(message: [ChatLog]) {
-        // TODO: Send only Agent messsages to Kommunicate Server via api
-        // TODO: Call resolve api when zendesk agent leaves the conversation
+    // Send Agent Message comes from zendesk dashboard to Kommunicate server
+    func processAgentMessage(message: ChatLog) {
+        guard let chatMessage = message as? ChatMessage else { return }
+        // Kommunicate server accepts "-" but Zendesk sends ":"
+        let agentId = message.nick.replace(":", with: "-")
+        
+        var messageDict = createMessageProxy(displayName:message.displayName , agentId: agentId, conversationId: groupId, messageTimeStamp: message.createdTimestamp)
+        messageDict["message"] = chatMessage.message
+        let postdata: Data? = try? JSONSerialization.data(withJSONObject: messageDict, options: [])
+        var theParamString: String? = nil
+        if let aPostdata = postdata {
+            theParamString = String(data: aPostdata, encoding: .utf8)
+        }
+        
+        sendAgentMessageGroup.enter()
+        
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: KommunicateURL.sendMessage, paramString: theParamString) as NSMutableURLRequest? else { return }
+        let responseHandler = ALResponseHandler()
+        
+        responseHandler.authenticateAndProcessRequest(postURLRequest, andTag: "") {
+            (json, error) in
+            self.sendAgentMessageGroup.leave()
+            guard error == nil else {
+                print("Failed to send agent message \(chatMessage.message)")
+                return
+            }
+            print("Successfully sent agent message \(chatMessage.message)")
+        }
+        
+    }
+    
+    // Send Agent's attachment Message comes from zendesk dashboard to Kommunicate server
+    func processAgentAttachmentMessage(message: ChatLog) {
+        guard let attachmentMessage = message as? ChatAttachmentMessage else { return }
+        var messageProxy = createMessageProxy(displayName: message.displayName, agentId: message.nick.replace(":", with: "-"), conversationId: groupId, messageTimeStamp: message.createdTimestamp)
+        let attachmentDict = createAttachmentDict(attachment: attachmentMessage.attachment)
+        messageProxy["fileAttachment"] = attachmentDict
+        messageProxy["auth"] = ALUserDefaultsHandler.getAuthToken()
+        sendAgentMessageGroup.enter()
+        let postdata: Data? = try? JSONSerialization.data(withJSONObject: messageProxy, options: [])
+        var theParamString: String? = nil
+        if let aPostdata = postdata {
+            theParamString = String(data: aPostdata, encoding: .utf8)
+        }
+        
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: KommunicateURL.sendAttachment, paramString: theParamString) as NSMutableURLRequest? else { return }
+        let responseHandler = ALResponseHandler()
+        
+        responseHandler.authenticateAndProcessRequest(postURLRequest, andTag: "") {
+            (json, error) in
+            self.sendAgentMessageGroup.leave()
+            guard error == nil else {
+                return
+            }
+        }
+    }
+    
+    // Resolve the conversation if agent leaves the conversation
+    func processAgentLeave() {
+        let url = "\(KommunicateURL.resolveConversation)\(groupId)&status=\(2)&sendNotifyMessage=true"
+        let theRequest: NSMutableURLRequest? =
+            ALRequestHandler.createPatchRequest(
+                withUrlString: url,
+                paramString: nil
+            )
+        ALResponseHandler().authenticateAndProcessRequest(theRequest, andTag: "KM-RESOLVE-CONVERSATION") {
+            json, error in
+            guard error == nil else {
+                return
+            }
+            self.endChat()
+        }
     }
     
     func fetchMessages(channelKey: NSNumber,completion: @escaping (_ messages: NSMutableArray?, _ error: Error?, _ userDetails: NSMutableArray?) -> Void) {
@@ -366,6 +397,14 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator {
         /// Any ongoing chat will be ended, and locally stored information about the visitor will be cleared
         Chat.instance?.resetIdentity {}
     }
+    
+    func createMessageProxy(displayName: String,agentId: String,conversationId: String,messageTimeStamp: Double) -> [String:Any] {
+        let agentInfo = ["displayName": displayName, "agentId": agentId]
+        let messageDict = ["agentInfo": agentInfo,"messageDeduplicationKey": "\(agentId)-\(messageTimeStamp)","groupId":conversationId,"fromUserName":agentId] as [String : Any]
+        return messageDict
+    }
+    
+    func createAttachmentDict(attachment: ChatAttachment) -> [String:Any] {
+        return ["name":attachment.name, "mime_type": attachment.mimeType, "size": attachment.size, "url": attachment.url]
+    }
 }
-
-
