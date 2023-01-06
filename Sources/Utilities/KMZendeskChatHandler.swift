@@ -57,7 +57,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
     }
     
     public func initiateZendesk(key: String) {
-        if zenChatIntialized {
+        guard !zenChatIntialized else {
             return
         }
         Chat.initialize(accountKey: key)
@@ -295,15 +295,23 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
     func processChatLogs(logs: [ChatLog]) {
         let filteredArray = logs.filter{$0.createdTimestamp >= TimeInterval(truncating: lastSyncTime)}
         for log in filteredArray {
-            if log.type == .message && log.participant == .agent {
-                print("Received Agent Message \(log.description)")
-                processAgentMessage(message: log)
-            } else if log.type == .attachmentMessage && log.participant == .agent {
-                print("Received Attachment Message \(log.description)")
-                processAgentAttachmentMessage(message: log)
-            } else if log.type == .memberLeave && log.participant == .agent {
-                print("Received Member Leave Message")
-                processAgentLeave()
+            // If log is not from agent, then no need to consider the log.
+            guard log.participant == .agent else { continue }
+            
+            switch log.type {
+                case .message:
+                    print("Received Agent Message \(log.description)")
+                    processAgentMessage(message: log)
+                    break
+                case .attachmentMessage:
+                    print("Received Attachment Message \(log.description)")
+                    processAgentAttachmentMessage(message: log)
+                    break
+                case .memberLeave:
+                    print("Received Member Leave Message")
+                    processAgentLeave()
+                default:
+                    break
             }
             lastSyncTime = log.createdTimestamp as NSNumber
         }
