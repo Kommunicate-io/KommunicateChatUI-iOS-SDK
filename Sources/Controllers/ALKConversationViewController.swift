@@ -1317,6 +1317,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         default:
             print("Do nothing")
         }
+        guard let conversationId = message.channelKey else {return}
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId": conversationId,"action": action, "type": type])
     }
 
     func messageButtonSelected(
