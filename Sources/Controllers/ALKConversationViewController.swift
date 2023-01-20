@@ -1743,9 +1743,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formJsonData = [String: Any]()
         formJsonData["formData"] = formJsonValue
 
-        guard let chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
+        guard var chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
             print("Failed to convert the chat context data to json")
             return
+        }
+        
+        if let hide = hide, hide == true {
+            chatContextData["hide"] = hide
         }
 
         if isFormDataReplytoChat {
