@@ -1639,6 +1639,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formAction: String?
         var message: String?
         var isFormDataReplytoChat = false
+        var hide: Bool?
 
         for element in formTemplate.elements {
             if element.contentType == .hidden,
@@ -1666,6 +1667,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 if let formTemplatePostFormDataAsMessage = action.postFormDataAsMessage, formTemplatePostFormDataAsMessage == "true" {
                     isFormDataReplytoChat = true
                 }
+                hide = action.hide
             }
         }
 
