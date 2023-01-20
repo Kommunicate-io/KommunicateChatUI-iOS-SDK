@@ -1,6 +1,6 @@
 //
 // CustomEvent.swift
-// Kommunicate
+// KommunicateChatUI-iOS-SDK
 // Created by Sathyan Elangovan on 09/12/21.
 
 import Foundation
@@ -15,6 +15,4 @@ public enum CustomEvent: String {
     case conversationBackPress = "ON_CONVERSATION_BACK_CLICK"
     case conversationListBackPress = "ON_CONVERSATION_LIST_BACK_CLICK"
     case messageReceive = "ON_MESSAGE_RECEIVE"
-    // TODO: ADD THESE EVENTS(attachmentClick,voiceClick, locationClick, rateConversationEmotionsClick) WITH PROPER DATA
-    // TODO: FIX FLOW: resolveConversation
 }
