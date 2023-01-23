@@ -25,8 +25,8 @@ public class ALKCustomEventHandler {
         switch triggeredEvent {
             case .faqClick:
                 guard let data = data,
-                      let url = data["faqUrl"] as? String else { return }
-                delegate.faqClicked(url: url)
+                      let url = data["faqUrl"] as? URL else { return }
+            delegate.faqClicked(url: url.absoluteString)
             case .messageSend:
                 guard let data = data,
                       let message = data["message"] as? ALMessage else {return}
@@ -37,24 +37,24 @@ public class ALKCustomEventHandler {
                 delegate.conversationCreated(conversationId: conversationId)
             case .submitRatingClick:
                 guard let data = data,
-                      let conversationId = data["conversationId"] as? String,
+                      let conversationId = data["conversationId"] as? Int,
                       let rating = data["rating"] as? Int,
                       let comment = data["comment"] as? String  else { return }
-                delegate.ratingSubmitted(conversationId: conversationId, rating: rating, comment: comment)
+                delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
             case .restartConversationClick:
                 guard let data = data,
-                      let conversationId = data["conversationId"] as? String else { return }
-                delegate.conversationRestarted(converstionId: conversationId)
+                      let conversationId = data["conversationId"] as? Int else { return }
+                delegate.conversationRestarted(converstionId: String(conversationId))
             case .richMessageClick:
                 guard let data = data,
-                      let conversationId = data["conversationId"] as? String,
+                      let conversationId = data["conversationId"] as? Int,
                       let action = data["action"] as? [String:Any],
                       let type = data["type"] as? String else { return }
-                delegate.richMessageClicked(conversationId: conversationId, action: action, type: type)
+                delegate.richMessageClicked(conversationId: String(conversationId), action: action, type: type)
             case .conversationBackPress:
-                delegate.conversationBackPressed()
+                delegate.onBackButtonClick(isConversationOpened: true)
             case .conversationListBackPress:
-                delegate.conversationListBackPressed()
+            delegate.onBackButtonClick(isConversationOpened: false)
             case .messageReceive:
                 guard let data = data,
                       let messages = data["messageList"] as? [ALMessage] else {return}
