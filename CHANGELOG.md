@@ -2,6 +2,11 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [0.2.8] - 2022-01-25
+- Added Support for Zendesk Integration
+- [CM-1265] Improved Event Callbacks
+- [CM-1269] Fixed message meta data not being passed for form submission messsages
+
 ## [0.2.7] - 2022-11-02
 - [CM-1150] Added Customizations for Card Template
 - [CM-1135] Added events for message received, back button tap

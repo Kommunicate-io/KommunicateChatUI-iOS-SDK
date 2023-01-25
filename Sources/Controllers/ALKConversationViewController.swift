@@ -1120,6 +1120,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 self.refreshViewController()
             }
         }
+        // If zendesk chat is integrated and the message is an assignment(to human) message , then initialize the zendesk sdk
+        guard let zendeskKey = ALApplozicSettings.getZendeskSdkAccountKey(),
+              !zendeskKey.isEmpty,
+              message.isAssignmentMessage(),
+              !message.isHiddenMessage(),
+              let groupId = message.groupId,
+              let metadata = message.metadata,
+              let _ = metadata["KM_ASSIGN_TO"] as? String else { return }
+        
+        KMZendeskChatHandler.shared.handedOffToAgent(groupId: groupId.stringValue)
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId _: String?, status: Int32?) {
@@ -1274,6 +1284,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let languageCode = dict["updateLanguage"] as? String
         /// Use metadata
         sendQuickReply(title, metadata: metadata, languageCode: languageCode)
+        guard let conversationId = message.channelKey else {
+            return
+        }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["conversationId": conversationId, "action": [:], "type": "quickreply"])
     }
 
     func richButtonSelected(index: Int,
@@ -1293,19 +1307,23 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["UserSelection": ["title": title, "template": template, "payload": payload, "action": action, "type": type]])
+
+        if let conversationId = message.channelKey {
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId": conversationId,"action": action, "type": type])
+        }
+        
         switch type {
-        case "link":
-            linkButtonSelected(action)
-        case "submit":
-            let ackMessage = action["message"] as? String ?? title
-            submitButtonSelected(metadata: action, text: ackMessage)
-        case "quickReply":
-            let ackMessage = action["message"] as? String ?? title
-            let languageCode = action["updateLanguage"] as? String
-            sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any], languageCode: languageCode)
-        default:
-            print("Do nothing")
+            case "link":
+                linkButtonSelected(action)
+            case "submit":
+                let ackMessage = action["message"] as? String ?? title
+                submitButtonSelected(metadata: action, text: ackMessage)
+            case "quickReply":
+                let ackMessage = action["message"] as? String ?? title
+                let languageCode = action["updateLanguage"] as? String
+                sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any], languageCode: languageCode)
+            default:
+                print("Do nothing")
         }
     }
 
@@ -1848,9 +1866,19 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     func getUpdateMessageMetadata(with info: [String: Any]) -> [String: Any]? {
         var metadata = [String: Any]()
+        var formJsonData = info
+       
         do {
+            // merge the messsage metadata if it exists
+            if let messageMeta = configuration.messageMetadata as? [String:Any],
+               let jsonData = messageMeta["KM_CHAT_CONTEXT"] as? String,!jsonData.isEmpty,
+               let data = jsonData.data(using: .utf8),
+               let chatContextData = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
+                formJsonData.merge(chatContextData, uniquingKeysWith: {$1})
+            }
+            
             let messageInfoData = try JSONSerialization
-                .data(withJSONObject: info, options: .prettyPrinted)
+                .data(withJSONObject: formJsonData, options: .prettyPrinted)
             let messageInfoString = String(data: messageInfoData, encoding: .utf8) ?? ""
             metadata["KM_CHAT_CONTEXT"] = messageInfoString
 

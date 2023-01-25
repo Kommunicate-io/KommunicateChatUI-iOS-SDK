@@ -1,10 +1,12 @@
 //
 //
 // ALKCustomEventHandler.swift
-// ApplozicSwift
+// KommunicateChatUI-iOS-SDK
 //
 // Created by ___Sathyan Elangovan___ on 09/12/21
+
 import Foundation
+import KommunicateCore_iOS_SDK
 
 public class ALKCustomEventHandler {
     public static let shared = ALKCustomEventHandler()
@@ -17,8 +19,48 @@ public class ALKCustomEventHandler {
         - data : data of triggered event
      */
     public func publish(triggeredEvent: CustomEvent, data: [String: Any]?) {
-        if subscribedEvents.contains(triggeredEvent) {
-            delegate?.eventTriggered(eventName: triggeredEvent, data: data)
+        guard let delegate = delegate,
+              subscribedEvents.contains(triggeredEvent) else { return }
+              
+        switch triggeredEvent {
+            case .faqClick:
+                guard let data = data,
+                      let url = data["faqUrl"] as? URL else { return }
+            delegate.faqClicked(url: url.absoluteString)
+            case .messageSend:
+                guard let data = data,
+                      let message = data["message"] as? ALMessage else {return}
+                delegate.messageSent(message: message)
+            case .newConversation:
+                guard let data = data,
+                      let conversationId = data["conversationId"] as? String else { return }
+                delegate.conversationCreated(conversationId: conversationId)
+            case .submitRatingClick:
+                guard let data = data,
+                      let conversationId = data["conversationId"] as? Int,
+                      let rating = data["rating"] as? Int,
+                      let comment = data["comment"] as? String  else { return }
+                delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
+            case .restartConversationClick:
+                guard let data = data,
+                      let conversationId = data["conversationId"] as? Int else { return }
+                delegate.conversationRestarted(converstionId: String(conversationId))
+            case .richMessageClick:
+                guard let data = data,
+                      let conversationId = data["conversationId"] as? Int,
+                      let action = data["action"] as? [String:Any],
+                      let type = data["type"] as? String else { return }
+                delegate.richMessageClicked(conversationId: String(conversationId), action: action, type: type)
+            case .conversationBackPress:
+                delegate.onBackButtonClick(isConversationOpened: true)
+            case .conversationListBackPress:
+            delegate.onBackButtonClick(isConversationOpened: false)
+            case .messageReceive:
+                guard let data = data,
+                      let messages = data["messageList"] as? [ALMessage] else {return}
+                for message in messages {
+                    delegate.messageReceived(message: message)
+                }
         }
     }
 
