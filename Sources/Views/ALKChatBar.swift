@@ -280,22 +280,16 @@ open class ALKChatBar: UIView, Localizable {
         case plusButton:
             action?(.more(button))
         case photoButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.camera])
             action?(.cameraButtonClicked(button))
         case videoButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.video])
             action?(.startVideoRecord)
         case galleryButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.gallery])
             action?(.showImagePicker)
         case locationButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.locationClick, data: nil)
             action?(.showLocation)
         case contactButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.contact])
             action?(.shareContact)
         case documentButton:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.attachmentClick, data: ["UserSelection": ALKCustomEventHandler.AttachmentType.document])
             action?(.showDocumentPicker)
         default: break
         }

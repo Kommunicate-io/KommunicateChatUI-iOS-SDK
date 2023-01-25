@@ -635,7 +635,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             sortedArray.sort { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
         }
         guard !sortedArray.isEmpty else { return }
-
+        
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageReceive, data: ["messageList":sortedArray])
         _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
@@ -727,7 +728,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func send(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) {
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: nil)
         let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
@@ -740,6 +740,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: { _, error in
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
+                ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
@@ -752,6 +753,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 NSLog("Message sent section: \(indexPath.section), \(String(describing: alMessage.message))")
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
+                ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }

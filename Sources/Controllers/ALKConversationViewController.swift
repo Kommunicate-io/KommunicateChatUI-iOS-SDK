@@ -1284,6 +1284,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let languageCode = dict["updateLanguage"] as? String
         /// Use metadata
         sendQuickReply(title, metadata: metadata, languageCode: languageCode)
+        guard let conversationId = message.channelKey else {
+            return
+        }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["conversationId": conversationId, "action": [:], "type": "quickreply"])
     }
 
     func richButtonSelected(index: Int,
@@ -1303,19 +1307,23 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["UserSelection": ["title": title, "template": template, "payload": payload, "action": action, "type": type]])
+
+        if let conversationId = message.channelKey {
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId": conversationId,"action": action, "type": type])
+        }
+        
         switch type {
-        case "link":
-            linkButtonSelected(action)
-        case "submit":
-            let ackMessage = action["message"] as? String ?? title
-            submitButtonSelected(metadata: action, text: ackMessage)
-        case "quickReply":
-            let ackMessage = action["message"] as? String ?? title
-            let languageCode = action["updateLanguage"] as? String
-            sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any], languageCode: languageCode)
-        default:
-            print("Do nothing")
+            case "link":
+                linkButtonSelected(action)
+            case "submit":
+                let ackMessage = action["message"] as? String ?? title
+                submitButtonSelected(metadata: action, text: ackMessage)
+            case "quickReply":
+                let ackMessage = action["message"] as? String ?? title
+                let languageCode = action["updateLanguage"] as? String
+                sendQuickReply(ackMessage, metadata: payload["replyMetadata"] as? [String: Any], languageCode: languageCode)
+            default:
+                print("Do nothing")
         }
     }
 

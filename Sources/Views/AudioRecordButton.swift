@@ -168,7 +168,6 @@ open class AudioRecordButton: UIButton {
 
         switch gesture.state {
         case .began:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.voiceClick, data: ["UserSelection": "start"])
             if checkMicrophonePermission() == false {
                 delegate?.permissionNotGrant()
             } else {
@@ -189,11 +188,9 @@ open class AudioRecordButton: UIButton {
             if state == .none {
                 return
             }
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.voiceClick, data: ["UserSelection": "stop"])
             stopAudioRecord()
 
         case .failed, .possible, .cancelled:
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.voiceClick, data: ["UserSelection": "Failed - cancel"])
             if states == .recording {
                 stopAudioRecord()
             } else {
