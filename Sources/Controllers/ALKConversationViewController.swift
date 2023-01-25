@@ -1858,15 +1858,19 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     func getUpdateMessageMetadata(with info: [String: Any]) -> [String: Any]? {
         var metadata = [String: Any]()
-        var mergedMetaData = info
-        // merge the messsage metadata if it exists
-        if let messageMeta = configuration.messageMetadata as? [String:Any], !messageMeta.isEmpty {
-            mergedMetaData.merge(messageMeta, uniquingKeysWith: {$1})
-        }
-    
+        var formJsonData = info
+       
         do {
+            // merge the messsage metadata if it exists
+            if let messageMeta = configuration.messageMetadata as? [String:Any],
+               let jsonData = messageMeta["KM_CHAT_CONTEXT"] as? String,!jsonData.isEmpty,
+               let data = jsonData.data(using: .utf8),
+               let chatContextData = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
+                formJsonData.merge(chatContextData, uniquingKeysWith: {$1})
+            }
+            
             let messageInfoData = try JSONSerialization
-                .data(withJSONObject: mergedMetaData, options: .prettyPrinted)
+                .data(withJSONObject: formJsonData, options: .prettyPrinted)
             let messageInfoString = String(data: messageInfoData, encoding: .utf8) ?? ""
             metadata["KM_CHAT_CONTEXT"] = messageInfoString
 
