@@ -1,6 +1,6 @@
 //
 //  ALKUIConfiguration.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 13/06/18.
 //
@@ -162,6 +162,9 @@ public struct ALKConfiguration {
         
     // If true then Navigation bar will be hidden. By default it is false
     public var hideNavigationBarOnChat : Bool = false
+    
+    // If false then new conversation button (at bottom) will not be visible. By default it is true.
+    var hideBottomStartNewConversationButton: Bool = false
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
