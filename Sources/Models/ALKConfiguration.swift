@@ -164,7 +164,7 @@ public struct ALKConfiguration {
     public var hideNavigationBarOnChat : Bool = false
     
     // If false then new conversation button (at bottom) will not be visible. By default it is true.
-    var hideBottomStartNewConversationButton: Bool = false
+    public var hideBottomStartNewConversationButton: Bool = false
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
