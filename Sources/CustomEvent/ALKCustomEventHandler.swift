@@ -92,4 +92,11 @@ public class ALKCustomEventHandler {
         subscribedEvents.removeAll()
         subscribedEvents = eventsList
     }
+    
+    /**
+     This method is to unsubscribe events 
+     */
+    public func unsubscribeEvents() {
+        subscribedEvents.removeAll()
+    }
 }
