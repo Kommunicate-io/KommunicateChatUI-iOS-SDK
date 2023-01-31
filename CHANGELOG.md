@@ -1,7 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-
+## [Unreleased]
+- Added support to unsubscribe events
 ## [0.2.8] - 2022-01-25
 - Added Support for Zendesk Integration
 - [CM-1265] Improved Event Callbacks
