@@ -1,6 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [unreleased]
+- [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
 ## [0.2.9] - 2023-01-31
 - Added support to unsubscribe events
 ## [0.2.8] - 2023-01-25
