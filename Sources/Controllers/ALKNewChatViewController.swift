@@ -54,7 +54,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         searchBar.delegate = self
         ALUserDefaultsHandler.setContactServerCallIsDone(false)
         if let textField = searchBar.textField {
-            guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft else { return }
+            guard UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft else { return }
             textField.textAlignment = .right
         }
     }

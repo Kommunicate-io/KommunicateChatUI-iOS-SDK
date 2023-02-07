@@ -101,8 +101,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                     return
                 }
-                if UIApplication.shared.canOpenURL(settingsUrl) {
-                    UIApplication.shared.open(settingsUrl, completionHandler: nil)
+                if let application = UIApplication.main, application.canOpenURL(settingsUrl) {
+                    application.open(settingsUrl, completionHandler: nil)
                 }
             }
             alertController.addAction(settingsAction)
@@ -293,8 +293,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                     return
                 }
 
-                if UIApplication.shared.canOpenURL(settingsUrl) {
-                    UIApplication.shared.open(settingsUrl, completionHandler: nil)
+                if let application = UIApplication.main, application.canOpenURL(settingsUrl) {
+                    application.open(settingsUrl, completionHandler: nil)
                 }
             }
             alertController.addAction(settingsAction)
@@ -342,10 +342,9 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
 
         // orientation of video
-        let statusBarOrientation = UIApplication.shared.statusBarOrientation
         var initialVideoOrientation = AVCaptureVideoOrientation.portrait
-        if statusBarOrientation != UIInterfaceOrientation.unknown {
-            initialVideoOrientation = AVCaptureVideoOrientation(rawValue: statusBarOrientation.rawValue)!
+        if let application = UIApplication.main, application.statusBarOrientation != UIInterfaceOrientation.unknown {
+            initialVideoOrientation = AVCaptureVideoOrientation(rawValue: application.statusBarOrientation.rawValue)!
         }
 
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill

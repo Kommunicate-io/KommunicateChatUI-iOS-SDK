@@ -89,7 +89,7 @@ class TypingNotice: UIView, Localizable {
         guard !displayName.isEmpty else {
             return
         }
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft {
             let isTyping = localizedString(forKey: "IsTypingForRTL", withDefaultValue: SystemMessage.Message.isTypingForRTL, fileName: localizedStringFileName)
             populateTypingStatus(isTyping: isTyping, displayName: displayName)
         } else {

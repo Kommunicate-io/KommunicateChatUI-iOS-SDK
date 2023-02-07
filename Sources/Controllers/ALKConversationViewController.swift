@@ -409,7 +409,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
         edgesForExtendedLayout = []
@@ -1550,7 +1550,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func openLink(_ url: URL) {
-        UIApplication.shared.open(url)
+        UIApplication.main?.open(url)
     }
 
     private func linkButtonSelected(_ selectedButton: [String: Any]) {
@@ -1989,8 +1989,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
-            if UIApplication.shared.canOpenURL(settingsUrl) {
-                UIApplication.shared.open(settingsUrl, completionHandler: nil)
+            if let application = UIApplication.main, application.canOpenURL(settingsUrl) {
+                application.open(settingsUrl, completionHandler: nil)
             }
         }
         alertController.addAction(settingsAction)
@@ -2250,7 +2250,7 @@ extension ALKConversationViewController: ALKLocationCellDelegate {
         let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
         let locationString = String(format: "https://maps.google.com/maps?q=%@", latLonString)
         guard let locationUrl = URL(string: locationString) else { return }
-        UIApplication.shared.open(locationUrl)
+        UIApplication.main?.open(locationUrl)
     }
 }
 
@@ -2468,7 +2468,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     private func shouldRetryConnectionToMQTT() -> Bool {
         guard ALDataNetworkConnection.checkDataNetworkAvailable(),
-              UIApplication.shared.applicationState != .background else { return false }
+              UIApplication.main?.applicationState != .background else { return false }
         return true
     }
 }

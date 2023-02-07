@@ -26,7 +26,7 @@ extension UIViewController {
     func alert(msg _: String) {}
 
     class func topViewController() -> UIViewController? {
-        return topViewControllerWithRootViewController(rootViewController: UIApplication.shared.keyWindow?.rootViewController)
+        return topViewControllerWithRootViewController(rootViewController: UIApplication.main?.keyWindow?.rootViewController)
     }
 
     class func topViewControllerWithRootViewController(rootViewController: UIViewController?) -> UIViewController? {

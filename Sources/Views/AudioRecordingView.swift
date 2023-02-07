@@ -160,7 +160,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
 
         previousGestureLocation = 0.0
 
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft {
             slideToCancelStartLocation = slideView.frame.origin.x
             recordingViewStartLocation = recordingView.frame.origin.x - 10.0
             redDotStartLocation = redDot.frame.origin.x - 5.0
@@ -209,7 +209,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
     }
 
     @objc public func moveView(location: CGPoint) {
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft {
             moveViewRTL(location: location)
             return
         }
