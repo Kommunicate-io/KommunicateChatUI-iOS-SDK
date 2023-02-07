@@ -165,6 +165,10 @@ public struct ALKConfiguration {
     
     // If false then new conversation button (at bottom) will not be visible. By default it is true.
     public var hideBottomStartNewConversationButton: Bool = false
+    
+    // If true then arrow will be shown on conversartion list screen. if false then back text will be shown. By default it is true.
+    public var enableBackArrowOnConversationListScreen: Bool = true
+
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
