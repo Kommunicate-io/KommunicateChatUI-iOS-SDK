@@ -1,6 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [Unreleased]
+- Added customization enable/disable restart conversation button
 ## [0.2.9] - 2023-01-31
 - Added support to unsubscribe events
 ## [0.2.8] - 2023-01-25

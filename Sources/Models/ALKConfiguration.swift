@@ -165,6 +165,21 @@ public struct ALKConfiguration {
     
     // If false then new conversation button (at bottom) will not be visible. By default it is true.
     public var hideBottomStartNewConversationButton: Bool = false
+    
+    /// If true then click action on Add Participant in group will disabled.
+    /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
+    public var disableAddParticipantButton = false
+    
+    /// If true then feedback will be asked only once in a conversation
+    /// if false then feedback will be asked  everytime the conversation is resolved
+    public var oneTimeRating = false
+    
+    /// Use this to configure channel detail view like changing member name label color, title font etc.
+    public var channelDetail = ALKChannelDetailViewConfiguration()
+
+    /// If true then restart button will be shown after conversation gets resolved. End user can restart the conversation.
+    /// If false restart button won't be shown & end user can't resart the resolved conversation. By default it is false.
+    public var hideRestartConversationButton = false
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
@@ -196,16 +211,6 @@ public struct ALKConfiguration {
     /// Notification name for navigation icon click in conversation list
     @available(*, deprecated, message: "Use navigationItemsForConversationList instead it has identifier in ALKNavigationItem")
     public var nsNotificationNameForNavIconClick = "handleNavigationItemClick"
-
-    /// If true then click action on Add Participant in group will disabled.
-    /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
-    public var disableAddParticipantButton = false
-    
-    /// If true then feedback will be asked only once in a conversation
-    /// if false then feedback will be asked  everytime the conversation is resolved
-    public var oneTimeRating = false
-    /// Use this to configure channel detail view like changing member name label color, title font etc.
-    public var channelDetail = ALKChannelDetailViewConfiguration()
 
     /// Date cell and  information cell  background color
     @available(*, deprecated, message: "Use ALKMessageStyle for customization.")
