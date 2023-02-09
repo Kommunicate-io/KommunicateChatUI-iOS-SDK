@@ -441,38 +441,38 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
-        case .contact:
-            if message.isMyMessage {
-                let cell: ALKMyContactMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.update(viewModel: message)
-                if let filePath = message.filePath {
-                    cell.updateContactDetails(key: message.identifier, filePath: filePath)
-                }
-                if message.filePath == nil {
-                    attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
-                }
-                cell.contactView.contactSelected = { contactModel in
-                    let contact = contactModel.contact
-                    self.openContact(contact)
-                }
-                return cell
-            } else {
-                let cell: ALKFriendContactMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
-                cell.update(viewModel: message)
-                if let filePath = message.filePath {
-                    cell.updateContactDetails(key: message.identifier, filePath: filePath)
-                }
-                if message.filePath == nil {
-                    attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
-                }
-                cell.contactView.contactSelected = { contactModel in
-                    let contact = contactModel.contact
-                    self.openContact(contact)
-                }
-                return cell
-            }
+//        case .contact:
+//            if message.isMyMessage {
+//                let cell: ALKMyContactMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+//                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+//                cell.update(viewModel: message)
+//                if let filePath = message.filePath {
+//                    cell.updateContactDetails(key: message.identifier, filePath: filePath)
+//                }
+//                if message.filePath == nil {
+//                    attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
+//                }
+//                cell.contactView.contactSelected = { contactModel in
+//                    let contact = contactModel.contact
+//                    self.openContact(contact)
+//                }
+//                return cell
+//            } else {
+//                let cell: ALKFriendContactMessageCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+//                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+//                cell.update(viewModel: message)
+//                if let filePath = message.filePath {
+//                    cell.updateContactDetails(key: message.identifier, filePath: filePath)
+//                }
+//                if message.filePath == nil {
+//                    attachmentViewDidTapDownload(view: cell, indexPath: indexPath)
+//                }
+//                cell.contactView.contactSelected = { contactModel in
+//                    let contact = contactModel.contact
+//                    self.openContact(contact)
+//                }
+//                return cell
+//            }
         case .imageMessage:
             guard let imageMessage = message.imageMessage() else { return UITableViewCell() }
             if message.isMyMessage {

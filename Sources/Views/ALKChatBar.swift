@@ -40,7 +40,7 @@ open class ALKChatBar: UIView, Localizable {
         case mic(UIButton)
         case more(UIButton)
         case cameraButtonClicked(UIButton)
-        case shareContact
+//        case shareContact
         case showDocumentPicker
     }
 
@@ -287,8 +287,8 @@ open class ALKChatBar: UIView, Localizable {
             action?(.showImagePicker)
         case locationButton:
             action?(.showLocation)
-        case contactButton:
-            action?(.shareContact)
+//        case contactButton:
+//            action?(.shareContact)
         case documentButton:
             action?(.showDocumentPicker)
         default: break

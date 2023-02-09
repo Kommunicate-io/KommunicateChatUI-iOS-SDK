@@ -6,7 +6,7 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import ContactsUI
+//import ContactsUI
 import Foundation
 import KommunicateCore_iOS_SDK
 import UIKit
