@@ -28,7 +28,6 @@ public enum ALKMessageType: String {
     case cardTemplate = "CardTemplate"
     case email = "Email"
     case document = "Document"
-//    case contact = "Contact"
     case faqTemplate = "FAQTemplate"
     case imageMessage = "ImageMessage"
     case allButtons = "AllButtons"

@@ -7,7 +7,6 @@
 //
 
 import AVFoundation
-//import Contacts
 import Foundation
 import KommunicateCore_iOS_SDK
 import MobileCoreServices
@@ -432,18 +431,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                         .rowHeigh(viewModel: messageModel, width: maxWidth)
                         .cached(with: cacheIdentifier)
             }
-//        case .contact:
-//            if messageModel.isMyMessage {
-//                return
-//                    ALKMyContactMessageCell
-//                        .rowHeight()
-//                        .cached(with: cacheIdentifier)
-//            } else {
-//                return
-//                    ALKFriendContactMessageCell
-//                        .rowHeight()
-//                        .cached(with: cacheIdentifier)
-//            }
         case .imageMessage:
             guard let imageMessage = messageModel.imageMessage() else { return 0 }
             if messageModel.isMyMessage {
@@ -797,25 +784,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         addToWrapper(message: alMessage)
         return (alMessage, IndexPath(row: 0, section: messageModels.count - 1))
     }
-
-//    open func send(contact: CNContact, metadata: [AnyHashable: Any]?) {
-//        guard
-//            let path = ALKFileUtils().saveContact(toDocDirectory: contact),
-//            let url = URL(string: path)
-//        else {
-//            print("Error while saving contact")
-//            return
-//        }
-//        guard let alMessage = processAttachment(
-//            filePath: url,
-//            text: "",
-//            contentType: Int(ALMESSAGE_CONTENT_VCARD),
-//            metadata: metadata
-//        ) else { return }
-//        addToWrapper(message: alMessage)
-//        delegate?.messageSent(at: IndexPath(row: 0, section: messageModels.count - 1))
-//        uploadAudio(alMessage: alMessage, indexPath: IndexPath(row: 0, section: messageModels.count - 1))
-//    }
 
     open func send(voiceMessage: Data, metadata: [AnyHashable: Any]?) {
         print("voice data received: ", voiceMessage.count)
