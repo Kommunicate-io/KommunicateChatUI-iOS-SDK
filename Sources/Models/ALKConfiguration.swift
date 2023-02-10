@@ -166,6 +166,9 @@ public struct ALKConfiguration {
     // If false then new conversation button (at bottom) will not be visible. By default it is true.
     public var hideBottomStartNewConversationButton: Bool = false
     
+    // If true then arrow will be shown on conversartion list screen. if false then back text will be shown. By default it is true.
+    public var enableBackArrowOnConversationListScreen: Bool = true
+
     /// If true then click action on Add Participant in group will disabled.
     /// After disabling you can handle it from outside by observing ALKNotification.createGroupAction
     public var disableAddParticipantButton = false
