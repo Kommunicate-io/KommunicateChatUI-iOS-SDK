@@ -44,7 +44,7 @@ public class ALKCustomEventHandler {
             case .restartConversationClick:
                 guard let data = data,
                       let conversationId = data["conversationId"] as? Int else { return }
-                delegate.conversationRestarted(converstionId: String(conversationId))
+                delegate.conversationRestarted(conversationId: String(conversationId))
             case .richMessageClick:
                 guard let data = data else { return }
                 let conversationId =  String(data["conversationId"] as? Int ?? 0)
