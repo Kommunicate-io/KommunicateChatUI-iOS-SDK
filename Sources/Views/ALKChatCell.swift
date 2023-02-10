@@ -195,7 +195,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         label.numberOfLines = 1
         label.font = Font.normal(size: 14.0).font()
         label.textColor = UIColor(netHex: 0x9B9B9B)
-        label.textAlignment = UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft ? .left : .right
+        label.textAlignment = UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft ? .left : .right
         return label
     }()
 
