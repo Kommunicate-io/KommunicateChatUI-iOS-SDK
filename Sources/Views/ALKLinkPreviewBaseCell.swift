@@ -41,7 +41,7 @@ class ALKLinkPreviewBaseCell: ALKMessageCell {
 
     @objc private func openUrl() {
         guard let stringURL = url, let openURL = URL(string: stringURL) else { return }
-        UIApplication.main?.open(openURL)
+        UIApplication.sharedUIApplication()?.open(openURL)
     }
 
     func isCellVisible(_ closure: @escaping ((_ identifier: String) -> Bool)) {

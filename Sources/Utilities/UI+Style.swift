@@ -71,7 +71,7 @@ extension UITextView {
     func changeTextDirection() {
         var lang = textInputMode?.primaryLanguage
         if lang == nil {
-            lang = UIApplication.main?.textInputMode?.primaryLanguage
+            lang = UIApplication.sharedUIApplication()?.textInputMode?.primaryLanguage
         }
         // Still no language is detected then simply return
         guard let language = lang else { return }

@@ -563,7 +563,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
     private func shouldRetryConnectionToMQTT() -> Bool {
         guard ALDataNetworkConnection.checkDataNetworkAvailable(),
-              UIApplication.main?.applicationState != .background else { return false }
+              UIApplication.sharedUIApplication()?.applicationState != .background else { return false }
         return true
     }
 }

@@ -10,6 +10,6 @@ import UIKit
 
 extension ALKConversationViewController: ALKMessageCellDelegate {
     public func urlTapped(url: URL, message _: ALKMessageViewModel) {
-        UIApplication.main?.open(url)
+        UIApplication.sharedUIApplication()?.open(url)
     }
 }

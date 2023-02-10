@@ -76,7 +76,7 @@ extension UIViewController {
             preferredStyle: UIAlertController.Style.alert
         )
         activityAlert.activityIndicatorAlert!.addActivityIndicator()
-        guard let application = UIApplication.main, var topController = application.keyWindow?.rootViewController else { return }
+        guard let application = UIApplication.sharedUIApplication(), var topController = application.keyWindow?.rootViewController else { return }
         while topController.presentedViewController != nil {
             topController = topController.presentedViewController!
         }

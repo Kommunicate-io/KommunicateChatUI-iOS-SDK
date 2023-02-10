@@ -409,7 +409,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
         edgesForExtendedLayout = []
@@ -1550,7 +1550,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func openLink(_ url: URL) {
-        UIApplication.main?.open(url)
+        UIApplication.sharedUIApplication()?.open(url)
     }
 
     private func linkButtonSelected(_ selectedButton: [String: Any]) {
@@ -1989,7 +1989,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
-            if let application = UIApplication.main, application.canOpenURL(settingsUrl) {
+            if let application = UIApplication.sharedUIApplication(), application.canOpenURL(settingsUrl) {
                 application.open(settingsUrl, completionHandler: nil)
             }
         }
@@ -2250,7 +2250,7 @@ extension ALKConversationViewController: ALKLocationCellDelegate {
         let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
         let locationString = String(format: "https://maps.google.com/maps?q=%@", latLonString)
         guard let locationUrl = URL(string: locationString) else { return }
-        UIApplication.main?.open(locationUrl)
+        UIApplication.sharedUIApplication()?.open(locationUrl)
     }
 }
 
@@ -2468,7 +2468,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     private func shouldRetryConnectionToMQTT() -> Bool {
         guard ALDataNetworkConnection.checkDataNetworkAvailable(),
-              UIApplication.main?.applicationState != .background else { return false }
+              UIApplication.sharedUIApplication()?.applicationState != .background else { return false }
         return true
     }
 }

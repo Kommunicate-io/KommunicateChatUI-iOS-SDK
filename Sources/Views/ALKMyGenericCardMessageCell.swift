@@ -181,7 +181,7 @@ open class ALKGenericCardBaseCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     override open func draw(_ rect: CGRect) {
         super.draw(rect)
-        guard UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft else {
+        guard UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft else {
             return
         }
         scrollToBeginning()

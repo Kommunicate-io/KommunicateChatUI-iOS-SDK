@@ -101,7 +101,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                 guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                     return
                 }
-                if let application = UIApplication.main, application.canOpenURL(settingsUrl) {
+                if let application = UIApplication.sharedUIApplication(), application.canOpenURL(settingsUrl) {
                     application.open(settingsUrl, completionHandler: nil)
                 }
             }
@@ -293,7 +293,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                     return
                 }
 
-                if let application = UIApplication.main, application.canOpenURL(settingsUrl) {
+                if let application = UIApplication.sharedUIApplication(), application.canOpenURL(settingsUrl) {
                     application.open(settingsUrl, completionHandler: nil)
                 }
             }
@@ -343,7 +343,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
         // orientation of video
         var initialVideoOrientation = AVCaptureVideoOrientation.portrait
-        if let application = UIApplication.main, application.statusBarOrientation != UIInterfaceOrientation.unknown {
+        if let application = UIApplication.sharedUIApplication(), application.statusBarOrientation != UIInterfaceOrientation.unknown {
             initialVideoOrientation = AVCaptureVideoOrientation(rawValue: application.statusBarOrientation.rawValue)!
         }
 

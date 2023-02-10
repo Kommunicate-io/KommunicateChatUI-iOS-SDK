@@ -9,5 +9,13 @@ import Foundation
 
 @available(iOSApplicationExtension, unavailable, message: "UIApplication.shared is unavailable in application extensions")
 public extension UIApplication {
-    static var main: UIApplication? { UIApplication.value(forKeyPath: #keyPath(UIApplication.shared)) as? UIApplication }
+    #if !os(OSX) && !os(watchOS)
+        static func sharedUIApplication() -> UIApplication? {
+            guard let sharedApplication =
+                    UIApplication.perform(NSSelectorFromString("sharedApplication"))?.takeUnretainedValue() as? UIApplication else {
+                return nil
+            }
+            return sharedApplication
+        }
+    #endif
 }

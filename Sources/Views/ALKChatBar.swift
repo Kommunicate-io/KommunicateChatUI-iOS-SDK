@@ -314,7 +314,7 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     private func initializeView() {
-        if UIApplication.main?.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }
 
