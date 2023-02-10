@@ -1346,10 +1346,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             type == "link"
         else {
             /// Submit Button
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "submit"])
             let text = selectedButton["replyText"] as? String ?? selectedButton["name"] as! String
             submitButtonSelected(metadata: message.metadata!, text: text)
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "link"])
         linkButtonSelected(selectedButton)
     }
 
@@ -1359,6 +1361,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("Type not defined for action")
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": action, "type": type])
 
         switch type {
         case ActionType.link.rawValue:
@@ -1395,6 +1398,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("\(tag) Button for this card is nil unexpectedly :: \(template)")
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": action, "type": action.type])
 
         switch action.type {
         case CardTemplateActionType.link.rawValue:

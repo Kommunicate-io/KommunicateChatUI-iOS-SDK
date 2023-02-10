@@ -46,11 +46,11 @@ public class ALKCustomEventHandler {
                       let conversationId = data["conversationId"] as? Int else { return }
                 delegate.conversationRestarted(converstionId: String(conversationId))
             case .richMessageClick:
-                guard let data = data,
-                      let conversationId = data["conversationId"] as? Int,
-                      let action = data["action"] as? [String:Any],
-                      let type = data["type"] as? String else { return }
-                delegate.richMessageClicked(conversationId: String(conversationId), action: action, type: type)
+                guard let data = data else { return }
+                let conversationId =  String(data["conversationId"] as? Int ?? 0)
+                let action = data["action"] as? [String:Any] ?? [:]
+                let type = data["type"] as? String ?? ""
+                delegate.richMessageClicked(conversationId: conversationId, action: action, type: type)
             case .conversationBackPress:
                 delegate.onBackButtonClick(isConversationOpened: true)
             case .conversationListBackPress:
