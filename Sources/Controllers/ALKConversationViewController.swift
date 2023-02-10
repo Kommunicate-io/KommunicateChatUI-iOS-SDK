@@ -2074,7 +2074,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             print("😱Tableview shouldn't have more number of sections than viewModel😱")
             return
         }
-        let indexSet = IndexSet(integersIn: oldCount ..< newCount)
+        let indexSet = IndexSet(integersIn: oldCount ... newCount - 1)
 
         tableView.beginUpdates()
         tableView.insertSections(indexSet, with: .automatic)
