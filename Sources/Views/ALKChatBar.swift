@@ -40,7 +40,6 @@ open class ALKChatBar: UIView, Localizable {
         case mic(UIButton)
         case more(UIButton)
         case cameraButtonClicked(UIButton)
-        case shareContact
         case showDocumentPicker
     }
 
@@ -287,8 +286,6 @@ open class ALKChatBar: UIView, Localizable {
             action?(.showImagePicker)
         case locationButton:
             action?(.showLocation)
-        case contactButton:
-            action?(.shareContact)
         case documentButton:
             action?(.showDocumentPicker)
         default: break
@@ -314,7 +311,7 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     private func initializeView() {
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }
 

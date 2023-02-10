@@ -6,7 +6,6 @@
 //  Copyright © 2017 Applozic. All rights reserved.
 //
 
-import ContactsUI
 import Foundation
 import KommunicateCore_iOS_SDK
 import UIKit
@@ -563,7 +562,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
 
     private func shouldRetryConnectionToMQTT() -> Bool {
         guard ALDataNetworkConnection.checkDataNetworkAvailable(),
-              UIApplication.shared.applicationState != .background else { return false }
+              UIApplication.sharedUIApplication()?.applicationState != .background else { return false }
         return true
     }
 }

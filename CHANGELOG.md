@@ -1,6 +1,12 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+
+## [0.3.0] - 2023-02-10
+- [CM-1313] Fixed Add contacts permission issue when app submitted in appstore
+- [CM-1302] Added customization for back button on conversation list screen
+- Added customization enable/disable restart conversation button
+
 ## [0.2.9] - 2023-01-31
 - Added support to unsubscribe events
 ## [0.2.8] - 2023-01-25
