@@ -7,7 +7,6 @@
 
 import AVFoundation
 import AVKit
-import ContactsUI
 import KommunicateCore_iOS_SDK
 import MobileCoreServices
 import SafariServices
@@ -705,8 +704,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendMessageListTemplateCell.self)
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKFriendDocumentCell.self)
-        tableView.register(ALKMyContactMessageCell.self)
-        tableView.register(ALKFriendContactMessageCell.self)
         tableView.register(SentImageMessageCell.self)
         tableView.register(ReceivedImageMessageCell.self)
         tableView.register(ReceivedFAQMessageCell.self)
@@ -905,9 +902,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 weakSelf.present(vc, animated: true, completion: nil)
                 button.isUserInteractionEnabled = true
-
-            case .shareContact:
-                weakSelf.shareContact()
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
             default:
@@ -1420,30 +1414,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         ALPushAssist().topViewController.dismiss(animated: true, completion: nil)
     }
 
-    func openContact(_ contact: CNContact) {
-        CNContactStore().requestAccess(for: .contacts) { [weak self] granted, _ in
-            guard let weakSelf = self else {
-                return
-            }
-            if granted {
-                let vc = CNContactViewController(forUnknownContact: contact)
-                vc.contactStore = CNContactStore()
-                let nav = UINavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: weakSelf, action: #selector(self?.dismissContact))
-                weakSelf.present(nav, animated: true, completion: nil)
-            } else {
-                let title = weakSelf.localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: weakSelf.localizedStringFileName)
-
-                let message = weakSelf.localizedString(
-                    forKey: "EnableContactPermissionMessage",
-                    withDefaultValue: SystemMessage.Contact.permissionMessage,
-                    fileName: weakSelf.localizedStringFileName
-                )
-                weakSelf.showAlertForApplicationSettings(title: title, message: message)
-            }
-        }
-    }
-
     func openRichMessageImageView(imageUrl: URL) {
         let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.previewImage, bundle: Bundle.applozic)
         guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController,
@@ -1895,27 +1865,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return String(data: data, encoding: String.Encoding.utf8)
     }
 
-    private func shareContact() {
-        CNContactStore().requestAccess(for: .contacts) { granted, _ in
-            DispatchQueue.main.async {
-                if granted {
-                    let vc = CNContactPickerViewController()
-                    vc.delegate = self
-                    self.present(vc, animated: true, completion: nil)
-                } else {
-                    let title = self.localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: self.localizedStringFileName)
-
-                    let message = self.localizedString(
-                        forKey: "EnableContactPermissionMessage",
-                        withDefaultValue: SystemMessage.Contact.permissionMessage,
-                        fileName: self.localizedStringFileName
-                    )
-                    self.showAlertForApplicationSettings(title: title, message: message)
-                }
-            }
-        }
-    }
-
     func setRichMessageKitTheme() {
         let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
         let sentMessageBackgroundColor = appSettingsUserDefaults.getSentMessageBackgroundColor()
@@ -1998,12 +1947,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let cancelAction = UIAlertAction(title: cancelTitle, style: .default, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
-    }
-}
-
-extension ALKConversationViewController: CNContactPickerDelegate {
-    public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
-        viewModel.send(contact: contact, metadata: configuration.messageMetadata)
     }
 }
 
