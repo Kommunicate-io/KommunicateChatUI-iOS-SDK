@@ -184,6 +184,7 @@ public struct ALKConfiguration {
     /// If false restart button won't be shown & end user can't resart the resolved conversation. By default it is false.
     public var hideRestartConversationButton = false
 
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {
