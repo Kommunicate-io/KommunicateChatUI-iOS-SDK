@@ -191,7 +191,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
 
     fileprivate func setupUI() {
         // Textfield Group name
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             txtfGroupName.textAlignment = .right
         }
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)

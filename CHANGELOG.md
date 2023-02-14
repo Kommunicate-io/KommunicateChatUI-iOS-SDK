@@ -4,6 +4,9 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## [unreleased]
 - [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
+
+## [0.3.0] - 2023-02-10
+- [CM-1313] Fixed Add contacts permission issue when app submitted in appstore
 - [CM-1302] Added customization for back button on conversation list screen
 - Added customization enable/disable restart conversation button
 

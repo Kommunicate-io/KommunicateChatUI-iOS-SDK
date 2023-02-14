@@ -7,7 +7,6 @@
 
 import AVFoundation
 import AVKit
-import ContactsUI
 import KommunicateCore_iOS_SDK
 import MobileCoreServices
 import SafariServices
@@ -409,7 +408,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
         edgesForExtendedLayout = []
@@ -705,8 +704,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendMessageListTemplateCell.self)
         tableView.register(ALKMyDocumentCell.self)
         tableView.register(ALKFriendDocumentCell.self)
-        tableView.register(ALKMyContactMessageCell.self)
-        tableView.register(ALKFriendContactMessageCell.self)
         tableView.register(SentImageMessageCell.self)
         tableView.register(ReceivedImageMessageCell.self)
         tableView.register(ReceivedFAQMessageCell.self)
@@ -905,9 +902,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 weakSelf.present(vc, animated: true, completion: nil)
                 button.isUserInteractionEnabled = true
-
-            case .shareContact:
-                weakSelf.shareContact()
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
             default:
@@ -1346,10 +1340,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             type == "link"
         else {
             /// Submit Button
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "submit"])
             let text = selectedButton["replyText"] as? String ?? selectedButton["name"] as! String
             submitButtonSelected(metadata: message.metadata!, text: text)
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "link"])
         linkButtonSelected(selectedButton)
     }
 
@@ -1359,6 +1355,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("Type not defined for action")
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": action, "type": type])
 
         switch type {
         case ActionType.link.rawValue:
@@ -1395,6 +1392,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("\(tag) Button for this card is nil unexpectedly :: \(template)")
             return
         }
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": action, "type": action.type])
 
         switch action.type {
         case CardTemplateActionType.link.rawValue:
@@ -1418,30 +1416,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     @objc func dismissContact() {
         ALPushAssist().topViewController.dismiss(animated: true, completion: nil)
-    }
-
-    func openContact(_ contact: CNContact) {
-        CNContactStore().requestAccess(for: .contacts) { [weak self] granted, _ in
-            guard let weakSelf = self else {
-                return
-            }
-            if granted {
-                let vc = CNContactViewController(forUnknownContact: contact)
-                vc.contactStore = CNContactStore()
-                let nav = UINavigationController(rootViewController: vc)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: weakSelf, action: #selector(self?.dismissContact))
-                weakSelf.present(nav, animated: true, completion: nil)
-            } else {
-                let title = weakSelf.localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: weakSelf.localizedStringFileName)
-
-                let message = weakSelf.localizedString(
-                    forKey: "EnableContactPermissionMessage",
-                    withDefaultValue: SystemMessage.Contact.permissionMessage,
-                    fileName: weakSelf.localizedStringFileName
-                )
-                weakSelf.showAlertForApplicationSettings(title: title, message: message)
-            }
-        }
     }
 
     func openRichMessageImageView(imageUrl: URL) {
@@ -1550,7 +1524,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func openLink(_ url: URL) {
-        UIApplication.shared.open(url)
+        UIApplication.sharedUIApplication()?.open(url)
     }
 
     private func linkButtonSelected(_ selectedButton: [String: Any]) {
@@ -1895,27 +1869,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return String(data: data, encoding: String.Encoding.utf8)
     }
 
-    private func shareContact() {
-        CNContactStore().requestAccess(for: .contacts) { granted, _ in
-            DispatchQueue.main.async {
-                if granted {
-                    let vc = CNContactPickerViewController()
-                    vc.delegate = self
-                    self.present(vc, animated: true, completion: nil)
-                } else {
-                    let title = self.localizedString(forKey: "Settings", withDefaultValue: SystemMessage.LabelName.Settings, fileName: self.localizedStringFileName)
-
-                    let message = self.localizedString(
-                        forKey: "EnableContactPermissionMessage",
-                        withDefaultValue: SystemMessage.Contact.permissionMessage,
-                        fileName: self.localizedStringFileName
-                    )
-                    self.showAlertForApplicationSettings(title: title, message: message)
-                }
-            }
-        }
-    }
-
     func setRichMessageKitTheme() {
         let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
         let sentMessageBackgroundColor = appSettingsUserDefaults.getSentMessageBackgroundColor()
@@ -1989,8 +1942,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
-            if UIApplication.shared.canOpenURL(settingsUrl) {
-                UIApplication.shared.open(settingsUrl, completionHandler: nil)
+            if let application = UIApplication.sharedUIApplication(), application.canOpenURL(settingsUrl) {
+                application.open(settingsUrl, completionHandler: nil)
             }
         }
         alertController.addAction(settingsAction)
@@ -1998,12 +1951,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         let cancelAction = UIAlertAction(title: cancelTitle, style: .default, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
-    }
-}
-
-extension ALKConversationViewController: CNContactPickerDelegate {
-    public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
-        viewModel.send(contact: contact, metadata: configuration.messageMetadata)
     }
 }
 
@@ -2250,7 +2197,7 @@ extension ALKConversationViewController: ALKLocationCellDelegate {
         let latLonString = String(format: "%f,%f", location.coordinate.latitude, location.coordinate.longitude)
         let locationString = String(format: "https://maps.google.com/maps?q=%@", latLonString)
         guard let locationUrl = URL(string: locationString) else { return }
-        UIApplication.shared.open(locationUrl)
+        UIApplication.sharedUIApplication()?.open(locationUrl)
     }
 }
 
@@ -2468,7 +2415,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 
     private func shouldRetryConnectionToMQTT() -> Bool {
         guard ALDataNetworkConnection.checkDataNetworkAvailable(),
-              UIApplication.shared.applicationState != .background else { return false }
+              UIApplication.sharedUIApplication()?.applicationState != .background else { return false }
         return true
     }
 }

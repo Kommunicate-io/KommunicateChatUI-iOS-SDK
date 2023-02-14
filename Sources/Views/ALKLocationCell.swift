@@ -50,7 +50,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
     }()
 
     private var topViewController: UIViewController? {
-        guard var topViewController = UIApplication.shared.keyWindow?.rootViewController else { return nil }
+        guard var topViewController = UIApplication.sharedUIApplication()?.keyWindow?.rootViewController else { return nil }
 
         while let presentedViewController = topViewController.presentedViewController {
             topViewController = presentedViewController
