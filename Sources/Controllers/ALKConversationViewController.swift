@@ -1621,7 +1621,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formAction: String?
         var message: String?
         var isFormDataReplytoChat = false
-        var hiddenMessage = false
+        var actionMessageMetaData = [String:String]()
 
         for element in formTemplate.elements {
             if element.contentType == .hidden,
@@ -1650,8 +1650,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     isFormDataReplytoChat = true
                 }
                 
-                if let metadata = action.metadata, let category =  metadata["category"] , category.uppercased() == "HIDDEN" {
-                    hiddenMessage = true
+                if let metadata = action.metadata  {
+                    actionMessageMetaData = metadata
                 }
             }
         }
@@ -1733,8 +1733,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         
-        if hiddenMessage {
-            chatContextData["hide"] = true
+        if !actionMessageMetaData.isEmpty {
+            chatContextData.merge(actionMessageMetaData, uniquingKeysWith: {$1})
         }
 
 
