@@ -719,9 +719,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
 
-//        addToWrapper(message: alMessage)
-//        let indexPath = IndexPath(row: 0, section: messageModels.count - 1)
-//        delegate?.messageSent(at: indexPath)
         var indexPath = IndexPath(row: 0, section: messageModels.count - 1)
         if !alMessage.isHiddenMessage() {
             addToWrapper(message: alMessage)
