@@ -2112,10 +2112,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                ]
             }
 
-            let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "shape", in: Bundle.applozic, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
+            let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.applozic, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
             rightBarButtonItems.append(morebutton)
         } else {
-            let rateIcon = UIImage(named: "shape", in: Bundle.applozic, compatibleWith: nil)
+            let rateIcon = UIImage(named: "icon_favorite", in: Bundle.applozic, compatibleWith: nil)
             let rateBarButton = UIBarButtonItem(
                 image: rateIcon,
                 style: .plain,
