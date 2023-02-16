@@ -1649,7 +1649,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 if let formTemplatePostFormDataAsMessage = action.postFormDataAsMessage, formTemplatePostFormDataAsMessage == "true" {
                     isFormDataReplytoChat = true
                 }
-                hiddenMessage = action.hide
+                
+                if let metadata = action.metadata, let category =  metadata["category"] , category.uppercased() == "HIDDEN" {
+                    hiddenMessage = true
+                }
             }
         }
 
