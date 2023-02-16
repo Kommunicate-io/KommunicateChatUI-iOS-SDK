@@ -1621,6 +1621,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formAction: String?
         var message: String?
         var isFormDataReplytoChat = false
+        var hiddenMessage = false
 
         for element in formTemplate.elements {
             if element.contentType == .hidden,
@@ -1648,6 +1649,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 if let formTemplatePostFormDataAsMessage = action.postFormDataAsMessage, formTemplatePostFormDataAsMessage == "true" {
                     isFormDataReplytoChat = true
                 }
+                hiddenMessage = action.hide
             }
         }
 
@@ -1723,10 +1725,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formJsonData = [String: Any]()
         formJsonData["formData"] = formJsonValue
 
-        guard let chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
+        guard var chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
             print("Failed to convert the chat context data to json")
             return
         }
+        
+        if hiddenMessage {
+            chatContextData["hide"] = true
+        }
+
 
         if isFormDataReplytoChat {
             sendPostSubmittedFormDataAsMessage(message: message, messageModel: messageModel, postFormData: postFormData, chatContextData: chatContextData)
