@@ -719,9 +719,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
 
-        addToWrapper(message: alMessage)
-        let indexPath = IndexPath(row: 0, section: messageModels.count - 1)
-        delegate?.messageSent(at: indexPath)
+        var indexPath = IndexPath(row: 0, section: messageModels.count - 1)
+        if !alMessage.isHiddenMessage() {
+            addToWrapper(message: alMessage)
+            indexPath = IndexPath(row: 0, section: messageModels.count - 1)
+            delegate?.messageSent(at: indexPath)
+        }
         if isOpenGroup {
             let messageClientService = ALMessageClientService()
             messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: { _, error in
@@ -731,6 +734,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
+                guard !alMessage.isHiddenMessage() else {return}
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
@@ -744,6 +748,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
+                guard !alMessage.isHiddenMessage() else {return}
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)

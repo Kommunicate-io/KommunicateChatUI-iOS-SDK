@@ -2,6 +2,11 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [0.3.1] - 2023-02-17
+- [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
+- [CM-1278] Added Suppor rating button on conversation screen
+- [CM-1325] Added Support for metadata for form action messages
+
 ## [0.3.0] - 2023-02-10
 - [CM-1313] Fixed Add contacts permission issue when app submitted in appstore
 - [CM-1302] Added customization for back button on conversation list screen
@@ -9,6 +14,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## [0.2.9] - 2023-01-31
 - Added support to unsubscribe events
+
 ## [0.2.8] - 2023-01-25
 - Added Support for Zendesk Integration
 - [CM-1265] Improved Event Callbacks

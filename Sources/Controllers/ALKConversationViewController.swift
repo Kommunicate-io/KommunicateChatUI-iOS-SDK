@@ -1621,6 +1621,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formAction: String?
         var message: String?
         var isFormDataReplytoChat = false
+        var actionMessageMetaData = [String:String]()
 
         for element in formTemplate.elements {
             if element.contentType == .hidden,
@@ -1647,6 +1648,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 if let formTemplatePostFormDataAsMessage = action.postFormDataAsMessage, formTemplatePostFormDataAsMessage == "true" {
                     isFormDataReplytoChat = true
+                }
+                
+                if let metadata = action.metadata  {
+                    actionMessageMetaData = metadata
                 }
             }
         }
@@ -1723,10 +1728,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formJsonData = [String: Any]()
         formJsonData["formData"] = formJsonValue
 
-        guard let chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
+        guard var chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
             print("Failed to convert the chat context data to json")
             return
         }
+        
+        if !actionMessageMetaData.isEmpty {
+            chatContextData.merge(actionMessageMetaData, uniquingKeysWith: {$1})
+        }
+
 
         if isFormDataReplytoChat {
             sendPostSubmittedFormDataAsMessage(message: message, messageModel: messageModel, postFormData: postFormData, chatContextData: chatContextData)
@@ -2021,7 +2031,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             print("😱Tableview shouldn't have more number of sections than viewModel😱")
             return
         }
-        let indexSet = IndexSet(integersIn: oldCount ..< newCount)
+        let indexSet = IndexSet(integersIn: oldCount ... newCount - 1)
 
         tableView.beginUpdates()
         tableView.insertSections(indexSet, with: .automatic)
@@ -2102,7 +2112,30 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     func setUpRightNavigationButtons() {
         let navigationItems = configuration.navigationItemsForConversationView
         var rightBarButtonItems: [UIBarButtonItem] = []
+        if configuration.rateConversationMenuOption {
+            if #available(iOS 14, *) {
+                var menuItems: [UIAction] {
+                   return [
+                       UIAction(title: "Rate this conversation", image: UIImage(named: "icon_favorite_active", in: Bundle.applozic, compatibleWith: nil), handler: { (_) in
+                           self.showFeedback()
+                       })
+                   ]
+                }
 
+                let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.applozic, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
+                rightBarButtonItems.append(morebutton)
+            } else {
+                let rateIcon = UIImage(named: "icon_favorite", in: Bundle.applozic, compatibleWith: nil)
+                let rateBarButton = UIBarButtonItem(
+                    image: rateIcon,
+                    style: .plain,
+                    target: self, action: #selector(showFeedback)
+                )
+                rateBarButton.accessibilityIdentifier = "rate"
+                rightBarButtonItems.append(rateBarButton)
+            }
+        }
+        
         if configuration.isRefreshButtonEnabled, let refreshButton = rightNavbarButton() {
             rightBarButtonItems.append(refreshButton)
         }
@@ -2117,7 +2150,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             navigationItem.rightBarButtonItems = rightBarButtonItems
         }
     }
-
+    
+    @objc open func showFeedback() {}
+    
     @objc func customButtonEvent(_ sender: AnyObject) {
         guard let identifier = sender.tag else {
             return
