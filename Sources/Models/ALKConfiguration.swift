@@ -183,7 +183,9 @@ public struct ALKConfiguration {
     /// If true then restart button will be shown after conversation gets resolved. End user can restart the conversation.
     /// If false restart button won't be shown & end user can't resart the resolved conversation. By default it is false.
     public var hideRestartConversationButton = false
-
+    
+    /// If true, rate conversation button will be visible on ConversationVC, By default it is false.
+    public var rateConversationMenuOption = false
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
