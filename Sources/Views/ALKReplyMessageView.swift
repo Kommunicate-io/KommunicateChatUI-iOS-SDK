@@ -1,6 +1,6 @@
 //
 //  ALKReplyMessageView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 07/02/18.
 //

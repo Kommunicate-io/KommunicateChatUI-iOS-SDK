@@ -1,6 +1,6 @@
 //
 //  ALKLoadingIndicator.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 06/03/19.
 //

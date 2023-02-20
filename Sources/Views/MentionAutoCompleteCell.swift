@@ -1,6 +1,6 @@
 //
 //  MentionAutoSuggestionCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 11/09/19.
 //

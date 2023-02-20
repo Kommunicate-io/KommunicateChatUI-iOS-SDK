@@ -1,6 +1,6 @@
 //
 //  Encodable+Extension.swift
-//  Applozic
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 09/10/19.
 //

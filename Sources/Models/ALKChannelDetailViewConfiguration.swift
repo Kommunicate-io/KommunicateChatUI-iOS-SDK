@@ -1,6 +1,6 @@
 //
 //  ALKChannelDetailViewConfiguration.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 14/08/19.
 //

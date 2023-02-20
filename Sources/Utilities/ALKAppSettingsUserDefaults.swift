@@ -1,6 +1,6 @@
 //
 //  ALKAppSettingsUserDefaults.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 29/04/20.
 //

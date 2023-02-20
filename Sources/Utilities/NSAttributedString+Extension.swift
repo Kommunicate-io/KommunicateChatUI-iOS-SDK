@@ -1,6 +1,6 @@
 //
 //  NSAttributedString+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 29/08/19.
 //

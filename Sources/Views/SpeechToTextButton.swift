@@ -1,6 +1,6 @@
 //
 //  SpeechToTextButton.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 01/09/20.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKFormDataCache.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 20/07/20.
 //

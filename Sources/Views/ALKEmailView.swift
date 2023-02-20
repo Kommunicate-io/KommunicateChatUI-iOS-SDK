@@ -1,6 +1,6 @@
 //
 //  ALKEmailCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 13/03/19.
 //

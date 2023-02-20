@@ -2,7 +2,6 @@
 //  ALKCollectionTableViewCell.swift
 //
 //  Created by Mukesh on 09/04/18.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import KommunicateCore_iOS_SDK

@@ -1,6 +1,6 @@
 //
 //  ALKUploadManager.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 12/05/21.
 //

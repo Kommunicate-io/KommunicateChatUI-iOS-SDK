@@ -1,9 +1,8 @@
 //
 //  Data+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/09/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation

@@ -1,9 +1,8 @@
 //
 //  ALKFriendVideoCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 10/07/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Kingfisher

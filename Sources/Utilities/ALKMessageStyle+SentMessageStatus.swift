@@ -1,6 +1,6 @@
 //
 //  ALKMessageStyle+SentMessageStatus.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 02/03/20.
 //

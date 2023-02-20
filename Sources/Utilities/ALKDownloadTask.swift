@@ -1,6 +1,6 @@
 //
 //  ALKDownloadTask.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 15/11/17.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKAccountSuspensionController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 05/06/18.
 //

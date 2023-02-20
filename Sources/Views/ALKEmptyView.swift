@@ -1,6 +1,6 @@
 //
 //  ALKEmptyCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by apple on 19/11/18.
 //

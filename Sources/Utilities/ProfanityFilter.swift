@@ -1,6 +1,6 @@
 //
 //  ProfanityFilter.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 10/04/19.
 //

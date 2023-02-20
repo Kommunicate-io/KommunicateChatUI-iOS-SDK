@@ -1,6 +1,6 @@
 //
 //  AudioRecordingView.swift
-//  Applozic
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 17/08/18.
 //

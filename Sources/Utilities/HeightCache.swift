@@ -1,6 +1,6 @@
 //
 //  HeightCache.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 12/04/19.
 //

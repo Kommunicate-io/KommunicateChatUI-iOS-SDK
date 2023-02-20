@@ -1,6 +1,6 @@
 //
 //  ALKMyGenericCardMessageCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 05/12/18.
 //

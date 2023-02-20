@@ -1,8 +1,7 @@
 //  ConversationViewController.swift
-//
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import AVFoundation
@@ -743,9 +742,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         // Update background view's color which contains all the attachment options.
         chatBar.bottomBackgroundColor = configuration.chatBarAttachmentViewBackgroundColor
 
-        chatBar.poweredByMessageTextView.hyperLink(mutableAttributedString: NSMutableAttributedString(string: "Powered by Applozic"),
-                                                   url: URL(string: "https://Applozic.com")!,
-                                                   clickString: "Applozic")
+        chatBar.poweredByMessageTextView.hyperLink(mutableAttributedString: NSMutableAttributedString(string: "Powered by Kommunicate.io"),
+                                                   url: URL(string: "https://kommunicate.io")!,
+                                                   clickString: "Kommunicate.io")
 
         if viewModel.showPoweredByMessage() { chatBar.showPoweredByMessage() }
         chatBar.accessibilityIdentifier = "chatBar"

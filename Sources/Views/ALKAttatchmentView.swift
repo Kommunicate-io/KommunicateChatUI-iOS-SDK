@@ -1,6 +1,6 @@
 //
 //  ALKAttatchmentView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by apple on 18/10/19.
 //

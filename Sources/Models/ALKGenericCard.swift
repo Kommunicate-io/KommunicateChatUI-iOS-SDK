@@ -1,6 +1,6 @@
 //
 //  ALKGenericCard.swift
-//  Applozic
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 27/03/18.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKFormViewModelItem.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 08/07/20.
 //

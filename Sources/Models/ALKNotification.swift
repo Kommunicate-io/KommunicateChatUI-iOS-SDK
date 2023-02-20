@@ -1,6 +1,6 @@
 //
 //  ALKNotifications.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 07/08/19.
 //

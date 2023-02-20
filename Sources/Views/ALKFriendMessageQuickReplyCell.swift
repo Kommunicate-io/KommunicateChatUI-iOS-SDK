@@ -1,6 +1,6 @@
 //
 //  ALKFriendQuickReplyCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 07/01/19.
 //

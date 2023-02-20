@@ -1,6 +1,6 @@
 //
 //  ALKFriendDocumentCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by sunil on 05/03/19.
 //

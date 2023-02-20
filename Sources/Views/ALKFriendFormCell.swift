@@ -1,6 +1,6 @@
 //
 //  ALKFriendFormCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 09/07/20.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKGroupMemberCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 08/05/19.
 //

@@ -1,6 +1,6 @@
 //
 //  CardTemplate.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 19/02/19.
 //

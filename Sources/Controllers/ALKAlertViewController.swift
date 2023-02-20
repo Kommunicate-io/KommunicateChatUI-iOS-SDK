@@ -1,6 +1,6 @@
 //
 //  ALKReportMessageViewController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by apple on 01/07/19.
 //
