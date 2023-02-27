@@ -15,7 +15,7 @@ protocol Localizable {
 extension Localizable {
     static func localizedString(forKey: String) -> String {
         //  bundle
-        let bundle = Bundle.applozic
+        let bundle = Bundle.km
 
         return NSLocalizedString(forKey, tableName: nil, bundle: bundle, value: "", comment: "")
     }

@@ -53,7 +53,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 
     public var avatarImage: UIImage? {
-        return isGroupChat ? UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil) : nil
+        return isGroupChat ? UIImage(named: "group_profile_picture-1", in: Bundle.km, compatibleWith: nil) : nil
     }
 
     public var avatarGroupImageUrl: String? {

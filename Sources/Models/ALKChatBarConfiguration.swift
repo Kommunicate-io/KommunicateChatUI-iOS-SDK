@@ -69,17 +69,17 @@ public struct ALKChatBarConfiguration {
         for option in AttachmentType.allCases {
             switch option {
             case .contact:
-                icons[.contact] = UIImage(named: "contactShare", in: Bundle.applozic, compatibleWith: nil)
+                icons[.contact] = UIImage(named: "contactShare", in: Bundle.km, compatibleWith: nil)
             case .camera:
-                icons[.camera] = UIImage(named: "photo", in: Bundle.applozic, compatibleWith: nil)
+                icons[.camera] = UIImage(named: "photo", in: Bundle.km, compatibleWith: nil)
             case .gallery:
-                icons[.gallery] = UIImage(named: "gallery", in: Bundle.applozic, compatibleWith: nil)
+                icons[.gallery] = UIImage(named: "gallery", in: Bundle.km, compatibleWith: nil)
             case .video:
-                icons[.video] = UIImage(named: "video", in: Bundle.applozic, compatibleWith: nil)
+                icons[.video] = UIImage(named: "video", in: Bundle.km, compatibleWith: nil)
             case .location:
-                icons[.location] = UIImage(named: "location_new", in: Bundle.applozic, compatibleWith: nil)
+                icons[.location] = UIImage(named: "location_new", in: Bundle.km, compatibleWith: nil)
             case .document:
-                icons[.document] = UIImage(named: "ic_alk_document", in: Bundle.applozic, compatibleWith: nil)
+                icons[.document] = UIImage(named: "ic_alk_document", in: Bundle.km, compatibleWith: nil)
             }
         }
         return icons

@@ -111,7 +111,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     public enum Config {
-        public static var iconMuted = UIImage(named: "muted", in: Bundle.applozic, compatibleWith: nil)
+        public static var iconMuted = UIImage(named: "muted", in: Bundle.km, compatibleWith: nil)
     }
 
     public var localizationFileName: String = "Localizable"
@@ -166,7 +166,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         imv.contentMode = .scaleAspectFill
         imv.clipsToBounds = true
         imv.isHidden = true
-        imv.image = UIImage(named: "alk_email_icon", in: Bundle.applozic, compatibleWith: nil)
+        imv.image = UIImage(named: "alk_email_icon", in: Bundle.km, compatibleWith: nil)
         return imv
     }()
 
@@ -347,7 +347,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             if viewModel.isGroupChat, viewModel.channelType != Int16(SUPPORT_GROUP.rawValue) {
                 placeholder = "groupPlaceholder"
             }
-            return UIImage(named: placeholder, in: Bundle.applozic, compatibleWith: nil)
+            return UIImage(named: placeholder, in: Bundle.km, compatibleWith: nil)
         }
         return image
     }

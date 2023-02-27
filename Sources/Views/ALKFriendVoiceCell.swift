@@ -83,7 +83,7 @@ class ALKFriendVoiceCell: ALKVoiceCell {
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
 
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
 
         if let url = viewModel.avatarURL {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)

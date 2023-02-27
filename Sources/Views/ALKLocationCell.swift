@@ -140,7 +140,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
             with: URL(string: urlString),
             placeholder: UIImage(
                 named: "map_no_data",
-                in: Bundle.applozic,
+                in: Bundle.km,
                 compatibleWith: nil
             )
         )

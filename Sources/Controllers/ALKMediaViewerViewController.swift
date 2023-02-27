@@ -35,14 +35,14 @@ final class ALKMediaViewerViewController: UIViewController {
 
     fileprivate let playButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "PLAY", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "PLAY", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         return button
     }()
 
     fileprivate let audioPlayButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "audioPlay", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "audioPlay", in: Bundle.km, compatibleWith: nil)
         button.imageView?.tintColor = UIColor.gray
         button.setImage(image, for: .normal)
         return button
@@ -50,7 +50,7 @@ final class ALKMediaViewerViewController: UIViewController {
 
     fileprivate let audioIcon: UIImageView = {
         let imageView = UIImageView(frame: .zero)
-        imageView.image = UIImage(named: "mic", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = UIImage(named: "mic", in: Bundle.km, compatibleWith: nil)
         return imageView
     }()
 
@@ -210,7 +210,7 @@ final class ALKMediaViewerViewController: UIViewController {
             showPhotoView(message: message)
             updateMinZoomScaleForSize(size: windowSize())
             updateConstraintsForSize(size: windowSize())
-            let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            let image = UIImage(named: "DownloadiOS", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
             let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
             button.tintColor = UINavigationBar.appearance().tintColor
             navigationItem.rightBarButtonItem = button

@@ -147,7 +147,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     let unreadScrollButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.lightText
-        let image = UIImage(named: "scrollDown", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "scrollDown", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.layer.cornerRadius = 15
         return button
@@ -886,7 +886,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     weakSelf.present(vc, animated: true, completion: nil)
                 }
             case .showLocation:
-                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.applozic)
+                let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.km)
 
                 guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController else { return }
                 guard let mapViewVC = nav.viewControllers.first as? ALKMapViewController else { return }
@@ -1418,7 +1418,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func openRichMessageImageView(imageUrl: URL) {
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.previewImage, bundle: Bundle.applozic)
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.previewImage, bundle: Bundle.km)
         guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController,
               let vc = nav.viewControllers.first as? ALKPreviewImageViewController
         else {
@@ -1474,7 +1474,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     func showParticipantListChat() {
         guard let channelKey = viewModel.channelKey else { return }
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.km)
         if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
             vc.configuration = configuration
             vc.setCurrentGroupSelected(
@@ -2115,16 +2115,16 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             if #available(iOS 14, *) {
                 var menuItems: [UIAction] {
                    return [
-                       UIAction(title: "Rate this conversation", image: UIImage(named: "icon_favorite_active", in: Bundle.applozic, compatibleWith: nil), handler: { (_) in
+                       UIAction(title: "Rate this conversation", image: UIImage(named: "icon_favorite_active", in: Bundle.km, compatibleWith: nil), handler: { (_) in
                            self.showFeedback()
                        })
                    ]
                 }
 
-                let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.applozic, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
+                let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
                 rightBarButtonItems.append(morebutton)
             } else {
-                let rateIcon = UIImage(named: "icon_favorite", in: Bundle.applozic, compatibleWith: nil)
+                let rateIcon = UIImage(named: "icon_favorite", in: Bundle.km, compatibleWith: nil)
                 let rateBarButton = UIBarButtonItem(
                     image: rateIcon,
                     style: .plain,

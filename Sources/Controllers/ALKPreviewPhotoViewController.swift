@@ -28,7 +28,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
     fileprivate let closeButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .white
-        bt.setImage(UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "close", in: Bundle.km, compatibleWith: nil), for: .normal)
         bt.backgroundColor = .clear
         return bt
     }()

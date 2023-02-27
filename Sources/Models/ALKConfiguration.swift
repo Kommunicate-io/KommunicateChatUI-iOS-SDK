@@ -44,7 +44,7 @@ public struct ALKConfiguration {
     public var localizedStringFileName = "Localizable"
     
     /// Send message icon in chat bar.
-    public var sendMessageIcon = UIImage(named: "send", in: Bundle.applozic, compatibleWith: nil)
+    public var sendMessageIcon = UIImage(named: "send", in: Bundle.km, compatibleWith: nil)
 
     /// Image for navigation bar right side icon in conversation view.
     @available(*, deprecated, message: "Use navigationItemsForConversationView instead")
@@ -208,7 +208,7 @@ public struct ALKConfiguration {
     /// conversationlist view navigation icon for right side.
     /// By default, create group icon image will be used.
     @available(*, deprecated, message: "Use navigationItemsForConversationList instead")
-    public var rightNavBarImageForConversationListView = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
+    public var rightNavBarImageForConversationListView = UIImage(named: "fill_214", in: Bundle.km, compatibleWith: nil)
 
     /// If true then click action on navigation icon in conversation list view will be handled from outside
     @available(*, deprecated, message: "Use navigationItemsForConversationList instead")

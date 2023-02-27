@@ -26,7 +26,7 @@ class MentionAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
 
     let profile: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = UIImage(named: "contactPlaceholder", in: Bundle.km, compatibleWith: nil)
         imageView.layer.cornerRadius = 20
         imageView.clipsToBounds = true
         return imageView
@@ -57,7 +57,7 @@ class MentionAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
         self.item = item
         nameLabel.text = item.content
 
-        let placeHolder = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "contactPlaceholder", in: Bundle.km, compatibleWith: nil)
         guard let url = item.displayImageURL else {
             profile.image = placeHolder
             return

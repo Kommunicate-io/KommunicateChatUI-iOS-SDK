@@ -89,7 +89,7 @@ class ALKFriendVideoCell: ALKVideoCell {
         super.update(viewModel: viewModel)
         nameLabel.text = viewModel.displayName
 
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         guard let url = viewModel.avatarURL else {
             avatarImageView.image = placeHolder
             return

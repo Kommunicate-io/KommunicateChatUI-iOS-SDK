@@ -22,7 +22,7 @@ open class ALKConversationNavBar: UIView, Localizable {
 
     var profileImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         imageView.layer.cornerRadius = 18
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleToFill
@@ -160,7 +160,7 @@ open class ALKConversationNavBar: UIView, Localizable {
         profileName.text = name
 
         let placeholderName = isContact ? "contactPlaceholder" : "groupPlaceholder"
-        let placeholder = UIImage(named: placeholderName, in: Bundle.applozic, compatibleWith: nil)
+        let placeholder = UIImage(named: placeholderName, in: Bundle.km, compatibleWith: nil)
         guard
             let urlString = imageUrl,
             let url = URL(string: urlString)

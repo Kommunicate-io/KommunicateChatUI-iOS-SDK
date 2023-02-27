@@ -15,7 +15,7 @@ class ALKEmailTopView: UIView {
     fileprivate var emailImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "alk_replied_icon",
-                                  in: Bundle.applozic,
+                                  in: Bundle.km,
                                   compatibleWith: nil)
         imageView.isUserInteractionEnabled = false
         imageView.contentMode = .center

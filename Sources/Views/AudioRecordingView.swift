@@ -34,7 +34,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
     }()
 
     let leftArrow: UIImageView = {
-        var image = UIImage(named: "leftArrow", in: Bundle.applozic, compatibleWith: nil)
+        var image = UIImage(named: "leftArrow", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         let imageView = UIImageView(image: image)
         imageView.heightAnchor.constraint(equalToConstant: 11).isActive = true

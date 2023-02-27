@@ -89,7 +89,7 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     open func showAccountSuspensionView() {}
 
     func backBarButtonItem() -> UIBarButtonItem {
-        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        var backImage = UIImage(named: "icon_back", in: Bundle.km, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
         let backButton = UIBarButtonItem(
             image: backImage,

@@ -114,7 +114,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     }
 
     static func makeInstanceWith(delegate: ALKCustomCameraProtocol, and configuration: ALKConfiguration) -> ALKBaseNavigationViewController? {
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.camera, bundle: Bundle.applozic)
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.camera, bundle: Bundle.km)
         guard
             let vc = storyboard.instantiateViewController(withIdentifier: "CustomCameraNavigationController")
             as? ALKBaseNavigationViewController,
@@ -187,7 +187,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     // MARK: - UI control
 
     private func setupNavigation() {
-        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        var backImage = UIImage(named: "icon_back", in: Bundle.km, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissCameraPress(_:)))
     }

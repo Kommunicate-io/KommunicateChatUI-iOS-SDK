@@ -62,7 +62,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
 
     let profile: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = UIImage(named: "contactPlaceholder", in: Bundle.km, compatibleWith: nil)
         imageView.layer.cornerRadius = 20
         imageView.clipsToBounds = true
         return imageView
@@ -118,7 +118,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
             return
         }
 
-        let placeHolder = UIImage(named: "contactPlaceholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "contactPlaceholder", in: Bundle.km, compatibleWith: nil)
         guard let urlString = model.image, let url = URL(string: urlString) else {
             profile.image = placeHolder
             return

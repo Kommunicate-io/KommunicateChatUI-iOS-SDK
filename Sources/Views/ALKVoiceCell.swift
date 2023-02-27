@@ -181,10 +181,10 @@ class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         accessibilityIdentifier = "audioCell"
 
-        var playIcon = UIImage(named: "icon_play", in: Bundle.applozic, compatibleWith: nil)
+        var playIcon = UIImage(named: "icon_play", in: Bundle.km, compatibleWith: nil)
         playIcon = playIcon?.imageFlippedForRightToLeftLayoutDirection()
 
-        var pauseIcon = UIImage(named: "icon_pause", in: Bundle.applozic, compatibleWith: nil)
+        var pauseIcon = UIImage(named: "icon_pause", in: Bundle.km, compatibleWith: nil)
         pauseIcon = pauseIcon?.imageFlippedForRightToLeftLayoutDirection()
 
         actionButton.setImage(playIcon, for: .normal)
@@ -260,7 +260,7 @@ class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     private func showMediaViewer() {
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mediaViewer, bundle: Bundle.applozic)
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mediaViewer, bundle: Bundle.km)
 
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController

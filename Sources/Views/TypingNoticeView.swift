@@ -38,7 +38,7 @@ class TypingNotice: UIView, Localizable {
                 numStr = "0"
             }
 
-            if let img = UIImage(named: "animate-typing00\(numStr)\(index)", in: Bundle.applozic, compatibleWith: nil) {
+            if let img = UIImage(named: "animate-typing00\(numStr)\(index)", in: Bundle.km, compatibleWith: nil) {
                 animationImages.append(img)
             }
         }

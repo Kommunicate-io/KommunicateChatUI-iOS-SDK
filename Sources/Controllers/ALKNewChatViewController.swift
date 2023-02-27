@@ -138,7 +138,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
 
-            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
+            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.km)
             if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
                 vc.setCurrentGroupSelected(groupId: NSNumber(value: 0), groupProfile: nil, delegate: self)
                 vc.addContactMode = .newChat
