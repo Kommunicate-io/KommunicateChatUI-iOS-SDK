@@ -1,6 +1,5 @@
 //
 //  QuickReplyConfig.swift
-//  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 09/01/19.
 //

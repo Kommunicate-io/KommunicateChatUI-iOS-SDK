@@ -18,7 +18,7 @@ public final class ALKNewChatViewModel {
         }
     }
 
-    var applozicSettings: ALApplozicSettings.Type = ALApplozicSettings.self
+    var alSettings: ALApplozicSettings.Type = ALApplozicSettings.self
 
     // MARK: - Intialization
 
@@ -50,7 +50,7 @@ public final class ALKNewChatViewModel {
             }
 
         } else {
-            if applozicSettings.getFilterContactsStatus() {
+            if alSettings.getFilterContactsStatus() {
                 userService.getListOfRegisteredUsers(completion: { _ in
                     self.bufferFriendList = self.fetchContactsFromDB() ?? []
                     completion()

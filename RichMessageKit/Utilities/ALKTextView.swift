@@ -1,6 +1,5 @@
 //
 //  ALKTextView.swift
-//  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 13/06/19.
 //

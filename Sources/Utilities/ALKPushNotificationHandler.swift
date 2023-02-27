@@ -48,7 +48,7 @@ public class ALKPushNotificationHandler: Localizable {
     }
 
     func launchIndividualChatWith(notificationData: NotificationHelper.NotificationData) {
-        guard !NotificationHelper().isApplozicVCAtTop() else {
+        guard !NotificationHelper().isKMChatUIVCAtTop() else {
             NotificationHelper().handleNotificationTap(notificationData)
             return
         }

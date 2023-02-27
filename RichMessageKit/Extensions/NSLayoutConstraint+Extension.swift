@@ -1,6 +1,5 @@
 //
 //  NSLayoutConstraint+Extension.swift
-//  ApplozicSwift
 //
 //  Created by Mukesh Thawani on 11/12/17.
 //
