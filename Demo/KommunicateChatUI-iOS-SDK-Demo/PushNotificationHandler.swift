@@ -76,7 +76,7 @@ class PushNotificationHandler {
         print("Called when user taps on notification.")
 
         /// This will give false if our viewControllers are being added as child views.
-        if NotificationHelper().isKMChatUIVCAtTop() {
+        if NotificationHelper().isKMVCAtTop() {
             NotificationHelper().handleNotificationTap(notificationData)
         } else {
             print("Kommunicate Controller not on top. Launch chat using helper methods.")
