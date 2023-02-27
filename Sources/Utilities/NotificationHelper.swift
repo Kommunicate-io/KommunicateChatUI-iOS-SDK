@@ -168,7 +168,7 @@ public class NotificationHelper {
 
     /// Handles notification tap when any of Kommunicate's VC is at top.
     ///
-    /// - WARNING: Use this only when `isKMChatUIVCAtTop` returns true.
+    /// - WARNING: Use this only when `isKMVCAtTop` returns true.
     /// - Parameter notification: Contains details about arrived notification.
     public func handleNotificationTap(_ notification: NotificationData) {
         guard let topVC = ALPushAssist().topViewController else { return }
