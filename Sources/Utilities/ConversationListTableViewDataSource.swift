@@ -1,6 +1,6 @@
 //
 //  TableViewDataSource.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 29/11/18.
 //

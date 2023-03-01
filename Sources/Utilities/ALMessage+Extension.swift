@@ -1,9 +1,8 @@
 //
 //  ALMessage+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -54,7 +53,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 
     public var avatarImage: UIImage? {
-        return isGroupChat ? UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil) : nil
+        return isGroupChat ? UIImage(named: "group_profile_picture-1", in: Bundle.km, compatibleWith: nil) : nil
     }
 
     public var avatarGroupImageUrl: String? {

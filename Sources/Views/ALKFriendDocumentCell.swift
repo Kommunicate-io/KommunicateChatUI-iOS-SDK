@@ -1,6 +1,6 @@
 //
 //  ALKFriendDocumentCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by sunil on 05/03/19.
 //
@@ -91,7 +91,7 @@ class ALKFriendDocumentCell: ALKDocumentCell {
 
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
 
         if let url = viewModel.avatarURL {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)

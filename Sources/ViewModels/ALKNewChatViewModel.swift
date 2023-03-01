@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -19,7 +18,7 @@ public final class ALKNewChatViewModel {
         }
     }
 
-    var applozicSettings: ALApplozicSettings.Type = ALApplozicSettings.self
+    var alSettings: ALApplozicSettings.Type = ALApplozicSettings.self
 
     // MARK: - Intialization
 
@@ -51,7 +50,7 @@ public final class ALKNewChatViewModel {
             }
 
         } else {
-            if applozicSettings.getFilterContactsStatus() {
+            if alSettings.getFilterContactsStatus() {
                 userService.getListOfRegisteredUsers(completion: { _ in
                     self.bufferFriendList = self.fetchContactsFromDB() ?? []
                     completion()

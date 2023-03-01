@@ -1,6 +1,6 @@
 //
 //  LayoutProxy.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 18/02/19.
 //

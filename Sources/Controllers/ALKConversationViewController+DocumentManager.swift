@@ -1,6 +1,6 @@
 //
 //  ALKConversationViewController+DocumentManager.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 07/08/20.
 //

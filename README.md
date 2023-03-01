@@ -51,6 +51,3 @@ Please check the [documentation](https://docs.kommunicate.io/docs/ios-installati
 ## License
 
 Kommunicate is available under the BSD-3-Clause license. See the [LICENSE](LICENSE) file for more info.
-
-[img0]:https://raw.githubusercontent.com/Applozic/ApplozicSwift/master/Screenshots/screenshot0.png
-[img1]:https://raw.githubusercontent.com/Applozic/ApplozicSwift/master/Screenshots/screenshot1.png

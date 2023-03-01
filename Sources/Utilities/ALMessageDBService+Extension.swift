@@ -1,6 +1,6 @@
 //
 //  ALMessageDBService+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 13/05/19.
 //

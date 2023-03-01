@@ -1,6 +1,6 @@
 //
 //  ALKMyQuickReplyCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 08/01/19.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKDocumentManager.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 06/08/20.
 //

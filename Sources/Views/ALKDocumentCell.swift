@@ -1,6 +1,6 @@
 //
 //  ALKDocumentCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 05/03/19.
 //
@@ -56,7 +56,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var docImageView: UIImageView = {
         let imv = UIImageView()
-        imv.image = UIImage(named: "ic_alk_document", in: Bundle.applozic, compatibleWith: nil)
+        imv.image = UIImage(named: "ic_alk_document", in: Bundle.km, compatibleWith: nil)
         imv.backgroundColor = .clear
         imv.clipsToBounds = true
         return imv
@@ -64,7 +64,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var downloadButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "ic_alk_download", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "ic_alk_download", in: Bundle.km, compatibleWith: nil)
         button.isUserInteractionEnabled = true
         button.setImage(image, for: .normal)
         return button

@@ -1,6 +1,6 @@
 //
 //  AutoCompleteItemConfiguration.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 23/09/19.
 //

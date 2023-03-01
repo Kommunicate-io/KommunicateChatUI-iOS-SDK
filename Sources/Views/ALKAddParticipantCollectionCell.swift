@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Kingfisher
@@ -41,8 +40,8 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
         // imgView.layer.borderWidth = 2
         imgView.clipsToBounds = true
 
-        btnAdd.setImage(UIImage(named: "icon_add_people-1", in: Bundle.applozic, compatibleWith: nil), for: .normal)
-        btnAdd.setImage(UIImage(named: "icon_add_people_grey", in: Bundle.applozic, compatibleWith: nil), for: .disabled)
+        btnAdd.setImage(UIImage(named: "icon_add_people-1", in: Bundle.km, compatibleWith: nil), for: .normal)
+        btnAdd.setImage(UIImage(named: "icon_add_people_grey", in: Bundle.km, compatibleWith: nil), for: .disabled)
         btnAdd.layer.cornerRadius = 0.5 * btnAdd.frame.size.width
         // btnAdd.layer.borderColor = UIColor.white.cgColor
         // btnAdd.layer.borderWidth = 2
@@ -63,7 +62,7 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
             lblName.text = currentFriendViewModel?.getFriendDisplayName()
 
             // image
-            let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+            let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
             let tempURL: URL = currentFriendViewModel!.friendDisplayImgURL!
             let resource = ImageResource(downloadURL: tempURL, cacheKey: tempURL.absoluteString)
             imgView.kf.setImage(with: resource, placeholder: placeHolder)

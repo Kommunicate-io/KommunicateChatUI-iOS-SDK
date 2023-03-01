@@ -1,6 +1,6 @@
 //
 //  ALKRichMessageStyle.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 26/05/20.
 //

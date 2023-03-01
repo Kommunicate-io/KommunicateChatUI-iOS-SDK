@@ -1,6 +1,6 @@
 //
 //  ALKMessageBaseCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 12/06/19.
 //
@@ -421,9 +421,9 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 let fileUtills = ALKFileUtils()
                 return fileUtills.getThumbnail(filePath: path)
             }
-            return UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+            return UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
         case .location:
-            return UIImage(named: "map_no_data", in: Bundle.applozic, compatibleWith: nil)
+            return UIImage(named: "map_no_data", in: Bundle.km, compatibleWith: nil)
         default:
             return nil
         }

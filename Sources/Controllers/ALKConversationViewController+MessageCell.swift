@@ -1,6 +1,6 @@
 //
 //  ALKConversationViewController+MessageCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 09/04/20.
 //

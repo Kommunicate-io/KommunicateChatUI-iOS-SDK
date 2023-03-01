@@ -65,7 +65,7 @@ class ALKLinkView: UIView, Localizable {
 
     let previewImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
-        imageView.image = UIImage(named: "default_image", in: Bundle.applozic, compatibleWith: nil)
+        imageView.image = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
         imageView.backgroundColor = .clear
         return imageView
     }()
@@ -151,7 +151,7 @@ class ALKLinkView: UIView, Localizable {
     }
 
     func updateView(linkPreviewMeta: LinkPreviewMeta) {
-        let placeHolder = UIImage(named: "default_image", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
 
         if let stringURL = linkPreviewMeta.image ?? linkPreviewMeta.icon, let url = URL(string: stringURL) {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)

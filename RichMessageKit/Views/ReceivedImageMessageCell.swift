@@ -1,6 +1,5 @@
 //
 //  ReceivedImageMessageView.swift
-//  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 20/05/19.
 //

@@ -1,6 +1,5 @@
 //
 //  FAQMessageSizeCalculator.swift
-//  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 04/06/19.
 //

@@ -24,7 +24,7 @@ class RatingHelper : Localizable {
          default:
              print("incorrect data")
          }
-         guard let ratingImage = UIImage(named: imageName, in: Bundle.applozic, compatibleWith: nil) else { return nil }
+         guard let ratingImage = UIImage(named: imageName, in: Bundle.km, compatibleWith: nil) else { return nil }
          return ratingImage
 
      }

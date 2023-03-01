@@ -1,6 +1,6 @@
 //
 //  ALKRegexValidator.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 07/10/20.
 //

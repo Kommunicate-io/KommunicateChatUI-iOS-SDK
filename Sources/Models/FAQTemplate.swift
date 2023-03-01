@@ -1,6 +1,6 @@
 //
 //  FAQTemplate.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 03/06/19.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKMapViewModel.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 10/10/17.
 //

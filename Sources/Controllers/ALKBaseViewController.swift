@@ -1,9 +1,8 @@
 //
 //  ALKBaseViewController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import KommunicateCore_iOS_SDK
@@ -90,7 +89,7 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
     open func showAccountSuspensionView() {}
 
     func backBarButtonItem() -> UIBarButtonItem {
-        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        var backImage = UIImage(named: "icon_back", in: Bundle.km, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
         let backButton = UIBarButtonItem(
             image: backImage,

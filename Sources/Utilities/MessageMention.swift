@@ -1,6 +1,6 @@
 //
 //  MessageMention.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 06/09/19.
 //

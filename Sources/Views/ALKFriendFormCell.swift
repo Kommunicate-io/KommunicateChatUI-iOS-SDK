@@ -1,6 +1,6 @@
 //
 //  ALKFriendFormCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 09/07/20.
 //
@@ -97,7 +97,7 @@ class ALKFriendFormCell: ALKFormCell {
             messageView.update(model: model)
         }
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
 
         if let url = viewModel.avatarURL {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)

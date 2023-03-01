@@ -1,6 +1,6 @@
 //
 //  UINavigationBar+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 29/06/18.
 //

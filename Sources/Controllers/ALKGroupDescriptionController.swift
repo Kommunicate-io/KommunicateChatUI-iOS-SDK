@@ -1,6 +1,6 @@
 //
 //  ALKGroupDescriptionController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 14/04/21.
 //

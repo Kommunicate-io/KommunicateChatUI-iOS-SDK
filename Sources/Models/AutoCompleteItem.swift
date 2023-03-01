@@ -1,6 +1,6 @@
 //
 //  AutoCompleteItem.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 19/09/19.
 //
@@ -21,5 +21,5 @@ public struct AutoCompleteItem {
 
 public extension AutoCompleteItem {
     /// A key used for referencing which substrings were autocompletes
-    static let attributesKey = NSAttributedString.Key("com.applozicswift.autocompletekey")
+    static let attributesKey = NSAttributedString.Key("com.kommunicatechatui.autocompletekey")
 }

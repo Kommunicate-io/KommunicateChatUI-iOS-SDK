@@ -1,9 +1,8 @@
 //
 //  TypingNoticeView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import UIKit
@@ -39,7 +38,7 @@ class TypingNotice: UIView, Localizable {
                 numStr = "0"
             }
 
-            if let img = UIImage(named: "animate-typing00\(numStr)\(index)", in: Bundle.applozic, compatibleWith: nil) {
+            if let img = UIImage(named: "animate-typing00\(numStr)\(index)", in: Bundle.km, compatibleWith: nil) {
                 animationImages.append(img)
             }
         }

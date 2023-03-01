@@ -1,6 +1,6 @@
 //
 //  AlignedCollectionViewFlowLayout.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 22/02/19.
 //
