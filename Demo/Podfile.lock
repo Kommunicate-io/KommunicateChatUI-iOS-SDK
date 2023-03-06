@@ -12,8 +12,6 @@ PODS:
     - KommunicateChatUI-iOS-SDK/RichMessageKit
     - KommunicateCore-iOS-SDK (~> 1.0.7)
     - SwipeCellKit (~> 2.7.1)
-    - ZendeskChatProvidersSDK
-    - ZendeskChatSDK
   - KommunicateChatUI-iOS-SDK/RichMessageKit (0.3.1)
   - KommunicateCore-iOS-SDK (1.0.7)
   - Nimble (10.0.0)
@@ -26,17 +24,6 @@ PODS:
   - SwiftFormat/CLI (0.48.18)
   - SwiftLint (0.50.3)
   - SwipeCellKit (2.7.1)
-  - ZendeskChatProvidersSDK (3.0.0)
-  - ZendeskChatSDK (3.0.0):
-    - ZendeskChatProvidersSDK (= 3.0.0)
-    - ZendeskMessagingSDK (= 4.0.0)
-  - ZendeskCommonUISDK (7.0.0)
-  - ZendeskMessagingAPISDK (4.0.0):
-    - ZendeskSDKConfigurationsSDK (= 2.0.0)
-  - ZendeskMessagingSDK (4.0.0):
-    - ZendeskCommonUISDK (= 7.0.0)
-    - ZendeskMessagingAPISDK (= 4.0.0)
-  - ZendeskSDKConfigurationsSDK (2.0.0)
 
 DEPENDENCIES:
   - KommunicateChatUI-iOS-SDK (from `../KommunicateChatUI-iOS-SDK.podspec`)
@@ -57,12 +44,6 @@ SPEC REPOS:
     - SwiftFormat
     - SwiftLint
     - SwipeCellKit
-    - ZendeskChatProvidersSDK
-    - ZendeskChatSDK
-    - ZendeskCommonUISDK
-    - ZendeskMessagingAPISDK
-    - ZendeskMessagingSDK
-    - ZendeskSDKConfigurationsSDK
 
 EXTERNAL SOURCES:
   KommunicateChatUI-iOS-SDK:
@@ -71,7 +52,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
-  KommunicateChatUI-iOS-SDK: 9fb64d394054922d15e40a4f854b5a97eb90e6ba
+  KommunicateChatUI-iOS-SDK: 60aa1768d5ee0aa7779feaddec6c03a3f6b9a9b1
   KommunicateCore-iOS-SDK: dbcd925238d785a45181d03353a011e3634b23f9
   Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
   Nimble-Snapshots: ef281b908c604f78c8313587e25ea92c8ab513d7
@@ -79,12 +60,6 @@ SPEC CHECKSUMS:
   SwiftFormat: 7dd2b33a0a3d61095b61c911b6d89ff962ae695c
   SwiftLint: 77f7cb2b9bb81ab4a12fcc86448ba3f11afa50c6
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
-  ZendeskChatProvidersSDK: af93e02e2058875f92e6ad86e74ee51203b4079e
-  ZendeskChatSDK: fe03650a5ebe3d35fd1f4da90792021f809bcf11
-  ZendeskCommonUISDK: f06dbac6c9e74c3afff75ecdc6bec3832b23258c
-  ZendeskMessagingAPISDK: 95a99f1eab9482b4106ec88466b93a89f9f7c5fa
-  ZendeskMessagingSDK: 4f5f3d43766bb3b2ea6411d1331cfe609ff33618
-  ZendeskSDKConfigurationsSDK: a5c21010e17b71d02bc2cfe73dcc9da1efa0a7b2
 
 PODFILE CHECKSUM: ceb862bddf2e495511834b44350239c68ccce94f
 

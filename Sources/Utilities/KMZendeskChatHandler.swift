@@ -4,7 +4,7 @@
 //
 //  Created by sathyan elangovan on 28/11/22.
 //
-
+#if ChatSDK
 import Foundation
 import ChatSDK
 import ChatProvidersSDK
@@ -473,3 +473,4 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         return ["name":attachment.name, "mime_type": attachment.mimeType, "size": attachment.size, "url": attachment.url]
     }
 }
+#endif

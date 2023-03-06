@@ -730,9 +730,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
                 ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
+                #if ChatSDK
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
+                #endif
                 guard !alMessage.isHiddenMessage() else {return}
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
@@ -744,9 +746,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
                 ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
+                #if ChatSDK
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
+                #endif
                 guard !alMessage.isHiddenMessage() else {return}
                 alMessage.status = NSNumber(integerLiteral: Int(SENT.rawValue))
                 self.messageModels[indexPath.section] = alMessage.messageModel
@@ -1716,9 +1720,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
             message, error in
             let newMesg = alMessage
+            #if ChatSDK
             if KMZendeskChatHandler.shared.isZendeskEnabled() {
                 KMZendeskChatHandler.shared.sendAttachment(message: alMessage)
             }
+            #endif
             NSLog("message is: ", newMesg.key)
             NSLog("Message sent: \(String(describing: message)), \(String(describing: error))")
             if error == nil {
