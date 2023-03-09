@@ -1113,7 +1113,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 self.refreshViewController()
             }
         }
-        #if ChatSDK
         // If zendesk chat is integrated and the message is an assignment(to human) message , then initialize the zendesk sdk
         guard let zendeskKey = ALApplozicSettings.getZendeskSdkAccountKey(),
               !zendeskKey.isEmpty,
@@ -1124,7 +1123,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
               let _ = metadata["KM_ASSIGN_TO"] as? String else { return }
         
         KMZendeskChatHandler.shared.handedOffToAgent(groupId: groupId.stringValue)
-        #endif
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId _: String?, status: Int32?) {
