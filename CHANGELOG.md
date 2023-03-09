@@ -9,6 +9,11 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - [CM-1278] Added Suppor rating button on conversation screen
 - [CM-1325] Added Support for metadata for form action messages
 
+## [0.3.1] - 2023-02-17
+- [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
+- [CM-1278] Added Suppor rating button on conversation screen
+- [CM-1325] Added Support for metadata for form action messages
+
 ## [0.3.0] - 2023-02-10
 - [CM-1313] Fixed Add contacts permission issue when app submitted in appstore
 - [CM-1302] Added customization for back button on conversation list screen
