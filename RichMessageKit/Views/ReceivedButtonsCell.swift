@@ -1,6 +1,5 @@
 //
 //  ReceivedButtonsView.swift
-//  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 25/09/19.
 //

@@ -1,6 +1,6 @@
 //
 //  ALKReplyController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by apple on 01/07/19.
 //
@@ -195,7 +195,7 @@ class ALKReplyController: UIViewController, Localizable {
             messageView.text = message.message
             messageView.sizeToFit()
         }
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         let contactService = ALContactService()
         let contact = contactService.loadContact(byKey: "userId", value: message.to)
         if let imageUrl = contact?.contactImageUrl, let url = URL(string: imageUrl) {

@@ -1,6 +1,6 @@
 //
 //  ALKGroupDescriptionCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by apple on 15/04/21.
 //

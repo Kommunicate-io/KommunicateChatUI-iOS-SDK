@@ -1,9 +1,8 @@
 //
 //  CustomPickerView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 14/07/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Photos
@@ -64,7 +63,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     }
 
     static func makeInstanceWith(delegate: ALKCustomPickerDelegate, and configuration: ALKConfiguration) -> ALKBaseNavigationViewController? {
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.picker, bundle: Bundle.applozic)
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.picker, bundle: Bundle.km)
         guard
             let vc = storyboard.instantiateViewController(withIdentifier: "CustomPickerNavigationViewController")
             as? ALKBaseNavigationViewController,
@@ -77,7 +76,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
     // MARK: - UI control
 
     private func setupNavigation() {
-        var backImage = UIImage(named: "icon_back", in: Bundle.applozic, compatibleWith: nil)
+        var backImage = UIImage(named: "icon_back", in: Bundle.km, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissAction(_:)))
     }

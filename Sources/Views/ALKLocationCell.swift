@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Kingfisher
@@ -141,7 +140,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
             with: URL(string: urlString),
             placeholder: UIImage(
                 named: "map_no_data",
-                in: Bundle.applozic,
+                in: Bundle.km,
                 compatibleWith: nil
             )
         )

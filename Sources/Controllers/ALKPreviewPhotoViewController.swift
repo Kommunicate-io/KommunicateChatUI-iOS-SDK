@@ -1,9 +1,8 @@
 //
 //  ALKPreviewPhotoViewController.swift
-//
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -29,7 +28,7 @@ final class ALKPreviewPhotoViewController: ALKBaseViewController {
     fileprivate let closeButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .white
-        bt.setImage(UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "close", in: Bundle.km, compatibleWith: nil), for: .normal)
         bt.backgroundColor = .clear
         return bt
     }()

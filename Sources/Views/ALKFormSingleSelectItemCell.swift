@@ -1,6 +1,6 @@
 //
 //  ALKFormSingleSelectItemCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 13/07/20.
 //

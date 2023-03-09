@@ -1,6 +1,6 @@
 //
 //  AudioRecordButton.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 17/08/18.
 //
@@ -57,7 +57,7 @@ open class AudioRecordButton: UIButton {
 
         addConstraints([NSLayoutConstraint(item: recordButton, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0)])
 
-        var image = UIImage(named: "microphone", in: Bundle.applozic, compatibleWith: nil)
+        var image = UIImage(named: "microphone", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
             .withRenderingMode(.alwaysTemplate)
 

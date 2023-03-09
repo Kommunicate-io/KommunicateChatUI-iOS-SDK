@@ -1,6 +1,6 @@
 //
 //  TemplateDecoder.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 28/04/19.
 //

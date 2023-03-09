@@ -1,6 +1,6 @@
 //
 //  ALKAccountSuspensionController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 05/06/18.
 //
@@ -22,7 +22,7 @@ public class ALKAccountSuspensionController: UIViewController {
 
     private func setupViews() {
         view.backgroundColor = UIColor(netHex: 0xFAFAFA)
-        guard let accountView = Bundle.applozic.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?.first as? UIView else {
+        guard let accountView = Bundle.km.loadNibNamed("ALKAccountSuspensionView", owner: self, options: nil)?.first as? UIView else {
             return
         }
         accountView.frame = CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.height - 50)
@@ -48,7 +48,7 @@ public class ALKAccountSuspensionController: UIViewController {
         let button = UIButton(type: .system)
         button.frame = frame
         button.addTarget(self, action: #selector(closeButtonAction(_:)), for: .touchUpInside)
-        let closeImage = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
+        let closeImage = UIImage(named: "close", in: Bundle.km, compatibleWith: nil)
         button.setImage(closeImage, for: .normal)
         button.tintColor = UIColor.black
         return button

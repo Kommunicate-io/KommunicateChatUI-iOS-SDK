@@ -1,9 +1,8 @@
 //
 //  ALKNewChatViewController.swift
-//
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import KommunicateCore_iOS_SDK
@@ -139,7 +138,7 @@ extension ALKNewChatViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
 
-            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.applozic)
+            let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.createGroupChat, bundle: Bundle.km)
             if let vc = storyboard.instantiateViewController(withIdentifier: "ALKCreateGroupViewController") as? ALKCreateGroupViewController {
                 vc.setCurrentGroupSelected(groupId: NSNumber(value: 0), groupProfile: nil, delegate: self)
                 vc.addContactMode = .newChat

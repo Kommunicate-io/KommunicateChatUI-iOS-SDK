@@ -1,9 +1,8 @@
 //
 //  ALKMediaViewerViewModel.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 28/08/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import AVFoundation

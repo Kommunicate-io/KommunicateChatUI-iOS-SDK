@@ -1,6 +1,5 @@
 //
 //  RichMessageStyle.swift
-//  ApplozicSwift
 //
 //  Created by Sunil on 28/05/20.
 //

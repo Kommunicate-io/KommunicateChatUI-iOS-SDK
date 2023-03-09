@@ -1,6 +1,6 @@
 //
 //  ALKDocumentViewerController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by apple on 13/03/19.
 //

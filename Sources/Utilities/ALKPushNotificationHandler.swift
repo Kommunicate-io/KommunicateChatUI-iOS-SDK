@@ -1,9 +1,8 @@
 //
 //  ALPushNotificationHandler.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -49,7 +48,7 @@ public class ALKPushNotificationHandler: Localizable {
     }
 
     func launchIndividualChatWith(notificationData: NotificationHelper.NotificationData) {
-        guard !NotificationHelper().isApplozicVCAtTop() else {
+        guard !NotificationHelper().isKMVCAtTop() else {
             NotificationHelper().handleNotificationTap(notificationData)
             return
         }

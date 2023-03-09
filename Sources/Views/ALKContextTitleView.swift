@@ -1,6 +1,6 @@
 //
 //  ALKContextTitleView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/12/17.
 //

@@ -1,6 +1,5 @@
 //
 //  SentButtonsView.swift
-//  ApplozicSwift
 //
 //  Created by Shivam Pokhriyal on 23/09/19.
 //

@@ -1,6 +1,6 @@
 //
 //  ActionableMessageType.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 07/03/19.
 //

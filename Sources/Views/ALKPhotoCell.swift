@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -50,7 +49,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate var downloadButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "DownloadiOS", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.backgroundColor = UIColor.black
         return button
@@ -58,7 +57,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     var uploadButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "UploadiOS2", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "UploadiOS2", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.backgroundColor = UIColor.black
         return button
@@ -159,7 +158,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     @objc func actionTapped(button: UIButton) {
-        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mediaViewer, bundle: Bundle.applozic)
+        let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mediaViewer, bundle: Bundle.km)
 
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
@@ -335,7 +334,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             photoView.kf.setImage(with: message.thumbnailURL)
             return
         }
-        let placeHolderImage = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolderImage = UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
         /* if URL is exist on metadata, then it was upload by S3 Service. if not it was uploaded by Google
          */
         if metadata.url == nil {

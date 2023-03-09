@@ -1,6 +1,6 @@
 //
 //  ListTemplate.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 18/02/19.
 //

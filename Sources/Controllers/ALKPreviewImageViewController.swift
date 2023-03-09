@@ -3,7 +3,6 @@
 //  TestScrollView
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import UIKit
@@ -44,7 +43,7 @@ final class ALKPreviewImageViewController: ALKBaseViewController, Localizable {
         guard let viewModel = viewModel else { return }
         let title = localizedString(forKey: "RichMessageImagePreviewTitle", withDefaultValue: SystemMessage.PhotoAlbum.PreviewTitle, fileName: viewModel.localizedStringFileName)
         navigationItem.title = title
-        let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: "DownloadiOS", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
         button.tintColor = UINavigationBar.appearance().tintColor
         navigationItem.rightBarButtonItem = button

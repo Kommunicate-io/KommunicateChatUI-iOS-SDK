@@ -1,6 +1,6 @@
 //
 //  ALKPhotoPicker.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 06/10/20.
 //

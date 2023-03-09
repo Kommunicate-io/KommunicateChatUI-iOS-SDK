@@ -1,9 +1,8 @@
 //
 //  ALKVideoCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 10/07/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import AVKit
@@ -51,7 +50,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate var downloadButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "DownloadiOS", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "DownloadiOS", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.backgroundColor = UIColor.black
         return button
@@ -59,14 +58,14 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate var playButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "PLAY", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "PLAY", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         return button
     }()
 
     fileprivate var uploadButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "UploadiOS2", in: Bundle.applozic, compatibleWith: nil)
+        let image = UIImage(named: "UploadiOS2", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.backgroundColor = UIColor.black
         return button
@@ -228,7 +227,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     @objc private func playButtonAction(_: UIButton) {
         let initialVC = UIStoryboard.name(
             storyboard: UIStoryboard.Storyboard.mediaViewer,
-            bundle: Bundle.applozic
+            bundle: Bundle.km
         )
         .instantiateInitialViewController()
         guard let nav = initialVC as? ALKBaseNavigationViewController,
@@ -286,7 +285,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             downloadButton.isHidden = true
             progressView.isHidden = true
             playButton.isHidden = true
-            photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+            photoView.image = UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
             uploadButton.isHidden = false
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
@@ -304,7 +303,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         guard let message = viewModel, let metadata = message.fileMetaInfo else {
             return
         }
-        let placeHolderImage = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolderImage = UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
         guard ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled() else {
             photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolderImage)
             return
@@ -332,7 +331,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
                       let url = url
                 else {
                     print("Error downloading thumbnail url")
-                    self.photoView.image = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+                    self.photoView.image = UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
                     return
                 }
                 let httpManager = ALKHTTPManager()
@@ -354,7 +353,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     func setPhotoViewImageFromFileURL(_ fileURL: URL) {
         let provider = LocalFileImageDataProvider(fileURL: fileURL)
-        let placeHolder = UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
         photoView.kf.setImage(with: provider, placeholder: placeHolder)
     }
 

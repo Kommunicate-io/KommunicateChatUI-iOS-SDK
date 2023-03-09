@@ -1,6 +1,6 @@
 //
 //  NotificationHelper.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 25/03/19.
 //
@@ -139,11 +139,11 @@ public class NotificationHelper {
         viewController.refreshViewController()
     }
 
-    /// Checks whether Applozic ViewController is at top.
+    /// Checks whether Kommunicate ViewController is at top.
     ///
-    /// - WARNING: Doesn't work if Applozic's Controller is added inside some container.
-    /// - Returns: Bool value indicating whether Applozic view is at top.
-    public func isApplozicVCAtTop() -> Bool {
+    /// - WARNING: Doesn't work if Kommunicate''s Controller is added inside some container.
+    /// - Returns: Bool value indicating whether Kommunicate view is at top.
+    public func isKMVCAtTop() -> Bool {
         guard let topVC = ALPushAssist().topViewController else { return false }
         let topVCName = String(describing: topVC.classForCoder)
         switch topVCName {
@@ -166,9 +166,9 @@ public class NotificationHelper {
         }
     }
 
-    /// Handles notification tap when any of Applozic's VC is at top.
+    /// Handles notification tap when any of Kommunicate's VC is at top.
     ///
-    /// - WARNING: Use this only when `isApplozicVCAtTop` returns true.
+    /// - WARNING: Use this only when `isKMVCAtTop` returns true.
     /// - Parameter notification: Contains details about arrived notification.
     public func handleNotificationTap(_ notification: NotificationData) {
         guard let topVC = ALPushAssist().topViewController else { return }

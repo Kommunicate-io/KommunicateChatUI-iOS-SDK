@@ -1,6 +1,6 @@
 //
 //  ConversationListTableViewController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 29/11/18.
 //
@@ -796,11 +796,11 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
             muteAction.backgroundColor = UIColor(netHex: 0x999999)
 
             if conversationMuted {
-                muteAction.image = UIImage(named: "icon_mute_inactive", in: Bundle.applozic, compatibleWith: nil)
+                muteAction.image = UIImage(named: "icon_mute_inactive", in: Bundle.km, compatibleWith: nil)
                 let unmute = localizedString(forKey: "UnmuteButton", withDefaultValue: SystemMessage.Mute.UnmuteButton, fileName: configuration.localizedStringFileName)
                 muteAction.title = unmute
             } else {
-                muteAction.image = UIImage(named: "icon_mute_active", in: Bundle.applozic, compatibleWith: nil)
+                muteAction.image = UIImage(named: "icon_mute_active", in: Bundle.km, compatibleWith: nil)
                 let mute = localizedString(forKey: "MuteButton", withDefaultValue: SystemMessage.Mute.MuteButton, fileName: configuration.localizedStringFileName)
                 muteAction.title = mute
             }
@@ -811,7 +811,7 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
                 self.chatCellAction(indexPath: indexPath, action: .delete, viewModel: message)
             }
 
-            deleteButton.image = UIImage(named: "icon_delete_white", in: Bundle.applozic, compatibleWith: nil)
+            deleteButton.image = UIImage(named: "icon_delete_white", in: Bundle.km, compatibleWith: nil)
 
             deleteButton.backgroundColor = UIColor.mainRed()
 
@@ -835,7 +835,7 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
                 self.chatCellAction(indexPath: indexPath, action: contact.block ? .unblock : .block, viewModel: message)
             }
 
-            blockButton.image = UIImage(named: "icon_block", in: Bundle.applozic, compatibleWith: nil)
+            blockButton.image = UIImage(named: "icon_block", in: Bundle.km, compatibleWith: nil)
 
             if contact.block {
                 blockButton.backgroundColor = UIColor(red: 111, green: 115, blue: 247)

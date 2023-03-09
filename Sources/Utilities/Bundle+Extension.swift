@@ -9,7 +9,7 @@
 import Foundation
 
 extension Bundle {
-    static var applozic: Bundle {
+    static var km: Bundle {
         #if SWIFT_PACKAGE
             return Bundle.module
         #else

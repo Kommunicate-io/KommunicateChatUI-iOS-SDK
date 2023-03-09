@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -160,7 +159,7 @@ open class ALKChatBar: UIView, Localizable {
 
     open var plusButton: UIButton = {
         let bt = UIButton(type: .custom)
-        var image = UIImage(named: "icon_more_menu", in: Bundle.applozic, compatibleWith: nil)
+        var image = UIImage(named: "icon_more_menu", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         bt.setImage(image, for: .normal)
         return bt
@@ -187,7 +186,7 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     open var lineImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "line", in: Bundle.applozic, compatibleWith: nil))
+        let imageView = UIImageView(image: UIImage(named: "line", in: Bundle.km, compatibleWith: nil))
         return imageView
     }()
 

@@ -3,7 +3,6 @@
 //  KommunicateChatUI-iOS-SDK-DemoTests
 //
 //  Created by Kirti S on 12/31/21.
-//  Copyright © 2021 Applozic. All rights reserved.
 //
 
 import XCTest

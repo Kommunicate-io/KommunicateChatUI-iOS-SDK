@@ -1,6 +1,6 @@
 //
 //  ALKDateItemCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 30/09/20.
 //

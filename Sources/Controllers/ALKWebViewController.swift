@@ -1,6 +1,6 @@
 //
 //  ALKWebViewController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 12/07/19.
 //

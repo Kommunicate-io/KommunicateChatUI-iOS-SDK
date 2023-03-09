@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -23,35 +22,35 @@ final class ALKMoreBar: UIView {
     fileprivate let emotionButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .mainRed()
-        bt.setImage(UIImage(named: "icon_emoji", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "icon_emoji", in: Bundle.km, compatibleWith: nil), for: .normal)
         return bt
     }()
 
     fileprivate let locationButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .mainRed()
-        bt.setImage(UIImage(named: "icon_send_location", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "icon_send_location", in: Bundle.km, compatibleWith: nil), for: .normal)
         return bt
     }()
 
     fileprivate let attachButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .mainRed()
-        bt.setImage(UIImage(named: "icon_send_file", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "icon_send_file", in: Bundle.km, compatibleWith: nil), for: .normal)
         return bt
     }()
 
     fileprivate let giftButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .mainRed()
-        bt.setImage(UIImage(named: "icon_send_gift", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "icon_send_gift", in: Bundle.km, compatibleWith: nil), for: .normal)
         return bt
     }()
 
     fileprivate let bankButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.tintColor = .mainRed()
-        bt.setImage(UIImage(named: "icon_send_money", in: Bundle.applozic, compatibleWith: nil), for: .normal)
+        bt.setImage(UIImage(named: "icon_send_money", in: Bundle.km, compatibleWith: nil), for: .normal)
         return bt
     }()
 

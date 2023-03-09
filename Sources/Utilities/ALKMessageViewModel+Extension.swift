@@ -1,6 +1,6 @@
 //
 //  ALKMessageViewModel+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 20/05/19.
 //

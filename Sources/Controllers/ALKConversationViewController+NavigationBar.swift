@@ -1,6 +1,6 @@
 //
 //  ALKConversationViewController+NavigationBar.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 22/06/20.
 //

@@ -1,9 +1,9 @@
 //
 //  ALKConversationListViewController.swift
-//
+//  KommunicateChatUI-iOS-SDK
+
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Foundation
@@ -43,7 +43,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     var tableView: UITableView
 
     lazy var rightBarButtonItem: UIBarButtonItem = {
-        let icon = UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil)
+        let icon = UIImage(named: "fill_214", in: Bundle.km, compatibleWith: nil)
         let barButton = UIBarButtonItem(
             image: icon,
             style: .plain,
@@ -249,7 +249,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
         if configuration.isMessageSearchEnabled {
             let barButton = UIBarButtonItem(
-                image: UIImage(named: "search", in: Bundle.applozic, compatibleWith: nil),
+                image: UIImage(named: "search", in: Bundle.km, compatibleWith: nil),
                 style: .plain,
                 target: self, action: #selector(searchTapped)
             )

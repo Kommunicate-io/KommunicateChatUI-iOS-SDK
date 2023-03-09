@@ -1,6 +1,6 @@
 //
 //  SpeechToTextButton.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 01/09/20.
 //
@@ -37,7 +37,7 @@
 
         private let recordButton: UIButton = {
             let button = UIButton(type: .custom)
-            var image = UIImage(named: "microphone", in: Bundle.applozic, compatibleWith: nil)
+            var image = UIImage(named: "microphone", in: Bundle.km, compatibleWith: nil)
             image = image?.imageFlippedForRightToLeftLayoutDirection()
                 .withRenderingMode(.alwaysTemplate)
             button.setImage(image, for: .normal)

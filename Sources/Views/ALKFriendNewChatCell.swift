@@ -3,7 +3,6 @@
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
-//  Copyright © 2017 Applozic. All rights reserved.
 //
 
 import Kingfisher
@@ -84,12 +83,12 @@ class ALKFriendNewChatCell: UITableViewCell {
         lblDisplayName.text = friend.friendProfileName
 
         if friend.friendProfileName == "Create Group" {
-            imgDisplay.image = UIImage(named: "group_profile_picture-1", in: Bundle.applozic, compatibleWith: nil)
+            imgDisplay.image = UIImage(named: "group_profile_picture-1", in: Bundle.km, compatibleWith: nil)
             return
         }
 
         // image
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         if let tempURL: URL = friend.friendDisplayImgURL {
             let resource = ImageResource(downloadURL: tempURL)
             imgDisplay.kf.setImage(with: resource, placeholder: placeHolder)

@@ -1,6 +1,6 @@
 //
 //  MuteConversationViewController.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 15/10/18.
 //

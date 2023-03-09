@@ -1,6 +1,6 @@
 //
 //  ALKReplyMessageView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 07/02/18.
 //
@@ -45,7 +45,7 @@ open class ALKReplyMessageView: UIView, Localizable {
 
     open var closeButton: UIButton = {
         let button = UIButton(frame: CGRect.zero)
-        let closeImage = UIImage(named: "close", in: Bundle.applozic, compatibleWith: nil)
+        let closeImage = UIImage(named: "close", in: Bundle.km, compatibleWith: nil)
         button.setImage(closeImage, for: .normal)
         return button
     }()
@@ -290,9 +290,9 @@ open class ALKReplyMessageView: UIView, Localizable {
                 let fileUtills = ALKFileUtils()
                 return fileUtills.getThumbnail(filePath: path)
             }
-            return UIImage(named: "VIDEO", in: Bundle.applozic, compatibleWith: nil)
+            return UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
         case .location:
-            return UIImage(named: "map_no_data", in: Bundle.applozic, compatibleWith: nil)
+            return UIImage(named: "map_no_data", in: Bundle.km, compatibleWith: nil)
         default:
             return nil
         }

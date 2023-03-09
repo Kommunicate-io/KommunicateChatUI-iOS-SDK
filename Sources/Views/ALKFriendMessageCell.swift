@@ -1,6 +1,6 @@
 //
 //  ALKFriendMessageCell.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 12/06/19.
 //
@@ -289,7 +289,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
             showReplyView(false)
         }
 
-        let placeHolder = UIImage(named: "placeholder", in: Bundle.applozic, compatibleWith: nil)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         if let url = viewModel.avatarURL {
             let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)

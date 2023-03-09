@@ -1,6 +1,5 @@
 //
 //  UIImage+Scale.swift
-//  Applozic
 //
 //  Created by Sunil on 22/05/20.
 //

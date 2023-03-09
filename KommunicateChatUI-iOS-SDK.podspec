@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name = 'KommunicateChatUI-iOS-SDK'
-  s.version = '0.3.1'
+  s.version = '1.0.0'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
   s.summary = 'KommunicateChatUI-iOS-SDK Kit'
   s.homepage = 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK'
-  s.author = { 'Mukesh Thawani' => 'mukesh@applozic.com' }
+  s.author = { 'Sathyan Elangovan' => 'sathyan.elangovan@kommunicate.io' }
 
   s.source = { :git => 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK.git', :tag => s.version }
 

@@ -1,6 +1,6 @@
 //
 //  ALKTemplateMessagesView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 27/12/17.
 //

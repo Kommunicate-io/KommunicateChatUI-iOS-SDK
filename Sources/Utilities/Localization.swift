@@ -1,6 +1,6 @@
 //
 //  Localization.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 04/10/18.
 //
@@ -14,8 +14,8 @@ protocol Localizable {
 
 extension Localizable {
     static func localizedString(forKey: String) -> String {
-        // ApplozicSwift bundle
-        let bundle = Bundle.applozic
+        //  bundle
+        let bundle = Bundle.km
 
         return NSLocalizedString(forKey, tableName: nil, bundle: bundle, value: "", comment: "")
     }

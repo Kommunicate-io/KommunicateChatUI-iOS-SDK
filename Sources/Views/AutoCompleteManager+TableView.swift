@@ -1,6 +1,6 @@
 //
 //  AutoCompleteManager+TableView.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 29/05/19.
 //

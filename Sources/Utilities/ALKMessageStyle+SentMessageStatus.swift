@@ -1,6 +1,6 @@
 //
 //  ALKMessageStyle+SentMessageStatus.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 02/03/20.
 //
@@ -30,7 +30,7 @@ public extension ALKMessageStyle {
                     icons[.read] = .templateImageWithTint(
                         image: UIImage(
                             named: "read_state_2",
-                            in: Bundle.applozic,
+                            in: Bundle.km,
                             compatibleWith: nil
                         ) ?? UIImage(),
                         tintColor: UIColor(netHex: 0x0578FF)
@@ -39,7 +39,7 @@ public extension ALKMessageStyle {
                     icons[.delivered] = .normalImage(
                         image: UIImage(
                             named: "read_state_2",
-                            in: Bundle.applozic,
+                            in: Bundle.km,
                             compatibleWith: nil
                         ) ?? UIImage()
                     )
@@ -47,7 +47,7 @@ public extension ALKMessageStyle {
                     icons[.sent] = .normalImage(
                         image: UIImage(
                             named: "read_state_1",
-                            in: Bundle.applozic,
+                            in: Bundle.km,
                             compatibleWith: nil
                         ) ?? UIImage()
                     )
@@ -55,7 +55,7 @@ public extension ALKMessageStyle {
                     icons[.pending] = .templateImageWithTint(
                         image: UIImage(
                             named: "seen_state_0",
-                            in: Bundle.applozic,
+                            in: Bundle.km,
                             compatibleWith: nil
                         ) ?? UIImage(),
                         tintColor: .red

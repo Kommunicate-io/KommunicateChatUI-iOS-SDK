@@ -1,6 +1,6 @@
 //
 //  ALKImageView+Extension.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 10/10/19.
 //
@@ -29,7 +29,7 @@ extension ALKImageView {
         // image would be faster and we already have both the images.
         if isReceiverSide { imageTitle = showHangOverImage ? "chat_bubble_grey_hover" : "chat_bubble_grey" }
 
-        guard let bubbleImage = UIImage(named: imageTitle, in: Bundle.applozic, compatibleWith: nil)
+        guard let bubbleImage = UIImage(named: imageTitle, in: Bundle.km, compatibleWith: nil)
         else { return nil }
 
         // This API is from the Kingfisher so instead of directly using

@@ -1,6 +1,6 @@
 //
 //  ALKChannelDetailViewConfiguration.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Sunil on 14/08/19.
 //
@@ -37,10 +37,10 @@ public struct ALKChannelDetailViewConfiguration {
     )
 
     /// Default group icon
-    public var defaultGroupIcon = UIImage(named: "group_profile_picture", in: Bundle.applozic, compatibleWith: nil)
+    public var defaultGroupIcon = UIImage(named: "group_profile_picture", in: Bundle.km, compatibleWith: nil)
 
     /// Add member icon
-    public var addMemberIcon = UIImage(named: "icon_add_people-1", in: Bundle.applozic, compatibleWith: nil)
+    public var addMemberIcon = UIImage(named: "icon_add_people-1", in: Bundle.km, compatibleWith: nil)
 
     /// Add memberName text style
     public var memberName = Style(

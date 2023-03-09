@@ -1,6 +1,6 @@
 //
 //  ALKConversationViewController+UIImagePicker.swift
-//  ApplozicSwift
+//  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 08/11/19.
 //
