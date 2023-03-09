@@ -1,7 +1,9 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-
+## [1.0.0] - 2023-03-09
+- Fixed conversationClient Id setting issue
+- Update packages 
 ## [0.3.1] - 2023-02-17
 - [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
 - [CM-1278] Added Suppor rating button on conversation screen
