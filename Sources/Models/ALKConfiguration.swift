@@ -187,7 +187,7 @@ public struct ALKConfiguration {
     /// If true, rate conversation button will be visible on ConversationVC, By default it is false.
     public var rateConversationMenuOption = false
     
-    /// if false then chat  will be popped up on helpcenter(FAQ) page. by default it is true.
+    /// if false then chat  will be popped up on helpcenter(FAQ) page, By default it is true.
     public var hideChatInHelpcenter: Bool = true
 
     /// If true, contact share option in chatbar will be hidden.
