@@ -2120,7 +2120,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                        })
                    ]
                 }
-
                 let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
                 rightBarButtonItems.append(morebutton)
             } else {
