@@ -24,7 +24,6 @@ Pod::Spec.new do |s|
     complete.dependency 'Kingfisher', '~> 7.0.0'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
     complete.dependency 'ZendeskChatProvidersSDK'
-    complete.dependency 'ZendeskChatSDK'
     complete.dependency 'KommunicateCore-iOS-SDK', '~> 1.0.7'
     complete.dependency 'KommunicateChatUI-iOS-SDK/RichMessageKit'
   end
