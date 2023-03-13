@@ -40,6 +40,7 @@ open class ALKChatBar: UIView, Localizable {
         case more(UIButton)
         case cameraButtonClicked(UIButton)
         case showDocumentPicker
+        case languageSelection
     }
 
     public var action: ((ActionType) -> Void)?
@@ -124,6 +125,14 @@ open class ALKChatBar: UIView, Localizable {
         view.changePlaceHolderDirection()
         view.setBackgroundColor(.color(.none))
         return view
+    }()
+    // language selection Button On left of the Chat Bar
+    open var languageSelectionButton: UIButton = {
+        let button = UIButton(type: .custom)
+        var image = UIImage(named: "ic_language", in: Bundle.km, compatibleWith: nil)
+        image = image?.imageFlippedForRightToLeftLayoutDirection()
+        button.setImage(image, for: .normal)
+        return button
     }()
 
     #if SPEECH_REC
@@ -287,6 +296,8 @@ open class ALKChatBar: UIView, Localizable {
             action?(.showLocation)
         case documentButton:
             action?(.showDocumentPicker)
+        case languageSelectionButton:
+            print("Pakka101 language selections is pressed")
         default: break
         }
     }
@@ -330,6 +341,7 @@ open class ALKChatBar: UIView, Localizable {
         locationButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         documentButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        languageSelectionButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
         let buttonTintColor = appSettingsUserDefaults.getAttachmentIconsTintColor()
         setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons, tintColor: buttonTintColor)
@@ -471,6 +483,7 @@ open class ALKChatBar: UIView, Localizable {
             placeHolder,
             soundRec,
             poweredByMessageTextView,
+            languageSelectionButton,
         ])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
@@ -522,10 +535,14 @@ open class ALKChatBar: UIView, Localizable {
         } else {
             sendButton.isHidden = true
         }
-
+        
+        languageSelectionButton.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 3).isActive = true
+        languageSelectionButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        languageSelectionButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        languageSelectionButton.topAnchor.constraint(equalTo: micButton.topAnchor).isActive = true
         textView.topAnchor.constraint(equalTo: poweredByMessageTextView.bottomAnchor, constant: 0).isActive = true
         textView.bottomAnchor.constraint(equalTo: bottomGrayView.topAnchor, constant: 0).isActive = true
-        textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3).isActive = true
+        textView.leadingAnchor.constraint(equalTo: languageSelectionButton.trailingAnchor, constant: 3).isActive = true
         poweredByMessageTextView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         poweredByMessageTextView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         poweredByMessageTextView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.poweredByMessageHeight.rawValue).isActive = true

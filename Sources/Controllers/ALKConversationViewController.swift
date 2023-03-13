@@ -903,10 +903,17 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 button.isUserInteractionEnabled = true
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
+            case .languageSelection:
+                weakSelf.showLanguageSelection()
+                
             default:
                 print("Not available")
             }
         }
+    }
+    
+    private func showLanguageSelection() {
+            
     }
 
     private func setupProfanityFilter() {
@@ -2500,3 +2507,4 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
         }
     }
 }
+
