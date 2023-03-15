@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 @available(iOSApplicationExtension, unavailable, message: "UIApplication.shared is unavailable in application extensions")
 public extension UIApplication {

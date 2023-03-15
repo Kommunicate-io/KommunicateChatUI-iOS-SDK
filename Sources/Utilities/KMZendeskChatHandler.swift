@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ChatSDK
 import ChatProvidersSDK
 import KommunicateCore_iOS_SDK
 
