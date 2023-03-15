@@ -903,32 +903,33 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 button.isUserInteractionEnabled = true
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
-            case let .languageSelection(button):
-                weakSelf.showLanguageSelection(micButton: button)
-                
+            case .languageSelection:
+                weakSelf.showLanguageSelection()
             default:
                 print("Not available")
             }
         }
     }
     
-    private func showLanguageSelection(micButton: SpeechToTextButton) {
-       
-        print("showing language ")
-        let controller = ALKMultipleLanguageSelectionViewController(config: configuration)
-        controller.closeButtonTapped = {[weak self] in
-            controller.dismiss(animated: true)
-        }
-        controller.submitButtonTapped = { languageCode in
-            print("pakka101 Selected Language Code \(languageCode)")
-            if !languageCode.isEmpty {
-                micButton.updateLanguage(code: languageCode)
+    private func showLanguageSelection() {
+        #if SPEECH_REC
+            let controller = ALKMultipleLanguageSelectionViewController(config: configuration)
+            controller.closeButtonTapped = {[weak self] in
+                controller.dismiss(animated: true)
             }
-            controller.dismiss(animated: true)
-        }
-        present(controller, animated: true, completion: nil)
-        
+            controller.languageSelected = { [weak self]languageCode in
+                guard let weakSelf = self, !languageCode.isEmpty else {
+                    return
+                }
+                weakSelf.chatBar.micButton .updateLanguage(code: languageCode)
+                self.addLanguageToMetadata(language: languageCode)
+                controller.dismiss(animated: true)
+            }
+            present(controller, animated: true, completion: nil)
+        #endif
     }
+    
+    open func addLanguageToMetadata(language:String){}
 
     private func setupProfanityFilter() {
         func makeProfanityFilter(

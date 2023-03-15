@@ -18,7 +18,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
     var languages = ["one", "two", "three", "four"]
     
     
-    public var submitButtonTapped: ((String) -> Void)?
+    public var languageSelected: ((String) -> Void)?
     public var closeButtonTapped: (() -> Void)?
 
     var titleLabel: UILabel = {
@@ -92,8 +92,6 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-
-    
     func setupViews() {
       
         view.addViewsForAutolayout(views: [titleLabel,closeButton,tableView])
@@ -149,7 +147,7 @@ extension ALKMultipleLanguageSelectionViewController: UITableViewDelegate, UITab
         let selectedLanguage = languages[indexPath.row]
         let selectedLanguageCode = configuration.languagesForSpeechToText.getKey(forValue: selectedLanguage)
         ALApplozicSettings.setSelectedLanguageForSpeechToText(selectedLanguageCode)
-        submitButtonTapped?(selectedLanguageCode ?? "")
+        languageSelected?(selectedLanguageCode ?? "")
     }
     
     private func getLanguageCode(language: String) -> String? {

@@ -40,7 +40,7 @@ open class ALKChatBar: UIView, Localizable {
         case more(UIButton)
         case cameraButtonClicked(UIButton)
         case showDocumentPicker
-        case languageSelection(SpeechToTextButton)
+        case languageSelection
     }
 
     public var action: ((ActionType) -> Void)?
@@ -304,10 +304,9 @@ open class ALKChatBar: UIView, Localizable {
             action?(.showLocation)
         case documentButton:
             action?(.showDocumentPicker)
+            
         case languageSelectionButton:
-            action?(.languageSelection(micButton))
-            micButton.updateLanguage(code: "ms_MY")
-            print("Pakka101 language selections is pressed. Changing language to ms_MY")
+            action?(.languageSelection)
         default: break
         }
     }
