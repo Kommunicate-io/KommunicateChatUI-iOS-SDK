@@ -2,15 +2,15 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [Unreleased]
+- [CM-1365] Added Customization for hiding chat widget on helpcenter
+
 ## [1.0.1] - 2023-03-10
 - Fixed build issue when sdk integrated thorugh SPM
+
 ## [1.0.0] - 2023-03-09
 - Fixed conversationClient Id setting issue
 - Updated packages 
-## [0.3.1] - 2023-02-17
-- [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
-- [CM-1278] Added Suppor rating button on conversation screen
-- [CM-1325] Added Support for metadata for form action messages
 
 ## [0.3.1] - 2023-02-17
 - [CM-1188] Fixed `attempt to insert section 1 but there are only 1 sections after the update` crash
