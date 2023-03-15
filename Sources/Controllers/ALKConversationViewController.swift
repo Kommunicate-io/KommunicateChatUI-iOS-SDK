@@ -922,7 +922,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     return
                 }
                 weakSelf.chatBar.micButton .updateLanguage(code: languageCode)
-                self.addLanguageToMetadata(language: languageCode)
+                weakSelf.addLanguageToMetadata(language: languageCode)
                 controller.dismiss(animated: true)
             }
             present(controller, animated: true, completion: nil)
