@@ -903,8 +903,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 button.isUserInteractionEnabled = true
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
-            case .languageSelection:
-                weakSelf.showLanguageSelection()
+            case let .languageSelection(button):
+                weakSelf.showLanguageSelection(micButton: button)
                 
             default:
                 print("Not available")
@@ -912,8 +912,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
     
-    private func showLanguageSelection() {
-            
+    private func showLanguageSelection(micButton: SpeechToTextButton) {
+       
+        print("showing language ")
+        let controller = ALKMultipleLanguageSelectionViewController(config: configuration)
+        controller.closeButtonTapped = {[weak self] in
+            controller.dismiss(animated: true)
+        }
+        controller.submitButtonTapped = { languageCode in
+            print("pakka101 Selected Language Code \(languageCode)")
+            if !languageCode.isEmpty {
+                micButton.updateLanguage(code: languageCode)
+            }
+            controller.dismiss(animated: true)
+        }
+        present(controller, animated: true, completion: nil)
+        
     }
 
     private func setupProfanityFilter() {

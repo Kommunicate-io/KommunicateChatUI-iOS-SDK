@@ -8,8 +8,10 @@
 #if SPEECH_REC
     import Foundation
     import Speech
+    import KommunicateCore_iOS_SDK
 
     open class SpeechToTextButton: UIButton, Localizable {
+        
         public enum ALKSoundRecorderState {
             case recording
             case none
@@ -21,6 +23,11 @@
                 setNeedsLayout()
                 layoutIfNeeded()
             }
+        }
+        
+        func updateLanguage(code: String) {
+            guard !code.isEmpty else { return }
+            speechRecognizer = SFSpeechRecognizer(locale:Locale(identifier: code))
         }
 
         override open var intrinsicContentSize: CGSize {
@@ -34,6 +41,7 @@
         weak var delegate: ALKAudioRecorderProtocol?
         let textView: UITextView
         let localizedStringFileName: String
+        let config: ALKConfiguration
 
         private let recordButton: UIButton = {
             let button = UIButton(type: .custom)
@@ -45,6 +53,8 @@
         }()
 
         private lazy var speechRecognizer = SFSpeechRecognizer()
+       
+        
         private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
         private var recognitionTask: SFSpeechRecognitionTask?
         private let audioEngine = AVAudioEngine()
@@ -62,9 +72,10 @@
             return styledText
         }()
 
-        public init(textView: UITextView, localizedStringFileName: String) {
+        public init(textView: UITextView, localizedStringFileName: String, configuration: ALKConfiguration) {
             self.textView = textView
             self.localizedStringFileName = localizedStringFileName
+            self.config = configuration
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             setupRecordButton()
@@ -92,6 +103,9 @@
             longPress.allowableMovement = 10
             longPress.minimumPressDuration = 0.2
             recordButton.addGestureRecognizer(longPress)
+            if let existingCode = ALApplozicSettings.getSelectedLanguageForSpeechToText() {
+                updateLanguage(code: existingCode)
+            }
         }
 
         private func checkSpeechRecognizerPermission(completion: @escaping (Bool) -> Void) {

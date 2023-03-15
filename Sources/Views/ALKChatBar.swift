@@ -40,7 +40,7 @@ open class ALKChatBar: UIView, Localizable {
         case more(UIButton)
         case cameraButtonClicked(UIButton)
         case showDocumentPicker
-        case languageSelection
+        case languageSelection(SpeechToTextButton)
     }
 
     public var action: ((ActionType) -> Void)?
@@ -126,12 +126,19 @@ open class ALKChatBar: UIView, Localizable {
         view.setBackgroundColor(.color(.none))
         return view
     }()
-    // language selection Button On left of the Chat Bar
+    
+    // For Speech To Text
     open var languageSelectionButton: UIButton = {
         let button = UIButton(type: .custom)
         var image = UIImage(named: "ic_language", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
+        let tintColor = ALKAppSettingsUserDefaults().getAttachmentIconsTintColor()
+        if tintColor != nil {
+            image = image?.withRenderingMode(.alwaysTemplate)
+            button.imageView?.tintColor = tintColor
+        }
         button.setImage(image, for: .normal)
+        button.isHidden = true
         return button
     }()
 
@@ -139,7 +146,8 @@ open class ALKChatBar: UIView, Localizable {
         open lazy var micButton: SpeechToTextButton = {
             let button = SpeechToTextButton(
                 textView: textView,
-                localizedStringFileName: configuration.localizedStringFileName
+                localizedStringFileName: configuration.localizedStringFileName,
+                configuration: configuration
             )
             button.layer.masksToBounds = true
             button.accessibilityIdentifier = "MicButton"
@@ -297,7 +305,9 @@ open class ALKChatBar: UIView, Localizable {
         case documentButton:
             action?(.showDocumentPicker)
         case languageSelectionButton:
-            print("Pakka101 language selections is pressed")
+            action?(.languageSelection(micButton))
+            micButton.updateLanguage(code: "ms_MY")
+            print("Pakka101 language selections is pressed. Changing language to ms_MY")
         default: break
         }
     }
@@ -536,13 +546,21 @@ open class ALKChatBar: UIView, Localizable {
             sendButton.isHidden = true
         }
         
-        languageSelectionButton.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 3).isActive = true
-        languageSelectionButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        languageSelectionButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        languageSelectionButton.topAnchor.constraint(equalTo: micButton.topAnchor).isActive = true
+       
+        
+        if !configuration.languagesForSpeechToText.isEmpty {
+            languageSelectionButton.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 5).isActive = true
+            languageSelectionButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+            languageSelectionButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+            languageSelectionButton.topAnchor.constraint(equalTo: micButton.topAnchor).isActive = true
+            languageSelectionButton.isHidden = false
+            textView.leadingAnchor.constraint(equalTo: languageSelectionButton.trailingAnchor, constant: 3).isActive = true
+        } else {
+            languageSelectionButton.isHidden = true
+            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3).isActive = true
+        }
         textView.topAnchor.constraint(equalTo: poweredByMessageTextView.bottomAnchor, constant: 0).isActive = true
         textView.bottomAnchor.constraint(equalTo: bottomGrayView.topAnchor, constant: 0).isActive = true
-        textView.leadingAnchor.constraint(equalTo: languageSelectionButton.trailingAnchor, constant: 3).isActive = true
         poweredByMessageTextView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         poweredByMessageTextView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         poweredByMessageTextView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.poweredByMessageHeight.rawValue).isActive = true
