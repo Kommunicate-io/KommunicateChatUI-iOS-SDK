@@ -1,7 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-
+## [Unreleased]
+- Added Support for conversation Info View on conversation Screen
 ## [1.0.1] - 2023-03-10
 - Fixed build issue when sdk integrated thorugh SPM
 ## [1.0.0] - 2023-03-09
