@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'KommunicateChatUI-iOS-SDK'
-  s.version = '1.0.1'
+  s.version = '1.0.2'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
   s.summary = 'KommunicateChatUI-iOS-SDK Kit'
   s.homepage = 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK'
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
     complete.dependency 'Kingfisher', '~> 7.0.0'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
     complete.dependency 'ZendeskChatProvidersSDK',  '~> 3.0.0'
-    complete.dependency 'KommunicateCore-iOS-SDK', '~> 1.0.7'
+    complete.dependency 'KommunicateCore-iOS-SDK', '~> 1.0.8'
     complete.dependency 'KommunicateChatUI-iOS-SDK/RichMessageKit'
   end
 end
