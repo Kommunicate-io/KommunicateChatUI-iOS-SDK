@@ -567,6 +567,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let conversationInfoModel = configuration.conversationInfoModel else { return }
         conversationInfoView.configureViewWith(model: conversationInfoModel)
     }
+    
+    @objc func conversationInfoViewTap(_: UITapGestureRecognizer) {
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.conversationInfoClick, data:  nil)
+    }
 
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
         contextTitleView.isHidden = !show
@@ -608,9 +612,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         conversationInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         conversationInfoView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         conversationInfoView.backgroundColor = configuration.conversationInfoModel?.backgroundColor
+        
         if configuration.conversationInfoModel == nil {
             conversationInfoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
         }
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector(conversationInfoViewTap(_:)))
+        view.addGestureRecognizer(gesture)
         
         templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
         templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
