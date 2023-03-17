@@ -459,7 +459,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
-        chatBar.stopRecording()
+        chatBar.stopRecording(hide: true)
         if individualLaunch {
             if alMqttConversationService != nil {
                 alMqttConversationService.unsubscribeToConversation()
@@ -903,11 +903,33 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 button.isUserInteractionEnabled = true
             case .showDocumentPicker:
                 weakSelf.documentManager.showPicker(from: weakSelf)
+            case .languageSelection:
+                weakSelf.showLanguageSelection()
             default:
                 print("Not available")
             }
         }
     }
+    
+    private func showLanguageSelection() {
+        #if SPEECH_REC
+            let controller = ALKMultipleLanguageSelectionViewController(config: configuration)
+            controller.closeButtonTapped = {[weak self] in
+                controller.dismiss(animated: true)
+            }
+            controller.languageSelected = { [weak self]languageCode in
+                guard let weakSelf = self, !languageCode.isEmpty else {
+                    return
+                }
+                weakSelf.chatBar.micButton .updateLanguage(code: languageCode)
+                weakSelf.addLanguageToMetadata(language: languageCode)
+                controller.dismiss(animated: true)
+            }
+            present(controller, animated: true, completion: nil)
+        #endif
+    }
+    
+    open func addLanguageToMetadata(language:String){}
 
     private func setupProfanityFilter() {
         func makeProfanityFilter(
