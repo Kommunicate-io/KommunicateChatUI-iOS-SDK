@@ -459,7 +459,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
-        chatBar.stopRecording()
+        chatBar.stopRecording(hide: true)
         if individualLaunch {
             if alMqttConversationService != nil {
                 alMqttConversationService.unsubscribeToConversation()

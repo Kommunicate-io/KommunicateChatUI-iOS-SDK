@@ -646,9 +646,9 @@ open class ALKChatBar: UIView, Localizable {
         }
     }
 
-    func stopRecording() {
+    func stopRecording(hide: Bool = false) {
         #if SPEECH_REC
-            toggleButtonInChatBar(hide: true)
+            toggleButtonInChatBar(hide: hide)
         #else
             soundRec.userDidStopRecording()
             micButton.isSelected = false
