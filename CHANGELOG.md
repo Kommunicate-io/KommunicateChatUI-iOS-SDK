@@ -3,7 +3,8 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 ## [Unreleased]
-- [CM-1365] Added Customization for hiding chat widget on helpcenter
+- [CM-1355] Added Customization for hiding chat widget on helpcenter
+- [CM-1348] Added Support for Multiple languages for Speech To Text
 
 ## [1.0.1] - 2023-03-10
 - Fixed build issue when sdk integrated thorugh SPM
