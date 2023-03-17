@@ -61,6 +61,8 @@ public class ALKCustomEventHandler {
                 for message in messages {
                     delegate.messageReceived(message: message)
                 }
+        case .conversationInfoClick:
+            delegate.conversationInfoClicked()
         }
     }
 
@@ -94,7 +96,7 @@ public class ALKCustomEventHandler {
     }
     
     /**
-     This method is to unsubscribe events 
+     This method is to unsubscribe events
      */
     public func unsubscribeEvents() {
         subscribedEvents.removeAll()

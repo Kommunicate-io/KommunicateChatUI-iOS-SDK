@@ -7,16 +7,16 @@
 
 import Foundation
 
-class KMConversationInfoViewModel {
+public class KMConversationInfoViewModel {
     
     var infoContent: String
     var leadingImage: UIImage
     var trailingImage: UIImage
     var backgroundColor: UIColor
     var contentColor: UIColor
-    var contentFont: Font
+    var contentFont: UIFont
     
-    init(infoContent: String, leadingImage: UIImage, trailingImage: UIImage, backgroundColor: UIColor, contentColor: UIColor, contentFont: Font) {
+   public init(infoContent: String, leadingImage: UIImage, trailingImage: UIImage, backgroundColor: UIColor, contentColor: UIColor, contentFont: UIFont) {
         self.infoContent = infoContent
         self.leadingImage = leadingImage
         self.trailingImage = trailingImage
