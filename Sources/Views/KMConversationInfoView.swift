@@ -13,8 +13,6 @@ open class KMConversationInfoView: UIView {
     
     private let leadingImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
-        var backImage = UIImage(named: "file")
-        imageView.image = backImage
         return imageView
     }()
 
