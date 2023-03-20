@@ -14,7 +14,7 @@ public class KMConversationInfoViewModel {
     var trailingImage: UIImage
     var backgroundColor: UIColor
     var contentColor: UIColor
-    var contentFont: UIFont
+    var contentFont: UIFont?
     
    public init(infoContent: String, leadingImage: UIImage, trailingImage: UIImage, backgroundColor: UIColor, contentColor: UIColor, contentFont: UIFont) {
         self.infoContent = infoContent
