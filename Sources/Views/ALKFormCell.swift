@@ -163,6 +163,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         itemListView.register(ALKFormPasswordItemCell.self)
         itemListView.register(ALKFormSingleSelectItemCell.self)
         itemListView.register(ALKFormMultiSelectItemCell.self)
+        itemListView.register(KMFormMultiSelectButtonItemCell.self)
         itemListView.register(ALKFormDateItemCell.self)
         itemListView.register(ALKFormTimeItemCell.self)
         itemListView.register(ALKFormDateTimeItemCell.self)
@@ -266,38 +267,73 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             guard let multiselectItem = item as? FormViewModelMultiselectItem else {
                 return UITableViewCell()
             }
-            let cell: ALKFormMultiSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-            cell.cellSelected = {
-                if let formDataSubmit = self.formData {
-                    if var array = formDataSubmit.multiSelectFields[indexPath.section] {
-                        if array.contains(indexPath.row) {
-                            array.remove(object: indexPath.row)
-                        } else {
-                            array.append(indexPath.row)
-                        }
+            if KMMultipleSelectionConfiguration.enableMultipleSelectionOnCheckbox {
+                itemListView.separatorStyle = .none
+                let cell: KMFormMultiSelectButtonItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.cellSelected = {
+                   if let formDataSubmit = self.formData {
+                       if var array = formDataSubmit.multiSelectFields[indexPath.section] {
+                           if array.contains(indexPath.row) {
+                               array.remove(object: indexPath.row)
+                           } else {
+                               array.append(indexPath.row)
+                           }
 
-                        if array.isEmpty {
-                            formDataSubmit.multiSelectFields.removeValue(forKey: indexPath.section)
-                        } else {
-                            formDataSubmit.multiSelectFields[indexPath.section] = array
-                        }
+                           if array.isEmpty {
+                               formDataSubmit.multiSelectFields.removeValue(forKey: indexPath.section)
+                           } else {
+                               formDataSubmit.multiSelectFields[indexPath.section] = array
+                           }
+                       } else {
+                           formDataSubmit.multiSelectFields[indexPath.section] = [indexPath.row]
+                       }
+                       self.formData = formDataSubmit
+                   }
+               }
+                if let formDataSubmit = formData,
+                       let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
+                    {
+                    
+                    cell.update(item: multiselectItem.options[indexPath.row],isChecked : true)
+
                     } else {
-                        formDataSubmit.multiSelectFields[indexPath.section] = [indexPath.row]
-                    }
-                    self.formData = formDataSubmit
+                        cell.update(item: multiselectItem.options[indexPath.row])
                 }
-            }
-
-            if let formDataSubmit = formData,
-               let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
-            {
-                cell.accessoryType = .checkmark
+                return cell
             } else {
-                cell.accessoryType = .none
+                let cell: ALKFormMultiSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                itemListView.separatorStyle = .singleLine
+                cell.cellSelected = {
+                    if let formDataSubmit = self.formData {
+                        if var array = formDataSubmit.multiSelectFields[indexPath.section] {
+                            if array.contains(indexPath.row) {
+                                array.remove(object: indexPath.row)
+                            } else {
+                                array.append(indexPath.row)
+                            }
+    
+                            if array.isEmpty {
+                                formDataSubmit.multiSelectFields.removeValue(forKey: indexPath.section)
+                            } else {
+                                formDataSubmit.multiSelectFields[indexPath.section] = array
+                            }
+                        } else {
+                            formDataSubmit.multiSelectFields[indexPath.section] = [indexPath.row]
+                        }
+                        self.formData = formDataSubmit
+                    }
+                }
+    
+                if let formDataSubmit = formData,
+                   let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
+                {
+                    cell.accessoryType = .checkmark
+                } else {
+                    cell.accessoryType = .none
+                }
+                cell.item = multiselectItem.options[indexPath.row]
+                return cell
             }
-            cell.item = multiselectItem.options[indexPath.row]
-            return cell
-
         case .date:
             guard let dateSelectItem = item as? FormViewModelDateItem else {
                 return UITableViewCell()
