@@ -48,22 +48,17 @@ public class KMMultiSelectButton: UIView {
     var maxWidth: CGFloat = 0.0
     var config =  Config()
     var isButtonselected = false
-    lazy var image = KMMultipleSelectionConfiguration.shared.image
     
     private let label = UILabel()
-
-   // private let imageView = UIImageView()
     
-    var imageView: UIImageView = {
+    lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        let image = UIImage(named: "camera", in: Bundle.km, compatibleWith: nil)
-        imageView.image = image?.withRenderingMode(.alwaysTemplate)
         imageView.clipsToBounds = true
         imageView.isHidden = true
         return imageView
     }()
+    
     // MARK: Initializers
-
     public init()
     {
         super.init(frame: .zero)
@@ -142,19 +137,14 @@ public class KMMultiSelectButton: UIView {
     }
 
     // MARK: Private methods
-
     @objc private func tapped(_: UIButton) {
         let buttonConfiguration = KMMultipleSelectionConfiguration.shared
         if !isButtonselected {
             self.label.font = buttonConfiguration.selectedFont
             self.backgroundColor = buttonConfiguration.selectedBackgroundColor
-            //self.imageView.image = buttonConfiguration.image.withRenderingMode(.automatic)
-            if #available(iOS 13.0, *) {
-                self.imageView.image = UIImage.checkmark
-            } else {
-                // Fallback on earlier versions
+            if let image = buttonConfiguration.image {
+                self.imageView.image = image
             }
-
             self.imageView.isHidden = false
         } else {
             self.imageView.isHidden = true
@@ -172,6 +162,7 @@ public class KMMultiSelectButton: UIView {
         tapGesture.numberOfTapsRequired = 1
         addGestureRecognizer(tapGesture)
     }
+    
     private func setupView() {
         let style = KMMultipleSelectionConfiguration.shared
         backgroundColor = style.backgroundColor
@@ -186,13 +177,12 @@ public class KMMultiSelectButton: UIView {
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
-        if isButtonselected {
-            imageView.isHidden = false
+        if isButtonselected,let image = KMMultipleSelectionConfiguration.shared.image  {
+            self.imageView.image = image
+            self.imageView.isHidden = false
         } else {
             imageView.isHidden = true
         }
-        
-        //self.layoutSubviews()
         frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
     }
 
@@ -200,15 +190,15 @@ public class KMMultiSelectButton: UIView {
         addViewsForAutolayout(views: [label, imageView])
         
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo:leadingAnchor, constant: 15),
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            imageView.widthAnchor.constraint(equalToConstant: 25),
-            imageView.heightAnchor.constraint(equalToConstant: 25),
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            imageView.leadingAnchor.constraint(equalTo:leadingAnchor, constant: 10),
+            imageView.widthAnchor.constraint(equalToConstant: 20),
+            imageView.heightAnchor.constraint(equalToConstant: 20),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 5),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor)
+            label.topAnchor.constraint(equalTo: topAnchor,constant: 15),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -15),
+
         ])
-        
     }
 }

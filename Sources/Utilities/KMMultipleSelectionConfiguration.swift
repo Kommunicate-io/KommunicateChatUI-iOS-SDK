@@ -15,7 +15,7 @@ public struct KMMultipleSelectionConfiguration {
     /// Font for text inside view.
     public var normalfont: UIFont = Font.normal(size: 16).font()
     
-    public var image : UIImage = UIImage(named: "camera") ?? UIImage()
+    public var image : UIImage? =  UIImage(named: "checked", in: Bundle.km, compatibleWith: nil)
     //UIImage.checkmark
     //UIImage(named: "camera", in: Bundle.km, compatibleWith: nil)!
     
