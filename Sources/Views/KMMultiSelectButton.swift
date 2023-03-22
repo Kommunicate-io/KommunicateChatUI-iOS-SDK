@@ -8,11 +8,9 @@
 import Foundation
 import UIKit
 
-/// A curved button with text and optional image.
-///
-/// To change the spacing and other properties of view, change parameters of #CurvedImageButton.Config
+/// A curved button with text and  image.
 public class KMMultiSelectButton: UIView {
-    /// Configuration to change UI properties of `CurvedImageButton`
+    /// Configuration to change UI properties of `KMMultiSelectButton`
     public struct Config {
         /// Padding of view.
         public var padding = Padding(left: 14, right: 14, top: 8, bottom: 8)
@@ -48,36 +46,38 @@ public class KMMultiSelectButton: UIView {
 
     var title: String = ""
     var maxWidth: CGFloat = 0.0
-    var image: UIImage? = UIImage(named: "send", in: Bundle.km, compatibleWith: nil)
     var config =  Config()
-    var selected = false
-
+    var isButtonselected = false
+    lazy var image = KMMultipleSelectionConfiguration.shared.image
+    
     private let label = UILabel()
 
-    private let imageView = UIImageView()
+   // private let imageView = UIImageView()
+    
+    var imageView: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "camera", in: Bundle.km, compatibleWith: nil)
+        imageView.image = image?.withRenderingMode(.alwaysTemplate)
+        imageView.clipsToBounds = true
+        imageView.isHidden = true
+        return imageView
+    }()
     // MARK: Initializers
 
-    /// Initializer for link button.
-    ///
-    /// - Parameters:
-    ///   - title: Text to be shown in the button.
-    ///   - image: Optional. If used, an image of size CurvedImageButton.Config.Image will be shown to the right of text.
-    ///   - config: `CurvedImageButton.Config`. It can be used to customize UI of button.
-    ///   - maxWidth: Maximum width of button so that it can render in multiple lines of text is large.
     public init()
     {
         super.init(frame: .zero)
     }
     
-    func update(title: String,image: UIImage? = nil,config: Config = Config(),maxWidth: CGFloat = UIScreen.main.bounds.width, isSelected: Bool) {
+    ///
+    /// - Parameters:
+    ///   - title: Text to be shown in the button.
+    ///   - image: Optional. If used, an image of size KMMultiSelectButton.Config.Image will be shown to the right of text.
+    ///   - config: `CurvedImageButton.Config`. It can be used to customize UI of button.
+    ///   - maxWidth: Maximum width of button so that it can render in multiple lines of text is large.
+    func update(title: String,maxWidth: CGFloat = UIScreen.main.bounds.width, isSelected: Bool) {
         self.title = title
-        self.image = image
-        self.config = config
-        self.selected = isSelected
-        if image == nil {
-            self.config.textImageSpace = 0
-            self.config.imageSize = CGSize(width: 0, height: 0)
-        }
+        self.isButtonselected = isSelected
         setupView()
         setupConstraint()
         setupAction()
@@ -97,7 +97,7 @@ public class KMMultiSelectButton: UIView {
         let titleWidth =
             title
                 .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                          font: CurvedImageButton.QuickReplyButtonStyle.shared.font)
+                                          font: KMMultipleSelectionConfiguration.shared.normalfont)
                 .width
                 .rounded(.up)
         let buttonWidth = titleWidth + config.spaceWithoutText
@@ -111,7 +111,7 @@ public class KMMultiSelectButton: UIView {
         let titleHeight =
             title
                 .rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                          font: CurvedImageButton.QuickReplyButtonStyle.shared.font)
+                                          font: KMMultipleSelectionConfiguration.shared.normalfont)
                 .height
                 .rounded(.up)
         let buttonHeight = titleHeight + config.padding.top + config.padding.bottom
@@ -134,7 +134,7 @@ public class KMMultiSelectButton: UIView {
             config.imageSize = CGSize(width: 0, height: 0)
         }
         let textSize = text.rectWithConstrainedWidth(maxWidth - config.spaceWithoutText,
-                                                     font: CurvedImageButton.QuickReplyButtonStyle.shared.font)
+                                                     font: KMMultipleSelectionConfiguration.shared.normalfont)
         let labelWidth = textSize.width.rounded(.up)
         let labelHeight = textSize.height.rounded(.up) + config.padding.top + config.padding.bottom
         return CGSize(width: max(labelWidth + config.spaceWithoutText, config.minWidth),
@@ -144,23 +144,25 @@ public class KMMultiSelectButton: UIView {
     // MARK: Private methods
 
     @objc private func tapped(_: UIButton) {
-        if !selected {
-            self.imageView.isHidden = false
-            self.label.font = Font.bold(size: 16).font()
-
+        let buttonConfiguration = KMMultipleSelectionConfiguration.shared
+        if !isButtonselected {
+            self.label.font = buttonConfiguration.selectedFont
+            self.backgroundColor = buttonConfiguration.selectedBackgroundColor
+            //self.imageView.image = buttonConfiguration.image.withRenderingMode(.automatic)
             if #available(iOS 13.0, *) {
-                self.imageView.image = UIImage.add
+                self.imageView.image = UIImage.checkmark
+            } else {
+                // Fallback on earlier versions
             }
-            self.backgroundColor = UIColor(hexString: "D4F3F8")
+
+            self.imageView.isHidden = false
         } else {
             self.imageView.isHidden = true
-            self.backgroundColor = UIColor.clear
-            self.label.font = Font.normal(size: 16).font()
-
-            
+            self.backgroundColor = buttonConfiguration.backgroundColor
+            self.label.font = buttonConfiguration.normalfont
         }
         self.layoutSubviews()
-        selected = !selected
+        isButtonselected = !isButtonselected
         guard let delegate = delegate else { return }
         delegate.didTap(index: index, title: title)
     }
@@ -170,36 +172,27 @@ public class KMMultiSelectButton: UIView {
         tapGesture.numberOfTapsRequired = 1
         addGestureRecognizer(tapGesture)
     }
-// border -> 00A4BF text -> 00A4BF background -> D4F3F8
     private func setupView() {
-        let style = CurvedImageButton.QuickReplyButtonStyle.shared
-        backgroundColor = style.buttonColor.background
-        layer.cornerRadius = 5
-        //style.cornerRadius
+        let style = KMMultipleSelectionConfiguration.shared
+        backgroundColor = style.backgroundColor
+        layer.cornerRadius = style.cornorRadius
         layer.borderWidth = style.borderWidth
-        layer.borderColor = UIColor(hexString: "00A4BF").cgColor
-        //style.buttonColor.border
+        layer.borderColor = style.borderColor.cgColor
         clipsToBounds = true
 
         label.text = title
-        label.textColor = UIColor(hexString: "00A4BF")
-        //style.buttonColor.text
-        label.font = style.font
+        label.textColor = style.titleColor
+        label.font = style.normalfont
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-//        label.textAlignment = .center
 
-        if #available(iOS 13.0, *), selected {
-            imageView.image = UIImage.add
+        if isButtonselected {
             imageView.isHidden = false
-
         } else {
-            // Fallback on earlier versions
             imageView.isHidden = true
         }
-        //image?.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = style.buttonColor.tint
-
+        
+        //self.layoutSubviews()
         frame.size = CGSize(width: buttonWidth(), height: buttonHeight())
     }
 
@@ -209,8 +202,8 @@ public class KMMultiSelectButton: UIView {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo:leadingAnchor, constant: 15),
             imageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            imageView.widthAnchor.constraint(equalToConstant: 15),
-            imageView.heightAnchor.constraint(equalToConstant: 15),
+            imageView.widthAnchor.constraint(equalToConstant: 25),
+            imageView.heightAnchor.constraint(equalToConstant: 25),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 5),

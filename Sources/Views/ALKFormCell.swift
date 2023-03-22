@@ -267,7 +267,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             guard let multiselectItem = item as? FormViewModelMultiselectItem else {
                 return UITableViewCell()
             }
-            if KMMultipleSelectionConfiguration.enableMultipleSelectionOnCheckbox {
+            if KMMultipleSelectionConfiguration.shared.enableMultipleSelectionOnCheckbox {
                 itemListView.separatorStyle = .none
                 let cell: KMFormMultiSelectButtonItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.cellSelected = {

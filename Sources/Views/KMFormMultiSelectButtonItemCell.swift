@@ -24,7 +24,6 @@ class KMFormMultiSelectButtonItemCell: UITableViewCell {
         self.item = item
         button.update(title: item.label,isSelected: isChecked)
         button.delegate = self
-        button.layoutIfNeeded()
     }
     
     @available(*, unavailable)
@@ -62,6 +61,5 @@ private extension KMFormMultiSelectButtonItemCell {
 extension KMFormMultiSelectButtonItemCell: Tappable {
     func didTap(index: Int?, title: String) {
         cellSelected?()
-
     }
 }
