@@ -193,6 +193,8 @@ public struct ALKConfiguration {
     /// if false then chat  will be popped up on helpcenter(FAQ) page, By default it is true.
     public var hideChatInHelpcenter: Bool = true
 
+    public var conversationInfoModel : KMConversationInfoViewModel?
+
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")
     public var hideContactInChatBar: Bool = false {
