@@ -187,6 +187,7 @@ public class KMMultiSelectButton: UIView {
     }
 
     private func setupConstraint() {
+        let configuration = KMMultipleSelectionConfiguration.shared
         addViewsForAutolayout(views: [label, imageView])
         
         NSLayoutConstraint.activate([
@@ -196,8 +197,8 @@ public class KMMultiSelectButton: UIView {
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 5),
-            label.topAnchor.constraint(equalTo: topAnchor,constant: 15),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -15),
+            label.topAnchor.constraint(equalTo: topAnchor,constant: configuration.topPadding),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -configuration.bottomPadding),
 
         ])
     }

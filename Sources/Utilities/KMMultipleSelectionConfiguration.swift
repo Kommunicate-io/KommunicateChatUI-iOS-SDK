@@ -16,8 +16,6 @@ public struct KMMultipleSelectionConfiguration {
     public var normalfont: UIFont = Font.normal(size: 16).font()
     
     public var image : UIImage? =  UIImage(named: "checked", in: Bundle.km, compatibleWith: nil)
-    //UIImage.checkmark
-    //UIImage(named: "camera", in: Bundle.km, compatibleWith: nil)!
     
     public var backgroundColor: UIColor = UIColor.clear
     
@@ -25,12 +23,16 @@ public struct KMMultipleSelectionConfiguration {
     
     public var selectedFont: UIFont = Font.bold(size: 16).font()
     
-    public var cornorRadius: CGFloat = 5
+    public var cornorRadius: CGFloat = 7
     
     public var borderWidth: CGFloat = 2
     
     public var borderColor: UIColor = UIColor(hexString: "00A4BF")
     
     public var titleColor: UIColor = UIColor(hexString: "00A4BF")
+    
+    public var topPadding : CGFloat = 12
+    
+    public var bottomPadding: CGFloat = 12
     
 }
