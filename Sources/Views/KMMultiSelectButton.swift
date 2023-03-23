@@ -7,6 +7,9 @@
 
 import Foundation
 import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 /// A curved button with text and  image.
 public class KMMultiSelectButton: UIView {

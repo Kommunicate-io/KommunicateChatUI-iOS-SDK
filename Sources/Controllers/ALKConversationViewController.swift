@@ -617,7 +617,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             conversationInfoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
         }
         let gesture = UITapGestureRecognizer(target: self, action:  #selector(conversationInfoViewTap(_:)))
-        view.addGestureRecognizer(gesture)
+        conversationInfoView.addGestureRecognizer(gesture)
         
         templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
         templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
