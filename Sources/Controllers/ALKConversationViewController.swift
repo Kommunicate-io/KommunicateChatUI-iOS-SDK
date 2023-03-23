@@ -165,6 +165,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return contextView
     }()
 
+    open var conversationInfoView: KMConversationInfoView = {
+        let contextView = KMConversationInfoView(frame: CGRect.zero)
+        return contextView
+    }()
+    
     open var templateView: ALKTemplateMessagesView?
 
     open lazy var replyMessageView: ALKReplyMessageView = {
@@ -557,6 +562,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.configureWith(value: topicDetail)
         toggleVisibilityOfContextTitleView(true)
     }
+    
+    public func prepareConversationInfoView() {
+        guard let conversationInfoModel = configuration.conversationInfoModel else { return }
+        conversationInfoView.configureViewWith(model: conversationInfoModel)
+    }
+    
+    @objc func conversationInfoViewTap(_: UITapGestureRecognizer) {
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.conversationInfoClick, data:  nil)
+    }
 
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
         contextTitleView.isHidden = !show
@@ -568,7 +582,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupConstraints() {
-        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView]
+        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, conversationInfoView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -594,12 +608,23 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView).isActive = true
 
+        conversationInfoView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        conversationInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        conversationInfoView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        conversationInfoView.backgroundColor = configuration.conversationInfoModel?.backgroundColor
+        
+        if configuration.conversationInfoModel == nil {
+            conversationInfoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+        }
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector(conversationInfoViewTap(_:)))
+        view.addGestureRecognizer(gesture)
+        
         templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
         templateView?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5.0).isActive = true
         templateView?.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10.0).isActive = true
         templateView?.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
-        tableView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: conversationInfoView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: (templateView != nil) ? templateView!.topAnchor : typingNoticeView.topAnchor).isActive = true
@@ -985,6 +1010,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         clearAndReloadTable()
         updateConversationProfile()
         prepareContextView()
+        prepareConversationInfoView()
         configureChatBar()
         // Check for group left
         isChannelLeft()
