@@ -11,8 +11,6 @@ import UIKit
     import RichMessageKit
 #endif
 
-
-
 /// A curved button with text and  image.
 public class KMMultiSelectButton: UIView {
     /// Configuration to change UI properties of `KMMultiSelectButton`
