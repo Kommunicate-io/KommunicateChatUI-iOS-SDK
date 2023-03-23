@@ -2,9 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-## [Unreleased]
+## [1.0.3] - 2023-03-23
 - [CM-1366] Added Support for conversation Info View on conversation Screen
-
+- [CM-1380] Added Support Multiple Selection Button UI
 ## [1.0.2] - 2023-03-17
 - [CM-1355] Added Customization for hiding chat widget on helpcenter
 - [CM-1348] Added Support for Multiple languages for Speech To Text
