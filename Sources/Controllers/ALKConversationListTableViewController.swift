@@ -119,6 +119,61 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             tableView.sectionHeaderTopPadding = 0
         }
         tableView.estimatedRowHeight = 0
+        
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
+        tableView.addGestureRecognizer(longPress)
+
+    }
+    
+    @objc func longPress(sender: UILongPressGestureRecognizer) {
+
+        if sender.state == UIGestureRecognizer.State.began {
+            let touchPoint = sender.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                // your code here, get the row for the indexPath or do whatever you want
+                print("Long press Pressed:) \(indexPath.row)")
+                if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
+                    print("Long Pressed Conversation \(conversation.groupId)")
+                    showDeleteAlert(conversation: conversation)
+                }
+            }
+        }
+
+
+    }
+    
+    func showDeleteAlert(conversation: ALMessage) {
+        let alert = UIAlertController(title: "Delete Conversation", message: "Do you want to delete the conversation?", preferredStyle: .alert)
+
+        let cancelButton = UIAlertAction(
+            title: localizedString(
+                forKey: "ButtonCancel",
+                withDefaultValue: SystemMessage.ButtonName.Cancel,
+                fileName: localizedStringFileName
+            ),
+            style: .cancel,
+            handler: nil
+        )
+        let deleteButton = UIAlertAction(title: "DeleteGroupConversation", style: .destructive, handler: { [weak self] _ in
+            guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
+            weakSelf.startLoadingIndicator()
+            let messageService = ALMessageService()
+            if conversation.isGroupChat {
+                let channelService = ALChannelService()
+                messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                    _, error in
+                    weakSelf.stopLoadingIndicator()
+                    guard error == nil else { return }
+                    let channelDbService = ALChannelDBService()
+                    channelDbService.deleteChannel(conversation.groupId)
+                    weakSelf.viewModel.remove(message: conversation)
+                    weakSelf.tableView.reloadData()
+                })
+            }
+        })
+        alert.addAction(cancelButton)
+        alert.addAction(deleteButton)
+        present(alert, animated: true, completion: nil)
     }
 
     override public func viewWillDisappear(_: Bool) {
