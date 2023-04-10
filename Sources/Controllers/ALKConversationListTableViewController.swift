@@ -128,7 +128,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         if sender.state == UIGestureRecognizer.State.began {
             let touchPoint = sender.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
-                // your code here, get the row for the indexPath or do whatever you want
                 if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
                     showDeleteAlert(conversation: conversation)
                 }
@@ -137,7 +136,19 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
     
     func showDeleteAlert(conversation: ALMessage) {
-        let alert = UIAlertController(title: "Delete Conversation", message: "Do you want to delete the conversation?", preferredStyle: .alert)
+        let title = localizedString(
+            forKey: "DeleteConversationTitle",
+            withDefaultValue: SystemMessage.DeleteConversationPopup.title,
+            fileName: localizedStringFileName
+        )
+        
+        let warningMessage =  localizedString(
+            forKey: "DeleteConversationContent",
+            withDefaultValue: SystemMessage.DeleteConversationPopup.content,
+            fileName: localizedStringFileName
+        )
+        
+        let alert = UIAlertController(title: title, message:warningMessage, preferredStyle: .alert)
 
         let cancelButton = UIAlertAction(
             title: localizedString(
@@ -154,24 +165,29 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             withDefaultValue: "Delete",
             fileName: localizedStringFileName
         )
+        
         let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
             guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
-            let alert = weakSelf.displayAlert(viewController: weakSelf)
+            let alert = weakSelf.displayLoadingAlert(viewController: weakSelf)
             let messageService = ALMessageService()
             if conversation.isGroupChat {
                 messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                     _, error in
                     alert.dismiss(animated: false)
-                    guard error == nil else { return }
+                    guard error == nil else {
+                        weakSelf.showAlertWithSingleAction(message: error.debugDescription)
+                        return
+                    }
                     let channelDbService = ALChannelDBService()
                     channelDbService.deleteChannel(conversation.groupId)
                     weakSelf.viewModel.remove(message: conversation)
                     weakSelf.tableView.reloadData()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        let alert = UIAlertController(title: nil, message: "Successfully deleted the conversation!!", preferredStyle: .alert)
-                        let okButton = UIAlertAction(title: "Okay", style: .default, handler: nil)
-                        alert.addAction(okButton)
-                        weakSelf.present(alert, animated: true, completion: nil)
+                        weakSelf.showAlertWithSingleAction(message: weakSelf.localizedString(
+                            forKey: "DeletionSuccessMessage",
+                            withDefaultValue: SystemMessage.DeleteConversationPopup.content,
+                            fileName: weakSelf.localizedStringFileName
+                        ))
                     }
                 })
             }
@@ -181,7 +197,14 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         present(alert, animated: true, completion: nil)
     }
     
-    private func displayAlert(viewController: ALKConversationListTableViewController) -> UIAlertController {
+    private func showAlertWithSingleAction(message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let okButton = UIAlertAction(title: "Okay", style: .default, handler: nil)
+        alert.addAction(okButton)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func displayLoadingAlert(viewController: ALKConversationListTableViewController) -> UIAlertController {
         let alertTitle = localizedString(forKey: "WaitMessage", withDefaultValue: "Please Wait", fileName: localizedStringFileName)
         
         let loadingAlertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)

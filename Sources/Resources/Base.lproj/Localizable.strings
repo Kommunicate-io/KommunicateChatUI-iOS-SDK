@@ -170,3 +170,8 @@ AddGroupDescriptionPlaceHolder = "Add group description";
 
 /* Feedback */
  RatingLabelTitle = "You";
+
+/* Delete Conversation */
+DeleteConversationTitle = "Delete Conversation";
+DeleteConversationContent = "Do you want to delete the conversation?";
+DeletionSuccessMessage = "Successfully deleted the conversation!!!"
