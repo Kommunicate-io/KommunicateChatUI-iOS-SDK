@@ -1,6 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [Unreleased]
+- Added Support for delete conversation for End User
 
 ## [1.0.5] - 2023-04-05
 - Upgraded Kingfisher pod to version 7.6.2
