@@ -167,8 +167,11 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                     channelDbService.deleteChannel(conversation.groupId)
                     weakSelf.viewModel.remove(message: conversation)
                     weakSelf.tableView.reloadData()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        weakSelf.confirmationAlert(with: "Successfully deleted the conversation!!")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        let alert = UIAlertController(title: nil, message: "Successfully deleted the conversation!!", preferredStyle: .alert)
+                        let okButton = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                        alert.addAction(okButton)
+                        weakSelf.present(alert, animated: true, completion: nil)
                     }
                 })
             }
