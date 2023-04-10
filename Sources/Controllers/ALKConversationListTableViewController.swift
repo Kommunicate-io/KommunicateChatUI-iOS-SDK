@@ -624,13 +624,11 @@ extension ALKConversationListTableViewController {
     }
 
     private func startLoadingIndicator() {
-        view.bringSubviewToFront(activityIndicator)
         activityIndicator.startAnimating()
         view.isUserInteractionEnabled = false
     }
 
     private func stopLoadingIndicator() {
-        view.sendSubviewToBack(activityIndicator)
         activityIndicator.stopAnimating()
         view.isUserInteractionEnabled = true
     }
