@@ -119,27 +119,21 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             tableView.sectionHeaderTopPadding = 0
         }
         tableView.estimatedRowHeight = 0
-        
+        guard configuration.enableDeleteConversationOnLongpress else{ return }
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
         tableView.addGestureRecognizer(longPress)
-
     }
     
     @objc func longPress(sender: UILongPressGestureRecognizer) {
-
         if sender.state == UIGestureRecognizer.State.began {
             let touchPoint = sender.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
                 // your code here, get the row for the indexPath or do whatever you want
-                print("Long press Pressed:) \(indexPath.row)")
                 if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
-                    print("Long Pressed Conversation \(conversation.groupId)")
                     showDeleteAlert(conversation: conversation)
                 }
             }
         }
-
-
     }
     
     func showDeleteAlert(conversation: ALMessage) {
@@ -154,20 +148,28 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             style: .cancel,
             handler: nil
         )
-        let deleteButton = UIAlertAction(title: "DeleteGroupConversation", style: .destructive, handler: { [weak self] _ in
+        
+       let buttonTitle =  localizedString(
+            forKey: "DeleteButtonName",
+            withDefaultValue: "Delete",
+            fileName: localizedStringFileName
+        )
+        let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
             guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
-            weakSelf.startLoadingIndicator()
+            let alert = weakSelf.displayAlert(viewController: weakSelf)
             let messageService = ALMessageService()
             if conversation.isGroupChat {
-                let channelService = ALChannelService()
                 messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                     _, error in
-                    weakSelf.stopLoadingIndicator()
+                    alert.dismiss(animated: false)
                     guard error == nil else { return }
                     let channelDbService = ALChannelDBService()
                     channelDbService.deleteChannel(conversation.groupId)
                     weakSelf.viewModel.remove(message: conversation)
                     weakSelf.tableView.reloadData()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        weakSelf.confirmationAlert(with: "Successfully deleted the conversation!!")
+                    }
                 })
             }
         })
@@ -175,6 +177,30 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         alert.addAction(deleteButton)
         present(alert, animated: true, completion: nil)
     }
+    
+    private func displayAlert(viewController: ALKConversationListTableViewController) -> UIAlertController {
+        let alertTitle = localizedString(forKey: "WaitMessage", withDefaultValue: "Please Wait", fileName: localizedStringFileName)
+        
+        let loadingAlertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        loadingAlertController.view.addSubview(activityIndicator)
+
+        let xConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: loadingAlertController.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let yConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: loadingAlertController.view, attribute: .centerY, multiplier: 1.4, constant: 0)
+
+        NSLayoutConstraint.activate([xConstraint, yConstraint])
+        activityIndicator.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+
+        let height = NSLayoutConstraint(item: loadingAlertController.view as Any, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 80)
+        loadingAlertController.view.addConstraint(height)
+
+        viewController.present(loadingAlertController, animated: true, completion: nil)
+
+        return loadingAlertController
+    }
+
 
     override public func viewWillDisappear(_: Bool) {
         if let text = searchBar.text, !text.isEmpty {
@@ -595,11 +621,13 @@ extension ALKConversationListTableViewController {
     }
 
     private func startLoadingIndicator() {
+        view.bringSubviewToFront(activityIndicator)
         activityIndicator.startAnimating()
         view.isUserInteractionEnabled = false
     }
 
     private func stopLoadingIndicator() {
+        view.sendSubviewToBack(activityIndicator)
         activityIndicator.stopAnimating()
         view.isUserInteractionEnabled = true
     }
@@ -926,3 +954,4 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
         }
     }
 }
+
