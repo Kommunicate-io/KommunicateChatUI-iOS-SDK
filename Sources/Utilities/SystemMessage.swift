@@ -228,6 +228,7 @@ struct SystemMessage: Localizable {
     enum DeleteConversationPopup {
         static let title = localizedString(forKey: "DeleteConversationTitle")
         static let content = localizedString(forKey: "DeleteConversationContent")
-        static let success = localizedString(forKey: "DeletionSuccessMessage")
+        static let success = localizedString(forKey: "DeleteConversationSuccessMessage")
+        static let failure = localizedString(forKey: "DeleteConversationFailureMessage")
     }
 }

@@ -136,19 +136,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
     
     func showDeleteAlert(conversation: ALMessage) {
-        let title = localizedString(
-            forKey: "DeleteConversationTitle",
-            withDefaultValue: SystemMessage.DeleteConversationPopup.title,
-            fileName: localizedStringFileName
-        )
-        
-        let warningMessage =  localizedString(
-            forKey: "DeleteConversationContent",
-            withDefaultValue: SystemMessage.DeleteConversationPopup.content,
-            fileName: localizedStringFileName
-        )
-        
-        let alert = UIAlertController(title: title, message:warningMessage, preferredStyle: .alert)
+        let alert = UIAlertController(title: localizedString(forKey: "DeleteConversationTitle",withDefaultValue: SystemMessage.DeleteConversationPopup.title,fileName: localizedStringFileName), message:localizedString(forKey: "DeleteConversationContent",withDefaultValue: SystemMessage.DeleteConversationPopup.content,fileName: localizedStringFileName),preferredStyle: .alert)
 
         let cancelButton = UIAlertAction(
             title: localizedString(
@@ -159,47 +147,50 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             style: .cancel,
             handler: nil
         )
-        
-       let buttonTitle =  localizedString(
-            forKey: "DeleteButtonName",
-            withDefaultValue: "Delete",
-            fileName: localizedStringFileName
-        )
-        
-        let deleteButton = UIAlertAction(title: buttonTitle, style: .destructive, handler: { [weak self] _ in
+                
+        let deleteButton = UIAlertAction(title: localizedString(forKey: "DeleteButtonName",withDefaultValue: "Delete",fileName: localizedStringFileName), style: .destructive, handler: { [weak self] _ in
             guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
-            let alert = weakSelf.displayLoadingAlert(viewController: weakSelf)
-            let messageService = ALMessageService()
-            if conversation.isGroupChat {
-                messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
-                    _, error in
-                    alert.dismiss(animated: false)
-                    guard error == nil else {
-                        weakSelf.showAlertWithSingleAction(message: error.debugDescription)
-                        return
-                    }
-                    let channelDbService = ALChannelDBService()
-                    channelDbService.deleteChannel(conversation.groupId)
-                    weakSelf.viewModel.remove(message: conversation)
-                    weakSelf.tableView.reloadData()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        weakSelf.showAlertWithSingleAction(message: weakSelf.localizedString(
-                            forKey: "DeletionSuccessMessage",
-                            withDefaultValue: SystemMessage.DeleteConversationPopup.content,
-                            fileName: weakSelf.localizedStringFileName
-                        ))
-                    }
-                })
-            }
+            weakSelf.deleteConversation(conversation: conversation)
         })
         alert.addAction(cancelButton)
         alert.addAction(deleteButton)
         present(alert, animated: true, completion: nil)
     }
     
+    private func deleteConversation(conversation: ALMessage) {
+        let alert = self.displayLoadingAlert(viewController: self)
+        let messageService = ALMessageService()
+        if conversation.isGroupChat {
+            messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                _, error in
+                alert.dismiss(animated: false)
+                guard error == nil else {
+                    print("Failed to delete the conversation: \(error.debugDescription)")
+                    self.showAlertWithSingleAction(message:self.localizedString(
+                        forKey: "DeleteConversationFailureMessage",
+                        withDefaultValue: SystemMessage.DeleteConversationPopup.failure,
+                        fileName: self.localizedStringFileName
+                    ))
+                    return
+                }
+                let channelDbService = ALChannelDBService()
+                channelDbService.deleteChannel(conversation.groupId)
+                self.viewModel.remove(message: conversation)
+                self.tableView.reloadData()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.showAlertWithSingleAction(message: self.localizedString(
+                        forKey: "DeletionSuccessMessage",
+                        withDefaultValue: SystemMessage.DeleteConversationPopup.content,
+                        fileName: self.localizedStringFileName
+                    ))
+                }
+            })
+        }
+    }
+    
     private func showAlertWithSingleAction(message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let okButton = UIAlertAction(title: "Okay", style: .default, handler: nil)
+        let okButton = UIAlertAction(title: localizedString(forKey: "OkayMessage", withDefaultValue:SystemMessage.ButtonName.okay, fileName: localizedStringFileName), style: .default, handler: nil)
         alert.addAction(okButton)
         self.present(alert, animated: true, completion: nil)
     }

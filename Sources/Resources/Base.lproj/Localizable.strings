@@ -174,4 +174,5 @@ AddGroupDescriptionPlaceHolder = "Add group description";
 /* Delete Conversation */
 DeleteConversationTitle = "Delete Conversation";
 DeleteConversationContent = "Do you want to delete the conversation?";
-DeletionSuccessMessage = "Successfully deleted the conversation!!!"
+DeleteConversationSuccessMessage = "Successfully deleted the conversation!!!";
+DeleteConversationFailureMessage = "Failed to delete the conversation!!!";
