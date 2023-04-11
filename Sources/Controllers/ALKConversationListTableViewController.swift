@@ -179,8 +179,8 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                 self.tableView.reloadData()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.showAlertWithSingleAction(message: self.localizedString(
-                        forKey: "DeletionSuccessMessage",
-                        withDefaultValue: SystemMessage.DeleteConversationPopup.content,
+                        forKey: "DeleteConversationSuccessMessage",
+                        withDefaultValue: SystemMessage.DeleteConversationPopup.success,
                         fileName: self.localizedStringFileName
                     ))
                 }
