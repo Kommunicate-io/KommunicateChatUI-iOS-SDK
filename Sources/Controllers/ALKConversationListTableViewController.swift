@@ -119,7 +119,105 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             tableView.sectionHeaderTopPadding = 0
         }
         tableView.estimatedRowHeight = 0
+        guard configuration.enableDeleteConversationOnLongpress else{ return }
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
+        tableView.addGestureRecognizer(longPress)
     }
+    
+    @objc func longPress(sender: UILongPressGestureRecognizer) {
+        if sender.state == UIGestureRecognizer.State.began {
+            let touchPoint = sender.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                if viewModel.chatFor(indexPath: indexPath) != nil, let conversation = viewModel.getChatList()[indexPath.row] as? ALMessage {
+                    showDeleteAlert(conversation: conversation)
+                }
+            }
+        }
+    }
+    
+    func showDeleteAlert(conversation: ALMessage) {
+        let alert = UIAlertController(title: localizedString(forKey: "DeleteConversationTitle",withDefaultValue: SystemMessage.DeleteConversationPopup.title,fileName: localizedStringFileName), message:localizedString(forKey: "DeleteConversationContent",withDefaultValue: SystemMessage.DeleteConversationPopup.content,fileName: localizedStringFileName),preferredStyle: .alert)
+
+        let cancelButton = UIAlertAction(
+            title: localizedString(
+                forKey: "ButtonCancel",
+                withDefaultValue: SystemMessage.ButtonName.Cancel,
+                fileName: localizedStringFileName
+            ),
+            style: .cancel,
+            handler: nil
+        )
+                
+        let deleteButton = UIAlertAction(title: localizedString(forKey: "DeleteButtonName",withDefaultValue: "Delete",fileName: localizedStringFileName), style: .destructive, handler: { [weak self] _ in
+            guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
+            weakSelf.deleteConversation(conversation: conversation)
+        })
+        alert.addAction(cancelButton)
+        alert.addAction(deleteButton)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func deleteConversation(conversation: ALMessage) {
+        let alert = self.displayLoadingAlert(viewController: self)
+        let messageService = ALMessageService()
+        if conversation.isGroupChat {
+            messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
+                _, error in
+                alert.dismiss(animated: false)
+                guard error == nil else {
+                    print("Failed to delete the conversation: \(error.debugDescription)")
+                    self.showAlertWithSingleAction(message:self.localizedString(
+                        forKey: "DeleteConversationFailureMessage",
+                        withDefaultValue: SystemMessage.DeleteConversationPopup.failure,
+                        fileName: self.localizedStringFileName
+                    ))
+                    return
+                }
+                let channelDbService = ALChannelDBService()
+                channelDbService.deleteChannel(conversation.groupId)
+                self.viewModel.remove(message: conversation)
+                self.tableView.reloadData()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.showAlertWithSingleAction(message: self.localizedString(
+                        forKey: "DeleteConversationSuccessMessage",
+                        withDefaultValue: SystemMessage.DeleteConversationPopup.success,
+                        fileName: self.localizedStringFileName
+                    ))
+                }
+            })
+        }
+    }
+    
+    private func showAlertWithSingleAction(message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let okButton = UIAlertAction(title: localizedString(forKey: "OkayMessage", withDefaultValue:SystemMessage.ButtonName.okay, fileName: localizedStringFileName), style: .default, handler: nil)
+        alert.addAction(okButton)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func displayLoadingAlert(viewController: ALKConversationListTableViewController) -> UIAlertController {
+        let alertTitle = localizedString(forKey: "WaitMessage", withDefaultValue: "Please Wait", fileName: localizedStringFileName)
+        
+        let loadingAlertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        loadingAlertController.view.addSubview(activityIndicator)
+
+        let xConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: loadingAlertController.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let yConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: loadingAlertController.view, attribute: .centerY, multiplier: 1.4, constant: 0)
+
+        NSLayoutConstraint.activate([xConstraint, yConstraint])
+        activityIndicator.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+
+        let height = NSLayoutConstraint(item: loadingAlertController.view as Any, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 80)
+        loadingAlertController.view.addConstraint(height)
+
+        viewController.present(loadingAlertController, animated: true, completion: nil)
+
+        return loadingAlertController
+    }
+
 
     override public func viewWillDisappear(_: Bool) {
         if let text = searchBar.text, !text.isEmpty {
@@ -871,3 +969,4 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
         }
     }
 }
+

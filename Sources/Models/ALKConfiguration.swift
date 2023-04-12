@@ -194,6 +194,9 @@ public struct ALKConfiguration {
     public var hideChatInHelpcenter: Bool = true
 
     public var conversationInfoModel : KMConversationInfoViewModel?
+    
+    /// if true then delete option will be enabled for end user on long press, By default it is false
+    public var enableDeleteConversationOnLongpress : Bool = false
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")

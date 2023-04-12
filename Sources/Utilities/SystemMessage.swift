@@ -221,8 +221,14 @@ struct SystemMessage: Localizable {
         static let Info = localizedString(forKey: "Info")
     }
     
-    
     enum Feedback {
         static let RatingLabelTitle = localizedString(forKey: "RatingLabelTitle")
+    }
+    
+    enum DeleteConversationPopup {
+        static let title = localizedString(forKey: "DeleteConversationTitle")
+        static let content = localizedString(forKey: "DeleteConversationContent")
+        static let success = localizedString(forKey: "DeleteConversationSuccessMessage")
+        static let failure = localizedString(forKey: "DeleteConversationFailureMessage")
     }
 }
