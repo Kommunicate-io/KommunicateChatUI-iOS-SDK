@@ -640,6 +640,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let initialMessage = ALMessage()
         initialMessage.message = KMConversationScreenConfiguration.staticTopMessage
         initialMessage.contentType = Int16(ALMESSAGE_CONTENT_INITIAL_STATIC_MESSAGE)
+        let date = Date().timeIntervalSince1970 * 1000
+        initialMessage.createdAtTime = NSNumber(value: date)
         return initialMessage
     }
 
