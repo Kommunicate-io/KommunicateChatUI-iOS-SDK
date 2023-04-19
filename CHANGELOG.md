@@ -6,6 +6,11 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Fixed Form text area data not added with message for `postFormDataAsMessage` issue
 - Matched form action flow with web & android.
 - Fixed submitted form data double stringified issue
+- Added Support for Static Top Message.You can enable this by using below code
+```swift
+KMConversationScreenConfiguration.staticTopMessage = "<Your Message>"
+KMConversationScreenConfiguration.staticTopIcon = "<pass your UIImage>"
+```
 ## [1.0.5] - 2023-04-05
 - Upgraded Kingfisher pod to version 7.6.2
 

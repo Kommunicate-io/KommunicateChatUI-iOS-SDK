@@ -79,6 +79,11 @@ public enum ALKMessageStyle {
         text: UIColor.white,
         background: UIColor.gray
     )
+    
+    /// Style for static top message cell
+    public static var staticTopMessage = Style(
+        font: UIFont.font(.normal(size: 15.0)), text: UIColor.black
+    )
 
     @available(*, deprecated, message: "Use `receivedMessage` and `sentMessage`")
     public static var message = Style(

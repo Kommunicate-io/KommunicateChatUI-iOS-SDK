@@ -31,6 +31,7 @@ public enum ALKMessageType: String {
     case imageMessage = "ImageMessage"
     case allButtons = "AllButtons"
     case form = "Form"
+    case staticTopMessage = "staticTopMessage"
 }
 
 // MARK: - MessageViewModel
