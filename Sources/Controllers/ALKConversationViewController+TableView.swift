@@ -544,6 +544,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+        case .initialEncryptionMessage:
+            let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMStaticTopMessageCell
+            cell.updateMessage(viewModel: message)
+            return cell
         }
     }
 

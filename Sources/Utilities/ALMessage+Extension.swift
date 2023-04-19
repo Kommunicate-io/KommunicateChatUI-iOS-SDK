@@ -137,6 +137,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Document"
         case .allButtons:
             return isMessageEmpty ? "Buttons" : message
+        case .initialEncryptionMessage:
+            return message
         }
     }
 
@@ -235,7 +237,8 @@ extension ALMessage {
             return .information
         case ALMESSAGE_CONTENT_TEXT_HTML:
             return richMessageType()
-
+        case ALMESSAGE_CONTENT_INITIAL_STATIC_MESSAGE:
+            return .initialEncryptionMessage
         default:
             guard let attachmentType = getAttachmentType() else { return .text }
             return attachmentType

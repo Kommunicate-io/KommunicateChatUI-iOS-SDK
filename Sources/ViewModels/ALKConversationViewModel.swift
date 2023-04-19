@@ -458,6 +458,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         case .form:
             return 0
+        case .initialEncryptionMessage:
+            return KMStaticTopMessageCell.rowHeight(model: messageModel, width: maxWidth)
         }
     }
 
@@ -623,12 +625,22 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard !sortedArray.isEmpty else { return }
         
         ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageReceive, data: ["messageList":sortedArray])
+        if alMessages.isEmpty, !KMCellConfiguration.staticTopMessage.isEmpty {
+            sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
+        }
         _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
         print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
+    }
+    
+    private func getInitialStaticFirstMessage() -> ALMessage {
+        let initialMessage = ALMessage()
+        initialMessage.message = KMCellConfiguration.staticTopMessage
+        initialMessage.contentType = Int16(ALMESSAGE_CONTENT_INITIAL_STATIC_MESSAGE)
+        return initialMessage
     }
 
     open func markConversationRead() {
@@ -1211,8 +1223,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: ", messages)
-
+            
             self.alMessages = messages.reversed() as! [ALMessage]
+
+            if !KMCellConfiguration.staticTopMessage.isEmpty {
+                self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
+            }
+
             self.alMessageWrapper.addObject(toMessageArray: messages)
             
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
@@ -1406,6 +1423,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: %@", messages)
+            if !KMCellConfiguration.staticTopMessage.isEmpty {
+                messages.insert(self.getInitialStaticFirstMessage(), at: 0)
+            }
             self.alMessages = messages as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
             let models = messages.map { ($0 as! ALMessage).messageModel }
