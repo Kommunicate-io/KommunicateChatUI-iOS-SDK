@@ -8,6 +8,7 @@ PODS:
   - KommunicateChatUI-iOS-SDK (1.0.6):
     - KommunicateChatUI-iOS-SDK/Complete (= 1.0.6)
   - KommunicateChatUI-iOS-SDK/Complete (1.0.6):
+
     - Kingfisher (~> 7.6.2)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
     - KommunicateCore-iOS-SDK (~> 1.0.9)

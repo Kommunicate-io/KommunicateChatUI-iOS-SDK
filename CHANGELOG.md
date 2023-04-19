@@ -14,6 +14,9 @@ KMConversationScreenConfiguration.staticTopIcon = "<pass your UIImage>"
 ## [1.0.5] - 2023-04-05
 - Upgraded Kingfisher pod to version 7.6.2
 
+## [1.0.5] - 2023-04-05
+- Upgraded Kingfisher pod to version 7.6.2
+
 ## [1.0.4] - 2023-03-23
 - Fixed Conversation info tap & SPM build issue
 
