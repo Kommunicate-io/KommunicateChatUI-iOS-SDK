@@ -1766,8 +1766,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 selectedArray.append(value)
             }
 
-            let data = json(from: selectedArray)
-            postFormData[multiSelect.name] = data
+            postFormData[multiSelect.name] = selectedArray
         }
 
         for (position, timeInMillSecs) in formData.dateFields {
