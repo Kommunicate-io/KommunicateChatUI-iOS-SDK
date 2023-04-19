@@ -3,7 +3,9 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 ## [Unreleased]
 - Added Support for delete conversation for End User
-
+- Fixed Form text area data not added with message for `postFormDataAsMessage` issue
+- Matched form action flow with web & android.
+- Fixed submitted form data double stringified issue
 ## [1.0.5] - 2023-04-05
 - Upgraded Kingfisher pod to version 7.6.2
 
