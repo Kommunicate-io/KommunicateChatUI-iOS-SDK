@@ -264,7 +264,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
 
         switch viewModel.messageType {
-        case .text:
+        case .text, .initialEncryptionMessage:
             if let attributedText = viewModel
                 .attributedTextWithMentions(
                     defaultAttributes: dummyMessageView.typingAttributes,
