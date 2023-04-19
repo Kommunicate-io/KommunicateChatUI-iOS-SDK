@@ -739,6 +739,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKFriendLinkPreviewCell.self)
         tableView.register(ALKMyFormCell.self)
         tableView.register(ALKFriendFormCell.self)
+        tableView.register(KMStaticTopMessageCell.self)
     }
 
     private func prepareMoreBar() {
@@ -1602,6 +1603,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         group.notify(queue: .main) {
             self.activityIndicator.stopAnimating()
+            guard self.configuration.pushWebviewWithFormActionResponse else {return}
             guard let data = responseData, let url = responseUrl else {
                 return
             }
@@ -1724,6 +1726,28 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 break
             }
         }
+        
+        for (pos, text) in formData.textViews {
+            let element = viewModelItems[pos]
+            switch element.type {
+            case .text:
+                if let textModel = element as? FormViewModelTextItem {
+                    postFormData[textModel.label] = text
+                }
+            case .textarea:
+                if let textModel = element as? FormViewModelTextAreaItem {
+                    postFormData[textModel.title] = text
+                }
+            case .password:
+                if let passwordModel = element as? FormViewModelPasswordItem {
+                    postFormData[passwordModel.label] = text
+                }
+            default:
+                break
+            }
+        }
+        
+        
 
         for (section, pos) in formData.singleSelectFields {
             guard let singleSelectModel = viewModelItems[section] as? FormViewModelSingleselectItem else {
@@ -1743,8 +1767,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 selectedArray.append(value)
             }
 
-            let data = json(from: selectedArray)
-            postFormData[multiSelect.name] = data
+            postFormData[multiSelect.name] = selectedArray
         }
 
         for (position, timeInMillSecs) in formData.dateFields {
@@ -1768,12 +1791,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
 
-        guard let formJsonValue = ALUtilityClass.generateJsonString(from: postFormData) else {
-            print("Failed to convert the formdata to json")
-            return
-        }
         var formJsonData = [String: Any]()
-        formJsonData["formData"] = formJsonValue
+        formJsonData["formData"] = postFormData
 
         guard var chatContextData = getUpdateMessageMetadata(with: formJsonData) else {
             print("Failed to convert the chat context data to json")
@@ -1784,38 +1803,35 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             chatContextData.merge(actionMessageMetaData, uniquingKeysWith: {$1})
         }
 
-
         if isFormDataReplytoChat {
             sendPostSubmittedFormDataAsMessage(message: message, messageModel: messageModel, postFormData: postFormData, chatContextData: chatContextData)
 
-        } else {
-            if let messageString = message {
-                viewModel.send(message: messageString, metadata: chatContextData)
-            }
-            guard
-                let urlString = formAction,
-                let url = URL(string: urlString)
-            else {
-                print("URL for posting is not valid")
-                return
-            }
-            var request: URLRequest!
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: chatContextData),
-                  let jsonString = String(data: jsonData, encoding: .utf8),
-                  let data = jsonString.data(using: .utf8),
-                  let urlRequest = postRequestUsing(url: url, data: data)
-            else { return }
+        } else if let messageString = message {
+            viewModel.send(message: messageString, metadata: chatContextData)
+        }
+            
+        guard let urlString = formAction,
+            let url = URL(string: urlString)
+        else {
+            print("URL for posting is not valid")
+            return
+        }
+        var request: URLRequest!
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: postFormData),
+              let jsonString = String(data: jsonData, encoding: .utf8),
+              let data = jsonString.data(using: .utf8),
+              let urlRequest = postRequestUsing(url: url, data: data)
+        else { return }
 
-            request = urlRequest
-            if requestType == "json" {
-                let contentType = "application/json"
-                request.addValue(contentType, forHTTPHeaderField: "Content-Type")
-                requestHandler(request) { _, _, _ in }
-            } else {
-                let contentType = "application/x-www-form-urlencoded"
-                request.addValue(contentType, forHTTPHeaderField: "Content-Type")
-                submitButtonResponse(request: request)
-            }
+        request = urlRequest
+        if requestType == "json" {
+            let contentType = "application/json"
+            request.addValue(contentType, forHTTPHeaderField: "Content-Type")
+            requestHandler(request) { _, _, _ in }
+        } else {
+            let contentType = "application/x-www-form-urlencoded"
+            request.addValue(contentType, forHTTPHeaderField: "Content-Type")
+            submitButtonResponse(request: request)
         }
     }
 
@@ -1842,6 +1858,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .password:
                 if let passwordItemModel = item as? FormViewModelPasswordItem {
                     postBackMessageString.append("\(passwordItemModel.label) : \(postFormData[passwordItemModel.label] ?? "")\n")
+                }
+            case.textarea:
+                if let textAreaModelItem = item as? FormViewModelTextAreaItem {
+                    postBackMessageString.append("\(textAreaModelItem.title) : \(postFormData[textAreaModelItem.title] ?? "")\n")
                 }
             case .singleselect:
                 if let singleSelectionItemModel = item as? FormViewModelSingleselectItem {
