@@ -458,7 +458,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         case .form:
             return 0
-        case .initialEncryptionMessage:
+        case .staticTopMessage:
             return KMStaticTopMessageCell.rowHeight(model: messageModel, width: maxWidth)
         }
     }
@@ -625,7 +625,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard !sortedArray.isEmpty else { return }
         
         ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageReceive, data: ["messageList":sortedArray])
-        if alMessages.isEmpty, !KMCellConfiguration.staticTopMessage.isEmpty {
+        if alMessages.isEmpty, !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
             sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
         }
         _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
@@ -638,7 +638,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     private func getInitialStaticFirstMessage() -> ALMessage {
         let initialMessage = ALMessage()
-        initialMessage.message = KMCellConfiguration.staticTopMessage
+        initialMessage.message = KMConversationScreenConfiguration.staticTopMessage
         initialMessage.contentType = Int16(ALMESSAGE_CONTENT_INITIAL_STATIC_MESSAGE)
         return initialMessage
     }
@@ -1223,10 +1223,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: ", messages)
-            
+
             self.alMessages = messages.reversed() as! [ALMessage]
 
-            if !KMCellConfiguration.staticTopMessage.isEmpty {
+            if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
 
@@ -1423,7 +1423,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             NSLog("messages loaded: %@", messages)
-            if !KMCellConfiguration.staticTopMessage.isEmpty {
+            if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 messages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
             self.alMessages = messages as! [ALMessage]

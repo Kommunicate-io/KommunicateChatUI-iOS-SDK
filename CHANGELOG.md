@@ -3,6 +3,11 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 ## [Unreleased]
 - Added Support for delete conversation for End User
+- Added Support for Static Top Message.You can enable this by using below code
+```swift
+KMConversationScreenConfiguration.staticTopMessage = "<Your Message>"
+KMConversationScreenConfiguration.staticTopIcon = "<pass your UIImage>"
+```
 
 ## [1.0.5] - 2023-04-05
 - Upgraded Kingfisher pod to version 7.6.2

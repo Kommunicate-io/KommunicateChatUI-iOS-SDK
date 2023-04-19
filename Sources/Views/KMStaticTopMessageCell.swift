@@ -50,7 +50,7 @@ class KMStaticTopMessageCell: ALKMessageCell {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
         imv.clipsToBounds = true
-        imv.image = KMCellConfiguration.staticTopIcon
+        imv.image = KMConversationScreenConfiguration.staticTopIcon
         return imv
     }()
     
