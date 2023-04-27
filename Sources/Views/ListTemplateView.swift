@@ -36,8 +36,7 @@ class ListTemplateElementView: UIView {
     }()
 
     var item: ListTemplate.Element?
-    var selected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)?
-
+    var selected: ((_ element: ListTemplate.Element) -> Void)?
     override public init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -95,14 +94,14 @@ class ListTemplateElementView: UIView {
     }
 
     @objc private func tapped() {
-        guard let action = item?.action else {
-            print("Action is not defined for this list item")
+        guard let item = item else {
+            print("Couldn't retrieve Element Model for this list item")
             return
         }
         guard let selected = selected else { return }
-        selected(item?.title, action)
+        selected(item)
     }
-
+    
     private func setupAction() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
         tapGesture.numberOfTapsRequired = 1
@@ -159,7 +158,7 @@ class ListTemplateView: UIView {
     let listStyle = ALKListTemplateCell.ListStyle.shared
 
     var item: ListTemplate?
-    var selected: ((_ text: String?, _ action: ListTemplate.Action) -> Void)?
+    var selected: ((_ element: ListTemplate.Element?, _ text: String?, _ action: ListTemplate.Action?) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -263,7 +262,7 @@ class ListTemplateView: UIView {
             return
         }
         guard let selected = selected else { return }
-        selected(selectedButton.name, action)
+        selected(nil,selectedButton.name, action)
     }
 
     private func setupButtons() {
@@ -286,11 +285,11 @@ class ListTemplateView: UIView {
     private func setupElements() {
         listItems = (0 ... 7).map {
             let item = ListTemplateElementView()
-            item.tag = $0
+            item.tag = Int($0)
             item.backgroundColor = .white
-            item.selected = { [weak self] defaultText, action in
+            item.selected = { [weak self] element in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
-                selected(defaultText, action)
+                selected(element,nil,nil)
             }
             return item
         }
