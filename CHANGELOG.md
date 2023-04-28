@@ -1,6 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [1.0.7] 2023-04-28
+- Fixed Event data not getting passed for Rich Message Event
 ## [1.0.6] 2023-04-19
 - Added Support for delete conversation for End User
 - Fixed Form text area data not added with message for `postFormDataAsMessage` issue

@@ -389,9 +389,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
-                cell.templateSelected = { [weak self] defaultText, action in
+                cell.templateSelected = { [weak self] element, defaultText, action in
                     guard let weakSelf = self else { return }
-                    weakSelf.listTemplateSelected(defaultText: defaultText, action: action)
+                    weakSelf.listTemplateSelected(element:element, defaultText:defaultText,  action: action)
                 }
                 return cell
             }
