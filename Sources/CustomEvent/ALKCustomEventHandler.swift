@@ -26,7 +26,7 @@ public class ALKCustomEventHandler {
             case .faqClick:
                 guard let data = data,
                       let url = data["faqUrl"] as? URL else { return }
-            delegate.faqClicked(url: url.absoluteString)
+                delegate.faqClicked(url: url.absoluteString)
             case .messageSend:
                 guard let data = data,
                       let message = data["message"] as? ALMessage else {return}
@@ -47,22 +47,22 @@ public class ALKCustomEventHandler {
                 delegate.conversationRestarted(conversationId: String(conversationId))
             case .richMessageClick:
                 guard let data = data else { return }
-                let conversationId =  String(data["conversationId"] as? Int ?? 0)
-                let action = data["action"] as? [String:Any] ?? [:]
+                let conversationId =  data["conversationId"] as? String ?? ""
+                let action = data["action"]
                 let type = data["type"] as? String ?? ""
-                delegate.richMessageClicked(conversationId: conversationId, action: action, type: type)
+                delegate.richMessageClicked(conversationId: conversationId, action:action , type: type)
             case .conversationBackPress:
                 delegate.onBackButtonClick(isConversationOpened: true)
             case .conversationListBackPress:
-            delegate.onBackButtonClick(isConversationOpened: false)
+                delegate.onBackButtonClick(isConversationOpened: false)
             case .messageReceive:
                 guard let data = data,
                       let messages = data["messageList"] as? [ALMessage] else {return}
                 for message in messages {
                     delegate.messageReceived(message: message)
                 }
-        case .conversationInfoClick:
-            delegate.conversationInfoClicked()
+            case .conversationInfoClick:
+                delegate.conversationInfoClicked()
         }
     }
 

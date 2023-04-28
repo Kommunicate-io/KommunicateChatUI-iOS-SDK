@@ -1397,14 +1397,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         linkButtonSelected(selectedButton)
     }
 
-    func listTemplateSelected(defaultText: String?, action: ListTemplate.Action) {
+    func listTemplateSelected(element: ListTemplate.Element?, defaultText: String?, action: ListTemplate.Action?) {
         guard !configuration.disableRichMessageButtonAction else { return }
-        guard let type = action.type else {
+        let defaultText = element?.title
+        guard let action = action, let type = action.type  else {
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element , "type": ""])
             print("Type not defined for action")
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": action, "type": type])
 
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": action , "type": type])
         switch type {
         case ActionType.link.rawValue:
             guard let urlString = action.url, let url = URL(string: urlString) else { return }

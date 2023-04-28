@@ -8,7 +8,6 @@ PODS:
   - KommunicateChatUI-iOS-SDK (1.0.6):
     - KommunicateChatUI-iOS-SDK/Complete (= 1.0.6)
   - KommunicateChatUI-iOS-SDK/Complete (1.0.6):
-
     - Kingfisher (~> 7.6.2)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
     - KommunicateCore-iOS-SDK (~> 1.0.9)
@@ -68,4 +67,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ceb862bddf2e495511834b44350239c68ccce94f
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
