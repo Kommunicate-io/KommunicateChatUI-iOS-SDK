@@ -341,7 +341,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     lazy var listTemplateHeight = listTemplateView.heightAnchor.constraint(equalToConstant: 0)
 
-    public var templateSelected: ((_ text: ListTemplate.Element?, _ defaultText: String?, _ action: ListTemplate.Action?) -> Void)? {
+    public var templateSelected: ((_ element: ListTemplate.Element?, _ defaultText: String?, _ action: ListTemplate.Action?) -> Void)? {
         didSet {
             listTemplateView.selected = templateSelected
         }

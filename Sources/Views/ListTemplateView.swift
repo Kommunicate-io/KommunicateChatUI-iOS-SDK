@@ -285,7 +285,7 @@ class ListTemplateView: UIView {
     private func setupElements() {
         listItems = (0 ... 7).map {
             let item = ListTemplateElementView()
-            item.tag = Int($0)
+            item.tag = $0
             item.backgroundColor = .white
             item.selected = { [weak self] element in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
