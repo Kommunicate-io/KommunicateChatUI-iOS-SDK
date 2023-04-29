@@ -131,6 +131,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         connectionToken = Chat.instance?.connectionProvider.observeConnectionStatus { [self] (connection) in
             // Handle connection status changes
             guard connection.isConnected else {
+                sendLogToKMServer(message: "iOS SDK: Socket connnection status is false in observer for conversation \(groupId).Retrying Connection..")
                 print("connecting to zendesk socket")
                 connectionProvider.connect()
                 return
