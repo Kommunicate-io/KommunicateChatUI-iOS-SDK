@@ -81,7 +81,6 @@ class ALKVideoUploadManager: NSObject {
                 
                 if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String:String] {
                     for (key, value) in customHeaders {
-                       print("Pakk101 \(key),\(value)")
                         postURLRequest.setValue(value, forHTTPHeaderField: key)
                     }
                 }

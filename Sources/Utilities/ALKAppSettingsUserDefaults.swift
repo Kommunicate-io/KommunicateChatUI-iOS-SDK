@@ -116,22 +116,6 @@ public struct ALKAppSettingsUserDefaults {
         }
         return UIColor.actionButtonColor()
     }
-    
-//    public func getCustomAttachmentUrl() -> String {
-//        if let appSettings = getAppSettings(),
-//           let url = appSettings.defaultUploadOverrideUrl {
-//            return url
-//        }
-//        return ""
-//    }
-//
-//    public func getCustomAttachmentheaderes() -> [String:String] {
-//        if let appSettings = getAppSettings(),
-//           let headers = appSettings.defaultUploadOverrideHeaders {
-//            return headers
-//        }
-//        return [:]
-//    }
 
     /// If you want to override all the app settings then you can use this method.
     public func setAppSettings(appSettings: ALKAppSettings) {
