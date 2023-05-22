@@ -289,7 +289,7 @@ class ListTemplateView: UIView {
             item.backgroundColor = .white
             item.selected = { [weak self] element in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
-                selected(element,nil,nil)
+                selected(element,nil,element.action)
             }
             return item
         }

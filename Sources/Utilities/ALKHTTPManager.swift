@@ -160,6 +160,12 @@ class ALKHTTPManager: NSObject {
             task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
         }
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
+        
+        if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String:String] {
+            for (key, value) in customHeaders {
+                postURLRequest.setValue(value, forHTTPHeaderField: key)
+            }
+        }
         let responseHandler = ALResponseHandler()
         responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
             guard error == nil,
@@ -177,15 +183,11 @@ class ALKHTTPManager: NSObject {
                 let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
                 let imageData = NSData(contentsOfFile: filePath.path)
 
-                if let data = imageData as Data? {
-                    print("data present")
-                    body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-                    body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, task.fileName ?? "").data(using: .utf8)!)
-                    body.append(String(format: "Content-Type:%@\r\n\r\n", task.contentType ?? "").data(using: .utf8)!)
-                    body.append(data)
-                    body.append(String(format: "\r\n").data(using: .utf8)!)
-                }
-
+                body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
+                body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, task.fileName ?? "").data(using: .utf8)!)
+                body.append(String(format: "Content-Type:%@\r\n\r\n", task.contentType ?? "").data(using: .utf8)!)
+                body.append(String(format: "\r\n").data(using: .utf8)!)
+                
                 body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
                 request.httpBody = body
                 request.url = task.url

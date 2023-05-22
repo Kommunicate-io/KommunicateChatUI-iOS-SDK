@@ -5,6 +5,7 @@ use_frameworks!
 
 target 'KommunicateChatUI-iOS-SDK-Demo' do
     pod 'KommunicateChatUI-iOS-SDK', :path => '../KommunicateChatUI-iOS-SDK.podspec'
+    pod 'KommunicateCore-iOS-SDK', :git => 'https://github.com/Sathyan-KM/KommunicateCore-iOS-SDK.git', :branch => ‘CM-1444’
     pod 'SwiftLint'
 end
 

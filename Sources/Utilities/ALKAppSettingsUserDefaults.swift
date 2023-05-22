@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import KommunicateCore_iOS_SDK
 import UIKit
 
 /// `ALKAppSettingsUserDefaults` is used for handling the app settings and storing the data
@@ -115,6 +116,22 @@ public struct ALKAppSettingsUserDefaults {
         }
         return UIColor.actionButtonColor()
     }
+    
+//    public func getCustomAttachmentUrl() -> String {
+//        if let appSettings = getAppSettings(),
+//           let url = appSettings.defaultUploadOverrideUrl {
+//            return url
+//        }
+//        return ""
+//    }
+//
+//    public func getCustomAttachmentheaderes() -> [String:String] {
+//        if let appSettings = getAppSettings(),
+//           let headers = appSettings.defaultUploadOverrideHeaders {
+//            return headers
+//        }
+//        return [:]
+//    }
 
     /// If you want to override all the app settings then you can use this method.
     public func setAppSettings(appSettings: ALKAppSettings) {
@@ -153,6 +170,9 @@ public struct ALKAppSettingsUserDefaults {
             setAppSettings(appSettings: appSettings)
         }
         UserDefaults.standard.set(appSettings.hidePostCTAEnabled, forKey: "HidePostCTAEnabled")
+
+        ALApplozicSettings.setDefaultOverrideuploadUrl(appSettings.defaultUploadOverrideUrl ?? "")
+        ALApplozicSettings.setDefaultOverrideuploadHeaders(NSMutableDictionary(dictionary: appSettings.defaultUploadOverrideHeaders ?? [:]))
     }
 
     /// This method will be used for getting the app settings data
@@ -198,6 +218,9 @@ public class ALKAppSettings: NSObject, NSCoding {
         static let attachmentIconsTintColor = "attachmentIconsTintColor"
         static let buttonPrimaryColor = "buttonPrimaryColor"
         static let hidePostCTAEnabled = "hidePostCTAEnabled"
+        static let defaultUploadOverrideUrl = "defaultUploadOverrideUrl"
+        static let defaultUploadOverrideHeaders = "defaultUploadOverrideHeaders"
+        
     }
 
     var primaryColor: String
@@ -211,6 +234,8 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var attachmentIconsTintColor: String?
     public var buttonPrimaryColor: String?
     public var hidePostCTAEnabled: Bool = false
+    public var defaultUploadOverrideUrl: String?
+    public var defaultUploadOverrideHeaders: [String:String]?
 
     // MARK: - Public Initialization
 
@@ -227,6 +252,8 @@ public class ALKAppSettings: NSObject, NSCoding {
         attachmentIconsTintColor = coder.decodeObject(forKey: CoderKey.attachmentIconsTintColor) as? String
         buttonPrimaryColor = coder.decodeObject(forKey: CoderKey.buttonPrimaryColor) as? String
         hidePostCTAEnabled = coder.decodeBool(forKey: CoderKey.hidePostCTAEnabled)
+        defaultUploadOverrideUrl = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideUrl) as? String
+        defaultUploadOverrideHeaders = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideHeaders) as? [String:String]
     }
 
     // MARK: - Public methods
