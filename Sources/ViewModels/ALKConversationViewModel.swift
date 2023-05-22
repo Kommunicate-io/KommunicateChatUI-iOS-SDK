@@ -1027,6 +1027,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
+            task.groupdId = alMessage.groupId.stringValue
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadAttachment(task: task)
             downloadManager.uploadCompleted = { [weak self] responseDict, task in
@@ -1061,6 +1062,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
+            task.groupdId = alMessage.groupId.stringValue
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
             downloadManager.uploadAttachment(task: task)

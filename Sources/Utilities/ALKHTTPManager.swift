@@ -181,7 +181,6 @@ class ALKHTTPManager: NSObject {
                 request.setValue(contentType, forHTTPHeaderField: "Content-Type")
                 var body = Data()
                 let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
-                let imageData = NSData(contentsOfFile: filePath.path)
 
                 body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
                 body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, task.fileName ?? "").data(using: .utf8)!)
@@ -189,6 +188,10 @@ class ALKHTTPManager: NSObject {
                 body.append(String(format: "\r\n").data(using: .utf8)!)
                 
                 body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+                if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+                    body.append(String(format: "%@\n",  ["groupId": task.groupdId]).data(using: .utf8)!)
+                    body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+                }
                 request.httpBody = body
                 request.url = task.url
                 let configuration = URLSessionConfiguration.default

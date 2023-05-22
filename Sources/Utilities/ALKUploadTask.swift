@@ -20,6 +20,7 @@ public class ALKUploadTask {
     public var filePath: String?
     public var thumbnailPath: String?
     public var identifier: String?
+    public var groupdId: String?
 
     public init(url: URL, fileName: String) {
         self.url = url
