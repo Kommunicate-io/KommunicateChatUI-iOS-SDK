@@ -120,11 +120,17 @@ class ALKVideoUploadManager: NSObject {
         var body = Data()
         let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
 
-        body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-        body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, uploadTask?.thumbnailPath ?? "").data(using: .utf8)!)
-        body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
-        body.append(String(format: "\r\n").data(using: .utf8)!)
-    
+        let imageData = NSData(contentsOfFile: path)
+
+         if let data = imageData as Data? {
+             print("data present")
+             body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
+             body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, uploadTask?.thumbnailPath ?? "").data(using: .utf8)!)
+             body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
+             body.append(data)
+             body.append(String(format: "\r\n").data(using: .utf8)!)
+         }
+
         body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
 
         if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
