@@ -896,15 +896,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alHandler = ALDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
               let message = messageService.createMessageEntity(dbMessage) else { return }
+        
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
 
-        if ALApplozicSettings.isS3StorageServiceEnabled() {
+        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty,let metadata = fileInfo["metadata"] as? [String:Any] {
+            message.metadata = modfiedMessageMetadata(alMessage: message, metadata: metadata)
+        } else if ALApplozicSettings.isS3StorageServiceEnabled() {
             message.fileMeta.populate(fileInfo)
         } else {
             guard let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
             message.fileMeta.populate(fileMeta)
         }
+        
         if let contentType = dbMessage.fileMetaInfo.contentType, contentType.hasPrefix("video") {
             let thumbnailUrl = dbMessage.fileMetaInfo.thumbnailUrl
             let thumbnailBlobKeyString = dbMessage.fileMetaInfo.thumbnailBlobKeyString
@@ -915,18 +919,26 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
 
         message.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-
+        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+            message.contentType = 0
+        }
+        
         let error = alHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
             return
         }
-
+        
         send(alMessage: message) {
             updatedMessage in
             guard let mesg = updatedMessage else { return }
             DispatchQueue.main.async {
                 NSLog("UI updated at section: \(indexPath.section), \(message.isSent)")
+                if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+                    // while storing message type was photo.Since Attachment is uploaded to client server, now its a rich message. thatswhy replacing it in DB.
+                    messageService.deleteMessage(byKey: message.key)
+                    messageService.add(updatedMessage)
+                }
                 self.alMessages[indexPath.section] = mesg
                 self.messageModels[indexPath.section] = mesg.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
@@ -1015,6 +1027,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
+            task.groupdId = alMessage.groupId.stringValue
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadAttachment(task: task)
             downloadManager.uploadCompleted = { [weak self] responseDict, task in
@@ -1049,6 +1062,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
+            task.groupdId = alMessage.groupId.stringValue
             let downloadManager = ALKHTTPManager()
             downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
             downloadManager.uploadAttachment(task: task)

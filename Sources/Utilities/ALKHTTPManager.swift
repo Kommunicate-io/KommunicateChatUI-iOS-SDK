@@ -156,10 +156,16 @@ class ALKHTTPManager: NSObject {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
-        if ALApplozicSettings.isS3StorageServiceEnabled() {
+        if ALApplozicSettings.isS3StorageServiceEnabled() && ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
             task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
         }
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
+        
+        if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String:String] {
+            for (key, value) in customHeaders {
+                postURLRequest.setValue(value, forHTTPHeaderField: key)
+            }
+        }
         let responseHandler = ALResponseHandler()
         responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
             guard error == nil,
@@ -175,6 +181,7 @@ class ALKHTTPManager: NSObject {
                 request.setValue(contentType, forHTTPHeaderField: "Content-Type")
                 var body = Data()
                 let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
+                
                 let imageData = NSData(contentsOfFile: filePath.path)
 
                 if let data = imageData as Data? {
@@ -185,8 +192,14 @@ class ALKHTTPManager: NSObject {
                     body.append(data)
                     body.append(String(format: "\r\n").data(using: .utf8)!)
                 }
-
                 body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+                
+                
+                if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+                    body.append(String(format: "%@\n",  ["groupId": task.groupdId]).data(using: .utf8)!)
+                    body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+                }
+                
                 request.httpBody = body
                 request.url = task.url
                 let configuration = URLSessionConfiguration.default

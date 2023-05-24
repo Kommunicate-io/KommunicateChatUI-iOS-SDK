@@ -129,7 +129,10 @@ public class ALKMyMessageListTemplateCell: ALKListTemplateCell {
 
         let width = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
         let templateLeftPadding = leftPadding + width
-        let templateRightPadding = rightPadding - width
+        var templateRightPadding = rightPadding - width
+        if (templateRightPadding == 0) {
+            templateRightPadding = 10.0
+        }
         listTemplateView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ViewPadding.ListTemplateView.top).isActive = true
         listTemplateView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: templateLeftPadding).isActive = true
         listTemplateView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1 * templateRightPadding).isActive = true

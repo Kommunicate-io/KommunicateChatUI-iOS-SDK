@@ -44,7 +44,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
             return UITableViewCell()
         }
-        print("Cell updated at row: ", indexPath.row, "and type is: ", message.messageType)
+        print("Cell updated at row: ", indexPath.row ,"section: ", indexPath.section, "and type is: ", message.messageType)
 
         switch message.messageType {
         case .text, .html, .email:
@@ -382,6 +382,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyMessageListTemplateCell
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
+                cell.templateSelected = { [weak self] element, defaultText, action in
+                    guard let weakSelf = self else { return }
+                    weakSelf.listTemplateSelected(element:element, defaultText:defaultText,  action: action)
+                }
                 cell.update(chatBar: chatBar)
                 return cell
             } else {
