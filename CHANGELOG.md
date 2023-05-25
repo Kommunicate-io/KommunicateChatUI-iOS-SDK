@@ -2,9 +2,10 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-##[Unreleased]
+## [1.0.8] 2023-05-24
 - [CM-1444] Added custom cloud support for attachments
 - [CM-1469] Added restrction attachment upload size
+
 ## [1.0.7] 2023-04-28
 - Fixed Event data not getting passed for Rich Message Event
 ## [1.0.6] 2023-04-19
