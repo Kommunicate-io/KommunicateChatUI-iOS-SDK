@@ -42,6 +42,7 @@ class ALKVideoUploadManager: NSObject {
                 task.identifier = alMessage.key
                 task.contentType = contentType
                 task.filePath = filePath
+                task.groupdId = alMessage.groupId.stringValue
 
                 let downloadManager = ALKHTTPManager()
                 downloadManager.uploadDelegate = self.uploadDelegate
@@ -75,9 +76,16 @@ class ALKVideoUploadManager: NSObject {
                 task.contentType = alMessage.fileMeta.contentType
                 task.filePath = alMessage.imageFilePath
                 task.thumbnailPath = filePath.lastPathComponent
+                task.groupdId = alMessage.groupId.stringValue
                 self.uploadTask = task
 
                 guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
+                
+                if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String:String] {
+                    for (key, value) in customHeaders {
+                        postURLRequest.setValue(value, forHTTPHeaderField: key)
+                    }
+                }
 
                 responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
                     guard let weakSelf = self,
@@ -89,7 +97,7 @@ class ALKVideoUploadManager: NSObject {
                     }
 
                     if FileManager.default.fileExists(atPath: filePath.path) {
-                        request = weakSelf.getURLRequestWithFilePath(path: filePath.path, request: request)
+                        request = weakSelf.getURLRequestWithFilePath(path: filePath.path, request: request, groupId: alMessage.groupId.stringValue)
                         let configuration = URLSessionConfiguration.default
                         weakSelf.session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
                         let dataTask = weakSelf.session?.dataTask(with: request)
@@ -104,25 +112,32 @@ class ALKVideoUploadManager: NSObject {
         print("Video file path: ", alMessage.imageFilePath ?? "")
     }
 
-    func getURLRequestWithFilePath(path: String, request: URLRequest) -> URLRequest {
+    func getURLRequestWithFilePath(path: String, request: URLRequest, groupId: String?) -> URLRequest {
         var urlRequest = request
         let boundary = "------ApplogicBoundary4QuqLuM1cE5lMwCy"
         let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
         urlRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
         var body = Data()
         let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
+
         let imageData = NSData(contentsOfFile: path)
 
-        if let data = imageData as Data? {
-            print("data present")
-            body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-            body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, uploadTask?.thumbnailPath ?? "").data(using: .utf8)!)
-            body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
-            body.append(data)
-            body.append(String(format: "\r\n").data(using: .utf8)!)
-        }
+         if let data = imageData as Data? {
+             print("data present")
+             body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
+             body.append(String(format: "Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fileParamConstant, uploadTask?.thumbnailPath ?? "").data(using: .utf8)!)
+             body.append(String(format: "Content-Type:%@\r\n\r\n", "image/jpeg").data(using: .utf8)!)
+             body.append(data)
+             body.append(String(format: "\r\n").data(using: .utf8)!)
+         }
 
         body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+
+        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+            body.append(String(format: "%@\n",  ["groupId": groupId]).data(using: .utf8)!)
+            body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
+        }
+        
         urlRequest.httpBody = body
         urlRequest.url = uploadTask?.url
         return urlRequest
@@ -198,6 +213,7 @@ extension ALKVideoUploadManager: URLSessionDataDelegate {
                     task.identifier = alMessage?.key
                     task.contentType = contentType
                     task.filePath = filePath
+                    task.groupdId = alMessage?.groupId.stringValue
 
                     let downloadManager = ALKHTTPManager()
                     downloadManager.uploadDelegate = self.uploadDelegate

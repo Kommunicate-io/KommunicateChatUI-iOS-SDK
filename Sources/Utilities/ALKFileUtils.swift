@@ -101,3 +101,12 @@ class ALKFileUtils: NSObject {
         return filePath
     }
 }
+
+extension FileManager {
+    func sizeOfFile(atPath path: String) -> Int64? {
+        guard let attrs = try? attributesOfItem(atPath: path), let size = attrs[.size] as? Int64  else {
+            return nil
+        }
+       return size/1024
+    }
+}
