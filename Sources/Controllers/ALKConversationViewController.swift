@@ -2266,6 +2266,22 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             self.navigationBar.updateView(profile: profile)
         }
     }
+    
+    func showUploadRestrictionAlert() {
+        let uploadrestrictionTitle = self.localizedString(
+            forKey: "uploadRestrictionTitle",
+            withDefaultValue: SystemMessage.Warning.uploadAttachmentRestrictionTitle,
+            fileName: self.localizedStringFileName
+        )
+        
+        let uploadrestrictionMessage = self.localizedString(
+            forKey: "uploadRestrictionMessage",
+            withDefaultValue: SystemMessage.Warning.uploadAttachmentRestrictionMessage,
+            fileName: self.localizedStringFileName
+        )
+       
+        self.showAlert(alertTitle: uploadrestrictionTitle, alertMessage: uploadrestrictionMessage)
+    }
 }
 
 extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
@@ -2529,6 +2545,12 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
         for index in 0 ..< fileCount {
             if index < images.count {
                 let image = images[index]
+                guard image.getSizeInMb() < Double(ALApplozicSettings.getMaxImageSizeForUploadInMB()) else{
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                        self.showUploadRestrictionAlert()
+                    })
+                    continue
+                }
                 let (message, indexPath) = viewModel.send(
                     photo: image,
                     metadata: configuration.messageMetadata
@@ -2549,6 +2571,13 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
                 let path = videos[index - images.count]
+                
+                if let size = FileManager().sizeOfFile(atPath: path), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                        self.showUploadRestrictionAlert()
+                    })
+                    continue
+                }
                 guard let indexPath = viewModel.sendVideo(
                     atPath: path,
                     sourceType: .photoLibrary,
