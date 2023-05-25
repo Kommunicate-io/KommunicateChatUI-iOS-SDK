@@ -16,6 +16,7 @@ struct KommunicateURL {
     static let sendMessage = "https://api.kommunicate.io/rest/ws/zendesk/message/send"
     static let sendAttachment = "https://api.kommunicate.io/rest/ws/zendesk/file/send"
     static let resolveConversation = "https://chat.kommunicate.io/rest/ws/group/status/change?groupId="
+    static let logApi = "https://api.kommunicate.io/rest/ws/tools/log"
 }
 
 public protocol KMZendeskChatProtocol {
@@ -85,7 +86,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         self.groupId = groupId
     }
     
-    
     public func disconnectFromZendesk() {
         Chat.connectionProvider?.disconnect()
         resetConfiguration()
@@ -121,6 +121,26 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         }
     }
     
+    func connectToZendeskSocket() {
+        guard let connectionProvider = Chat.connectionProvider else {
+            return
+        }
+        // Connecting to zeendesk server
+        connectionProvider.connect()
+
+        connectionToken = Chat.instance?.connectionProvider.observeConnectionStatus { [self] (connection) in
+            // Handle connection status changes
+            guard connection.isConnected else {
+                sendLogToKMServer(message: "iOS SDK: Socket connnection status is false in observer for conversation \(groupId).Retrying Connection..")
+                print("connecting to zendesk socket")
+                connectionProvider.connect()
+                return
+            }
+            self.observeChatLogs()
+            self.processBufferMessages()
+       }
+    }
+    
     func observeChatLogs() {
         lastSyncTime = ALApplozicSettings.getZendeskLastSyncTime() ?? 0
         let stateToken = Chat.chatProvider?.observeChatState { (state) in
@@ -128,13 +148,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
             self.processChatLogs(logs: state.logs)
         }
         chatLogToken = stateToken
-        let connectionToken = Chat.connectionProvider?.observeConnectionStatus { [self] (connection) in
-            // Handle connection status changes
-            guard connection.isConnected else {
-               return
-            }
-            processBufferMessages()
-       }
     }
     
     func fetchUserId() {
@@ -170,9 +183,11 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         responseHandler.authenticateAndProcessRequest(postURLRequest, andTag: "") {
             (json, error) in
             guard error == nil else {
+                self.connectToZendeskSocket()
                 return
             }
             guard let dict = json as? [String: Any], let data = dict["data"] as? [String: Any], let jwtKey = data["jwt"] as? String else {
+                self.connectToZendeskSocket()
                 return
             }
             self.jwtToken = jwtKey
@@ -181,43 +196,51 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         }
     }
     
-    func connectToZendeskSocket() {
-        guard let connectionProvider = Chat.connectionProvider else {
-            return
+    func sendLogToKMServer(message: String) {
+        let body = ["message":message]
+        let postdata: Data? = try? JSONSerialization.data(withJSONObject: body, options: [])
+        var theParamString: String? = nil
+        if let aPostdata = postdata {
+            theParamString = String(data: aPostdata, encoding: .utf8)
         }
-        // Connecting to zeendesk server
-        connectionProvider.connect()
-        self.observeChatLogs()
-
-         connectionToken = Chat.instance?.connectionProvider.observeConnectionStatus { [self] (connection) in
-            // Handle connection status changes
-            guard connection.isConnected else {
-                print("connecting to zendesk socket")
-                connectionProvider.connect()
-               return
+        
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: KommunicateURL.logApi, paramString: theParamString) as NSMutableURLRequest? else { return }
+        let responseHandler = ALResponseHandler()
+        
+        responseHandler.authenticateAndProcessRequest(postURLRequest, andTag: "") {
+            (json, error) in
+            guard error == nil else {
+                print("Failed to send zendesk logs to server \(error?.localizedDescription)")
+                return
             }
-            self.processBufferMessages()
-       }
-       
+            guard let dict = json as? [String: Any], let code = dict["code"] as? String, code == "SUCCESS" else {
+                print("Failed to send zendesk logs to server")
+                return
+            }
+        }
     }
     
     func sendMessage(message: ALMessage) {
-        guard isHandOffHappened else {return}
+        guard isHandOffHappened else {
+            sendLogToKMServer(message: "iOS SDK:Failed to send message\(message.messageId) to zendesk due to handoff")
+            return
+        }
         
         guard let connectionProvider = Chat.connectionProvider, connectionProvider.status == .connected else {
             addMessageToBuffer(message: message)
             connectToZendeskSocket()
+            sendLogToKMServer(message: "iOS SDK:Failed to send message\(message.messageId) to zendesk due to Socket Connection. Retrying connection..")
             return
         }
         sendMessageToZendesk(message: message.message) { (result) in
             switch result {
             case .success:
                 print("Message Sent to Zendesk Successfully")
-                if self.messageBufffer.contains(message) {
-                    self.messageBufffer.remove(object: message)
-                }
+                self.removeMessageFromBuffer(message: message)
             case .failure(let error):
                 print("Failed Send the Message to Zendesk \(error)")
+                self.addMessageToBuffer(message: message)
+                self.sendLogToKMServer(message: "iOS SDK:Failed to send message\(message.messageId) to zendesk due to error zendesk api error: \(error.localizedDescription)")
             }
         }
     }
@@ -238,9 +261,15 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         messageBufffer.append(message)
     }
     
+    func removeMessageFromBuffer(message:ALMessage) {
+        if messageBufffer.contains(message) {
+            messageBufffer.remove(object: message)
+        }
+    }
     func sendChatTranscript() {
         let channelKey = NSNumber(value: Int(groupId) ?? 0)
         guard channelKey != 0 else {
+            sendLogToKMServer(message: "iOS SDK:Failed to send Chat Transcript \(channelKey) to zendesk due invalid groupid")
             print("Failed to fetch messages for channel key \(channelKey)")
             return
         }
@@ -269,6 +298,23 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
                 guard !userName.isEmpty && !message.isEmpty else {continue}
                 transcriptString.append("\(userName): \(message)\n")
             }
+            //for logs
+            let transcriptMessage = ALMessage()
+            transcriptMessage.message = transcriptString
+            
+            guard isHandOffHappened else {
+                addMessageToBuffer(message: transcriptMessage)
+                sendLogToKMServer(message: "iOS SDK: Failed to send Chat Transcript \(channelKey) to zendesk due to handoff")
+                return
+            }
+            
+
+            guard let connectionProvider = Chat.connectionProvider, connectionProvider.status == .connected else {
+                addMessageToBuffer(message: transcriptMessage)
+                connectToZendeskSocket()
+                sendLogToKMServer(message: "iOS SDK: Failed Send the Chat Transcript \(channelKey)  due to socket conneciton.Retrying connection..")
+                return
+            }
 
             sendMessageToZendesk(message: transcriptString, completionHandler: { (result) in
                 switch result {
@@ -276,7 +322,9 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
                     self.isChatTranscriptSent = true
                     print("Chat Transcript Sent to Zendesk Successfully")
                 case .failure(let error):
-                    print("Failed Send the chat transcript to Zendesk \(error)")
+                    print("Failed Send the chat transcript to due Zendesk api \(error)")
+                    self.addMessageToBuffer(message: transcriptMessage)
+                    self.sendLogToKMServer(message: "iOS SDK: Failed Send the Chat Transcript due to Zendesk api \(error)")
                 }
             })
         }
@@ -331,13 +379,29 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
     
     func sendChatInfo() {
         let infoString = "This chat is initiated from Kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
-
+        let infoMessage = ALMessage()
+        infoMessage.message = infoString
+        
+        guard isHandOffHappened else {
+            addMessageToBuffer(message: infoMessage)
+            sendLogToKMServer(message: "iOS SDK: Failed to send chat info \(groupId) due to handoff")
+            return
+        }
+        
+        guard let connectionProvider = Chat.connectionProvider, connectionProvider.status == .connected else {
+            sendLogToKMServer(message: "iOS SDK: Failed to send chat info \(groupId) due to socket connection.Retrying connection..")
+            connectToZendeskSocket()
+            return
+        }
+        
         sendMessageToZendesk(message: infoString, completionHandler: {(result) in
             switch result {
             case .success(let messageId):
               print("info message sent successfully \(messageId)")
             case .failure(let error):
               print("Failed to send info message due to \(error)")
+                self.sendLogToKMServer(message: "iOS SDK:Failed to send chat info \(self.groupId) due to Zendesk api error \(error.localizedDescription)")
+                self.addMessageToBuffer(message: infoMessage)
             }
         })
     }
