@@ -176,3 +176,6 @@ DeleteConversationTitle = "Delete Conversation";
 DeleteConversationContent = "Do you want to delete the conversation?";
 DeleteConversationSuccessMessage = "Successfully deleted the conversation!!!";
 DeleteConversationFailureMessage = "Failed to delete the conversation!!!";
+/* upload Max size  restriction messages */
+uploadRestrictionTitle = "Large File";
+uploadRestrcitionMessage = "Itseems uploading file size is larger than the limit.";
