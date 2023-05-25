@@ -2275,7 +2275,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         )
         
         let uploadrestrictionMessage = self.localizedString(
-            forKey: "uploadRestrcitionMessage",
+            forKey: "uploadRestrictionMessage",
             withDefaultValue: SystemMessage.Warning.uploadAttachmentRestrictionMessage,
             fileName: self.localizedStringFileName
         )

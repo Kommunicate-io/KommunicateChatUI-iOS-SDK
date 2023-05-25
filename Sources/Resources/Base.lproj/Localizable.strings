@@ -178,4 +178,4 @@ DeleteConversationSuccessMessage = "Successfully deleted the conversation!!!";
 DeleteConversationFailureMessage = "Failed to delete the conversation!!!";
 /* upload Max size  restriction messages */
 uploadRestrictionTitle = "File Too Big!!";
-uploadRestrcitionMessage = "Looks like the file you are trying to upload is too big.";
+uploadRestrictionMessage = "Looks like the file you are trying to upload is too big.";

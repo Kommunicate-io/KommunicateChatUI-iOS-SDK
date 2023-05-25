@@ -85,7 +85,7 @@ struct SystemMessage: Localizable {
         static let profaneWordsMessage = localizedString(forKey: "profaneWordsMessage")
         static let videoExportError = localizedString(forKey: "VideoExportError")
         static let uploadAttachmentRestrictionTitle = localizedString(forKey: "uploadRestrictionTitle")
-        static let uploadAttachmentRestrictionMessage = localizedString(forKey: "uploadRestrcitionMessage")
+        static let uploadAttachmentRestrictionMessage = localizedString(forKey: "uploadRestrictionMessage")
     }
 
     enum ButtonName {
