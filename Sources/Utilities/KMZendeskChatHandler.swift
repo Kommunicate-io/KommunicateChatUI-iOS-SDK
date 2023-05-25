@@ -28,9 +28,8 @@ public protocol KMZendeskChatProtocol {
     func endChat()
     func setGroupId(_ groupId: String)
 }
-
+// swiftlint:disable type_body_length
 public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatProtocol {
-    
     public static let shared = KMZendeskChatHandler()
     var groupId: String = ""
     var zenChatIntialized = false
