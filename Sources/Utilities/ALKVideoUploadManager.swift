@@ -131,13 +131,14 @@ class ALKVideoUploadManager: NSObject {
              body.append(String(format: "\r\n").data(using: .utf8)!)
          }
 
+        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+            body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
+            body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n",  "data").data(using: .utf8)!)
+            body.append(String(format: "Content-Type:%@\r\n\r\n", "application/json").data(using: .utf8)!)
+            body.append(String(format: "{\"groupId\": \"%@\"}\r\n",groupId ?? "").data(using: .utf8)!)
+        }
         body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
 
-        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
-            body.append(String(format: "%@\n",  ["groupId": groupId]).data(using: .utf8)!)
-            body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
-        }
-        
         urlRequest.httpBody = body
         urlRequest.url = uploadTask?.url
         return urlRequest
@@ -233,3 +234,4 @@ extension ALKVideoUploadManager: URLSessionDataDelegate {
         }
     }
 }
+

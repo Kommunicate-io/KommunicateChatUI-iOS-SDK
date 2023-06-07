@@ -228,6 +228,11 @@ extension ALMessage {
             }
             return .email
         }
+        
+        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty && Int32(contentType) == ALMESSAGE_CONTENT_ATTACHMENT {
+            return richMessageType()
+        }
+        
         switch Int32(contentType) {
         case ALMESSAGE_CONTENT_DEFAULT:
             return richMessageType()
@@ -389,6 +394,8 @@ extension ALMessage {
                 return .text
             case ALMESSAGE_CONTENT_TEXT_HTML:
                 return .html
+            case ALMESSAGE_CONTENT_ATTACHMENT:
+                return getAttachmentType() ?? .text
             default:
                 return .text
             }
