@@ -1409,7 +1409,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": action , "type": type])
         switch type {
         case ActionType.link.rawValue:
-            guard let urlString = action.url, let url = URL(string: urlString) else { return }
+            guard let urlString = action.url, let url = URL(string: urlString), !configuration.restrictLinkNavigationOnListTemplateTap else { return }
             openLink(url)
 
         case ActionType.quickReply.rawValue:
