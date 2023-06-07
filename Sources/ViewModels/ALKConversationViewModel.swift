@@ -919,9 +919,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
 
         message.status = NSNumber(integerLiteral: Int(SENT.rawValue))
-        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
-            message.contentType = 0
-        }
         
         let error = alHandler?.saveContext()
         if error != nil {

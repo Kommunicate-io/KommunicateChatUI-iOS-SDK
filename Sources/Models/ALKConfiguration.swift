@@ -200,6 +200,9 @@ public struct ALKConfiguration {
     
     /// if true then webview will be pushed once formaction url returns with response, By default it is false
     public var pushWebviewWithFormActionResponse = false
+    
+    /// If true then on tap of list template(link) browser will not be opened. By default it is false
+    public var restrictLinkNavigationOnListTemplateTap = false
 
 
     /// If true, contact share option in chatbar will be hidden.
