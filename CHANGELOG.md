@@ -5,6 +5,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 ## [1.0.9] 2023-06-07
 - Added Customization to restrict browser navigation on tap of link list template
 - Fixed the upload issue for custom cloud support
+
 ## [1.0.8] 2023-05-24
 - [CM-1444] Added custom cloud support for attachments
 - [CM-1469] Added restrction attachment upload size
