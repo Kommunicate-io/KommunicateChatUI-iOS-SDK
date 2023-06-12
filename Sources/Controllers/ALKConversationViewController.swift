@@ -2091,6 +2091,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             }
         }
     }
+    
+    public func updateChatbarText(text: String) {
+        chatBar.setDefaultText(text)
+    }
 
     func updateTableView() {
         let oldCount = tableView.numberOfSections
