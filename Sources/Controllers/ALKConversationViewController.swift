@@ -429,12 +429,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.delegate = self
         refreshViewController()
 
-        if let templates = viewModel.getMessageTemplates() {
-            templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
-        }
-        templateView?.messageSelected = { [weak self] template in
-            self?.viewModel.selected(template: template, metadata: self?.configuration.messageMetadata)
-        }
         if isFirstTime {
             setupView()
         } else {
@@ -448,6 +442,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+       
+        if let templates = viewModel.getMessageTemplates() {
+            templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
+        }
+        
+        templateView?.messageSelected = { [weak self] template in
+            self?.viewModel.selected(template: template, metadata: self?.configuration.messageMetadata)
+        }
+        
         setupConstraints()
         setRichMessageKitTheme()
         setupProfanityFilter()
