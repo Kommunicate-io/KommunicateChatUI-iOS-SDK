@@ -167,6 +167,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         itemListView.register(ALKFormDateItemCell.self)
         itemListView.register(ALKFormTimeItemCell.self)
         itemListView.register(ALKFormDateTimeItemCell.self)
+        itemListView.register(KMFormDropDownCell.self)
     }
 
     private func setUpSubmitButton(title: String) {
@@ -381,6 +382,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             } else {
                 cell.valueTextField.text = ""
             }
+            return cell
+        case .dropdown:
+            print("Drop Down Support ")
+            let cell: KMFormDropDownCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.item = item
             return cell
         }
     }

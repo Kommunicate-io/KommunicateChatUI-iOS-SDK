@@ -56,6 +56,7 @@ extension FormTemplate.Element {
         case date
         case time
         case dateTimeLocal = "datetime-local"
+        case dropdown
         case unknown
     }
 

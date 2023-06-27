@@ -16,6 +16,7 @@ enum FormViewModelItemType {
     case date
     case time
     case dateTimeLocal
+    case dropdown
 }
 
 protocol FormViewModelItem {
@@ -170,6 +171,26 @@ class FormViewModelTimeItem: FormViewModelItem {
     }
 }
 
+class FormViewModelDropdownItem: FormViewModelItem {
+    typealias Option = FormTemplate.Option
+
+    var type: FormViewModelItemType {
+        return .dropdown
+    }
+    
+    let title:String
+    let name: String
+    var options: [Option]
+
+    init(title: String, name: String,options: [Option]) {
+        self.title = title
+        self.name = name
+        self.options = options
+    }
+    
+    
+}
+
 extension FormTemplate {
     var viewModeItems: [FormViewModelItem] {
         var items: [FormViewModelItem] = []
@@ -229,6 +250,12 @@ extension FormTemplate {
                 guard let elementData = element.data,
                       let label = elementData.label else { return }
                 items.append(FormViewModelDateTimeLocalItem(label: label))
+            case .dropdown:
+                guard let elementData = element.data,
+                    let title = elementData.title,
+                    let options = elementData.options,
+                        let name = elementData.name else { return }
+                items.append(FormViewModelDropdownItem(title: title, name: name, options: options))
             default:
                 print("\(element.contentType) form template type is not part of the form list view")
             }
