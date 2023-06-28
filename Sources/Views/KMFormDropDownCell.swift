@@ -21,6 +21,24 @@ class KMFormDropDownCell: UITableViewCell {
             nameLabel.text = item.title
             titleButton.setTitle("Profession", for: .normal)
             options = item.options
+            guard let options = options, !options.isEmpty else{return}
+            let ite = options.map({$0.label})
+            menu.dataSource = ite
+//            /["Sathyan", "Aman","Pranay", "Adarsh","Rajeev"]
+//            menu.show()
+//            // Action triggered on selection
+//            menu.cellConfiguration = { [unowned self] (index, item) in
+//                return options[index].label
+//            }
+            
+            print("Pakka101 \(ite)")
+            menu.selectionAction = { [unowned self] (index: Int, item: String) in
+              print("Selected item: \(item) at index: \(index)")
+                titleButton.setTitle(item, for: .normal)
+            }
+
+            // Will set a custom width instead of the anchor view width
+//            menu.width = 200
 
         }
     }
@@ -47,30 +65,34 @@ class KMFormDropDownCell: UITableViewCell {
         return button
     }()
     
-    let tableView: UITableView = {
-        let table = UITableView()
-        table.backgroundColor = .black
-        return table
+    let menu: DropDown = {
+        let menu = DropDown()
+        return menu
     }()
-    
+        
     
    @objc func tappedBUtton() {
         print("Pakka101 button clicked")
+       menu.show()
     }
    
     
    @objc func onSelection() {
         print("Pakka101 onSelection clicked")
+//       menu.show()
+       
     }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onSelection))
             contentView.addGestureRecognizer(tapRecognizer)
-        titleButton.addTarget(self, action: #selector(tappedBUtton), for: .touchUpInside)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(DropDownOptionsCell.self, forCellReuseIdentifier: "cell")
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.register(DropDownOptionsCell.self, forCellReuseIdentifier: "cell")
         addConstraints()
+        titleButton.addTarget(self, action: #selector(tappedBUtton), for: .touchUpInside)
+
     }
     
     @available(*, unavailable)
@@ -79,8 +101,8 @@ class KMFormDropDownCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [titleButton, nameLabel, tableView])
-        
+        addViewsForAutolayout(views: [titleButton, nameLabel])
+
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
@@ -89,29 +111,21 @@ class KMFormDropDownCell: UITableViewCell {
             titleButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
             titleButton.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             titleButton.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            titleButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10)
             
-            tableView.topAnchor.constraint(equalTo: titleButton.bottomAnchor, constant: 0),
-            tableView.leadingAnchor.constraint(equalTo: titleButton.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: titleButton.trailingAnchor),
-            
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: 200)
+//            tableView.topAnchor.constraint(equalTo: titleButton.bottomAnchor, constant: 0),
+//            tableView.leadingAnchor.constraint(equalTo: titleButton.leadingAnchor),
+//            tableView.trailingAnchor.constraint(equalTo: titleButton.trailingAnchor),
+//
+//            tableView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: 200)
 
         ])
+        
+        // The view to which the drop down will appear on
+        menu.anchorView = titleButton
+        
+        
+
     }
 }
 
-extension KMFormDropDownCell : UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return options?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let options = options  else{return UITableViewCell()}
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = options[indexPath.row].label
-        
-        return cell
-    }
-    
-    
-}
