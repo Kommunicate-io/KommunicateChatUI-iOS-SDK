@@ -173,6 +173,7 @@ class FormViewModelTimeItem: FormViewModelItem {
 
 class FormViewModelDropdownItem: FormViewModelItem {
     typealias Option = FormTemplate.Option
+    typealias Validation = FormTemplate.Validation
 
     var type: FormViewModelItemType {
         return .dropdown
@@ -181,11 +182,14 @@ class FormViewModelDropdownItem: FormViewModelItem {
     let title:String
     let name: String
     var options: [Option]
+    let validation: Validation?
 
-    init(title: String, name: String,options: [Option]) {
+
+    init(title: String, name: String,options: [Option], validation: Validation?) {
         self.title = title
         self.name = name
         self.options = options
+        self.validation = validation
     }
     
     
@@ -255,7 +259,7 @@ extension FormTemplate {
                     let title = elementData.title,
                     let options = elementData.options,
                         let name = elementData.name else { return }
-                items.append(FormViewModelDropdownItem(title: title, name: name, options: options))
+                items.append(FormViewModelDropdownItem(title: title, name: name, options: options, validation: elementData.validation))
             default:
                 print("\(element.contentType) form template type is not part of the form list view")
             }

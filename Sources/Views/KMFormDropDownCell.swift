@@ -6,51 +6,38 @@
 //
 
 import Foundation
+import UIKit
 import iOSDropDown
 
-class DropDownOptionsCell: UITableViewCell {}
-
+protocol KMFormDropDownSelectionProtocol{
+    func optionSelected(position: Int,selectedText: String)
+}
 
 class KMFormDropDownCell: UITableViewCell {
-    let  menu = DropDown(frame: CGRect(x: 110, y: 140, width: 200, height: 30))
+    
     
     var item: FormViewModelItem? {
         didSet {
             guard let item = item as? FormViewModelDropdownItem else {
                 return
             }
+            name = item.name
             nameLabel.text = item.title
-//            titleButton.setTitle("Profession", for: .normal)
+            menu.placeholder = nameLabel.text
             options = item.options
-            // The list of array to display. Can be changed dynamically
-            menu.optionArray = ["Option 1", "Option 2", "Option 3"]
-            // Its Id Values and its optional
-            menu.optionIds = [1,23,54,22]
-            // Image Array its optional
-//            menu.ImageArray = [👩🏻‍🦳,🙊,🥞]
-//            guard let options = options, !options.isEmpty else{return}
-//            let ite = options.map({$0.label})
-//            menu.dataSource = ite
-//            /["Sathyan", "Aman","Pranay", "Adarsh","Rajeev"]
-//            menu.show()
-//            // Action triggered on selection
-//            menu.cellConfiguration = { [unowned self] (index, item) in
-//                return options[index].label
-//            }
-            
-//            print("Pakka101 \(ite)")
-//            menu.selectionAction = { [unowned self] (index: Int, item: String) in
-//              print("Selected item: \(item) at index: \(index)")
-//                titleButton.setTitle(item, for: .normal)
-//            }
-
-            // Will set a custom width instead of the anchor view width
-//            menu.width = 200
-
+            guard let options = options, !options.isEmpty else { return }
+            let labelList = options.map({$0.label})
+            menu.optionArray = labelList
+            for item in options {
+                optionsDict[item.label] = item
+            }
         }
     }
     
-    var options: [FormViewModelDropdownItem.Option]? = nil
+    var options: [FormTemplate.Option]? = nil
+    var name: String = ""
+    var optionsDict: [String: FormTemplate.Option] = [:]
+    var delegate: KMFormDropDownSelectionProtocol?
     
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -61,45 +48,33 @@ class KMFormDropDownCell: UITableViewCell {
         return label
     }()
     
-//    let titleButton: UIButton = {
-//        let button = UIButton()
-//        button.titleLabel?.font = Font.medium(size: 15).font()
-//        button.backgroundColor = .blue
-//        button.layer.borderColor = UIColor.green.cgColor
-//        button.layer.borderWidth = CGFloat(2.0)
-//        button.isEnabled = true
-//        button.isUserInteractionEnabled = true
-//        return button
-//    }()
-//
-//    let menu: DropDown = {
-//        let menu = DropDown()
-//        return menu
-//    }()
-//
+    let  menu : DropDown = {
+        let dropdown = DropDown(frame: .zero)
+        dropdown.checkMarkEnabled = false
+        dropdown.selectedRowColor = FormDropDownStyle.Color.selectedRowBackgroundColor
+        dropdown.rowBackgroundColor = FormDropDownStyle.Color.rowBackgroundColor
+        dropdown.rowHeight = FormDropDownStyle.Size.rowHeight
+        dropdown.listHeight = FormDropDownStyle.Size.listHeight
+        dropdown.textColor = FormDropDownStyle.Color.textColor
+        dropdown.arrowSize = FormDropDownStyle.Size.arrowSize
+        dropdown.arrowColor = FormDropDownStyle.Color.arrowColor
+        return dropdown
+    }()
+
     
-   @objc func tappedBUtton() {
-        print("Pakka101 button clicked")
-//       menu.show()
-    }
-   
-    
-   @objc func onSelection() {
-        print("Pakka101 onSelection clicked")
-//       menu.show()
-       
-    }
-    
+    let view: UIView = {
+        let view = UIView(frame: .zero)
+        view.layer.cornerRadius = 4
+        view.layer.borderWidth = 2
+        view.layer.borderColor = UIColor.gray.cgColor
+        return view
+    }()
+  
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-//            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onSelection))
-//            contentView.addGestureRecognizer(tapRecognizer)
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.register(DropDownOptionsCell.self, forCellReuseIdentifier: "cell")
+        contentView.isUserInteractionEnabled = true
+        menu.delegate = self
         addConstraints()
-//        titleButton.addTarget(self, action: #selector(tappedBUtton), for: .touchUpInside)
-
     }
     
     @available(*, unavailable)
@@ -108,40 +83,54 @@ class KMFormDropDownCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [menu, nameLabel])
-
+        addViewsForAutolayout(views: [view, nameLabel])
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            
-            menu.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
-            menu.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            menu.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            menu.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10)
-          
-
-            // The the Closure returns Selected Index and String
-            
-//            tableView.topAnchor.constraint(equalTo: titleButton.bottomAnchor, constant: 0),
-//            tableView.leadingAnchor.constraint(equalTo: titleButton.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: titleButton.trailingAnchor),
-//
-//            tableView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: 200)
-
+            view.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight),
+            view.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
+            view.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
         ])
-        
-        // The view to which the drop down will appear on
-//        menu.anchorView = titleButton
-        
-        menu.didSelect{(selectedText , index ,id) in
-            print("Selected String: \(selectedText) \n index: \(index)")
-//            self.valueLabel.text = "Selected String: \(selectedText) \n index: \(index)"
-            }
-        
-        
-        
+        view.addViewsForAutolayout(views: [menu])
+        menu.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight).isActive = true
+        menu.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        menu.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        menu.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
+        menu.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
 
+        menu.didSelect{(selectedText , index ,id) in
+            guard let selectedvalue = self.optionsDict[selectedText]
+            else {
+                print("Could not retreive selected option in Dropdown Menu")
+                return
+            }
+            self.delegate?.optionSelected(position: self.menu.tag, selectedText: selectedvalue.value)
+        }
     }
 }
 
+extension KMFormDropDownCell: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.menu.endEditing(true)
+        self.menu.showList()
+    }
+}
+
+public struct FormDropDownStyle {
+    public struct Color {
+        public static var selectedRowBackgroundColor : UIColor = UIColor.green
+        public static var rowBackgroundColor: UIColor = UIColor.white
+        public static var textColor: UIColor = UIColor.gray
+        public static var arrowColor: UIColor = .black
+    }
+    
+    public struct Size {
+        public static var rowHeight: CGFloat = 30.0
+        public static var listHeight: CGFloat = 150.0
+        public static var dropdownBoxHeight: CGFloat = 40.0
+        public static var arrowSize : CGFloat = 15.0
+    }
+}

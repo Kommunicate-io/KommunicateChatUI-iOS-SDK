@@ -387,6 +387,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             print("Drop Down Support ")
             let cell: KMFormDropDownCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.item = item
+            cell.menu.tag = indexPath.section
+            cell.delegate = self
             return cell
         }
     }
@@ -445,6 +447,19 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
         formSubmitData.dateFields[position] = timeInMillSecs
         formData = formSubmitData
         itemListView.reloadSections([position], with: .fade)
+    }
+}
+
+extension ALKFormCell: KMFormDropDownSelectionProtocol {
+    func optionSelected(position: Int, selectedText: String) {
+        guard let formSubmittedData = formData,
+              position < itemListView.numberOfSections
+        else {
+            print("Can't be updated due to incorrect index")
+            return
+        }
+        formSubmittedData.dropDownFields[position] = selectedText
+        formData = formSubmittedData
     }
 }
 
@@ -520,5 +535,6 @@ class FormDataSubmit {
     var singleSelectFields = [Int: Int]()
     var multiSelectFields = [Int: [Int]]()
     var dateFields = [Int: Int64]()
+    var dropDownFields = [Int: String]()
     var validationFields = [Int: Int]()
 }
