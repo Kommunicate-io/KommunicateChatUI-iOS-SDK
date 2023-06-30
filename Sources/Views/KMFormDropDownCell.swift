@@ -6,24 +6,31 @@
 //
 
 import Foundation
-import DropDown
+import iOSDropDown
 
 class DropDownOptionsCell: UITableViewCell {}
 
 
 class KMFormDropDownCell: UITableViewCell {
-   
+    let  menu = DropDown(frame: CGRect(x: 110, y: 140, width: 200, height: 30))
+    
     var item: FormViewModelItem? {
         didSet {
             guard let item = item as? FormViewModelDropdownItem else {
                 return
             }
             nameLabel.text = item.title
-            titleButton.setTitle("Profession", for: .normal)
+//            titleButton.setTitle("Profession", for: .normal)
             options = item.options
-            guard let options = options, !options.isEmpty else{return}
-            let ite = options.map({$0.label})
-            menu.dataSource = ite
+            // The list of array to display. Can be changed dynamically
+            menu.optionArray = ["Option 1", "Option 2", "Option 3"]
+            // Its Id Values and its optional
+            menu.optionIds = [1,23,54,22]
+            // Image Array its optional
+//            menu.ImageArray = [👩🏻‍🦳,🙊,🥞]
+//            guard let options = options, !options.isEmpty else{return}
+//            let ite = options.map({$0.label})
+//            menu.dataSource = ite
 //            /["Sathyan", "Aman","Pranay", "Adarsh","Rajeev"]
 //            menu.show()
 //            // Action triggered on selection
@@ -31,11 +38,11 @@ class KMFormDropDownCell: UITableViewCell {
 //                return options[index].label
 //            }
             
-            print("Pakka101 \(ite)")
-            menu.selectionAction = { [unowned self] (index: Int, item: String) in
-              print("Selected item: \(item) at index: \(index)")
-                titleButton.setTitle(item, for: .normal)
-            }
+//            print("Pakka101 \(ite)")
+//            menu.selectionAction = { [unowned self] (index: Int, item: String) in
+//              print("Selected item: \(item) at index: \(index)")
+//                titleButton.setTitle(item, for: .normal)
+//            }
 
             // Will set a custom width instead of the anchor view width
 //            menu.width = 200
@@ -54,26 +61,26 @@ class KMFormDropDownCell: UITableViewCell {
         return label
     }()
     
-    let titleButton: UIButton = {
-        let button = UIButton()
-        button.titleLabel?.font = Font.medium(size: 15).font()
-        button.backgroundColor = .blue
-        button.layer.borderColor = UIColor.green.cgColor
-        button.layer.borderWidth = CGFloat(2.0)
-        button.isEnabled = true
-        button.isUserInteractionEnabled = true
-        return button
-    }()
-    
-    let menu: DropDown = {
-        let menu = DropDown()
-        return menu
-    }()
-        
+//    let titleButton: UIButton = {
+//        let button = UIButton()
+//        button.titleLabel?.font = Font.medium(size: 15).font()
+//        button.backgroundColor = .blue
+//        button.layer.borderColor = UIColor.green.cgColor
+//        button.layer.borderWidth = CGFloat(2.0)
+//        button.isEnabled = true
+//        button.isUserInteractionEnabled = true
+//        return button
+//    }()
+//
+//    let menu: DropDown = {
+//        let menu = DropDown()
+//        return menu
+//    }()
+//
     
    @objc func tappedBUtton() {
         print("Pakka101 button clicked")
-       menu.show()
+//       menu.show()
     }
    
     
@@ -85,13 +92,13 @@ class KMFormDropDownCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onSelection))
-            contentView.addGestureRecognizer(tapRecognizer)
+//            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onSelection))
+//            contentView.addGestureRecognizer(tapRecognizer)
 //        tableView.delegate = self
 //        tableView.dataSource = self
 //        tableView.register(DropDownOptionsCell.self, forCellReuseIdentifier: "cell")
         addConstraints()
-        titleButton.addTarget(self, action: #selector(tappedBUtton), for: .touchUpInside)
+//        titleButton.addTarget(self, action: #selector(tappedBUtton), for: .touchUpInside)
 
     }
     
@@ -101,17 +108,20 @@ class KMFormDropDownCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [titleButton, nameLabel])
+        addViewsForAutolayout(views: [menu, nameLabel])
 
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             
-            titleButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
-            titleButton.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            titleButton.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            titleButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10)
+            menu.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
+            menu.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            menu.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            menu.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10)
+          
+
+            // The the Closure returns Selected Index and String
             
 //            tableView.topAnchor.constraint(equalTo: titleButton.bottomAnchor, constant: 0),
 //            tableView.leadingAnchor.constraint(equalTo: titleButton.leadingAnchor),
@@ -122,7 +132,13 @@ class KMFormDropDownCell: UITableViewCell {
         ])
         
         // The view to which the drop down will appear on
-        menu.anchorView = titleButton
+//        menu.anchorView = titleButton
+        
+        menu.didSelect{(selectedText , index ,id) in
+            print("Selected String: \(selectedText) \n index: \(index)")
+//            self.valueLabel.text = "Selected String: \(selectedText) \n index: \(index)"
+            }
+        
         
         
 

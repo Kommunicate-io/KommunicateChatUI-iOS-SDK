@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "iOSDropDown",
+        "repositoryURL": "https://github.com/jriosdev/iOSDropDown.git",
+        "state": {
+          "branch": null,
+          "revision": "945c4f1945ed37a31055e812a5ee11a3d06e88ab",
+          "version": "0.4.0"
+        }
+      },
+      {
         "package": "Kingfisher",
         "repositoryURL": "https://github.com/onevcat/Kingfisher.git",
         "state": {
