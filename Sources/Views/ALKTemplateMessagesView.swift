@@ -93,4 +93,20 @@ extension ALKTemplateMessagesView: UICollectionViewDelegate, UICollectionViewDat
     public func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return viewModel.getSizeForItemAt(row: indexPath.row)
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+            // Centering if there are fever pages
+            let itemSize: CGSize? = (collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize
+            let spacing: CGFloat? = (collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing
+            let count: Int = self.collectionView(self.collectionView, numberOfItemsInSection: section)
+            let totalCellWidth = (itemSize?.width ?? 0.0) * CGFloat(count)
+            let totalSpacingWidth = (spacing ?? 0.0) * CGFloat(((count - 1) < 0 ? 0 : count - 1))
+            let leftInset: CGFloat = (bounds.size.width - (totalCellWidth + totalSpacingWidth)) / 2
+            if leftInset < 0, let inset = (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset as? UIEdgeInsets {
+                return inset
+            }
+            let rightInset: CGFloat = leftInset
+            let sectionInset = UIEdgeInsets(top: 0, left: CGFloat(leftInset), bottom: 0, right: CGFloat(rightInset))
+            return sectionInset
+        }
 }
