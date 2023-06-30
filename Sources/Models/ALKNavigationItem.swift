@@ -5,6 +5,10 @@ public struct ALKNavigationItem {
     public static let NSNotificationForConversationViewNavigationTap = "ConversationViewNavigationTap"
 
     public static let NSNotificationForConversationListNavigationTap = "ConversationListNavigationTap"
+    
+    public var faqTextColor: UIColor = UIColor.white
+    public var faqBackgroundColor: UIColor = UIColor(hexString: "ffffff", alpha: 0.24)
+    let faqIdentifier = 11_223_346
 
     /// The identifier of this item.
     public let identifier: Int
@@ -54,6 +58,19 @@ public extension ALKNavigationItem {
             guard let text = buttonText else {
                 return nil
             }
+           
+            if identifier == faqIdentifier {
+                let btn = UIButton(frame:CGRectMake(0.0, 0.0, 50.0, 30.0) )
+                btn.isUserInteractionEnabled = true
+                btn.setTitle(text, for: .normal)
+                btn.backgroundColor = faqBackgroundColor
+                btn.setTextColor(color: faqTextColor, forState: .normal)
+                btn.layer.cornerRadius = 5
+                btn.tag = faqIdentifier
+                btn.addTarget(target, action: action, for: .touchUpInside)
+                guard let barButton = btn.toBarButtonItem() else { return nil }
+                return barButton
+            }
             let button = UIBarButtonItem(title: text, style: .plain, target: target, action: action)
             button.tag = identifier
             return button
@@ -70,3 +87,10 @@ public extension ALKNavigationItem {
         return button
     }
 }
+
+extension UIButton {
+    func toBarButtonItem() -> UIBarButtonItem? {
+        return UIBarButtonItem(customView: self)
+    }
+}
+
