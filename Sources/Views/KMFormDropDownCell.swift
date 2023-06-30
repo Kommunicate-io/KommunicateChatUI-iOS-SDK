@@ -9,12 +9,11 @@ import Foundation
 import UIKit
 import iOSDropDown
 
-protocol KMFormDropDownSelectionProtocol{
+protocol KMFormDropDownSelectionProtocol {
     func optionSelected(position: Int,selectedText: String)
 }
 
 class KMFormDropDownCell: UITableViewCell {
-    
     
     var item: FormViewModelItem? {
         didSet {
@@ -121,7 +120,7 @@ extension KMFormDropDownCell: UITextFieldDelegate {
 
 public struct FormDropDownStyle {
     public struct Color {
-        public static var selectedRowBackgroundColor : UIColor = UIColor.green
+        public static var selectedRowBackgroundColor : UIColor = UIColor.blue
         public static var rowBackgroundColor: UIColor = UIColor.white
         public static var textColor: UIColor = UIColor.gray
         public static var arrowColor: UIColor = .black
