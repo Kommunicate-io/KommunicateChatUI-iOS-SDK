@@ -429,12 +429,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.delegate = self
         refreshViewController()
 
-        if let templates = viewModel.getMessageTemplates() {
-            templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
-        }
-        templateView?.messageSelected = { [weak self] template in
-            self?.viewModel.selected(template: template, metadata: self?.configuration.messageMetadata)
-        }
         if isFirstTime {
             setupView()
         } else {
@@ -448,6 +442,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+       
+        if let templates = viewModel.getMessageTemplates() {
+            templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
+        }
+        
+        templateView?.messageSelected = { [weak self] template in
+            self?.viewModel.selected(template: template, metadata: self?.configuration.messageMetadata)
+        }
+        
         setupConstraints()
         setRichMessageKitTheme()
         setupProfanityFilter()
@@ -1656,7 +1659,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
               !formData.multiSelectFields.isEmpty ||
               !formData.textFields.isEmpty ||
               !formData.singleSelectFields.isEmpty ||
-              !formData.dateFields.isEmpty
+              !formData.dateFields.isEmpty ||
+                !formData.dropDownFields.isEmpty
         else {
             print("Invalid empty form data for submit")
             return
@@ -1792,6 +1796,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 break
             }
         }
+        
+        for (position,option) in formData.dropDownFields {
+            let element = viewModelItems[position]
+            if let dropdownModel = element as? FormViewModelDropdownItem {
+                postFormData[dropdownModel.name] = option
+            }
+        }
 
         var formJsonData = [String: Any]()
         formJsonData["formData"] = postFormData
@@ -1899,6 +1910,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     } else {
                         postBackMessageString.append("\(dateTimeLocalItemModel.label) : \n")
                     }
+                }
+            case .dropdown:
+                if let dropdownModel = item as? FormViewModelDropdownItem {
+                    postBackMessageString.append("\(dropdownModel.name) : \(postFormData[dropdownModel.name] ?? "")\n")
                 }
             default:
                 print("\(item.type) form template type is not part of the form list view")
@@ -2599,3 +2614,4 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
         }
     }
 }
+

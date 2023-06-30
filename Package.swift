@@ -20,6 +20,7 @@ let package = Package(
         .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("7.6.2")),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
         .package(name: "ZendeskChatProvidersSDK", url: "https://github.com/zendesk/chat_providers_sdk_ios",.exact("3.0.0")),
+        .package(url: "https://github.com/jriosdev/iOSDropDown.git", .upToNextMajor(from: "0.4.0"))
     ],
     targets: [
         .target(name: "KommunicateChatUI-iOS-SDK",
