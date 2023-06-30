@@ -2,6 +2,11 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.1.0] 2023-06-30
+- Added Cusotmization support for Faq button
+- Added Support for Dropdown field in Form Template
+- [CM-1451] Fixed issue in ALKTemplateMessage flow 
+
 ## [1.0.9] 2023-06-07
 - Added Customization to restrict browser navigation on tap of link list template
 - Fixed the upload issue for custom cloud support
