@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [Unreleased]
+- Added Customization for Template Message
+- Added Color Customization for send button on conversation screen
 ## [1.1.0] 2023-06-30
 - Added Cusotmization support for Faq button
 - Added Support for Dropdown field in Form Template

@@ -33,6 +33,9 @@ public struct ALKChatBarConfiguration {
 
     /// If true then button tint color will be disabled for attachment buttons, send button.
     public var disableButtonTintColor = false
+    
+    ///  If you set a color here then send button's tint color will be overridden by this color instead primary color.
+    public var sendButtonTintColor: UIColor? = nil
 
     /// Set the maximum number of photos/videos that can be selected in the new photos UI.
     /// Maximum limit should be less than 30
