@@ -15,4 +15,7 @@ public enum KMConversationScreenConfiguration {
     public static var staticTopMessage: String = ""
     // If you add image here, it will be shown along with static top message.
     public static var staticTopIcon: UIImage?  = nil
+    // If true, Typing Indicator will be shown while bot fetching the response. By default its false/
+    public static var showTypingIndicatorWhileFetchingResponse: Bool = false
+
 }

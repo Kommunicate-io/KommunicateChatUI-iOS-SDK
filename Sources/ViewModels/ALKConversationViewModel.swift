@@ -743,6 +743,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: { _, error in
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
+                self.showTypingIndicatorAfterMessageSent()
                 ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
@@ -757,6 +758,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 NSLog("Message sent section: \(indexPath.section), \(String(describing: alMessage.message))")
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
+                self.showTypingIndicatorAfterMessageSent()
                 ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
@@ -767,6 +769,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.updateMessageAt(indexPath: indexPath)
             })
         }
+    }
+    
+    func showTypingIndicatorAfterMessageSent() {
+        // If KMConversationScreenConfiguration.showTypingIndicatorWhileFetchingResponse is true and assignee is bot then typing indicator will be shown
+        guard KMConversationScreenConfiguration.showTypingIndicatorWhileFetchingResponse,
+              !self.alMessages.isEmpty,
+              let channel = ALChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
+              let assigneeUserId = channel.assigneeUserId,
+              let alContact = ALContactService().loadContact(byKey: "userId", value:  assigneeUserId),
+              alContact.roleType == NSNumber.init(value: AL_BOT.rawValue)
+        else { return }
+        self.delegate?.updateTyingStatus(status: true, userId:alContact.displayName)
+
     }
 
     func modfiedMessageMetadata(alMessage: ALMessage, metadata: [AnyHashable: Any]?) -> NSMutableDictionary {
@@ -936,6 +951,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     messageService.deleteMessage(byKey: message.key)
                     messageService.add(updatedMessage)
                 }
+                self.showTypingIndicatorAfterMessageSent()
                 self.alMessages[indexPath.section] = mesg
                 self.messageModels[indexPath.section] = mesg.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
@@ -1827,5 +1843,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             completion(contacts)
         }
+    }
+}
+
+public extension ALChannel {
+    static let ConversationAssignee = "CONVERSATION_ASSIGNEE"
+
+    var assigneeUserId: String? {
+        guard type == Int16(SUPPORT_GROUP.rawValue),
+              let assigneeId = metadata?[ALChannel.ConversationAssignee] as? String
+        else {
+            return nil
+        }
+        return assigneeId
     }
 }

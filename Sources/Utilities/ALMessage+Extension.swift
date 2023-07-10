@@ -99,33 +99,26 @@ extension ALMessage: ALKChatViewModelProtocol {
         }
         return contact.getDisplayName()
     }
-
     public var theLastMessage: String? {
+        var defaultMessage = "Message"
         switch messageType {
         case .text:
             return message
-        case .photo:
-            return "Photo"
+        case .photo, .video, .voice:
+            return (filePath ?? "").isEmpty ? defaultMessage : filePath
         case .location:
             return "Location"
-        case .voice:
-            return "Audio"
-        case .information:
-            return "Update"
-        case .video:
-            return "Video"
-        case .html:
-            return "Message"
+        case .information, .html, .allButtons:
+            return isMessageEmpty ? defaultMessage : message
         case .faqTemplate:
             return isMessageEmpty ? "FAQ" : message
         case .button,
              .form,
              .quickReply,
              .listTemplate,
+             .imageMessage,
              .cardTemplate:
             return latestRichMessageText()
-        case .imageMessage:
-            return isMessageEmpty ? "Photo" : message
         case .email:
             guard let channelMetadata = alChannel?.metadata,
                   let messageText = channelMetadata[ChannelMetadataKey.conversationSubject]
@@ -134,9 +127,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             }
             return messageText as? String
         case .document:
-            return "Document"
-        case .allButtons:
-            return isMessageEmpty ? "Buttons" : message
+            let path = ALKFileUtils().getFileName(filePath: filePath, fileMeta: fileMeta)
+            return path.isEmpty ? "File" : path
         case .staticTopMessage:
             return message
         }
