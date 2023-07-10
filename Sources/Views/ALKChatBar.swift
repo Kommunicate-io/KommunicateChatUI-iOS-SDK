@@ -355,15 +355,22 @@ open class ALKChatBar: UIView, Localizable {
         let buttonTintColor = appSettingsUserDefaults.getAttachmentIconsTintColor()
         setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons, tintColor: buttonTintColor)
         setupConstraints()
-        micButton.setButtonTintColor(color: buttonTintColor)
+        // To override Primary color being set as the tint color
+        if let tintColor = chatBarConfiguration.sendButtonTintColor {
+            micButton.setButtonTintColor(color: tintColor)
+        } else {
+            micButton.setButtonTintColor(color: buttonTintColor)
+        }
+        
         var image = configuration.sendMessageIcon
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         if !chatBarConfiguration.disableButtonTintColor {
             image = image?.withRenderingMode(.alwaysTemplate)
-            sendButton.imageView?.tintColor = buttonTintColor
+            // To override Primary color being set as the tint color
+            sendButton.imageView?.tintColor = chatBarConfiguration.sendButtonTintColor == nil ? buttonTintColor : chatBarConfiguration.sendButtonTintColor
         }
         sendButton.setImage(image, for: .normal)
-
+        
         if configuration.hideLineImageFromChatBar {
             lineImageView.isHidden = true
         }

@@ -101,7 +101,7 @@ extension ALKTemplateMessagesView: UICollectionViewDelegate, UICollectionViewDat
             let count: Int = self.collectionView(self.collectionView, numberOfItemsInSection: section)
             let totalCellWidth = (itemSize?.width ?? 0.0) * CGFloat(count)
             let totalSpacingWidth = (spacing ?? 0.0) * CGFloat(((count - 1) < 0 ? 0 : count - 1))
-            let leftInset: CGFloat = (bounds.size.width - (totalCellWidth + totalSpacingWidth)) / 2
+        let leftInset: CGFloat = (bounds.size.width - (totalCellWidth + totalSpacingWidth)) / 2 - totalCellWidth/2
             if leftInset < 0, let inset = (collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset as? UIEdgeInsets {
                 return inset
             }
