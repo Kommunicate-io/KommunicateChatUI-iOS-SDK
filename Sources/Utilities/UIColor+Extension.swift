@@ -84,7 +84,7 @@ public extension UIColor {
     }
 
     static func navigationOceanBlue() -> UIColor {
-        return UIColor(netHex: 0xECEFF1)
+        return UIColor(netHex: 0x0076FF)
     }
 
     static func navigationTextOceanBlue() -> UIColor {
