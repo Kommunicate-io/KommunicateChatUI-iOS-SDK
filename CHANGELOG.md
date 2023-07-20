@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [Unreleased]
+- [CM-1496] Fixed the form submission with empty fields issue
+
 ## [1.1.1] 2023-07-10
 - Added Customization for Template Message
 - Added Color Customization for send button on conversation screen
