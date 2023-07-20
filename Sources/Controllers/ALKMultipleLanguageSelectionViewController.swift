@@ -14,7 +14,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
     
     private var configuration: ALKConfiguration
     private var languages : [String] = []
-    public var languageSelected: ((String) -> Void)?
+    public var languageSelected: ((KMLanguage) -> Void)?
     public var closeButtonTapped: (() -> Void)?
 
     var titleLabel: UILabel = {
@@ -57,7 +57,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
     
     public required init(config: ALKConfiguration) {
         self.configuration = config
-        if let languageArray = Array(config.languagesForSpeechToText.values.sorted()) as? [String] {
+        if let languageArray = Array(config.languagesForSpeechToText.map({$0.name}).sorted()) as? [String] {
             languages = languageArray
         }
         super.init(nibName: nil, bundle: nil)
@@ -96,7 +96,8 @@ extension ALKMultipleLanguageSelectionViewController: UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "languagecell", for: indexPath)
         cell.textLabel?.text = languages[indexPath.row]
-        if let savedLanguageCode = ALApplozicSettings.getSelectedLanguageForSpeechToText(), let savedLanguage = configuration.languagesForSpeechToText[savedLanguageCode], savedLanguage == languages[indexPath.row] {
+        if let savedLanguageCode = ALApplozicSettings.getSelectedLanguageForSpeechToText(),
+           let savedLanguage = configuration.languagesForSpeechToText.first(where: {$0.code == savedLanguageCode}), savedLanguage.name == languages[indexPath.row] {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: . none)
         }
         return cell
@@ -111,20 +112,9 @@ extension ALKMultipleLanguageSelectionViewController: UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedLanguage = languages[indexPath.row]
-        let selectedLanguageCode = configuration.languagesForSpeechToText.getKey(forValue: selectedLanguage)
-        ALApplozicSettings.setSelectedLanguageForSpeechToText(selectedLanguageCode)
-        languageSelected?(selectedLanguageCode ?? "")
-    }
-    
-    private func getLanguageCode(language: String) -> String? {
-        return configuration.languagesForSpeechToText.getKey(forValue: language)
-    }
-   
-}
-
-extension Dictionary where Value: Equatable {
-    func getKey(forValue val: Value) -> Key? {
-        return first(where: { $1 == val })?.key
+        let selectedLanguageName = languages[indexPath.row]
+        guard let selectedLanguage = configuration.languagesForSpeechToText.first(where: {$0.name == selectedLanguageName}) else { return }
+        ALApplozicSettings.setSelectedLanguageForSpeechToText(selectedLanguage.code)
+        languageSelected?(selectedLanguage)
     }
 }

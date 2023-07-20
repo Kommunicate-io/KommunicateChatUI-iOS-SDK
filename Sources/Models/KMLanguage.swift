@@ -13,9 +13,9 @@ public struct KMLanguage {
     var sendMessageOnClick: Bool
     var messageToSend: String?
     
-    public init(name: String, code: String, sendMessageOnClick: Bool = false, messageToSend: String? = nil) {
-        self.name = name
+    public init( code: String, name: String, sendMessageOnClick: Bool = false, messageToSend: String? = nil) {
         self.code = code
+        self.name = name
         self.sendMessageOnClick = sendMessageOnClick
         self.messageToSend = messageToSend
     }
