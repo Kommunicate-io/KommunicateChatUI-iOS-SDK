@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 
 ## [Unreleased]
+- [CM-1496] Fixed the form submission with empty fields issue
 - [CM-1523] Added Support to trigger Assignment intent when language selected for Speech to Text.
 - [CM-1534] Fixed SPM build issue due to Dropdown dependency
 

@@ -1658,14 +1658,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func formSubmitButtonSelected(formSubmitData: FormDataSubmit?, messageModel: ALKMessageViewModel, isButtonClickDisabled: Bool) {
-        guard let formData = formSubmitData,
-              !formData.multiSelectFields.isEmpty ||
-              !formData.textFields.isEmpty ||
-              !formData.singleSelectFields.isEmpty ||
-              !formData.dateFields.isEmpty ||
-                !formData.dropDownFields.isEmpty
-        else {
-            print("Invalid empty form data for submit")
+        guard let formData = formSubmitData else {
+            print("Invalid form data for submit")
             return
         }
 
