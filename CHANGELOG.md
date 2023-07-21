@@ -2,8 +2,11 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+
 ## [Unreleased]
 - [CM-1523] Added Support to trigger Assignment intent when language selected for Speech to Text.
+- [CM-1534] Fixed SPM build issue due to Dropdown dependency
+
 ## [1.1.1] 2023-07-10
 - Added Customization for Template Message
 - Added Color Customization for send button on conversation screen
