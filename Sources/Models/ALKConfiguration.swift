@@ -187,8 +187,8 @@ public struct ALKConfiguration {
     /// If true, rate conversation button will be visible on ConversationVC, By default it is false.
     public var rateConversationMenuOption = false
    
-   /// List of languages for speech to text. Sample format code : ["language code": "language title"]. 
-    public var languagesForSpeechToText : [String: String] = [:]
+   /// List of languages for speech to text.
+    public var languagesForSpeechToText : [KMLanguage] = []
 
     /// if false then chat  will be popped up on helpcenter(FAQ) page, By default it is true.
     public var hideChatInHelpcenter: Bool = true
