@@ -2,7 +2,6 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-
 ## [1.1.2] 2023-07-21
 - [CM-1496] Fixed the form submission with empty fields issue
 - [CM-1523] Added Support to trigger Assignment intent when language selected for Speech to Text.
