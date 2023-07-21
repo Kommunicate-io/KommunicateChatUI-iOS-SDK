@@ -946,12 +946,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             controller.closeButtonTapped = {[weak self] in
                 controller.dismiss(animated: true)
             }
-            controller.languageSelected = { [weak self]languageCode in
-                guard let weakSelf = self, !languageCode.isEmpty else {
+            controller.languageSelected = { [weak self] language in
+                guard let weakSelf = self else {
                     return
                 }
-                weakSelf.chatBar.micButton .updateLanguage(code: languageCode)
-                weakSelf.addLanguageToMetadata(language: languageCode)
+                weakSelf.chatBar.micButton.updateLanguage(code: language.code)
+                weakSelf.addLanguageToMetadata(language: language.code)
+                if language.sendMessageOnClick, let message = language.messageToSend, !message.isEmpty {
+                    weakSelf.viewModel.send(message: message, metadata: weakSelf.configuration.messageMetadata)
+                }
                 controller.dismiss(animated: true)
             }
             present(controller, animated: true, completion: nil)
@@ -1655,14 +1658,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func formSubmitButtonSelected(formSubmitData: FormDataSubmit?, messageModel: ALKMessageViewModel, isButtonClickDisabled: Bool) {
-        guard let formData = formSubmitData,
-              !formData.multiSelectFields.isEmpty ||
-              !formData.textFields.isEmpty ||
-              !formData.singleSelectFields.isEmpty ||
-              !formData.dateFields.isEmpty ||
-                !formData.dropDownFields.isEmpty
-        else {
-            print("Invalid empty form data for submit")
+        guard let formData = formSubmitData else {
+            print("Invalid form data for submit")
             return
         }
 
@@ -2105,6 +2102,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
             }
         }
+    }
+    
+    public func updateChatbarText(text: String) {
+        chatBar.setDefaultText(text)
     }
 
     func updateTableView() {
