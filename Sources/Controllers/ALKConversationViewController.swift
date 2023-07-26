@@ -1412,7 +1412,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
 
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": action , "type": type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element as Any , "type": type])
         switch type {
         case ActionType.link.rawValue:
             guard let urlString = action.url, let url = URL(string: urlString), !configuration.restrictLinkNavigationOnListTemplateTap else { return }
