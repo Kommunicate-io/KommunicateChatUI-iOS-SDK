@@ -2137,7 +2137,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             isViewLoadedFromTappingOnNotification = false
         } else if tableView.isCellVisible(section: lastSectionBeforeUpdate - 1, row: 0) {
             moveTableViewToBottom(indexPath: indexPath)
-        } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
+        } else if viewModel.messageModels.count > 1 && !tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0){ // Check if the function is called before message is added. It happens when user is added in the group.
+            // the second condition is for checking if the message is visible in screen or its hidden in case if the message is vissible it will not allow to enter in this condition
             unreadScrollButton.isHidden = false
         }
         
