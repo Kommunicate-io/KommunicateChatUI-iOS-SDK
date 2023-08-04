@@ -287,8 +287,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
         
-        let agentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
-        if agentApp == true {
+        /// this is used to set the icon according to data recived in metadata
+        let isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
+        if isAgentApp == true {
             platformIdentifier.isHidden = false
             let channelKey = viewModel.channelKey
             if let channel = ALChannelService().getChannelByKey(channelKey), let source = channel.metadata.value(forKey: "source"){
