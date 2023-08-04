@@ -113,6 +113,13 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     public enum Config {
         public static var iconMuted = UIImage(named: "muted", in: Bundle.km, compatibleWith: nil)
     }
+    
+    public enum PlatformIcon {
+        public static var iconFacebook = UIImage(named: "platformFacebook", in: Bundle.km, compatibleWith: nil)
+        public static var iconWhatsapp = UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil)
+        public static var iconPhone = UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil)
+        public static var iconWeb = UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil)
+    }
 
     public var localizationFileName: String = "Localizable"
     var displayNames: ((Set<String>) -> ([String: String]?))?
@@ -136,7 +143,20 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         label.textColor = .text(.black00)
         return label
     }()
-
+    
+    private var platformIdentifier: UIImageView = {
+        let platformImage = UIImageView()
+        platformImage.contentMode = .scaleAspectFit
+        platformImage.clipsToBounds = true
+        
+        let isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
+        
+        if isAgentApp == false{
+            platformImage.isHidden = true
+        }
+        return platformImage
+    }()
+    
     private var messageLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byTruncatingTail
@@ -266,7 +286,28 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
-
+        
+        let agentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
+        if agentApp == true {
+            platformIdentifier.isHidden = false
+            let channelKey = viewModel.channelKey
+            if let channel = ALChannelService().getChannelByKey(channelKey), let source = channel.metadata.value(forKey: "source"){
+                guard let device = source as? String else{return}
+                switch device {
+                case "MOBILE":
+                    platformIdentifier.image = PlatformIcon.iconPhone
+                case "WEB":
+                    platformIdentifier.image = PlatformIcon.iconWeb
+                case "FACEBOOK":
+                    platformIdentifier.image = PlatformIcon.iconFacebook
+                case "WHATSAPP":
+                    platformIdentifier.image = PlatformIcon.iconWhatsapp
+                default:
+                    platformIdentifier.isHidden = true
+                }
+            }
+        }
+        
         if let avatarImage = viewModel.avatarImage {
             if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
                 let resource = ImageResource(downloadURL: imgURL, cacheKey: imgStr)
@@ -353,7 +394,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, platformIdentifier, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
@@ -370,11 +411,21 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         emailIcon.heightAnchor.constraint(equalToConstant: Padding.Email.height).isActive = true
         emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
         emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
-
+        
+        // setup constraint of Platform Identirier (Agent App)
+        platformIdentifier.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4).isActive = true
+        platformIdentifier.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        platformIdentifier.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12).isActive = true
+        platformIdentifier.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        
         // setup constraint of mood'
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
+        if platformIdentifier.isHidden {
+            messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
+        } else {
+            messageLabel.leadingAnchor.constraint(equalTo: platformIdentifier.trailingAnchor, constant: 7).isActive = true
+        }
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
         // setup constraint of line
