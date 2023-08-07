@@ -2184,22 +2184,12 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         var selector = notificationSelector
         if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
-            button = UIBarButtonItem(image: UIImage(named: "ic_refresh"), style: .plain, target: self, action: selector)
-//
-//            UIBarButtonItem(
-//                barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
-//                target: self,
-//                action: selector
-//            )
-        } else {
-            button = UIBarButtonItem(
-                barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
-                target: self,
-                action: selector
-            )
         }
-
-       
+        button = UIBarButtonItem(
+            barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
+            target: self,
+            action: selector
+        )
         return button
     }
 
