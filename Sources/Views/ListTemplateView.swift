@@ -55,9 +55,13 @@ class ListTemplateElementView: UIView {
         subtitle.text = item.description
         guard let urlString = item.imgSrc, let url = URL(string: urlString) else {
             thumbnail.isHidden = true
+            thumbnail.widthAnchor.constraint(equalToConstant: 0).isActive = true
+            thumbnail.heightAnchor.constraint(equalToConstant: 0).isActive = true
             layoutIfNeeded()
             return
         }
+        thumbnail.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        thumbnail.heightAnchor.constraint(equalToConstant: 35).isActive = true
         thumbnail.isHidden = false
         thumbnail.kf.setImage(with: url)
         layoutIfNeeded()
