@@ -292,20 +292,22 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         let channelKey = viewModel.channelKey
         if isAgentApp == true, let channel = ALChannelService().getChannelByKey(channelKey), let source = channel.metadata.value(forKey: "source") {
                 platformImageView.isHidden = false
-                guard let device = source as? String else{return}
-                switch device {
-                case "MOBILE":
-                    platformImageView.image = PlatformIcon.iconPhone
-                case "WEB":
-                    platformImageView.image = PlatformIcon.iconWeb
-                case "FACEBOOK":
-                    platformImageView.image = PlatformIcon.iconFacebook
-                case "WHATSAPP":
-                    platformImageView.image = PlatformIcon.iconWhatsapp
-                default:
-                    platformImageView.isHidden = true
+                guard let device = source as? String else {
+                    return
                 }
-        }
+                switch device {
+                    case "MOBILE":
+                        platformImageView.image = PlatformIcon.iconPhone
+                    case "WEB":
+                        platformImageView.image = PlatformIcon.iconWeb
+                    case "FACEBOOK":
+                        platformImageView.image = PlatformIcon.iconFacebook
+                    case "WHATSAPP":
+                        platformImageView.image = PlatformIcon.iconWhatsapp
+                    default:
+                        platformImageView.isHidden = true
+                    }
+            }
         
         if let avatarImage = viewModel.avatarImage {
             if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
