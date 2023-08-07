@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## Unreleased
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
+- Fixed down arrow coming in bottom of the screen when welcome message get rendered issue.
 
 ## [1.1.2] 2023-07-21
 - [CM-1496] Fixed the form submission with empty fields issue
