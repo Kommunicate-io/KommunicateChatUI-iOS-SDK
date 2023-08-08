@@ -302,7 +302,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
                         platformImageView.image = PlatformIcon.iconWeb
                     case "FACEBOOK":
                         platformImageView.image = PlatformIcon.iconFacebook
-                    case "WHATSAPP":
+                    case "WHATSAPPCLOUDAPI":
                         platformImageView.image = PlatformIcon.iconWhatsapp
                     default:
                         platformImageView.isHidden = true
