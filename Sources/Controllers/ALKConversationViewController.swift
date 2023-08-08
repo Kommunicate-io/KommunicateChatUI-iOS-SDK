@@ -2186,7 +2186,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
         }
-
         button = UIBarButtonItem(
             barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
             target: self,
