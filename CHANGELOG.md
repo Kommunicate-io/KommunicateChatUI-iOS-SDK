@@ -2,7 +2,7 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-## Unreleased
+## [1.1.3] 2023-08-08
 - Fixed down arrow coming in bottom of the screen when welcome message get rendered issue.
 - Form Submit button width is corrected.
 - Added border to the form and removed paddding form the top of each cell.
