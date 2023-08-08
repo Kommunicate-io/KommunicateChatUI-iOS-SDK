@@ -171,6 +171,7 @@ class ALKFriendFormCell: ALKFormCell {
             $0.bottom == timeLabel.topAnchor - ChatCellPadding.ReceivedMessage.MessageButton.bottom
             $0.leading == itemListView.leadingAnchor
         }
+        submitButtonView.trailingAnchor.constraint(lessThanOrEqualTo: messageView.trailingAnchor).isActive = true
         nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
 }
