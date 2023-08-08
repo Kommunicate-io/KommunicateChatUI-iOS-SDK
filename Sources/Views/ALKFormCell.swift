@@ -22,6 +22,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     let itemListView = NestedCellTableView()
     var submitButton: CurvedImageButton?
     var identifier: String?
+    let formBorderColor: CGColor = UIColor(red: 230/255, green: 229/255, blue: 236/255, alpha: 1.0).cgColor
     var activeTextField: UITextField? {
         didSet {
             activeTextFieldChanged?(activeTextField)
@@ -156,6 +157,12 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         itemListView.alwaysBounceVertical = false
         itemListView.delegate = self
         itemListView.dataSource = self
+        itemListView.layer.borderColor = formBorderColor
+        itemListView.layer.borderWidth = 1
+        itemListView.layer.cornerRadius = 5
+        if #available(iOS 15.0, *) {  /// this is to remove the extra top padding form the cell
+            itemListView.sectionHeaderTopPadding = 0
+        }
         itemListView.tableFooterView = UIView(frame: .zero)
         itemListView.register(ALKFormItemHeaderView.self)
         itemListView.register(ALKFormTextItemCell.self)

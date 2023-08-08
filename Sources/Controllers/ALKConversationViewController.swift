@@ -1335,7 +1335,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let conversationId = message.channelKey else {
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["conversationId": conversationId, "action": [:], "type": "quickreply"])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["conversationId": conversationId.stringValue, "action": [:], "type": "quickreply"])
     }
 
     func richButtonSelected(index: Int,
@@ -1357,7 +1357,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         if let conversationId = message.channelKey {
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId": conversationId,"action": action, "type": type])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId": conversationId.stringValue,"action": action, "type": type])
         }
         
         switch type {
@@ -1412,7 +1412,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
 
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": action , "type": type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element, "type": type])
         switch type {
         case ActionType.link.rawValue:
             guard let urlString = action.url, let url = URL(string: urlString), !configuration.restrictLinkNavigationOnListTemplateTap else { return }
@@ -2137,7 +2137,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             isViewLoadedFromTappingOnNotification = false
         } else if tableView.isCellVisible(section: lastSectionBeforeUpdate - 1, row: 0) {
             moveTableViewToBottom(indexPath: indexPath)
-        } else if viewModel.messageModels.count > 1 { // Check if the function is called before message is added. It happens when user is added in the group.
+        } else if viewModel.messageModels.count > 1 && !tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0){ // Check if the function is called before message is added. It happens when user is added in the group.
+            // the second condition is for checking if the message is visible in screen or its hidden in case if the message is vissible it will not allow to enter in this condition
             unreadScrollButton.isHidden = false
         }
         
@@ -2185,7 +2186,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
         }
-
         button = UIBarButtonItem(
             barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
             target: self,
