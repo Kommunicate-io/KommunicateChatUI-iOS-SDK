@@ -301,8 +301,10 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             guard let device = source as? String else {
                 return
             }
-            platformImageView.image = platformIcons[device]
-            if platformImageView.image == nil {
+            
+            if let platformImage = platformIcons[device] {
+                platformImageView.image = platformImage
+            } else {
                 platformImageView.isHidden = true
                 setupConstraints()
             }
