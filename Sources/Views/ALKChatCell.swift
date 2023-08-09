@@ -306,6 +306,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
                         platformImageView.image = PlatformIcon.iconWhatsapp
                     default:
                         platformImageView.isHidden = true
+                        setupConstraints()
                     }
             }
         
@@ -425,7 +426,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         if platformImageView.isHidden {
             messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         } else {
-            messageLabel.leadingAnchor.constraint(equalTo: platformImageView.trailingAnchor, constant: 7).isActive = true
+            messageLabel.leadingAnchor.constraint(equalTo: platformImageView.trailingAnchor, constant: 6).isActive = true
         }
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
