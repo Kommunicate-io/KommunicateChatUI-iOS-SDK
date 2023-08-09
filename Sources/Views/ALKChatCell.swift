@@ -115,11 +115,18 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
     
     public enum PlatformIcon {
-        public static var iconFacebook = UIImage(named: "platformFacebook", in: Bundle.km, compatibleWith: nil)
-        public static var iconWhatsapp = UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil)
-        public static var iconPhone = UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil)
-        public static var iconWeb = UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil)
+        public static var iconFacebook = UIImage(named: "platformFacebook", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconWhatsapp = UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconPhone = UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconWeb = UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil) ?? UIImage()
     }
+    
+    let platformIcons: [String: UIImage] = [
+        "MOBILE": PlatformIcon.iconPhone,
+        "WEB": PlatformIcon.iconWeb,
+        "FACEBOOK": PlatformIcon.iconFacebook,
+        "WHATSAPPCLOUDAPI": PlatformIcon.iconWhatsapp
+    ]
 
     public var localizationFileName: String = "Localizable"
     var displayNames: ((Set<String>) -> ([String: String]?))?
@@ -291,24 +298,15 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         let isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
         let channelKey = viewModel.channelKey
         if isAgentApp == true, let channel = ALChannelService().getChannelByKey(channelKey), let source = channel.metadata.value(forKey: "source") {
-                platformImageView.isHidden = false
-                guard let device = source as? String else {
-                    return
-                }
-                switch device {
-                    case "MOBILE":
-                        platformImageView.image = PlatformIcon.iconPhone
-                    case "WEB":
-                        platformImageView.image = PlatformIcon.iconWeb
-                    case "FACEBOOK":
-                        platformImageView.image = PlatformIcon.iconFacebook
-                    case "WHATSAPPCLOUDAPI":
-                        platformImageView.image = PlatformIcon.iconWhatsapp
-                    default:
-                        platformImageView.isHidden = true
-                        setupConstraints()
-                    }
+            guard let device = source as? String else {
+                return
             }
+            platformImageView.image = platformIcons[device]
+            if platformImageView.image == nil {
+                platformImageView.isHidden = true
+                setupConstraints()
+            }
+        }
         
         if let avatarImage = viewModel.avatarImage {
             if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
@@ -414,18 +412,18 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
         emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
         
-        // setup constraint of Platform Identirier (Agent App)
-        platformImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4).isActive = true
-        platformImageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        platformImageView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12).isActive = true
-        platformImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        
         // setup constraint of mood'
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         if platformImageView.isHidden {
             messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         } else {
+            // setup constraint of Platform Identirier (Agent App)
+            platformImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4).isActive = true
+            platformImageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
+            platformImageView.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor).isActive = true
+            platformImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+            
             messageLabel.leadingAnchor.constraint(equalTo: platformImageView.trailingAnchor, constant: 6).isActive = true
         }
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
