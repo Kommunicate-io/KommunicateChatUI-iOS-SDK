@@ -119,13 +119,31 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         public static var iconWhatsapp = UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage()
         public static var iconPhone = UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil) ?? UIImage()
         public static var iconWeb = UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var icon360Dialog = UIImage(named: "platform360Dialog", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconMeta = UIImage(named: "platformMeta", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconLine = UIImage(named: "platformLine", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconInstagram = UIImage(named: "platformInstagram", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconMessengerFB = UIImage(named: "platformMessengerFB", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconSunshine = UIImage(named: "platformSunshine", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconTelegram = UIImage(named: "platformTelegram", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconViber = UIImage(named: "platformViber", in: Bundle.km, compatibleWith: nil) ?? UIImage()
+        public static var iconTwillio = UIImage(named: "platformTwillio", in: Bundle.km, compatibleWith: nil) ?? UIImage()
     }
     
     let platformIcons: [String: UIImage] = [
         "MOBILE": PlatformIcon.iconPhone,
         "WEB": PlatformIcon.iconWeb,
         "FACEBOOK": PlatformIcon.iconFacebook,
-        "WHATSAPPCLOUDAPI": PlatformIcon.iconWhatsapp
+        "WHATSAPPCLOUDAPI": PlatformIcon.iconWhatsapp,
+        "DIALOG360": PlatformIcon.icon360Dialog,
+        "ZENDESKSUNSHINE": PlatformIcon.iconSunshine,
+        "VIBER": PlatformIcon.iconViber,
+        "LINE": PlatformIcon.iconLine,
+        "META": PlatformIcon.iconMeta,
+        "TELEGRAM": PlatformIcon.iconTelegram,
+        "MESSENGERFB": PlatformIcon.iconMessengerFB,
+        "INSTAGRAM": PlatformIcon.iconInstagram,
+        "TWILIO": PlatformIcon.iconTwillio
     ]
 
     public var localizationFileName: String = "Localizable"
@@ -306,7 +324,8 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
                 platformImageView.image = platformImage
             } else {
                 platformImageView.isHidden = true
-                setupConstraints()
+                messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
+                layoutIfNeeded()
             }
         }
         
