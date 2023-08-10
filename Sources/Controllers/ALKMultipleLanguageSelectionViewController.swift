@@ -7,8 +7,7 @@
 
 import Foundation
 import KommunicateCore_iOS_SDK
-
-class LanguageOptionsCell: UITableViewCell {}
+import UIKit
 
 class ALKMultipleLanguageSelectionViewController : UIViewController {
     
@@ -19,28 +18,45 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
 
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "HelveticaNeue", size: 16) ?? UIFont.systemFont(ofSize: 16)
+        label.font = UIFont(name: "HelveticaNeue-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor(red: 96, green: 94, blue: 94)
-        label.text = "Select a Language"
+        label.text = "Select a language"
         return label
     }()
 
-    let tableView: UITableView = {
-        let table = UITableView(frame: .zero)
-       table.translatesAutoresizingMaskIntoConstraints = false
-       return table
-    }()
-    
     open var closeButton: UIButton = {
         let button = UIButton(type: .custom)
-        var image = UIImage(named: "ic_close", in: Bundle.km, compatibleWith: nil)
+        var image = UIImage(named: "icon_close_white", in: Bundle.km, compatibleWith: nil)
+        button.contentMode = .scaleAspectFit
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         image = image?.withRenderingMode(.alwaysTemplate)
-        button.imageView?.tintColor = UIColor.black
+        button.tintColor = UIColor.gray
         button.setImage(image, for: .normal)
         return button
     }()
+
+    lazy var bottomSheetTransitionDelegate = KMBottomSheetTransitionDelegate()
+
+    private lazy var bottomConstraint: NSLayoutConstraint = {
+        var bottomAnchor = view.bottomAnchor
+        if #available(iOS 11, *) {
+            bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
+        }
+        let constraint = languageStackView.bottomAnchor.constraint(
+            lessThanOrEqualTo: bottomAnchor,
+            constant: -15
+        )
+        return constraint
+    }()
     
+    private let languageStackView: UIStackView = {
+        let stackView = UIStackView(frame: .zero)
+        stackView.distribution = .fill
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        return stackView
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
@@ -61,6 +77,8 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
             languages = languageArray
         }
         super.init(nibName: nil, bundle: nil)
+        self.transitioningDelegate = self.bottomSheetTransitionDelegate
+        self.modalPresentationStyle = .custom
     }
 
     @available(*, unavailable)
@@ -69,7 +87,22 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
     }
     
     func setupViews() {
-        view.addViewsForAutolayout(views: [titleLabel,closeButton,tableView])
+        languageStackView.arrangedSubviews.forEach {
+            $0.removeFromSuperview()
+        }
+        
+        for item in self.languages {
+            let view = KMLanguageView(title: item,languageList: configuration.languagesForSpeechToText)
+            view.languageTapped = { [weak self] language in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.languageSelected?(language)
+            }
+            languageStackView.addArrangedSubview(view)
+        }
+        
+        view.addViewsForAutolayout(views: [titleLabel,closeButton,languageStackView])
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
        
@@ -79,42 +112,12 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
         closeButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
         closeButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
 
-        tableView.topAnchor.constraint(equalTo: titleLabel.safeAreaLayoutGuide.bottomAnchor, constant: 16).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        
+        languageStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
+        languageStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        languageStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        bottomConstraint.isActive = true
+
         view.backgroundColor = .white
         view.layer.cornerRadius = 8
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(LanguageOptionsCell.self, forCellReuseIdentifier: "languagecell")
-    }
-}
-
-extension ALKMultipleLanguageSelectionViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "languagecell", for: indexPath)
-        cell.textLabel?.text = languages[indexPath.row]
-        if let savedLanguageCode = ALApplozicSettings.getSelectedLanguageForSpeechToText(),
-           let savedLanguage = configuration.languagesForSpeechToText.first(where: {$0.code == savedLanguageCode}), savedLanguage.name == languages[indexPath.row] {
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: . none)
-        }
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return languages.count
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedLanguageName = languages[indexPath.row]
-        guard let selectedLanguage = configuration.languagesForSpeechToText.first(where: {$0.name == selectedLanguageName}) else { return }
-        ALApplozicSettings.setSelectedLanguageForSpeechToText(selectedLanguage.code)
-        languageSelected?(selectedLanguage)
     }
 }
