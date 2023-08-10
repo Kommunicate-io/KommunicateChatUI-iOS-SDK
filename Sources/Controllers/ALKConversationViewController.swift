@@ -2190,8 +2190,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
         }
         
+        let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 30, height: 30))
+        
         button = UIBarButtonItem(
-            image: configuration.rightNavBarIconForConversationView,
+            image: refreshIcon,
             style: .plain,
             target: self,
             action: selector
