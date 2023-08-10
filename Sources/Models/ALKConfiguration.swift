@@ -50,7 +50,7 @@ public struct ALKConfiguration {
     @available(*, deprecated, message: "Use navigationItemsForConversationView instead")
     public var rightNavBarImageForConversationView: UIImage?
 
-    /// System icon for right side navigation bar in conversation view.
+    /// icon for right side navigation bar in conversation view.
     public var rightNavBarIconForConversationView = UIImage(named: "refreshIcon", in: Bundle.km, compatibleWith: nil)
 
     /// If true then right side navigation icon in conversation view will be hidden.
