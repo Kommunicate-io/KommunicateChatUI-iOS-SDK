@@ -2183,21 +2183,26 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let notificationSelector = #selector(ALKConversationViewController.sendRightNavBarButtonSelectionNotification(_:))
 
         var selector = notificationSelector
-        
-        let refresh = UIImage(named: "refreshIcon", in: Bundle.km, compatibleWith: nil)
                 
-        if configuration.rightNavBarIconForConversationView == refresh {
+        if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
+            let refresh = UIImage(named: "refreshIcon", in: Bundle.km, compatibleWith: nil)
+            let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 30, height: 30))
+            button = UIBarButtonItem(
+                image: refreshIcon,
+                style: .plain,
+                target: self,
+                action: selector
+            )
+            
+        } else {
+            button = UIBarButtonItem(
+                barButtonSystemItem: configuration.rightNavBarSystemIconForConversationView,
+                target: self,
+                action: selector
+            )
         }
         
-        let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 30, height: 30))
-        
-        button = UIBarButtonItem(
-            image: refreshIcon,
-            style: .plain,
-            target: self,
-            action: selector
-        )
         return button
     }
 
