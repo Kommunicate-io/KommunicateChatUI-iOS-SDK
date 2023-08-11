@@ -2202,7 +2202,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 action: selector
             )
         }
-        
         return button
     }
 

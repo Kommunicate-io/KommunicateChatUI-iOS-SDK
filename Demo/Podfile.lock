@@ -6,9 +6,11 @@ PODS:
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (7.6.2)
+
   - KommunicateChatUI-iOS-SDK (1.1.4):
     - KommunicateChatUI-iOS-SDK/Complete (= 1.1.4)
   - KommunicateChatUI-iOS-SDK/Complete (1.1.4):
+
     - iOSDropDown
     - Kingfisher (~> 7.6.2)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
