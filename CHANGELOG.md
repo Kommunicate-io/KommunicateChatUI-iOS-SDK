@@ -3,8 +3,14 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 
+
 ## Unreleased
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
+
+## [1.1.4] 2023-08-11
+- Improved UI of multiple language selection & make it similar to android
+- Refresh Icon Change
+
 
 ## [1.1.3] 2023-08-08
 - Fixed down arrow coming in bottom of the screen when welcome message get rendered issue.
