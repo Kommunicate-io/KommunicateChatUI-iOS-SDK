@@ -205,6 +205,12 @@ extension ALMessage: ALKChatViewModelProtocol {
     public var messageMetadata: NSMutableDictionary? {
         return metadata
     }
+    
+    public var platformSource: String? {
+        guard let sourceChannel = ALChannelDBService().getChannelByKey(channelKey) else { return ""}
+        let source = sourceChannel.platformSource
+        return source
+    }
 }
 
 extension ALMessage {

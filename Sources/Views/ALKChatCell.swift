@@ -29,6 +29,7 @@ public protocol ALKChatViewModelProtocol {
     var channelType: Int16 { get }
     var isMessageEmpty: Bool { get }
     var messageMetadata: NSMutableDictionary? { get }
+    var platformSource: String? { get }
 }
 
 extension ALKChatViewModelProtocol {
@@ -314,19 +315,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         
         /// this is used to set the icon according to data recived in metadata
         let isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
-        let channelKey = viewModel.channelKey
-        if isAgentApp == true, let channel = ALChannelService().getChannelByKey(channelKey), let source = channel.metadata.value(forKey: "source") {
-            guard let device = source as? String else {
-                return
-            }
-            
-            if let platformImage = platformIcons[device] {
-                platformImageView.image = platformImage
-            } else {
-                platformImageView.isHidden = true
-                messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
-                layoutIfNeeded()
-            }
+        
+        if isAgentApp == true,let device = viewModel.platformSource, let platformImage = platformIcons[device] {
+            platformImageView.image = platformImage
         }
         
         if let avatarImage = viewModel.avatarImage {
