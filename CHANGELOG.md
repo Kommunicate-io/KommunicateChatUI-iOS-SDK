@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## Unreleased
+- Crash fix for agent app while updating it to latest ios SDK
+
 ## [1.1.4] 2023-08-11
 - Improved UI of multiple language selection & make it similar to android
 - Refresh Icon Change

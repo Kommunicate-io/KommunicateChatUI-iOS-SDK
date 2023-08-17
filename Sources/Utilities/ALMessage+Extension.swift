@@ -221,7 +221,7 @@ extension ALMessage {
             return .email
         }
         
-        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty && Int32(contentType) == ALMESSAGE_CONTENT_ATTACHMENT {
+        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty, Int32(contentType) == ALMESSAGE_CONTENT_ATTACHMENT {
             return richMessageType()
         }
         
