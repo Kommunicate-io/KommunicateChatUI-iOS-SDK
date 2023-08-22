@@ -10,10 +10,27 @@ import UIKit
 import iOSDropDown
 
 protocol KMFormDropDownSelectionProtocol {
-    func optionSelected(position: Int,selectedText: String)
+    func optionSelected(position: Int,selectedText: String,index:Int)
 }
 
 class KMFormDropDownCell: UITableViewCell {
+    
+    private lazy var errorStackView: UIStackView = {
+        let labelStackView = UIStackView()
+        labelStackView.axis = .horizontal
+        labelStackView.alignment = .fill
+        labelStackView.distribution = .fillEqually
+        labelStackView.backgroundColor = UIColor.white
+        return labelStackView
+    }()
+    
+    let errorLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.textColor = .red
+        label.font = Font.normal(size: 15).font()
+        label.textAlignment = .left
+        return label
+    }()
     
     var item: FormViewModelItem? {
         didSet {
@@ -24,12 +41,34 @@ class KMFormDropDownCell: UITableViewCell {
             nameLabel.text = item.title
             menu.placeholder = nameLabel.text
             options = item.options
-            guard let options = options, !options.isEmpty else { return }
+            guard var options = options, !options.isEmpty else { return }
+            
+            var selectedIndex = 0
+            
+            for (index, item) in options.enumerated() {
+                if let selected = item.selected, selected {
+                    selectedIndex = index
+                }
+            }
+            
+            if !options.isEmpty {
+                let item = options[selectedIndex]
+                if let disabled = item.disabled, disabled {
+                    menu.selectedIndex = selectedIndex
+                }
+                menu.text = options[selectedIndex].label
+            }
+            
+            for (index, item) in options.enumerated() {
+                if let disabled = item.disabled, disabled, item.value == nil {
+                    options.remove(at: index)
+                }else {
+                    optionsDict[item.label] = item
+                }
+            }
+            
             let labelList = options.map({$0.label})
             menu.optionArray = labelList
-            for item in options {
-                optionsDict[item.label] = item
-            }
         }
     }
     
@@ -49,7 +88,6 @@ class KMFormDropDownCell: UITableViewCell {
     
     let  menu : DropDown = {
         let dropdown = DropDown(frame: .zero)
-        dropdown.checkMarkEnabled = false
         dropdown.selectedRowColor = FormDropDownStyle.Color.selectedRowBackgroundColor
         dropdown.rowBackgroundColor = FormDropDownStyle.Color.rowBackgroundColor
         dropdown.rowHeight = FormDropDownStyle.Size.rowHeight
@@ -82,7 +120,9 @@ class KMFormDropDownCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [view, nameLabel])
+        addViewsForAutolayout(views: [view, nameLabel, errorStackView])
+        errorStackView.addArrangedSubview(errorLabel)
+        errorStackView.bringSubviewToFront(errorLabel)
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
@@ -90,9 +130,16 @@ class KMFormDropDownCell: UITableViewCell {
             view.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight),
             view.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             view.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
+            view.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
         ])
+        
+        errorStackView.layout {
+            $0.leading == nameLabel.leadingAnchor
+            $0.trailing == nameLabel.trailingAnchor
+            $0.top == view.bottomAnchor + 10
+            $0.bottom <= bottomAnchor - 10
+        }
+        
         view.addViewsForAutolayout(views: [menu])
         menu.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight).isActive = true
         menu.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
@@ -106,7 +153,9 @@ class KMFormDropDownCell: UITableViewCell {
                 print("Could not retreive selected option in Dropdown Menu")
                 return
             }
-            self.delegate?.optionSelected(position: self.menu.tag, selectedText: selectedvalue.value)
+            if let selectedText = selectedvalue.value {
+                self.delegate?.optionSelected(position: self.menu.tag, selectedText: selectedText, index : index)
+            }
         }
     }
 }
@@ -120,7 +169,7 @@ extension KMFormDropDownCell: UITextFieldDelegate {
 
 public struct FormDropDownStyle {
     public struct Color {
-        public static var selectedRowBackgroundColor : UIColor = UIColor.blue
+        public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
         public static var rowBackgroundColor: UIColor = UIColor.white
         public static var textColor: UIColor = UIColor.gray
         public static var arrowColor: UIColor = .black
