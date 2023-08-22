@@ -10,7 +10,7 @@ import UIKit
 import iOSDropDown
 
 protocol KMFormDropDownSelectionProtocol {
-    func optionSelected(position: Int,selectedText: String,index:Int)
+    func optionSelected(position: Int,selectedText: String?,index:Int)
 }
 
 class KMFormDropDownCell: UITableViewCell {
@@ -39,7 +39,6 @@ class KMFormDropDownCell: UITableViewCell {
             }
             name = item.name
             nameLabel.text = item.title
-            menu.placeholder = nameLabel.text
             options = item.options
             guard var options = options, !options.isEmpty else { return }
             
@@ -51,18 +50,13 @@ class KMFormDropDownCell: UITableViewCell {
                 }
             }
             
-            if !options.isEmpty {
-                let item = options[selectedIndex]
-                if let disabled = item.disabled, disabled {
-                    menu.selectedIndex = selectedIndex
-                }
-                menu.text = options[selectedIndex].label
-            }
+            menu.selectedIndex = selectedIndex
+            menu.text = options[selectedIndex].label
             
             for (index, item) in options.enumerated() {
-                if let disabled = item.disabled, disabled, item.value == nil {
+                if let disabled = item.disabled, disabled && item.selected != nil {
                     options.remove(at: index)
-                }else {
+                } else {
                     optionsDict[item.label] = item
                 }
             }
@@ -153,9 +147,7 @@ class KMFormDropDownCell: UITableViewCell {
                 print("Could not retreive selected option in Dropdown Menu")
                 return
             }
-            if let selectedText = selectedvalue.value {
-                self.delegate?.optionSelected(position: self.menu.tag, selectedText: selectedText, index : index)
-            }
+            self.delegate?.optionSelected(position: self.menu.tag, selectedText: selectedvalue.value ?? nil, index: index)
         }
     }
 }
