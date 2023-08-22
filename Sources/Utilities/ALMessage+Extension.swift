@@ -208,6 +208,12 @@ extension ALMessage: ALKChatViewModelProtocol {
     
     public var platformSource: String? {
         guard let sourceChannel = ALChannelDBService().getChannelByKey(channelKey) else { return ""}
+        if sourceChannel.platformSource == nil {
+            let source = alChannel?.platformSource
+            sourceChannel.platformSource = source
+            return source
+        }
+        
         let source = sourceChannel.platformSource
         return source
     }
