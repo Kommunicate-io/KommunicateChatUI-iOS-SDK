@@ -136,6 +136,8 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         "WEB": PlatformIcon.iconWeb,
         "FACEBOOK": PlatformIcon.iconFacebook,
         "WHATSAPPCLOUDAPI": PlatformIcon.iconWhatsapp,
+        "WHATSAPPTWILIO": PlatformIcon.iconWhatsapp,
+        "WHATSAPPDIALOG360": PlatformIcon.iconWhatsapp,
         "DIALOG360": PlatformIcon.icon360Dialog,
         "ZENDESKSUNSHINE": PlatformIcon.iconSunshine,
         "VIBER": PlatformIcon.iconViber,
