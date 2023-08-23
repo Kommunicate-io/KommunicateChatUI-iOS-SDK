@@ -915,7 +915,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
 
-        if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty,let metadata = fileInfo["metadata"] as? [String:Any] {
+        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty,let metadata = fileInfo["metadata"] as? [String:Any] {
             message.metadata = modfiedMessageMetadata(alMessage: message, metadata: metadata)
         } else if ALApplozicSettings.isS3StorageServiceEnabled() {
             message.fileMeta.populate(fileInfo)
@@ -946,7 +946,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard let mesg = updatedMessage else { return }
             DispatchQueue.main.async {
                 NSLog("UI updated at section: \(indexPath.section), \(message.isSent)")
-                if !ALApplozicSettings.getDefaultOverrideuploadUrl().isEmpty {
+                if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
                     // while storing message type was photo.Since Attachment is uploaded to client server, now its a rich message. thatswhy replacing it in DB.
                     messageService.deleteMessage(byKey: message.key)
                     messageService.add(updatedMessage)
