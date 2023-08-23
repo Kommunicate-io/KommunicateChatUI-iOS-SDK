@@ -540,34 +540,40 @@ extension ALKFormCell {
                 
             case .dropdown:
                 let dropdownItem = element as? FormViewModelDropdownItem
-                if dropdownItem?.validation != nil {
-                    guard let selectedIndex = self.cell!.menu.selectedIndex else {
+                
+                guard let validation = dropdownItem?.validation else {
+                    formDataSubmit.validationFields[index] = FormData.valid
+                    formData = formDataSubmit
+                    continue
+                }
+                
+                guard let selectedIndex = self.cell!.menu.selectedIndex else {
+                    isValid = false
+                    formDataSubmit.validationFields[index] = FormData.inValid
+                    formData = formDataSubmit
+                    continue
+                }
+
+                var disabled = dropdownItem?.options[selectedIndex].disabled
+                
+                if(disabled == nil){
+                    if (dropdownItem?.options[selectedIndex].value == nil) {
                         isValid = false
                         formDataSubmit.validationFields[index] = FormData.inValid
-                        formData = formDataSubmit
-                        continue
-                    }
-
-                    var disabled = dropdownItem?.options[selectedIndex].disabled
-                    
-                    if(disabled == nil){
-                        if (dropdownItem?.options[selectedIndex].value == nil) {
-                            isValid = false
-                            formDataSubmit.validationFields[index] = FormData.inValid
-                        } else {
-                            formDataSubmit.validationFields[index] = FormData.valid
-                        }
                     } else {
-                        if (dropdownItem?.options[selectedIndex].value == nil) {
-                            isValid = isValid && !disabled!
-                            formDataSubmit.validationFields[index] = disabled! ? FormData.inValid : FormData.valid
-                        } else {
-                            formDataSubmit.validationFields[index] = FormData.valid
-                        }
+                        formDataSubmit.validationFields[index] = FormData.valid
                     }
-                    
-                    formData = formDataSubmit
+                } else {
+                    if (dropdownItem?.options[selectedIndex].value == nil) {
+                        isValid = isValid && !disabled!
+                        formDataSubmit.validationFields[index] = disabled! ? FormData.inValid : FormData.valid
+                    } else {
+                        formDataSubmit.validationFields[index] = FormData.valid
+                    }
                 }
+                
+                formData = formDataSubmit
+                
             default:
                 break
             }
