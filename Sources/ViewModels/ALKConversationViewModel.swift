@@ -1677,7 +1677,26 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessage.source = Int16(AL_SOURCE_IOS)
         alMessage.conversationId = conversationId
         alMessage.groupId = channelKey
+        setMetaDataForMessage(alMessage: alMessage)
         return alMessage
+    }
+    
+    private func setMetaDataForMessage(alMessage : ALMessage){
+        do {
+            var languageDict : [String:String] = [:]
+            let languageCode = NSLocale.preferredLanguages.first?.prefix(2)
+            if let languageCodeString = languageCode.map(String.init) {
+                languageDict["kmUserLocale"] = languageCodeString
+            }
+            let messageInfoData = try JSONSerialization.data(withJSONObject: languageDict, options: .prettyPrinted)
+            let messageInfoString = String(data: messageInfoData, encoding: .utf8) ?? ""
+            if(alMessage.metadata == nil){
+                alMessage.metadata = NSMutableDictionary()
+            }
+            alMessage.metadata["KM_CHAT_CONTEXT"] = messageInfoString
+        } catch {
+            print("error while setting message metadata : \(error.localizedDescription)")
+        }
     }
 
     private func getFileMetaInfo() -> ALFileMetaInfo {
