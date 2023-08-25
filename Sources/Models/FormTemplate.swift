@@ -23,7 +23,9 @@ struct FormTemplate: Decodable {
     }
 
     struct Option: Decodable {
-        let label, value: String
+        let label : String
+        let value : String?
+        let selected, disabled : Bool?
     }
 
     struct Action: Decodable {
