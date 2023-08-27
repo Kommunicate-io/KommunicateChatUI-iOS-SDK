@@ -1086,6 +1086,52 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         })
     }
+    
+    func uploadGIF(view: UIView, indexPath: IndexPath) {
+        let alMessage = alMessages[indexPath.section]
+        let clientService = ALMessageClientService()
+        let messageService = ALMessageDBService()
+        let alHandler = ALDBHandler.sharedInstance()
+        
+        guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
+            return
+        }
+        
+        dbMessage.inProgress = 1
+        dbMessage.isUploadFailed = 0
+        
+        let error = alHandler?.saveContext()
+        if error != nil {
+            print("Not saved due to error \(String(describing: error))")
+            return
+        }
+        
+        NSLog("content type: ", alMessage.fileMeta.contentType)
+        NSLog("file path: ", alMessage.imageFilePath)
+        
+        clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: { urlStr, error in
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else {
+                return
+            }
+            
+            let task = ALKUploadTask(url: url, fileName: alMessage.fileMeta.name)
+            task.identifier = alMessage.key
+            task.contentType = alMessage.fileMeta.contentType
+            task.filePath = alMessage.imageFilePath
+            task.groupdId = alMessage.groupId.stringValue
+            
+            let downloadManager = ALKHTTPManager()
+            downloadManager.uploadDelegate = view as? ALKHTTPManagerUploadDelegate
+            downloadManager.uploadAttachment(task: task)
+            
+            downloadManager.uploadCompleted = { [weak self] responseDict, task in
+                if task.uploadError == nil, task.completed {
+                    self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                }
+            }
+        })
+    }
+
 
     open func encodeVideo(videoURL: URL, completion: @escaping (_ path: String?) -> Void) {
         guard let videoURL = URL(string: "file://\(videoURL.path)") else { return }
