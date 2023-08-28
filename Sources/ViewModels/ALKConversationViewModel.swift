@@ -1683,17 +1683,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     private func setMetaDataForMessage(alMessage : ALMessage){
         do {
-            var languageDict : [String:String] = [:]
-            let languageCode = NSLocale.preferredLanguages.first?.prefix(2)
-            if let languageCodeString = languageCode.map(String.init) {
-                languageDict["kmUserLocale"] = languageCodeString
+            guard var languageCode = NSLocale.preferredLanguages.first?.prefix(2) else {
+                return
             }
+            let languageDict = ["kmUserLocale" : languageCode]
             let messageInfoData = try JSONSerialization.data(withJSONObject: languageDict, options: .prettyPrinted)
-            let messageInfoString = String(data: messageInfoData, encoding: .utf8) ?? ""
-            if(alMessage.metadata == nil){
+            if alMessage.metadata == nil {
                 alMessage.metadata = NSMutableDictionary()
             }
-            alMessage.metadata["KM_CHAT_CONTEXT"] = messageInfoString
+            alMessage.metadata["KM_CHAT_CONTEXT"] = String(data: messageInfoData, encoding: .utf8)
+            
         } catch {
             print("error while setting message metadata : \(error.localizedDescription)")
         }
