@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import KommunicateCore_iOS_SDK
+import RichMessageKit
 
 public class KMLanguageView: UIView {
 

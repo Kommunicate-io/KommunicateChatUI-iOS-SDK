@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
 
   s.source = { :git => 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK.git', :tag => s.version }
 
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '13.0'
   s.swift_version = '5.0'
 
   s.default_subspec = 'Complete'
