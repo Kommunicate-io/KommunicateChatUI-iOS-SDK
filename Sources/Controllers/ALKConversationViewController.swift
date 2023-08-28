@@ -2624,7 +2624,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
             } else {
                 let path = videos[index - images.count - gifs.count]
                 
-                if let size = FileManager().sizeOfFile(atPath: path), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() {
+                if let size = FileManager().sizeOfFile(atPath: path), size > (ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })
