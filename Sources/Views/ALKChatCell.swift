@@ -115,38 +115,22 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         public static var iconMuted = UIImage(named: "muted", in: Bundle.km, compatibleWith: nil)
     }
     
-    public enum PlatformIcon {
-        public static var iconFacebook = UIImage(named: "platformFacebook", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconWhatsapp = UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconPhone = UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconWeb = UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var icon360Dialog = UIImage(named: "platform360Dialog", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconMeta = UIImage(named: "platformMeta", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconLine = UIImage(named: "platformLine", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconInstagram = UIImage(named: "platformInstagram", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconMessengerFB = UIImage(named: "platformMessengerFB", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconSunshine = UIImage(named: "platformSunshine", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconTelegram = UIImage(named: "platformTelegram", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconViber = UIImage(named: "platformViber", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-        public static var iconTwillio = UIImage(named: "platformTwillio", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-    }
-    
     let platformIcons: [String: UIImage] = [
-        "MOBILE": PlatformIcon.iconPhone,
-        "WEB": PlatformIcon.iconWeb,
-        "FACEBOOK": PlatformIcon.iconFacebook,
-        "WHATSAPPCLOUDAPI": PlatformIcon.iconWhatsapp,
-        "WHATSAPPTWILIO": PlatformIcon.iconWhatsapp,
-        "WHATSAPPDIALOG360": PlatformIcon.iconWhatsapp,
-        "DIALOG360": PlatformIcon.icon360Dialog,
-        "ZENDESKSUNSHINE": PlatformIcon.iconSunshine,
-        "VIBER": PlatformIcon.iconViber,
-        "LINE": PlatformIcon.iconLine,
-        "META": PlatformIcon.iconMeta,
-        "TELEGRAM": PlatformIcon.iconTelegram,
-        "MESSENGERFB": PlatformIcon.iconMessengerFB,
-        "INSTAGRAM": PlatformIcon.iconInstagram,
-        "TWILIO": PlatformIcon.iconTwillio
+        "MOBILE": UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "WEB": UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "FACEBOOK": UIImage(named: "platformFacebook", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "WHATSAPPCLOUDAPI": UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "WHATSAPPTWILIO": UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "WHATSAPPDIALOG360": UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "DIALOG360": UIImage(named: "platform360Dialog", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "ZENDESKSUNSHINE": UIImage(named: "platformSunshine", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "VIBER": UIImage(named: "platformViber", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "LINE": UIImage(named: "platformLine", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "META": UIImage(named: "platformMeta", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "TELEGRAM": UIImage(named: "platformTelegram", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "MESSENGERFB": UIImage(named: "platformMessengerFB", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "INSTAGRAM": UIImage(named: "platformInstagram", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
+        "TWILIO": UIImage(named: "platformTwillio", in: Bundle.km, compatibleWith: nil) ?? UIImage()
     ]
 
     public var localizationFileName: String = "Localizable"
