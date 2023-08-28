@@ -177,9 +177,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         platformImage.contentMode = .scaleAspectFit
         platformImage.clipsToBounds = true
         
-        let isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
-        
-        if isAgentApp == false{
+        if !ALApplozicSettings.isAgentAppConfigurationEnabled(){
             platformImage.isHidden = true
         }
         return platformImage
