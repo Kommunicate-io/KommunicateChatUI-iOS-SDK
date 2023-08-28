@@ -2600,7 +2600,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else if index < gifs.count + images.count {
                 let gif = gifs[index - images.count]
-                guard let size = FileManager().sizeOfFile(atPath: gif), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() else{
+                if let size = FileManager().sizeOfFile(atPath: gif), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })
