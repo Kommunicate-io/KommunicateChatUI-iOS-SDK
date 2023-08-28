@@ -426,33 +426,6 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
     }
 }
 
-extension UIImage {
-    func toGifData(frameDuration: TimeInterval = 0.2) -> Data? {
-
-        guard let cgImages = images?.map({ $0.cgImage! }) else { return nil }
-        
-        let frameProperties = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFDelayTime as String: frameDuration]]
-        let gifProperties = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]
-        let data = NSMutableData()
-        
-        guard let destination = CGImageDestinationCreateWithData(data as CFMutableData, kUTTypeGIF, cgImages.count, nil) else {
-            return nil
-        }
-
-        CGImageDestinationSetProperties(destination, gifProperties as CFDictionary)
-        
-        for (index, cgImage) in cgImages.enumerated() {
-            CGImageDestinationAddImage(destination, cgImage, frameProperties as CFDictionary)
-        }
-        
-        if CGImageDestinationFinalize(destination) {
-            return data as Data
-        } else {
-            return nil
-        }
-    }
-}
-
 extension PHAsset {
     var isAnimatedGif: Bool {
         if let resource = PHAssetResource.assetResources(for: self).first,
