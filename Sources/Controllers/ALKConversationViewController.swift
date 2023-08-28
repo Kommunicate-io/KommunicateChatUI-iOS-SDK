@@ -1766,7 +1766,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
             var selectedArray = [String]()
             for selectedPos in pos {
-                let value = multiSelect.options[selectedPos].value
+                guard let value = multiSelect.options[selectedPos].value else{
+                    continue
+                }
                 selectedArray.append(value)
             }
 
@@ -1794,7 +1796,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         
-        for (position,option) in formData.dropDownFields {
+        for (position,(index,option)) in formData.dropDownFields {
             let element = viewModelItems[position]
             if let dropdownModel = element as? FormViewModelDropdownItem {
                 postFormData[dropdownModel.name] = option
@@ -2599,7 +2601,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
             } else {
                 let path = videos[index - images.count]
                 
-                if let size = FileManager().sizeOfFile(atPath: path), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() {
+                if let size = FileManager().sizeOfFile(atPath: path), size > (ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })

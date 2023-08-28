@@ -10,6 +10,9 @@ import UIKit
     import RichMessageKit
 #endif
 class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UITextViewDelegate {
+    
+    var cell : KMFormDropDownCell?
+    
     enum FormData {
         static let valid = 1
         static let inValid = 2
@@ -393,9 +396,26 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
         case .dropdown:
             print("Drop Down Support ")
             let cell: KMFormDropDownCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.menu.optionArray.removeAll()
+            cell.menu.text = ""
             cell.item = item
             cell.menu.tag = indexPath.section
             cell.delegate = self
+            self.cell = cell
+            
+            if let formDataSubmit = formData,
+               let fields = formDataSubmit.dropDownFields[indexPath.section]{
+                cell.menu.selectedIndex = fields.0
+                cell.menu.text = cell.menu.optionArray[fields.0]
+            }
+            
+            if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
+                let formViewModelDropdownItem = item as? FormViewModelDropdownItem
+                cell.errorLabel.text = formViewModelDropdownItem?.validation?.errorText ?? localizedString(forKey: "InvalidDataErrorInForm", withDefaultValue: SystemMessage.UIError.InvalidDatErrorInForm, fileName: localizedStringFileName)
+                cell.errorLabel.isHidden = false
+            } else {
+                cell.errorLabel.isHidden = true
+            }
             return cell
         }
     }
@@ -458,14 +478,14 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
 }
 
 extension ALKFormCell: KMFormDropDownSelectionProtocol {
-    func optionSelected(position: Int, selectedText: String) {
+    func optionSelected(position: Int, selectedText: String?, index: Int) {
         guard let formSubmittedData = formData,
               position < itemListView.numberOfSections
         else {
             print("Can't be updated due to incorrect index")
             return
         }
-        formSubmittedData.dropDownFields[position] = selectedText
+        formSubmittedData.dropDownFields[position] = (index,selectedText)
         formData = formSubmittedData
     }
 }
@@ -492,8 +512,9 @@ extension ALKFormCell {
                    let regxPattern = validation.regex
                 {
                     do {
-                        isValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
-                        formDataSubmit.validationFields[index] = isValid ? FormData.valid : FormData.inValid
+                        let isCurrentValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
+                        isValid = isValid && isCurrentValid
+                        formDataSubmit.validationFields[index] = isCurrentValid ? FormData.valid : FormData.inValid
                         formData = formDataSubmit
                     } catch {
                         print("Error while matching text: \(error.localizedDescription)")
@@ -508,13 +529,51 @@ extension ALKFormCell {
                    let regxPattern = validation.regex
                 {
                     do {
-                        isValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
-                        formDataSubmit.validationFields[index] = isValid ? FormData.valid : FormData.inValid
+                        let isCurrentValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
+                        isValid = isValid && isCurrentValid
+                        formDataSubmit.validationFields[index] = isCurrentValid ? FormData.valid : FormData.inValid
                         formData = formDataSubmit
                     } catch {
                         print("Error while matching text: \(error.localizedDescription)")
                     }
                 }
+                
+            case .dropdown:
+                let dropdownItem = element as? FormViewModelDropdownItem
+                
+                guard let validation = dropdownItem?.validation else {
+                    formDataSubmit.validationFields[index] = FormData.valid
+                    formData = formDataSubmit
+                    continue
+                }
+                
+                guard let selectedIndex = self.cell!.menu.selectedIndex else {
+                    isValid = false
+                    formDataSubmit.validationFields[index] = FormData.inValid
+                    formData = formDataSubmit
+                    continue
+                }
+
+                var disabled = dropdownItem?.options[selectedIndex].disabled
+                
+                if(disabled == nil){
+                    if (dropdownItem?.options[selectedIndex].value == nil) {
+                        isValid = false
+                        formDataSubmit.validationFields[index] = FormData.inValid
+                    } else {
+                        formDataSubmit.validationFields[index] = FormData.valid
+                    }
+                } else {
+                    if (dropdownItem?.options[selectedIndex].value == nil) {
+                        isValid = isValid && !disabled!
+                        formDataSubmit.validationFields[index] = disabled! ? FormData.inValid : FormData.valid
+                    } else {
+                        formDataSubmit.validationFields[index] = FormData.valid
+                    }
+                }
+                
+                formData = formDataSubmit
+                
             default:
                 break
             }
@@ -542,6 +601,6 @@ class FormDataSubmit {
     var singleSelectFields = [Int: Int]()
     var multiSelectFields = [Int: [Int]]()
     var dateFields = [Int: Int64]()
-    var dropDownFields = [Int: String]()
+    var dropDownFields = [Int: (Int,String?)]()
     var validationFields = [Int: Int]()
 }
