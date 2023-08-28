@@ -2620,7 +2620,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     notificationView.noDataConnectionNotificationView()
                     return
                 }
-                viewModel.uploadGIF(view: cell, indexPath: newIndexPath)
+                viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
                 let path = videos[index - images.count - gifs.count]
                 
