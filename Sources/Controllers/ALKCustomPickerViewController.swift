@@ -236,8 +236,9 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                 return
             }
 
+            let extensionOfFile =  NSURL(fileURLWithPath: fileURL.absoluteString).pathExtension
             
-            if self.isGIF(imageData) {
+            if extensionOfFile == "gif" {
                 do {
                     try imageData.write(to: fileURL)
                     print("GIF exported successfully")
@@ -338,18 +339,6 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             }
         }
     }
-
-
-    func isGIF(_ data: Data) -> Bool {
-        
-        return data.count >= 6 &&
-            data[0] == 0x47 &&
-            data[1] == 0x49 &&
-            data[2] == 0x46 &&
-            data[3] == 0x38 &&
-            (data[4] == 0x37 || data[4] == 0x39)
-    }
-
 
     @IBAction func dismissAction(_: UIBarButtonItem) {
         navigationController?.dismiss(animated: true, completion: nil)
