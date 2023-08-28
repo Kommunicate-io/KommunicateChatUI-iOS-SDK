@@ -316,9 +316,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
         
         /// this is used to set the icon according to data recived in metadata
-        let isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
-        
-        if isAgentApp == true,let device = viewModel.platformSource, let platformImage = platformIcons[device] {
+        if ALApplozicSettings.isAgentAppConfigurationEnabled(), let device = viewModel.platformSource, let platformImage = platformIcons[device] {
             platformImageView.image = platformImage
         }
         
