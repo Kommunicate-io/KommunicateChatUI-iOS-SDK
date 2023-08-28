@@ -8,7 +8,9 @@
 import Foundation
 import UIKit
 import KommunicateCore_iOS_SDK
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 public class KMLanguageView: UIView {
 
     public enum Style {
