@@ -1087,7 +1087,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
 
-
     open func encodeVideo(videoURL: URL, completion: @escaping (_ path: String?) -> Void) {
         guard let videoURL = URL(string: "file://\(videoURL.path)") else { return }
 
