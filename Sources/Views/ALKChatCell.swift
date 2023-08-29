@@ -300,6 +300,8 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         /// this is used to set the icon according to data recived in metadata
         if ALApplozicSettings.isAgentAppConfigurationEnabled(), let device = viewModel.platformSource, let platformImage = platformIcons[device] {
             platformImageView.image = platformImage
+        } else {
+            platformImageView.image = nil
         }
         
         if let avatarImage = viewModel.avatarImage {
