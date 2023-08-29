@@ -5,6 +5,10 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 ## Unreleased
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
 
+## [1.1.6] 2023-08-28
+- Fixed attachments upload issue 
+- Fixed SPM Build issue 
+
 ## [1.1.5] 2023-08-23
 - Crash fix for agent app while updating it to latest ios SDK
 - Added validation and default value for form type rich message
