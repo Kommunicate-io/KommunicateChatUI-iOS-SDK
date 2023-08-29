@@ -1682,20 +1682,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     private func setMetaDataForMessage(alMessage : ALMessage){
-        do {
-            guard var languageCode = NSLocale.preferredLanguages.first?.prefix(2) else {
-                return
-            }
-            let languageDict = ["kmUserLocale" : languageCode]
-            let messageInfoData = try JSONSerialization.data(withJSONObject: languageDict, options: .prettyPrinted)
-            if alMessage.metadata == nil {
-                alMessage.metadata = NSMutableDictionary()
-            }
-            alMessage.metadata["KM_CHAT_CONTEXT"] = String(data: messageInfoData, encoding: .utf8)
-            
-        } catch {
-            print("error while setting message metadata : \(error.localizedDescription)")
+        guard let languageCode = NSLocale.preferredLanguages.first?.prefix(2) else {
+            return
         }
+        let languageDict = ["kmUserLocale" : languageCode]
+
+        guard let messageInfoData = try? JSONSerialization.data(withJSONObject: languageDict, options: .prettyPrinted), alMessage.metadata == nil else {
+            return
+        }
+        alMessage.metadata = NSMutableDictionary()
+        alMessage.metadata["KM_CHAT_CONTEXT"] = String(data: messageInfoData, encoding: .utf8)
     }
 
     private func getFileMetaInfo() -> ALFileMetaInfo {
