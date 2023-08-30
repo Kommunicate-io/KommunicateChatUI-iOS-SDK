@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "KommunicateChatUI-iOS-SDK",
     defaultLocalization: "en",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS(.v13)],
     products: [
         .library(
             name: "KommunicateChatUI-iOS-SDK",
