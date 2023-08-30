@@ -39,10 +39,11 @@ class ALKPhotoPicker: NSObject, Localizable {
     @available(iOS 14, *)
     private func export(
         results: [PHPickerResult],
-        completion: @escaping (_ images: [UIImage], _ videos: [String]) -> Void
+        completion: @escaping (_ images: [UIImage],_ gifs: [String], _ videos: [String]) -> Void
     ) {
         var selectedImages: [UIImage] = []
         var selectedVideosPath: [String] = []
+        var selectedGifsPath: [String] = []
         let exportGroup = DispatchGroup()
         DispatchQueue.global(qos: .userInitiated).async {
             for result in results {
@@ -72,7 +73,7 @@ class ALKPhotoPicker: NSObject, Localizable {
             }
             exportGroup.wait()
             DispatchQueue.main.async {
-                completion(selectedImages, selectedVideosPath)
+                completion(selectedImages, selectedGifsPath, selectedVideosPath)
             }
         }
     }
@@ -86,10 +87,10 @@ extension ALKPhotoPicker: PHPickerViewControllerDelegate {
             return
         }
         picker.displayIPActivityAlert(title: loadingTitle)
-        export(results: results) { images, videos in
+        export(results: results) { images, gifs, videos in
             picker.dismissIPActivityAlert {
                 picker.dismiss(animated: true)
-                self.delegate?.filesSelected(images: images, videos: videos)
+                self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos)
             }
         }
     }
