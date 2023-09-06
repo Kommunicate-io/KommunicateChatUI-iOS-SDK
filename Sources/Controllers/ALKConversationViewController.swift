@@ -508,7 +508,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         backgroundView.backgroundColor = configuration.backgroundColor
         prepareTable()
-        prepareMoreBar()
+        if moreBar.isHidden{
+            prepareMoreBar()
+        }
         prepareChatBar()
         setupMemberMention()
         replyMessageView.closeButtonTapped = { [weak self] _ in

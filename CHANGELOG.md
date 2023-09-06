@@ -6,6 +6,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Added support for Sending GIF from device
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
 - Exposed a customisation function for a rating menu icon on conversation screen.
+- Fixed crash coming in agent app due to moreBar.
 
 ## [1.1.6] 2023-08-28
 - Fixed attachments upload issue 
