@@ -60,6 +60,7 @@ public extension ALKNavigationItem {
             }
            
             if identifier == faqIdentifier {
+                let customView = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 30))
                 let btn = UIButton(frame:CGRectMake(0.0, 0.0, 50.0, 30.0) )
                 btn.isUserInteractionEnabled = true
                 btn.setTitle(text, for: .normal)
@@ -68,7 +69,8 @@ public extension ALKNavigationItem {
                 btn.layer.cornerRadius = 5
                 btn.tag = faqIdentifier
                 btn.addTarget(target, action: action, for: .touchUpInside)
-                guard let barButton = btn.toBarButtonItem() else { return nil }
+                customView.addSubview(btn)
+                let barButton = UIBarButtonItem(customView: customView)
                 return barButton
             }
             let button = UIBarButtonItem(title: text, style: .plain, target: target, action: action)
