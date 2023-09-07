@@ -508,7 +508,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         backgroundView.backgroundColor = configuration.backgroundColor
         prepareTable()
-        prepareMoreBar()
+        if moreBar.isHidden{
+            prepareMoreBar()
+        }
         prepareChatBar()
         setupMemberMention()
         replyMessageView.closeButtonTapped = { [weak self] _ in
@@ -2189,7 +2191,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
             let refresh = UIImage(named: "refreshIcon", in: Bundle.km, compatibleWith: nil)
-            let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 30, height: 30))
+            let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 20, height: 20))
             button = UIBarButtonItem(
                 image: refreshIcon,
                 style: .plain,
@@ -2219,7 +2221,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                        })
                    ]
                 }
-                let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
+                var ratingIcon = configuration.ratingMenuIcon
+                if let icon = ratingIcon, icon != UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil), icon.size.height > 25.0, icon.size.width > 25.0 {
+                    ratingIcon = icon.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 25, height: 25))
+                }
+                let morebutton = UIBarButtonItem(title: "", image: ratingIcon, primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
                 rightBarButtonItems.append(morebutton)
             } else {
                 let rateIcon = UIImage(named: "icon_favorite", in: Bundle.km, compatibleWith: nil)
@@ -2569,8 +2575,8 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {
-    func filesSelected(images: [UIImage], videos: [String]) {
-        let fileCount = images.count + videos.count
+    func filesSelected(images: [UIImage], gifs: [String],videos: [String]) {
+        let fileCount = images.count + videos.count + gifs.count
         for index in 0 ..< fileCount {
             if index < images.count {
                 let image = images[index]
@@ -2598,8 +2604,31 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     return
                 }
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
+            } else if index < gifs.count + images.count {
+                let gif = gifs[index - images.count]
+                if let size = FileManager().sizeOfFile(atPath: gif), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                        self.showUploadRestrictionAlert()
+                    })
+                    continue
+                }
+
+                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata).1 else { continue }
+                let newIndexPath = indexPath
+                tableView.beginUpdates()
+                tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
+                tableView.endUpdates()
+                tableView.scrollToBottom(animated: false)
+                
+                guard let cell = tableView.cellForRow(at: newIndexPath) as? ALKMyPhotoPortalCell else { return }
+                guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
+                    let notificationView = ALNotificationView()
+                    notificationView.noDataConnectionNotificationView()
+                    return
+                }
+                viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else {
-                let path = videos[index - images.count]
+                let path = videos[index - images.count - gifs.count]
                 
                 if let size = FileManager().sizeOfFile(atPath: path), size > (ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {

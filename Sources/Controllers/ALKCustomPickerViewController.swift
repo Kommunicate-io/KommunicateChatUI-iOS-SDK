@@ -7,9 +7,10 @@
 
 import Photos
 import UIKit
+import MobileCoreServices
 
 protocol ALKCustomPickerDelegate: AnyObject {
-    func filesSelected(images: [UIImage], videos: [String])
+    func filesSelected(images: [UIImage], gifs: [String], videos: [String])
 }
 
 class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
@@ -186,7 +187,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
 
     @IBAction func doneButtonAction(_: UIBarButtonItem) {
         activityIndicator.startAnimating()
-        export { images, videos, error in
+        export { images, gifs, videos, error in
             self.activityIndicator.stopAnimating()
             if error {
                 let alertTitle = self.localizedString(
@@ -210,22 +211,57 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                     preferredStyle: UIAlertController.Style.alert
                 )
                 alert.addAction(UIAlertAction(title: buttonTitle, style: UIAlertAction.Style.default, handler: { _ in
-                    self.delegate?.filesSelected(images: images, videos: videos)
+                    self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos)
                     self.navigationController?.dismiss(animated: true, completion: nil)
                 }))
                 self.present(alert, animated: true, completion: nil)
             } else {
-                self.delegate?.filesSelected(images: images, videos: videos)
+                self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos)
                 self.navigationController?.dismiss(animated: true, completion: nil)
             }
         }
     }
 
-    func export(_ completion: @escaping ((_ images: [UIImage], _ videos: [String], _ error: Bool) -> Void)) {
+    func exportGifAsset(_ asset: PHAsset, completion: @escaping ((_ gifPath: String?) -> Void)) {
+        let filename = String(format: "GIF-%f.gif", Date().timeIntervalSince1970 * 1000)
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsURL.appendingPathComponent(filename)
+
+        let options = PHImageRequestOptions()
+        options.isSynchronous = false
+
+        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+            guard let imageData = data else {
+                completion(nil)
+                return
+            }
+
+            let extensionOfFile =  NSURL(fileURLWithPath: fileURL.absoluteString).pathExtension
+            
+            if extensionOfFile == "gif" {
+                do {
+                    try imageData.write(to: fileURL)
+                    print("GIF exported successfully")
+                    completion(fileURL.path)
+                } catch {
+                    print("Error while saving GIF: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Invalid GIF data")
+                completion(nil)
+            }
+        }
+    }
+
+
+    func export(_ completion: @escaping ((_ images: [UIImage], _ gifs: [String], _ videos: [String], _ error: Bool) -> Void)) {
         var selectedImages = [UIImage]()
+        var selectedGifs = [String]()
         var selectedVideos = [String]()
         var error = false
         let group = DispatchGroup()
+
         DispatchQueue.global(qos: .background).async {
             for indexPath in self.selectedFiles {
                 group.wait()
@@ -241,24 +277,65 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                         selectedVideos.append(video)
                         group.leave()
                     }
-                } else {
-                    PHCachingImageManager.default().requestImageData(
-                        for: asset,
-                        options: self.imageRequestOptions
-                    ) { imageData, _, _, _ in
-                        guard let imageData = imageData, let image = UIImage(data: imageData) else {
-                            error = true
+                } else if asset.mediaType == .image {
+                    if asset.isAnimatedGif {
+                        self.exportGifAsset(asset) { gifPath in
+                            if let gifPath = gifPath {
+                                selectedGifs.append(gifPath)
+                                print("GIF exported: \(gifPath)")
+                            } else {
+                                print("Failed to export GIF")
+                            }
                             group.leave()
-                            return
                         }
-                        selectedImages.append(image)
-                        group.leave()
+                    } else {
+                        self.exportImageAsset(asset) { (image, success) in
+                            if success {
+                                if let image = image {
+                                    selectedImages.append(image)
+                                    print("Image exported: \(image.description)")
+                                }
+                            } else {
+                                print("Failed to export image")
+                            }
+                            group.leave()
+                        }
                     }
                 }
             }
             group.wait()
             DispatchQueue.main.async {
-                completion(selectedImages, selectedVideos, error)
+                completion(selectedImages, selectedGifs, selectedVideos, error)
+            }
+        }
+    }
+    
+    func exportImageAsset(_ asset: PHAsset, completion: @escaping ((_ image: UIImage?, _ isGif: Bool) -> Void)) {
+        let options = PHImageRequestOptions()
+        options.isSynchronous = false
+
+        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+            guard let imageData = data else {
+                completion(nil, false)
+                return
+            }
+
+            
+            if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "gif" as CFString, nil)?.takeRetainedValue(),
+               UTTypeConformsTo(uti, kUTTypeGIF) {
+                
+                if let image = UIImage(data: imageData) {
+                    completion(image, true)
+                } else {
+                    completion(nil, false)
+                }
+            } else {
+                
+                if let image = UIImage(data: imageData) {
+                    completion(image, false)
+                } else {
+                    completion(nil, false)
+                }
             }
         }
     }
@@ -346,5 +423,15 @@ extension ALKCustomPickerViewController: UICollectionViewDelegate, UICollectionV
 
     func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, insetForSectionAt _: Int) -> UIEdgeInsets {
         return CollectionViewEnvironment.Spacing.inset
+    }
+}
+
+extension PHAsset {
+    var isAnimatedGif: Bool {
+        if let resource = PHAssetResource.assetResources(for: self).first,
+           let uniformTypeIdentifier = resource.uniformTypeIdentifier as String? {
+            return UTTypeConformsTo(uniformTypeIdentifier as CFString, kUTTypeGIF)
+        }
+        return false
     }
 }

@@ -45,6 +45,9 @@ public struct ALKConfiguration {
     
     /// Send message icon in chat bar.
     public var sendMessageIcon = UIImage(named: "send", in: Bundle.km, compatibleWith: nil)
+    
+    /// Rating conversation icon in app bar.
+    public var ratingMenuIcon = UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil)
 
     /// Image for navigation bar right side icon in conversation view.
     @available(*, deprecated, message: "Use navigationItemsForConversationView instead")

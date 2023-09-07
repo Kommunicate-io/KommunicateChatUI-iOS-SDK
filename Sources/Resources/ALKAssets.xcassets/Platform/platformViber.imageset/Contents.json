@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "refresh-3.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Channel=viber.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
