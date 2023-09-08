@@ -27,7 +27,7 @@ extension ALKConversationViewController: AutoCompletionDelegate {
             if message.isEmpty {
                 autoSuggestionManager.items = arrayOfAutocomplete
             } else {
-                autoSuggestionManager.items = arrayOfAutocomplete.filter{ $0.content.lowercased().contains(message) }
+                autoSuggestionManager.items = arrayOfAutocomplete.filter{ $0.key.lowercased().contains(message) }
             }
                     
             UIView.performWithoutAnimation {
