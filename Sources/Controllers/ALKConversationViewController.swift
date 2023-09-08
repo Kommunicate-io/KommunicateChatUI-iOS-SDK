@@ -940,6 +940,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
     
+    public func updatePlaceholder(){
+        guard let isCustomDataRichMessage = viewModel.lastMessage?.messageModel.isCustomDataRichMessage(),
+              let placeholder = viewModel.lastMessage?.messageModel.getKmField()?.placeholder else {
+            return
+        }
+        chatBar.placeHolder.text = placeholder
+    }
+    
     private func showLanguageSelection() {
         #if SPEECH_REC
             let controller = ALKMultipleLanguageSelectionViewController(config: configuration)
@@ -2048,6 +2056,29 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 }
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
+    
+    public func showInvalidReplyAlert(kmField: KMField) {
+        
+        guard let validation = kmField.validation else {
+            return
+        }
+        
+        let title = "Invalid Reply"
+        let message = validation["errorText"]
+        let okButtonTitle = "OK"
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: okButtonTitle,
+            style: .cancel,
+            handler: nil
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @objc open func loadingStarted() {
         activityIndicator.startAnimating()
     }
@@ -2148,6 +2179,13 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             return
         }
         viewModel.markConversationRead()
+        var lastMessage = viewModel.messageModels.last
+        guard let lastMessage = lastMessage,
+              let placeholder = lastMessage.getKmField()?.placeholder
+        else {
+            return
+        }
+        chatBar.placeHolder.text = placeholder
     }
 
     public func messageSent(at indexPath: IndexPath) {

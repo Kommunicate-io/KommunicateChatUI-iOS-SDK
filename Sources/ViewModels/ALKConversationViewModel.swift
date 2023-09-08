@@ -22,6 +22,7 @@ public protocol ALKConversationViewModelDelegate: AnyObject {
     func updateDisplay(contact: ALContact?, channel: ALChannel?)
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
+    func showInvalidReplyAlert(kmField : KMField)
 }
 
 // swiftlint:disable:next type_body_length
@@ -47,6 +48,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var isSearch: Bool = false
+    open var lastMessage : ALMessage?
 
     // For topic based chat
     open var conversationProxy: ALConversationProxy? {
@@ -731,7 +733,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
-
+        updateMetaDataForCustomField(message : alMessage)
+        
+        if let kmField = alMessages.last?.messageModel.getKmField() {
+            if(!isValidReply(message: alMessage)){
+                delegate?.showInvalidReplyAlert(kmField: kmField)
+                return
+            }
+            updateUser(kmField: kmField, message: alMessage.message)
+        }
+            
         var indexPath = IndexPath(row: 0, section: messageModels.count - 1)
         if !alMessage.isHiddenMessage() {
             addToWrapper(message: alMessage)
@@ -768,6 +779,80 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.messageModels[indexPath.section] = alMessage.messageModel
                 self.delegate?.updateMessageAt(indexPath: indexPath)
             })
+        }
+    }
+    
+    func updateMetaDataForCustomField(message : ALMessage){
+        if let lastMessage = alMessages.last?.messageModel,
+           let replyMetaData = lastMessage.getReplyMetaData() {
+            message.metadata.addEntries(from: replyMetaData)
+        }
+    }
+    
+    func updateUser(kmField: KMField, message: String) {
+        guard let fieldType = kmField.fieldType,
+              let action = kmField.action,
+              let _ = action.updateUserDetails
+        else {
+            return
+        }
+        
+        let alUserClientService = ALUserClientService()
+        
+        switch(fieldType.lowercased()){
+        case "name":
+            alUserClientService.updateUserDisplayName(message, andUserImageLink: nil, userStatus: nil, metadata: nil) { theJson, error in
+                if(error == nil){
+                    print("User's display name updated")
+                } else {
+                    print("error occured while updating user's display name \(error?.localizedDescription)")
+                }
+            }
+        case "email":
+            alUserClientService.updateUser(nil, email: message, ofUser: nil) { theJson, error in
+                if(error == nil){
+                    print("User's email updated")
+                } else {
+                    print("error occured while updating user's email \(error?.localizedDescription)")
+                }
+            }
+        case "phone_number":
+            alUserClientService.updateUser(message, email: nil, ofUser: nil) { theJson, error in
+                if(error == nil){
+                    print("User's phone number updated")
+                } else {
+                    print("error occured while updating user's phone number \(error?.localizedDescription)")
+                }
+            }
+        default:
+            print("Nothing to update")
+        }
+    }
+    
+    func isValidReply(message : ALMessage) -> Bool {
+
+        guard let lastMessage = alMessages.last?.messageModel,
+              let kmField = lastMessage.getKmField(),
+              let messageText = message.message,
+              let validation = kmField.validation,
+              let regex = validation["regex"] else {
+            return true
+        }
+
+        do{
+            return try ALKRegexValidator.matchPattern(text: messageText, pattern: regex)
+        } catch {
+            guard let fieldType = kmField.fieldType else {
+                return true
+            }
+            switch(fieldType.lowercased()){
+            case "email" :
+                return fieldType.isValidEmail(email: messageText)
+            case "phone_number" :
+                return fieldType.isValidPhoneNumber
+            default:
+                return true
+            }
         }
     }
     
@@ -1277,6 +1362,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.loadingFinished(error: nil)
             }
         })
+        self.lastMessage = alMessages.last
     }
     
     /*
@@ -1470,6 +1556,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.messageUpdated()
             }
         })
+        self.lastMessage = alMessages.last
     }
 
     open func loadOpenGroupMessages() {
