@@ -83,7 +83,6 @@ class QuickReplyItemCell: UITableViewCell {
 
 extension QuickReplyItemCell: AutoCompletionItemCell {
     func updateView(item: AutoCompleteItem) {
-        detailTextLabel?.textColor = .gray
-        textLabel?.text = item.key
+        textLabel?.text = "\(item.content)"
     }
 }

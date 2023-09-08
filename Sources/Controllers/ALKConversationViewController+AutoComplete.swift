@@ -15,7 +15,7 @@ extension ALKConversationViewController: AutoCompletionDelegate {
             if suggestionArray.isEmpty {
                 let items = suggestionDict
                 for dictionary in items {
-                    if let key = dictionary["message"] as? String, let content = dictionary["searchKey"] as? String{
+                    if let key = dictionary["searchKey" ] as? String, let content = dictionary["message"] as? String{
                         let autoCompleteItem = AutoCompleteItem(key: key, content: content)
                         arrayOfAutocomplete.append(autoCompleteItem)
                     }
