@@ -43,6 +43,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         manager.autocompletionDelegate = self
         return manager
     }()
+    
+    public lazy var autoSuggestionManager: AutoCompleteManager = {
+        let manager = AutoCompleteManager(textView: chatBar.textView, tableview: autoSuggestionView)
+        manager.autocompletionDelegate = self
+        return manager
+    }()
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
@@ -53,8 +59,23 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableview.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         return tableview
     }()
+    
+    public let autoSuggestionView: UITableView = {
+        let tableview = UITableView(frame: CGRect.zero, style: .plain)
+        tableview.backgroundColor = .white
+        tableview.estimatedRowHeight = 25
+        tableview.rowHeight = UITableView.automaticDimension
+        tableview.separatorStyle = .none
+        tableview.contentInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
+        return tableview
+    }()
 
     open lazy var navigationBar = ALKConversationNavBar(configuration: self.configuration, delegate: self)
+    
+    var suggestionArray: [String] = []
+    var suggestionDict: [[String: Any]] = [[:]]
+    var suggestionApiData: [Any] = []
+    var isAutoSuggestionRichMessage: Bool = false
 
     var contactService: ALContactService!
     let registerUserClientService = ALRegisterUserClientService()
@@ -587,7 +608,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupConstraints() {
-        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, conversationInfoView]
+        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, autoSuggestionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, conversationInfoView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -638,6 +659,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             .constraint(equalTo: typingNoticeView.topAnchor).isActive = true
         autocompletionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         autocompletionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        autoSuggestionView.bottomAnchor
+            .constraint(equalTo: typingNoticeView.topAnchor).isActive = true
+        autoSuggestionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        autoSuggestionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
 
         typingNoticeViewHeighConstaint = typingNoticeView.heightAnchor.constraint(equalToConstant: 0)
         typingNoticeViewHeighConstaint?.isActive = true
@@ -813,6 +838,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
                 weakSelf.chatBar.clear()
                 weakSelf.autocompleteManager.cancelAndHide()
+                weakSelf.autoSuggestionManager.cancelAndHide()
 
                 if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message.string) {
                     let profanityTitle = weakSelf.localizedString(
@@ -1138,6 +1164,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
+        if message.isAutoSuggestion() {
+            setupAutoSuggestion(message)
+        }
         guard !viewModel.isOpenGroup else {
             viewModel.syncOpenGroup(message: message)
             return
@@ -2279,6 +2308,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         // Clear reply message and the view
         viewModel.clearSelectedMessageToReply()
         hideReplyMessageView()
+        autoSuggestionView.isHidden = true
+        isAutoSuggestionRichMessage = false
+        suggestionDict = []
+        suggestionArray = []
     }
 
     public func updateTyingStatus(status: Bool, userId: String) {
