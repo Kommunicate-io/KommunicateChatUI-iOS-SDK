@@ -2,10 +2,14 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-## Unreleased
+##Unreleased
+- Added custom input field rich message support in IOS SDK
+
+## [1.1.7] 2023-09-07
 - Added support for Sending GIF from device
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
-- Added custom input field rich message support in IOS SDK
+- Exposed a customisation function for a rating menu icon on conversation screen.
+- Fixed crash coming in agent app due to moreBar.
 
 ## [1.1.6] 2023-08-28
 - Fixed attachments upload issue 

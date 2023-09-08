@@ -508,7 +508,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         backgroundView.backgroundColor = configuration.backgroundColor
         prepareTable()
-        prepareMoreBar()
+        if moreBar.isHidden{
+            prepareMoreBar()
+        }
         prepareChatBar()
         setupMemberMention()
         replyMessageView.closeButtonTapped = { [weak self] _ in
@@ -2227,7 +2229,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(ALKConversationViewController.refreshButtonAction(_:))
             let refresh = UIImage(named: "refreshIcon", in: Bundle.km, compatibleWith: nil)
-            let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 30, height: 30))
+            let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 20, height: 20))
             button = UIBarButtonItem(
                 image: refreshIcon,
                 style: .plain,
@@ -2257,7 +2259,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                        })
                    ]
                 }
-                let morebutton = UIBarButtonItem(title: "", image: UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil), primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
+                var ratingIcon = configuration.ratingMenuIcon
+                if let icon = ratingIcon, icon != UIImage(named: "ic_menu", in: Bundle.km, compatibleWith: nil), icon.size.height > 25.0, icon.size.width > 25.0 {
+                    ratingIcon = icon.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 25, height: 25))
+                }
+                let morebutton = UIBarButtonItem(title: "", image: ratingIcon, primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
                 rightBarButtonItems.append(morebutton)
             } else {
                 let rateIcon = UIImage(named: "icon_favorite", in: Bundle.km, compatibleWith: nil)
