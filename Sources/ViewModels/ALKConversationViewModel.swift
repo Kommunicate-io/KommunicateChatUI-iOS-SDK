@@ -825,7 +825,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 }
             }
         default:
-            print("Nothing to update")
+            alUserClientService.updateUserDisplayName(nil , andUserImageLink: nil, userStatus: nil, metadata: [fieldType : message]) { theJson, error in
+                if(error == nil){
+                    print("User info updated")
+                } else {
+                    print("error occured while updating user info \(error?.localizedDescription)")
+                }
+            }
         }
     }
     
