@@ -1164,7 +1164,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
-        if message.isAutoSuggestion() {
+        if message.isAutoSuggestion(),!ALApplozicSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
         guard !viewModel.isOpenGroup else {

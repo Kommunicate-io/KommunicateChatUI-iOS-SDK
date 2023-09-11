@@ -44,18 +44,15 @@ extension ALKConversationViewController {
         }
         
         let session = URLSession.shared
-        
         let task = session.dataTask(with: url) { (data, _, error) in
             if let error = error {
                 print("Error: \(error)")
                 return
             }
-            
             guard let data = data, let dataString = String(data: data, encoding: .utf8), let jsonData = dataString.data(using: .utf8) else {
                 print("Invalid data")
                 return
             }
-            
             do {
                 if let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any], let dataArray = jsonObject["data"] as? [[String: Any]] {
                     self.suggestionDict = dataArray
@@ -64,7 +61,6 @@ extension ALKConversationViewController {
                 print("Error parsing JSON: \(error)")
             }
         }
-        
         task.resume()
     }
 }
