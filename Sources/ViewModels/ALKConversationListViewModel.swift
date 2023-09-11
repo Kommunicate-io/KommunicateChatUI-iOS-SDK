@@ -133,6 +133,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
             return
         }
         allMessages.remove(at: index)
+        updateMessageList(messages: allMessages)
     }
 
     public func updateTypingStatus(in viewController: ALKConversationViewController, userId: String, status: Bool) {
