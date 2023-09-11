@@ -1161,6 +1161,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
     }
     
+    public func syncAutoSuggestionMessage(message: ALMessage?){
+        guard let message = message else { return }
+        if message.isAutoSuggestion(),!ALApplozicSettings.isAgentAppConfigurationEnabled() {
+            setupAutoSuggestion(message)
+        }
+    }
+    
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }

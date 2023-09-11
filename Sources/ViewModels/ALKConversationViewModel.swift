@@ -47,6 +47,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var isSearch: Bool = false
+    open var lastMessage : ALMessage?
 
     // For topic based chat
     open var conversationProxy: ALConversationProxy? {
@@ -1277,6 +1278,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.loadingFinished(error: nil)
             }
         })
+        self.lastMessage = alMessages.last
     }
     
     /*
@@ -1470,6 +1472,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.messageUpdated()
             }
         })
+        self.lastMessage = alMessages.last
     }
 
     open func loadOpenGroupMessages() {

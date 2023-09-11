@@ -10,6 +10,9 @@ import KommunicateCore_iOS_SDK
 
 extension ALKConversationViewController {
     public func setupAutoSuggestion(_ message: ALMessage) {
+        if message.autoSuggestionData == nil {
+            message.autoSuggestionData = message.metadata[AUTO_SUGGESTION_TYPE_MESSAGE] as? String
+        }
         guard let jsonData = message.autoSuggestionData else { return }
         let data = convertToDictionary(text: jsonData)
         guard let placeholderValue = data?["placeholder"] as? String else{ return }
