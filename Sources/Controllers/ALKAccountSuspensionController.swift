@@ -51,6 +51,7 @@ public class ALKAccountSuspensionController: UIViewController {
         let closeImage = UIImage(named: "close", in: Bundle.km, compatibleWith: nil)
         button.setImage(closeImage, for: .normal)
         button.tintColor = UIColor.black
+        button.isHidden = true
         return button
     }
 }
