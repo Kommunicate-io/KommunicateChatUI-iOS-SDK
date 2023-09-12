@@ -209,7 +209,7 @@ extension ALKMessageViewModel {
             let kmField = try JSONDecoder().decode(KMField.self, from: kmFieldData)
             return kmField
         } catch {
-            print("Error decoding JSON: \(error)")
+            print("Error decoding KmField: \(error)")
         }
         return nil
     }
@@ -226,7 +226,7 @@ extension ALKMessageViewModel {
             let replyMetaData = try JSONDecoder().decode([String : String].self, from: replydata)
             return replyMetaData
         } catch {
-            print("Error decoding JSON: \(error)")
+            print("Error decoding replyMetaData: \(error)")
         }
         return nil
     }

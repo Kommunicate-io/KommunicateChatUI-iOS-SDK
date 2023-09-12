@@ -2065,9 +2065,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             return
         }
         
-        let title = "Invalid Reply"
+        let title = localizedString(forKey: "InvalidReply", withDefaultValue: SystemMessage.Warning.InvalidReply, fileName: localizedStringFileName)
         let message = validation["errorText"]
-        let okButtonTitle = "OK"
+        let okButtonTitle = localizedString(forKey: "OkMessage", withDefaultValue: SystemMessage.ButtonName.ok, fileName: localizedStringFileName)
         let alert = UIAlertController(
             title: title,
             message: message,

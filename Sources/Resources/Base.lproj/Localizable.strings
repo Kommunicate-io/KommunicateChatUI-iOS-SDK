@@ -66,6 +66,7 @@ FailedToUpdateMessage = "Failed to update";
 
 EnterEmailMessage = "Please enter email address";
 InvalidEmailMessage = "Invalid email address";
+InvalidReply = "Invalid Reply";
 FillAllFieldsMessage = "Please fill-in all fields";
 FillPasswordMessage = "Please fill-in password";
 PasswordNotMatchedMessage = "Password does not match the confirm password";

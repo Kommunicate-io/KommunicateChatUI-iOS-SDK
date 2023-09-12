@@ -889,7 +889,47 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard let value = value as? [AnyHashable: Any] else { continue }
             metaData[key] = ALUtilityClass.generateJsonString(from: value)
         }
+        
+        let languageCode = NSLocale.preferredLanguages.first?.prefix(2)
+        
+        updateMessageMetadataChatContext(info: ["kmUserLocale" : languageCode as Any], metadata: metaData)
+        
         return metaData
+    }
+    
+    func updateMessageMetadataChatContext(info: [String: Any], metadata : NSMutableDictionary) {
+        var context: [String: Any] = [:]
+
+        do {
+            let contextDict = try chatContextFromMessageMetadata(messageMetadata: metadata as? [AnyHashable : Any])
+            context = contextDict ?? [:]
+            context.merge(info, uniquingKeysWith: { $1 })
+
+            let messageInfoData = try JSONSerialization
+                .data(withJSONObject: context, options: .prettyPrinted)
+            let messageInfoString = String(data: messageInfoData, encoding: .utf8) ?? ""
+            metadata["KM_CHAT_CONTEXT"] = messageInfoString
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    private func chatContextFromMessageMetadata(messageMetadata : [AnyHashable: Any]?) -> [String: Any]? {
+        guard
+            let messageMetadata = messageMetadata,
+            let chatContext = messageMetadata["KM_CHAT_CONTEXT"] as? String,
+            let contextData = chatContext.data(using: .utf8)
+        else {
+            return nil
+        }
+        do {
+            let contextDict = try JSONSerialization
+                .jsonObject(with: contextData, options: .allowFragments) as? [String: Any]
+            return contextDict
+        } catch {
+            print(error.localizedDescription)
+        }
+        return nil
     }
 
     open func send(photo: UIImage, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
