@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## Unreleased
+- Fixed Trial Period Alert closable issue.
+
 ## [1.1.7] 2023-09-07
 - Added support for Sending GIF from device
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
