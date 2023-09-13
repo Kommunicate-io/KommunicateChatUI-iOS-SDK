@@ -2,7 +2,8 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-## Unreleased
+##Unreleased
+- Added custom input field rich message support in IOS SDK
 - Fixed Trial Period Alert closable issue.
 - Fixed the delete conversation showing the empty screen.  
 - Added support for XCode 15
