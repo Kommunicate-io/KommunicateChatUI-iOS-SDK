@@ -825,7 +825,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 }
             }
         default:
-            alUserClientService.updateUserDisplayName(nil , andUserImageLink: nil, userStatus: nil, metadata: [fieldType : message]) { theJson, error in
+            alUserClientService.updateUserDisplayName(nil , andUserImageLink: nil, userStatus: nil, metadata: [kmField.field : message]) { theJson, error in
                 if(error == nil){
                     print("User info updated")
                 } else {
