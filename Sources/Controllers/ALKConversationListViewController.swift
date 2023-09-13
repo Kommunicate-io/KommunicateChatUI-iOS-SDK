@@ -343,6 +343,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     override open func showAccountSuspensionView() {
         let accountVC = ALKAccountSuspensionController()
+        accountVC.isModalInPresentation = true
         accountVC.closePressed = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
