@@ -42,18 +42,18 @@ extension ALKConversationViewController {
     
     func fetchData(from url: String) {
         guard let url = URL(string: url) else {
-            print("Invalid URL")
+            print("Invalid URL recived in AutoSuggestion")
             return
         }
         
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, _, error) in
             if let error = error {
-                print("Error: \(error)")
+                print("Error in Api comming from AutoSuggestion: \(error)")
                 return
             }
             guard let data = data, let dataString = String(data: data, encoding: .utf8), let jsonData = dataString.data(using: .utf8) else {
-                print("Invalid data")
+                print("Invalid data recived form Api in AutoSuggestion")
                 return
             }
             do {
@@ -61,7 +61,7 @@ extension ALKConversationViewController {
                     self.suggestionDict = dataArray
                 }
             } catch {
-                print("Error parsing JSON: \(error)")
+                print("Error parsing JSON data from AutoSuggestion: \(error)")
             }
         }
         task.resume()
