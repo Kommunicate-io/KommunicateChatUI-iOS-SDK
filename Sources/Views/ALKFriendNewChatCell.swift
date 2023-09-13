@@ -90,7 +90,7 @@ class ALKFriendNewChatCell: UITableViewCell {
         // image
         let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         if let tempURL: URL = friend.friendDisplayImgURL {
-            let resource = ImageResource(downloadURL: tempURL)
+            let resource = Kingfisher.ImageResource(downloadURL: tempURL)
             imgDisplay.kf.setImage(with: resource, placeholder: placeHolder)
 
         } else {
