@@ -177,7 +177,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                 channelDbService.deleteChannel(conversation.groupId)
                 self.viewModel.remove(message: conversation)
                 self.tableView.reloadData()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.showAlertWithSingleAction(message: self.localizedString(
                         forKey: "DeleteConversationSuccessMessage",
                         withDefaultValue: SystemMessage.DeleteConversationPopup.success,

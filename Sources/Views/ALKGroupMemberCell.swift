@@ -123,7 +123,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
             profile.image = placeHolder
             return
         }
-        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+        let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
         profile.kf.setImage(with: resource, placeholder: placeHolder)
     }
 
