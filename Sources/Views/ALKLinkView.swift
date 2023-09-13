@@ -154,7 +154,7 @@ class ALKLinkView: UIView, Localizable {
         let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
 
         if let stringURL = linkPreviewMeta.image ?? linkPreviewMeta.icon, let url = URL(string: stringURL) {
-            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             previewImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             previewImageView.image = placeHolder

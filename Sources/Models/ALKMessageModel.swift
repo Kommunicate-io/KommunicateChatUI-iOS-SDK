@@ -180,3 +180,62 @@ public extension ALKMessageViewModel {
         }
     }
 }
+
+public struct KMField : Decodable {
+    public var label: String?
+    public var field: String?
+    public var fieldType: String?
+    public var placeholder: String?
+    public var action: Action?
+    public var validation: [String : String]?
+    
+    public struct Action : Decodable {
+        public var updateUserDetails : Bool?
+    }
+    
+}
+
+extension ALKMessageViewModel {
+    
+    func getKmField() -> KMField? {
+        do {
+            guard let metadata = metadata, let payload = metadata["KM_FIELD"] as? String else {
+                return nil
+            }
+            let kmFieldData = payload.data(using: .utf8)
+            guard let kmFieldData = kmFieldData else {
+                return nil
+            }
+            let kmField = try JSONDecoder().decode(KMField.self, from: kmFieldData)
+            return kmField
+        } catch {
+            print("Error decoding KmField: \(error)")
+        }
+        return nil
+    }
+
+    func getReplyMetaData() -> [String:String]? {
+        do {
+            guard let metadata = metadata, let replyMetadata = metadata["replyMetadata"] as? String else {
+                return nil
+            }
+            let replydata = replyMetadata.data(using: .utf8)
+            guard let replydata = replydata else {
+                return nil
+            }
+            let replyMetaData = try JSONDecoder().decode([String : String].self, from: replydata)
+            return replyMetaData
+        } catch {
+            print("Error decoding replyMetaData: \(error)")
+        }
+        return nil
+    }
+
+    func isCustomDataRichMessage() -> Bool {
+        guard let metadata = metadata, metadata["KM_FIELD"] != nil else {
+            return false
+        }
+        return true
+    }
+    
+}

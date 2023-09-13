@@ -86,6 +86,7 @@ struct SystemMessage: Localizable {
         static let videoExportError = localizedString(forKey: "VideoExportError")
         static let uploadAttachmentRestrictionTitle = localizedString(forKey: "uploadRestrictionTitle")
         static let uploadAttachmentRestrictionMessage = localizedString(forKey: "uploadRestrictionMessage")
+        static let InvalidReply = localizedString(forKey: "InvalidReply")
     }
 
     enum ButtonName {
