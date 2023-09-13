@@ -75,7 +75,7 @@ final class ALKFriendContactCell: UITableViewCell {
     }
 
     private func setupFriendProfilePhoto(imgURL: URL) {
-        let resource = ImageResource(downloadURL: imgURL, cacheKey: imgURL.absoluteString)
+        let resource = Kingfisher.ImageResource(downloadURL: imgURL, cacheKey: imgURL.absoluteString)
         imgFriendIcon.kf.setImage(with: resource, placeholder: placeHolder)
     }
 
