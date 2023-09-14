@@ -892,16 +892,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
         
         let languageCode = NSLocale.preferredLanguages.first?.prefix(2)
         
-        updateMessageMetadataChatContext(info: ["kmUserLocale" : languageCode as Any], metadata: metaData)
+        ALKConversationViewModel.updateMetadataChatContext(info: ["kmUserLocale" : languageCode as Any], metadata: metaData)
         
         return metaData
     }
     
-    func updateMessageMetadataChatContext(info: [String: Any], metadata : NSMutableDictionary) {
+    public static func updateMetadataChatContext(info: [String: Any], metadata : NSMutableDictionary) {
         var context: [String: Any] = [:]
 
         do {
-            let contextDict = try chatContextFromMessageMetadata(messageMetadata: metadata as? [AnyHashable : Any])
+            let contextDict = try chatContextFromMetadata(messageMetadata: metadata as? [AnyHashable : Any])
             context = contextDict ?? [:]
             context.merge(info, uniquingKeysWith: { $1 })
 
@@ -914,7 +914,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    private func chatContextFromMessageMetadata(messageMetadata : [AnyHashable: Any]?) -> [String: Any]? {
+    public static func chatContextFromMetadata(messageMetadata : [AnyHashable: Any]?) -> [String: Any]? {
         guard
             let messageMetadata = messageMetadata,
             let chatContext = messageMetadata["KM_CHAT_CONTEXT"] as? String,
