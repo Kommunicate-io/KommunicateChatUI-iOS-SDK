@@ -13,11 +13,23 @@ extension ALKConversationViewController: AutoCompletionDelegate {
         if isAutoSuggestionRichMessage , message.count >= 2 {
             var arrayOfAutocomplete: [AutoCompleteItem] = []
             if suggestionArray.isEmpty {
-                let items = suggestionDict
-                for dictionary in items {
-                    if let key = dictionary["searchKey" ] as? String, let content = dictionary["message"] as? String{
-                        let autoCompleteItem = AutoCompleteItem(key: key, content: content)
-                        arrayOfAutocomplete.append(autoCompleteItem)
+                if !autoSuggestionApi.isEmpty {
+                    fetchData(from: autoSuggestionApi, message: message)
+                    let items = suggestionDict
+                    for dictionary in items {
+                        if let key = dictionary["searchKey"] as? String, let content = dictionary["message"] as? String {
+                            let autoCompleteItem = AutoCompleteItem(key: key, content: content)
+                            arrayOfAutocomplete.append(autoCompleteItem)
+                        }
+                    }
+                }
+                else {
+                    let items = suggestionDict
+                    for dictionary in items {
+                        if let key = dictionary["searchKey" ] as? String, let content = dictionary["message"] as? String{
+                            let autoCompleteItem = AutoCompleteItem(key: key, content: content)
+                            arrayOfAutocomplete.append(autoCompleteItem)
+                        }
                     }
                 }
             } else {
@@ -27,7 +39,8 @@ extension ALKConversationViewController: AutoCompletionDelegate {
             if message.isEmpty {
                 autoSuggestionManager.items = arrayOfAutocomplete
             } else {
-                autoSuggestionManager.items = arrayOfAutocomplete.filter{ $0.key.lowercased().contains(message) }
+                let searchMessage = message.dropFirst()
+                autoSuggestionManager.items = arrayOfAutocomplete.filter{ $0.key.lowercased().contains(searchMessage) }
             }
                     
             UIView.performWithoutAnimation {

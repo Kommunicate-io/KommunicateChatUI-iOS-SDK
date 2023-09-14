@@ -74,7 +74,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     var suggestionArray: [String] = []
     var suggestionDict: [[String: Any]] = [[:]]
-    var suggestionApiData: [Any] = []
+    var autoSuggestionApi: String = ""
     var isAutoSuggestionRichMessage: Bool = false
 
     var contactService: ALContactService!
@@ -2358,6 +2358,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         isAutoSuggestionRichMessage = false
         suggestionDict = []
         suggestionArray = []
+        autoSuggestionApi = ""
     }
 
     public func updateTyingStatus(status: Bool, userId: String) {

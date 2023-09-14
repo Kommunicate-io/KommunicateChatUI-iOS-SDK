@@ -188,7 +188,7 @@ extension AutoCompleteManager: UITextViewDelegate {
                 return
             }
             selection = (result.prefix, result.range, String(result.word.dropFirst(result.prefix.count)))
-            autocompletionDelegate?.didMatch(prefix: "", message: String(textView.text.dropFirst()))
+            autocompletionDelegate?.didMatch(prefix: "", message: String(textView.text))
         } else {
             guard let result = textView.find(prefixes: autocompletionPrefixes) else {
                 cancelAndHide()

@@ -22,7 +22,7 @@ extension ALKConversationViewController {
         } else if let suggestion = data?["source"] as? [[String : Any]] {
             suggestionDict = suggestion
         } else if let sourceDictionary = data?["source"] as? [String: Any], let url = sourceDictionary["url"] as? String {
-            fetchData(from: url)
+            autoSuggestionApi = url
         }
         autoSuggestionView.isHidden = false
         isAutoSuggestionRichMessage = true
@@ -40,8 +40,9 @@ extension ALKConversationViewController {
         return nil
     }
     
-    func fetchData(from url: String) {
-        guard let url = URL(string: url) else {
+    func fetchData(from url: String, message check: String) {
+        let searchURL: String = url + check.replacingOccurrences(of: " ", with: "+")
+        guard let url = URL(string: searchURL) else {
             print("Invalid URL recived in AutoSuggestion")
             return
         }
