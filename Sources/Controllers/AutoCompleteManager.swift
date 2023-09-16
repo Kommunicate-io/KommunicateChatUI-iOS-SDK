@@ -11,7 +11,7 @@ import UIKit
 #endif
 
 public protocol AutoCompletionDelegate: AnyObject {
-    func didMatch(prefix: String, message: String)
+    func didMatch(prefix: String, message: String, updated: Bool)
 }
 
 public protocol AutoCompletionItemCell: UITableViewCell {
@@ -188,7 +188,7 @@ extension AutoCompleteManager: UITextViewDelegate {
                 return
             }
             selection = (result.prefix, result.range, String(result.word.dropFirst(result.prefix.count)))
-            autocompletionDelegate?.didMatch(prefix: "", message: String(textView.text))
+            autocompletionDelegate?.didMatch(prefix: "", message: String(textView.text), updated: false)
         } else {
             guard let result = textView.find(prefixes: autocompletionPrefixes) else {
                 cancelAndHide()
@@ -197,7 +197,7 @@ extension AutoCompleteManager: UITextViewDelegate {
 
             selection = (result.prefix, result.range, String(result.word.dropFirst(result.prefix.count)))
             // Call delegate and get items
-            autocompletionDelegate?.didMatch(prefix: result.prefix, message: String(result.word.dropFirst(result.prefix.count)))
+            autocompletionDelegate?.didMatch(prefix: result.prefix, message: String(result.word.dropFirst(result.prefix.count)), updated: false)
         }
         }
 

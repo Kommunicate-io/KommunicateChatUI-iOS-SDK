@@ -41,6 +41,7 @@ extension ALKConversationViewController {
     }
     
     func fetchData(from url: String, message check: String) {
+        let recivedMessage = check
         let searchURL: String = url + check.replacingOccurrences(of: " ", with: "+")
         guard let url = URL(string: searchURL) else {
             print("Invalid URL recived in AutoSuggestion")
@@ -60,6 +61,9 @@ extension ALKConversationViewController {
             do {
                 if let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any], let dataArray = jsonObject["data"] as? [[String: Any]] {
                     self.suggestionDict = dataArray
+                    DispatchQueue.main.async {
+                        self.didMatch(prefix: "", message: recivedMessage, updated: true)
+                    }
                 }
             } catch {
                 print("Error parsing JSON data from AutoSuggestion: \(error)")

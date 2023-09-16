@@ -9,12 +9,14 @@ import Foundation
 import UIKit
 
 extension ALKConversationViewController: AutoCompletionDelegate {
-    public func didMatch(prefix: String, message: String) {
+    public func didMatch(prefix: String, message: String, updated: Bool) {
         if isAutoSuggestionRichMessage , message.count >= 2 {
             var arrayOfAutocomplete: [AutoCompleteItem] = []
             if suggestionArray.isEmpty {
                 if !autoSuggestionApi.isEmpty {
-                    fetchData(from: autoSuggestionApi, message: message)
+                    if !updated {
+                        fetchData(from: autoSuggestionApi, message: message)
+                    }
                     let items = suggestionDict
                     for dictionary in items {
                         if let key = dictionary["searchKey"] as? String, let content = dictionary["message"] as? String {
