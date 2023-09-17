@@ -497,6 +497,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         unsubscribingChannel()
         self.invalidateTimerAndUpdateHeightConstraint()
         self.viewModel.timer.invalidate()
+        isAutoSuggestionRichMessage = false
     }
 
     override func backTapped() {
