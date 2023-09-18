@@ -16,6 +16,7 @@ extension ALKConversationViewController: AutoCompletionDelegate {
                 if !autoSuggestionApi.isEmpty {
                     if !updated {
                         fetchData(from: autoSuggestionApi, message: message)
+                        currentText = message
                     }
                     let items = suggestionDict
                     for dictionary in items {
@@ -51,6 +52,9 @@ extension ALKConversationViewController: AutoCompletionDelegate {
             autoSuggestionManager.hide(false)
         } else {
             autoSuggestionManager.hide(true)
+            if !updated{
+                currentText = message
+            }
         }
         
         guard prefix == MessageMention.Prefix else { return }

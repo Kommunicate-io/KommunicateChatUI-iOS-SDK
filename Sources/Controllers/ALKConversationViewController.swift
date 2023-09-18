@@ -76,6 +76,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     var suggestionDict: [[String: Any]] = [[:]]
     var autoSuggestionApi: String = ""
     var isAutoSuggestionRichMessage: Bool = false
+    var currentText: String = ""
 
     var contactService: ALContactService!
     let registerUserClientService = ALRegisterUserClientService()
