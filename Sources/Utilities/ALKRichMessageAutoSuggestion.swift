@@ -40,6 +40,14 @@ extension ALKConversationViewController {
         return nil
     }
     
+    func clearAutoSuggestionData() {
+        self.autoSuggestionView.isHidden = true
+        self.isAutoSuggestionRichMessage = false
+        self.suggestionDict = []
+        self.suggestionArray = []
+        self.autoSuggestionApi = ""
+    }
+    
     func fetchData(from url: String, message check: String) {
         let searchURL: String = url + check.replacingOccurrences(of: " ", with: "+")
         guard let url = URL(string: searchURL) else {

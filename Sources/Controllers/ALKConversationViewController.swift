@@ -2356,11 +2356,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         // Clear reply message and the view
         viewModel.clearSelectedMessageToReply()
         hideReplyMessageView()
-        autoSuggestionView.isHidden = true
-        isAutoSuggestionRichMessage = false
-        suggestionDict = []
-        suggestionArray = []
-        autoSuggestionApi = ""
+        clearAutoSuggestionData()
     }
 
     public func updateTyingStatus(status: Bool, userId: String) {
