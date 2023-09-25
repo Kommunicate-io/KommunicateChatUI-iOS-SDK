@@ -8,6 +8,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Fixed Trial Period Alert closable issue.
 - Fixed the delete conversation showing the empty screen.  
 - Added support for XCode 15
+- Fixed kommunicate.io showing in iOS 17 even when it is disabled
 
 
 ## [1.1.7] 2023-09-07
