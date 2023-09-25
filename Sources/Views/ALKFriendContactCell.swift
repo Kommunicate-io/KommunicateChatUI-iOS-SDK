@@ -75,7 +75,7 @@ final class ALKFriendContactCell: UITableViewCell {
     }
 
     private func setupFriendProfilePhoto(imgURL: URL) {
-        let resource = ImageResource(downloadURL: imgURL, cacheKey: imgURL.absoluteString)
+        let resource = KF.ImageResource(downloadURL: imgURL, cacheKey: imgURL.absoluteString)
         imgFriendIcon.kf.setImage(with: resource, placeholder: placeHolder)
     }
 

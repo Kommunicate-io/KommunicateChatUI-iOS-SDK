@@ -237,7 +237,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         let placeHolder = configuration.channelDetail.defaultGroupIcon?.scale(with: CGSize(width: 25, height: 25))
 
         if let url = URL(string: groupProfileImgUrl) {
-            let resource = ImageResource(downloadURL: url, cacheKey: groupProfileImgUrl)
+            let resource = KF.ImageResource(downloadURL: url, cacheKey: groupProfileImgUrl)
             imgGroupProfile.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             imgGroupProfile.image = placeHolder

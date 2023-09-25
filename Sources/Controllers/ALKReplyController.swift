@@ -199,7 +199,7 @@ class ALKReplyController: UIViewController, Localizable {
         let contactService = ALContactService()
         let contact = contactService.loadContact(byKey: "userId", value: message.to)
         if let imageUrl = contact?.contactImageUrl, let url = URL(string: imageUrl) {
-            let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            let resource = KF.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             avatarImageView.image = placeHolder

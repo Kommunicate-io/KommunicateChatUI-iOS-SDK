@@ -168,7 +168,7 @@ open class ALKConversationNavBar: UIView, Localizable {
             profileImage.image = placeholder
             return
         }
-        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+        let resource = KF.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
         profileImage.kf.setImage(with: resource, placeholder: placeholder)
     }
 

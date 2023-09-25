@@ -64,7 +64,7 @@ final class ALKAddParticipantCollectionCell: UICollectionViewCell {
             // image
             let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
             let tempURL: URL = currentFriendViewModel!.friendDisplayImgURL!
-            let resource = ImageResource(downloadURL: tempURL, cacheKey: tempURL.absoluteString)
+            let resource = KF.ImageResource(downloadURL: tempURL, cacheKey: tempURL.absoluteString)
             imgView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             // an add button
