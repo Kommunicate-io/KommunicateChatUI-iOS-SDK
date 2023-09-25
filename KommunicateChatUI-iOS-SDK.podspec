@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.subspec 'Complete' do |complete|
     complete.source_files = 'Sources/**/*.swift'
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
-    complete.dependency 'Kingfisher', '~> 7.6.2'
+    complete.dependency 'Kingfisher', '~> 7.9.1'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
     complete.dependency 'ZendeskChatProvidersSDK',  '~> 3.0.0'
     complete.dependency 'iOSDropDown'
