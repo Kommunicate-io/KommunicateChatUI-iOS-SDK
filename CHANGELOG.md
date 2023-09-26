@@ -10,7 +10,6 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Added support for XCode 15
 - Fixed kommunicate.io showing in iOS 17 even when it is disabled
 
-
 ## [1.1.7] 2023-09-07
 - Added support for Sending GIF from device
 - Added icons for (mobile/web/facebook/WhatsApp) on conversation list for agent app. 
@@ -24,7 +23,6 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 ## [1.1.5] 2023-08-23
 - Crash fix for agent app while updating it to latest ios SDK
 - Added validation and default value for form type rich message
-
 
 ## [1.1.4] 2023-08-11
 - Improved UI of multiple language selection & make it similar to android
