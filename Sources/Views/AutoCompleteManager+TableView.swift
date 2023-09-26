@@ -27,6 +27,14 @@ extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
         guard indexPath.row < items.count,
               let selection = selection
         else {
+            if(isAutoSuggestion){
+                let autoCompleteCellType = cellType(forPrefix: "")
+                guard let autoCompleteCell = tableView.dequeueReusableCell( withIdentifier: autoCompleteCellType.reuseIdentifier, for: indexPath) as? AutoCompletionItemCell else {
+                    return cell
+                }
+                isAutoSuggestion = false
+                return autoCompleteCell
+            }
             return cell
         }
 
