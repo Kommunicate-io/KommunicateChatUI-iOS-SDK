@@ -50,6 +50,7 @@ open class ALKChatBar: UIView, Localizable {
         textView.isUserInteractionEnabled = true
         textView.isSelectable = true
         textView.isEditable = false
+        textView.isHidden = true
         textView.textContainer.maximumNumberOfLines = 1
         textView.textContainer.lineBreakMode = .byTruncatingTail
         textView.backgroundColor = UIColor.darkGray
@@ -612,6 +613,7 @@ open class ALKChatBar: UIView, Localizable {
     }
 
     public func showPoweredByMessage() {
+        poweredByMessageTextView.isHidden = false
         poweredByMessageTextView.constraint(withIdentifier: ConstraintIdentifier.poweredByMessageHeight.rawValue)?.constant = 20
     }
 

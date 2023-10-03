@@ -11,7 +11,7 @@ import UIKit
 #endif
 
 public protocol AutoCompletionDelegate: AnyObject {
-    func didMatch(prefix: String, message: String)
+    func didMatch(prefix: String, message: String, updated: Bool)
 }
 
 public protocol AutoCompletionItemCell: UITableViewCell {
@@ -25,6 +25,7 @@ public class AutoCompleteManager: NSObject {
     public let textView: ALKChatBarTextView
     public weak var autocompletionDelegate: AutoCompletionDelegate?
     public var items = [AutoCompleteItem]()
+    public var isAutoSuggestion: Bool = false
 
     // Prefix and entered word with its range in the text.
     typealias Selection = (
@@ -72,6 +73,16 @@ public class AutoCompleteManager: NSObject {
         prefixCells[prefix] = cellType
         if cellType != DefaultAutoCompleteCell.self {
             autocompletionView.register(cellType)
+        }
+    }
+    
+    public func registerWithoutPrefix<T: AutoCompletionItemCell>(
+        configuration: AutoCompleteItemConfiguration = AutoCompleteItemConfiguration(),
+        cellType: T.Type
+    ) {
+        if cellType != DefaultAutoCompleteCell.self {
+            autocompletionView.register(cellType)
+            isAutoSuggestion = true
         }
     }
 
@@ -171,15 +182,24 @@ extension AutoCompleteManager: UITextViewDelegate {
     }
 
     public func textViewDidChangeSelection(_ textView: UITextView) {
-        guard let result = textView.find(prefixes: autocompletionPrefixes) else {
-            cancelAndHide()
-            return
-        }
+        if(isAutoSuggestion){
+            guard let result = textView.find(prefixes: [""]) else{
+                cancelAndHide()
+                return
+            }
+            selection = (result.prefix, result.range, String(result.word.dropFirst(result.prefix.count)))
+            autocompletionDelegate?.didMatch(prefix: "", message: String(textView.text), updated: false)
+        } else {
+            guard let result = textView.find(prefixes: autocompletionPrefixes) else {
+                cancelAndHide()
+                return
+            }
 
-        selection = (result.prefix, result.range, String(result.word.dropFirst(result.prefix.count)))
-        // Call delegate and get items
-        autocompletionDelegate?.didMatch(prefix: result.prefix, message: String(result.word.dropFirst(result.prefix.count)))
-    }
+            selection = (result.prefix, result.range, String(result.word.dropFirst(result.prefix.count)))
+            // Call delegate and get items
+            autocompletionDelegate?.didMatch(prefix: result.prefix, message: String(result.word.dropFirst(result.prefix.count)), updated: false)
+        }
+        }
 
     func cellType(forPrefix prefix: String) -> AutoCompletionItemCell.Type {
         return prefixCells[prefix] ?? DefaultAutoCompleteCell.self
