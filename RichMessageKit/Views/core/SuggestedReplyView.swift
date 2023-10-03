@@ -176,6 +176,7 @@ public class SuggestedReplyView: UIView {
         let stackView = UIStackView(arrangedSubviews: subviews)
         stackView.alignment = .center
         stackView.axis = .horizontal
+        stackView.distribution = .fill
         return stackView
     }
     
