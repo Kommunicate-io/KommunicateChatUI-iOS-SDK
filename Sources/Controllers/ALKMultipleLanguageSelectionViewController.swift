@@ -61,7 +61,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
             // Always adopt a light interface style.
-            overrideUserInterfaceStyle = .light
+//            overrideUserInterfaceStyle = .light
         }
         closeButton.addTarget(self, action: #selector(closeButtonAction(_:)), for: .touchUpInside)
         setupViews()

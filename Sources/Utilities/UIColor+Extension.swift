@@ -105,3 +105,19 @@ public extension UIColor {
         return String(format: "%06x", rgb)
     }
 }
+
+extension UIApplication {
+    var userInterfaceStyle: UIUserInterfaceStyle? {
+        if let windowScene = UIApplication.shared.connectedScenes
+            .first(where: { $0 is UIWindowScene }) as? UIWindowScene {
+            return windowScene.traitCollection.userInterfaceStyle
+        }
+        return nil
+    }
+}
+
+extension UIColor {
+    static func dynamicColor(light: UIColor, dark: UIColor) -> UIColor {
+        return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
+    }
+}

@@ -73,6 +73,9 @@ public struct ALKConfiguration {
 
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata: [AnyHashable: Any]?
+    
+    /// Chcek for the dark mode Support Enabled for the SDK
+    public var isDarkModeEnabled = false
 
     /// Status bar style. It will be used in all view controllers.
     /// Default value is lightContent.
