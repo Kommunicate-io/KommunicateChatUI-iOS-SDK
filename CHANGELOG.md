@@ -17,7 +17,6 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Exposed a customisation function for a rating menu icon on conversation screen.
 - Fixed crash coming in agent app due to moreBar.
 
-
 ## [1.1.6] 2023-08-28
 - Fixed attachments upload issue 
 - Fixed SPM Build issue 
@@ -25,6 +24,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 ## [1.1.5] 2023-08-23
 - Crash fix for agent app while updating it to latest ios SDK
 - Added validation and default value for form type rich message
+
 
 ## [1.1.4] 2023-08-11
 - Improved UI of multiple language selection & make it similar to android
