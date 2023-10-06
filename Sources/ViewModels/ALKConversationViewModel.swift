@@ -474,6 +474,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadOpenGroupMessages()
             return
         }
+        self.delegate?.loadingStarted()
         loadMessagesFromDB()
     }
 
