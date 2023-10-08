@@ -154,7 +154,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     }
 
     private func setUpTableView() {
-        itemListView.backgroundColor = UIColor.dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+        itemListView.backgroundColor = UIColor.dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         itemListView.estimatedRowHeight = 50
         itemListView.estimatedSectionHeaderHeight = 50
         itemListView.rowHeight = UITableView.automaticDimension

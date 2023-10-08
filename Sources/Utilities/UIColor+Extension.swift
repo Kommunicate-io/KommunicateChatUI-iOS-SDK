@@ -74,6 +74,14 @@ public extension UIColor {
     static func placeholderGray() -> UIColor {
         return UIColor(netHex: 0xCCCCCC)
     }
+    
+    static func backgroundDarkColor() -> UIColor {
+        return UIColor(netHex: 0x1C1C1C)
+    }
+    
+    static func appBarDarkColor() -> UIColor {
+        return UIColor(netHex: 0x313131)
+    }
 
     static func disabledButton() -> UIColor {
         return UIColor(netHex: 0xCCCCCC)

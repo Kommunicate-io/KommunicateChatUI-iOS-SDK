@@ -96,7 +96,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         /// Used for description text color
         public static var descriptionTextColor = UIColor.dynamicColor(light: UIColor(red: 121, green: 116, blue: 116), dark: UIColor(netHex: 0xC3C3C3))
         /// Used for background color of overlay text
-        public static var overlayTextBackground = UIColor.dynamicColor(light: UIColor.white, dark: UIColor(netHex: 0x1C1C1C))
+        public static var overlayTextBackground = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
         /// Shadow color of the overlay text
         public static var overlayTextShadowColor = UIColor.black.cgColor
     }
@@ -401,14 +401,14 @@ open class ALKGenericCardCell: UICollectionViewCell {
             button.setTitle("Button", for: .normal)
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.tag = $0
-            button.backgroundColor = .dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+            button.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
             return button
         }
     }
 
     private func setupConstraints() {
         let view = contentView
-        view.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor(netHex: 0x313131))
+        view.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(ratingLabel)
         actionButtons.forEach {

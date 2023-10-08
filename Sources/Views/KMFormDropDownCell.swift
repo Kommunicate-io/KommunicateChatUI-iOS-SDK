@@ -104,7 +104,7 @@ class KMFormDropDownCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.isUserInteractionEnabled = true
-        contentView.backgroundColor = UIColor.dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+        contentView.backgroundColor = UIColor.dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         menu.delegate = self
         addConstraints()
     }
@@ -163,7 +163,7 @@ extension KMFormDropDownCell: UITextFieldDelegate {
 public struct FormDropDownStyle {
     public struct Color {
         public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
-        public static var rowBackgroundColor: UIColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor(netHex: 0x1C1C1C))
+        public static var rowBackgroundColor: UIColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
         public static var textColor: UIColor = UIColor.dynamicColor(light: UIColor.gray, dark: UIColor.white)
         public static var arrowColor: UIColor = .black
     }

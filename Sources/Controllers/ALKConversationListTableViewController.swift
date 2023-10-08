@@ -136,14 +136,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         }
     }
     
-    func switchDynamicMode(isDynamic: Bool) {
-        if isDynamic {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
-        } else {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
-        }
-    }
-    
     func showDeleteAlert(conversation: ALMessage) {
         let alert = UIAlertController(title: localizedString(forKey: "DeleteConversationTitle",withDefaultValue: SystemMessage.DeleteConversationPopup.title,fileName: localizedStringFileName), message:localizedString(forKey: "DeleteConversationContent",withDefaultValue: SystemMessage.DeleteConversationPopup.content,fileName: localizedStringFileName),preferredStyle: .alert)
 
@@ -349,7 +341,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         tableView.estimatedRowHeight = 75
         tableView.rowHeight = 75
         tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor(netHex: 0x1C1C1C))
+        tableView.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
         tableView.keyboardDismissMode = .onDrag
         tableView.accessibilityIdentifier = "OuterChatScreenTableView"
 
@@ -979,3 +971,12 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
     }
 }
 
+extension UIViewController {
+    public func switchDynamicMode(isDynamic: Bool) {
+        if isDynamic {
+                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
+        } else {
+                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
+        }
+    }
+}

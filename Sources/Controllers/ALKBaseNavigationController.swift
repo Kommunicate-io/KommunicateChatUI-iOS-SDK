@@ -39,7 +39,7 @@ public class ALKBaseNavigationViewController: UINavigationController {
             navBarAppearance.titleTextAttributes =
             navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.dynamicColor(light: .black, dark: .white)]
             if navigationBarProxy.backgroundImage(for: .default) == nil {
-                navBarAppearance.backgroundColor = UIColor.dynamicColor(light: appSettingsUserDefaults.getAppBarTintColor(), dark: UIColor(netHex: 0x313131))
+                navBarAppearance.backgroundColor = UIColor.dynamicColor(light: appSettingsUserDefaults.getAppBarTintColor(), dark: UIColor.appBarDarkColor())
             } else {
                 navBarAppearance.backgroundImage = navigationBarProxy.backgroundImage(for: .default)
             }

@@ -52,7 +52,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
-        tableview.backgroundColor = .dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+        tableview.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         tableview.estimatedRowHeight = 50
         tableview.rowHeight = UITableView.automaticDimension
         tableview.separatorStyle = .none
@@ -62,7 +62,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     public let autoSuggestionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
-        tableview.backgroundColor = .dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+        tableview.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         tableview.estimatedRowHeight = 25
         tableview.rowHeight = UITableView.automaticDimension
         tableview.separatorStyle = .none
@@ -409,14 +409,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             self.navigationBar.updateView(profile: profile)
         })
     }
-
-    func switchDynamicMode(isDynamic: Bool) {
-        if isDynamic {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
-        } else {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
-        }
-    }
     
     open func updateAssigneeOnlineStatus(userId: String){}
     
@@ -538,7 +530,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
-        backgroundView.backgroundColor = UIColor.dynamicColor(light: configuration.backgroundColor, dark: UIColor(netHex: 0x1C1C1C))
+        backgroundView.backgroundColor = UIColor.dynamicColor(light: configuration.backgroundColor, dark: UIColor.backgroundDarkColor())
         prepareTable()
         if moreBar.isHidden{
             prepareMoreBar()
@@ -804,10 +796,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
         // Update ChatBar's top view which contains send button and the text view.
-        chatBar.grayView.backgroundColor = UIColor.dynamicColor(light: configuration.backgroundColor, dark: UIColor(netHex: 0x1C1C1C))
+        chatBar.grayView.backgroundColor = UIColor.dynamicColor(light: configuration.backgroundColor, dark: UIColor.backgroundDarkColor())
 
         // Update background view's color which contains all the attachment options.
-        chatBar.bottomBackgroundColor = UIColor.dynamicColor(light: configuration.chatBarAttachmentViewBackgroundColor, dark: UIColor(netHex: 0x313131))
+        chatBar.bottomBackgroundColor = UIColor.dynamicColor(light: configuration.chatBarAttachmentViewBackgroundColor, dark: UIColor.appBarDarkColor())
 
         chatBar.textView.textColor = UIColor.dynamicColor(light: .white, dark: .black)
         chatBar.poweredByMessageTextView.hyperLink(mutableAttributedString: NSMutableAttributedString(string: "Powered by Kommunicate.io"),

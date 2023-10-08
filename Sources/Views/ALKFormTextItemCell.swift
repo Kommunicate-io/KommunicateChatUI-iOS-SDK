@@ -135,7 +135,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         valueTextField.textColor = .black
-        contentView.backgroundColor = .dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+        contentView.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         addConstraints()
     }
 

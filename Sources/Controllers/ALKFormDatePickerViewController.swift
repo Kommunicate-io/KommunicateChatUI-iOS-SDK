@@ -184,9 +184,9 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
     }
 
     private func setupViews() {
-        view.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor(netHex: 0x313131))
-        modalView.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor(netHex: 0x313131))
-        buttonUIView.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor(netHex: 0x313131))
+        view.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor.appBarDarkColor())
+        modalView.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor.appBarDarkColor())
+        buttonUIView.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor.appBarDarkColor())
         view.isOpaque = false
         view.isUserInteractionEnabled = true
         uiDatePicker.datePickerMode = datePickerMode

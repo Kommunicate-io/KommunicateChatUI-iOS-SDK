@@ -280,7 +280,7 @@ class ListTemplateView: UIView {
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.titleLabel?.numberOfLines = 1
             button.tag = $0
-            button.backgroundColor = .dynamicColor(light: buttonBackgroundColor, dark: UIColor(netHex: 0x313131))
+            button.backgroundColor = .dynamicColor(light: buttonBackgroundColor, dark: UIColor.appBarDarkColor())
             button.layoutIfNeeded()
             return button
         }
@@ -290,7 +290,7 @@ class ListTemplateView: UIView {
         listItems = (0 ... 7).map {
             let item = ListTemplateElementView()
             item.tag = $0
-            item.backgroundColor = .dynamicColor(light: .white, dark: UIColor(netHex: 0x313131))
+            item.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
             item.selected = { [weak self] element in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
                 selected(element,nil,element.action)
@@ -333,6 +333,6 @@ class ListTemplateView: UIView {
 
     private func setupStyle() {
         headerText.textColor = .dynamicColor(light: listStyle.headerText.text, dark: .white)
-        headerText.backgroundColor = .dynamicColor(light: listStyle.headerText.background, dark: UIColor(netHex: 0x313131))
+        headerText.backgroundColor = .dynamicColor(light: listStyle.headerText.background, dark: UIColor.appBarDarkColor())
     }
 }
