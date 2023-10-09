@@ -88,7 +88,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         textView.isSelectable = true
         textView.isEditable = false
         textView.dataDetectorTypes = .link
-        textView.linkTextAttributes = [.foregroundColor: UIColor.blue,
+        textView.linkTextAttributes = [.foregroundColor: UIColor.white,
                                        .underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.isScrollEnabled = false
         textView.delaysContentTouches = false
