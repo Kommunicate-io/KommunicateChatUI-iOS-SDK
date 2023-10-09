@@ -209,6 +209,9 @@ public struct ALKConfiguration {
     
     /// Changing this will change the color of link text present inside the sent message
     public var linkAttributeColorForSentMessage = UIColor.white
+    
+    /// Changing this will change the color of link text present inside the received message
+    public var linkAttributeColorForReceivedMessage = UIColor.blue
 
 
     /// If true, contact share option in chatbar will be hidden.
