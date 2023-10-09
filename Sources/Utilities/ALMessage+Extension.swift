@@ -131,8 +131,6 @@ extension ALMessage: ALKChatViewModelProtocol {
             return path.isEmpty ? "File" : path
         case .staticTopMessage:
             return message
-        case .videoTemplate:
-            return defaultMessage
         }
     }
 
@@ -422,8 +420,6 @@ extension ALMessage {
             return .allButtons
         case "12":
             return .form
-        case "14":
-            return .videoTemplate
         default:
             return .text
         }

@@ -145,16 +145,4 @@ extension ALKMessageViewModel {
             return nil
         }
     }
-    
-    func videoTemplate() -> [VideoTemplate]? {
-        guard let payload = payloadFromMetadata() else { return nil }
-        do {
-            let json = try JSONSerialization.data(withJSONObject: payload)
-            let videoTemplate = try JSONDecoder().decode([VideoTemplate].self, from: json)
-            return videoTemplate
-        } catch {
-            print("Error while decoding video template \(error.localizedDescription)")
-            return nil
-        }
-    }
 }
