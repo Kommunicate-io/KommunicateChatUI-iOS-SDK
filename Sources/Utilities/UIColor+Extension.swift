@@ -112,6 +112,10 @@ public extension UIColor {
         let rgb = Int(r * 255) << 16 | Int(g * 255) << 8 | Int(b * 255) << 0
         return String(format: "%06x", rgb)
     }
+    
+    static func dynamicColor(light: UIColor, dark: UIColor) -> UIColor {
+        return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
+    }
 }
 
 extension UIApplication {
@@ -121,11 +125,5 @@ extension UIApplication {
             return windowScene.traitCollection.userInterfaceStyle
         }
         return nil
-    }
-}
-
-extension UIColor {
-    static func dynamicColor(light: UIColor, dark: UIColor) -> UIColor {
-        return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
     }
 }
