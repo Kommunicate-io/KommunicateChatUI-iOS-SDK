@@ -21,6 +21,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     public var playtapped: ((_ url: String) -> Void)?
 
+    var messageModel : ALKMessageViewModel?
     
     private var template: [VideoTemplate]? {
         didSet {
@@ -38,8 +39,6 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         return lb
     }()
     
-   
-
     var bubbleView: UIView = {
         let bv = UIView()
         bv.clipsToBounds = true
@@ -47,7 +46,6 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         return bv
     }()
 
-  
     private var frontView: ALKTappableView = {
         let view = ALKTappableView()
         view.alpha = 1.0
@@ -56,8 +54,6 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         return view
     }()
 
-
-
     class func topPadding() -> CGFloat {
         return 12
     }
@@ -65,8 +61,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     class func bottomPadding() -> CGFloat {
         return 16
     }
-    var messageModel : ALKMessageViewModel?
-    
+        
     override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
         guard let model = viewModel.videoTemplate() else {
             return 0
@@ -89,8 +84,6 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         timeLabel.text = viewModel.time
     }
     
-   
-
     override func setupStyle() {
         super.setupStyle()
 
@@ -109,9 +102,6 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         bubbleView.rightAnchor.constraint(equalTo: videoTableview.rightAnchor).isActive = true
     }
     
-    
-    
-    
     private func setUpTableView() {
         videoTableview.backgroundColor = .clear
         videoTableview.separatorStyle = .none
@@ -126,7 +116,6 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         videoTableview.register(KMVideoCell.self)
     }
 }
-
 
 extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
