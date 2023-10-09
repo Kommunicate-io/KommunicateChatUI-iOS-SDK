@@ -74,7 +74,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         } else {
             heigh = ceil((width * 0.64) / viewModel.ratio)
         }
-        heigh += 30.0
+        heigh += 50.0
         return heigh * CGFloat(model.count)
     }
 
