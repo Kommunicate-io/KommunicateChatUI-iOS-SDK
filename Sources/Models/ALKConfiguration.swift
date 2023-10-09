@@ -207,6 +207,7 @@ public struct ALKConfiguration {
     /// If true then on tap of list template(link) browser will not be opened. By default it is false
     public var restrictLinkNavigationOnListTemplateTap = false
     
+    /// Changing this will change the color of link text present inside the sent message
     public var linkAttributeColorForSentMessage = UIColor.white
 
 
