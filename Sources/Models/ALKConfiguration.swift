@@ -206,6 +206,8 @@ public struct ALKConfiguration {
     
     /// If true then on tap of list template(link) browser will not be opened. By default it is false
     public var restrictLinkNavigationOnListTemplateTap = false
+    
+    public var linkAttributeColorForSentMessage = UIColor.white
 
 
     /// If true, contact share option in chatbar will be hidden.
