@@ -745,6 +745,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(ALKMyFormCell.self)
         tableView.register(ALKFriendFormCell.self)
         tableView.register(KMStaticTopMessageCell.self)
+        tableView.register(KMMyVideoTemplateCell.self)
+        tableView.register(KMFriendVideoTemplateCell.self)
     }
 
     private func prepareMoreBar() {
