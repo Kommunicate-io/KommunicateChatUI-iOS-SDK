@@ -79,9 +79,8 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         } else {
             heigh = ceil((width * 0.64) / viewModel.ratio)
         }
-        heigh += 50.0
+        heigh += 30.0
         return heigh * CGFloat(model.count)
-        //topPadding() + heigh + bottomPadding()
     }
 
     override func update(viewModel: ALKMessageViewModel) {
@@ -115,31 +114,18 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     private func setUpTableView() {
         videoTableview.backgroundColor = .clear
-//        videoTableview.estimatedRowHeight = 200
-//        videoTableview.estimatedSectionHeaderHeight = 50
-//        videoTableview.rowHeight = UITableView.automaticDimension
         videoTableview.separatorStyle = .none
         videoTableview.allowsSelection = false
         videoTableview.isScrollEnabled = false
-//        videoTableview.alwaysBounceVertical = false
         videoTableview.delegate = self
         videoTableview.dataSource = self
-//        videoTableview.layer.borderColor = UIColor.gray.cgColor
-//        videoTableview.layer.borderWidth = 1
-//        videoTableview.layer.cornerRadius = 5
+        
         if #available(iOS 15.0, *) {  /// this is to remove the extra top padding form the cell
             videoTableview.sectionHeaderTopPadding = 0
         }
-//        videoTableview.tableFooterView = UIView(frame: .zero)
         videoTableview.register(KMVideoCell.self)
-
     }
-
-
-
-    
 }
-
 
 
 extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
@@ -169,5 +155,4 @@ extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
         }
         return heigh
     }
-
 }

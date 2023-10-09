@@ -84,7 +84,7 @@ class KMVideoCell: UITableViewCell {
     
     func updateVideModel(model: VideoTemplate) {
         self.viewModel = model
-        captionLabel.text = model.caption ?? "Caption"
+        captionLabel.text = model.caption ?? ""
         if let url = URL(string:model.url) {
             self.setThumbnailImageFromVideoUrl(url: url)
         } else {
@@ -126,6 +126,3 @@ class KMVideoCell: UITableViewCell {
         }
     }
 }
-
-
-

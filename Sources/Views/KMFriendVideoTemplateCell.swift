@@ -40,13 +40,6 @@ class KMFriendVideoTemplateCell : KMVideoTemplateCell {
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
-//        if ALKMessageStyle.receivedBubble.style == .edge {
-//            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-//            bubbleView.backgroundColor = appSettingsUserDefaults.getReceivedMessageBackgroundColor()
-//        } else {
-//            photoView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-//            bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
-//        }
     }
     
     
@@ -58,10 +51,8 @@ class KMFriendVideoTemplateCell : KMVideoTemplateCell {
         avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
-
         nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 57).isActive = true
-//
         nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -56).isActive = true
         nameLabel.bottomAnchor.constraint(equalTo: videoTableview.topAnchor, constant: -6).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true

@@ -461,13 +461,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         case .staticTopMessage:
             return KMStaticTopMessageCell.rowHeight(model: messageModel, width: maxWidth)
         case .videoTemplate:
-//            .return 1000
             return KMVideoTemplateCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-//            if messageModel.isMyMessage {
-//                return ALKMyVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-//            } else {
-//               return ALKFriendVideoCell.rowHeigh(viewModel: messageModel, width: maxWidth)
-//            }
         }
     }
 
