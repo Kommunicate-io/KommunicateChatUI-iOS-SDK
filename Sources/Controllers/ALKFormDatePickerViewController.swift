@@ -65,7 +65,7 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
     private let popupTitle: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = UIColor.black
+        label.textColor = UIColor.dynamicColor(light: .black, dark: .white)
         label.numberOfLines = 3
         label.font = Font.bold(size: 18.0).font()
         return label
@@ -184,7 +184,9 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
     }
 
     private func setupViews() {
-        view.backgroundColor = UIColor(red: 10, green: 10, blue: 10, alpha: 0.2)
+        view.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor.appBarDarkColor())
+        modalView.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor.appBarDarkColor())
+        buttonUIView.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 10, green: 10, blue: 10, alpha: 0.2), dark: UIColor.appBarDarkColor())
         view.isOpaque = false
         view.isUserInteractionEnabled = true
         uiDatePicker.datePickerMode = datePickerMode

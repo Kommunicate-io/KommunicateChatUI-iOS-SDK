@@ -2,8 +2,10 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
-##Unreleased
-- Fixed conversation history mismatch
+## Unreleased
+- Fixed the Button Title hidding in smaller devices.
+- Changed foreground color for link present inside message.
+- Fixed all messages are not loading in conversation screen.
 
 ## [1.1.8] 2023-09-26
 - Added Support For Auto Suggestions Rich Message
