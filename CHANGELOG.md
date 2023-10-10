@@ -4,7 +4,8 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## Unreleased
 - Fixed the Button Title hidding in smaller devices.
-- Changed foreground color for link present inside message
+- Changed foreground color for link present inside message.
+- Fixed all messages are not loading in conversation screen.
 
 ## [1.1.8] 2023-09-26
 - Added Support For Auto Suggestions Rich Message
@@ -13,7 +14,6 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Fixed the delete conversation showing the empty screen.  
 - Added support for XCode 15
 - Fixed kommunicate.io showing in iOS 17 even when it is disabled
-
 
 ## [1.1.7] 2023-09-07
 - Added support for Sending GIF from device
