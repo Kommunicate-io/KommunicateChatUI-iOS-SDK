@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## Unreleased
 - Fixed the Button Title hidding in smaller devices.
+- Changed foreground color for link present inside message
 
 ## [1.1.8] 2023-09-26
 - Added Support For Auto Suggestions Rich Message
