@@ -38,6 +38,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         cell.replyViewAction = { [weak self] in
             self?.scrollTo(message: message)
         }
+        cell.messageView.linkTextAttributes = [.foregroundColor: (message.isMyMessage) ? configuration.linkAttributeColorForSentMessage : configuration.linkAttributeColorForReceivedMessage,
+                                               .underlineStyle: NSUnderlineStyle.single.rawValue]
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
