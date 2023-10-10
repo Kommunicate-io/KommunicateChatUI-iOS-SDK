@@ -25,7 +25,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     let itemListView = NestedCellTableView()
     var submitButton: CurvedImageButton?
     var identifier: String?
-    let formBorderColor: CGColor = UIColor(red: 230/255, green: 229/255, blue: 236/255, alpha: 1.0).cgColor
+    let formBorderColor: CGColor = UIColor.dynamicColor(light: UIColor(red: 230/255, green: 229/255, blue: 236/255, alpha: 1.0), dark: UIColor.darkGray).cgColor
     var activeTextField: UITextField? {
         didSet {
             activeTextFieldChanged?(activeTextField)
@@ -126,9 +126,13 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextView = textView
         textView.text = nil
-        textView.textColor = .black
+        textView.textColor = .dynamicColor(light: .black, dark: .white)
     }
 
+    func textViewDidChange(_ textView: UITextView) {
+        textView.textColor = .dynamicColor(light: .black, dark: .white)
+    }
+    
     func textViewDidEndEditing(_ textView: UITextView) {
         activeTextView = nil
         guard let text = textView.text,
@@ -150,7 +154,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     }
 
     private func setUpTableView() {
-        itemListView.backgroundColor = .white
+        itemListView.backgroundColor = UIColor.dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         itemListView.estimatedRowHeight = 50
         itemListView.estimatedSectionHeaderHeight = 50
         itemListView.rowHeight = UITableView.automaticDimension

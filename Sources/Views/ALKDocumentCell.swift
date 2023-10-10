@@ -57,7 +57,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
     var docImageView: UIImageView = {
         let imv = UIImageView()
         imv.image = UIImage(named: "ic_alk_document", in: Bundle.km, compatibleWith: nil)
-        imv.backgroundColor = .clear
+        imv.tintColor = .white
         imv.clipsToBounds = true
         return imv
     }()
@@ -75,6 +75,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         imv.backgroundColor = .clear
         imv.contentMode = .scaleAspectFill
         imv.clipsToBounds = true
+        imv.layer.cornerRadius = 5
         return imv
     }()
 
@@ -83,7 +84,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 12)
         label.isOpaque = true
-        label.textColor = .black
+        label.textColor = .white
         return label
     }()
 
@@ -92,7 +93,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 12)
         label.isOpaque = true
-        label.textColor = .black
+        label.textColor = .white
         return label
     }()
 
@@ -103,7 +104,7 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var frameUIView: UIView = {
         let uiView = UIView()
-        uiView.backgroundColor = UIColor(red: 231, green: 231, blue: 232)
+        uiView.backgroundColor = .clear
         return uiView
     }()
 
