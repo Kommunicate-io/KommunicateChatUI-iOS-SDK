@@ -1679,6 +1679,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let urlString = metadata["formAction"] as? String,
             let url = URL(string: urlString)
         else {
+            viewModel.send(message: text, metadata: nil)
             return
         }
         var request: URLRequest!
