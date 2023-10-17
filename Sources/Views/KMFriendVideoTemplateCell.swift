@@ -87,7 +87,7 @@ class KMFriendVideoTemplateCell : KMVideoTemplateCell {
             avatarImageView.image = placeHolder
             return
         }
-        let resource = ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+        let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
         avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
     }
 
