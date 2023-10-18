@@ -74,14 +74,6 @@ public extension UIColor {
     static func placeholderGray() -> UIColor {
         return UIColor(netHex: 0xCCCCCC)
     }
-    
-    static func backgroundDarkColor() -> UIColor {
-        return UIColor(netHex: 0x1C1C1C)
-    }
-    
-    static func appBarDarkColor() -> UIColor {
-        return UIColor(netHex: 0x313131)
-    }
 
     static func disabledButton() -> UIColor {
         return UIColor(netHex: 0xCCCCCC)
@@ -111,19 +103,5 @@ public extension UIColor {
         getRed(&r, green: &g, blue: &b, alpha: &a)
         let rgb = Int(r * 255) << 16 | Int(g * 255) << 8 | Int(b * 255) << 0
         return String(format: "%06x", rgb)
-    }
-    
-    static func dynamicColor(light: UIColor, dark: UIColor) -> UIColor {
-        return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
-    }
-}
-
-extension UIApplication {
-    var userInterfaceStyle: UIUserInterfaceStyle? {
-        if let windowScene = UIApplication.shared.connectedScenes
-            .first(where: { $0 is UIWindowScene }) as? UIWindowScene {
-            return windowScene.traitCollection.userInterfaceStyle
-        }
-        return nil
     }
 }

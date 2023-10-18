@@ -12,7 +12,7 @@ public struct ImageBubbleStyle {
     /// Style for caption text
     public var captionStyle = Style(
         font: UIFont.systemFont(ofSize: 12),
-        text: UIColor.dynamicColor(light: .darkText, dark: .lightText)
+        text: UIColor.darkText
     )
 
     /// Style for image bubble

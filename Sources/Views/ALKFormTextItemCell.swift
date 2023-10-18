@@ -23,7 +23,7 @@ class ALKFormTextItemCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 15).font()
-        label.textColor = UIColor.dynamicColor(light: .black, dark: .white)
+        label.textColor = .black
         label.numberOfLines = 1
         label.textAlignment = .left
         return label
@@ -39,7 +39,7 @@ class ALKFormTextItemCell: UITableViewCell {
         labelStackView.axis = .horizontal
         labelStackView.alignment = .fill
         labelStackView.distribution = .fillEqually
-        labelStackView.backgroundColor = UIColor.clear
+        labelStackView.backgroundColor = UIColor.white
         return labelStackView
     }()
 
@@ -53,7 +53,7 @@ class ALKFormTextItemCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        valueTextField.textColor = .dynamicColor(light: .black, dark: .white)
+        valueTextField.textColor = .black
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         addConstraints()
@@ -102,7 +102,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 15).font()
-        label.textColor = UIColor.dynamicColor(light: .black, dark: .white)
+        label.textColor = .black
         label.numberOfLines = 1
         label.textAlignment = .left
         return label
@@ -111,7 +111,6 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     let valueTextField: UITextView = {
         let textfield = UITextView(frame: .zero)
         textfield.font = Font.medium(size: 17).font()
-        textfield.backgroundColor = UIColor.clear
         return textfield
     }()
 
@@ -120,7 +119,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
         labelStackView.axis = .horizontal
         labelStackView.alignment = .fill
         labelStackView.distribution = .fillEqually
-        labelStackView.backgroundColor = UIColor.clear
+        labelStackView.backgroundColor = UIColor.white
         return labelStackView
     }()
 
@@ -135,7 +134,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         valueTextField.textColor = .black
-        contentView.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+        contentView.backgroundColor = .clear
         addConstraints()
     }
 
@@ -182,7 +181,7 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
     var titleLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.normal(size: 17).font()
-        label.textColor = .dynamicColor(light: .text(.gray7E), dark: .text(.grayCC))
+        label.textColor = .text(.gray7E)
         label.numberOfLines = 0
         label.textAlignment = .left
         return label
@@ -190,6 +189,7 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = .white
         addConstraints()
     }
 

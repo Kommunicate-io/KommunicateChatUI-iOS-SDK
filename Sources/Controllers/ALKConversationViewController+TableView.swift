@@ -6,7 +6,6 @@
 //
 
 import AVFoundation
-import AVKit
 import Foundation
 import KommunicateCore_iOS_SDK
 import UIKit
@@ -38,8 +37,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         cell.replyViewAction = { [weak self] in
             self?.scrollTo(message: message)
         }
-        cell.messageView.linkTextAttributes = [.foregroundColor: (message.isMyMessage) ? configuration.linkAttributeColorForSentMessage : configuration.linkAttributeColorForReceivedMessage,
-                                               .underlineStyle: NSUnderlineStyle.single.rawValue]
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -555,35 +552,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMStaticTopMessageCell
             cell.updateMessage(viewModel: message)
             return cell
-        case .videoTemplate:
-            //This is video Template not the attachments
-            if message.isMyMessage {
-                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMMyVideoTemplateCell
-                cell.update(viewModel: message)
-                cell.playtapped = { [weak self] videoUrl in
-                    guard let weakSelf = self, let url = URL(string: videoUrl) else { return }
-                    weakSelf.openAvplayerViewController(withUrl: url)
-                }
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMFriendVideoTemplateCell
-                cell.update(viewModel: message)
-                cell.playtapped = { [weak self] videoUrl in
-                    guard let weakSelf = self, let url = URL(string: videoUrl) else { return }
-                    weakSelf.openAvplayerViewController(withUrl: url)
-                }
-                return cell
-            }
-        }
-    }
-    
-    private func openAvplayerViewController(withUrl: URL) {
-        let player = AVPlayer(url: withUrl)
-        let vc = AVPlayerViewController()
-        vc.player = player
-
-        present(vc, animated: true) {
-            vc.player?.play()
         }
     }
 

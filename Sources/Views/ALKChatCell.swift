@@ -152,7 +152,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 1
         label.font = Font.bold(size: 14.0).font()
-        label.textColor = UIColor.dynamicColor(light: .text(.black00), dark: .text(.white))
+        label.textColor = .text(.black00)
         return label
     }()
     
@@ -246,8 +246,8 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             return
         }
 
-        lineView.backgroundColor = UIColor.dynamicColor(light: UIColor(netHex: 0xF1F1F1), dark: UIColor.appBarDarkColor())
-        backgroundColor = highlighted ? UIColor.dynamicColor(light: UIColor(netHex: 0xECECEC), dark: UIColor.appBarDarkColor()) : UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
+        lineView.backgroundColor = UIColor(netHex: 0xF1F1F1)
+        backgroundColor = highlighted ? UIColor(netHex: 0xECECEC) : UIColor.white
         contentView.backgroundColor = backgroundColor
 
         // set backgroundColor of badgeNumber
@@ -259,8 +259,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         guard viewModel != nil else {
             return
         }
-        lineView.backgroundColor = UIColor.dynamicColor(light: UIColor(netHex: 0xF1F1F1), dark: UIColor.appBarDarkColor())
-        backgroundColor = selected ? UIColor.dynamicColor(light: UIColor(netHex: 0xECECEC), dark: UIColor.appBarDarkColor()) : UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
+
+        lineView.backgroundColor = UIColor(netHex: 0xF1F1F1)
+        backgroundColor = selected ? UIColor(netHex: 0xECECEC) : UIColor.white
         contentView.backgroundColor = backgroundColor
 
         // set backgroundColor of badgeNumber

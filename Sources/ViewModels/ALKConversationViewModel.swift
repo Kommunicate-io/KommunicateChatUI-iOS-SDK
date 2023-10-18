@@ -462,8 +462,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return 0
         case .staticTopMessage:
             return KMStaticTopMessageCell.rowHeight(model: messageModel, width: maxWidth)
-        case .videoTemplate:
-            return KMVideoTemplateCell.rowHeigh(viewModel: messageModel, width: maxWidth)
         }
     }
 
@@ -476,8 +474,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadOpenGroupMessages()
             return
         }
-        self.delegate?.loadingStarted()
-        loadMessagesFromDB()
+        guard ALUserDefaultsHandler.isShowLoadEarlierOption(chatId), ALUserDefaultsHandler.isServerCallDone(forMSGList: chatId) else {
+            return
+        }
+        loadEarlierMessages()
     }
 
     open func getContextTitleData() -> ALKContextTitleDataType? {
@@ -1400,6 +1400,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.messageModels = self.modelsToBeAddedAfterDelay
                
             }
+            
+            let showLoadEarlierOption: Bool = self.messageModels.count >= 50
+            ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             self.membersInGroup { members in
                 self.groupMembers = members
                 self.delegate?.loadingFinished(error: nil)
@@ -1574,15 +1577,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     func loadMessagesFromDB(isFirstTime: Bool = true) {
-        
-        let startTime = alMessages.first?.createdAtTime ?? nil;
-        
-        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
+        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, withCompletion: {
             messages in
-            guard let messages = messages, messages.count != 0 else {
-                if(ALUserDefaultsHandler.isShowLoadEarlierOption(self.chatId)){
-                    self.loadEarlierMessages()
-                }
+            guard let messages = messages else {
                 self.delegate?.loadingFinished(error: nil)
                 return
             }
@@ -1590,11 +1587,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 messages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
-            self.alMessages.insert(contentsOf: messages as! [ALMessage], at: 0)
-
+            self.alMessages = messages as! [ALMessage]
             self.alMessageWrapper.addObject(toMessageArray: messages)
             let models = messages.map { ($0 as! ALMessage).messageModel }
-            self.messageModels.insert(contentsOf: models, at: 0)
+            self.messageModels = models
+            let showLoadEarlierOption: Bool = self.messageModels.count >= 50
+            ALUserDefaultsHandler.setShowLoadEarlierOption(showLoadEarlierOption, forContactId: self.chatId)
             if isFirstTime {
                 self.membersInGroup { members in
                     self.groupMembers = members
@@ -1723,6 +1721,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
                 self.alMessages.insert(mesg, at: 0)
                 self.messageModels.insert(mesg.messageModel, at: 0)
+            }
+            if newMessages.count < 50 {
+                ALUserDefaultsHandler.setShowLoadEarlierOption(false, forContactId: self.chatId)
             }
             self.delegate?.loadingFinished(error: nil)
         })

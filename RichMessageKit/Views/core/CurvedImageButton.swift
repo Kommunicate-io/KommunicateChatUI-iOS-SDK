@@ -160,7 +160,7 @@ public class CurvedImageButton: UIView {
         clipsToBounds = true
 
         label.text = title
-        label.textColor = UIColor.dynamicColor(light: style.buttonColor.text, dark: UIColor.white)
+        label.textColor = style.buttonColor.text
         label.font = style.font
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping

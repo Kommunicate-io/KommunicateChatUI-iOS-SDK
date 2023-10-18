@@ -12,19 +12,19 @@ public struct MessageStyle {
     /// Style for display name
     public var displayName = Style(
         font: UIFont.systemFont(ofSize: 14),
-        text: UIColor.dynamicColor(light: .darkText, dark: .lightText)
+        text: UIColor.darkText
     )
 
     /// Style for message text.
     public var message = Style(
         font: UIFont.systemFont(ofSize: 14),
-        text: UIColor.dynamicColor(light: .black, dark: .white)
+        text: UIColor.black
     )
 
     /// Style for time.
     public var time = Style(
         font: UIFont.systemFont(ofSize: 12),
-        text: UIColor.dynamicColor(light: .darkText, dark: .lightText)
+        text: UIColor.darkText
     )
 
     /// Style for message bubble

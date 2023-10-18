@@ -105,7 +105,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         setupView()
         searchBar.delegate = self
         tableView.delegate = self
@@ -293,7 +292,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
         emptyCellView.conversationLabel.text = noConversationLabelText
         emptyCellView.startNewConversationButtonIcon.isHidden = configuration.hideEmptyStateStartNewButtonInConversationList
-        emptyCellView.conversationLabel.textColor = .dynamicColor(light: .black, dark: .white)
+        emptyCellView.contentView.backgroundColor = .white
 
         if !configuration.hideEmptyStateStartNewButtonInConversationList {
             if let tap = emptyCellView.gestureRecognizers?.first {
@@ -341,7 +340,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         tableView.estimatedRowHeight = 75
         tableView.rowHeight = 75
         tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
+        tableView.backgroundColor = UIColor.white
         tableView.keyboardDismissMode = .onDrag
         tableView.accessibilityIdentifier = "OuterChatScreenTableView"
 
@@ -971,12 +970,3 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
     }
 }
 
-extension UIViewController {
-    public func switchDynamicMode(isDynamic: Bool) {
-        if isDynamic {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
-        } else {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
-        }
-    }
-}

@@ -144,12 +144,7 @@ public class SuggestedReplyView: UIView {
                 let hiddenView = hiddenViewUsing(currWidth: width - button.buttonWidth(), maxWidth: maxWidth, subViews: subviews)
                 alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
                 width = button.buttonWidth() + 10
-                let stackView: UIStackView
-                if subviews.count > 2 {
-                    stackView = horizontalStackViewWithSpace(subviews: subviews)
-                } else {
-                    stackView = horizontalStackView(subviews: subviews)
-                }
+                let stackView = horizontalStackView(subviews: subviews)
                 mainStackView.addArrangedSubview(stackView)
                 subviews.removeAll()
                 subviews.append(button)
@@ -162,25 +157,12 @@ public class SuggestedReplyView: UIView {
         if isMultiLine {
             alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
         }
-        let stackView: UIStackView
-        if subviews.count > 2 {
-            stackView = horizontalStackViewWithSpace(subviews: subviews)
-        } else {
-            stackView = horizontalStackView(subviews: subviews)
-        }
-        
+
+        let stackView = horizontalStackView(subviews: subviews)
         mainStackView.addArrangedSubview(stackView)
     }
 
     private func horizontalStackView(subviews: [UIView]) -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: subviews)
-        stackView.alignment = .center
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        return stackView
-    }
-    
-    private func horizontalStackViewWithSpace(subviews: [UIView]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: subviews)
         stackView.spacing = 10
         stackView.alignment = .center

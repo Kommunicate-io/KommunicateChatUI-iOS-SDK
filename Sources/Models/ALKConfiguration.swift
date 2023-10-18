@@ -73,9 +73,6 @@ public struct ALKConfiguration {
 
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata: [AnyHashable: Any]?
-    
-    /// if true then dark mode support is enabled to the SDK.
-    public var isDarkModeEnabled = false
 
     /// Status bar style. It will be used in all view controllers.
     /// Default value is lightContent.
@@ -209,12 +206,6 @@ public struct ALKConfiguration {
     
     /// If true then on tap of list template(link) browser will not be opened. By default it is false
     public var restrictLinkNavigationOnListTemplateTap = false
-    
-    /// Changing this will change the color of link text present inside the sent message
-    public var linkAttributeColorForSentMessage = UIColor.white
-    
-    /// Changing this will change the color of link text present inside the received message
-    public var linkAttributeColorForReceivedMessage = UIColor.blue
 
 
     /// If true, contact share option in chatbar will be hidden.

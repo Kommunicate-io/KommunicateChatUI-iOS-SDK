@@ -31,7 +31,6 @@ class ALKMapViewController: UIViewController, Localizable {
     }
 
     override func viewWillAppear(_: Bool) {
-        view.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)
         let locationButtonTitle = localizedString(forKey: "SendLocationButton", withDefaultValue: SystemMessage.Map.SendLocationButton, fileName: configuration.localizedStringFileName)
         shareLocationButton.setTitle(locationButtonTitle, for: UIControl.State.normal)

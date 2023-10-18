@@ -217,7 +217,7 @@ open class ALKChatBar: UIView, Localizable {
     open var lineView: UIView = {
         let view = UIView()
         let layer = view.layer
-        view.backgroundColor = UIColor.dynamicColor(light: UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 1.0), dark: UIColor.darkGray)
+        view.backgroundColor = UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 1.0)
         return view
     }()
 
@@ -774,7 +774,6 @@ open class ALKChatBar: UIView, Localizable {
 extension ALKChatBar: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
         textView.typingAttributes = defaultTextAttributes
-        textView.textColor = UIColor.dynamicColor(light: UIColor.black, dark: UIColor.white)
         if textView.text.isEmpty {
             clearTextInTextView()
         } else {
