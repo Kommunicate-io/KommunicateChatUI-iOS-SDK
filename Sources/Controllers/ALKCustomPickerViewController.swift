@@ -42,7 +42,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         doneButton.title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done, fileName: localizedStringFileName)
         title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
         checkPhotoLibraryPermission()

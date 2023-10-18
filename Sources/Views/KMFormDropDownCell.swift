@@ -20,7 +20,7 @@ class KMFormDropDownCell: UITableViewCell {
         labelStackView.axis = .horizontal
         labelStackView.alignment = .fill
         labelStackView.distribution = .fillEqually
-        labelStackView.backgroundColor = UIColor.white
+        labelStackView.backgroundColor = UIColor.clear
         return labelStackView
     }()
     
@@ -74,7 +74,7 @@ class KMFormDropDownCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 17).font()
-        label.textColor = .black
+        label.textColor = .dynamicColor(light: .black, dark: .white)
         label.numberOfLines = 0
         label.textAlignment = .left
         return label
@@ -88,7 +88,7 @@ class KMFormDropDownCell: UITableViewCell {
         dropdown.listHeight = FormDropDownStyle.Size.listHeight
         dropdown.textColor = FormDropDownStyle.Color.textColor
         dropdown.arrowSize = FormDropDownStyle.Size.arrowSize
-        dropdown.arrowColor = FormDropDownStyle.Color.arrowColor
+        dropdown.arrowColor = UIColor.dynamicColor(light: FormDropDownStyle.Color.arrowColor, dark: .white)
         return dropdown
     }()
 
@@ -104,6 +104,7 @@ class KMFormDropDownCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.isUserInteractionEnabled = true
+        contentView.backgroundColor = UIColor.dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         menu.delegate = self
         addConstraints()
     }
@@ -162,8 +163,8 @@ extension KMFormDropDownCell: UITextFieldDelegate {
 public struct FormDropDownStyle {
     public struct Color {
         public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
-        public static var rowBackgroundColor: UIColor = UIColor.white
-        public static var textColor: UIColor = UIColor.gray
+        public static var rowBackgroundColor: UIColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
+        public static var textColor: UIColor = UIColor.dynamicColor(light: UIColor.gray, dark: UIColor.white)
         public static var arrowColor: UIColor = .black
     }
     

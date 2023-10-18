@@ -28,7 +28,7 @@ public class ALKBaseNavigationViewController: UINavigationController {
         navigationBarProxy.shadowImage = navigationBarProxy.shadowImage ?? UIImage()
         navigationBarProxy.tintColor = navigationBarProxy.tintColor ?? UIColor.navigationTextOceanBlue()
         navigationBarProxy.titleTextAttributes =
-            navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.black]
+        navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.dynamicColor(light: .black, dark: .white)]
 
         if navigationBarProxy.backgroundImage(for: .default) == nil {
             navigationBarProxy.barTintColor = appSettingsUserDefaults.getAppBarTintColor()
@@ -37,9 +37,9 @@ public class ALKBaseNavigationViewController: UINavigationController {
             let navBarAppearance = UINavigationBarAppearance()
             navBarAppearance.configureWithOpaqueBackground()
             navBarAppearance.titleTextAttributes =
-                navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.black]
+            navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.dynamicColor(light: .black, dark: .white)]
             if navigationBarProxy.backgroundImage(for: .default) == nil {
-                navBarAppearance.backgroundColor = appSettingsUserDefaults.getAppBarTintColor()
+                navBarAppearance.backgroundColor = UIColor.dynamicColor(light: appSettingsUserDefaults.getAppBarTintColor(), dark: UIColor.appBarDarkColor())
             } else {
                 navBarAppearance.backgroundImage = navigationBarProxy.backgroundImage(for: .default)
             }
