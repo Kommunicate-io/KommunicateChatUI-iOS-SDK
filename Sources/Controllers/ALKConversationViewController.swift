@@ -2162,6 +2162,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 return
             }
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+            let message = self.viewModel.messageModels[indexPath.section]
+            if(UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) && message.isMyMessage){
+                self.deleteProcessedMessages(index: indexPath.section)
+            }
         }
     }
 
@@ -2180,6 +2184,22 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
             }
         }
+    }
+    
+    func deleteProcessedMessages(index : Int){
+        guard index >= 0 && viewModel.messageModels[index].isMyMessage else {
+            return
+        }
+        var messageIndex = index-1;
+        while messageIndex >= 0 && messageIndex < viewModel.messageModels.count && !viewModel.messageModels[messageIndex].isMyMessage {
+            let message = viewModel.messageModels[messageIndex]
+            if(message.messageType == .allButtons || message.messageType == .quickReply){
+                viewModel.messageModels.remove(at: messageIndex)
+                tableView.deleteSections([messageIndex], with: .automatic)
+            }
+            messageIndex-=1
+        }
+        moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
     
     public func updateChatbarText(text: String) {

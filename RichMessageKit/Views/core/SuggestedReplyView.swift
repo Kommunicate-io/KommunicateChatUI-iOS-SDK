@@ -16,6 +16,7 @@ import UIKit
 public class SuggestedReplyView: UIView {
     static var didTapSuggestedReply = false
     static var messageIdentifier = String()
+    static let hidePostCTA = "HidePostCTAEnabled"
 
     // MARK: Public properties
 
