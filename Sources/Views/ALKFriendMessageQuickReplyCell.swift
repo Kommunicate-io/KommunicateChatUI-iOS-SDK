@@ -131,7 +131,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
         quickReplyView.update(model: suggestedReplies, maxWidth: quickReplyViewWidth)
     }
 
-    public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat) -> CGFloat {
+    public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth: CGFloat, isActionButtonHidden: Bool) -> CGFloat {
         let isMessageEmpty = viewModel.isMessageEmpty
         var height: CGFloat = 0
 
@@ -155,8 +155,12 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
 
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
+        
+        if !isActionButtonHidden {
+            height += SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
+        }
+        
         return height
-            + SuggestedReplyView.rowHeight(model: suggestedReplies, maxWidth: quickReplyViewWidth)
             + ChatCellPadding.ReceivedMessage.QuickReply.top
             + ChatCellPadding.ReceivedMessage.QuickReply.bottom + timeLabelSize.height.rounded(.up)
             + ViewPadding.TimeLabel.bottom

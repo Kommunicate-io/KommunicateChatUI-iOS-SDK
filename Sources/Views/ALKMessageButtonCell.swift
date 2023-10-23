@@ -280,7 +280,7 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         buttonView.update(model: dict, maxWidth: buttonWidth)
     }
 
-    override open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    open class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat, isActionButtonHidden: Bool) -> CGFloat {
         let isMessageEmpty = viewModel.isMessageEmpty
         var height: CGFloat = 0
 
@@ -304,9 +304,12 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         }
 
         let buttonWidth = width - (ChatCellPadding.ReceivedMessage.MessageButton.left + ChatCellPadding.ReceivedMessage.MessageButton.right)
-        let buttonHeight = SuggestedReplyView.rowHeight(model: dict, maxWidth: buttonWidth)
+        
+        if !isActionButtonHidden {
+            height += SuggestedReplyView.rowHeight(model: dict, maxWidth: buttonWidth)
+        }
+        
         return height
-            + buttonHeight
             + ChatCellPadding.ReceivedMessage.MessageButton.top
             + ChatCellPadding.ReceivedMessage.MessageButton.bottom + timeLabelSize.height.rounded(.up)
             + ViewPadding.TimeLabel.bottom

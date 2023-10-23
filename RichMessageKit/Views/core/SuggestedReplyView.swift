@@ -16,6 +16,7 @@ import UIKit
 public class SuggestedReplyView: UIView {
     static var didTapSuggestedReply = false
     static var messageIdentifier = String()
+    static let hidePostCTA = "HidePostCTAEnabled"
 
     // MARK: Public properties
 
@@ -206,6 +207,19 @@ public class SuggestedReplyView: UIView {
         button.index = index
         return button
     }
+    
+    func hideActionButtons() {
+        SuggestedReplyView.didTapSuggestedReply = true
+        if let identifier = model?.message.identifier {
+            SuggestedReplyView.messageIdentifier = identifier
+        }
+        model?.suggestion.removeAll()
+        mainStackView.isHidden = true
+        guard let suggestedReplyMessage = model else {
+            return
+        }
+        setupSuggestedReplyButtons(suggestedReplyMessage, maxWidth: 0)
+    }
 }
 
 extension SuggestedReplyView: Tappable {
@@ -213,12 +227,5 @@ extension SuggestedReplyView: Tappable {
         guard let index = index, let suggestion = model?.suggestion[index] else { return }
         let replyToBeSend = suggestion.reply ?? title
         delegate?.didTap(index: index, title: replyToBeSend)
-
-        if UserDefaults.standard.bool(forKey: "HidePostCTAEnabled") {
-            SuggestedReplyView.didTapSuggestedReply = true
-            SuggestedReplyView.messageIdentifier = (model?.message.identifier)!
-            model?.suggestion.removeAll()
-            mainStackView.isHidden = true
-        }
     }
 }

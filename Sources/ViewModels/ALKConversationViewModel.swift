@@ -49,6 +49,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open var isSearch: Bool = false
     open var lastMessage : ALMessage?
+    open var lastSentMessage : ALMessage?
 
     // For topic based chat
     open var conversationProxy: ALConversationProxy? {
@@ -183,6 +184,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
         messageModels.append(message.messageModel)
+        if(message.isMyMessage){
+            lastSentMessage = message
+        }
     }
 
     func clearViewModel() {
@@ -296,7 +300,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func heightForRow(indexPath: IndexPath, cellFrame _: CGRect, configuration: ALKConfiguration) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         let cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
-        if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
+        let isActionButtonHidden = isActionButtonHidden(message: messageModel)
+        if let height = HeightCache.shared.getHeight(for: cacheIdentifier),
+           !isActionButtonHidden{
             return height
         }
         switch messageModel.messageType {
@@ -394,7 +400,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return
                     ALKFriendMessageQuickReplyCell
-                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width, isActionButtonHidden: isActionButtonHidden)
             }
         case .button:
             if messageModel.isMyMessage {
@@ -405,7 +411,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return
                     ALKFriendMessageButtonCell
-                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
+                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width, isActionButtonHidden: isActionButtonHidden)
                         .cached(with: cacheIdentifier)
             }
         case .listTemplate:
@@ -455,7 +461,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return
                     ReceivedButtonsCell
-                        .rowHeight(model: model)
+                        .rowHeight(model: model, isActionButtonHidden: isActionButtonHidden)
                         .cached(with: cacheIdentifier)
             }
         case .form:
@@ -1389,6 +1395,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
+            
+            if(self.lastSentMessage == nil){
+                self.lastSentMessage = self.getLastSentMessage()
+            }
 
             self.alMessageWrapper.addObject(toMessageArray: messages)
             
@@ -1411,6 +1421,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
     /*
         Since we are getting the welcome message from Api Call, we are using this method to Show Typing Delay Indicator for Welcome Messsages
      */
+    
+    func getLastSentMessage() -> ALMessage? {
+        for message in alMessages.reversed() {
+            if(message.isMyMessage){
+                return message
+            }
+        }
+        return nil
+    }
+    
     func showTypingIndicatorForWelcomeMessage() {
         if welcomeMessagePosition >= alMessages.count {
             return
@@ -1593,6 +1613,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessages.insert(contentsOf: messages as! [ALMessage], at: 0)
 
             self.alMessageWrapper.addObject(toMessageArray: messages)
+            if(self.lastSentMessage == nil){
+                self.lastSentMessage = self.getLastSentMessage()
+            }
             let models = messages.map { ($0 as! ALMessage).messageModel }
             self.messageModels.insert(contentsOf: models, at: 0)
             if isFirstTime {
@@ -1976,6 +1999,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
             completion(contacts)
         }
     }
+    
+    func isActionButtonHidden(message : ALKMessageViewModel) -> Bool {
+        guard UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
+              message.allButtons() != nil,
+              let currentMessageTime = message.createdAtTime,
+              let lastSentMessageTime = lastSentMessage?.createdAtTime,
+              currentMessageTime .int64Value < lastSentMessageTime .int64Value else {
+            return false
+        }
+        return true
+    }
+    
 }
 
 public extension ALChannel {

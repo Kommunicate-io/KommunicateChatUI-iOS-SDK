@@ -66,7 +66,7 @@ public class ReceivedButtonsCell: UITableViewCell {
         return lb
     }()
 
-    fileprivate lazy var buttons = SuggestedReplyView()
+    lazy var buttons = SuggestedReplyView()
     fileprivate lazy var messageView = MessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
@@ -142,7 +142,7 @@ public class ReceivedButtonsCell: UITableViewCell {
     /// - Parameters:
     ///   - model: object that conforms to `SuggestedReplyMessage`
     /// - Returns: exact height of the view.
-    public static func rowHeight(model: SuggestedReplyMessage) -> CGFloat {
+    public static func rowHeight(model: SuggestedReplyMessage, isActionButtonHidden: Bool) -> CGFloat {
         let isMessageEmpty = model.message.isMessageEmpty()
         var height: CGFloat = 0
 
@@ -159,8 +159,12 @@ public class ReceivedButtonsCell: UITableViewCell {
 
         let quickReplyViewWidth = ViewPadding.maxWidth -
             (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
+        
+        if !isActionButtonHidden {
+            height += SuggestedReplyView.rowHeight(model: model, maxWidth: quickReplyViewWidth)
+        }
+        
         return height
-            + SuggestedReplyView.rowHeight(model: model, maxWidth: quickReplyViewWidth)
             + ChatCellPadding.ReceivedMessage.QuickReply.top
             + ChatCellPadding.ReceivedMessage.QuickReply.bottom + timeLabelSize.height.rounded(.up)
             + ViewPadding.TimeLabel.bottom

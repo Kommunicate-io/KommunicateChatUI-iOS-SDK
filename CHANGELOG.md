@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## Unreleased
+- Fixed action buttons not hiding while hidePostCTA is enabled
+
 ## [1.1.9] 2023-10-18
 - Fixed the Button Title hidding in smaller devices.
 - Changed foreground color for link present inside message.

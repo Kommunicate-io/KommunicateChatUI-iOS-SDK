@@ -2162,7 +2162,30 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 return
             }
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+            let message = self.viewModel.messageModels[indexPath.section]
+            if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
+               message.isMyMessage {
+                self.reloadProcessedMessages(index: indexPath.section)
+            }
         }
+    }
+    
+    func reloadProcessedMessages(index : Int){
+        
+        for messageIndex in stride(from: index-1, to: -1, by: -1){
+            let message = viewModel.messageModels[messageIndex]
+            
+            guard !message.isMyMessage else {
+                return
+            }
+            
+            if message.messageType == .allButtons ||
+               message.messageType == .quickReply ||
+               message.messageType == .button {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
+        }
+        moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
 
     // This is a temporary workaround for the issue that messages are not scrolling to bottom when opened from notification

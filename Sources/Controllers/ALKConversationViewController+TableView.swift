@@ -48,6 +48,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             return UITableViewCell()
         }
         print("Cell updated at row: ", indexPath.row ,"section: ", indexPath.section, "and type is: ", message.messageType)
+        
+        let isActionButtonHidden = viewModel.isActionButtonHidden(message: message)
 
         switch message.messageType {
         case .text, .html, .email:
@@ -345,6 +347,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = message.payloadFromMetadata() else {
                     return cell
                 }
+                if viewModel.isActionButtonHidden(message: message){
+                    cell.quickReplyView.hideActionButtons()
+                }
                 cell.quickReplySelected = { [weak self] index, title in
                     guard let weakSelf = self else { return }
                     weakSelf.quickReplySelected(
@@ -369,6 +374,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
+                if isActionButtonHidden {
+                    cell.buttonView.hideActionButtons()
+                }
                 cell.buttonSelected = { [weak self] index, title in
                     guard let weakSelf = self else { return }
                     weakSelf.messageButtonSelected(
@@ -477,6 +485,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ReceivedButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(model: allButtons)
+                if isActionButtonHidden {
+                    cell.buttons.hideActionButtons()
+                }
                 cell.tapped = { [weak self] index, name in
                     guard let weakSelf = self else { return }
                     weakSelf.richButtonSelected(
