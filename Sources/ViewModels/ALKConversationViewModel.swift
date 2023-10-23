@@ -396,12 +396,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
                         .cached(with: cacheIdentifier)
             } else {
-                if isActionButtonHidden(message: messageModel) {
-                    return 0
-                }
                 return
                     ALKFriendMessageQuickReplyCell
-                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width, isActionButtonHidden: isActionButtonHidden(message: messageModel))
             }
         case .button:
             if messageModel.isMyMessage {
@@ -1644,7 +1641,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         for message in messages {
             if let currentMessageTime = message.createdAtTime {
                 if message.isMyMessage ||
-                    (message.messageType != .allButtons && message.messageType != .quickReply) ||
+                    (message.messageType != .allButtons) ||
                     currentMessageTime .int64Value >= lastSentMessageTime .int64Value {
                     self.messageModels.append(message)
                 }

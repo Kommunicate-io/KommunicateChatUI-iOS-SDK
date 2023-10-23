@@ -345,6 +345,9 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = message.payloadFromMetadata() else {
                     return cell
                 }
+                if viewModel.isActionButtonHidden(message: message){
+                    cell.quickReplyView.hideActionButtons()
+                }
                 cell.quickReplySelected = { [weak self] index, title in
                     guard let weakSelf = self else { return }
                     weakSelf.quickReplySelected(

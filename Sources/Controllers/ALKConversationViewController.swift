@@ -2193,9 +2193,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         var messageIndex = index-1;
         while messageIndex >= 0 && messageIndex < viewModel.messageModels.count && !viewModel.messageModels[messageIndex].isMyMessage {
             let message = viewModel.messageModels[messageIndex]
-            if(message.messageType == .allButtons || message.messageType == .quickReply){
+            if message.messageType == .allButtons {
                 viewModel.messageModels.remove(at: messageIndex)
                 tableView.deleteSections([messageIndex], with: .automatic)
+            } else if message.messageType == .quickReply {
+                tableView.reloadSections([messageIndex], with: .automatic)
             }
             messageIndex-=1
         }
