@@ -16,13 +16,25 @@ public class KMConversationInfoViewModel {
     var backgroundColor: UIColor
     var contentColor: UIColor
     var contentFont: UIFont?
+    var darkBackgroundColor: UIColor
+    var contentDarkColor: UIColor
     
-   public init(infoContent: String, leadingImage: UIImage, trailingImage: UIImage, backgroundColor: UIColor, contentColor: UIColor, contentFont: UIFont) {
+    public init(infoContent: String, leadingImage: UIImage, trailingImage: UIImage, backgroundColor: UIColor, contentColor: UIColor, contentFont: UIFont, darkBackgroundColor: UIColor = .clear, contentDarkColor: UIColor = .clear) {
         self.infoContent = infoContent
         self.leadingImage = leadingImage
         self.trailingImage = trailingImage
         self.backgroundColor = backgroundColor
         self.contentColor = contentColor
         self.contentFont = contentFont
+        if darkBackgroundColor == UIColor.clear {
+            self.darkBackgroundColor = backgroundColor
+        } else {
+            self.darkBackgroundColor = darkBackgroundColor
+        }
+        if contentDarkColor == UIColor.clear {
+            self.contentDarkColor = contentColor
+        } else {
+            self.contentDarkColor = contentDarkColor
+        }
     }
 }

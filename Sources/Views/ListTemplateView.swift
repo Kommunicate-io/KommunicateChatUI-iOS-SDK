@@ -93,8 +93,8 @@ class ListTemplateElementView: UIView {
 
     private func setupStyle() {
         let style = ALKListTemplateCell.ListStyle.shared
-        title.textColor = UIColor.dynamicColor(light: style.listTemplateElementViewStyle.titleTextColor, dark: .text(.white))
-        subtitle.textColor = UIColor.dynamicColor(light: style.listTemplateElementViewStyle.subtitleTextColor, dark: .text(.grayCC))
+        title.textColor = UIColor.kmDynamicColor(light: style.listTemplateElementViewStyle.titleTextColor, dark: .text(.white))
+        subtitle.textColor = UIColor.kmDynamicColor(light: style.listTemplateElementViewStyle.subtitleTextColor, dark: .text(.grayCC))
     }
 
     @objc private func tapped() {
@@ -280,7 +280,7 @@ class ListTemplateView: UIView {
             button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
             button.titleLabel?.numberOfLines = 1
             button.tag = $0
-            button.backgroundColor = .dynamicColor(light: buttonBackgroundColor, dark: UIColor.appBarDarkColor())
+            button.backgroundColor = .kmDynamicColor(light: buttonBackgroundColor, dark: UIColor.appBarDarkColor())
             button.layoutIfNeeded()
             return button
         }
@@ -290,7 +290,7 @@ class ListTemplateView: UIView {
         listItems = (0 ... 7).map {
             let item = ListTemplateElementView()
             item.tag = $0
-            item.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+            item.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
             item.selected = { [weak self] element in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
                 selected(element,nil,element.action)
@@ -332,7 +332,7 @@ class ListTemplateView: UIView {
     }
 
     private func setupStyle() {
-        headerText.textColor = .dynamicColor(light: listStyle.headerText.text, dark: .white)
-        headerText.backgroundColor = .dynamicColor(light: listStyle.headerText.background, dark: UIColor.appBarDarkColor())
+        headerText.textColor = .kmDynamicColor(light: listStyle.headerText.text, dark: .white)
+        headerText.backgroundColor = .kmDynamicColor(light: listStyle.headerText.background, dark: UIColor.appBarDarkColor())
     }
 }

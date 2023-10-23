@@ -293,7 +293,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         let noConversationLabelText = localizedString(forKey: "NoConversationsLabelText", withDefaultValue: SystemMessage.ChatList.NoConversationsLabelText, fileName: localizedStringFileName)
         emptyCellView.conversationLabel.text = noConversationLabelText
         emptyCellView.startNewConversationButtonIcon.isHidden = configuration.hideEmptyStateStartNewButtonInConversationList
-        emptyCellView.conversationLabel.textColor = .dynamicColor(light: .black, dark: .white)
+        emptyCellView.conversationLabel.textColor = .kmDynamicColor(light: .black, dark: .white)
 
         if !configuration.hideEmptyStateStartNewButtonInConversationList {
             if let tap = emptyCellView.gestureRecognizers?.first {
@@ -341,7 +341,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
         tableView.estimatedRowHeight = 75
         tableView.rowHeight = 75
         tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor.dynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
+        tableView.backgroundColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
         tableView.keyboardDismissMode = .onDrag
         tableView.accessibilityIdentifier = "OuterChatScreenTableView"
 
