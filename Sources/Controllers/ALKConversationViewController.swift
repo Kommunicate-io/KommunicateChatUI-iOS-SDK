@@ -803,7 +803,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         // Update background view's color which contains all the attachment options.
         chatBar.bottomBackgroundColor = UIColor.kmDynamicColor(light: configuration.chatBarAttachmentViewBackgroundColor, dark: configuration.chatBarAttachmentViewDarkBackgroundColor)
 
-        chatBar.textView.textColor = UIColor.kmDynamicColor(light: .white, dark: .black)
+        chatBar.textView.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
         chatBar.poweredByMessageTextView.hyperLink(mutableAttributedString: NSMutableAttributedString(string: "Powered by Kommunicate.io"),
                                                    url: URL(string: "https://kommunicate.io")!,
                                                    clickString: "Kommunicate.io")
