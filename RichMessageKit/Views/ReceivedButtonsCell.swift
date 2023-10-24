@@ -66,7 +66,7 @@ public class ReceivedButtonsCell: UITableViewCell {
         return lb
     }()
 
-    lazy var buttons = SuggestedReplyView()
+    fileprivate lazy var buttons = SuggestedReplyView()
     fileprivate lazy var messageView = MessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
@@ -83,6 +83,10 @@ public class ReceivedButtonsCell: UITableViewCell {
         buttons.delegate = self
         setupConstraints()
         backgroundColor = .clear
+    }
+    
+    func hideActionButtons() {
+        buttons.hideActionButtons()
     }
 
     @available(*, unavailable)

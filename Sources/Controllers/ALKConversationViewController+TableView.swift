@@ -486,7 +486,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 let cell: ReceivedButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(model: allButtons)
                 if isActionButtonHidden {
-                    cell.buttons.hideActionButtons()
+                    cell.hideActionButtons()
                 }
                 cell.tapped = { [weak self] index, name in
                     guard let weakSelf = self else { return }
