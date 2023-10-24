@@ -437,6 +437,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
+        
+        if !isChatBarHidden {
+            bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomConstraint?.isActive = true
+        } else {
+            backgroundViewBottomConstraint?.isActive = isChatBarHidden
+            replyViewBottomConstraint?.isActive = isChatBarHidden
+        }
+        
         edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.lightGray
@@ -450,7 +459,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         viewModel.delegate = self
         refreshViewController()
-
+//        setupConstraints()
+        
         if isFirstTime {
             setupView()
         } else {
@@ -490,6 +500,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording(hide: true)
+        isChatBarHidden = false
         if individualLaunch {
             if alMqttConversationService != nil {
                 alMqttConversationService.unsubscribeToConversation()
@@ -673,11 +684,19 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         typingNoticeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         typingNoticeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
         typingNoticeView.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor).isActive = true
-
         chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        bottomConstraint?.isActive = true
+        if !isChatBarHidden {
+            bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomConstraint?.isActive = true
+        } else {
+            bottomConstraint = replyMessageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomConstraint?.isActive = true
+        }
+//        chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        bottomConstraint?.isActive = true
 
         replyMessageView.leadingAnchor.constraint(
             equalTo: view.leadingAnchor
@@ -2384,9 +2403,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
     
-    public func hideChatBarForOperator() {
+    public func showChatBarForOperator() {
         chatBar.isHidden = true
-        bottomConstraint = replyMessageView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: 0)
+        bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomConstraint?.isActive = true
         let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
         moveTableViewToBottom(indexPath: indexPath)
