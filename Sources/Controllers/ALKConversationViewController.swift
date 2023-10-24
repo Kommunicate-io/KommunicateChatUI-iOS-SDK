@@ -2384,6 +2384,14 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
     
+    public func hideChatBarForOperator() {
+        chatBar.isHidden = true
+        bottomConstraint = replyMessageView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: 0)
+        bottomConstraint?.isActive = true
+        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+        moveTableViewToBottom(indexPath: indexPath)
+    }
+    
     func showUploadRestrictionAlert() {
         let uploadrestrictionTitle = self.localizedString(
             forKey: "uploadRestrictionTitle",
