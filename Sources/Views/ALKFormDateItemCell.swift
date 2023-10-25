@@ -54,7 +54,7 @@ class ALKFormDateBaseCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 15).font()
-        label.textColor = .dynamicColor(light: .black, dark: .white)
+        label.textColor = .kmDynamicColor(light: .black, dark: .white)
         label.numberOfLines = 1
         label.textAlignment = .left
         return label
@@ -68,7 +68,7 @@ class ALKFormDateBaseCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        valueTextField.textColor = .dynamicColor(light: .black, dark: .white)
+        valueTextField.textColor = .kmDynamicColor(light: .black, dark: .white)
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         addConstraints()

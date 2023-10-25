@@ -24,6 +24,9 @@ public struct ALKConfiguration {
 
     /// The background color of the ALKConversationViewController.
     public var backgroundColor = UIColor(netHex: 0xF9F9F9)
+    
+    /// The dark background color of the ALKConversationViewController.
+    public var backgroundDarkColor = UIColor(netHex: 0x1C1C1C)
 
     /// Hides the bottom line in the navigation bar.
     /// It will be hidden in all the ViewControllers where
@@ -33,6 +36,15 @@ public struct ALKConfiguration {
     /// ChatBar's bottom view color. This is the view which contains
     /// all the attachment and other options.
     public var chatBarAttachmentViewBackgroundColor = UIColor.background(.grayEF)
+    
+    /// ChatBar attachment view dark background color
+    public var chatBarAttachmentViewDarkBackgroundColor = UIColor(netHex: 0x313131)
+    
+    /// RecivedMessage Light Bubble Color
+    public var recivedMessageColor = UIColor.gray
+    
+    /// RecivedMessage dark Bubble Color
+    public var recivedMessageDarkColor = UIColor.red
 
     /// If true then audio option in chat bar will be hidden.
     public var hideAudioOptionInChatBar = false

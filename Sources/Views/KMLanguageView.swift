@@ -18,9 +18,9 @@ public class KMLanguageView: UIView {
         public static var dividerColor = UIColor.lightGray
         public static var minHeight: CGFloat = 35
         public static var padding = Padding(left: 14, right: 14, top: 4, bottom: 8)
-        public static var selectedBackgroundColor = UIColor(hexString: "686464", alpha: 1)
+        public static var selectedBackgroundColor = UIColor.kmDynamicColor(light: UIColor(hexString: "686464", alpha: 1), dark: .appBarDarkColor())
         public static var selectedNameTextColor = UIColor(hexString: "ffffff", alpha: 1)
-        public static var languageNameTextColor = UIColor(hexString: "29292a", alpha: 1)
+        public static var languageNameTextColor = UIColor.kmDynamicColor(light: UIColor(hexString: "29292a", alpha: 1), dark: .lightText)
         public static var languageNameFont = UIFont.systemFont(ofSize: 15)
         
         public enum LineStyle {

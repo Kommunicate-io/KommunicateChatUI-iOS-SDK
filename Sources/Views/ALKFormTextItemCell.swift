@@ -23,7 +23,7 @@ class ALKFormTextItemCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 15).font()
-        label.textColor = UIColor.dynamicColor(light: .black, dark: .white)
+        label.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
         label.numberOfLines = 1
         label.textAlignment = .left
         return label
@@ -53,7 +53,7 @@ class ALKFormTextItemCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        valueTextField.textColor = .dynamicColor(light: .black, dark: .white)
+        valueTextField.textColor = .kmDynamicColor(light: .black, dark: .white)
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         addConstraints()
@@ -102,7 +102,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 15).font()
-        label.textColor = UIColor.dynamicColor(light: .black, dark: .white)
+        label.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
         label.numberOfLines = 1
         label.textAlignment = .left
         return label
@@ -135,7 +135,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         valueTextField.textColor = .black
-        contentView.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+        contentView.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         addConstraints()
     }
 
@@ -182,7 +182,7 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
     var titleLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.normal(size: 17).font()
-        label.textColor = .dynamicColor(light: .text(.gray7E), dark: .text(.grayCC))
+        label.textColor = .kmDynamicColor(light: .text(.gray7E), dark: .text(.grayCC))
         label.numberOfLines = 0
         label.textAlignment = .left
         return label
