@@ -2180,8 +2180,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             }
             
             if message.messageType == .allButtons ||
-               message.messageType == .quickReply ||
-               message.messageType == .button {
+                message.messageType == .button {
+                viewModel.messageModels.remove(at: messageIndex)
+                tableView.deleteSections([messageIndex], with: .automatic)
+            } else if message.messageType == .quickReply {
                 tableView.reloadSections([messageIndex], with: .automatic)
             }
         }

@@ -301,8 +301,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let messageModel = messageModels[indexPath.section]
         let cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
         let isActionButtonHidden = isActionButtonHidden(message: messageModel)
-        if let height = HeightCache.shared.getHeight(for: cacheIdentifier),
-           !isActionButtonHidden{
+        if let height = HeightCache.shared.getHeight(for: cacheIdentifier){
             return height
         }
         switch messageModel.messageType {
@@ -411,7 +410,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return
                     ALKFriendMessageButtonCell
-                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width, isActionButtonHidden: isActionButtonHidden)
+                        .rowHeigh(viewModel: messageModel, width: UIScreen.main.bounds.width)
                         .cached(with: cacheIdentifier)
             }
         case .listTemplate:
@@ -461,7 +460,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 return
                     ReceivedButtonsCell
-                        .rowHeight(model: model, isActionButtonHidden: isActionButtonHidden)
+                        .rowHeight(model: model)
                         .cached(with: cacheIdentifier)
             }
         case .form:
@@ -1407,8 +1406,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
-                self.messageModels = self.modelsToBeAddedAfterDelay
-               
+                self.addMessageToMessageModel(messages: self.modelsToBeAddedAfterDelay)
             }
             self.membersInGroup { members in
                 self.groupMembers = members
@@ -1617,7 +1615,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.lastSentMessage = self.getLastSentMessage()
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
-            self.messageModels.insert(contentsOf: models, at: 0)
+            self.addMessageToMessageModel(messages: models)
             if isFirstTime {
                 self.membersInGroup { members in
                     self.groupMembers = members
@@ -1628,6 +1626,24 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
         })
         self.lastMessage = alMessages.last
+    }
+    
+    func addMessageToMessageModel(messages : [ALKMessageModel]){
+        guard let lastSentMessageTime = lastSentMessage?.createdAtTime,
+              UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else {
+            self.messageModels.insert(contentsOf: messages, at: 0)
+            return
+        }
+
+        for message in messages {
+            if let currentMessageTime = message.createdAtTime {
+                if message.isMyMessage ||
+                    (message.messageType != .allButtons && message.messageType != .button) ||
+                    currentMessageTime .int64Value >= lastSentMessageTime .int64Value {
+                    self.messageModels.append(message)
+                }
+            }
+        }
     }
 
     open func loadOpenGroupMessages() {
@@ -1745,7 +1761,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 }
                 self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
                 self.alMessages.insert(mesg, at: 0)
-                self.messageModels.insert(mesg.messageModel, at: 0)
+                self.addMessageToMessageModel(messages: [mesg.messageModel])
             }
             self.delegate?.loadingFinished(error: nil)
         })

@@ -347,7 +347,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 guard let template = message.payloadFromMetadata() else {
                     return cell
                 }
-                if viewModel.isActionButtonHidden(message: message){
+                if isActionButtonHidden {
                     cell.quickReplyView.hideActionButtons()
                 }
                 cell.quickReplySelected = { [weak self] index, title in
@@ -374,9 +374,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.update(chatBar: chatBar)
-                if isActionButtonHidden {
-                    cell.buttonView.hideActionButtons()
-                }
                 cell.buttonSelected = { [weak self] index, title in
                     guard let weakSelf = self else { return }
                     weakSelf.messageButtonSelected(
@@ -485,9 +482,6 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ReceivedButtonsCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.update(model: allButtons)
-                if isActionButtonHidden {
-                    cell.hideActionButtons()
-                }
                 cell.tapped = { [weak self] index, name in
                     guard let weakSelf = self else { return }
                     weakSelf.richButtonSelected(
