@@ -150,6 +150,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.conversationProxy = conversationProxy
         self.localizedStringFileName = localizedStringFileName
         self.prefilledMessage = prefilledMessage
+        ALKConversationViewModel.lastSentMessage = nil
     }
 
     // MARK: - Public methods
