@@ -119,6 +119,9 @@ extension ALKMessageViewModel {
         let isActionButtonHidden = isActionButtonHidden()
         guard let payload = payloadFromMetadata() else { return nil }
         var buttons = [SuggestedReplyMessage.Suggestion]()
+        if isActionButtonHidden {
+            return SuggestedReplyMessage(suggestion: buttons, message: messageDetails())
+        }
         for object in payload {
             guard let name = object["title"] as? String else { continue }
             let reply = object["message"] as? String
@@ -167,17 +170,17 @@ extension ALKMessageViewModel {
     }
     
     func isSuggestedReply() -> Bool {
-        guard self.messageType == .allButtons ||
-                self.messageType == .button ||
-                self.messageType == .quickReply else {
-            return false
-        }
-        return true
+        return self.messageType == .allButtons || self.messageType == .quickReply
     }
     
     func isActionButtonHidden() -> Bool {
+        
         guard UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
-              self.isSuggestedReply(),
+              self.messageType != .button else {
+            return false
+        }
+
+        guard self.isSuggestedReply(),
               let currentMessageTime = self.createdAtTime,
               let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
               currentMessageTime .int64Value < lastSentMessageTime .int64Value else {

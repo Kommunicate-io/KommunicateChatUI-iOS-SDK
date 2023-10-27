@@ -2216,8 +2216,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 return
             }
             
-            if message.isSuggestedReply(),
-               !containsOnlyNormalButton(message: message) {
+            if message.isSuggestedReply() {
                 tableView.reloadSections([messageIndex], with: .automatic)
             }
         }
