@@ -52,7 +52,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public let autocompletionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
-        tableview.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+        tableview.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         tableview.estimatedRowHeight = 50
         tableview.rowHeight = UITableView.automaticDimension
         tableview.separatorStyle = .none
@@ -62,7 +62,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     public let autoSuggestionView: UITableView = {
         let tableview = UITableView(frame: CGRect.zero, style: .plain)
-        tableview.backgroundColor = .dynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+        tableview.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         tableview.estimatedRowHeight = 25
         tableview.rowHeight = UITableView.automaticDimension
         tableview.separatorStyle = .none
@@ -437,6 +437,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
+        
+        if !isChatBarHidden {
+            bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomConstraint?.isActive = true
+        } else {
+            backgroundViewBottomConstraint?.isActive = isChatBarHidden
+            replyViewBottomConstraint?.isActive = isChatBarHidden
+        }
+        
         edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.lightGray
@@ -450,7 +459,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         viewModel.delegate = self
         refreshViewController()
-
+//        setupConstraints()
+        
         if isFirstTime {
             setupView()
         } else {
@@ -490,6 +500,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording(hide: true)
+        isChatBarHidden = false
         if individualLaunch {
             if alMqttConversationService != nil {
                 alMqttConversationService.unsubscribeToConversation()
@@ -530,7 +541,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         unreadScrollButton.isHidden = true
         unreadScrollButton.addTarget(self, action: #selector(unreadScrollDownAction(_:)), for: .touchUpInside)
 
-        backgroundView.backgroundColor = UIColor.dynamicColor(light: configuration.backgroundColor, dark: UIColor.backgroundDarkColor())
+        backgroundView.backgroundColor = UIColor.kmDynamicColor(light: configuration.backgroundColor, dark: configuration.backgroundDarkColor)
         prepareTable()
         if moreBar.isHidden{
             prepareMoreBar()
@@ -640,7 +651,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         conversationInfoView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
         conversationInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         conversationInfoView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        conversationInfoView.backgroundColor = configuration.conversationInfoModel?.backgroundColor
+        conversationInfoView.backgroundColor = UIColor.kmDynamicColor(light: configuration.conversationInfoModel?.backgroundColor ?? .gray, dark: configuration.conversationInfoModel?.darkBackgroundColor ?? .white)
         
         if configuration.conversationInfoModel == nil {
             conversationInfoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
@@ -673,11 +684,19 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         typingNoticeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         typingNoticeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
         typingNoticeView.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor).isActive = true
-
         chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        bottomConstraint?.isActive = true
+        if !isChatBarHidden {
+            bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomConstraint?.isActive = true
+        } else {
+            bottomConstraint = replyMessageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomConstraint?.isActive = true
+        }
+//        chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        bottomConstraint?.isActive = true
 
         replyMessageView.leadingAnchor.constraint(
             equalTo: view.leadingAnchor
@@ -798,12 +817,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
         // Update ChatBar's top view which contains send button and the text view.
-        chatBar.grayView.backgroundColor = UIColor.dynamicColor(light: configuration.backgroundColor, dark: UIColor.backgroundDarkColor())
+        chatBar.grayView.backgroundColor = UIColor.kmDynamicColor(light: configuration.backgroundColor, dark: configuration.backgroundDarkColor)
 
         // Update background view's color which contains all the attachment options.
-        chatBar.bottomBackgroundColor = UIColor.dynamicColor(light: configuration.chatBarAttachmentViewBackgroundColor, dark: UIColor.appBarDarkColor())
+        chatBar.bottomBackgroundColor = UIColor.kmDynamicColor(light: configuration.chatBarAttachmentViewBackgroundColor, dark: configuration.chatBarAttachmentViewDarkBackgroundColor)
 
-        chatBar.textView.textColor = UIColor.dynamicColor(light: .white, dark: .black)
+        chatBar.textView.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
         chatBar.poweredByMessageTextView.hyperLink(mutableAttributedString: NSMutableAttributedString(string: "Powered by Kommunicate.io"),
                                                    url: URL(string: "https://kommunicate.io")!,
                                                    clickString: "Kommunicate.io")
@@ -2382,6 +2401,14 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             self.loadingIndicator.stopLoading()
             self.navigationBar.updateView(profile: profile)
         }
+    }
+    
+    public func showChatBarForOperator() {
+        chatBar.isHidden = true
+        bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        bottomConstraint?.isActive = true
+        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+        moveTableViewToBottom(indexPath: indexPath)
     }
     
     func showUploadRestrictionAlert() {

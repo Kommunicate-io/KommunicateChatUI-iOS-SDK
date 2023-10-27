@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public extension UIColor {
-    static func dynamicColor(light: UIColor, dark: UIColor) -> UIColor {
+    static func kmDynamicColor(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
     }
 }

@@ -72,7 +72,7 @@ open class KMConversationInfoView: UIView {
         leadingImageView.image = viewModel.leadingImage
         trailingImageView.image = viewModel.trailingImage
         titleLabel.font = viewModel.contentFont ?? Font.normal(size: 16.0).font()
-        titleLabel.textColor = viewModel.contentColor
+        titleLabel.textColor = .kmDynamicColor(light: viewModel.contentColor, dark: viewModel.contentDarkColor)
     }
 
 }

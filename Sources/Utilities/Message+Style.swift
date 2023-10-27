@@ -29,7 +29,7 @@ public enum ALKMessageStyle {
     // Received message text style
     public static var receivedMessage = Style(
         font: UIFont.font(.normal(size: 14)),
-        text: UIColor.dynamicColor(light: .text(.black00), dark: .text(.white))
+        text: UIColor.kmDynamicColor(light: .text(.black00), dark: .text(.white))
     )
 
     // Sent message text style
@@ -144,10 +144,10 @@ public enum ALKMessageStyle {
         }
     }
 
-    public static var receivedBubble = Bubble(color: UIColor.dynamicColor(light: UIColor(netHex: 0xF1F0F0), dark: UIColor.appBarDarkColor()), style: .edge) {
+    public static var receivedBubble = Bubble(color: UIColor.kmDynamicColor(light: UIColor(netHex: 0xF1F0F0), dark: UIColor.appBarDarkColor()), style: .edge) {
         didSet {
             let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
-            appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: UIColor.dynamicColor(light: receivedBubble.color, dark: UIColor.appBarDarkColor()))
+            appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: UIColor.kmDynamicColor(light: receivedBubble.color, dark: UIColor.appBarDarkColor()))
         }
     }
 

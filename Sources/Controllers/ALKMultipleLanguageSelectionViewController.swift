@@ -19,7 +19,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "HelveticaNeue-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor(red: 96, green: 94, blue: 94)
+        label.textColor = UIColor.kmDynamicColor(light: UIColor(red: 96, green: 94, blue: 94), dark: .lightText)
         label.text = "Select a language"
         return label
     }()
@@ -102,7 +102,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
        
-        closeButton.imageView?.tintColor = UIColor.black
+        closeButton.imageView?.tintColor = UIColor.kmDynamicColor(light: .black, dark: .white)
         closeButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
         closeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         closeButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
@@ -113,7 +113,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
         languageStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         bottomConstraint.isActive = true
 
-        view.backgroundColor = .white
+        view.backgroundColor = .kmDynamicColor(light: .white, dark: .backgroundDarkColor())
         view.layer.cornerRadius = 8
     }
 }
