@@ -6,26 +6,26 @@ PODS:
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (7.6.2)
-  - KommunicateChatUI-iOS-SDK (1.1.9):
-    - KommunicateChatUI-iOS-SDK/Complete (= 1.1.9)
-  - KommunicateChatUI-iOS-SDK/Complete (1.1.9):
+  - KommunicateChatUI-iOS-SDK (2.0.0):
+    - KommunicateChatUI-iOS-SDK/Complete (= 2.0.0)
+  - KommunicateChatUI-iOS-SDK/Complete (2.0.0):
     - iOSDropDown
     - Kingfisher (~> 7.6.2)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
-    - KommunicateCore-iOS-SDK (~> 1.1.4)
+    - KommunicateCore-iOS-SDK (~> 1.1.5)
     - SwipeCellKit (~> 2.7.1)
     - ZendeskChatProvidersSDK (~> 3.0.0)
-  - KommunicateChatUI-iOS-SDK/RichMessageKit (1.1.9)
-  - KommunicateCore-iOS-SDK (1.1.4)
-  - Nimble (11.2.2)
-  - Nimble-Snapshots (9.5.1):
-    - Nimble-Snapshots/Core (= 9.5.1)
-  - Nimble-Snapshots/Core (9.5.1):
+  - KommunicateChatUI-iOS-SDK/RichMessageKit (2.0.0)
+  - KommunicateCore-iOS-SDK (1.1.5)
+  - Nimble (12.3.0)
+  - Nimble-Snapshots (9.6.1):
+    - Nimble-Snapshots/Core (= 9.6.1)
+  - Nimble-Snapshots/Core (9.6.1):
     - iOSSnapshotTestCase (~> 8.0)
-    - Nimble (~> 11.0)
+    - Nimble (~> 12.0)
   - Quick (7.3.0)
   - SwiftFormat/CLI (0.48.18)
-  - SwiftLint (0.52.4)
+  - SwiftLint (0.53.0)
   - SwipeCellKit (2.7.1)
   - ZendeskChatProvidersSDK (3.0.0)
 
@@ -59,13 +59,13 @@ SPEC CHECKSUMS:
   iOSDropDown: ce9daa584eaa5567cafc1b633e3cc7eb6d9cea42
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
-  KommunicateChatUI-iOS-SDK: b41eb6d89c75e0b2f8159aa2943f77bc89acaa38
-  KommunicateCore-iOS-SDK: e7ede494b32e5238dd3421d38682ee2ee8c2d22e
-  Nimble: 01a944d4d07eab73617dfd4b32ac9f7152ac34de
-  Nimble-Snapshots: ffa513489b87160d95b09e9158c9cb2bf70e00a4
+  KommunicateChatUI-iOS-SDK: 859bc0283d418b823688acdf5afd6e283988f6d1
+  KommunicateCore-iOS-SDK: 83e2c8d5b3007417354752a457068bd07e6d2e03
+  Nimble: f8a8219d16f176429b951e8f7e72df5c23ceddc0
+  Nimble-Snapshots: 4988d1cf2fe062f13bd2eb87c4279770785e682b
   Quick: d32871931c05547cb4e0bc9009d66a18b50d8558
   SwiftFormat: 7dd2b33a0a3d61095b61c911b6d89ff962ae695c
-  SwiftLint: 1cc5cd61ba9bacb2194e340aeb47a2a37fda00b3
+  SwiftLint: 5ce4d6a8ff83f1b5fd5ad5dbf30965d35af65e44
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
   ZendeskChatProvidersSDK: af93e02e2058875f92e6ad86e74ee51203b4079e
 
