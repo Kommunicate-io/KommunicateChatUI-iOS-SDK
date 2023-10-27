@@ -2330,7 +2330,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.beginUpdates()
         tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
         tableView.endUpdates()
-        reloadProcessedMessages(index: indexPath.section)
+        if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) {
+            reloadProcessedMessages(index: indexPath.section)
+        }
         moveTableViewToBottom(indexPath: indexPath)
     }
 
