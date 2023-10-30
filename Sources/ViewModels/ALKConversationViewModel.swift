@@ -184,7 +184,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard !alMessageWrapper.contains(message: message) else { return }
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
-        messageModels.append(message.messageModel)
+        self.addMessageToMessageModel(messages: [message.messageModel])
         if(message.isMyMessage){
             ALKConversationViewModel.lastSentMessage = message
         }
@@ -382,7 +382,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
                     ALKFriendGenericCardMessageCell
                         .rowHeigh(viewModel: messageModel, width: maxWidth)
-                        .cached(with: cacheIdentifier)
             }
         case .faqTemplate:
             guard let faqMessage = messageModel.faqMessage() else { return 0 }
@@ -425,7 +424,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
                     ALKFriendMessageListTemplateCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
-                        .cached(with: cacheIdentifier)
             }
         case .document:
             if messageModel.isMyMessage {
@@ -640,7 +638,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
-        messageModels.append(contentsOf: models)
+        self.addMessageToMessageModel(messages: models)
         print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
     }
@@ -1408,7 +1406,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
             } else {
-                self.addMessageToMessageModel(messages: self.modelsToBeAddedAfterDelay)
+                self.messageModels = self.modelsToBeAddedAfterDelay
             }
             self.membersInGroup { members in
                 self.groupMembers = members
@@ -1441,7 +1439,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
                 return
             }
-            self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
+            self.addMessageToMessageModel(messages: [modelsToBeAddedAfterDelay[welcomeMessagePosition]])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
             if welcomeMessagePosition >= alMessages.count  {
@@ -1633,7 +1631,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     func addMessageToMessageModel(messages : [ALKMessageModel]){
         guard let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
               UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else {
-            self.messageModels.insert(contentsOf: messages, at: 0)
+            self.messageModels.append(contentsOf: messages)
             return
         }
 

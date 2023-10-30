@@ -170,7 +170,8 @@ extension ALKMessageViewModel {
     }
     
     func isSuggestedReply() -> Bool {
-        return self.messageType == .allButtons || self.messageType == .quickReply
+        let messageType = self.messageType
+        return messageType == .allButtons || messageType == .quickReply || messageType == .cardTemplate || messageType == .listTemplate
     }
     
     func isActionButtonHidden() -> Bool {

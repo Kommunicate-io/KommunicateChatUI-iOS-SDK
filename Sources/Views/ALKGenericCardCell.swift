@@ -39,7 +39,14 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
         switch templateId {
         case ActionableMessageType.cardTemplate.rawValue:
             do {
-                let templates = try TemplateDecoder.decode([CardTemplate].self, from: metadata)
+                var templates = try TemplateDecoder.decode([CardTemplate].self, from: metadata)
+                if message.isActionButtonHidden() {
+                    for index in 0...templates.count - 1 {
+                        templates[index].buttons?.removeAll{ button in
+                            return button.action?.type != "link" && button.action?.type != "submit"
+                        }
+                    }
+                }
                 return templates
             } catch {
                 print("\(error)")
