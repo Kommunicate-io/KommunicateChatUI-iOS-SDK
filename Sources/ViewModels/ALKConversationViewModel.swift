@@ -402,7 +402,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
                     ALKFriendMessageQuickReplyCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
-                        .cached(with: cacheIdentifier)
             }
         case .button:
             if messageModel.isMyMessage {
