@@ -199,7 +199,7 @@ public class KMMultiSelectButton: UIView {
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 5),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             label.topAnchor.constraint(equalTo: topAnchor,constant: configuration.topPadding),
             label.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -configuration.bottomPadding),
 
