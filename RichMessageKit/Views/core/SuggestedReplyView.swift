@@ -164,7 +164,7 @@ public class SuggestedReplyView: UIView {
             alignLeft ? subviews.append(hiddenView) : subviews.insert(hiddenView, at: 0)
         }
         let stackView: UIStackView
-        if subviews.count > 2 {
+        if subviews.count > 2 || !isMultiLine {
             stackView = horizontalStackViewWithSpace(subviews: subviews)
         } else {
             stackView = horizontalStackView(subviews: subviews)
