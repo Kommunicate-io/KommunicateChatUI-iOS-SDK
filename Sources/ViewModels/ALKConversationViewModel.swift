@@ -382,6 +382,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
                     ALKFriendGenericCardMessageCell
                         .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .cached(with: cacheIdentifier)
             }
         case .faqTemplate:
             guard let faqMessage = messageModel.faqMessage() else { return 0 }
@@ -401,6 +402,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
                     ALKFriendMessageQuickReplyCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: cacheIdentifier)
             }
         case .button:
             if messageModel.isMyMessage {
@@ -424,6 +426,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
                     ALKFriendMessageListTemplateCell
                         .rowHeight(viewModel: messageModel, maxWidth: UIScreen.main.bounds.width)
+                        .cached(with: cacheIdentifier)
             }
         case .document:
             if messageModel.isMyMessage {
