@@ -304,6 +304,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
             buttonStackView.isHidden = true
             return
         }
+        buttonStackView.isHidden = false
         updateViewFor(buttons)
         contentView.layoutIfNeeded()
     }
