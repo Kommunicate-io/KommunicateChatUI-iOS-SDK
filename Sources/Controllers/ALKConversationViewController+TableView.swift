@@ -300,7 +300,10 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendGenericCardMessageCell
+                var cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendGenericCardMessageCell
+                if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) {
+                    cell = ALKFriendGenericCardMessageCell()
+                }
                 cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = true
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
