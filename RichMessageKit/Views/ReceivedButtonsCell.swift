@@ -109,7 +109,10 @@ public class ReceivedButtonsCell: UITableViewCell {
 
         if !isMessageEmpty {
             messageView.update(model: model.message)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model.message)
         }
+
         if let url = model.message.imageURL {
             ImageCache.downloadImage(url: url) { [weak self] image in
                 guard let image = image else { return }
