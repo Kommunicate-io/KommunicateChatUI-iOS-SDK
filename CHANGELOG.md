@@ -3,7 +3,7 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 ## [1.2.1] 2023-11-02
-- Fixed iOS 17 BUtton issue.
+- Fixed iOS 17 Button issue.
 - Fixed the Typing Customization issue.
 - Fixed buttons are getting cut in form template
 - Added hidepostCTA support for all types of buttons.
