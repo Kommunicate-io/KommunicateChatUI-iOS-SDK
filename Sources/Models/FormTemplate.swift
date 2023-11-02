@@ -8,7 +8,7 @@
 import Foundation
 
 struct FormTemplate: Decodable {
-    let elements: [Element]
+    var elements: [Element]
 
     struct Element: Decodable {
         let type: String

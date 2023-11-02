@@ -475,6 +475,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+        KMHidePostCTAForm.shared.enabledHidePostCTAForm = configuration.hidePostFormSubmit
         self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         if let templates = viewModel.getMessageTemplates() {
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
@@ -2220,6 +2221,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             if message.isSuggestedReply() {
                 tableView.reloadSections([messageIndex], with: .automatic)
             }
+            if message.messageType == .form, KMHidePostCTAForm.shared.enabledHidePostCTAForm {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
         }
         moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
@@ -2338,6 +2342,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
         tableView.endUpdates()
         if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) {
+            reloadProcessedMessages(index: indexPath.section)
+        }
+        if KMHidePostCTAForm.shared.enabledHidePostCTAForm {
             reloadProcessedMessages(index: indexPath.section)
         }
         moveTableViewToBottom(indexPath: indexPath)

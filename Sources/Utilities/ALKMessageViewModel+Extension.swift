@@ -150,7 +150,15 @@ extension ALKMessageViewModel {
     func formTemplate() -> FormTemplate? {
         guard let payload = payloadFromMetadata() else { return nil }
         do {
-            return try FormTemplate(payload: payload)
+            var templet = try FormTemplate(payload: payload)
+                        
+                if isFormSubmitButtonHidden() {
+                    templet.elements.removeAll { element in
+                        return element.type == "submit"
+                    }
+                }
+                        
+            return templet
         } catch {
             print("Error while decoding form template: \(error.localizedDescription)")
             return nil
@@ -189,4 +197,15 @@ extension ALKMessageViewModel {
         }
         return true
     }
+    
+    func isFormSubmitButtonHidden() -> Bool {
+            guard messageType == .form,
+                  KMHidePostCTAForm.shared.enabledHidePostCTAForm,
+                  let currentMessageTime = self.createdAtTime,
+                  let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
+                  currentMessageTime .int64Value < lastSentMessageTime .int64Value else {
+                return false
+            }
+            return true
+        }
 }

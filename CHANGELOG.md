@@ -7,6 +7,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Fixed the Typing Customization issue.
 - Fixed buttons are getting cut in form template
 - Added hidepostCTA support for all types of buttons.
+- Default configuration added for hiding the form submit button with 'hidePostFormSubmit'.
 
 ## [1.2.0] 2023-10-27
 - Fixed Button Spacing
