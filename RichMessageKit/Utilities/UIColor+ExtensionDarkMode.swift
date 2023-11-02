@@ -11,7 +11,7 @@ import UIKit
 
 public extension UIColor {
     static func kmDynamicColor(light: UIColor, dark: UIColor) -> UIColor {
-        return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
+        return UIColor { $0.userInterfaceStyle == .dark ? light : light } /// disabled dark mode
     }
 }
 

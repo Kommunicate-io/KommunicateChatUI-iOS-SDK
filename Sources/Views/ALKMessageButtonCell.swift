@@ -72,6 +72,8 @@ open class ALKMyMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
                                                       padding: ViewPadding.messageViewPadding)
         if !isMessageEmpty {
             messageView.update(model: model)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model)
         }
 
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
@@ -256,6 +258,8 @@ class ALKFriendMessageButtonCell: ALKChatBaseCell<ALKMessageViewModel> {
         nameLabel.setStyle(ALKMessageStyle.displayName)
 
         if !isMessageEmpty {
+            messageView.update(model: model)
+        } else if #available(iOS 17, *) {
             messageView.update(model: model)
         }
 
