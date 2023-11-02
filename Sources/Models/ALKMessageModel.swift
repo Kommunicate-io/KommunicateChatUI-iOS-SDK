@@ -68,6 +68,7 @@ public protocol ALKMessageViewModel {
     var metadata: [String: Any]? { get }
     var source: Int16 { get }
     var contentType: Message.ContentType { get }
+    var createdAtTime : NSNumber? { get set }
 }
 
 public class ALKMessageModel: ALKMessageViewModel {
@@ -101,6 +102,7 @@ public class ALKMessageModel: ALKMessageViewModel {
     public var isReplyMessage: Bool = false
     public var metadata: [String: Any]?
     public var source: Int16 = 0
+    public var createdAtTime: NSNumber?
 }
 
 extension ALKMessageModel: Equatable {

@@ -11,6 +11,7 @@ public struct SuggestedReplyMessage {
     public enum SuggestionType {
         case link
         case normal
+        case submit
     }
 
     public struct Suggestion {
