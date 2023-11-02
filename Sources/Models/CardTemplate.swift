@@ -13,7 +13,7 @@ public struct CardTemplate: Codable {
     public let subtitle: String?
     public let description: String?
     public let header: Header?
-    public let buttons: [Button]?
+    public var buttons: [Button]?
 
     public struct Header: Codable {
         public let imgSrc: String?

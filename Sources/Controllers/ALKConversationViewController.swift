@@ -2182,7 +2182,75 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 return
             }
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+            let message = self.viewModel.messageModels[indexPath.section]
+            if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
+               message.isMyMessage {
+                self.deleteProcessedMessages(index: indexPath.section)
+            }
         }
+    }
+    
+    func deleteProcessedMessages(index : Int){
+        
+        for messageIndex in stride(from: index-1, to: -1, by: -1){
+            let message = viewModel.messageModels[messageIndex]
+            
+            guard !message.isMyMessage else {
+                return
+            }
+            
+            if message.isSuggestedReply() &&
+                containsOnlyNormalButton(message: message) {
+                viewModel.messageModels.remove(at: messageIndex)
+                tableView.deleteSections([messageIndex], with: .automatic)
+            }
+        }
+        moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
+    }
+    
+    func reloadProcessedMessages(index : Int){
+        
+        for messageIndex in stride(from: index-1, to: -1, by: -1){
+            let message = viewModel.messageModels[messageIndex]
+            
+            guard !message.isMyMessage else {
+                return
+            }
+            
+            if message.isSuggestedReply() {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
+        }
+        moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
+    }
+    
+    func containsOnlyNormalButton(message : ALKMessageModel) -> Bool {
+        
+        guard message.message == nil else {
+            return false
+        }
+        
+        var buttons = message.linkOrSubmitButton()?.suggestion
+        if let buttons = buttons{
+            for button in buttons {
+                if button.type == .link ||
+                    button.type == .submit{
+                    return false
+                }
+            }
+        }
+        
+        buttons = message.allButtons()?.suggestion
+        if let buttons = buttons{
+            for button in buttons {
+                if button.type == .link ||
+                    button.type == .submit{
+                    return false
+                }
+            }
+        }
+        
+        return true
     }
 
     // This is a temporary workaround for the issue that messages are not scrolling to bottom when opened from notification
@@ -2269,6 +2337,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.beginUpdates()
         tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
         tableView.endUpdates()
+        if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) {
+            reloadProcessedMessages(index: indexPath.section)
+        }
         moveTableViewToBottom(indexPath: indexPath)
     }
 

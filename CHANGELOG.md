@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## Unreleased
 - Fixed buttons are getting cut in form template
+- Added hidepostCTA support for all types of buttons.
 
 ## [1.2.0] 2023-10-27
 - Fixed Button Spacing
