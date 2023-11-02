@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## Unreleased
+- Added hidepostCTA support for all types of buttons.
+
 ## [1.2.0] 2023-10-27
 - Fixed Button Spacing
 

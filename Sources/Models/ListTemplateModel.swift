@@ -12,7 +12,7 @@ public struct ListTemplate: Codable {
     public let headerImgSrc: String?
     public let headerText: String?
     public let elements: [Element]?
-    public let buttons: [Button]?
+    public var buttons: [Button]?
 
     public struct Element: Codable {
         public let imgSrc: String?

@@ -16,6 +16,7 @@ import UIKit
 public class SuggestedReplyView: UIView {
     static var didTapSuggestedReply = false
     static var messageIdentifier = String()
+    static let hidePostCTA = "HidePostCTAEnabled"
 
     // MARK: Public properties
 
@@ -213,12 +214,5 @@ extension SuggestedReplyView: Tappable {
         guard let index = index, let suggestion = model?.suggestion[index] else { return }
         let replyToBeSend = suggestion.reply ?? title
         delegate?.didTap(index: index, title: replyToBeSend)
-
-        if UserDefaults.standard.bool(forKey: "HidePostCTAEnabled") {
-            SuggestedReplyView.didTapSuggestedReply = true
-            SuggestedReplyView.messageIdentifier = (model?.message.identifier)!
-            model?.suggestion.removeAll()
-            mainStackView.isHidden = true
-        }
     }
 }

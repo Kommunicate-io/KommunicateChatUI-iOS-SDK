@@ -362,11 +362,16 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public func update(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) {
         guard let metadata = viewModel.metadata,
-              let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
+              var template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
         else {
             listTemplateView.isHidden = true
             layoutIfNeeded()
             return
+        }
+        if viewModel.isActionButtonHidden() {
+            template.buttons?.removeAll{ button in
+                return button.action?.type != "link" && button.action?.type != "submit"
+            }
         }
         listTemplateView.isHidden = false
         listTemplateView.update(item: template)
@@ -376,9 +381,14 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) -> CGFloat {
         guard let metadata = viewModel.metadata,
-              let template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
+              var template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
         else {
             return CGFloat(0)
+        }
+        if viewModel.isActionButtonHidden() {
+            template.buttons?.removeAll{ button in
+                return button.action?.type != "link" && button.action?.type != "submit"
+            }
         }
         return ListTemplateView.rowHeight(template: template)
     }
