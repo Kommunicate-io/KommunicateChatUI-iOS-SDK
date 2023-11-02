@@ -311,6 +311,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let msgArray = notification.object as? [ALMessage]
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
+            weakSelf.newFormMessageAdded()
         })
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
             _ in
@@ -2288,6 +2289,13 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.endUpdates()
     }
 
+    @objc open func newFormMessageAdded() {
+        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+        if let lastMessage = viewModel.messageModels.last {
+            reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
+        }
+    }
+    
     @objc open func newMessagesAdded() {
         let lastSectionBeforeUpdate = tableView.lastSection()
         updateTableView()
