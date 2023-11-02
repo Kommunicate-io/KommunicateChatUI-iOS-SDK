@@ -53,8 +53,8 @@ class KMFormMultiSelectButtonItemCell: UITableViewCell {
 private extension KMFormMultiSelectButtonItemCell {
     enum Size {
         enum nameLabel {
-            static let top: CGFloat = 10
-            static let bottom: CGFloat = -10
+            static let top: CGFloat = 5
+            static let bottom: CGFloat = -5
             static let leading: CGFloat = 10
             static let trailing: CGFloat = -40
         }

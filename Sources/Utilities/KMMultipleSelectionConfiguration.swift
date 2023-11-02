@@ -21,7 +21,7 @@ public struct KMMultipleSelectionConfiguration {
     
     public var selectedBackgroundColor: UIColor = UIColor(hexString: "D4F3F8")
     
-    public var selectedFont: UIFont = Font.bold(size: 16).font()
+    public var selectedFont: UIFont = Font.bold(size: 15).font()
     
     public var cornorRadius: CGFloat = 7
     
