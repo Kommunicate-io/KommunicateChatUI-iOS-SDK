@@ -469,6 +469,7 @@ public extension ALMessage {
         messageModel.isReplyMessage = isAReplyMessage()
         messageModel.metadata = metadata as? [String: Any]
         messageModel.source = source
+        messageModel.createdAtTime = createdAtTime
         if let messageContentType = Message.ContentType(rawValue: contentType) {
             messageModel.contentType = messageContentType
         }

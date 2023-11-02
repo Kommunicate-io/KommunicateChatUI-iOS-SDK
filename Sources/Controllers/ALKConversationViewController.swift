@@ -311,6 +311,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let msgArray = notification.object as? [ALMessage]
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
+            weakSelf.newFormMessageAdded()
         })
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "notificationIndividualChat"), object: nil, queue: nil, using: {
             _ in
@@ -474,6 +475,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+        KMHidePostCTAForm.shared.enabledHidePostCTAForm = configuration.hidePostFormSubmit
         self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         if let templates = viewModel.getMessageTemplates() {
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
@@ -822,7 +824,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         // Update background view's color which contains all the attachment options.
         chatBar.bottomBackgroundColor = UIColor.kmDynamicColor(light: configuration.chatBarAttachmentViewBackgroundColor, dark: configuration.chatBarAttachmentViewDarkBackgroundColor)
 
-        chatBar.textView.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
+        chatBar.textView.textColor = chatBar.textView.textColor == .text(.black00) ? UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white) : chatBar.textView.textColor
         chatBar.poweredByMessageTextView.hyperLink(mutableAttributedString: NSMutableAttributedString(string: "Powered by Kommunicate.io"),
                                                    url: URL(string: "https://kommunicate.io")!,
                                                    clickString: "Kommunicate.io")
@@ -2181,7 +2183,78 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                 return
             }
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+            let message = self.viewModel.messageModels[indexPath.section]
+            if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
+               message.isMyMessage {
+                self.deleteProcessedMessages(index: indexPath.section)
+            }
         }
+    }
+    
+    func deleteProcessedMessages(index : Int){
+        
+        for messageIndex in stride(from: index-1, to: -1, by: -1){
+            let message = viewModel.messageModels[messageIndex]
+            
+            guard !message.isMyMessage else {
+                return
+            }
+            
+            if message.isSuggestedReply() &&
+                containsOnlyNormalButton(message: message) {
+                viewModel.messageModels.remove(at: messageIndex)
+                tableView.deleteSections([messageIndex], with: .automatic)
+            }
+        }
+        moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
+    }
+    
+    func reloadProcessedMessages(index : Int){
+        
+        for messageIndex in stride(from: index-1, to: -1, by: -1){
+            let message = viewModel.messageModels[messageIndex]
+            
+            guard !message.isMyMessage else {
+                return
+            }
+            
+            if message.isSuggestedReply() {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
+            if message.messageType == .form, KMHidePostCTAForm.shared.enabledHidePostCTAForm {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
+        }
+        moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
+    }
+    
+    func containsOnlyNormalButton(message : ALKMessageModel) -> Bool {
+        
+        guard message.message == nil else {
+            return false
+        }
+        
+        var buttons = message.linkOrSubmitButton()?.suggestion
+        if let buttons = buttons{
+            for button in buttons {
+                if button.type == .link ||
+                    button.type == .submit{
+                    return false
+                }
+            }
+        }
+        
+        buttons = message.allButtons()?.suggestion
+        if let buttons = buttons{
+            for button in buttons {
+                if button.type == .link ||
+                    button.type == .submit{
+                    return false
+                }
+            }
+        }
+        
+        return true
     }
 
     // This is a temporary workaround for the issue that messages are not scrolling to bottom when opened from notification
@@ -2220,6 +2293,13 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.endUpdates()
     }
 
+    @objc open func newFormMessageAdded() {
+        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+        if let lastMessage = viewModel.messageModels.last {
+            reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
+        }
+    }
+    
     @objc open func newMessagesAdded() {
         let lastSectionBeforeUpdate = tableView.lastSection()
         updateTableView()
@@ -2261,6 +2341,12 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.beginUpdates()
         tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
         tableView.endUpdates()
+        if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) {
+            reloadProcessedMessages(index: indexPath.section)
+        }
+        if KMHidePostCTAForm.shared.enabledHidePostCTAForm {
+            reloadProcessedMessages(index: indexPath.section)
+        }
         moveTableViewToBottom(indexPath: indexPath)
     }
 

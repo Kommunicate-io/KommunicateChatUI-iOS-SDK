@@ -774,7 +774,7 @@ open class ALKChatBar: UIView, Localizable {
 extension ALKChatBar: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
         textView.typingAttributes = defaultTextAttributes
-        textView.textColor = UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white)
+        textView.textColor = textView.textColor == .text(.black00) ? UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white) : textView.textColor
         if textView.text.isEmpty {
             clearTextInTextView()
         } else {

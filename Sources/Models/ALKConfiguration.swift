@@ -88,6 +88,9 @@ public struct ALKConfiguration {
     
     /// if true then dark mode support is enabled to the SDK.
     public var isDarkModeEnabled = false
+    
+    /// For the Form Submit Button, hide post CTA is false by default.
+    public var hidePostFormSubmit = false
 
     /// Status bar style. It will be used in all view controllers.
     /// Default value is lightContent.
