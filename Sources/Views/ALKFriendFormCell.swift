@@ -114,6 +114,13 @@ class ALKFriendFormCell: ALKFormCell {
             submitButtonView.addSubview(submitButton)
             submitButton.bindFrameToSuperviewBounds()
         }
+        if viewModel.isFormSubmitButtonHidden() {
+            submitButtonView.isHidden = true
+            submitButtonViewHeight.constant = 0
+        } else if KMHidePostCTAForm.shared.enabledHidePostCTAForm, let submitButton = submitButton {
+            submitButtonView.isHidden = false
+            submitButtonViewHeight.constant = submitButton.buttonHeight()
+        }
         timeLabel.setStyle(ALKMessageStyle.time)
         timeLabel.text = viewModel.time
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(

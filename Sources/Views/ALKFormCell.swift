@@ -608,3 +608,8 @@ class FormDataSubmit {
     var dropDownFields = [Int: (Int,String?)]()
     var validationFields = [Int: Int]()
 }
+
+public struct KMHidePostCTAForm {
+    static var shared = KMHidePostCTAForm()
+    var enabledHidePostCTAForm: Bool = false
+}
