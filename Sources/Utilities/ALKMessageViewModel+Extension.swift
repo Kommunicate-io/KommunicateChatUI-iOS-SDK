@@ -184,7 +184,7 @@ extension ALKMessageViewModel {
     
     func isActionButtonHidden() -> Bool {
         
-        guard UserDefaults.standard.bool(forKey: "HidePostCTAEnabled"),
+        guard UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
               self.messageType != .button else {
             return false
         }
