@@ -2184,7 +2184,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             }
             self.tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
             let message = self.viewModel.messageModels[indexPath.section]
-            if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA),
+            if UserDefaults.standard.bool(forKey: "HidePostCTAEnabled"),
                message.isMyMessage {
                 self.deleteProcessedMessages(index: indexPath.section)
             }
@@ -2341,7 +2341,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         tableView.beginUpdates()
         tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
         tableView.endUpdates()
-        if UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) {
+        if UserDefaults.standard.bool(forKey: "HidePostCTAEnabled") {
             reloadProcessedMessages(index: indexPath.section)
         }
         if KMHidePostCTAForm.shared.enabledHidePostCTAForm {
