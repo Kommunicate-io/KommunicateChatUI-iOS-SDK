@@ -1632,7 +1632,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     func addMessageToMessageModel(messages : [ALKMessageModel]){
         guard let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
-              UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else {
+              UserDefaults.standard.bool(forKey: "HidePostCTAEnabled") else {
             self.messageModels.append(contentsOf: messages)
             return
         }
