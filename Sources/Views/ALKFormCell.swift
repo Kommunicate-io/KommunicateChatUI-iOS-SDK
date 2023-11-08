@@ -74,6 +74,11 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
         template = viewModel.formTemplate()
+        if viewModel.isFormSubmitted() {
+            itemListView.isUserInteractionEnabled = false
+        } else {
+            itemListView.isUserInteractionEnabled = true
+        }
     }
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -612,4 +617,5 @@ class FormDataSubmit {
 public struct KMHidePostCTAForm {
     static var shared = KMHidePostCTAForm()
     var enabledHidePostCTAForm: Bool = false
+    var disableSelectionAfterSubmision: Bool = false
 }
