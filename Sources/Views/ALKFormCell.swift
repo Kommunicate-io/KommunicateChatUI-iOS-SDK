@@ -281,7 +281,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             } else {
                 cell.accessoryType = .none
             }
-
+            if let check = viewModel?.isFormSubmitted() , check {
+                cell.tintColor = .darkGray
+            } else {
+                cell.tintColor = UIColor.systemBlue
+            }
             return cell
         case .multiselect:
             guard let multiselectItem = item as? FormViewModelMultiselectItem else {
@@ -319,6 +323,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     } else {
                         cell.update(item: multiselectItem.options[indexPath.row])
                 }
+                if let check = viewModel?.isFormSubmitted() , check {
+                    cell.button.layer.borderColor = KMMultipleSelectionConfiguration.shared.afterSubmitBorderColor.cgColor
+                    cell.button.label.textColor = KMMultipleSelectionConfiguration.shared.afterSubmitTitleColor
+                    cell.button.imageView.image = KMMultipleSelectionConfiguration.shared.afterSubmitImage
+                }
                 return cell
             } else {
                 let cell: ALKFormMultiSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -352,6 +361,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     cell.accessoryType = .none
                 }
                 cell.item = multiselectItem.options[indexPath.row]
+                if let check = viewModel?.isFormSubmitted() , check {
+                    cell.tintColor = .darkGray
+                } else {
+                    cell.tintColor = UIColor.systemBlue
+                }
                 return cell
             }
         case .date:

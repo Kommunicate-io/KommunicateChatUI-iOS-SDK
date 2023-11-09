@@ -52,7 +52,7 @@ public class KMMultiSelectButton: UIView {
     var config =  Config()
     var isButtonselected = false
     
-    private let label = UILabel()
+    public let label = UILabel()
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
