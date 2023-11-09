@@ -16,7 +16,7 @@ public struct SuggestedReplyMessage {
 
     public struct Suggestion {
         let title: String
-        let type: SuggestionType
+        public let type: SuggestionType
         /// Reply that should be given when title is clicked
         /// If nil, then title will be used as reply
         public var reply: String?

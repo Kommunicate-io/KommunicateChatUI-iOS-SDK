@@ -7,6 +7,7 @@
 
 import Foundation
 import Kingfisher
+import UIKit
 
 
 class KMFriendVideoTemplateCell : KMVideoTemplateCell {
