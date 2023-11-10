@@ -2296,10 +2296,62 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     @objc open func newFormMessageAdded() {
         let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
         if let lastMessage = viewModel.messageModels.last {
+            processFormTemplate(for: lastMessage)
             reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
         }
     }
     
+    func processFormTemplate(for message: ALKMessageModel) {
+        let key = message.identifier
+        guard let elements = message.formTemplate()?.elements else { return }
+
+        var formData = FormDataSubmit()
+
+        for (elementIndex, element) in elements.enumerated() {
+            processElement(element, at: elementIndex, formData: &formData)
+        }
+
+        ALKFormDataCache.shared.set(formData, for: key)
+    }
+
+    func processElement(_ element: FormTemplate.Element, at elementIndex: Int, formData: inout FormDataSubmit) {
+        let elementType = element.type
+        guard let details = element.data, let options = details.options else { return }
+
+        switch elementType {
+        case "radio":
+            processRadioElement(options, at: elementIndex, formData: &formData)
+        case "checkbox":
+            processCheckboxElement(options, at: elementIndex, formData: &formData)
+        default:
+            break
+        }
+    }
+
+    func processRadioElement(_ options: [FormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
+        for (optionIndex, option) in options.enumerated() {
+            if let selected = option.selected, selected {
+                if let value = option.value {
+                    formData.singleSelectFields[elementIndex] = optionIndex
+                }
+            }
+        }
+    }
+
+    func processCheckboxElement(_ options: [FormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
+        var selectedOptionIndices: [Int] = []
+
+        for (optionIndex, option) in options.enumerated() {
+            if let selected = option.selected, selected {
+                selectedOptionIndices.append(optionIndex)
+            }
+        }
+
+        if !selectedOptionIndices.isEmpty {
+            formData.multiSelectFields[elementIndex] = selectedOptionIndices
+        }
+    }
+
     @objc open func newMessagesAdded() {
         let lastSectionBeforeUpdate = tableView.lastSection()
         updateTableView()
