@@ -92,7 +92,7 @@ public struct ALKConfiguration {
     /// For the Form Submit Button, hide post CTA is false by default.
     public var hidePostFormSubmit = false
     
-    /// For the Form Submit Button, hide post CTA is false by default.
+    /// For the disabling of form post-submit, 'disable post submit' is set to false by default.
     public var disableFormPostSubmit = false
 
     /// Status bar style. It will be used in all view controllers.

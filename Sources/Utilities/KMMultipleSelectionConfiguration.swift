@@ -17,7 +17,7 @@ public struct KMMultipleSelectionConfiguration {
     
     public var image : UIImage? =  UIImage(named: "checked", in: Bundle.km, compatibleWith: nil)
     
-    public var afterSubmitImage : UIImage? = UIImage(named: "selectedCheck", in: Bundle.km, compatibleWith: nil)
+    public var postSubmitImage : UIImage? = UIImage(named: "selectedCheck", in: Bundle.km, compatibleWith: nil)
     
     public var backgroundColor: UIColor = UIColor.clear
     
@@ -31,11 +31,11 @@ public struct KMMultipleSelectionConfiguration {
     
     public var borderColor: UIColor = UIColor(hexString: "00A4BF")
     
-    public var afterSubmitBorderColor: UIColor = UIColor(hexString: "8F8F8F")
+    public var postSubmitBorderColor: UIColor = UIColor(hexString: "8F8F8F")
     
     public var titleColor: UIColor = UIColor(hexString: "00A4BF")
     
-    public var afterSubmitTitleColor: UIColor = UIColor(hexString: "8F8F8F")
+    public var postSubmitTitleColor: UIColor = UIColor(hexString: "8F8F8F")
     
     public var topPadding : CGFloat = 12
     

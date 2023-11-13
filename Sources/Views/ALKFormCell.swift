@@ -281,7 +281,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             } else {
                 cell.accessoryType = .none
             }
-            if let check = viewModel?.isFormSubmitted() , check {
+            if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
                 cell.tintColor = .darkGray
             } else {
                 cell.tintColor = UIColor.systemBlue
@@ -323,10 +323,10 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     } else {
                         cell.update(item: multiselectItem.options[indexPath.row])
                 }
-                if let check = viewModel?.isFormSubmitted() , check {
-                    cell.button.layer.borderColor = KMMultipleSelectionConfiguration.shared.afterSubmitBorderColor.cgColor
-                    cell.button.label.textColor = KMMultipleSelectionConfiguration.shared.afterSubmitTitleColor
-                    cell.button.imageView.image = KMMultipleSelectionConfiguration.shared.afterSubmitImage
+                if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+                    cell.button.layer.borderColor = KMMultipleSelectionConfiguration.shared.postSubmitBorderColor.cgColor
+                    cell.button.label.textColor = KMMultipleSelectionConfiguration.shared.postSubmitTitleColor
+                    cell.button.imageView.image = KMMultipleSelectionConfiguration.shared.postSubmitImage
                 }
                 return cell
             } else {
@@ -361,7 +361,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     cell.accessoryType = .none
                 }
                 cell.item = multiselectItem.options[indexPath.row]
-                if let check = viewModel?.isFormSubmitted() , check {
+                if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
                     cell.tintColor = .darkGray
                 } else {
                     cell.tintColor = UIColor.systemBlue
