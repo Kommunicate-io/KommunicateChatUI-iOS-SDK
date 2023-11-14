@@ -2306,9 +2306,13 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         guard let elements = message.formTemplate()?.elements else { return }
 
         var formData = FormDataSubmit()
-
-        for (elementIndex, element) in elements.enumerated() {
-            processElement(element, at: elementIndex, formData: &formData)
+        var index = 0
+        for (_, element) in elements.enumerated() {
+            if element.type == "hidden" || element.type == "submit" {
+                continue
+            }
+            processElement(element, at: index, formData: &formData)
+            index += 1
         }
 
         ALKFormDataCache.shared.set(formData, for: key)
