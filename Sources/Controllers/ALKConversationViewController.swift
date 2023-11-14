@@ -2308,6 +2308,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         var formData = FormDataSubmit()
         var index = 0
         for (_, element) in elements.enumerated() {
+            /// We skip indexes for hidden and submit elements in the UI form.
             if element.type == "hidden" || element.type == "submit" {
                 continue
             }
