@@ -476,6 +476,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         KMHidePostCTAForm.shared.enabledHidePostCTAForm = configuration.hidePostFormSubmit
+        KMHidePostCTAForm.shared.disableSelectionAfterSubmision = configuration.disableFormPostSubmit
         self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         if let templates = viewModel.getMessageTemplates() {
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
@@ -1956,11 +1957,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .multiselect:
                 if let multiSelectionItemModel = item as? FormViewModelMultiselectItem {
                     var multiSelectString: String
-                    if postFormData[multiSelectionItemModel.name] != nil {
-                        multiSelectString = postFormData[multiSelectionItemModel.name] as? String ?? ""
+                    if let multiSelectionSelectedItemArray = postFormData[multiSelectionItemModel.name] as? [String], !multiSelectionSelectedItemArray.isEmpty  {
+                        multiSelectString = multiSelectionSelectedItemArray.joined(separator: ", ")
 
-                        let characterSet = CharacterSet(charactersIn: "][ \"")
-                        multiSelectString = multiSelectString.components(separatedBy: characterSet).joined(separator: "")
                         postBackMessageString.append("\(multiSelectionItemModel.name) : \(multiSelectString) \n")
 
                     } else {
@@ -2224,6 +2223,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             if message.messageType == .form, KMHidePostCTAForm.shared.enabledHidePostCTAForm {
                 tableView.reloadSections([messageIndex], with: .automatic)
             }
+            if message.messageType == .form, KMHidePostCTAForm.shared.disableSelectionAfterSubmision {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
         }
         moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
@@ -2296,10 +2298,67 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     @objc open func newFormMessageAdded() {
         let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
         if let lastMessage = viewModel.messageModels.last {
+            processFormTemplate(for: lastMessage)
             reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
         }
     }
     
+    func processFormTemplate(for message: ALKMessageModel) {
+        let key = message.identifier
+        guard let elements = message.formTemplate()?.elements else { return }
+
+        var formData = FormDataSubmit()
+        var index = 0
+        for (_, element) in elements.enumerated() {
+            /// We skip indexes for hidden and submit elements in the UI form.
+            if element.type == "hidden" || element.type == "submit" {
+                continue
+            }
+            processElement(element, at: index, formData: &formData)
+            index += 1
+        }
+
+        ALKFormDataCache.shared.set(formData, for: key)
+    }
+
+    func processElement(_ element: FormTemplate.Element, at elementIndex: Int, formData: inout FormDataSubmit) {
+        let elementType = element.type
+        guard let details = element.data, let options = details.options else { return }
+
+        switch elementType {
+        case "radio":
+            processRadioElement(options, at: elementIndex, formData: &formData)
+        case "checkbox":
+            processCheckboxElement(options, at: elementIndex, formData: &formData)
+        default:
+            break
+        }
+    }
+
+    func processRadioElement(_ options: [FormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
+        for (optionIndex, option) in options.enumerated() {
+            if let selected = option.selected, selected {
+                if let value = option.value {
+                    formData.singleSelectFields[elementIndex] = optionIndex
+                }
+            }
+        }
+    }
+
+    func processCheckboxElement(_ options: [FormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
+        var selectedOptionIndices: [Int] = []
+
+        for (optionIndex, option) in options.enumerated() {
+            if let selected = option.selected, selected {
+                selectedOptionIndices.append(optionIndex)
+            }
+        }
+
+        if !selectedOptionIndices.isEmpty {
+            formData.multiSelectFields[elementIndex] = selectedOptionIndices
+        }
+    }
+
     @objc open func newMessagesAdded() {
         let lastSectionBeforeUpdate = tableView.lastSection()
         updateTableView()
@@ -2345,6 +2404,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             reloadProcessedMessages(index: indexPath.section)
         }
         if KMHidePostCTAForm.shared.enabledHidePostCTAForm {
+            reloadProcessedMessages(index: indexPath.section)
+        }
+        if KMHidePostCTAForm.shared.disableSelectionAfterSubmision {
             reloadProcessedMessages(index: indexPath.section)
         }
         moveTableViewToBottom(indexPath: indexPath)

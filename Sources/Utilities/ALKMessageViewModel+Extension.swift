@@ -208,4 +208,15 @@ extension ALKMessageViewModel {
             }
             return true
         }
+    
+    func isFormSubmitted() -> Bool {
+            guard messageType == .form,
+                  KMHidePostCTAForm.shared.disableSelectionAfterSubmision,
+                  let currentMessageTime = self.createdAtTime,
+                  let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
+                  currentMessageTime .int64Value < lastSentMessageTime .int64Value else {
+                return false
+            }
+            return true
+        }
 }
