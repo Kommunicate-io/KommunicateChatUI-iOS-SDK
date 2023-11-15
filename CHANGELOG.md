@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 
 ## Unreleased
 - Default configuration added for disabling the form submit button using 'disableFormPostSubmit'.
+- Added support of prefill checkboxes on Form Template.
 
 ## [1.2.1] 2023-11-02
 - Fixed iOS 17 BUtton issue.
