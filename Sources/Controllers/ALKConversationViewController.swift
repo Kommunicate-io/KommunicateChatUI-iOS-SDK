@@ -476,6 +476,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     override open func viewDidLoad() {
         super.viewDidLoad()
         KMHidePostCTAForm.shared.enabledHidePostCTAForm = configuration.hidePostFormSubmit
+        KMHidePostCTAForm.shared.disableSelectionAfterSubmision = configuration.disableFormPostSubmit
         self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         if let templates = viewModel.getMessageTemplates() {
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
@@ -2224,6 +2225,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             if message.messageType == .form, KMHidePostCTAForm.shared.enabledHidePostCTAForm {
                 tableView.reloadSections([messageIndex], with: .automatic)
             }
+            if message.messageType == .form, KMHidePostCTAForm.shared.disableSelectionAfterSubmision {
+                tableView.reloadSections([messageIndex], with: .automatic)
+            }
         }
         moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
@@ -2402,6 +2406,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             reloadProcessedMessages(index: indexPath.section)
         }
         if KMHidePostCTAForm.shared.enabledHidePostCTAForm {
+            reloadProcessedMessages(index: indexPath.section)
+        }
+        if KMHidePostCTAForm.shared.disableSelectionAfterSubmision {
             reloadProcessedMessages(index: indexPath.section)
         }
         moveTableViewToBottom(indexPath: indexPath)

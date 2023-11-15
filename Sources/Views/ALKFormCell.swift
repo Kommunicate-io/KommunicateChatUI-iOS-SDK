@@ -74,6 +74,11 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     override func update(viewModel: ALKMessageViewModel) {
         super.update(viewModel: viewModel)
         template = viewModel.formTemplate()
+        if viewModel.isFormSubmitted() {
+            itemListView.isUserInteractionEnabled = false
+        } else {
+            itemListView.isUserInteractionEnabled = true
+        }
     }
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -276,7 +281,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             } else {
                 cell.accessoryType = .none
             }
-
+            if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+                cell.tintColor = .darkGray
+            } else {
+                cell.tintColor = UIColor.systemBlue
+            }
             return cell
         case .multiselect:
             guard let multiselectItem = item as? FormViewModelMultiselectItem else {
@@ -314,6 +323,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     } else {
                         cell.update(item: multiselectItem.options[indexPath.row])
                 }
+                if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+                    cell.button.layer.borderColor = KMMultipleSelectionConfiguration.shared.postSubmitBorderColor.cgColor
+                    cell.button.label.textColor = KMMultipleSelectionConfiguration.shared.postSubmitTitleColor
+                    cell.button.imageView.image = KMMultipleSelectionConfiguration.shared.postSubmitImage
+                }
                 return cell
             } else {
                 let cell: ALKFormMultiSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
@@ -347,6 +361,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     cell.accessoryType = .none
                 }
                 cell.item = multiselectItem.options[indexPath.row]
+                if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+                    cell.tintColor = .darkGray
+                } else {
+                    cell.tintColor = UIColor.systemBlue
+                }
                 return cell
             }
         case .date:
@@ -612,4 +631,5 @@ class FormDataSubmit {
 public struct KMHidePostCTAForm {
     static var shared = KMHidePostCTAForm()
     var enabledHidePostCTAForm: Bool = false
+    var disableSelectionAfterSubmision: Bool = false
 }
