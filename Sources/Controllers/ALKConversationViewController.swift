@@ -1956,11 +1956,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .multiselect:
                 if let multiSelectionItemModel = item as? FormViewModelMultiselectItem {
                     var multiSelectString: String
-                    if postFormData[multiSelectionItemModel.name] != nil {
-                        multiSelectString = postFormData[multiSelectionItemModel.name] as? String ?? ""
+                    if let multiSelectionSelectedItemArray = postFormData[multiSelectionItemModel.name] as? [String], !multiSelectionSelectedItemArray.isEmpty  {
+                        multiSelectString = multiSelectionSelectedItemArray.joined(separator: ", ")
 
-                        let characterSet = CharacterSet(charactersIn: "][ \"")
-                        multiSelectString = multiSelectString.components(separatedBy: characterSet).joined(separator: "")
                         postBackMessageString.append("\(multiSelectionItemModel.name) : \(multiSelectString) \n")
 
                     } else {
