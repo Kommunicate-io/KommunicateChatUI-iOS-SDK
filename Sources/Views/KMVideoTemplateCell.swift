@@ -163,7 +163,6 @@ extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
         }
         let model = template[indexPath.row]
         let youtubeUrl = "https://www.youtube.com/embed"
-        print("yestysaddsjd : index \(indexPath.row)   url : \(model.url)")
         if model.url.contains(youtubeUrl) {
             let cell: KMYoutubeVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.updateVideModel(model: model)
