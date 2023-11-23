@@ -8,7 +8,9 @@
 import Foundation
 import Kingfisher
 import UIKit
-
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 class KMFriendVideoTemplateCell : KMVideoTemplateCell {
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
