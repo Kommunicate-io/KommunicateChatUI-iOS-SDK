@@ -8,6 +8,7 @@
 import Foundation
 import Kingfisher
 import UIKit
+import RichMessageKit
 
 
 class KMFriendVideoTemplateCell : KMVideoTemplateCell {
