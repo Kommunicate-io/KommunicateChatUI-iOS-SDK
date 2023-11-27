@@ -16,6 +16,10 @@ class KMYoutubeVideoCell: UITableViewCell {
         webView.scrollView.isScrollEnabled = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.backgroundColor = .gray
+        webView.layer.borderColor = UIColor.gray.cgColor
+        webView.layer.borderWidth = 1
+        webView.layer.cornerRadius = 5
+        webView.layer.masksToBounds = true
         return webView
     }()
 
