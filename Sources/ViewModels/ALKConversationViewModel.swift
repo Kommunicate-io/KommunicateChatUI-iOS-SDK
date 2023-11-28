@@ -1431,6 +1431,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return nil
     }
     
+    public func getLastRecivedMessage() -> ALMessage? {
+        for message in alMessages.reversed() {
+            if(message.isReceivedMessage()){
+                return message
+            }
+        }
+        return nil
+    }
+    
     func showTypingIndicatorForWelcomeMessage() {
         if welcomeMessagePosition >= alMessages.count {
             return
