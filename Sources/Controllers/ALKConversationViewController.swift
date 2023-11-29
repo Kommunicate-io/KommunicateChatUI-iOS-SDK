@@ -2178,7 +2178,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         isChatBarResticted = checkRestriceted()
     }
     
-    func checkRestriceted() -> Bool {
+    @objc open func checkRestriceted() -> Bool {
         let channelKey = viewModel.channelKey
         let channelService = ALChannelService()
         let channel = channelService.getChannelByKey(channelKey)
@@ -2196,8 +2196,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     
     @objc open func twentyFourHoursAgoTimeStamp() -> Double {
         let currentDate = Date()
-        let twentyFourHoursAgo = currentDate.addingTimeInterval(-60)
-            // currentDate.addingTimeInterval(-24 * 60 * 60)
+        let twentyFourHoursAgo = currentDate.addingTimeInterval(-24 * 60 * 60)
         return twentyFourHoursAgo.timeIntervalSince1970 * 1000
     }
 
