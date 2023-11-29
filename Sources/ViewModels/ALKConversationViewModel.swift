@@ -1431,7 +1431,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return nil
     }
     
-    public func getLastRecivedMessage() -> ALMessage? {
+    public func getLastReceivedMessage() -> ALMessage? {
         for message in alMessages.reversed() {
             if(message.isReceivedMessage()){
                 return message
