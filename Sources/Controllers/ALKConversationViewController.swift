@@ -217,6 +217,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             if isChatBarResticted {
                 chatBar.textView.textAlignment = .center
                 chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                chatBar.sendButton.isHidden = isChatBarResticted
             } else {
                 chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
                 chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
@@ -232,7 +233,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
             chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
             chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
-            chatBar.sendButton.isHidden = isChatBarResticted
             chatBar.updateMediaViewVisibility(hide: isChatBarResticted)
             chatBar.textView.layoutIfNeeded()
         }
