@@ -10,8 +10,15 @@ import Foundation
 import UIKit
 
 public extension UIColor {
+    static var isKMDarkModeEnabled = false
+    
     static func kmDynamicColor(light: UIColor, dark: UIColor) -> UIColor {
-        return UIColor { $0.userInterfaceStyle == .dark ? light : light } /// disabled dark mode
+        if self.isKMDarkModeEnabled {
+            return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
+        } else {
+            /// isDarkMode is not enabled in this condition the only light color is passed
+            return UIColor { $0.userInterfaceStyle == .dark ? light : light }
+        }
     }
 }
 

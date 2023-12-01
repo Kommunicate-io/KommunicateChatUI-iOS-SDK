@@ -217,7 +217,26 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         DispatchQueue.global(qos: .utility).async {
             guard let attributedText = ALKMessageCell.attributedStringFrom(message, for: viewModel.identifier) else { return }
             let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
-            htmlMessage.setBaseFont(baseFont: messageStyle.font)
+
+            if let frontColor = htmlMessage.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor {
+                let frontCGColor = frontColor.cgColor
+                let frontUIColor = UIColor(cgColor: frontCGColor)
+                
+                if let targetColorSpace = CGColorSpace(name: CGColorSpace.sRGB), let targetCGColor = CGColor(colorSpace: targetColorSpace, components: [0, 0, 0, 1]) {
+                    let targetColor = UIColor(cgColor: targetCGColor)
+                    if frontUIColor.isEqual(targetColor) {
+                        htmlMessage.addAttribute(.foregroundColor, value: UIColor.kmDynamicColor(light: .black, dark: .white), range: NSRange(location: 0, length: htmlMessage.length))
+                    }
+                }
+            }
+
+            let htmlFont = htmlMessage.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
+            print("message og html \(message)  att : \(attributedText)")
+            
+            /// Check for a condition where the user has not passed a font. In this scenario, set the font to the system's default font.
+            if !message.contains("font-family") {
+                htmlMessage.setBaseFont(baseFont: messageStyle.font)
+            }
             DispatchQueue.main.async {
                 self.messageView.attributedText = htmlMessage
             }

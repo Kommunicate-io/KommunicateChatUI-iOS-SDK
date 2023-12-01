@@ -86,9 +86,6 @@ public struct ALKConfiguration {
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata: [AnyHashable: Any]?
     
-    /// if true then dark mode support is enabled to the SDK.
-    public var isDarkModeEnabled = false
-    
     /// For the Form Submit Button, hide post CTA is false by default.
     public var hidePostFormSubmit = false
     
