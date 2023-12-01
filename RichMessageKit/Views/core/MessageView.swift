@@ -139,6 +139,9 @@ public class MessageView: UIView {
                 let attributedText = MessageView.attributedStringFrom(model.text ?? "", for: model.identifier)
                 DispatchQueue.main.async {
                     self.messageTextView.attributedText = attributedText
+                    if self.messageStyle.text.toHexString() == "ffffff" {
+                        self.messageTextView.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
+                    }
                     self.layoutIfNeeded()
                 }
             }
