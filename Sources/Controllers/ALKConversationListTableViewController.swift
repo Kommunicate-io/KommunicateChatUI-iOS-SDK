@@ -969,13 +969,3 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
         }
     }
 }
-//
-//extension UIViewController {
-//    public func switchDynamicMode(isDynamic: Bool) {
-//        if isDynamic {
-//                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
-//        } else {
-//                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified /// disabled dark mode to enable pass ".light"
-//        }
-//    }
-//}
