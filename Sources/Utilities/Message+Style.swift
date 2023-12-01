@@ -147,7 +147,7 @@ public enum ALKMessageStyle {
     public static var receivedBubble = Bubble(color: UIColor.kmDynamicColor(light: UIColor(netHex: 0xF1F0F0), dark: UIColor.appBarDarkColor()), style: .edge) {
         didSet {
             let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
-            appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: UIColor.kmDynamicColor(light: receivedBubble.color, dark: UIColor.appBarDarkColor()))
+            appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: receivedBubble.color)
         }
     }
 
