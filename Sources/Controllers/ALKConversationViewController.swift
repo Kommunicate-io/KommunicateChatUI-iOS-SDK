@@ -2184,9 +2184,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let channel = channelService.getChannelByKey(channelKey)
         let whatsappSource = ["WHATSAPPCLOUDAPI", "WHATSAPPTWILIO", "WHATSAPPDIALOG360"]
         if let platformSource = channel?.platformSource,
+           whatsappSource.contains(platformSource),
            let lastMessageTime = viewModel.getLastReceivedMessage()?.createdAtTime,
-           Double(truncating: lastMessageTime) <= twentyFourHoursAgoTimeStamp(),
-           whatsappSource.contains(platformSource) {
+           Double(truncating: lastMessageTime) <= twentyFourHoursAgoTimeStamp() {
             chatBar.textView.text = "The last message received from this contact was over 24 hours ago. To send Template message, go to the dashboard."
             return true
         } else {
