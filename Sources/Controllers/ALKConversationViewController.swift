@@ -2202,6 +2202,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             if message.isSuggestedReply() &&
                 containsOnlyNormalButton(message: message) {
                 viewModel.messageModels.remove(at: messageIndex)
+                viewModel.alMessages.remove(at: messageIndex)
                 tableView.deleteSections([messageIndex], with: .automatic)
             }
         }
