@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'KommunicateChatUI-iOS-SDK'
-  s.version = '1.2.2'
+  s.version = '1.2.3'
   s.license = { :type => "BSD 3-Clause", :file => "LICENSE" }
   s.summary = 'KommunicateChatUI-iOS-SDK Kit'
   s.homepage = 'https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK'
