@@ -1193,7 +1193,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func uploadImage(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
-        print("Alnnfc : \(indexPath.section) \(alMessages.count)")
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
         let alHandler = ALDBHandler.sharedInstance()
