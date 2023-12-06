@@ -25,8 +25,38 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     private var template: [VideoTemplate]? {
         didSet {
+           videoTableview.reloadData()
            setUpTableView()
         }
+    }
+    
+    enum ViewPadding {
+        enum NameLabel {
+            static let top: CGFloat = 6
+            static let leading: CGFloat = 57
+            static let trailing: CGFloat = 57
+            static let height: CGFloat = 16
+        }
+
+        enum AvatarImageView {
+            static let top: CGFloat = 18
+            static let leading: CGFloat = 9
+            static let height: CGFloat = 37
+            static let width: CGFloat = 37
+        }
+
+        enum TimeLabel {
+            static var leading: CGFloat = 2.0
+            static var top: CGFloat = 2.0
+            static let maxWidth: CGFloat = 200
+        }
+
+        static let maxWidth = UIScreen.main.bounds.width
+            - (ViewPadding.AvatarImageView.width + ViewPadding.AvatarImageView.leading)
+        static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
+                                                right: ChatCellPadding.ReceivedMessage.Message.right,
+                                                top: ChatCellPadding.ReceivedMessage.Message.top,
+                                                bottom: 0)
     }
 
     var timeLabel: UILabel = {
@@ -74,11 +104,15 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         } else {
             heigh = ceil((width * 0.64) / viewModel.ratio)
         }
-        heigh += 50.0
+        let isMessageEmpty = viewModel.isMessageEmpty
+        let messageModel = viewModel.messageDetails()
+        let messagePadding = isMessageEmpty ? 0.0 : ReceivedMessageViewSizeCalculator().rowHeight(messageModel: messageModel, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
+        heigh += ((50.0 + messagePadding) / CGFloat(model.count))
         return heigh * CGFloat(model.count)
     }
 
     override func update(viewModel: ALKMessageViewModel) {
+        super.update(viewModel: viewModel)
         self.messageModel = viewModel
         self.template = viewModel.videoTemplate()
         timeLabel.text = viewModel.time
@@ -114,6 +148,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
             videoTableview.sectionHeaderTopPadding = 0
         }
         videoTableview.register(KMVideoCell.self)
+        videoTableview.register(KMYoutubeVideoCell.self)
     }
 }
 
@@ -123,14 +158,23 @@ extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: KMVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         guard let template = template else {
-            return UITableViewCell() }
-        cell.updateVideModel(model: template[indexPath.row])
-        cell.tapped = { url in
-            self.playtapped?(url)
+            return UITableViewCell()
         }
-        return cell
+        let model = template[indexPath.row]
+        let youtubeUrl = "https://www.youtube.com/embed"
+        if model.url.contains(youtubeUrl) {
+            let cell: KMYoutubeVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.updateVideModel(model: model)
+            return cell
+        } else {
+            let cell: KMVideoCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.tapped = { url in
+                self.playtapped?(url)
+            }
+            cell.updateVideModel(model: model)
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

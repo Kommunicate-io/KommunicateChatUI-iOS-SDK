@@ -123,7 +123,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private let maxWidth = UIScreen.main.bounds.width
     private var alMessageWrapper = ALMessageArrayWrapper()
 
-    private var alMessages: [ALMessage] = []
+    open var alMessages: [ALMessage] = []
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
 
@@ -184,7 +184,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard !alMessageWrapper.contains(message: message) else { return }
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
-        self.addMessageToMessageModel(messages: [message.messageModel])
+        messageModels.append(message.messageModel)
+        self.removeMessageForHidePostCTA(messages: [message.messageModel])
         if(message.isMyMessage){
             ALKConversationViewModel.lastSentMessage = message
         }
@@ -640,7 +641,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
-        self.addMessageToMessageModel(messages: models)
+        messageModels.append(contentsOf: models)
+        self.removeMessageForHidePostCTA(messages: models)
         print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
     }
@@ -1441,7 +1443,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
                 return
             }
-            self.addMessageToMessageModel(messages: [modelsToBeAddedAfterDelay[welcomeMessagePosition]])
+            self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
+            self.removeMessageForHidePostCTA(messages: [modelsToBeAddedAfterDelay[welcomeMessagePosition]])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
             if welcomeMessagePosition >= alMessages.count  {
@@ -1617,7 +1620,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
-            self.addMessageToMessageModel(messages: models)
+            self.messageModels.insert(contentsOf: models, at: 0)
+            self.removeMessageForHidePostCTA(messages: models)
             if isFirstTime {
                 self.membersInGroup { members in
                     self.groupMembers = members
@@ -1630,23 +1634,21 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.lastMessage = alMessages.last
     }
     
-    func addMessageToMessageModel(messages : [ALKMessageModel]){
+    func removeMessageForHidePostCTA(messages : [ALKMessageModel]){
         guard let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
-              UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else {
-            self.messageModels.append(contentsOf: messages)
-            return
-        }
+                  !UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else { return }
 
         for message in messages {
-            if let currentMessageTime = message.createdAtTime {
-                if message.isMyMessage ||
-                    message.message != nil ||
-                    message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
-                    message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
-                    message.allButtons()?.suggestion.count ?? 0 > 0 ||
-                    currentMessageTime .int64Value >= lastSentMessageTime .int64Value {
-                    self.messageModels.append(message)
-                }
+            guard let currentMessageTime = message.createdAtTime else { continue }
+
+            let hasValidConditions = message.isMyMessage ||
+                                     message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
+                                     message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
+                                     message.allButtons()?.suggestion.count ?? 0 > 0 ||
+                                     currentMessageTime.int64Value >= lastSentMessageTime.int64Value
+            if !hasValidConditions {
+                messageModels.removeAll { $0.identifier == message.identifier }
+                alMessages.removeAll { $0.identifier == message.identifier }
             }
         }
     }
@@ -1766,7 +1768,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 }
                 self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
                 self.alMessages.insert(mesg, at: 0)
-                self.addMessageToMessageModel(messages: [mesg.messageModel])
+                self.messageModels.insert(mesg.messageModel, at: 0)
+                self.removeMessageForHidePostCTA(messages: [mesg.messageModel])
             }
             self.delegate?.loadingFinished(error: nil)
         })
