@@ -1642,7 +1642,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard let currentMessageTime = message.createdAtTime else { continue }
 
             let hasValidConditions = message.isMyMessage ||
-                                     message.message != nil ||
                                      message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
                                      message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
                                      message.allButtons()?.suggestion.count ?? 0 > 0 ||
