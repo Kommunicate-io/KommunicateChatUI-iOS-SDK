@@ -1433,7 +1433,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     public func getLastReceivedMessage() -> ALMessage? {
         for message in alMessages.reversed() {
-            if(message.isReceivedMessage()){
+            if(message.isReceivedMessage() && message.to != "bot"){
                 return message
             }
         }
