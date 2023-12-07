@@ -211,6 +211,32 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             moveTableViewToBottom(indexPath: indexPath)
         }
     }
+    
+    public var isChatBarResticted: Bool = false {
+        didSet {
+            if isChatBarResticted {
+                chatBar.textView.textAlignment = .center
+                chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                chatBar.sendButton.isHidden = isChatBarResticted
+            } else {
+                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
+                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
+                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
+
+                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
+                
+                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+            }
+            chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
+            chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
+            chatBar.updateMediaViewVisibility(hide: isChatBarResticted)
+            chatBar.textView.layoutIfNeeded()
+        }
+    }
 
     var contentOffsetDictionary: [AnyHashable: AnyObject]!
 
@@ -2147,6 +2173,32 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     @objc open func loadingStarted() {
         activityIndicator.startAnimating()
     }
+    
+    @objc open func checkRestrictedMesssaging() {
+        isChatBarResticted = checkRestriceted()
+    }
+    
+    @objc open func checkRestriceted() -> Bool {
+        let channelKey = viewModel.channelKey
+        let channelService = ALChannelService()
+        let channel = channelService.getChannelByKey(channelKey)
+        let whatsappSource = ["WHATSAPPCLOUDAPI", "WHATSAPPTWILIO", "WHATSAPPDIALOG360"]
+        if let platformSource = channel?.platformSource,
+           whatsappSource.contains(platformSource),
+           let lastMessageTime = viewModel.getLastReceivedMessage()?.createdAtTime,
+           Double(truncating: lastMessageTime) <= twentyFourHoursAgoTimeStamp() {
+            chatBar.textView.text = "The last message received from this contact was over 24 hours ago. To send Template message, go to the dashboard."
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    @objc open func twentyFourHoursAgoTimeStamp() -> Double {
+        let currentDate = Date()
+        let twentyFourHoursAgo = currentDate.addingTimeInterval(-24 * 60 * 60)
+        return twentyFourHoursAgo.timeIntervalSince1970 * 1000
+    }
 
     @objc open func loadingFinished(error _: Error?) {
         activityIndicator.stopAnimating()
@@ -2156,6 +2208,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         if newSectionCount > oldSectionCount {
             let offset = newSectionCount - oldSectionCount - 1
             tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: false)
+        }
+        if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+            isChatBarResticted = checkRestriceted()
         }
         print("loading finished")
         DispatchQueue.main.async {
