@@ -141,6 +141,8 @@ public class ReceivedImageMessageCell: UITableViewCell {
 
         if !isMessageEmpty {
             messageView.update(model: model.message)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model.message)
         }
 
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)

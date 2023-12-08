@@ -85,6 +85,8 @@ public class SentButtonsCell: UITableViewCell {
                                                                                                     padding: ViewPadding.messageViewPadding)
         if !isMessageEmpty {
             messageView.update(model: model.message)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model.message)
         }
 
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)
