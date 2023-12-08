@@ -107,6 +107,9 @@ class ALKFriendDocumentCell: ALKDocumentCell {
         timeLabel.setStyle(ALKMessageStyle.time)
         nameLabel.setStyle(ALKMessageStyle.displayName)
         bubbleView.backgroundColor = appSettingsUserDefaults.getReceivedMessageBackgroundColor()
+        fileNameLabel.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
+        docImageView.tintColor = UIColor.kmDynamicColor(light: .black, dark: .white)
+        sizeAndFileType.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
     }
 
     override class func rowHeigh(viewModel _: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
