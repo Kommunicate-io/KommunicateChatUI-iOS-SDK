@@ -15,6 +15,15 @@ protocol KMFormDropDownSelectionProtocol {
 
 class KMFormDropDownCell: UITableViewCell {
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let currentMode = traitCollection.userInterfaceStyle
+        if let previousMode = previousTraitCollection?.userInterfaceStyle,
+               previousMode != currentMode {
+            updateDropdownAppearance()
+        }
+    }
+    
     private lazy var errorStackView: UIStackView = {
         let labelStackView = UIStackView()
         labelStackView.axis = .horizontal
@@ -23,6 +32,16 @@ class KMFormDropDownCell: UITableViewCell {
         labelStackView.backgroundColor = UIColor.clear
         return labelStackView
     }()
+    
+    /// Update dropdown appearance based on the UI mode
+    private func updateDropdownAppearance() {
+        menu.selectedRowColor = FormDropDownStyle.Color.selectedRowBackgroundColor
+        menu.rowBackgroundColor = FormDropDownStyle.Color.rowBackgroundColor
+        menu.textColor = FormDropDownStyle.Color.textColor
+        menu.arrowColor = FormDropDownStyle.Color.arrowColor
+        menu.itemsColor = FormDropDownStyle.Color.optionsTextColor
+    }
+
     
     let errorLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -89,6 +108,7 @@ class KMFormDropDownCell: UITableViewCell {
         dropdown.textColor = FormDropDownStyle.Color.textColor
         dropdown.arrowSize = FormDropDownStyle.Size.arrowSize
         dropdown.arrowColor = UIColor.kmDynamicColor(light: FormDropDownStyle.Color.arrowColor, dark: .white)
+        dropdown.itemsColor = FormDropDownStyle.Color.optionsTextColor
         return dropdown
     }()
 
@@ -165,7 +185,8 @@ public struct FormDropDownStyle {
         public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
         public static var rowBackgroundColor: UIColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
         public static var textColor: UIColor = UIColor.kmDynamicColor(light: UIColor.gray, dark: UIColor.white)
-        public static var arrowColor: UIColor = .black
+        public static var arrowColor: UIColor = UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white)
+        public static var optionsTextColor: UIColor = UIColor.kmDynamicColor(light: .darkGray, dark: .lightText)
     }
     
     public struct Size {

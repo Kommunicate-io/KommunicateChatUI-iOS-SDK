@@ -10,8 +10,25 @@ import Foundation
 import UIKit
 
 public extension UIColor {
+    static var isKMDarkModeEnabled = false
+    
     static func kmDynamicColor(light: UIColor, dark: UIColor) -> UIColor {
-        return UIColor { $0.userInterfaceStyle == .dark ? light : light } /// disabled dark mode
+        if self.isKMDarkModeEnabled {
+            return UIColor { $0.userInterfaceStyle == .dark ? dark : light }
+        } else {
+            /// isDarkMode is not enabled in this condition the only light color is passed
+            return UIColor { $0.userInterfaceStyle == .dark ? light : light }
+        }
+    }
+    
+    func toHexString() -> String {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+        let rgb = Int(r * 255) << 16 | Int(g * 255) << 8 | Int(b * 255) << 0
+        return String(format: "%06x", rgb)
     }
 }
 

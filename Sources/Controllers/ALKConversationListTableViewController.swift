@@ -105,7 +105,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         setupView()
         searchBar.delegate = self
         tableView.delegate = self
@@ -967,16 +966,6 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
         } else {
             // Conversation is not for user or channel
             return true
-        }
-    }
-}
-
-extension UIViewController {
-    public func switchDynamicMode(isDynamic: Bool) {
-        if isDynamic {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified
-        } else {
-                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .unspecified /// disabled dark mode to enable pass ".light"
         }
     }
 }
