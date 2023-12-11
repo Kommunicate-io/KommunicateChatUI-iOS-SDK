@@ -1651,11 +1651,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard let currentMessageTime = message.createdAtTime else { continue }
 
             let messageType = message.messageType
-            let checkMessageDelete = (!message.isMyMessage &&
+            let checkMessageDelete = !message.isMyMessage &&
                                       (messageType == .allButtons || messageType == .button || messageType == .quickReply) &&
                                       message.message == nil &&
-                                      message.containsHidePostCTARestrictedButtons() &&
-                                      currentMessageTime.int64Value <= lastSentMessageTime.int64Value)
+                                      !message.containsHidePostCTARestrictedButtons() &&
+                                      currentMessageTime.int64Value <= lastSentMessageTime.int64Value
             
            if checkMessageDelete {
                 messageModels.removeAll { $0.identifier == message.identifier }
