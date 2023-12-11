@@ -1650,12 +1650,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
         for message in messages {
             guard let currentMessageTime = message.createdAtTime else { continue }
 
-            let hasValidConditions = message.isMyMessage ||
-                                     message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
-                                     message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
-                                     message.allButtons()?.suggestion.count ?? 0 > 0 ||
-                                     currentMessageTime.int64Value >= lastSentMessageTime.int64Value
-            if !hasValidConditions {
+            let checkMessageDelete = (!message.isMyMessage &&
+                                      (message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
+                                       message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
+                                       message.allButtons()?.suggestion.count ?? 0 > 0) &&
+                                      currentMessageTime.int64Value <= lastSentMessageTime.int64Value)
+            
+           if checkMessageDelete {
                 messageModels.removeAll { $0.identifier == message.identifier }
                 alMessages.removeAll { $0.identifier == message.identifier }
             }
