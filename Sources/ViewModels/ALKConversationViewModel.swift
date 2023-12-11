@@ -1652,7 +1652,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
             let messageType = message.messageType
             let checkMessageDelete = !message.isMyMessage &&
-                                      (messageType == .allButtons || messageType == .button || messageType == .quickReply) &&
+                                      (messageType == .allButtons || messageType == .quickReply) 
                                       message.message == nil &&
                                       !message.containsHidePostCTARestrictedButtons() &&
                                       currentMessageTime.int64Value <= lastSentMessageTime.int64Value
