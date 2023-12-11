@@ -1645,15 +1645,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     func removeMessageForHidePostCTA(messages : [ALKMessageModel]){
         guard let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
-                  !UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else { return }
+                  UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else { return }
 
         for message in messages {
             guard let currentMessageTime = message.createdAtTime else { continue }
 
+            let messageType = message.messageType
             let checkMessageDelete = (!message.isMyMessage &&
-                                      (message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
-                                       message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
-                                       message.allButtons()?.suggestion.count ?? 0 > 0) &&
+                                      (messageType == .allButtons || messageType == .button || messageType == .quickReply) &&
+                                      message.message == nil &&
+                                      message.containsHidePostCTARestrictedButtons() &&
                                       currentMessageTime.int64Value <= lastSentMessageTime.int64Value)
             
            if checkMessageDelete {
