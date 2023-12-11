@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## Unreleased
+- Added Customisation for the line above chatbar.
+
 ## [1.2.3] 2023-12-06
 - Added Support of Video Rich Message.
 - Fixed the attachment upload issue.
