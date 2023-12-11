@@ -185,7 +185,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
         messageModels.append(message.messageModel)
-        self.removeMessageForHidePostCTA(messages: [message.messageModel])
         if(message.isMyMessage){
             ALKConversationViewModel.lastSentMessage = message
         }
@@ -301,10 +300,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func heightForRow(indexPath: IndexPath, cellFrame _: CGRect, configuration: ALKConfiguration) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
-        let cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
+        var cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
         let isActionButtonHidden = messageModel.isActionButtonHidden()
-        if let height = HeightCache.shared.getHeight(for: cacheIdentifier),
-           !isActionButtonHidden {
+        if isActionButtonHidden {
+            cacheIdentifier += "-h"
+        }
+        if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
             return height
         }
         switch messageModel.messageType {
@@ -642,7 +643,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
-        self.removeMessageForHidePostCTA(messages: models)
         print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
     }
@@ -1412,6 +1412,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
             }
+            self.removeMessageForHidePostCTA(messages: self.messageModels)
             self.membersInGroup { members in
                 self.groupMembers = members
                 self.delegate?.loadingFinished(error: nil)
@@ -1453,7 +1454,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
-            self.removeMessageForHidePostCTA(messages: [modelsToBeAddedAfterDelay[welcomeMessagePosition]])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
             if welcomeMessagePosition >= alMessages.count  {
@@ -1645,17 +1645,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     func removeMessageForHidePostCTA(messages : [ALKMessageModel]){
         guard let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
-                  !UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else { return }
+                  UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else { return }
 
         for message in messages {
             guard let currentMessageTime = message.createdAtTime else { continue }
 
-            let hasValidConditions = message.isMyMessage ||
-                                     message.linkOrSubmitButton()?.suggestion.count ?? 0 > 0 ||
-                                     message.suggestedReply()?.suggestion.count ?? 0 > 0 ||
-                                     message.allButtons()?.suggestion.count ?? 0 > 0 ||
-                                     currentMessageTime.int64Value >= lastSentMessageTime.int64Value
-            if !hasValidConditions {
+            let messageType = message.messageType
+            let checkMessageDelete = !message.isMyMessage &&
+                                      (messageType == .allButtons || messageType == .quickReply) &&
+                                      message.message == nil &&
+                                      !message.containsHidePostCTARestrictedButtons() &&
+                                      currentMessageTime.int64Value <= lastSentMessageTime.int64Value
+            
+           if checkMessageDelete {
                 messageModels.removeAll { $0.identifier == message.identifier }
                 alMessages.removeAll { $0.identifier == message.identifier }
             }

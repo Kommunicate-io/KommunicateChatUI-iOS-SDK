@@ -146,6 +146,18 @@ extension ALKMessageViewModel {
         }
         return SuggestedReplyMessage(suggestion: buttons, message: messageDetails())
     }
+    
+    func containsHidePostCTARestrictedButtons() -> Bool {
+        guard let payload = payloadFromMetadata() else { return true }
+        for object in payload {
+            if let action = object["action"] as? [String:Any], let type = action["type"] as? String, ["submit","link"].contains(type) {
+                return true
+            } else if let type = object["type"] as? String, ["submit","link"].contains(type) {
+                return true
+            }
+        }
+        return false
+    }
 
     func formTemplate() -> FormTemplate? {
         guard let payload = payloadFromMetadata() else { return nil }
