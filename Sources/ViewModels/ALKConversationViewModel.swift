@@ -185,7 +185,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
         messageModels.append(message.messageModel)
-        self.removeMessageForHidePostCTA(messages: [message.messageModel])
         if(message.isMyMessage){
             ALKConversationViewModel.lastSentMessage = message
         }
@@ -642,7 +641,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
-        self.removeMessageForHidePostCTA(messages: models)
         print("new messages: ", models.map { $0.message })
         delegate?.newMessagesAdded()
     }
@@ -1412,6 +1410,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
             }
+            self.removeMessageForHidePostCTA(messages: self.messageModels)
             self.membersInGroup { members in
                 self.groupMembers = members
                 self.delegate?.loadingFinished(error: nil)
@@ -1453,7 +1452,6 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 return
             }
             self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
-            self.removeMessageForHidePostCTA(messages: [modelsToBeAddedAfterDelay[welcomeMessagePosition]])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
             if welcomeMessagePosition >= alMessages.count  {
