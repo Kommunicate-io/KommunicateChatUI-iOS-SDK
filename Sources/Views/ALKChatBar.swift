@@ -217,7 +217,6 @@ open class ALKChatBar: UIView, Localizable {
     open var lineView: UIView = {
         let view = UIView()
         let layer = view.layer
-        view.backgroundColor = UIColor.kmDynamicColor(light: UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 1.0), dark: UIColor.darkGray)
         return view
     }()
 
@@ -400,6 +399,7 @@ open class ALKChatBar: UIView, Localizable {
         self.configuration = configuration
         isMicButtonHidden = configuration.hideAudioOptionInChatBar
         initializeView()
+        lineView.backgroundColor = configuration.aboveChatbarLineViewColor
     }
 
     deinit {

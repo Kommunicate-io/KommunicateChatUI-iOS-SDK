@@ -82,6 +82,9 @@ public struct ALKConfiguration {
 
     /// If true then start new conversation button shown in the empty state will be disabled
     public var hideEmptyStateStartNewButtonInConversationList = false
+    
+    /// Customisation for chatBar for line above input field
+    public var aboveChatbarLineViewColor: UIColor = UIColor.kmDynamicColor(light: UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 1.0), dark: UIColor.darkGray)
 
     /// Additional information you can pass in message metadata in all the messages.
     public var messageMetadata: [AnyHashable: Any]?
