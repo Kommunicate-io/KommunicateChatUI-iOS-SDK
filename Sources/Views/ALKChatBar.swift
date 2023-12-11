@@ -399,7 +399,7 @@ open class ALKChatBar: UIView, Localizable {
         self.configuration = configuration
         isMicButtonHidden = configuration.hideAudioOptionInChatBar
         initializeView()
-        lineView.backgroundColor = configuration.aboveChatbarLineViewColor
+        lineView.backgroundColor = configuration.chatBarToplineViewColor
     }
 
     deinit {
