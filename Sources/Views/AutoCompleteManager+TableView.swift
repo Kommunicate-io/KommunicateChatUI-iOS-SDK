@@ -62,5 +62,7 @@ extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
 public class DefaultAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
     public func updateView(item: AutoCompleteItem) {
         textLabel?.text = "\(item.content)"
+        textLabel?.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
+        backgroundColor = UIColor.kmDynamicColor(light: .white, dark: .appBarDarkColor())
     }
 }

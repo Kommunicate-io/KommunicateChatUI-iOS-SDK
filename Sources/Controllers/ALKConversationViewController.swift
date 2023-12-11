@@ -503,7 +503,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         super.viewDidLoad()
         KMHidePostCTAForm.shared.enabledHidePostCTAForm = configuration.hidePostFormSubmit
         KMHidePostCTAForm.shared.disableSelectionAfterSubmision = configuration.disableFormPostSubmit
-        self.switchDynamicMode(isDynamic: configuration.isDarkModeEnabled)
         if let templates = viewModel.getMessageTemplates() {
             templateView = ALKTemplateMessagesView(frame: CGRect.zero, viewModel: ALKTemplateMessagesViewModel(messageTemplates: templates))
         }
