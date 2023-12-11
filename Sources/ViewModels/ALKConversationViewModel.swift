@@ -300,10 +300,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func heightForRow(indexPath: IndexPath, cellFrame _: CGRect, configuration: ALKConfiguration) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
-        let cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
+        var cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
         let isActionButtonHidden = messageModel.isActionButtonHidden()
-        if let height = HeightCache.shared.getHeight(for: cacheIdentifier),
-           !isActionButtonHidden {
+        if isActionButtonHidden {
+            cacheIdentifier += "-h"
+        }
+        if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
             return height
         }
         switch messageModel.messageType {
@@ -1650,7 +1652,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
             let messageType = message.messageType
             let checkMessageDelete = !message.isMyMessage &&
-                                      (messageType == .allButtons || messageType == .quickReply) 
+                                      (messageType == .allButtons || messageType == .quickReply) &&
                                       message.message == nil &&
                                       !message.containsHidePostCTARestrictedButtons() &&
                                       currentMessageTime.int64Value <= lastSentMessageTime.int64Value
