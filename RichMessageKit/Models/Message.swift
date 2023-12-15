@@ -28,6 +28,7 @@ public struct Message {
         case audio = 8
         case video = 9
         case actionMessage = 10
+        case typingIndicator = 111
     }
 
     public init(

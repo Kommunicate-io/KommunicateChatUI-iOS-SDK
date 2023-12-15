@@ -822,6 +822,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(KMStaticTopMessageCell.self)
         tableView.register(KMMyVideoTemplateCell.self)
         tableView.register(KMFriendVideoTemplateCell.self)
+        tableView.register(KMTypingIndicator.self)
     }
 
     private func prepareMoreBar() {
@@ -1158,6 +1159,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func scrollViewWillBeginDecelerating(_: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
+    }
+    
+    public func showNewTypingLabel(status: Bool) {
+        if status {
+            self.viewModel.addTypingIndicatorMessage()
+        } else {
+            self.viewModel.removeTypingIndicatorMessage()
+        }
     }
     
     // Called from the parent VC
@@ -2586,7 +2595,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func updateTyingStatus(status: Bool, userId: String) {
-        showTypingLabel(status: status, userId: userId)
+        showNewTypingLabel(status: status)
     }
 
     public func clearAndReloadTable() {
@@ -2829,7 +2838,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             return
         }
         print("Contact id matched")
-        showTypingLabel(status: status, userId: userId)
+        showNewTypingLabel(status: status)
     }
 
     public func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
