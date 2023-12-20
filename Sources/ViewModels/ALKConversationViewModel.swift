@@ -182,6 +182,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     public func addToWrapper(message: ALMessage) {
         guard !alMessageWrapper.contains(message: message) else { return }
+        if messageModels.last?.contentType == .typingIndicator {
+            removeTypingIndicatorMessage()
+        }
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
         messageModels.append(message.messageModel)
@@ -473,6 +476,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return KMStaticTopMessageCell.rowHeight(model: messageModel, width: maxWidth)
         case .videoTemplate:
             return KMVideoTemplateCell.rowHeigh(viewModel: messageModel, width: maxWidth)
+        case .typingIndicator:
+            return 60.0
         }
     }
 
@@ -644,6 +649,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
         print("new messages: ", models.map { $0.message })
+        self.removeTypingIndicatorMessage()
         delegate?.newMessagesAdded()
     }
     
@@ -654,6 +660,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let date = Date().timeIntervalSince1970 * 1000
         initialMessage.createdAtTime = NSNumber(value: date)
         return initialMessage
+    }
+    
+    private func getTypingIndicatorMessage() -> ALMessage {
+        let typingIndicatorMessage = ALMessage()
+        typingIndicatorMessage.contentType = Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR)
+        let date = Date().timeIntervalSince1970 * 1000
+        typingIndicatorMessage.createdAtTime = NSNumber(value: date)
+        return typingIndicatorMessage
     }
 
     open func markConversationRead() {
@@ -978,7 +992,23 @@ open class ALKConversationViewModel: NSObject, Localizable {
         delegate?.messageSent(at: IndexPath(row: 0, section: messageModels.count - 1))
         uploadAudio(alMessage: alMessage, indexPath: IndexPath(row: 0, section: messageModels.count - 1))
     }
-
+    
+    open func addTypingIndicatorMessage() {
+        if alMessages.contains(where: { $0.contentType == Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR) }) {
+            self.removeTypingIndicatorMessage()
+        }
+        addToWrapper(message: getTypingIndicatorMessage())
+        self.delegate?.newMessagesAdded()
+    }
+    
+    open func removeTypingIndicatorMessage() {
+        if alMessages.contains(where: { $0.contentType == Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR) }) {
+            alMessages.removeAll { $0.contentType == Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR)}
+            messageModels.removeAll {$0.contentType.rawValue == getTypingIndicatorMessage().contentType}
+            self.delegate?.messageUpdated()
+        }
+    }
+    
     open func add(geocode: Geocode, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
         let latlonString = ["lat": "\(geocode.location.latitude)", "lon": "\(geocode.location.longitude)"]
         guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
@@ -1453,6 +1483,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
                 return
             }
+            self.removeTypingIndicatorMessage()
             self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
             self.delegate?.messageUpdated()
             self.timer.invalidate()

@@ -133,6 +133,8 @@ extension ALMessage: ALKChatViewModelProtocol {
             return message
         case .videoTemplate:
             return defaultMessage
+        case .typingIndicator:
+            return defaultMessage
         }
     }
 
@@ -249,6 +251,8 @@ extension ALMessage {
             return richMessageType()
         case ALMESSAGE_CONTENT_INITIAL_STATIC_MESSAGE:
             return .staticTopMessage
+        case ALMESSAGE_CONTENT_TYPING_INDICATOR:
+            return .typingIndicator
         default:
             guard let attachmentType = getAttachmentType() else { return .text }
             return attachmentType
