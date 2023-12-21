@@ -9,9 +9,7 @@ import Foundation
 import UIKit
 
 extension ALKConversationViewController: AutoCompletionDelegate {
-    public func sendMessage(content: String) {
-        
-    }
+    public func sendMessage(content: String) {}
     
     public func didMatch(prefix: String, message: String, updated: Bool) {
         if isAutoSuggestionRichMessage , message.count >= 2 {
@@ -25,7 +23,7 @@ extension ALKConversationViewController: AutoCompletionDelegate {
                     let items = suggestionDict
                     for dictionary in items {
                         if let key = dictionary["searchKey"] as? String, let content = dictionary["message"] as? String {
-                            let autoCompleteItem = AutoCompleteItem(key: key, content: content, supportsRichMessage: nil)
+                            let autoCompleteItem = AutoCompleteItem(key: key, content: content)
                             arrayOfAutocomplete.append(autoCompleteItem)
                         }
                     }
@@ -34,14 +32,14 @@ extension ALKConversationViewController: AutoCompletionDelegate {
                     let items = suggestionDict
                     for dictionary in items {
                         if let key = dictionary["searchKey" ] as? String, let content = dictionary["message"] as? String{
-                            let autoCompleteItem = AutoCompleteItem(key: key, content: content, supportsRichMessage: nil)
+                            let autoCompleteItem = AutoCompleteItem(key: key, content: content)
                             arrayOfAutocomplete.append(autoCompleteItem)
                         }
                     }
                 }
             } else {
                 let items = suggestionArray
-                arrayOfAutocomplete = items.map{ AutoCompleteItem(key: $0, content: $0, supportsRichMessage: nil)}
+                arrayOfAutocomplete = items.map{ AutoCompleteItem(key: $0, content: $0)}
             }
             if message.isEmpty {
                 autoSuggestionManager.items = arrayOfAutocomplete
