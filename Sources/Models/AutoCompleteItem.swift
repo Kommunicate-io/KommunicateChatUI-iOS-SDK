@@ -11,11 +11,13 @@ public struct AutoCompleteItem {
     public let key: String
     public let content: String
     public let displayImageURL: URL?
+    public let supportsRichMessage: Bool?
 
-    public init(key: String, content: String, displayImageURL: URL? = nil) {
+    public init(key: String, content: String, displayImageURL: URL? = nil, supportsRichMessage : Bool?) {
         self.key = key
         self.content = content
         self.displayImageURL = displayImageURL
+        self.supportsRichMessage = supportsRichMessage
     }
 }
 

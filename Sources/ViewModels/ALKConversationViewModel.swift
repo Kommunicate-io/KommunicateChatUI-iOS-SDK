@@ -1718,7 +1718,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let items =
             members
                 .filter { $0.userId != ALUserDefaultsHandler.getUserId() }
-                .map { AutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
+                .map { AutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL, supportsRichMessage: nil) }
                 .sorted { $0.content < $1.content }
         return items
     }
