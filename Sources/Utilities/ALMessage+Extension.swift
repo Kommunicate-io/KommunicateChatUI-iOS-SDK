@@ -108,7 +108,9 @@ extension ALMessage: ALKChatViewModelProtocol {
             return (filePath ?? "").isEmpty ? defaultMessage : filePath
         case .location:
             return "Location"
-        case .information, .html, .allButtons:
+        case .html:
+            return defaultMessage
+        case .information,.allButtons:
             return isMessageEmpty ? defaultMessage : message
         case .faqTemplate:
             return isMessageEmpty ? "FAQ" : message
