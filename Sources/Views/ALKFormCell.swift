@@ -424,6 +424,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.item = item
             cell.menu.tag = indexPath.section
             cell.delegate = self
+            cell.identifier = identifier
             self.cell = cell
             
             if let formDataSubmit = formData,
@@ -508,6 +509,12 @@ extension ALKFormCell: KMFormDropDownSelectionProtocol {
             print("Can't be updated due to incorrect index")
             return
         }
+        formSubmittedData.dropDownFields[position] = (index,selectedText)
+        formData = formSubmittedData
+    }
+    
+    func defaultOptionSelected(position: Int, selectedText: String?, index: Int) {
+        guard let formSubmittedData = formData else { return }
         formSubmittedData.dropDownFields[position] = (index,selectedText)
         formData = formSubmittedData
     }

@@ -11,6 +11,7 @@ import iOSDropDown
 
 protocol KMFormDropDownSelectionProtocol {
     func optionSelected(position: Int,selectedText: String?,index:Int)
+    func defaultOptionSelected(position: Int,selectedText: String?,index:Int)
 }
 
 class KMFormDropDownCell: UITableViewCell {
@@ -63,9 +64,14 @@ class KMFormDropDownCell: UITableViewCell {
             
             var selectedIndex = 0
             
-            for (index, item) in options.enumerated() {
-                if let selected = item.selected, selected {
-                    selectedIndex = index
+            if let key = identifier, let formData = ALKFormDataCache.shared.getFormData(for: key) {
+                selectedIndex = formData.dropDownFields.keys.first ?? 0
+            } else {
+                for (index, item) in options.enumerated() {
+                    if let selected = item.selected, selected {
+                        selectedIndex = index
+                        addDefultDataInCache(position: self.menu.tag, selectedText: item.value, index: index)
+                    }
                 }
             }
             
@@ -89,6 +95,7 @@ class KMFormDropDownCell: UITableViewCell {
     var name: String = ""
     var optionsDict: [String: FormTemplate.Option] = [:]
     var delegate: KMFormDropDownSelectionProtocol?
+    var identifier: String?
     
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -134,6 +141,12 @@ class KMFormDropDownCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func addDefultDataInCache(position: Int,selectedText: String?,index:Int) {
+        DispatchQueue.main.async {
+            self.delegate?.defaultOptionSelected(position: position, selectedText: selectedText, index: index)
+        }
+    }
+    
     private func addConstraints() {
         addViewsForAutolayout(views: [view, nameLabel, errorStackView])
         errorStackView.addArrangedSubview(errorLabel)
