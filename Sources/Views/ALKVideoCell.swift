@@ -265,12 +265,16 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             playButton.isHidden = true
             progressView.isHidden = true
             loadThumbnail()
-        case .downloaded:
+        case let .downloaded(filePath):
             uploadButton.isHidden = true
             downloadButton.isHidden = true
             progressView.isHidden = true
             playButton.isHidden = false
             loadThumbnail()
+            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = docDirPath.appendingPathComponent(filePath)
+            let fileUtills = ALKFileUtils()
+            photoView.image = fileUtills.getThumbnail(filePath: path)
         case let .downloading(progress, _):
             // show progress bar
             print("downloading")
