@@ -12,6 +12,7 @@ import UIKit
 
 public protocol AutoCompletionDelegate: AnyObject {
     func didMatch(prefix: String, message: String, updated: Bool)
+    func sendMessage(content : String)
 }
 
 public protocol AutoCompletionItemCell: UITableViewCell {
@@ -108,6 +109,14 @@ public class AutoCompleteManager: NSObject {
     }
 
     func insert(item: AutoCompleteItem, at insertionRange: NSRange, replace selection: Selection) {
+        
+        if let supportsRichMessage = item.supportsRichMessage,
+           supportsRichMessage {
+            self.autocompletionDelegate?.sendMessage(content: item.content)
+            textView.text = ""
+            return
+        }
+        
         let defaultAttributes = textView.typingAttributes
         var newAttributes = defaultAttributes
         let configuration = prefixConfigurations[selection.prefix] ?? AutoCompleteItemConfiguration()
