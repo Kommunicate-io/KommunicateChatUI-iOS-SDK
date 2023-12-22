@@ -64,14 +64,10 @@ class KMFormDropDownCell: UITableViewCell {
             
             var selectedIndex = 0
             
-            if let key = identifier, let formData = ALKFormDataCache.shared.getFormData(for: key) {
-                selectedIndex = formData.dropDownFields.keys.first ?? 0
-            } else {
-                for (index, item) in options.enumerated() {
-                    if let selected = item.selected, selected {
-                        selectedIndex = index
-                        addDefultDataInCache(position: self.menu.tag, selectedText: item.value, index: index)
-                    }
+            for (index, item) in options.enumerated() {
+                if let selected = item.selected, selected {
+                    selectedIndex = index
+                    addDefultDataInCache(position: self.menu.tag, selectedText: item.value, index: index)
                 }
             }
             
