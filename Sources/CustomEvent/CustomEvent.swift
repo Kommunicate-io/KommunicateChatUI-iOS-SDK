@@ -10,10 +10,12 @@ public enum CustomEvent: String {
     case faqClick = "ON_FAQ_CLICK"
     case newConversation = "ON_START_NEW_CONVERSATION_CLICK"
     case submitRatingClick = "ON_SUBMIT_RATING_CLICK"
+    case resolveConversation = "ON_CONVERSATION_RESOLVE"
     case restartConversationClick = "ON_RESTART_CONVERSATION_CLICK"
     case richMessageClick = "ON_RICH_MESSAGE_CLICK"
     case conversationBackPress = "ON_CONVERSATION_BACK_CLICK"
     case conversationListBackPress = "ON_CONVERSATION_LIST_BACK_CLICK"
     case messageReceive = "ON_MESSAGE_RECEIVE"
     case conversationInfoClick = "ON_CONVERSATION_INFO_CLICK"
+    
 }

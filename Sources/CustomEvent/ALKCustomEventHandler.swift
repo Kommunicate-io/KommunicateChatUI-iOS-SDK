@@ -41,6 +41,10 @@ public class ALKCustomEventHandler {
                       let rating = data["rating"] as? Int,
                       let comment = data["comment"] as? String  else { return }
                 delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
+            case .resolveConversation:
+                guard let data = data else { return }
+                let conversationId =  data["conversationId"] as? String ?? ""
+                delegate.conversationResolved(conversationId: conversationId)
             case .restartConversationClick:
                 guard let data = data,
                       let conversationId = data["conversationId"] as? Int else { return }
