@@ -6,17 +6,17 @@ PODS:
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
   - Kingfisher (7.6.2)
-  - KommunicateChatUI-iOS-SDK (1.2.4):
-    - KommunicateChatUI-iOS-SDK/Complete (= 1.2.4)
-  - KommunicateChatUI-iOS-SDK/Complete (1.2.4):
+  - KommunicateChatUI-iOS-SDK (1.2.5):
+    - KommunicateChatUI-iOS-SDK/Complete (= 1.2.5)
+  - KommunicateChatUI-iOS-SDK/Complete (1.2.5):
     - iOSDropDown
     - Kingfisher (~> 7.6.2)
     - KommunicateChatUI-iOS-SDK/RichMessageKit
-    - KommunicateCore-iOS-SDK (~> 1.1.5)
+    - KommunicateCore-iOS-SDK (~> 1.1.6)
     - SwipeCellKit (~> 2.7.1)
     - ZendeskChatProvidersSDK (~> 3.0.0)
-  - KommunicateChatUI-iOS-SDK/RichMessageKit (1.2.4)
-  - KommunicateCore-iOS-SDK (1.1.5)
+  - KommunicateChatUI-iOS-SDK/RichMessageKit (1.2.5)
+  - KommunicateCore-iOS-SDK (1.1.6)
   - Nimble (12.3.0)
   - Nimble-Snapshots (9.6.1):
     - Nimble-Snapshots/Core (= 9.6.1)
@@ -25,7 +25,7 @@ PODS:
     - Nimble (~> 12.0)
   - Quick (7.3.0)
   - SwiftFormat/CLI (0.48.18)
-  - SwiftLint (0.53.0)
+  - SwiftLint (0.54.0)
   - SwipeCellKit (2.7.1)
   - ZendeskChatProvidersSDK (3.0.0)
 
@@ -59,13 +59,13 @@ SPEC CHECKSUMS:
   iOSDropDown: ce9daa584eaa5567cafc1b633e3cc7eb6d9cea42
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
-  KommunicateChatUI-iOS-SDK: bea6efa038de0df45a3c40f84c93e0bf788a9167
-  KommunicateCore-iOS-SDK: 83e2c8d5b3007417354752a457068bd07e6d2e03
+  KommunicateChatUI-iOS-SDK: 33149c9a46a80bc57cedb4ecd419109ad5474fcb
+  KommunicateCore-iOS-SDK: 544bb6f935d4b66576e179c0f9fe932b15bb81c9
   Nimble: f8a8219d16f176429b951e8f7e72df5c23ceddc0
   Nimble-Snapshots: 4988d1cf2fe062f13bd2eb87c4279770785e682b
   Quick: d32871931c05547cb4e0bc9009d66a18b50d8558
   SwiftFormat: 7dd2b33a0a3d61095b61c911b6d89ff962ae695c
-  SwiftLint: 5ce4d6a8ff83f1b5fd5ad5dbf30965d35af65e44
+  SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
   ZendeskChatProvidersSDK: af93e02e2058875f92e6ad86e74ee51203b4079e
 

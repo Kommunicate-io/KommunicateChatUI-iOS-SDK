@@ -3,9 +3,10 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 
-## Unreleased
+## [1.2.5] 2023-12-23
 - Restrict agent reply for zendesk conversation
 - Added Customisation for the line above chatbar.
+- Changed UI for typing indicator
 
 ## [1.2.4] 2023-12-12
 - Fixed hidePostCTA message delete issue.
