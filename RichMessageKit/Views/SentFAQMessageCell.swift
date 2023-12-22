@@ -118,6 +118,8 @@ public class SentFAQMessageCell: UITableViewCell {
         messageViewHeight.constant = isMessageEmpty ? 0 : SentMessageViewSizeCalculator().rowHeight(messageModel: model.message, maxWidth: Config.maxWidth, padding: messageViewPadding)
         if !isMessageEmpty {
             messageView.update(model: model.message)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model.message)
         }
 
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model.message)

@@ -74,6 +74,8 @@ public class ALKMyMessageListTemplateCell: ALKListTemplateCell {
                                                       padding: ViewPadding.messageViewPadding)
         if !isMessageEmpty {
             messageView.update(model: model)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model)
         }
 
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
@@ -230,6 +232,8 @@ public class ALKFriendMessageListTemplateCell: ALKListTemplateCell {
         messageViewHeight.constant = isMessageEmpty ? 0 :
             ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
         if !isMessageEmpty {
+            messageView.update(model: model)
+        } else if #available(iOS 17, *) {
             messageView.update(model: model)
         }
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
