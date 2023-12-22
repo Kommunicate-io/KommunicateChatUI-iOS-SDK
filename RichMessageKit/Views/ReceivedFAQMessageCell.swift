@@ -160,6 +160,8 @@ public class ReceivedFAQMessageCell: UITableViewCell {
 
         if !isMessageEmpty {
             messageView.update(model: model.message)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model.message)
         }
 
         faqView.update(model: model, maxWidth: ReceivedFAQMessageCell.faqWidth)

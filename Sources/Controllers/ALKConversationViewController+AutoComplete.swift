@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 extension ALKConversationViewController: AutoCompletionDelegate {
+    public func sendMessage(content: String) {}
+    
     public func didMatch(prefix: String, message: String, updated: Bool) {
         if isAutoSuggestionRichMessage , message.count >= 2 {
             var arrayOfAutocomplete: [AutoCompleteItem] = []

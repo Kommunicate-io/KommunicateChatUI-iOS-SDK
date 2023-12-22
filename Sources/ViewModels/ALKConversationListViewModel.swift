@@ -144,7 +144,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         guard let alContact = contact else { return }
         guard !alContact.block || !alContact.blockBy else { return }
 
-        viewController.showTypingLabel(status: status, userId: userId)
+        viewController.showNewTypingLabel(status: status)
     }
 
     public func updateMessageList(messages: [Any]) {

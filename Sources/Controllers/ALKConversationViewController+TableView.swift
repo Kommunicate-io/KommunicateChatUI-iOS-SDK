@@ -574,6 +574,8 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             }
+        case .typingIndicator:
+            return KMTypingIndicator()
         }
     }
     

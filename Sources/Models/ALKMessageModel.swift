@@ -33,6 +33,7 @@ public enum ALKMessageType: String {
     case form = "Form"
     case staticTopMessage = "staticTopMessage"
     case videoTemplate = "VideoTemplate"
+    case typingIndicator = "TypingIndicator"
 }
 
 // MARK: - MessageViewModel

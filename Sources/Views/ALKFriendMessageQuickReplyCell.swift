@@ -97,6 +97,8 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
 
         if !isMessageEmpty {
             messageView.update(model: model)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model)
         }
 
         let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)

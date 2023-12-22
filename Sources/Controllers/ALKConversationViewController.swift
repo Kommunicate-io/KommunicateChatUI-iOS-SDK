@@ -822,6 +822,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(KMStaticTopMessageCell.self)
         tableView.register(KMMyVideoTemplateCell.self)
         tableView.register(KMFriendVideoTemplateCell.self)
+        tableView.register(KMTypingIndicator.self)
     }
 
     private func prepareMoreBar() {
@@ -1158,6 +1159,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func scrollViewWillBeginDecelerating(_: UIScrollView) {
         UIMenuController.shared.setMenuVisible(false, animated: true)
         hideMoreBar()
+    }
+    
+    public func showNewTypingLabel(status: Bool) {
+        if status {
+            self.viewModel.addTypingIndicatorMessage()
+        } else {
+            self.viewModel.removeTypingIndicatorMessage()
+        }
     }
     
     // Called from the parent VC
@@ -2181,6 +2190,12 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let channelKey = viewModel.channelKey
         let channelService = ALChannelService()
         let channel = channelService.getChannelByKey(channelKey)
+        
+        if isZendeskConversation(channel: channel){
+            chatBar.textView.text = "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users."
+            return true
+        }
+        
         let whatsappSource = ["WHATSAPPCLOUDAPI", "WHATSAPPTWILIO", "WHATSAPPDIALOG360"]
         if let platformSource = channel?.platformSource,
            whatsappSource.contains(platformSource),
@@ -2191,6 +2206,26 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         } else {
             return false
         }
+    }
+    
+    private func isZendeskConversation(channel : ALChannel?) -> Bool{
+        guard let channel = channel,
+              let channelMetaData = channel.metadata,
+              let conversationInfoString = channelMetaData["conversationMetadata"] as? String,
+              let data = conversationInfoString.data(using: .utf8)
+        else {
+            return false
+        }
+        
+        do {
+            let conversationInfoDict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
+            return (conversationInfoDict?["source"] as? String) == "zopim" ? true : false
+        } catch {
+            print("\(#file) \(#line) Parsing failed while checking for zendesk conversation")
+        }
+        
+        return false
+        
     }
     
     @objc open func twentyFourHoursAgoTimeStamp() -> Double {
@@ -2586,7 +2621,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     public func updateTyingStatus(status: Bool, userId: String) {
-        showTypingLabel(status: status, userId: userId)
+        showNewTypingLabel(status: status)
     }
 
     public func clearAndReloadTable() {
@@ -2829,7 +2864,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             return
         }
         print("Contact id matched")
-        showTypingLabel(status: status, userId: userId)
+        showNewTypingLabel(status: status)
     }
 
     public func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
