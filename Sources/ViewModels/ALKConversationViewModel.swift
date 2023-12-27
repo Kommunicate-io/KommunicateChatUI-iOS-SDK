@@ -651,6 +651,21 @@ open class ALKConversationViewModel: NSObject, Localizable {
         print("new messages: ", models.map { $0.message })
         self.removeTypingIndicatorMessage()
         delegate?.newMessagesAdded()
+        newFormMessageAdded()
+    }
+    
+    @objc open func newFormMessageAdded() {
+        let indexPath = IndexPath(row: 0, section: messageModels.count - 1)
+        if let lastMessage = messageModels.last {
+            reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
+        }
+    }
+    
+    func reloadIfFormMessage(message: ALKMessageModel, indexPath: IndexPath) {
+        guard message.messageType == .form, KMMultipleSelectionConfiguration.shared.enableMultipleSelectionOnCheckbox else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+            self.delegate?.messageUpdated()
+        })
     }
     
     private func getInitialStaticFirstMessage() -> ALMessage {
