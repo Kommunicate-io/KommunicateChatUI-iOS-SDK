@@ -2922,7 +2922,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {
-    func filesSelected(images: [UIImage], gifs: [String],videos: [String]) {
+    func filesSelected(images: [UIImage], gifs: [String],videos: [String], caption: String) {
         let fileCount = images.count + videos.count + gifs.count
         for index in 0 ..< fileCount {
             if index < images.count {
@@ -2935,7 +2935,8 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 }
                 let (message, indexPath) = viewModel.send(
                     photo: image,
-                    metadata: configuration.messageMetadata
+                    metadata: configuration.messageMetadata,
+                    caption: caption
                 )
                 guard message != nil, let newIndexPath = indexPath else { return }
                 //            DispatchQueue.main.async {

@@ -10,7 +10,7 @@ import UIKit
 import MobileCoreServices
 
 protocol ALKCustomPickerDelegate: AnyObject {
-    func filesSelected(images: [UIImage], gifs: [String], videos: [String])
+    func filesSelected(images: [UIImage], gifs: [String], videos: [String], caption: String)
 }
 
 class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
@@ -189,6 +189,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         activityIndicator.startAnimating()
         export { images, gifs, videos, error in
             self.activityIndicator.stopAnimating()
+            var check =  images.count != 0 || gifs.count != 0 || videos.count != 0
             if error {
                 let alertTitle = self.localizedString(
                     forKey: "PhotoAlbumFailureTitle",
@@ -211,13 +212,26 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                     preferredStyle: UIAlertController.Style.alert
                 )
                 alert.addAction(UIAlertAction(title: buttonTitle, style: UIAlertAction.Style.default, handler: { _ in
-                    self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos)
-                    self.navigationController?.dismiss(animated: true, completion: nil)
+                    if self.configuration.enableCaptionScreen, check {
+                        let vc = KMCustomCaptionViewController.init(images: images, gifs: gifs, videos: videos, configuration: self.configuration)
+                        vc.delegate = self
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    } else {
+                        self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos, caption: "")
+                        self.navigationController?.dismiss(animated: true, completion: nil)
+                    }
                 }))
                 self.present(alert, animated: true, completion: nil)
             } else {
-                self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos)
-                self.navigationController?.dismiss(animated: true, completion: nil)
+                
+                if self.configuration.enableCaptionScreen, check {
+                    let vc = KMCustomCaptionViewController.init(images: images, gifs: gifs, videos: videos, configuration: self.configuration)
+                    vc.delegate = self
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos, caption: "")
+                    self.navigationController?.dismiss(animated: true, completion: nil)
+                }
             }
         }
     }
@@ -433,5 +447,11 @@ extension PHAsset {
             return UTTypeConformsTo(uniformTypeIdentifier as CFString, kUTTypeGIF)
         }
         return false
+    }
+}
+
+extension ALKCustomPickerViewController: KMCustomUploadCaptionDelegate {
+    func filesSelectedWithCaption(images: [UIImage], gifs: [String], videos: [String], caption: String) {
+        self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos, caption: caption)
     }
 }
