@@ -339,7 +339,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
     }
     
     func processChatLogs(logs: [ChatLog]) {
-        let filteredArray = logs.filter{$0.createdTimestamp >= TimeInterval(truncating: lastSyncTime)}
+        let filteredArray = logs.filter{$0.createdTimestamp > TimeInterval(truncating: lastSyncTime)}
         for log in filteredArray {
             // If log is not from agent, then no need to consider the log.
             guard log.participant == .agent else { continue }
