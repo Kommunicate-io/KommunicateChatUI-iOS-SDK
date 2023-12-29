@@ -74,9 +74,6 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
     }
     
     public func handedOffToAgent(groupId: String) {
-        if isHandOffHappened {
-            return
-        }
         lastSyncTime = NSDate().timeIntervalSince1970 * 1000 as NSNumber
         self.groupId = groupId
         isHandOffHappened = true

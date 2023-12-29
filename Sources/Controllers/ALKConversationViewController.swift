@@ -436,10 +436,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             self.navigationBar.updateView(profile: profile)
         })
         
-        guard
-            (ALApplozicSettings.getZendeskSdkAccountKey() != nil),
-            let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
+        guard (ALApplozicSettings.getZendeskSdkAccountKey() != nil),
+              let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
               isZendeskConversation(channel: channel),
+              !KMZendeskChatHandler.shared.isHandOffHappened,
               let assigneeUserId = channel.assigneeUserId,
               let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
               let roleType = assignee.roleType as? UInt32,
