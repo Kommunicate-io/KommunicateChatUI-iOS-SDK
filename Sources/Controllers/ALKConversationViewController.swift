@@ -436,8 +436,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             self.navigationBar.updateView(profile: profile)
         })
         
-        guard let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
-              (ALApplozicSettings.getZendeskSdkAccountKey() != nil),
+        guard
+            (ALApplozicSettings.getZendeskSdkAccountKey() != nil),
+            let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
               isZendeskConversation(channel: channel),
               let assigneeUserId = channel.assigneeUserId,
               let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
