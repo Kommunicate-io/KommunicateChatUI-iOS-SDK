@@ -72,7 +72,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
     // MARK: - UI Setup
 
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         setupCollectionView()
         setupCaptionBar()
         setupBottomButtons()
@@ -123,6 +123,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
     private func setupCaptionBar() {
         captionBar = UITextField()
         captionBar.placeholder = "Add caption.."
+        captionBar.placeholderColor = UIColor.text(.gray9B)
         captionBar.borderStyle = .roundedRect
         captionBar.layer.cornerRadius = 5
         captionBar.layer.masksToBounds = true
@@ -156,9 +157,12 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
 
         cancelButton = createButton(title: "CANCEL", action: #selector(cancelAction))
         doneButton = createButton(title: " SEND ", action: #selector(doneAction))
+        
+        cancelButton.tintColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
+        doneButton.tintColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
 
         dividerView = UIView()
-        dividerView.backgroundColor = .white
+        dividerView.backgroundColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         dividerView.translatesAutoresizingMaskIntoConstraints = false
 
         stackView.addArrangedSubview(cancelButton)
