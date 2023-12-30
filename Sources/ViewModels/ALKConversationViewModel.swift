@@ -1032,14 +1032,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
+    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable: Any]?, caption: String) -> (ALMessage?, IndexPath?) {
         guard let url = URL(string: path) else { return (nil, nil) }
         var contentType = ALMESSAGE_CONTENT_ATTACHMENT
         if sourceType == .camera {
             contentType = ALMESSAGE_CONTENT_CAMERA_RECORDING
         }
 
-        guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(contentType), isVideo: true, metadata: metadata) else { return (nil, nil) }
+        guard let alMessage = processAttachment(filePath: url, text: caption, contentType: Int(contentType), isVideo: true, metadata: metadata) else { return (nil, nil) }
         addToWrapper(message: alMessage)
         return (alMessage, IndexPath(row: 0, section: messageModels.count - 1))
     }

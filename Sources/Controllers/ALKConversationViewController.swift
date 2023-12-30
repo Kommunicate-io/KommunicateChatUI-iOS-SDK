@@ -2961,7 +2961,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     continue
                 }
 
-                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata).1 else { continue }
+                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata, caption: caption).1 else { continue }
                 let newIndexPath = indexPath
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
@@ -2987,7 +2987,8 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 guard let indexPath = viewModel.sendVideo(
                     atPath: path,
                     sourceType: .photoLibrary,
-                    metadata: configuration.messageMetadata
+                    metadata: configuration.messageMetadata,
+                    caption: caption
                 ).1
                 else { continue }
                 tableView.beginUpdates()
