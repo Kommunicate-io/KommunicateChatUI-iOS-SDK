@@ -468,7 +468,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             cell.imageView.image = UIImage()
             cell.deleteButton.isHidden = true
             cell.addbutton.isHidden = false
-            cell.backgroundColor = .gray
+            cell.backgroundColor = .systemGray6
             cell.addbutton.addTarget(self, action: #selector(addButtonTapped(_: )), for: .touchUpInside)
         } else {
             let thumbnailSize = CGSize(width: 200, height: 200)
