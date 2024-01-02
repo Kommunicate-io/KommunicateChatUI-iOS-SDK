@@ -467,14 +467,16 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             // Placeholder image (last cell)
             cell.imageView.image = UIImage()
             cell.deleteButton.isHidden = true
-            cell.addbutton.isHidden = false
+            cell.addButton.isHidden = false
             cell.backgroundColor = .systemGray6
-            cell.addbutton.addTarget(self, action: #selector(addButtonTapped(_: )), for: .touchUpInside)
+            cell.newAttachmentLabel.isHidden = false
+            cell.addButton.addTarget(self, action: #selector(addButtonTapped(_: )), for: .touchUpInside)
         } else {
             let thumbnailSize = CGSize(width: 200, height: 200)
             cell.deleteButton.isHidden = false
-            cell.addbutton.isHidden = true
+            cell.addButton.isHidden = true
             cell.deleteButton.tag = indexPath.item
+            cell.newAttachmentLabel.isHidden = true
             let asset = savedPhotos[indexPath.item]
             cell.deleteButton.addTarget(self, action: #selector(deleteButtonTapped(_:)), for: .touchUpInside)
             PHCachingImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: option, resultHandler: { image, _ in
@@ -524,42 +526,64 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
 }
 
 class KMImageCell: UICollectionViewCell {
-    var imageView: UIImageView!
-    var deleteButton: UIButton!
-    var addbutton: UIButton!
-    var transparentBar: UIView!
-
+    
+    let imageView: UIImageView = {
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "trash.square.fill"), for: .normal)
+        button.tintColor = .gray
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
+        return button
+    }()
+    
+    let addButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.systemGray2)
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true
+        button.isUserInteractionEnabled = true
+        return button
+    }()
+    
+    let transparentBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let newAttachmentLabel: UIView = {
+        let label = UILabel()
+        label.text = "New Attachment"
+        label.font = .systemFont(ofSize: 14)
+        label.textColor =  UIColor.kmDynamicColor(light: UIColor.text(.white), dark: UIColor.text(.grayCC))
+        label.isHidden = true
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        setupConstraint()
+    }
+    
+    private func setupConstraint() {
+        
         contentView.addSubview(imageView)
-        
-        addbutton = UIButton(type: .system)
-        addbutton.setImage(UIImage(systemName: "plus"), for: .normal)
-        addbutton.tintColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.systemGray2)
-        addbutton.contentVerticalAlignment = .fill
-        addbutton.contentHorizontalAlignment = .fill
-        addbutton.translatesAutoresizingMaskIntoConstraints = false
-        addbutton.isHidden = true
-        contentView.addSubview(addbutton)
-        
-        transparentBar = UIView()
-        transparentBar.backgroundColor = UIColor.black.withAlphaComponent(0.35) // Adjust alpha as needed
-        transparentBar.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(transparentBar)
-
-        deleteButton = UIButton(type: .system)
-        deleteButton.setImage(UIImage(systemName: "trash.square.fill"), for: .normal)
-        deleteButton.tintColor = .gray
-        deleteButton.contentVerticalAlignment = .fill
-        deleteButton.contentHorizontalAlignment = .fill
-        deleteButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(deleteButton)
-        
+        contentView.addSubview(addButton)
+        addViewsForAutolayout(views: [transparentBar, newAttachmentLabel, deleteButton])
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -576,13 +600,16 @@ class KMImageCell: UICollectionViewCell {
             deleteButton.widthAnchor.constraint(equalToConstant: 35),
             deleteButton.heightAnchor.constraint(equalToConstant: 35),
             
-            addbutton.topAnchor.constraint(equalTo: imageView.topAnchor),
-            addbutton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
-            addbutton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
-            addbutton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            newAttachmentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            newAttachmentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -25),
+            
+            addButton.topAnchor.constraint(equalTo: imageView.topAnchor),
+            addButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+            addButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            addButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
         ])
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
