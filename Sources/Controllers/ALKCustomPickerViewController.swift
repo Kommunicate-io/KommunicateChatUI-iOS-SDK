@@ -190,7 +190,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             self.navigationController?.dismiss(animated: true, completion: nil)
             return
         }
-        guard !self.configuration.enableCaptionScreen else {
+        guard !self.configuration.enableCaptionScreenForAttachments else {
             let vc = KMCustomCaptionViewController.init(configuration: self.configuration, selectedFiles: self.selectedFiles, allPhotos: allPhotos)
             vc.delegate = self
             self.navigationController?.pushViewController(vc, animated: true)

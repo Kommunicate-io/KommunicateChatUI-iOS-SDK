@@ -93,7 +93,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             navigationController?.navigationBar.hideBottomHairline()
         }
 
-        title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
+        title = localizedString(forKey: "CaptionScreenTitle", withDefaultValue: SystemMessage.LabelName.CaptionScreen, fileName: localizedStringFileName)
     }
 
     private func setupCollectionView() {
@@ -122,15 +122,13 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
 
     private func setupCaptionBar() {
         captionBar = UITextField()
-        captionBar.placeholder = "Add caption.."
+        captionBar.placeholder = localizedString(forKey: "CaptionHere", withDefaultValue: SystemMessage.Information.CaptionHere, fileName: localizedStringFileName)
         captionBar.placeholderColor = UIColor.text(.gray9B)
         captionBar.borderStyle = .roundedRect
-        captionBar.layer.cornerRadius = 5
         captionBar.layer.masksToBounds = true
-        captionBar.layer.shadowColor = UIColor.black.cgColor
-        captionBar.layer.shadowOffset = CGSize(width: 0, height: 2)
+        captionBar.clipsToBounds = false
         captionBar.layer.shadowOpacity = 0.2
-        captionBar.layer.shadowRadius = 2
+        captionBar.layer.shadowOffset = CGSize(width: 0, height: 1)
         captionBar.translatesAutoresizingMaskIntoConstraints = false
         if !UIColor.isKMDarkModeEnabled {
             captionBar.overrideUserInterfaceStyle = .light
@@ -179,7 +177,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             bottomConstraint,
             stackView.heightAnchor.constraint(equalToConstant: 50),
-            captionBar.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -50),
+            captionBar.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
 
             dividerView.widthAnchor.constraint(equalToConstant: 1),
             dividerView.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),

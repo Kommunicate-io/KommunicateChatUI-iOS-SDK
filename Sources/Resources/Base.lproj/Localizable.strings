@@ -6,6 +6,7 @@
 
 Back = "Back";
 ChatHere = "Type your message...";
+CaptionHere = "Add Caption...";
 DeleteSingleConversation = "Are you sure you want to remove the chat with";
 LeaveGroupConversation = "Are you sure you want to leave the group";
 DeleteGroupConversation = "Are you sure you want to remove the group";
@@ -40,6 +41,7 @@ ResetPhotoButton = "Reset Photo";
 SelectButton = "Select";
 SendPhoto = "Send Photo";
 PhotosTitle = "Photos";
+CaptionScreenTitle = "Add Captions"; 
 CameraNotAvailableMessage = "Camera is not Available !!!";
 GalleryNotAvailableMessage = "Gallery is not available";
 ImageCroppedMessage = "Image cropped";
