@@ -22,7 +22,7 @@ struct KommunicateURL {
 public protocol KMZendeskChatProtocol {
     func initiateZendesk(key: String)
     func updateHandoffFlag(_ value: Bool)
-    func handedOffToAgent(groupId: String)
+    func handedOffToAgent(groupId: String, happendNow:Bool)
     func disconnectFromZendesk()
     func resetConfiguration()
     func endChat()
@@ -44,6 +44,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
     var connectionToken: ObservationToken?
     let sendUserMessageGroup = DispatchGroup()
     let sendAgentMessageGroup = DispatchGroup()
+    var isChatTranscriptInProgress : Bool = false
     
     var jwtToken: String = "" {
         didSet {
@@ -73,12 +74,16 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         completion(jwtToken,nil)
     }
     
-    public func handedOffToAgent(groupId: String) {
+    public func handedOffToAgent(groupId: String, happendNow: Bool) {
         lastSyncTime = NSDate().timeIntervalSince1970 * 1000 as NSNumber
         self.groupId = groupId
         isHandOffHappened = true
-        sendChatInfo()
-        sendChatTranscript()
+        if(happendNow &&
+           !ALApplozicSettings.isChatTranscriptSent(self.groupId) &&
+           !isChatTranscriptInProgress) {
+            sendChatInfo()
+            sendChatTranscript()
+        }
     }
     
     public func setGroupId(_ groupId: String) {
@@ -266,10 +271,12 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         }
     }
     func sendChatTranscript() {
+        isChatTranscriptInProgress = true
         let channelKey = NSNumber(value: Int(groupId) ?? 0)
         guard channelKey != 0 else {
             sendLogToKMServer(message: "iOS SDK:Failed to send Chat Transcript \(channelKey) to zendesk due invalid groupid")
             print("Failed to fetch messages for channel key \(channelKey)")
+            isChatTranscriptInProgress = false
             return
         }
      
@@ -279,6 +286,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
                   let userDetails = userArray as? [ALUserDetail],
                   !userDetails.isEmpty,
                   let almessages = messageList.reversed() as? [ALMessage] else {
+                self.isChatTranscriptInProgress = false
                 return
             }
             // Set Last user Message created time
@@ -304,6 +312,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
             guard isHandOffHappened else {
                 addMessageToBuffer(message: transcriptMessage)
                 sendLogToKMServer(message: "iOS SDK: Failed to send Chat Transcript \(channelKey) to zendesk due to handoff")
+                self.isChatTranscriptInProgress = false
                 return
             }
             
@@ -312,6 +321,7 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
                 addMessageToBuffer(message: transcriptMessage)
                 connectToZendeskSocket()
                 sendLogToKMServer(message: "iOS SDK: Failed Send the Chat Transcript \(channelKey)  due to socket conneciton.Retrying connection..")
+                self.isChatTranscriptInProgress = false
                 return
             }
 
@@ -319,8 +329,11 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
                 switch result {
                 case .success:
                     self.isChatTranscriptSent = true
+                    ALApplozicSettings.setIsChatTranscriptSent(self.groupId)
+                    self.isChatTranscriptInProgress = false
                     print("Chat Transcript Sent to Zendesk Successfully")
                 case .failure(let error):
+                    self.isChatTranscriptInProgress = false
                     print("Failed Send the chat transcript to due Zendesk api \(error)")
                     self.addMessageToBuffer(message: transcriptMessage)
                     self.sendLogToKMServer(message: "iOS SDK: Failed Send the Chat Transcript due to Zendesk api \(error)")

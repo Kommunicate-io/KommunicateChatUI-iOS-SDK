@@ -436,10 +436,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             self.navigationBar.updateView(profile: profile)
         })
         
-        guard (ALApplozicSettings.getZendeskSdkAccountKey() != nil),
+        guard KMZendeskChatHandler.shared.isZendeskEnabled(),
               let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
               isZendeskConversation(channel: channel),
-              !KMZendeskChatHandler.shared.isHandOffHappened,
+              !channel.isClosedConversation,
               let assigneeUserId = channel.assigneeUserId,
               let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
               let roleType = assignee.roleType as? UInt32,
@@ -448,7 +448,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             return
         }
         
-        KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString)
+        KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString, happendNow: true)
     }
     
     open func updateAssigneeOnlineStatus(userId: String){}
@@ -1291,15 +1291,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         // If zendesk chat is integrated and the message is an assignment(to human) message , then initialize the zendesk sdk
-        guard let zendeskKey = ALApplozicSettings.getZendeskSdkAccountKey(),
-              !zendeskKey.isEmpty,
-              message.isAssignmentMessage(),
-              !message.isHiddenMessage(),
-              let groupId = message.groupId,
-              let metadata = message.metadata,
-              let _ = metadata["KM_ASSIGN_TO"] as? String else { return }
-        
-        KMZendeskChatHandler.shared.handedOffToAgent(groupId: groupId.stringValue)
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId _: String?, status: Int32?) {
@@ -3019,3 +3010,14 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
     }
 }
 
+extension ALChannel {
+    static let ClosedStatus = 2
+
+    var isClosedConversation: Bool {
+        guard let conversationStatus = metadata[AL_CHANNEL_CONVERSATION_STATUS] as? String else {
+            return false
+        }
+        return type == Int16(SUPPORT_GROUP.rawValue) &&
+            Int(conversationStatus) ?? 0 == ALChannel.ClosedStatus
+    }
+}
