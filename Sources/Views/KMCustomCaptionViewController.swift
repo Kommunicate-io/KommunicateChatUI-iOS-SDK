@@ -540,7 +540,7 @@ class KMImageCell: UICollectionViewCell {
         
         addbutton = UIButton(type: .system)
         addbutton.setImage(UIImage(systemName: "plus"), for: .normal)
-        addbutton.tintColor = .white
+        addbutton.tintColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.systemGray2)
         addbutton.contentVerticalAlignment = .fill
         addbutton.contentHorizontalAlignment = .fill
         addbutton.translatesAutoresizingMaskIntoConstraints = false
