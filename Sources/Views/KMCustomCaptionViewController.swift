@@ -122,7 +122,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
 
     private func setupCaptionBar() {
         captionBar = UITextField()
-        captionBar.placeholder = localizedString(forKey: "CaptionHere", withDefaultValue: SystemMessage.Information.CaptionHere, fileName: localizedStringFileName)
+        captionBar.placeholder = localizedString(forKey: "AttachmentCaptionHere", withDefaultValue: SystemMessage.Information.AttachmentCaptionHere, fileName: localizedStringFileName)
         captionBar.placeholderColor = UIColor.text(.gray9B)
         captionBar.borderStyle = .roundedRect
         captionBar.layer.masksToBounds = true

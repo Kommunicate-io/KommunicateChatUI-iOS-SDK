@@ -6,7 +6,7 @@
 
 Back = "Back";
 ChatHere = "Type your message...";
-CaptionHere = "Add Caption...";
+AttachmentCaptionHere = "Add Caption...";
 DeleteSingleConversation = "Are you sure you want to remove the chat with";
 LeaveGroupConversation = "Are you sure you want to leave the group";
 DeleteGroupConversation = "Are you sure you want to remove the group";

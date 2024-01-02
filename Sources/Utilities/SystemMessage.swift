@@ -43,7 +43,7 @@ struct SystemMessage: Localizable {
         static let NotPartOfGroup = localizedString(forKey: "NotPartOfGroup")
         static let UnblockToEnableChat = localizedString(forKey: "UnblockToEnableChat")
         static let ChatHere = localizedString(forKey: "ChatHere")
-        static let CaptionHere = localizedString(forKey: "CaptionHere")
+        static let AttachmentCaptionHere = localizedString(forKey: "AttachmentCaptionHere")
         static let LoadingIndicatorText = localizedString(forKey: "LoadingIndicatorText")
         static let ReportMessageSuccess = localizedString(forKey: "ReportMessageSuccess")
         static let ReportMessageError = localizedString(forKey: "ReportMessageError")
