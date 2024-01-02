@@ -132,6 +132,9 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         captionBar.layer.shadowOpacity = 0.2
         captionBar.layer.shadowRadius = 2
         captionBar.translatesAutoresizingMaskIntoConstraints = false
+        if !UIColor.isKMDarkModeEnabled {
+            captionBar.overrideUserInterfaceStyle = .light
+        }
         view.addSubview(captionBar)
 
         NSLayoutConstraint.activate([
@@ -468,7 +471,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             cell.imageView.image = UIImage()
             cell.deleteButton.isHidden = true
             cell.addButton.isHidden = false
-            cell.backgroundColor = .systemGray6
+            cell.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
             cell.newAttachmentLabel.isHidden = false
             cell.addButton.addTarget(self, action: #selector(addButtonTapped(_: )), for: .touchUpInside)
         } else {
