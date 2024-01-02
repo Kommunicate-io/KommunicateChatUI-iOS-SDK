@@ -3,7 +3,7 @@
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
 ## Unreleased
-- Zendesk (Zopium) integration optimisations
+- Zendesk (Zopim) integration optimisations
 
 ## [1.2.5] 2023-12-23
 - Restrict agent reply for zendesk conversation
