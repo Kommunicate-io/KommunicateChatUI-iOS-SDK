@@ -211,12 +211,19 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                 let detector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
                 let range = NSRange(location: 0, length: message.utf16.count)
                 let matches = detector.matches(in: message, options: [], range: range)
-                let url = matches.compactMap { $0.url }.first
+                
+                let validURLs = matches.compactMap { result -> URL? in
+                    guard result.resultType == .link, let url = result.url, url.scheme?.lowercased().starts(with: "http") == true else {
+                        return nil
+                    }
+                    return url
+                }
 
-                guard let urlString = url?.absoluteString, !urlString.starts(with: "mailto:") else {
+                guard let url = validURLs.first else {
                     return nil
                 }
-                urlCache.setObject(urlString as NSString, forKey: identifier as NSString)
+
+                urlCache.setObject(url.absoluteString as NSString, forKey: identifier as NSString)
                 return url
             } catch {
                 return nil
