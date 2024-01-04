@@ -430,7 +430,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             if let formDataSubmit = formData,
                let fields = formDataSubmit.dropDownFields[indexPath.section]{
                 cell.menu.selectedIndex = fields.0
-                cell.menu.text = cell.menu.optionArray[fields.0]
+                cell.menu.text = cell.options?[fields.0].label
             }
             
             if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
