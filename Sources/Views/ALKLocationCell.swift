@@ -122,8 +122,12 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
         timeLabel.text = viewModel.time
 
         // addressLabel
-        if let geocode = viewModel.geocode {
+        if let geocode = viewModel.geocode, geocode.formattedAddress != "" {
             addressLabel.text = geocode.formattedAddress
+        } else {
+            addressLabel.isHidden = true 
+            locationImageView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 0.0).isActive = true
+            layoutIfNeeded()
         }
 
         // locationImageView
