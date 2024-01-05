@@ -2922,7 +2922,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {
-    func filesSelected(images: [UIImage], gifs: [String],videos: [String]) {
+    func filesSelected(images: [UIImage], gifs: [String],videos: [String], caption: String) {
         let fileCount = images.count + videos.count + gifs.count
         for index in 0 ..< fileCount {
             if index < images.count {
@@ -2935,7 +2935,8 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 }
                 let (message, indexPath) = viewModel.send(
                     photo: image,
-                    metadata: configuration.messageMetadata
+                    metadata: configuration.messageMetadata,
+                    caption: caption
                 )
                 guard message != nil, let newIndexPath = indexPath else { return }
                 //            DispatchQueue.main.async {
@@ -2960,7 +2961,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     continue
                 }
 
-                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata).1 else { continue }
+                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata, caption: caption).1 else { continue }
                 let newIndexPath = indexPath
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
@@ -2986,7 +2987,8 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 guard let indexPath = viewModel.sendVideo(
                     atPath: path,
                     sourceType: .photoLibrary,
-                    metadata: configuration.messageMetadata
+                    metadata: configuration.messageMetadata,
+                    caption: caption
                 ).1
                 else { continue }
                 tableView.beginUpdates()
