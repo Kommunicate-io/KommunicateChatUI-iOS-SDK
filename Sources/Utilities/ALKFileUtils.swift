@@ -17,7 +17,7 @@ class ALKFileUtils: NSObject {
             }
             return (localPathName as NSString).lastPathComponent as String
         }
-        return fileName
+        return fileName.replace("AWS-ENCRYPTED-", with: "")
     }
 
     func getFileSize(filePath: String?, fileMetaInfo: ALFileMetaInfo?) -> String? {
