@@ -10,11 +10,11 @@ import MobileCoreServices
 
 public enum DocumentType: CaseIterable, Equatable {
     case pdf
-    case excel
-    case docs
+    case xls
+    case text
     case docx
     case presentation
-    case word
+    case doc
     case spreadsheet
 }
 
@@ -22,7 +22,7 @@ public struct KMDocumentConfiguration {
     
     public static var shared =  KMDocumentConfiguration()
     
-    public var documentOptions: DocumentOptions = .some([.docs,.excel,.pdf,.presentation,.spreadsheet,.word])
+    public var documentOptions: DocumentOptions = .some([.text,.xls,.pdf,.presentation,.spreadsheet,.doc])
     
     public enum DocumentOptions {
         case all
@@ -47,11 +47,11 @@ public struct KMDocumentConfiguration {
     private func mapDocumentTypeToUTType(_ documentType: DocumentType) -> String {
         switch documentType {
         case .pdf: return kUTTypePDF as String
-        case .excel: return "com.microsoft.excel.xls"
-        case .docs: return kUTTypeText as String
+        case .xls: return "com.microsoft.excel.xls"
+        case .text: return kUTTypeText as String
         case .docx: return "org.openxmlformats.wordprocessingml.document"
         case .presentation: return kUTTypePresentation as String
-        case .word: return "com.microsoft.word.doc"
+        case .doc: return "com.microsoft.word.doc"
         case .spreadsheet: return kUTTypeSpreadsheet as String
         }
     }
