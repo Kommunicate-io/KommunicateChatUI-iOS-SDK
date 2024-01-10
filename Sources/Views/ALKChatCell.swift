@@ -56,7 +56,7 @@ extension ALKChatViewModelProtocol {
         return mentionParser
     }
 
-    func attributedTextWithMentions(
+    public func attributedTextWithMentions(
         defaultAttributes: [NSAttributedString.Key: Any],
         mentionAttributes: [NSAttributedString.Key: Any],
         displayNames: ((Set<String>) -> ([String: String]?))?
@@ -75,7 +75,7 @@ extension ALKChatViewModelProtocol {
         return attributedText
     }
 
-    func displayNames() -> [String: String]? {
+    public func displayNames() -> [String: String]? {
         let alConactService = ALContactService()
         var names: [String: String] = [:]
 
