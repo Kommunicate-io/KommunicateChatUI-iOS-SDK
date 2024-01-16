@@ -166,8 +166,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return tv
     }()
 
-    let unreadScrollButton: ExtendedTouchAreaButton = {
-        let button = ExtendedTouchAreaButton()
+    let unreadScrollButton: KMExtendedTouchAreaButton = {
+        let button = KMExtendedTouchAreaButton()
         button.backgroundColor = UIColor.lightText
         let image = UIImage(named: "scrollDown", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)

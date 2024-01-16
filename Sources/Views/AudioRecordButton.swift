@@ -39,7 +39,7 @@ open class AudioRecordButton: UIButton {
     fileprivate var audioFilename: URL!
     private var audioPlayer: AVAudioPlayer?
 
-    let recordButton = ExtendedTouchAreaButton(type: .custom)
+    let recordButton = KMExtendedTouchAreaButton(type: .custom)
 
     func setAudioRecDelegate(recorderDelegate: ALKAudioRecorderProtocol?) {
         delegate = recorderDelegate

@@ -130,7 +130,7 @@ open class ALKChatBar: UIView, Localizable {
     
     // For Speech To Text
     open var languageSelectionButton: UIButton = {
-        let button = ExtendedTouchAreaButton(type: .custom)
+        let button = KMExtendedTouchAreaButton(type: .custom)
         var image = UIImage(named: "ic_language", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         let tintColor = ALKAppSettingsUserDefaults().getAttachmentIconsTintColor()
@@ -164,13 +164,13 @@ open class ALKChatBar: UIView, Localizable {
     #endif
 
     open var photoButton: UIButton = {
-        let bt = ExtendedTouchAreaButton(type: .custom)
+        let bt = KMExtendedTouchAreaButton(type: .custom)
         bt.accessibilityIdentifier = "photoButtonInConversationScreen"
         return bt
     }()
 
     open var galleryButton: UIButton = {
-        let button = ExtendedTouchAreaButton(type: .custom)
+        let button = KMExtendedTouchAreaButton(type: .custom)
         button.accessibilityIdentifier = "galleryButtonInConversationScreen"
         return button
     }()
@@ -184,7 +184,7 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     open var locationButton: UIButton = {
-        let bt = ExtendedTouchAreaButton(type: .custom)
+        let bt = KMExtendedTouchAreaButton(type: .custom)
         bt.accessibilityIdentifier = "locationButtonInConversationScreen"
         return bt
     }()
@@ -198,7 +198,7 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     open var documentButton: UIButton = {
-        let button = ExtendedTouchAreaButton(type: .custom)
+        let button = KMExtendedTouchAreaButton(type: .custom)
         button.accessibilityIdentifier = "documentButtonInConversationScreen"
         return button
     }()
@@ -209,7 +209,7 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     open lazy var sendButton: UIButton = {
-        let bt = ExtendedTouchAreaButton(type: .custom)
+        let bt = KMExtendedTouchAreaButton(type: .custom)
         bt.accessibilityIdentifier = "sendButton"
         return bt
     }()
@@ -228,7 +228,7 @@ open class ALKChatBar: UIView, Localizable {
     }()
 
     open var videoButton: UIButton = {
-        let button = ExtendedTouchAreaButton(type: .custom)
+        let button = KMExtendedTouchAreaButton(type: .custom)
         button.accessibilityIdentifier = "videoButtonInConversationScreen"
         return button
     }()
@@ -908,11 +908,11 @@ extension UITextView {
     }
 }
 
-class ExtendedTouchAreaButton: UIButton {
+public class KMExtendedTouchAreaButton: UIButton {
     
-    private var extraTouchArea: UIEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
+    public var extraTouchArea: UIEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
     
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let extendedBounds = bounds.inset(by: extraTouchArea)
         return extendedBounds.contains(point)
     }
