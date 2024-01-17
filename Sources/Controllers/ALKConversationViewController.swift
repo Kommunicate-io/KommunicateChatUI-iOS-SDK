@@ -2358,12 +2358,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             return
         }
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let sectionCount = self.tableView.numberOfSections
-            if indexPath.section <= sectionCount {
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-            }
-        }
     }
     
     public func updateChatbarText(text: String) {
