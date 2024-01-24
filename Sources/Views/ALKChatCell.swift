@@ -114,24 +114,6 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     public enum Config {
         public static var iconMuted = UIImage(named: "muted", in: Bundle.km, compatibleWith: nil)
     }
-    
-    let platformIcons: [String: UIImage] = [
-        "MOBILE": UIImage(named: "platformPhone", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "WEB": UIImage(named: "platformWeb", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "FACEBOOK": UIImage(named: "platformFacebook", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "WHATSAPPCLOUDAPI": UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "WHATSAPPTWILIO": UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "WHATSAPPDIALOG360": UIImage(named: "platformWhatsapp", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "DIALOG360": UIImage(named: "platform360Dialog", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "ZENDESKSUNSHINE": UIImage(named: "platformSunshine", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "VIBER": UIImage(named: "platformViber", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "LINE": UIImage(named: "platformLine", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "META": UIImage(named: "platformMeta", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "TELEGRAM": UIImage(named: "platformTelegram", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "MESSENGERFB": UIImage(named: "platformMessengerFB", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "INSTAGRAM": UIImage(named: "platformInstagram", in: Bundle.km, compatibleWith: nil) ?? UIImage(),
-        "TWILIO": UIImage(named: "platformTwillio", in: Bundle.km, compatibleWith: nil) ?? UIImage()
-    ]
 
     public var localizationFileName: String = "Localizable"
     var displayNames: ((Set<String>) -> ([String: String]?))?
@@ -154,17 +136,6 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         label.font = Font.bold(size: 14.0).font()
         label.textColor = UIColor.kmDynamicColor(light: .text(.black00), dark: .text(.white))
         return label
-    }()
-    
-    private var platformImageView: UIImageView = {
-        let platformImage = UIImageView()
-        platformImage.contentMode = .scaleAspectFit
-        platformImage.clipsToBounds = true
-        
-        if !ALApplozicSettings.isAgentAppConfigurationEnabled(){
-            platformImage.isHidden = true
-        }
-        return platformImage
     }()
     
     private var messageLabel: UILabel = {
@@ -296,13 +267,6 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         self.viewModel = viewModel
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
         
-        /// this is used to set the icon according to data recived in metadata
-        if ALApplozicSettings.isAgentAppConfigurationEnabled(), let device = viewModel.platformSource, let platformImage = platformIcons[device] {
-            platformImageView.image = platformImage
-        } else {
-            platformImageView.image = nil
-        }
-        
         if let avatarImage = viewModel.avatarImage {
             if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
                 let resource = Kingfisher.ImageResource(downloadURL: imgURL, cacheKey: imgStr)
@@ -389,7 +353,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     }
 
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, platformImageView, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
@@ -410,17 +374,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         // setup constraint of mood'
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        if platformImageView.isHidden {
-            messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
-        } else {
-            // setup constraint of Platform Identirier (Agent App)
-            platformImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4).isActive = true
-            platformImageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-            platformImageView.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor).isActive = true
-            platformImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
-            
-            messageLabel.leadingAnchor.constraint(equalTo: platformImageView.trailingAnchor, constant: 6).isActive = true
-        }
+        messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
         // setup constraint of line
