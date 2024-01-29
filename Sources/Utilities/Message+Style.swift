@@ -22,8 +22,8 @@ public enum ALKMessageStyle {
     )
 
     public static var time = Style(
-        font: UIFont.font(.italic(size: 12)),
-        text: .text(.grayCC)
+        font: UIFont.font(.medium(size: 12)),
+        text: UIColor(hexString: "67757E")
     )
 
     // Received message text style
