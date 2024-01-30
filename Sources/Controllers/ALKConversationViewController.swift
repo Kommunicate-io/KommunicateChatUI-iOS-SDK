@@ -216,20 +216,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         didSet {
             if isChatBarResticted {
                 chatBar.textView.textAlignment = .center
+                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = false
+                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = false
+                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = false
+                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = false
                 chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                 chatBar.sendButton.isHidden = isChatBarResticted
             } else {
-                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
-                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
-                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
-                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
-
+                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = false
+                
+                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+                
                 chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                 chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
                 chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
                 chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
-                
-                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+
+                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
+                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
             }
             chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
             chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
