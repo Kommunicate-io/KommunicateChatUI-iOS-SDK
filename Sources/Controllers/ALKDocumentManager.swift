@@ -16,14 +16,7 @@ class ALKDocumentManager: NSObject {
     weak var delegate: ALKDocumentManagerDelegate?
 
     func showPicker(from controller: UIViewController) {
-        let types = [
-            kUTTypeText as String,
-            kUTTypePresentation as String,
-            kUTTypeSpreadsheet as String,
-            kUTTypePDF as String,
-            "com.microsoft.word.doc",
-            "com.microsoft.excel.xls",
-        ]
+        let types = KMDocumentConfiguration.shared.getDocumentOptions()
         let importMenu = UIDocumentPickerViewController(documentTypes: types, in: .import)
         importMenu.delegate = self
         importMenu.modalPresentationStyle = .formSheet

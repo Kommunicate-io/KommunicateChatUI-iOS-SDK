@@ -77,6 +77,9 @@ public struct ALKConfiguration {
     /// If true then line between send button and text view will be hidden.
     public var hideLineImageFromChatBar = false
 
+    /// If this is set to true, the screen will display a option of adding caption after selecting an image from the Custom Picker. By default, it is set to false.
+    public var enableCaptionScreenForAttachments = false
+    
     /// If true then typing status will show user names.
     public var showNameWhenUserTypesInGroup = true
 

@@ -13,7 +13,7 @@ extension ALKConversationViewController: ALKCustomCameraProtocol {
         print("Image call done")
         isJustSent = true
 
-        let (message, indexPath) = viewModel.send(photo: cropedImage, metadata: configuration.messageMetadata)
+        let (message, indexPath) = viewModel.send(photo: cropedImage, metadata: configuration.messageMetadata, caption: "")
         guard message != nil, let newIndexPath = indexPath else { return }
         tableView.beginUpdates()
         tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)

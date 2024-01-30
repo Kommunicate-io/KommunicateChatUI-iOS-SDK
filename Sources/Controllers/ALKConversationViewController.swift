@@ -166,8 +166,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return tv
     }()
 
-    let unreadScrollButton: UIButton = {
-        let button = UIButton()
+    let unreadScrollButton: KMExtendedTouchAreaButton = {
+        let button = KMExtendedTouchAreaButton()
         button.backgroundColor = UIColor.lightText
         let image = UIImage(named: "scrollDown", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
@@ -216,20 +216,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         didSet {
             if isChatBarResticted {
                 chatBar.textView.textAlignment = .center
+                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = false
+                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = false
+                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = false
+                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = false
                 chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                 chatBar.sendButton.isHidden = isChatBarResticted
             } else {
-                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
-                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
-                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
-                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
-
+                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = false
+                
+                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+                
                 chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                 chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
                 chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
                 chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
-                
-                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+
+                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
+                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
             }
             chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
             chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
@@ -2363,12 +2368,6 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             return
         }
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let sectionCount = self.tableView.numberOfSections
-            if indexPath.section <= sectionCount {
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-            }
-        }
     }
     
     public func updateChatbarText(text: String) {
@@ -2927,7 +2926,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {
-    func filesSelected(images: [UIImage], gifs: [String],videos: [String]) {
+    func filesSelected(images: [UIImage], gifs: [String],videos: [String], caption: String) {
         let fileCount = images.count + videos.count + gifs.count
         for index in 0 ..< fileCount {
             if index < images.count {
@@ -2940,7 +2939,8 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 }
                 let (message, indexPath) = viewModel.send(
                     photo: image,
-                    metadata: configuration.messageMetadata
+                    metadata: configuration.messageMetadata,
+                    caption: caption
                 )
                 guard message != nil, let newIndexPath = indexPath else { return }
                 //            DispatchQueue.main.async {
@@ -2965,7 +2965,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                     continue
                 }
 
-                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata).1 else { continue }
+                guard let indexPath = viewModel.sendVideo(atPath: gif, sourceType: .photoLibrary, metadata: configuration.messageMetadata, caption: caption).1 else { continue }
                 let newIndexPath = indexPath
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
@@ -2991,7 +2991,8 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 guard let indexPath = viewModel.sendVideo(
                     atPath: path,
                     sourceType: .photoLibrary,
-                    metadata: configuration.messageMetadata
+                    metadata: configuration.messageMetadata,
+                    caption: caption
                 ).1
                 else { continue }
                 tableView.beginUpdates()

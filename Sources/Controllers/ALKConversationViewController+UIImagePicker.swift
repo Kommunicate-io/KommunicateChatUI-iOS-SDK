@@ -31,7 +31,7 @@ extension ALKConversationViewController:
                 guard let newPath = path else { return }
                 var indexPath: IndexPath?
                 DispatchQueue.main.async {
-                    (_, indexPath) = self.viewModel.sendVideo(atPath: newPath, sourceType: picker.sourceType, metadata: self.configuration.messageMetadata)
+                    (_, indexPath) = self.viewModel.sendVideo(atPath: newPath, sourceType: picker.sourceType, metadata: self.configuration.messageMetadata, caption: "")
                     self.tableView.beginUpdates()
                     self.tableView.insertSections(IndexSet(integer: (indexPath?.section)!), with: .automatic)
                     self.tableView.endUpdates()

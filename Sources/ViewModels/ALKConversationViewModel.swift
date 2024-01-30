@@ -651,6 +651,21 @@ open class ALKConversationViewModel: NSObject, Localizable {
         print("new messages: ", models.map { $0.message })
         self.removeTypingIndicatorMessage()
         delegate?.newMessagesAdded()
+        newFormMessageAdded()
+    }
+    
+    @objc open func newFormMessageAdded() {
+        let indexPath = IndexPath(row: 0, section: messageModels.count - 1)
+        if let lastMessage = messageModels.last {
+            reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
+        }
+    }
+    
+    func reloadIfFormMessage(message: ALKMessageModel, indexPath: IndexPath) {
+        guard message.messageType == .form, KMMultipleSelectionConfiguration.shared.enableMultipleSelectionOnCheckbox else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+            self.delegate?.messageUpdated()
+        })
     }
     
     private func getInitialStaticFirstMessage() -> ALMessage {
@@ -955,14 +970,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return nil
     }
 
-    open func send(photo: UIImage, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
+    open func send(photo: UIImage, metadata: [AnyHashable: Any]?, caption: String) -> (ALMessage?, IndexPath?) {
         print("image is:  ", photo)
         let filePath = ALKFileUtils().saveImageToDocDirectory(image: photo)
         print("filepath:: \(String(describing: filePath))")
         guard let path = filePath, let url = URL(string: path) else { return (nil, nil) }
         guard let alMessage = processAttachment(
             filePath: url,
-            text: "",
+            text: caption,
             contentType: Int(ALMESSAGE_CONTENT_ATTACHMENT),
             metadata: metadata
         ) else {
@@ -1032,14 +1047,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
+    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable: Any]?, caption: String) -> (ALMessage?, IndexPath?) {
         guard let url = URL(string: path) else { return (nil, nil) }
         var contentType = ALMESSAGE_CONTENT_ATTACHMENT
         if sourceType == .camera {
             contentType = ALMESSAGE_CONTENT_CAMERA_RECORDING
         }
 
-        guard let alMessage = processAttachment(filePath: url, text: "", contentType: Int(contentType), isVideo: true, metadata: metadata) else { return (nil, nil) }
+        guard let alMessage = processAttachment(filePath: url, text: caption, contentType: Int(contentType), isVideo: true, metadata: metadata) else { return (nil, nil) }
         addToWrapper(message: alMessage)
         return (alMessage, IndexPath(row: 0, section: messageModels.count - 1))
     }
@@ -1917,7 +1932,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private func processAttachment(
         filePath: URL,
-        text _: String,
+        text : String,
         contentType: Int,
         isVideo _: Bool = false,
         metadata: [AnyHashable: Any]?,
@@ -1927,6 +1942,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
         alMessage.contentType = Int16(contentType)
         alMessage.fileMeta = getFileMetaInfo()
+        alMessage.message = text
         alMessage.imageFilePath = filePath.lastPathComponent
         alMessage.fileMeta.name = fileName ?? String(format: "AUD-5-%@", filePath.lastPathComponent)
         if fileName == nil, let contactId = contactId {

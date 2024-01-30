@@ -90,7 +90,7 @@ extension ALKPhotoPicker: PHPickerViewControllerDelegate {
         export(results: results) { images, gifs, videos in
             picker.dismissIPActivityAlert {
                 picker.dismiss(animated: true)
-                self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos)
+                self.delegate?.filesSelected(images: images, gifs: gifs, videos: videos, caption: "")
             }
         }
     }
