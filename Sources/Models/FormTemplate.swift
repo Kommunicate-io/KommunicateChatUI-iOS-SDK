@@ -13,6 +13,11 @@ struct FormTemplate: Decodable {
     struct Element: Decodable {
         let type: String
         let data: Details?
+        let options: [Option]?
+        let title, name, label, value, placeholder: String?
+        let formAction, message, requestType, postFormDataAsMessage: String?
+        var postBackToKommunicate: Bool?
+        var metadata : [String:String]?
     }
 
     struct Details: Decodable {

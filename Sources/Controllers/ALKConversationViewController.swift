@@ -1801,6 +1801,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                let hiddenValue = elementData.value
             {
                 postFormData[hiddenName] = hiddenValue
+            } else if element.contentType == .hidden,
+                      let hiddenName = element.name,
+                      let hiddenValue = element.value
+            {
+                postFormData[hiddenName] = hiddenValue
             }
 
             if element.contentType == .submit,
@@ -1822,6 +1827,26 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 
                 if let metadata = action.metadata  {
+                    actionMessageMetaData = metadata
+                }
+            }
+            
+            if element.contentType == .submit, element.data == nil {
+                
+                if let formTemplateRequest = element.requestType {
+                    requestType = formTemplateRequest
+                }
+                if let formTemplateAction = element.formAction {
+                    formAction = formTemplateAction
+                }
+                if let formTemplateMessage = element.message {
+                    message = formTemplateMessage
+                }
+                if let formTemplatePostFormDataAsMessage = element.postBackToKommunicate, formTemplatePostFormDataAsMessage {
+                    isFormDataReplytoChat = true
+                }
+                
+                if let metadata = element.metadata  {
                     actionMessageMetaData = metadata
                 }
             }
@@ -2417,15 +2442,25 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func processElement(_ element: FormTemplate.Element, at elementIndex: Int, formData: inout FormDataSubmit) {
         let elementType = element.type
-        guard let details = element.data, let options = details.options else { return }
-
-        switch elementType {
-        case "radio":
-            processRadioElement(options, at: elementIndex, formData: &formData)
-        case "checkbox":
-            processCheckboxElement(options, at: elementIndex, formData: &formData)
-        default:
-            break
+        
+        if let details = element.data, let options = details.options {
+            switch elementType {
+            case "radio":
+                processRadioElement(options, at: elementIndex, formData: &formData)
+            case "checkbox":
+                processCheckboxElement(options, at: elementIndex, formData: &formData)
+            default:
+                break
+            }
+        } else if let options = element.options {
+            switch elementType {
+            case "radio":
+                processRadioElement(options, at: elementIndex, formData: &formData)
+            case "checkbox":
+                processCheckboxElement(options, at: elementIndex, formData: &formData)
+            default:
+                break
+            }
         }
     }
 
