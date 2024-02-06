@@ -2392,7 +2392,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         guard indexPath.section >= 0 else {
             return
         }
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        let sectionCount = self.tableView.numberOfSections
+        if indexPath.section <= sectionCount {
+            tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        }
     }
     
     public func updateChatbarText(text: String) {
