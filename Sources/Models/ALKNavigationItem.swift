@@ -61,7 +61,7 @@ public extension ALKNavigationItem {
            
             if identifier == faqIdentifier {
                 let customView = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 30))
-                let btn = UIButton(frame:CGRectMake(0.0, 0.0, 50.0, 30.0) )
+                let btn = KMExtendedTouchAreaButton(frame:CGRectMake(0.0, 0.0, 50.0, 30.0) )
                 btn.isUserInteractionEnabled = true
                 btn.setTitle(text, for: .normal)
                 btn.backgroundColor = faqBackgroundColor

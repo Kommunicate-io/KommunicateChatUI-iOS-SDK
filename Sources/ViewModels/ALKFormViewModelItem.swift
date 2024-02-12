@@ -235,13 +235,20 @@ extension FormTemplate {
                                                            title: title,
                                                            options: options))
             case .multiselect:
-                guard let elementData = element.data,
-                      let title = elementData.title,
-                      let options = elementData.options,
-                      let name = elementData.name else { return }
-                items.append(FormViewModelMultiselectItem(name: name,
-                                                          title: title,
-                                                          options: options))
+                if let elementData = element.data,
+                   let title = elementData.title,
+                   let options = elementData.options,
+                   let name = elementData.name {
+                    items.append(FormViewModelMultiselectItem(name: name,
+                                                              title: title,
+                                                              options: options))
+                } else if let title = element.title,
+                          let options = element.options,
+                          let name = element.name {
+                    items.append(FormViewModelMultiselectItem(name: name,
+                                                              title: title,
+                                                              options: options))
+                } else { return }
             case .time:
                 guard let elementData = element.data,
                       let label = elementData.label else { return }
@@ -268,10 +275,17 @@ extension FormTemplate {
     }
 
     var submitButtonTitle: String? {
-        guard let submitButton = elements
+        if let submitButton = elements
             .filter({ $0.contentType == .submit })
             .first, let submitButtonData = submitButton.data,
-            let buttonName = submitButtonData.name else { return nil }
-        return buttonName
+           let buttonName = submitButtonData.name {
+            return buttonName
+        } else if let submitButton = elements
+            .filter({ $0.contentType == .submit })
+            .first, let buttonName = submitButton.label {
+            return buttonName
+        } else {
+            return nil
+        }
     }
 }

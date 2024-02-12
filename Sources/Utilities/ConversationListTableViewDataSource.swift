@@ -13,7 +13,7 @@ public class ConversationListTableViewDataSource: NSObject, UITableViewDataSourc
     public typealias CellConfigurator = (ALKChatViewModelProtocol, UITableViewCell) -> Void
     public var cellConfigurator: CellConfigurator
 
-    var viewModel: ALKConversationListViewModelProtocol
+    public var viewModel: ALKConversationListViewModelProtocol
 
     public init(viewModel: ALKConversationListViewModelProtocol, cellConfigurator: @escaping CellConfigurator) {
         self.viewModel = viewModel

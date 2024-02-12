@@ -91,7 +91,9 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
 
     public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         let isMessageEmpty = viewModel.isMessageEmpty
-
+        if let check = viewModel.suggestedReply() {
+            quickReplyView.isHidden = false
+        }
         let model = viewModel.messageDetails()
         messageViewHeight.constant = isMessageEmpty ? 0 : ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
 
@@ -114,20 +116,18 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
         nameLabel.setStyle(ALKMessageStyle.displayName)
 
         messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
-
-        guard let suggestedReplies = viewModel.suggestedReply() else {
-            quickReplyView.isHidden = true
-            return
-        }
         timeLabel.text = viewModel.time
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
             ViewPadding.TimeLabel.maxWidth,
             font: ALKMessageStyle.time.font
         )
-
         timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
         timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
         timeLabel.setStyle(ALKMessageStyle.time)
+        guard let suggestedReplies = viewModel.suggestedReply() else {
+            quickReplyView.isHidden = true
+            return
+        }
         let quickReplyViewWidth = maxWidth -
             (ChatCellPadding.ReceivedMessage.QuickReply.left + ChatCellPadding.ReceivedMessage.Message.right + ViewPadding.AvatarImageView.leading + ViewPadding.AvatarImageView.width + ChatCellPadding.ReceivedMessage.Message.left)
         quickReplyView.update(model: suggestedReplies, maxWidth: quickReplyViewWidth)

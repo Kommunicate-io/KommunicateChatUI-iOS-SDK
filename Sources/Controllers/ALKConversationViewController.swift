@@ -166,8 +166,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return tv
     }()
 
-    let unreadScrollButton: UIButton = {
-        let button = UIButton()
+    let unreadScrollButton: KMExtendedTouchAreaButton = {
+        let button = KMExtendedTouchAreaButton()
         button.backgroundColor = UIColor.lightText
         let image = UIImage(named: "scrollDown", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
@@ -216,20 +216,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         didSet {
             if isChatBarResticted {
                 chatBar.textView.textAlignment = .center
+                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = false
+                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = false
+                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = false
+                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = false
                 chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                 chatBar.sendButton.isHidden = isChatBarResticted
             } else {
-                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
-                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
-                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
-                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
-
+                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = false
+                
+                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+                
                 chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                 chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
                 chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
                 chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
-                
-                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+
+                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
+                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
             }
             chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
             chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
@@ -435,6 +440,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let profile = profile else { return }
             self.navigationBar.updateView(profile: profile)
         })
+        
+        guard KMZendeskChatHandler.shared.isZendeskEnabled(),
+              let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
+              isZendeskConversation(channel: channel),
+              !channel.isClosedConversation,
+              let assigneeUserId = channel.assigneeUserId,
+              let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
+              let roleType = assignee.roleType as? UInt32,
+              roleType == AL_APPLICATION_WEB_ADMIN.rawValue,
+              let channelKeyString = viewModel.channelKey?.stringValue else {
+            return
+        }
+        
+        KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString, happendNow: true)
     }
     
     open func updateAssigneeOnlineStatus(userId: String){}
@@ -1277,15 +1296,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         // If zendesk chat is integrated and the message is an assignment(to human) message , then initialize the zendesk sdk
-        guard let zendeskKey = ALApplozicSettings.getZendeskSdkAccountKey(),
-              !zendeskKey.isEmpty,
-              message.isAssignmentMessage(),
-              !message.isHiddenMessage(),
-              let groupId = message.groupId,
-              let metadata = message.metadata,
-              let _ = metadata["KM_ASSIGN_TO"] as? String else { return }
-        
-        KMZendeskChatHandler.shared.handedOffToAgent(groupId: groupId.stringValue)
     }
 
     public func updateDeliveryReport(messageKey: String?, contactId _: String?, status: Int32?) {
@@ -1791,6 +1801,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                let hiddenValue = elementData.value
             {
                 postFormData[hiddenName] = hiddenValue
+            } else if element.contentType == .hidden,
+                      let hiddenName = element.name,
+                      let hiddenValue = element.value
+            {
+                postFormData[hiddenName] = hiddenValue
             }
 
             if element.contentType == .submit,
@@ -1812,6 +1827,26 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 }
                 
                 if let metadata = action.metadata  {
+                    actionMessageMetaData = metadata
+                }
+            }
+            
+            if element.contentType == .submit, element.data == nil {
+                
+                if let formTemplateRequest = element.requestType {
+                    requestType = formTemplateRequest
+                }
+                if let formTemplateAction = element.formAction {
+                    formAction = formTemplateAction
+                }
+                if let formTemplateMessage = element.message {
+                    message = formTemplateMessage
+                }
+                if let formTemplatePostFormDataAsMessage = element.postBackToKommunicate, formTemplatePostFormDataAsMessage {
+                    isFormDataReplytoChat = true
+                }
+                
+                if let metadata = element.metadata  {
                     actionMessageMetaData = metadata
                 }
             }
@@ -2357,12 +2392,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         guard indexPath.section >= 0 else {
             return
         }
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let sectionCount = self.tableView.numberOfSections
-            if indexPath.section <= sectionCount {
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-            }
+        let sectionCount = self.tableView.numberOfSections
+        if indexPath.section <= sectionCount {
+            tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
         }
     }
     
@@ -2413,15 +2445,25 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func processElement(_ element: FormTemplate.Element, at elementIndex: Int, formData: inout FormDataSubmit) {
         let elementType = element.type
-        guard let details = element.data, let options = details.options else { return }
-
-        switch elementType {
-        case "radio":
-            processRadioElement(options, at: elementIndex, formData: &formData)
-        case "checkbox":
-            processCheckboxElement(options, at: elementIndex, formData: &formData)
-        default:
-            break
+        
+        if let details = element.data, let options = details.options {
+            switch elementType {
+            case "radio":
+                processRadioElement(options, at: elementIndex, formData: &formData)
+            case "checkbox":
+                processCheckboxElement(options, at: elementIndex, formData: &formData)
+            default:
+                break
+            }
+        } else if let options = element.options {
+            switch elementType {
+            case "radio":
+                processRadioElement(options, at: elementIndex, formData: &formData)
+            case "checkbox":
+                processCheckboxElement(options, at: elementIndex, formData: &formData)
+            default:
+                break
+            }
         }
     }
 
@@ -3007,3 +3049,14 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
     }
 }
 
+extension ALChannel {
+    static let ClosedStatus = 2
+
+    var isClosedConversation: Bool {
+        guard let conversationStatus = metadata[AL_CHANNEL_CONVERSATION_STATUS] as? String else {
+            return false
+        }
+        return type == Int16(SUPPORT_GROUP.rawValue) &&
+            Int(conversationStatus) ?? 0 == ALChannel.ClosedStatus
+    }
+}
