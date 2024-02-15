@@ -57,6 +57,17 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         return tv
     }()
     
+    fileprivate var assignTextView: UITextView = {
+        let tv = UITextView()
+        tv.isEditable = false
+        tv.backgroundColor = .clear
+        tv.isSelectable = false
+        tv.isScrollEnabled = false
+        tv.isUserInteractionEnabled = false
+        tv.textAlignment = .center
+        return tv
+    }()
+    
     fileprivate var bubbleView: UIView = {
         let bv = UIView()
         bv.backgroundColor = UIColor.clear
@@ -140,7 +151,9 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             if !ALApplozicSettings.isAgentAppConfigurationEnabled() {
                 let assignmentTitle = localizedString(forKey: "AssignedLabel", withDefaultValue: SystemMessage.AssignedInfo.AssignedLabel, fileName: configuration.localizedStringFileName)
                 let message = viewModel.message?.replacingOccurrences(of: "Assigned to", with: assignmentTitle, options: .literal, range: nil)
-                messageView.text = message
+                assignTextView.text = message
+                bubbleView.isHidden = true
+                messageView.text = ""
                 commentTextView.text = ""
                 setupConstraintsForAssignedTo()
             } else {
@@ -230,14 +243,14 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         lineViewRight.isHidden = false
         horizontalStackView.spacing = Padding.HorizontalStackView.spacing
         horizontalStackView.addArrangedSubview(lineViewLeft)
-        horizontalStackView.addArrangedSubview(messageView)
+        horizontalStackView.addArrangedSubview(assignTextView)
         horizontalStackView.addArrangedSubview(lineViewRight)
       
         lineViewLeft.backgroundColor = .lightGray
         lineViewRight.backgroundColor = .lightGray
         
         contentView.addViewsForAutolayout(views: [horizontalStackView])
-        contentView.bringSubviewToFront(messageView)
+        contentView.bringSubviewToFront(assignTextView)
         
         horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.HorizontalStackView.leading).isActive = true
         horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Padding.HorizontalStackView.trailing).isActive = true
@@ -247,7 +260,8 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         lineViewLeft.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
         lineViewRight.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
         
-        messageView.setFont(ALKMessageStyle.infoMessage.font)
+        assignTextView.setFont(ALKMessageStyle.assignmentMessage.font)
+        assignTextView.setTextColor(ALKMessageStyle.assignmentMessage.text)
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
     }
