@@ -111,7 +111,8 @@ class ALKFriendFormCell: ALKFormCell {
         nameLabel.text = viewModel.displayName
         nameLabel.setStyle(ALKMessageStyle.displayName)
 
-        if let submitButton = submitButton, submitButtonView.subviews.isEmpty {
+        if let submitButton = submitButton {
+            submitButtonView.subviews.forEach { $0.removeFromSuperview() }  
             submitButtonViewHeight.constant = submitButton.buttonHeight()
             submitButtonView.addSubview(submitButton)
             submitButton.bindFrameToSuperviewBounds()

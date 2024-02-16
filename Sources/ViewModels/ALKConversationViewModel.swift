@@ -662,7 +662,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     func reloadIfFormMessage(message: ALKMessageModel, indexPath: IndexPath) {
-        guard message.messageType == .form, KMMultipleSelectionConfiguration.shared.enableMultipleSelectionOnCheckbox else { return }
+        guard message.messageType == .form else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
             self.delegate?.messageUpdated()
         })
