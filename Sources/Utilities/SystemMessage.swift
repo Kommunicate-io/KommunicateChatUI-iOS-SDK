@@ -230,6 +230,10 @@ struct SystemMessage: Localizable {
         static let RatingLabelTitle = localizedString(forKey: "RatingLabelTitle")
     }
     
+    enum AssignedInfo {
+        static let AssignedLabel = localizedString(forKey: "AssignedLabel")
+    }
+    
     enum DeleteConversationPopup {
         static let title = localizedString(forKey: "DeleteConversationTitle")
         static let content = localizedString(forKey: "DeleteConversationContent")
