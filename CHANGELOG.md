@@ -4,6 +4,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 ## [1.2.8] 2024-02-21
 - Fixed Form Rich Message Rendering issue
 - Added support for showing assingment message 
+
 ## [1.2.7] 2024-02-12
 - Zendesk (Zopim) integration optimisations
 - Fixed Rich Message not getting rendered while scrolling on conversation screen
@@ -33,7 +34,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Added support of prefill checkboxes on Form Template.
 
 ## [1.2.1] 2023-11-02
-- Fixed iOS 17 BUtton issue.
+- Fixed iOS 17 Button issue.
 - Fixed the Typing Customization issue.
 - Fixed buttons are getting cut in form template
 - Added hidepostCTA support for all types of buttons.
