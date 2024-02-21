@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import KommunicateCore_iOS_SDK
 
 final class ALKInformationCell: UITableViewCell, Localizable {
     var configuration = ALKConfiguration()
@@ -56,6 +57,17 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         return tv
     }()
     
+    fileprivate var assignTextView: UITextView = {
+        let tv = UITextView()
+        tv.isEditable = false
+        tv.backgroundColor = .clear
+        tv.isSelectable = false
+        tv.isScrollEnabled = false
+        tv.isUserInteractionEnabled = false
+        tv.textAlignment = .center
+        return tv
+    }()
+    
     fileprivate var bubbleView: UIView = {
         let bv = UIView()
         bv.backgroundColor = UIColor.clear
@@ -80,13 +92,11 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     
     fileprivate var lineViewLeft : UIView = {
         let view = UIView()
-        view.isHidden = true
         return view
     }()
     
     fileprivate var lineViewRight : UIView = {
         let view = UIView()
-        view.isHidden = true
         return view
     }()
 
@@ -138,11 +148,21 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         guard let feedback = getFeedback(viewModel: viewModel) else {
-            messageView.text = viewModel.message
-            commentTextView.text = ""
-            lineViewLeft.isHidden = true
-            lineViewRight.isHidden = true
-            setupConstraints()
+            if !ALApplozicSettings.isAgentAppConfigurationEnabled() {
+                let assignmentTitle = localizedString(forKey: "AssignedLabel", withDefaultValue: SystemMessage.AssignedInfo.AssignedLabel, fileName: configuration.localizedStringFileName)
+                let message = viewModel.message?.replacingOccurrences(of: "Assigned to", with: assignmentTitle, options: .literal, range: nil)
+                assignTextView.text = message
+                bubbleView.isHidden = true
+                messageView.text = ""
+                commentTextView.text = ""
+                setupConstraintsForAssignedTo()
+            } else {
+                messageView.text = viewModel.message
+                commentTextView.text = ""
+                lineViewLeft.isHidden = true
+                lineViewRight.isHidden = true
+                setupConstraints()
+            }
             return
         }
         
@@ -209,6 +229,39 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         
         bubbleView.backgroundColor = ALKMessageStyle.infoMessage.background
         messageView.setFont(ALKMessageStyle.infoMessage.font)
+        contentView.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
+    }
+    
+    fileprivate func setupConstraintsForAssignedTo() {
+        let horizontalStackView = UIStackView()
+        
+        horizontalStackView.axis  = NSLayoutConstraint.Axis.horizontal
+        horizontalStackView.distribution  = UIStackView.Distribution.equalSpacing
+        horizontalStackView.alignment = UIStackView.Alignment.center
+        lineViewLeft.isHidden = false
+        lineViewRight.isHidden = false
+        horizontalStackView.spacing = Padding.HorizontalStackView.spacing
+        horizontalStackView.addArrangedSubview(lineViewLeft)
+        horizontalStackView.addArrangedSubview(assignTextView)
+        horizontalStackView.addArrangedSubview(lineViewRight)
+      
+        lineViewLeft.backgroundColor = .lightGray
+        lineViewRight.backgroundColor = .lightGray
+        
+        contentView.addViewsForAutolayout(views: [horizontalStackView])
+        contentView.bringSubviewToFront(assignTextView)
+        
+        horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.HorizontalStackView.leading).isActive = true
+        horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Padding.HorizontalStackView.trailing).isActive = true
+        
+        lineViewLeft.widthAnchor.constraint(equalToConstant: Padding.LineView.width).isActive = true
+        lineViewRight.widthAnchor.constraint(equalToConstant: Padding.LineView.width).isActive = true
+        lineViewLeft.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
+        lineViewRight.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
+        
+        assignTextView.setFont(ALKMessageStyle.assignmentMessage.font)
+        assignTextView.setTextColor(ALKMessageStyle.assignmentMessage.text)
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
     }

@@ -59,6 +59,13 @@ public enum ALKMessageStyle {
         background: UIColor.gray
     )
     
+    /// Style for Assignment Message in chat
+    public static var assignmentMessage = Style(
+        font: UIFont.font(.normal(size: 12)),
+        text: UIColor.gray,
+        background: UIColor.gray
+    )
+    
     /// Style for channel info messages in chat
     public static var infoMessage = Style(
         font: UIFont.font(.bold(size: 12.0)),
