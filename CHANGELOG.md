@@ -1,7 +1,9 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-
+## [1.2.8] 2024-02-21
+- Fixed Form Rich Message Rendering issue
+- Added support for showing assingment message 
 ## [1.2.7] 2024-02-12
 - Zendesk (Zopim) integration optimisations
 - Fixed Rich Message not getting rendered while scrolling on conversation screen
