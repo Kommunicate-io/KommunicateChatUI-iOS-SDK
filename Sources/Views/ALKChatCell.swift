@@ -418,8 +418,6 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         attachmentImageView.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor).isActive = true
         attachmentImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
 
-        
-        
         // setup constraint of mood'
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
         messageLabel.leadingAnchor.constraint(equalTo: attachmentImageView.trailingAnchor, constant: 6).isActive = true
