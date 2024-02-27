@@ -384,15 +384,10 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             attachmentImageView.image =  documentIcon
         default:
             attachmentImageView.image = nil
-            messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         }
-        
-        if attachmentImageView.image == nil {
-            messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
-        } else {
-            messageLabel.leadingAnchor.constraint(equalTo: attachmentImageView.trailingAnchor, constant: 6).isActive = true
-        }
+        setupConstraints()
     }
+    
     private func setupConstraints() {
         contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon, attachmentImageView])
         
