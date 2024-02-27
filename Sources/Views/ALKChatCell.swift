@@ -370,6 +370,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         case .video:
             let videoIcon =  UIImage(named: "video", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
             attachmentImageView.image =  videoIcon
+        case .email:
+            let emailIcon =  UIImage(named: "alk_email_icon", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  emailIcon
         case .photo:
             let photoIcon =  UIImage(named: "photo", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
             attachmentImageView.image =  photoIcon
