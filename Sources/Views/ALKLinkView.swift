@@ -70,9 +70,19 @@ class ALKLinkView: UIView, Localizable {
         return imageView
     }()
 
+    private var currentURL: String?
+    private var currentIdentifier: String?
+
     init() {
         super.init(frame: .zero)
         setupConstraintAndView()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let url = currentURL, let identifier = currentIdentifier {
+            update(url: url, identifier: identifier)
+        }
     }
 
     @available(*, unavailable)
@@ -116,6 +126,8 @@ class ALKLinkView: UIView, Localizable {
     }
 
     func update(url: String?, identifier: String) {
+        currentURL = url
+        currentIdentifier = identifier
         loadingIndicator.startLoading(localizationFileName: localizedStringFileName)
         hideViews(true)
         guard let linkUrl = url else {
@@ -124,20 +136,22 @@ class ALKLinkView: UIView, Localizable {
             return
         }
         guard let cachelinkPreviewMeta = LinkURLCache.getLink(for: linkUrl) else {
+            let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
             let linkview = ALKLinkPreviewManager()
             linkview.makePreview(from: linkUrl, identifier: identifier) { [weak self] result in
                 guard let weakSelf = self, let isViewCellVisible = weakSelf.isViewCellVisible, isViewCellVisible(identifier) else { return }
                 switch result {
-                case let .success(linkPreviewMeta):
-                    weakSelf.updateView(linkPreviewMeta: linkPreviewMeta)
+                case let .success(linkPreviewData):
+                    weakSelf.updateView(linkPreviewMeta: linkPreviewData.0, linkPreviewURL: linkPreviewData.1.absoluteString)
                 case .failure:
+                    self?.previewImageView.image = placeHolder
                     weakSelf.updateFailedStatusInView()
                     weakSelf.loadingIndicator.stopLoading()
                 }
             }
             return
         }
-        updateView(linkPreviewMeta: cachelinkPreviewMeta)
+        updateView(linkPreviewMeta: cachelinkPreviewMeta, linkPreviewURL: linkUrl)
     }
 
     func hideViews(_ isHide: Bool) {
@@ -150,10 +164,10 @@ class ALKLinkView: UIView, Localizable {
         return ALKLinkView.CommonPadding.View.height + ALKLinkView.CommonPadding.PreviewImageView.top
     }
 
-    func updateView(linkPreviewMeta: LinkPreviewMeta) {
+    func updateView(linkPreviewMeta: LinkPreviewMeta, linkPreviewURL:  String) {
         let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
 
-        if let stringURL = linkPreviewMeta.image ?? linkPreviewMeta.icon, let url = URL(string: stringURL) {
+        if let stringURL = linkPreviewMeta.image ?? linkPreviewMeta.icon, let url = URL(string: stringURL), currentURL == linkPreviewURL {
             let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             previewImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {

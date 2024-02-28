@@ -17,7 +17,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         self.responseMainQueue = responseMainQueue
     }
 
-    func makePreview(from text: String, identifier: String, _ completion: @escaping (Result<LinkPreviewMeta, LinkPreviewFailure>) -> Void) {
+    func makePreview(from text: String, identifier: String, _ completion: @escaping (Result<(LinkPreviewMeta, URL), LinkPreviewFailure>) -> Void) {
         guard let url = ALKLinkPreviewManager.extractURLAndAddInCache(from: text, identifier: identifier) else {
             responseMainQueue.async {
                 completion(.failure(.noURLFound))
@@ -66,7 +66,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                 }
                 LinkURLCache.addLink(linkPreviewData, for: linkPreviewData.url.absoluteString)
                 weakSelf.responseMainQueue.async {
-                    completion(.success(linkPreviewData))
+                    completion(.success((linkPreviewData, url)))
                 }
 
             }.resume()
