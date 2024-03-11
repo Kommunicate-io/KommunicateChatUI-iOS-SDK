@@ -24,7 +24,6 @@ PODS:
     - KommunicateCore-iOS-SDK (~> 1.1.8)
     - SwipeCellKit (~> 2.7.1)
     - ZendeskChatProvidersSDK (~> 3.0.0)
-
   - KommunicateChatUI-iOS-SDK/RichMessageKit (1.2.9)
   - KommunicateCore-iOS-SDK (1.1.8)
   - Nimble (13.1.2):
