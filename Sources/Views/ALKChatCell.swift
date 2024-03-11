@@ -204,6 +204,14 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         view.backgroundColor = UIColor.onlineGreen()
         return view
     }()
+    
+    private var attachmentImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.tintColor = UIColor.kmDynamicColor(light: .black, dark: .white)
+        return imageView
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -268,13 +276,16 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
         
         if let avatarImage = viewModel.avatarImage {
-            if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
+              if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
                 let resource = Kingfisher.ImageResource(downloadURL: imgURL, cacheKey: imgStr)
                 avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
-            } else {
+              } else if let avatar = viewModel.avatar {
+                let resource = Kingfisher.ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
+                avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+              } else {
                 avatarImageView.image = placeHolder
-            }
-        } else if let avatar = viewModel.avatar {
+              }
+            } else if let avatar = viewModel.avatar {
             let resource = Kingfisher.ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
@@ -301,7 +312,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             let lastMessage = viewModel.theLastMessage != nil ? localizedString(forKey: viewModel.theLastMessage!, withDefaultValue: viewModel.theLastMessage!, fileName:localizationFileName) :  ""
             messageLabel.text = lastMessage
         }
-
+        
+        updateAttchmentIcon(type: viewModel.messageType)
+        
         muteIcon.isHidden = !isConversationMuted(viewModel: viewModel)
 
         if viewModel.messageType == .email {
@@ -352,8 +365,35 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         return image
     }
 
+    private func updateAttchmentIcon(type: ALKMessageType) {
+        switch type {
+        case .location:
+            let locationIcon =  UIImage(named: "icon_send_location", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  locationIcon
+        case .video:
+            let videoIcon =  UIImage(named: "video", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  videoIcon
+        case .email:
+            let emailIcon =  UIImage(named: "alk_email_icon", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  emailIcon
+        case .photo:
+            let photoIcon =  UIImage(named: "photo", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  photoIcon
+        case .document:
+            let documentIcon =  UIImage(named: "ic_alk_document", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  documentIcon
+        case .allButtons, .button, .cardTemplate, .faqTemplate, .form, .imageMessage, .listTemplate, .quickReply, .videoTemplate:
+            let documentIcon =  UIImage(named: "icon_rich_message", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            attachmentImageView.image =  documentIcon
+        default:
+            attachmentImageView.image = nil
+        }
+        setupConstraints()
+    }
+    
     private func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon])
+        contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel, messageLabel, lineView, muteIcon, badgeNumberView, timeLabel, onlineStatusView, emailIcon, attachmentImageView])
+        
         // setup constraint of imageProfile
         avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 17.0).isActive = true
         avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.0).isActive = true
@@ -371,10 +411,15 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         emailIcon.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: Padding.Email.left).isActive = true
         emailIcon.widthAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.iconWidthIdentifier.rawValue).isActive = true
         
+        attachmentImageView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4).isActive = true
+        attachmentImageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        attachmentImageView.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor).isActive = true
+        attachmentImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+
         // setup constraint of mood'
         messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2).isActive = true
+        messageLabel.leadingAnchor.constraint(equalTo: attachmentImageView.trailingAnchor, constant: 6).isActive = true
         messageLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        messageLabel.leadingAnchor.constraint(equalTo: emailIcon.trailingAnchor, constant: 0).isActive = true
         messageLabel.trailingAnchor.constraint(equalTo: muteIcon.leadingAnchor, constant: -8).isActive = true
 
         // setup constraint of line
