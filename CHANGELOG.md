@@ -1,6 +1,11 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [1.2.9] 2024-03-11
+- Added the last Message icon in Conversation List Screen.
+- Fixed Link preview issue. 
+- Fixed Assignee Image not showing with custom title.
+
 ## [1.2.8] 2024-02-21
 - Fixed Form Rich Message Rendering issue
 - Added support for showing assingment message 
