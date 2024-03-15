@@ -595,16 +595,21 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
            message.formTemplate() != nil
         {
             return UITableView.automaticDimension
+        } else if (indexPath.section >= viewModel.messageModels.count) {
+            return UITableView.automaticDimension
         } else {
             return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
         }
     }
+
 
     public func tableView(_: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if let message = viewModel.messageForRow(indexPath: indexPath),
            message.messageType == .form,
            message.formTemplate() != nil
         {
+            return UITableView.automaticDimension
+        } else if (indexPath.section >= viewModel.messageModels.count) {
             return UITableView.automaticDimension
         } else {
             return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
