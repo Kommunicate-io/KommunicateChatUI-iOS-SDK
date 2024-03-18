@@ -43,7 +43,7 @@ class KMVideoCell: UITableViewCell {
         return lbl
     }()
     
-    var viewModel: VideoTemplate?
+    var viewModel: KMVideoTemplate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -82,7 +82,7 @@ class KMVideoCell: UITableViewCell {
     }
     
     
-    func updateVideModel(model: VideoTemplate) {
+    func updateVideModel(model: KMVideoTemplate) {
         self.viewModel = model
         captionLabel.text = model.caption ?? ""
         if let url = URL(string:model.url) {

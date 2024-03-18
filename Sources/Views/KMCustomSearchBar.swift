@@ -1,5 +1,5 @@
 //
-//  CustomSearchBar.swift
+//  KMCustomSearchBar.swift
 //  Kommunicate Chat
 //
 //  Created by Shivam Pokhriyal on 02/07/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class CustomSearchBar: UIView {
+public class KMCustomSearchBar: UIView {
     public let searchBar: UISearchBar
 
     public init(searchBar: UISearchBar) {

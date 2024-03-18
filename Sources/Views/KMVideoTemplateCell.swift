@@ -23,7 +23,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     var messageModel : ALKMessageViewModel?
     
-    private var template: [VideoTemplate]? {
+    private var template: [KMVideoTemplate]? {
         didSet {
            videoTableview.reloadData()
            setUpTableView()

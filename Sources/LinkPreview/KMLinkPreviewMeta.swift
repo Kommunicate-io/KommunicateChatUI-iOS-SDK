@@ -1,6 +1,6 @@
 import Foundation
 
-class LinkPreviewMeta {
+class KMLinkPreviewMeta {
     var title: String?
     var description: String?
     var image: String?
@@ -12,7 +12,7 @@ class LinkPreviewMeta {
     }
 }
 
-extension LinkPreviewMeta {
+extension KMLinkPreviewMeta {
     enum Key: String {
         case url
         case title

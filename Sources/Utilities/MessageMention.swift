@@ -62,7 +62,7 @@ struct MessageMentionEncoder {
     func replaceMentionsWithKeys() -> NSAttributedString {
         var newMessage = message
         allMentions.enumerated().forEach { index, mention in
-            let attrs = [AutoCompleteItem.attributesKey: mention.userId]
+            let attrs = [KMAutoCompleteItem.attributesKey: mention.userId]
             let replacementText = NSAttributedString(string: mention.userId, attributes: attrs)
 
             // As the range will change after text replacement
@@ -77,7 +77,7 @@ struct MessageMentionEncoder {
         let range = attrString.string.startIndex ..< attrString.string.endIndex
         let messageRange = NSRange(range, in: attrString.string)
         var allMentions: [Mention] = []
-        attrString.enumerateAttribute(AutoCompleteItem.attributesKey, in: messageRange, options: []) { value, keyRange, _ in
+        attrString.enumerateAttribute(KMAutoCompleteItem.attributesKey, in: messageRange, options: []) { value, keyRange, _ in
             if let value = value as? String, value.starts(with: MessageMention.Prefix) {
                 allMentions.append((value, keyRange))
             }

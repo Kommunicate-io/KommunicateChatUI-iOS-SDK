@@ -15,7 +15,7 @@ import UIKit
 class KMFriendVideoTemplateCell : KMVideoTemplateCell {
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
 
-    fileprivate lazy var messageView = MessageView(
+    fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
         maxWidth: ViewPadding.maxWidth - (ViewPadding.messageViewPadding.left + ViewPadding.messageViewPadding.right)

@@ -1,6 +1,6 @@
 import Foundation
 
-enum LinkPreviewFailure: Error {
+enum KMLinkPreviewFailure: Error {
     case noURLFound
     case invalidURL
     case cannotBeOpened

@@ -149,7 +149,6 @@ public class NotificationHelper {
         switch topVCName {
         case "MuteConversationViewController",
              "ALKWebViewController",
-             "SelectProfilePicViewController",
              "CNContactPickerViewController",
              "CAMImagePickerCameraViewController",
              "UIDocumentPickerViewController":

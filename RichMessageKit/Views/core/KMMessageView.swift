@@ -8,7 +8,7 @@
 import UIKit
 
 /// Its a view that displays text on top of a bubble.
-public class MessageView: UIView {
+public class KMMessageView: UIView {
     enum ConstraintIdentifier {
         enum MessageLabel {
             static let height = "MessageLabelHeight"
@@ -121,7 +121,7 @@ public class MessageView: UIView {
     /// - Parameter model: This will have details for message
     public func update(model: Message) {
         /// Set frame size.
-        let height = MessageView.rowHeight(model: model, maxWidth: maxWidth, font: messageStyle.font, padding: bubbleStyle.padding)
+        let height = KMMessageView.rowHeight(model: model, maxWidth: maxWidth, font: messageStyle.font, padding: bubbleStyle.padding)
         frame.size = CGSize(width: maxWidth, height: height)
 
         messageTextView.backgroundColor = messageStyle.background
@@ -136,7 +136,7 @@ public class MessageView: UIView {
         case Message.ContentType.html:
             /// Comes here for html
             DispatchQueue.global(qos: .utility).async {
-                let attributedText = MessageView.attributedStringFrom(model.text ?? "", for: model.identifier)
+                let attributedText = KMMessageView.attributedStringFrom(model.text ?? "", for: model.identifier)
                 DispatchQueue.main.async {
                     self.messageTextView.attributedText = attributedText
                     if self.messageStyle.text.toHexString() == "ffffff" {
@@ -192,7 +192,7 @@ public class MessageView: UIView {
 
     public func updateHeighOfView(hideView: Bool, model: Message) {
         let messageHeight = hideView ? 0 :
-            MessageView.rowHeight(model: model,
+            KMMessageView.rowHeight(model: model,
                                   maxWidth: maxWidth,
                                   font: messageStyle.font,
                                   padding: bubbleStyle.padding)

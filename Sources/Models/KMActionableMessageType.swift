@@ -1,5 +1,5 @@
 //
-//  ActionableMessageType.swift
+//  KMActionableMessageType.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 07/03/19.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ActionableMessageType: String {
+public enum KMActionableMessageType: String {
     case quickReply = "6"
     case button = "3"
     case listTemplate = "7"

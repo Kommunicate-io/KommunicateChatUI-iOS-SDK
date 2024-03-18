@@ -159,10 +159,10 @@ extension ALKMessageViewModel {
         return false
     }
 
-    func formTemplate() -> FormTemplate? {
+    func formTemplate() -> KMFormTemplate? {
         guard let payload = payloadFromMetadata() else { return nil }
         do {
-            var templet = try FormTemplate(payload: payload)
+            var templet = try KMFormTemplate(payload: payload)
                         
                 if isFormSubmitButtonHidden() {
                     templet.elements.removeAll { element in
@@ -177,11 +177,11 @@ extension ALKMessageViewModel {
         }
     }
     
-    func videoTemplate() -> [VideoTemplate]? {
+    func videoTemplate() -> [KMVideoTemplate]? {
         guard let payload = payloadFromMetadata() else { return nil }
         do {
             let json = try JSONSerialization.data(withJSONObject: payload)
-            let videoTemplate = try JSONDecoder().decode([VideoTemplate].self, from: json)
+            let videoTemplate = try JSONDecoder().decode([KMVideoTemplate].self, from: json)
             return videoTemplate
         } catch {
             print("Error while decoding video template \(error.localizedDescription)")

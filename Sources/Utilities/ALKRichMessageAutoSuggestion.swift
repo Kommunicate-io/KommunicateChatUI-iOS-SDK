@@ -94,8 +94,8 @@ class QuickReplyItemCell: UITableViewCell {
     }
 }
 
-extension QuickReplyItemCell: AutoCompletionItemCell {
-    func updateView(item: AutoCompleteItem) {
+extension QuickReplyItemCell: KMAutoCompletionItemCell {
+    func updateView(item: KMAutoCompleteItem) {
         textLabel?.text = "\(item.content)"
     }
 }

@@ -1,5 +1,5 @@
 //
-//  FormTemplate.swift
+//  KMFormTemplate.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 08/07/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FormTemplate: Decodable {
+struct KMFormTemplate: Decodable {
     var elements: [Element]
 
     struct Element: Decodable {
@@ -43,15 +43,15 @@ struct FormTemplate: Decodable {
     }
 }
 
-extension FormTemplate {
+extension KMFormTemplate {
     init(payload: [[String: Any]]) throws {
         let json = try JSONSerialization.data(withJSONObject: payload)
-        let elements = try JSONDecoder().decode([FormTemplate.Element].self, from: json)
-        self = FormTemplate(elements: elements)
+        let elements = try JSONDecoder().decode([KMFormTemplate.Element].self, from: json)
+        self = KMFormTemplate(elements: elements)
     }
 }
 
-extension FormTemplate.Element {
+extension KMFormTemplate.Element {
     enum ContentType: String {
         case text
         case textarea

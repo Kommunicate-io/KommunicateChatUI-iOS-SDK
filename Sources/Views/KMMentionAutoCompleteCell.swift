@@ -1,5 +1,5 @@
 //
-//  MentionAutoSuggestionCell.swift
+//  KMMentionAutoSuggestionCell.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 11/09/19.
@@ -8,7 +8,7 @@
 import Kingfisher
 import UIKit
 
-class MentionAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
+class KMMentionAutoCompleteCell: UITableViewCell, KMAutoCompletionItemCell {
     enum Padding {
         enum Profile {
             static let left: CGFloat = 20
@@ -41,7 +41,7 @@ class MentionAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
         return label
     }()
 
-    var item: AutoCompleteItem?
+    var item: KMAutoCompleteItem?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,7 +53,7 @@ class MentionAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateView(item: AutoCompleteItem) {
+    func updateView(item: KMAutoCompleteItem) {
         self.item = item
         nameLabel.text = item.content
 

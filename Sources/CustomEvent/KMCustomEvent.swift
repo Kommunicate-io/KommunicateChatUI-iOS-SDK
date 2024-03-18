@@ -1,11 +1,11 @@
 //
-// CustomEvent.swift
+// KMCustomEvent.swift
 // KommunicateChatUI-iOS-SDK
 // Created by Sathyan Elangovan on 09/12/21.
 
 import Foundation
 
-public enum CustomEvent: String {
+public enum KMCustomEvent: String {
     case messageSend = "ON_MESSAGE_SEND"
     case faqClick = "ON_FAQ_CLICK"
     case newConversation = "ON_START_NEW_CONVERSATION_CLICK"
