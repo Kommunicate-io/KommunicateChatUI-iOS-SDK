@@ -227,9 +227,9 @@ extension ALMessage: ALKChatViewModelProtocol {
         guard let channel = ALChannelService().getChannelByKey(channelKey),
               let tags = channel.metadata.value(forKey: "KM_TAGS") as? String,
               let data = tags.data(using: .utf8),
-              let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else { return nil }
+              let tagsList = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else { return nil }
         var tagsArray = [KMAssignedTags]()
-        for tag in json {
+        for tag in tagsList {
             if let id = tag["id"] as? Int,
                let name = tag["name"] as? String,
                let color = tag["color"] as? String {
