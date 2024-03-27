@@ -27,7 +27,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     public var conversationListTableViewController: ALKConversationListTableViewController
 
     var searchController: UISearchController!
-    var searchBar: CustomSearchBar!
+    var searchBar: KMCustomSearchBar!
     let registerUserClientService = ALRegisterUserClientService()
 
     lazy var resultVC = ALKSearchResultViewController(configuration: configuration)
@@ -276,7 +276,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     func setupSearchController() {
         searchController = resultVC.setUpSearchViewController()
         searchController.searchBar.delegate = self
-        searchBar = CustomSearchBar(searchBar: searchController.searchBar)
+        searchBar = KMCustomSearchBar(searchBar: searchController.searchBar)
         definesPresentationContext = true
     }
 

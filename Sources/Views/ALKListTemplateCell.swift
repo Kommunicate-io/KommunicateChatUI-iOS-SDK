@@ -56,7 +56,7 @@ public class ALKMyMessageListTemplateCell: ALKListTemplateCell {
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    fileprivate lazy var messageView = MessageView(
+    fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.sentMessage.bubble,
         messageStyle: MessageTheme.sentMessage.message,
         maxWidth: ViewPadding.maxWidth
@@ -217,7 +217,7 @@ public class ALKFriendMessageListTemplateCell: ALKListTemplateCell {
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    fileprivate lazy var messageView = MessageView(
+    fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
         maxWidth: ViewPadding.maxWidth
@@ -348,7 +348,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     lazy var listTemplateHeight = listTemplateView.heightAnchor.constraint(equalToConstant: 0)
 
-    public var templateSelected: ((_ element: ListTemplate.Element?, _ defaultText: String?, _ action: ListTemplate.Action?) -> Void)? {
+    public var templateSelected: ((_ element: KMListTemplate.Element?, _ defaultText: String?, _ action: KMListTemplate.Action?) -> Void)? {
         didSet {
             listTemplateView.selected = templateSelected
         }
@@ -366,7 +366,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public func update(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) {
         guard let metadata = viewModel.metadata,
-              var template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
+              var template = try? TemplateDecoder.decode(KMListTemplate.self, from: metadata)
         else {
             listTemplateView.isHidden = true
             layoutIfNeeded()
@@ -385,7 +385,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     public class func rowHeight(viewModel: ALKMessageViewModel, maxWidth _: CGFloat) -> CGFloat {
         guard let metadata = viewModel.metadata,
-              var template = try? TemplateDecoder.decode(ListTemplate.self, from: metadata)
+              var template = try? TemplateDecoder.decode(KMListTemplate.self, from: metadata)
         else {
             return CGFloat(0)
         }

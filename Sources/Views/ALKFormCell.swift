@@ -57,7 +57,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     }
 
     private var items: [FormViewModelItem] = []
-    private var template: FormTemplate? {
+    private var template: KMFormTemplate? {
         didSet {
             items = template?.viewModeItems ?? []
             itemListView.reloadData()

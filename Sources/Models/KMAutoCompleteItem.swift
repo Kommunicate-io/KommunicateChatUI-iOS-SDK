@@ -1,5 +1,5 @@
 //
-//  AutoCompleteItem.swift
+//  KMAutoCompleteItem.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 19/09/19.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AutoCompleteItem {
+public struct KMAutoCompleteItem {
     public let key: String
     public let content: String
     public let displayImageURL: URL?
@@ -21,7 +21,7 @@ public struct AutoCompleteItem {
     }
 }
 
-public extension AutoCompleteItem {
+public extension KMAutoCompleteItem {
     /// A key used for referencing which substrings were autocompletes
     static let attributesKey = NSAttributedString.Key("com.kommunicatechatui.autocompletekey")
 }

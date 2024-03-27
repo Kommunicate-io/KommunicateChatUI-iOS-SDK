@@ -1,5 +1,5 @@
 //
-//  ListTemplate.swift
+//  KMListTemplate.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 18/02/19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Use this instead of `ALKGenericListTemplate`
-public struct ListTemplate: Codable {
+public struct KMListTemplate: Codable {
     public let headerImgSrc: String?
     public let headerText: String?
     public let elements: [Element]?

@@ -1,5 +1,5 @@
 //
-//  ListTemplateView.swift
+//  KMListTemplateView.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 18/02/19.
@@ -8,7 +8,7 @@
 import Kingfisher
 import UIKit
 
-class ListTemplateElementView: UIView {
+class KMListTemplateElementView: UIView {
     static let font = UIFont(name: "Helvetica", size: 14) ?? UIFont.systemFont(ofSize: 14)
 
     let thumbnail: UIImageView = {
@@ -23,7 +23,7 @@ class ListTemplateElementView: UIView {
         let label = UILabel()
         label.numberOfLines = 1
         label.autoresizingMask = .flexibleLeftMargin
-        label.font = ListTemplateElementView.font
+        label.font = KMListTemplateElementView.font
         return label
     }()
 
@@ -31,12 +31,12 @@ class ListTemplateElementView: UIView {
         let label = UILabel()
         label.numberOfLines = 2
         label.autoresizingMask = .flexibleLeftMargin
-        label.font = ListTemplateElementView.font
+        label.font = KMListTemplateElementView.font
         return label
     }()
 
-    var item: ListTemplate.Element?
-    var selected: ((_ element: ListTemplate.Element) -> Void)?
+    var item: KMListTemplate.Element?
+    var selected: ((_ element: KMListTemplate.Element) -> Void)?
     override public init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -49,7 +49,7 @@ class ListTemplateElementView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(item: ListTemplate.Element) {
+    func update(item: KMListTemplate.Element) {
         self.item = item
         title.text = item.title
         subtitle.text = item.description
@@ -155,14 +155,14 @@ class ListTemplateView: UIView {
     }()
 
     var actionButtons = [UIButton]()
-    var listItems = [ListTemplateElementView]()
+    var listItems = [KMListTemplateElementView]()
 
     lazy var headerImageHeight = self.headerImage.heightAnchor.constraint(equalToConstant: ListTemplateView.imageHeight)
     lazy var headerTextHeight = self.headerText.heightAnchor.constraint(equalToConstant: ListTemplateView.textHeight)
     let listStyle = ALKListTemplateCell.ListStyle.shared
 
-    var item: ListTemplate?
-    var selected: ((_ element: ListTemplate.Element?, _ text: String?, _ action: ListTemplate.Action?) -> Void)?
+    var item: KMListTemplate?
+    var selected: ((_ element: KMListTemplate.Element?, _ text: String?, _ action: KMListTemplate.Action?) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -177,7 +177,7 @@ class ListTemplateView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(item: ListTemplate) {
+    func update(item: KMListTemplate) {
         updateHeaderImage(item.headerImgSrc)
         updateHeaderText(item.headerText)
         updateButtons(item.buttons)
@@ -204,7 +204,7 @@ class ListTemplateView: UIView {
         headerText.text = text
     }
 
-    private func updateButtons(_ buttons: [ListTemplate.Button]?) {
+    private func updateButtons(_ buttons: [KMListTemplate.Button]?) {
         guard let buttons = buttons else {
             actionButtons.enumerated().forEach { $1.isHidden = true }
             return
@@ -220,7 +220,7 @@ class ListTemplateView: UIView {
         }
     }
 
-    private func updateListItems(_ elements: [ListTemplate.Element]?) {
+    private func updateListItems(_ elements: [KMListTemplate.Element]?) {
         guard let elements = elements else {
             listItems.enumerated().forEach { $1.isHidden = true }
             return
@@ -236,7 +236,7 @@ class ListTemplateView: UIView {
         }
     }
 
-    static func rowHeight(template: ListTemplate) -> CGFloat {
+    static func rowHeight(template: KMListTemplate) -> CGFloat {
         let leftSpacing = ALKMyMessageCell.Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding + ALKMyMessageCell.Padding.ReplyMessageLabel.right + ALKMyMessageCell.Padding.BubbleView.right
         let rightSpacing = ALKMyMessageCell.Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
         let messageWidth = UIScreen.main.bounds.width - (leftSpacing + rightSpacing)
@@ -249,7 +249,7 @@ class ListTemplateView: UIView {
         height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
         height += template.headerText != nil ? textHeight : CGFloat(0)
         let elementCount = min(8, template.elements?.count ?? 0)
-        height += CGFloat(elementCount) * ListTemplateElementView.height()
+        height += CGFloat(elementCount) * KMListTemplateElementView.height()
         let buttonCount = min(8, template.buttons?.count ?? 0)
         height += CGFloat(buttonCount) * buttonHeight
         let spacing = min(8, template.elements?.count ?? 0) + min(8, template.buttons?.count ?? 0)
@@ -288,7 +288,7 @@ class ListTemplateView: UIView {
 
     private func setupElements() {
         listItems = (0 ... 7).map {
-            let item = ListTemplateElementView()
+            let item = KMListTemplateElementView()
             item.tag = $0
             item.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
             item.selected = { [weak self] element in
@@ -306,7 +306,7 @@ class ListTemplateView: UIView {
         }
         listItems.forEach {
             elementStackView.addArrangedSubview($0)
-            $0.heightAnchor.constraint(equalToConstant: ListTemplateElementView.height()).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: KMListTemplateElementView.height()).isActive = true
         }
         backgroundColor = .lightGray
         addViewsForAutolayout(views: [headerImage, headerText, elementStackView, buttonStackView])

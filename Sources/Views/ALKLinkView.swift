@@ -135,7 +135,7 @@ class ALKLinkView: UIView, Localizable {
             hideViews(false)
             return
         }
-        guard let cachelinkPreviewMeta = LinkURLCache.getLink(for: linkUrl) else {
+        guard let cachelinkPreviewMeta = KMLinkURLCache.getLink(for: linkUrl) else {
             let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
             let linkview = ALKLinkPreviewManager()
             linkview.makePreview(from: linkUrl, identifier: identifier) { [weak self] result in
@@ -164,7 +164,7 @@ class ALKLinkView: UIView, Localizable {
         return ALKLinkView.CommonPadding.View.height + ALKLinkView.CommonPadding.PreviewImageView.top
     }
 
-    func updateView(linkPreviewMeta: LinkPreviewMeta, linkPreviewURL:  String) {
+    func updateView(linkPreviewMeta: KMLinkPreviewMeta, linkPreviewURL:  String) {
         let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
 
         if let stringURL = linkPreviewMeta.image ?? linkPreviewMeta.icon, let url = URL(string: stringURL), currentURL == linkPreviewURL {

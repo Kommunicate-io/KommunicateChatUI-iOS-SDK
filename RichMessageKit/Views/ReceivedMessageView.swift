@@ -30,7 +30,7 @@ public class ReceivedMessageView: UIView {
 
     // MARK: Fileprivate properties
 
-    fileprivate lazy var messageView = MessageView(
+    fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
         maxWidth: maxWidth

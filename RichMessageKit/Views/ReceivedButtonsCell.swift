@@ -67,7 +67,7 @@ public class ReceivedButtonsCell: UITableViewCell {
     }()
 
     fileprivate lazy var buttons = SuggestedReplyView()
-    fileprivate lazy var messageView = MessageView(
+    fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
         messageStyle: MessageTheme.receivedMessage.message,
         maxWidth: ViewPadding.maxWidth

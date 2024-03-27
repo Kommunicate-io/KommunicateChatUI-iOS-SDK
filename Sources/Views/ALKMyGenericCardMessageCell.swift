@@ -47,7 +47,7 @@ open class ALKMyGenericCardMessageCell: ALKGenericCardBaseCell {
     fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
     fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
 
-    fileprivate lazy var messageView = MessageView(
+    fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.sentMessage.bubble,
         messageStyle: MessageTheme.sentMessage.message,
         maxWidth: ViewPadding.maxWidth

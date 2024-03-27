@@ -87,9 +87,9 @@ class KMFormDropDownCell: UITableViewCell {
         }
     }
     
-    var options: [FormTemplate.Option]? = nil
+    var options: [KMFormTemplate.Option]? = nil
     var name: String = ""
-    var optionsDict: [String: FormTemplate.Option] = [:]
+    var optionsDict: [String: KMFormTemplate.Option] = [:]
     var delegate: KMFormDropDownSelectionProtocol?
     var identifier: String?
     

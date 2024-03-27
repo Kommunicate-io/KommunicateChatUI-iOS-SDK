@@ -640,7 +640,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         guard !sortedArray.isEmpty else { return }
         
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageReceive, data: ["messageList":sortedArray])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageReceive, data: ["messageList":sortedArray])
         if alMessages.isEmpty, !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
             sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
         }
@@ -793,7 +793,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
                 self.showTypingIndicatorAfterMessageSent()
-                ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageSend, data: ["message":alMessage])
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
@@ -808,7 +808,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
                 self.showTypingIndicatorAfterMessageSent()
-                ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.messageSend, data: ["message":alMessage])
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageSend, data: ["message":alMessage])
                 if KMZendeskChatHandler.shared.isZendeskEnabled()  {
                     KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                 }
@@ -1728,12 +1728,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
 
-    func fetchGroupMembersForAutocompletion() -> [AutoCompleteItem] {
+    func fetchGroupMembersForAutocompletion() -> [KMAutoCompleteItem] {
         guard let members = groupMembers else { return [] }
         let items =
             members
                 .filter { $0.userId != ALUserDefaultsHandler.getUserId() }
-                .map { AutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
+                .map { KMAutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
                 .sorted { $0.content < $1.content }
         return items
     }

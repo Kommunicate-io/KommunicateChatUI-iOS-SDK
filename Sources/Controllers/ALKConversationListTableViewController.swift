@@ -827,7 +827,7 @@ extension ALKConversationListTableViewController {
         guard let title = popupTitleToMute(conversation: conversation) else {
             return
         }
-        let muteConversationVC = MuteConversationViewController(delegate: self, conversation: conversation, atIndexPath: atIndexPath, configuration: configuration)
+        let muteConversationVC = KMMuteConversationViewController(delegate: self, conversation: conversation, atIndexPath: atIndexPath, configuration: configuration)
         muteConversationVC.updateTitle(title)
         muteConversationVC.modalPresentationStyle = .overCurrentContext
         present(muteConversationVC, animated: true, completion: nil)

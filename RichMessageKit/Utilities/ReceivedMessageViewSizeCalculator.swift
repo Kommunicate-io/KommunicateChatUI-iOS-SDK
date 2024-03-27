@@ -16,7 +16,7 @@ public class ReceivedMessageViewSizeCalculator {
 
         let messageWidth = maxWidth - totalWidthPadding
 
-        let messageHeight = MessageView.rowHeight(model: messageModel,
+        let messageHeight = KMMessageView.rowHeight(model: messageModel,
                                                   maxWidth: messageWidth,
                                                   font: MessageTheme.receivedMessage.message.font,
                                                   padding: MessageTheme.receivedMessage.bubble.padding)

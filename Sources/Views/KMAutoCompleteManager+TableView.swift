@@ -1,5 +1,5 @@
 //
-//  AutoCompleteManager+TableView.swift
+//  KMAutoCompleteManager+TableView.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 29/05/19.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
+extension KMAutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
     public func numberOfSections(in _: UITableView) -> Int {
         return 1
     }
@@ -29,7 +29,7 @@ extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
         else {
             if(isAutoSuggestion){
                 let autoCompleteCellType = cellType(forPrefix: "")
-                guard let autoCompleteCell = tableView.dequeueReusableCell( withIdentifier: autoCompleteCellType.reuseIdentifier, for: indexPath) as? AutoCompletionItemCell else {
+                guard let autoCompleteCell = tableView.dequeueReusableCell( withIdentifier: autoCompleteCellType.reuseIdentifier, for: indexPath) as? KMAutoCompletionItemCell else {
                     return cell
                 }
                 isAutoSuggestion = false
@@ -42,7 +42,7 @@ extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
         guard let autoCompleteCell = tableView.dequeueReusableCell(
             withIdentifier: autoCompleteCellType.reuseIdentifier,
             for: indexPath
-        ) as? AutoCompletionItemCell else {
+        ) as? KMAutoCompletionItemCell else {
             return cell
         }
         autoCompleteCell.updateView(item: items[indexPath.row])
@@ -59,8 +59,8 @@ extension AutoCompleteManager: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-public class DefaultAutoCompleteCell: UITableViewCell, AutoCompletionItemCell {
-    public func updateView(item: AutoCompleteItem) {
+public class DefaultAutoCompleteCell: UITableViewCell, KMAutoCompletionItemCell {
+    public func updateView(item: KMAutoCompleteItem) {
         textLabel?.text = "\(item.content)"
         textLabel?.textColor = UIColor.kmDynamicColor(light: .black, dark: .white)
         backgroundColor = UIColor.kmDynamicColor(light: .white, dark: .appBarDarkColor())
