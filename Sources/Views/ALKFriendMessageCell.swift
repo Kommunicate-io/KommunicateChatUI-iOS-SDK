@@ -213,18 +213,10 @@ open class ALKFriendMessageCell: ALKMessageCell {
                 constant: 0,
                 identifier: ConstraintIdentifier.ReplyMessageLabel.height
             ),
-            iframeView.topAnchor.constraint(
-                equalTo: bubbleView.topAnchor
-            ),
-            iframeView.bottomAnchor.constraint(
-                equalTo: bubbleView.bottomAnchor
-            ),
-            iframeView.trailingAnchor.constraint(
-                equalTo: bubbleView.trailingAnchor
-            ),
-            iframeView.leadingAnchor.constraint(
-                equalTo: bubbleView.leadingAnchor
-            ),
+            iframeView.topAnchor.constraint(equalTo: bubbleView.topAnchor),
+            iframeView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor),
+            iframeView.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor),
+            iframeView.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor),
             iframeWidth,
             emailTopView.topAnchor.constraint(
                 equalTo: replyView.bottomAnchor,

@@ -104,6 +104,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.isUserInteractionEnabled = true
         webView.isOpaque = true
+        webView.scrollView.isScrollEnabled = false
         return webView
     }()
 
