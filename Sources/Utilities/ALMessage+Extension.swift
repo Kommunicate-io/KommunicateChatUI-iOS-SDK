@@ -222,6 +222,23 @@ extension ALMessage: ALKChatViewModelProtocol {
         let source = sourceChannel.platformSource
         return source
     }
+    
+    public var assignedTags: [KMAssignedTags]? {
+        guard let channel = ALChannelService().getChannelByKey(channelKey),
+              let tags = channel.metadata.value(forKey: "KM_TAGS") as? String,
+              let data = tags.data(using: .utf8),
+              let tagsList = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else { return nil }
+        var tagsArray = [KMAssignedTags]()
+        for tag in tagsList {
+            if let id = tag["id"] as? Int,
+               let name = tag["name"] as? String,
+               let color = tag["color"] as? String {
+                let tag = KMAssignedTags(id: id, name: name, color: color)
+                tagsArray.append(tag)
+            }
+        }
+        return tagsArray
+    }
 }
 
 extension ALMessage {
@@ -491,4 +508,10 @@ extension ALMessage {
             return false
         }
     }
+}
+
+public struct KMAssignedTags {
+    public let id: Int
+    public let name: String
+    public let color: String?
 }
