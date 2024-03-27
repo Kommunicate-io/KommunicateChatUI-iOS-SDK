@@ -101,6 +101,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
         avatarImageView.addGestureRecognizer(tapGesture)
 
         contentView.addViewsForAutolayout(views: [avatarImageView, nameLabel])
+        contentView.bringSubviewToFront(iframeView)
         contentView.bringSubviewToFront(messageView)
 
         NSLayoutConstraint.activate([
@@ -212,7 +213,19 @@ open class ALKFriendMessageCell: ALKMessageCell {
                 constant: 0,
                 identifier: ConstraintIdentifier.ReplyMessageLabel.height
             ),
-
+            iframeView.topAnchor.constraint(
+                equalTo: bubbleView.topAnchor
+            ),
+            iframeView.bottomAnchor.constraint(
+                equalTo: bubbleView.bottomAnchor
+            ),
+            iframeView.trailingAnchor.constraint(
+                equalTo: bubbleView.trailingAnchor
+            ),
+            iframeView.leadingAnchor.constraint(
+                equalTo: bubbleView.leadingAnchor
+            ),
+            iframeWidth,
             emailTopView.topAnchor.constraint(
                 equalTo: replyView.bottomAnchor,
                 constant: Padding.MessageView.top

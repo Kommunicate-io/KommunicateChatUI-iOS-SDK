@@ -8,6 +8,7 @@
 import Kingfisher
 import KommunicateCore_iOS_SDK
 import UIKit
+import WebKit
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
@@ -97,6 +98,14 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         textView.contentInset = .zero
         return textView
     }()
+    
+    var iframeView: WKWebView = {
+        let webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.isUserInteractionEnabled = true
+        webView.isOpaque = true
+        return webView
+    }()
 
     var timeLabel: UILabel = {
         let lb = UILabel()
@@ -142,6 +151,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
 
     lazy var emailTopHeight = emailTopView.heightAnchor.constraint(equalToConstant: 0)
     lazy var emailBottomViewHeight = emailBottomView.heightAnchor.constraint(equalToConstant: 0)
+    lazy var iframeWidth = iframeView.widthAnchor.constraint(equalToConstant: 0)
 
     fileprivate static let paragraphStyle: NSMutableParagraphStyle = {
         let style = NSMutableParagraphStyle()
@@ -168,7 +178,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         mentionStyle: Style
     ) {
         self.viewModel = viewModel
-
+        iframeView.isHidden = true
+        iframeWidth.isActive = false
         if viewModel.isReplyMessage {
             guard
                 let metadata = viewModel.metadata,
@@ -203,6 +214,17 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             setMessageText(viewModel: viewModel, mentionStyle: mentionStyle)
             return
         case .html:
+            if let html = viewModel.message, html.contains("<iframe") && html.contains("</iframe>") {
+                var modifiedHTML = html
+                if !html.contains("<meta name=\"viewport\"") {
+                    modifiedHTML = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" + html
+                }
+                iframeView.isHidden = false
+                iframeWidth.isActive = true
+                iframeWidth.constant = CGFloat(ALKMessageCell.extractIframeWidth(from: html) ?? 250)
+                iframeView.loadHTMLString(modifiedHTML, baseURL: nil)
+                return
+            }
             emailTopHeight.constant = 0
             emailBottomViewHeight.constant = 0
         case .email:
@@ -253,8 +275,10 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
              replyView,
              replyNameLabel,
              replyMessageLabel,
+             iframeView,
              previewImageView,
              timeLabel])
+        contentView.bringSubviewToFront(iframeView)
         contentView.bringSubviewToFront(messageView)
         contentView.bringSubviewToFront(emailTopView)
         contentView.bringSubviewToFront(emailBottomView)
@@ -298,6 +322,9 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
                 return 0
             }
+            if let html = viewModel.message, html.contains("<iframe") && html.contains("</iframe>") {
+                return CGFloat(extractIframeHeight(from: html) ?? 150) /// default value of iframe height
+            }
             let htmlMessage = NSMutableAttributedString(attributedString: attributedText)
             htmlMessage.setBaseFont(baseFont: font)
             dummyAttributedMessageView.font = font
@@ -325,6 +352,63 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             print("😱😱😱Shouldn't come here.😱😱😱")
             return 0
         }
+    }
+
+    class func extractIframeHeight(from htmlMessage: String) -> Int? {
+        let regexPattern = "(?i)height=(?:\"(.*?)\"|'(.*?)'|(\\d+))"
+        guard let regex = try? NSRegularExpression(pattern: regexPattern, options: []) else {
+            return nil
+        }
+        let range = NSRange(htmlMessage.startIndex..<htmlMessage.endIndex, in: htmlMessage)
+                    
+        if let match = regex.firstMatch(in: htmlMessage, options: [], range: range) {
+            for captureGroupIndex in 1...3 {
+                if let captureRange = Range(match.range(at: captureGroupIndex), in: htmlMessage) {
+                    let heightInString = String(htmlMessage[captureRange])
+                    if heightInString.contains("%"){
+                        return 150
+                    }
+                    return extractIntFromString(heightInString)
+                }
+            }
+        }
+        return nil
+    }
+    
+    class func extractIframeWidth(from htmlMessage: String) -> Int? {
+        let regexPattern = "(?i)width=(?:\"(.*?)\"|'(.*?)'|(\\d+))"
+        guard let regex = try? NSRegularExpression(pattern: regexPattern, options: []) else {
+            return nil
+        }
+        let range = NSRange(htmlMessage.startIndex..<htmlMessage.endIndex, in: htmlMessage)
+                    
+        if let match = regex.firstMatch(in: htmlMessage, options: [], range: range) {
+            for captureGroupIndex in 1...3 {
+                if let captureRange = Range(match.range(at: captureGroupIndex), in: htmlMessage) {
+                    let widthInString = String(htmlMessage[captureRange])
+                    if widthInString.contains("%"){
+                        return 250
+                    }
+                    return extractIntFromString(widthInString)
+                }
+            }
+        }
+        return nil
+    }
+    
+    class func extractIntFromString(_ input: String) -> Int? {
+        do {
+            let regex = try NSRegularExpression(pattern: "(\\d+)", options: [])
+            let matches = regex.matches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count))
+            if let match = matches.first {
+                if let range = Range(match.range(at: 1), in: input) {
+                    return Int(input[range])
+                }
+            }
+        } catch {
+            print("Regex Error: \(error)")
+        }
+        return nil
     }
 
     func getMessageFor(key: String) -> ALKMessageViewModel? {
