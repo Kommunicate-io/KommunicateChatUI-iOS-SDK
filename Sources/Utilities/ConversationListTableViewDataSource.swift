@@ -25,6 +25,7 @@ public class ConversationListTableViewDataSource: NSObject, UITableViewDataSourc
     }
 
     public func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("Pakka101 conversation count \(viewModel.numberOfRowsInSection(section))")
         return viewModel.numberOfRowsInSection(section)
     }
 

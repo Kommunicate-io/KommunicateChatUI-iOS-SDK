@@ -137,6 +137,19 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
             updateMessageList(messages: allMessages)
         }
     }
+    
+    public func removeMessageByGroupID(message: ALMessage) {
+        let messageToDelete = allMessages.filter { ($0 as? ALMessage)?.groupId == message.groupId }
+        guard let messageDel = messageToDelete.first as? ALMessage,
+              let index = (allMessages as? [ALMessage])?.firstIndex(of: messageDel)
+        else {
+            return
+        }
+        allMessages.remove(at: index)
+        if allMessages.count == 0 {
+            updateMessageList(messages: allMessages)
+        }
+    }
 
     public func updateTypingStatus(in viewController: ALKConversationViewController, userId: String, status: Bool) {
         let contactDbService = ALContactDBService()
