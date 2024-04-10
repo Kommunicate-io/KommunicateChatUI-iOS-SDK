@@ -1,6 +1,10 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [1.3.1] 2024-04-10
+- Iframe Support for HTML Content
+- Added prefix to the files to avoid build issue in case of same name is used by other libraries
+
 ## [1.3.0] 2024-03-15
 - Improved read recipt label for messages.
 
