@@ -36,7 +36,7 @@ extension FormViewModelItem {
 }
 
 class FormViewModelSingleselectItem: FormViewModelItem {
-    typealias Option = FormTemplate.Option
+    typealias Option = KMFormTemplate.Option
     var type: FormViewModelItemType {
         return .singleselect
     }
@@ -61,7 +61,7 @@ class FormViewModelSingleselectItem: FormViewModelItem {
 }
 
 class FormViewModelMultiselectItem: FormViewModelItem {
-    typealias Option = FormTemplate.Option
+    typealias Option = KMFormTemplate.Option
     var type: FormViewModelItemType {
         return .multiselect
     }
@@ -85,7 +85,7 @@ class FormViewModelMultiselectItem: FormViewModelItem {
 }
 
 class FormViewModelTextItem: FormViewModelItem {
-    typealias Validation = FormTemplate.Validation
+    typealias Validation = KMFormTemplate.Validation
     var type: FormViewModelItemType {
         return .text
     }
@@ -105,7 +105,7 @@ class FormViewModelTextItem: FormViewModelItem {
 }
 
 class FormViewModelTextAreaItem: FormViewModelItem {
-    typealias Validation = FormTemplate.Validation
+    typealias Validation = KMFormTemplate.Validation
     var type: FormViewModelItemType {
         return .textarea
     }
@@ -172,8 +172,8 @@ class FormViewModelTimeItem: FormViewModelItem {
 }
 
 class FormViewModelDropdownItem: FormViewModelItem {
-    typealias Option = FormTemplate.Option
-    typealias Validation = FormTemplate.Validation
+    typealias Option = KMFormTemplate.Option
+    typealias Validation = KMFormTemplate.Validation
 
     var type: FormViewModelItemType {
         return .dropdown
@@ -195,7 +195,7 @@ class FormViewModelDropdownItem: FormViewModelItem {
     
 }
 
-extension FormTemplate {
+extension KMFormTemplate {
     var viewModeItems: [FormViewModelItem] {
         var items: [FormViewModelItem] = []
         elements.forEach { element in

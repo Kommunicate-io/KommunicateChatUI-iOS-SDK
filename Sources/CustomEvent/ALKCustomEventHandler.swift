@@ -18,7 +18,7 @@ public class ALKCustomEventHandler {
         - triggeredEvent : event type
         - data : data of triggered event
      */
-    public func publish(triggeredEvent: CustomEvent, data: [String: Any]?) {
+    public func publish(triggeredEvent: KMCustomEvent, data: [String: Any]?) {
         guard let delegate = delegate,
               subscribedEvents.contains(triggeredEvent) else { return }
               
@@ -86,14 +86,14 @@ public class ALKCustomEventHandler {
         case document = "Document"
     }
 
-    var subscribedEvents = [CustomEvent]()
+    var subscribedEvents = [KMCustomEvent]()
     /**
          This method is to subscribe the events.
         - Parameters:
         - eventsList : list of event
         - eventDelegate : delegate to send the subscribed event data
      */
-    public func setSubscribedEvents(eventsList: [CustomEvent], eventDelegate: ALKCustomEventCallback) {
+    public func setSubscribedEvents(eventsList: [KMCustomEvent], eventDelegate: ALKCustomEventCallback) {
         delegate = eventDelegate
         subscribedEvents.removeAll()
         subscribedEvents = eventsList

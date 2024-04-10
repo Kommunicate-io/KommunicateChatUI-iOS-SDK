@@ -30,6 +30,7 @@ public protocol ALKChatViewModelProtocol {
     var isMessageEmpty: Bool { get }
     var messageMetadata: NSMutableDictionary? { get }
     var platformSource: String? { get }
+    var assignedTags: [KMAssignedTags]? { get }
 }
 
 extension ALKChatViewModelProtocol {

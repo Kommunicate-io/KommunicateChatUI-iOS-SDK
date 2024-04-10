@@ -1,5 +1,5 @@
 //
-//  AutoCompleteItemConfiguration.swift
+//  KMAutoCompleteItemConfiguration.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 23/09/19.
@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 /// AutoComplete configuration for each prefix.
-public struct AutoCompleteItemConfiguration {
+public struct KMAutoCompleteItemConfiguration {
     /// If true then space will be added after the autocomplete text.
     /// Default value is true.
     public var addSpaceAfterInserting = true
@@ -36,9 +36,9 @@ public struct AutoCompleteItemConfiguration {
     public init() {}
 }
 
-public extension AutoCompleteItemConfiguration {
-    static var memberMention: AutoCompleteItemConfiguration {
-        var config = AutoCompleteItemConfiguration()
+public extension KMAutoCompleteItemConfiguration {
+    static var memberMention: KMAutoCompleteItemConfiguration {
+        var config = KMAutoCompleteItemConfiguration()
         config.textStyle = Style(
             font: UIFont.systemFont(ofSize: 14),
             text: UIColor.blue,

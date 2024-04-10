@@ -1,5 +1,5 @@
 //
-//  AudioRecordButton.swift
+//  KMAudioRecordButton.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 17/08/18.
@@ -17,7 +17,7 @@ public protocol ALKAudioRecorderProtocol: AnyObject {
     func permissionNotGrant()
 }
 
-open class AudioRecordButton: UIButton {
+open class KMAudioRecordButton: UIButton {
     public enum ALKSoundRecorderState {
         case recording
         case none
@@ -207,7 +207,7 @@ open class AudioRecordButton: UIButton {
     }
 }
 
-extension AudioRecordButton: AVAudioRecorderDelegate {
+extension KMAudioRecordButton: AVAudioRecorderDelegate {
     public func audioRecorderDidFinishRecording(_: AVAudioRecorder, successfully flag: Bool) {
         if !flag {
             stopAudioRecord()

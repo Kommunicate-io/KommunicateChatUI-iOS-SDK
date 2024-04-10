@@ -1,5 +1,5 @@
 //
-//  MuteConversationViewController.swift
+//  KMMuteConversationViewController.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 15/10/18.
@@ -12,7 +12,7 @@ import KommunicateCore_iOS_SDK
     @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)
 }
 
-class MuteConversationViewController: UIViewController, Localizable {
+class KMMuteConversationViewController: UIViewController, Localizable {
     var configuration: ALKConfiguration!
 
     weak var delegate: Muteable?
@@ -177,7 +177,7 @@ class MuteConversationViewController: UIViewController, Localizable {
     }
 }
 
-extension MuteConversationViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+extension KMMuteConversationViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in _: UIPickerView) -> Int {
         return 1
     }

@@ -1,5 +1,5 @@
 //
-//  SpeechToTextButton.swift
+//  KMSpeechToTextButton.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 01/09/20.

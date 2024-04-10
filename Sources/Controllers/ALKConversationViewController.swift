@@ -35,8 +35,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var individualLaunch = true
 
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
-    public lazy var autocompleteManager: AutoCompleteManager = {
-        let manager = AutoCompleteManager(
+    public lazy var autocompleteManager: KMAutoCompleteManager = {
+        let manager = KMAutoCompleteManager(
             textView: chatBar.textView,
             tableview: autocompletionView
         )
@@ -44,8 +44,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return manager
     }()
     
-    public lazy var autoSuggestionManager: AutoCompleteManager = {
-        let manager = AutoCompleteManager(textView: chatBar.textView, tableview: autoSuggestionView)
+    public lazy var autoSuggestionManager: KMAutoCompleteManager = {
+        let manager = KMAutoCompleteManager(textView: chatBar.textView, tableview: autoSuggestionView)
         manager.autocompletionDelegate = self
         return manager
     }()
@@ -656,7 +656,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     @objc func conversationInfoViewTap(_: UITapGestureRecognizer) {
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.conversationInfoClick, data:  nil)
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.conversationInfoClick, data:  nil)
     }
 
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
@@ -1103,8 +1103,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if configuration.isMemberMentionEnabled {
             autocompleteManager.registerPrefix(
                 prefix: MessageMention.Prefix,
-                configuration: AutoCompleteItemConfiguration.memberMention,
-                cellType: MentionAutoCompleteCell.self
+                configuration: KMAutoCompleteItemConfiguration.memberMention,
+                cellType: KMMentionAutoCompleteCell.self
             )
         }
     }
@@ -1453,7 +1453,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let conversationId = message.channelKey else {
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data: ["conversationId": conversationId.stringValue, "action": [:], "type": "quickreply"])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["conversationId": conversationId.stringValue, "action": [:], "type": "quickreply"])
     }
 
     func richButtonSelected(index: Int,
@@ -1475,7 +1475,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         if let conversationId = message.channelKey {
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId": conversationId.stringValue,"action": action, "type": type])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId": conversationId.stringValue,"action": action, "type": type])
         }
         
         switch type {
@@ -1512,25 +1512,25 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             type == "link"
         else {
             /// Submit Button
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "submit"])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "submit"])
             let text = selectedButton["replyText"] as? String ?? selectedButton["name"] as! String
             submitButtonSelected(metadata: message.metadata!, text: text)
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "link"])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "link"])
         linkButtonSelected(selectedButton)
     }
 
-    func listTemplateSelected(element: ListTemplate.Element?, defaultText: String?, action: ListTemplate.Action?) {
+    func listTemplateSelected(element: KMListTemplate.Element?, defaultText: String?, action: KMListTemplate.Action?) {
         guard !configuration.disableRichMessageButtonAction else { return }
         let defaultText = element?.title
         guard let action = action, let type = action.type  else {
-            ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element , "type": ""])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element , "type": ""])
             print("Type not defined for action")
             return
         }
 
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element, "type": type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element, "type": type])
         switch type {
         case ActionType.link.rawValue:
             guard let urlString = action.url, let url = URL(string: urlString), !configuration.restrictLinkNavigationOnListTemplateTap else { return }
@@ -1550,7 +1550,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
 
-    func cardTemplateSelected(tag: Int, title: String, template: CardTemplate, message: ALKMessageViewModel) {
+    func cardTemplateSelected(tag: Int, title: String, template: KMCardTemplate, message: ALKMessageViewModel) {
         guard
             message.isMyMessage == false,
             configuration.disableRichMessageButtonAction == false
@@ -1566,7 +1566,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("\(tag) Button for this card is nil unexpectedly :: \(template)")
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: CustomEvent.richMessageClick, data:  ["action": action, "type": action.type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["action": action, "type": action.type])
 
         switch action.type {
         case CardTemplateActionType.link.rawValue:
@@ -2443,7 +2443,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         ALKFormDataCache.shared.set(formData, for: key)
     }
 
-    func processElement(_ element: FormTemplate.Element, at elementIndex: Int, formData: inout FormDataSubmit) {
+    func processElement(_ element: KMFormTemplate.Element, at elementIndex: Int, formData: inout FormDataSubmit) {
         let elementType = element.type
         
         if let details = element.data, let options = details.options {
@@ -2467,7 +2467,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    func processRadioElement(_ options: [FormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
+    func processRadioElement(_ options: [KMFormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
         for (optionIndex, option) in options.enumerated() {
             if let selected = option.selected, selected {
                 if let value = option.value {
@@ -2477,7 +2477,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    func processCheckboxElement(_ options: [FormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
+    func processCheckboxElement(_ options: [KMFormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
         var selectedOptionIndices: [Int] = []
 
         for (optionIndex, option) in options.enumerated() {

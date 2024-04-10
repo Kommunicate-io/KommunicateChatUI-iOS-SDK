@@ -30,7 +30,7 @@ class KMYoutubeVideoCell: UITableViewCell {
         return lbl
     }()
 
-    var viewModel: VideoTemplate?
+    var viewModel: KMVideoTemplate?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,7 +52,7 @@ class KMYoutubeVideoCell: UITableViewCell {
         captionLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
-    func updateVideModel(model: VideoTemplate) {
+    func updateVideModel(model: KMVideoTemplate) {
         self.viewModel = model
         captionLabel.text = model.caption ?? ""
         loadYouTubeVideo(url: model.url)

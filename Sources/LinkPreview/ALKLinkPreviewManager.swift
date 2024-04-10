@@ -17,7 +17,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         self.responseMainQueue = responseMainQueue
     }
 
-    func makePreview(from text: String, identifier: String, _ completion: @escaping (Result<(LinkPreviewMeta, URL), LinkPreviewFailure>) -> Void) {
+    func makePreview(from text: String, identifier: String, _ completion: @escaping (Result<(KMLinkPreviewMeta, URL), KMLinkPreviewFailure>) -> Void) {
         guard let url = ALKLinkPreviewManager.extractURLAndAddInCache(from: text, identifier: identifier) else {
             responseMainQueue.async {
                 completion(.failure(.noURLFound))
@@ -43,7 +43,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                     return
                 }
 
-                var linkPreview: LinkPreviewMeta?
+                var linkPreview: KMLinkPreviewMeta?
 
                 if let data = data, let urlResponse = response,
                    let encoding = urlResponse.textEncodingName,
@@ -64,7 +64,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                     }
                     return
                 }
-                LinkURLCache.addLink(linkPreviewData, for: linkPreviewData.url.absoluteString)
+                KMLinkURLCache.addLink(linkPreviewData, for: linkPreviewData.url.absoluteString)
                 weakSelf.responseMainQueue.async {
                     completion(.success((linkPreviewData, url)))
                 }
@@ -76,19 +76,19 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
     // MARK: - Private helpers
 
     private func cleanUnwantedTags(from html: String) -> String {
-        return html.deleteTagByPattern(LinkPreviewRegex.Pattern.InLine.style)
-            .deleteTagByPattern(LinkPreviewRegex.Pattern.InLine.script)
-            .deleteTagByPattern(LinkPreviewRegex.Pattern.Script.tag)
-            .deleteTagByPattern(LinkPreviewRegex.Pattern.Comment.tag)
+        return html.deleteTagByPattern(KMLinkPreviewRegex.Pattern.InLine.style)
+            .deleteTagByPattern(KMLinkPreviewRegex.Pattern.InLine.script)
+            .deleteTagByPattern(KMLinkPreviewRegex.Pattern.Script.tag)
+            .deleteTagByPattern(KMLinkPreviewRegex.Pattern.Comment.tag)
     }
 
-    private func parseHtmlAndUpdateLinkPreviewMeta(text: String?, baseUrl: String) -> LinkPreviewMeta? {
+    private func parseHtmlAndUpdateLinkPreviewMeta(text: String?, baseUrl: String) -> KMLinkPreviewMeta? {
         guard let text = text, let url = URL(string: baseUrl) else { return nil }
         let cleanHtml = cleanUnwantedTags(from: text)
 
-        var result = LinkPreviewMeta(url: url)
+        var result = KMLinkPreviewMeta(url: url)
         result.icon = parseIcon(in: text, baseUrl: baseUrl)
-        var linkFreeHtml = cleanHtml.deleteTagByPattern(LinkPreviewRegex.Pattern.Link.tag)
+        var linkFreeHtml = cleanHtml.deleteTagByPattern(KMLinkPreviewRegex.Pattern.Link.tag)
 
         parseMetaTags(in: &linkFreeHtml, result: &result)
         parseTitle(&linkFreeHtml, result: &result)
@@ -96,13 +96,13 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         return result
     }
 
-    private func parseMetaTags(in text: inout String, result: inout LinkPreviewMeta) {
-        let tags = LinkPreviewRegex.pregMatchAll(text, pattern: LinkPreviewRegex.Pattern.Meta.tag, index: 1)
+    private func parseMetaTags(in text: inout String, result: inout KMLinkPreviewMeta) {
+        let tags = KMLinkPreviewRegex.pregMatchAll(text, pattern: KMLinkPreviewRegex.Pattern.Meta.tag, index: 1)
 
         let possibleTags: [String] = [
-            LinkPreviewMeta.Key.title.rawValue,
-            LinkPreviewMeta.Key.description.rawValue,
-            LinkPreviewMeta.Key.image.rawValue,
+            KMLinkPreviewMeta.Key.title.rawValue,
+            KMLinkPreviewMeta.Key.description.rawValue,
+            KMLinkPreviewMeta.Key.image.rawValue,
         ]
         for metatag in tags {
             for tag in possibleTags {
@@ -115,14 +115,14 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                     metatag.range(of: "itemprop=\"\(tag)") != nil ||
                     metatag.range(of: "itemprop='\(tag)") != nil
                 {
-                    if let key = LinkPreviewMeta.Key(rawValue: tag),
+                    if let key = KMLinkPreviewMeta.Key(rawValue: tag),
                        result.value(for: key) == nil
                     {
-                        if let value = LinkPreviewRegex.pregMatchFirst(metatag, pattern: LinkPreviewRegex.Pattern.Meta.content, index: 2) {
+                        if let value = KMLinkPreviewRegex.pregMatchFirst(metatag, pattern: KMLinkPreviewRegex.Pattern.Meta.content, index: 2) {
                             let value = value.decodedHtml.extendedTrim
                             if tag == "image" {
                                 let value = handleImagePrefixAndSuffix(value, baseUrl: result.url.absoluteString)
-                                if LinkPreviewRegex.isMatchFound(value, regex: LinkPreviewRegex.Pattern.Image.type) { result.set(value, for: key) }
+                                if KMLinkPreviewRegex.isMatchFound(value, regex: KMLinkPreviewRegex.Pattern.Image.type) { result.set(value, for: key) }
                             } else {
                                 result.set(value, for: key)
                             }
@@ -134,7 +134,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
     }
 
     private func parseIcon(in text: String, baseUrl: String) -> String? {
-        let links = LinkPreviewRegex.pregMatchAll(text, pattern: LinkPreviewRegex.Pattern.Link.tag, index: 1)
+        let links = KMLinkPreviewRegex.pregMatchAll(text, pattern: KMLinkPreviewRegex.Pattern.Link.tag, index: 1)
         // swiftlint:disable:next opening_brace
         let filters = [{ (link: String) -> Bool
             in link.range(of: "apple-touch") != nil
@@ -145,17 +145,17 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         }]
         for filter in filters {
             guard let link = links.filter(filter).first else { continue }
-            if let matches = LinkPreviewRegex.pregMatchFirst(link, pattern: LinkPreviewRegex.Pattern.Image.href, index: 1) {
+            if let matches = KMLinkPreviewRegex.pregMatchFirst(link, pattern: KMLinkPreviewRegex.Pattern.Image.href, index: 1) {
                 return handleImagePrefixAndSuffix(matches, baseUrl: baseUrl)
             }
         }
         return nil
     }
 
-    private func parseTitle(_ htmlCode: inout String, result: inout LinkPreviewMeta) {
+    private func parseTitle(_ htmlCode: inout String, result: inout KMLinkPreviewMeta) {
         let title = result.title
         if title == nil || title?.isEmpty ?? true {
-            if let value = LinkPreviewRegex.pregMatchFirst(htmlCode, pattern: LinkPreviewRegex.Pattern.Title.tag, index: 2) {
+            if let value = KMLinkPreviewRegex.pregMatchFirst(htmlCode, pattern: KMLinkPreviewRegex.Pattern.Title.tag, index: 2) {
                 if value.isEmpty {
                     let data: String = getTagData(htmlCode, minimum: TextMinimumLength.title)
                     if !data.isEmpty {
@@ -169,7 +169,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         }
     }
 
-    private func parseDescription(_ htmlCode: String, result: inout LinkPreviewMeta) {
+    private func parseDescription(_ htmlCode: String, result: inout KMLinkPreviewMeta) {
         let description = result.description
 
         if description == nil || description?.isEmpty ?? true {
@@ -252,17 +252,17 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
     }
 
     private func getTagContent(_ tag: String, content: String, minimum: Int) -> String {
-        let pattern = LinkPreviewRegex.tagPattern(tag)
+        let pattern = KMLinkPreviewRegex.tagPattern(tag)
 
         let index = 2
-        let rawMatches = LinkPreviewRegex.pregMatchAll(content, pattern: pattern, index: index)
+        let rawMatches = KMLinkPreviewRegex.pregMatchAll(content, pattern: pattern, index: index)
 
-        let matches = rawMatches.filter { $0.extendedTrim.deleteTagByPattern(LinkPreviewRegex.Pattern.Raw.tag).count >= minimum }
+        let matches = rawMatches.filter { $0.extendedTrim.deleteTagByPattern(KMLinkPreviewRegex.Pattern.Raw.tag).count >= minimum }
         var result = !matches.isEmpty ? matches[0] : ""
 
         if result.isEmpty {
-            if let match = LinkPreviewRegex.pregMatchFirst(content, pattern: pattern, index: 2) {
-                result = match.extendedTrim.deleteTagByPattern(LinkPreviewRegex.Pattern.Raw.tag)
+            if let match = KMLinkPreviewRegex.pregMatchFirst(content, pattern: pattern, index: 2) {
+                result = match.extendedTrim.deleteTagByPattern(KMLinkPreviewRegex.Pattern.Raw.tag)
             }
         }
         return result

@@ -1,5 +1,5 @@
 //
-//  AutoCompleteManager.swift
+//  KMAutoCompleteManager.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh on 16/09/19.
@@ -10,22 +10,22 @@ import UIKit
     import RichMessageKit
 #endif
 
-public protocol AutoCompletionDelegate: AnyObject {
+public protocol KMAutoCompletionDelegate: AnyObject {
     func didMatch(prefix: String, message: String, updated: Bool)
     func sendMessage(content : String)
 }
 
-public protocol AutoCompletionItemCell: UITableViewCell {
-    func updateView(item: AutoCompleteItem)
+public protocol KMAutoCompletionItemCell: UITableViewCell {
+    func updateView(item: KMAutoCompleteItem)
 }
 
 /// An autocomplete manager that is used for registering prefixes,
 /// finding prefixes in user text and showing autocomplete suggestions.
-public class AutoCompleteManager: NSObject {
+public class KMAutoCompleteManager: NSObject {
     public let autocompletionView: UITableView
     public let textView: ALKChatBarTextView
-    public weak var autocompletionDelegate: AutoCompletionDelegate?
-    public var items = [AutoCompleteItem]()
+    public weak var autocompletionDelegate: KMAutoCompletionDelegate?
+    public var items = [KMAutoCompleteItem]()
     public var isAutoSuggestion: Bool = false
 
     // Prefix and entered word with its range in the text.
@@ -45,8 +45,8 @@ public class AutoCompleteManager: NSObject {
 
     fileprivate var autoCompletionViewHeightConstraint: NSLayoutConstraint?
     private var autocompletionPrefixes: Set<String> = []
-    private var prefixConfigurations: [String: AutoCompleteItemConfiguration] = [:]
-    private var prefixCells: [String: AutoCompletionItemCell.Type] = [:]
+    private var prefixConfigurations: [String: KMAutoCompleteItemConfiguration] = [:]
+    private var prefixCells: [String: KMAutoCompletionItemCell.Type] = [:]
 
     public init(
         textView: ALKChatBarTextView,
@@ -64,9 +64,9 @@ public class AutoCompleteManager: NSObject {
         autocompletionView.register(DefaultAutoCompleteCell.self)
     }
 
-    public func registerPrefix<T: AutoCompletionItemCell>(
+    public func registerPrefix<T: KMAutoCompletionItemCell>(
         prefix: String,
-        configuration: AutoCompleteItemConfiguration = AutoCompleteItemConfiguration(),
+        configuration: KMAutoCompleteItemConfiguration = KMAutoCompleteItemConfiguration(),
         cellType: T.Type
     ) {
         autocompletionPrefixes.insert(prefix)
@@ -77,8 +77,8 @@ public class AutoCompleteManager: NSObject {
         }
     }
     
-    public func registerWithoutPrefix<T: AutoCompletionItemCell>(
-        configuration: AutoCompleteItemConfiguration = AutoCompleteItemConfiguration(),
+    public func registerWithoutPrefix<T: KMAutoCompletionItemCell>(
+        configuration: KMAutoCompleteItemConfiguration = KMAutoCompleteItemConfiguration(),
         cellType: T.Type
     ) {
         if cellType != DefaultAutoCompleteCell.self {
@@ -108,7 +108,7 @@ public class AutoCompleteManager: NSObject {
         hide(true)
     }
 
-    func insert(item: AutoCompleteItem, at insertionRange: NSRange, replace selection: Selection) {
+    func insert(item: KMAutoCompleteItem, at insertionRange: NSRange, replace selection: Selection) {
         
         if let supportsRichMessage = item.supportsRichMessage,
            supportsRichMessage {
@@ -119,13 +119,13 @@ public class AutoCompleteManager: NSObject {
         
         let defaultAttributes = textView.typingAttributes
         var newAttributes = defaultAttributes
-        let configuration = prefixConfigurations[selection.prefix] ?? AutoCompleteItemConfiguration()
+        let configuration = prefixConfigurations[selection.prefix] ?? KMAutoCompleteItemConfiguration()
         if let style = configuration.textStyle {
             // pass prefix attributes for the range and override old value if present
             newAttributes.merge(style.toAttributes) { $1 }
         }
         if !configuration.allowEditingAutocompleteText {
-            newAttributes[AutoCompleteItem.attributesKey] = selection.prefix + item.key
+            newAttributes[KMAutoCompleteItem.attributesKey] = selection.prefix + item.key
         }
 
         let prefix = configuration.insertWithPrefix ? selection.prefix : ""
@@ -151,7 +151,7 @@ public class AutoCompleteManager: NSObject {
     }
 }
 
-extension AutoCompleteManager: UITextViewDelegate {
+extension KMAutoCompleteManager: UITextViewDelegate {
     public func textView(
         _ textView: UITextView,
         shouldChangeTextIn range: NSRange,
@@ -171,12 +171,12 @@ extension AutoCompleteManager: UITextViewDelegate {
             // Backspace/removing text
             let attribute = textView.attributedText
                 .attributes(at: range.lowerBound, longestEffectiveRange: nil, in: range)
-                .filter { $0.key == AutoCompleteItem.attributesKey }
+                .filter { $0.key == KMAutoCompleteItem.attributesKey }
 
-            if let isAutocomplete = attribute[AutoCompleteItem.attributesKey] as? String, !isAutocomplete.isEmpty {
+            if let isAutocomplete = attribute[KMAutoCompleteItem.attributesKey] as? String, !isAutocomplete.isEmpty {
                 // Remove the autocompleted substring
                 let lowerRange = NSRange(location: 0, length: range.location + 1)
-                textView.attributedText.enumerateAttribute(AutoCompleteItem.attributesKey, in: lowerRange, options: .reverse, using: { _, range, stop in
+                textView.attributedText.enumerateAttribute(KMAutoCompleteItem.attributesKey, in: lowerRange, options: .reverse, using: { _, range, stop in
 
                     // Only delete the first found range
                     defer { stop.pointee = true }
@@ -210,7 +210,7 @@ extension AutoCompleteManager: UITextViewDelegate {
         }
         }
 
-    func cellType(forPrefix prefix: String) -> AutoCompletionItemCell.Type {
+    func cellType(forPrefix prefix: String) -> KMAutoCompletionItemCell.Type {
         return prefixCells[prefix] ?? DefaultAutoCompleteCell.self
     }
 }

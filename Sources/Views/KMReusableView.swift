@@ -1,5 +1,5 @@
 //
-//  ReusableView.swift
+//  KMReusableView.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 
-protocol ReusableView: AnyObject {
+protocol KMReusableView: AnyObject {
     static var reuseIdentifier: String { get }
     static var heightForView: CGFloat { get }
 }
 
-extension ReusableView where Self: UIView {
+extension KMReusableView where Self: UIView {
     static var reuseIdentifier: String {
         let name = NSStringFromClass(self).components(separatedBy: ".").last!
         return name
@@ -24,10 +24,10 @@ extension ReusableView where Self: UIView {
     }
 }
 
-extension UICollectionViewCell: ReusableView {}
+extension UICollectionViewCell: KMReusableView {}
 
-extension UITableViewCell: ReusableView {}
-extension UITableViewHeaderFooterView: ReusableView {}
+extension UITableViewCell: KMReusableView {}
+extension UITableViewHeaderFooterView: KMReusableView {}
 
 protocol NibLoadableView: AnyObject {
     static var nibName: String { get }
