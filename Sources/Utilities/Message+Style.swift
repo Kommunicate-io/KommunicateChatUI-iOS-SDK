@@ -35,7 +35,7 @@ public enum ALKMessageStyle {
     // Sent message text style
     public static var sentMessage = Style(
         font: UIFont.font(.normal(size: 14)),
-        text: .text(.black00)
+        text: .text(.white)
     )
 
     /// Style for mentions in sent message text
