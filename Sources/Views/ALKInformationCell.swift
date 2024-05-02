@@ -191,9 +191,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         }
         imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
-        let textString = getFormattedFeedbackString(viewModel)
-        textString.append(imageString)
-        setupViews(feedbackString: textString, comment: comment)
+        setupViews(feedbackString: NSMutableAttributedString(attributedString: imageString), comment: comment)
     }
     
     fileprivate func setupViews(feedbackString: NSMutableAttributedString, comment: String){

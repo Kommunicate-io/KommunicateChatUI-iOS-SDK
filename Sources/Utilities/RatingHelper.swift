@@ -15,12 +15,16 @@ class RatingHelper : Localizable {
      func getRatingIconFor(rating : Int) -> UIImage? {
          var imageName = String()
          switch rating {
-         case 1:
-             imageName = "sadEmoji"
-         case 5:
-             imageName = "confusedEmoji"
+         case 2:
+             imageName = "rating_star_filled"
+         case 4:
+             imageName = "rating_star_filled_two"
+         case 6:
+             imageName = "rating_star_filled_three"
+         case 8:
+             imageName = "rating_star_filled_four"
          case 10:
-             imageName = "happyEmoji"
+             imageName = "rating_star_filled_five"
          default:
              print("incorrect data")
          }
