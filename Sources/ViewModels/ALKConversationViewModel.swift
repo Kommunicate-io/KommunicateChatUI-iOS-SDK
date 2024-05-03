@@ -1536,6 +1536,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         return false
     }
+    
+    func isBotHandelingConversation() -> Bool {
+        if let channel = ALChannelService().getChannelByKey(channelKey),
+        let assigneeUserId = channel.assigneeUserId,
+        let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
+        let roleType = assignee.roleType,
+        roleType ==  NSNumber.init(value: AL_BOT.rawValue) {
+            return true
+        }
+        return false
+    }
 
     func loadSearchMessages() {
         var time: NSNumber?
