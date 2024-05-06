@@ -381,6 +381,10 @@ open class ALKChatBar: UIView, Localizable {
         comingSoonDelegate = delegate
     }
 
+    open func hideAllAttachmentButtonIcons(isHidden: Bool) {
+        attachmentButtonStackView.isHidden = isHidden
+    }
+    
     open func clear() {
         textView.text = ""
         clearTextInTextView()
