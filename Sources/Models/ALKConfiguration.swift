@@ -173,6 +173,15 @@ public struct ALKConfiguration {
     // If true, then in-app notification banner will be disabled
     public var isInAppNotificationBannerDisabled: Bool = false
 
+    /// Set The In App Banner Color. By Default the color is black.
+    public var inAppBannerColor: UIColor = UIColor.black
+    
+    /// Set The In App Banner Text Color. By Default the color is white.
+    public var inAppBannerTextColor: UIColor = UIColor.white
+    
+    /// Set The In App Banner Content Color. By Default the color is white.
+    public var inAppBannerContentColor: UIColor = UIColor.white
+    
     // If true, then link preview will be disabled
     public var isLinkPreviewDisabled: Bool = false
 
