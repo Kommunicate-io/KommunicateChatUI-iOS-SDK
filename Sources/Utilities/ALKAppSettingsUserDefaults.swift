@@ -40,8 +40,8 @@ public struct ALKAppSettingsUserDefaults {
     
     /// CSAT Rating Base
     public func getCSATRatingBase() -> Int {
-        if let appSettings = getAppSettings(), let csatRatingBase = appSettings.csatRatingBase {
-            return csatRatingBase
+        if let appSettings = getAppSettings(){
+            return appSettings.csatRatingBase
         }
         return 3
     }
@@ -236,7 +236,7 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var hidePostCTAEnabled: Bool = false
     public var defaultUploadOverrideUrl: String?
     public var defaultUploadOverrideHeaders: [String:String]?
-    public var csatRatingBase: Int?
+    public var csatRatingBase: Int = 3
 
     // MARK: - Public Initialization
 
