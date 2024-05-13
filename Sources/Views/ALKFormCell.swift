@@ -277,9 +277,9 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                let singleSelectFields = formDataSubmit.singleSelectFields[indexPath.section],
                singleSelectFields == indexPath.row
             {
-                cell.accessoryType = .checkmark
+                cell.checkBoxImage.image = UIImage(named: "radiobutton_checked", in: Bundle.km, compatibleWith: nil)
             } else {
-                cell.accessoryType = .none
+                cell.checkBoxImage.image = UIImage(named: "radiobutton_unchecked", in: Bundle.km, compatibleWith: nil)
             }
             if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
                 cell.tintColor = .darkGray
@@ -356,9 +356,11 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                 if let formDataSubmit = formData,
                    let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
                 {
-                    cell.accessoryType = .checkmark
+                    cell.isSelectedCell = true
+                    cell.checkBoxImage.image = UIImage(named: "checkbox_checked", in: Bundle.km, compatibleWith: nil)
                 } else {
-                    cell.accessoryType = .none
+                    cell.isSelectedCell = false
+                    cell.checkBoxImage.image = UIImage(named: "checkbox_unchecked", in: Bundle.km, compatibleWith: nil)
                 }
                 cell.item = multiselectItem.options[indexPath.row]
                 if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
