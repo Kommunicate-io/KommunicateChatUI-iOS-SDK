@@ -176,6 +176,18 @@ public struct ALKConfiguration {
     /// Set The In App Banner Color. By Default the color is black.
     public var inAppBannerColor: UIColor = UIColor.black
     
+    /// Set The In App Banner Shadow Color. By Default the color is black.
+    public var inAppBannerShadowColor: UIColor = UIColor.black
+
+    /// Set The In App Banner Shadow radius. By Default the value is 0.
+    public var inAppBannerShadowRadius: NSNumber = 0
+    
+    /// Set The In App Banner Shadow radius. By Default the value is 0.
+    public var inAppBannerRadius: NSNumber = 0
+    
+    /// Set The In App Banner Shadow Opacity. By Default the value is 0.
+    public var inAppBannerOpacity: NSNumber = 0
+    
     /// Set The In App Banner Text Color. By Default the color is white.
     public var inAppBannerTextColor: UIColor = UIColor.white
     
