@@ -42,7 +42,7 @@ public class ALKPushNotificationHandler: Localizable {
                     backgroundShadowColor: configuration.inAppBannerShadowColor,
                     shadowRadius: configuration.inAppBannerShadowRadius,
                     cornerRadius: configuration.inAppBannerRadius,
-                    shadowOpacity: configuration.inAppBannerOpacity,
+                    shadowOpacity: configuration.inAppBannerShadowOpacity,
                     completionHandler: {
                         _ in
                         weakSelf.launchIndividualChatWith(notificationData: notificationData)
