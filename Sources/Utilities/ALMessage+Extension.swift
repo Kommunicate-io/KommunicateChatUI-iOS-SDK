@@ -286,7 +286,7 @@ extension ALMessage {
 
     var time: String? {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "HH:mm"
+        dateFormatterGet.dateFormat = "h:mm a"
         return dateFormatterGet.string(from: date)
     }
 
