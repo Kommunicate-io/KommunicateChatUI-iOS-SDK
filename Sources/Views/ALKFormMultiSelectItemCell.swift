@@ -18,6 +18,14 @@ class ALKFormMultiSelectItemCell: UITableViewCell {
             nameLabel.text = item.label
         }
     }
+    
+    var isSelectedCell : Bool = false
+    
+    let checkBoxImage: UIImageView = {
+       let image = UIImageView()
+        image.image = UIImage(named: "checkbox_unchecked", in: Bundle.km, compatibleWith: nil)
+        return image
+    }()
 
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -43,18 +51,27 @@ class ALKFormMultiSelectItemCell: UITableViewCell {
     }
 
     @objc private func onSelection() {
-        accessoryType = (accessoryType == .none) ? .checkmark : .none
+        isSelectedCell = !isSelectedCell
+        if (isSelectedCell == true) {
+            checkBoxImage.image = UIImage(named: "checkbox_checked", in: Bundle.km, compatibleWith: nil)
+        } else {
+            checkBoxImage.image = UIImage(named: "checkbox_unchecked", in: Bundle.km, compatibleWith: nil)
+        }
         cellSelected?()
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [nameLabel])
-        nameLabel.layout {
-            $0.leading == leadingAnchor + Size.nameLabel.leading
-            $0.trailing == trailingAnchor + Size.nameLabel.trailing
-            $0.top == topAnchor + Size.nameLabel.top
-            $0.bottom <= bottomAnchor + Size.nameLabel.bottom
-        }
+        addViewsForAutolayout(views: [checkBoxImage, nameLabel])
+        NSLayoutConstraint.activate([
+            checkBoxImage.leadingAnchor.constraint(equalTo: leadingAnchor,constant: Size.checkBoxImage.leading),
+            checkBoxImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            checkBoxImage.heightAnchor.constraint(equalToConstant: Size.checkBoxImage.height),
+            checkBoxImage.widthAnchor.constraint(equalToConstant: Size.checkBoxImage.width),
+            nameLabel.leadingAnchor.constraint(equalTo: checkBoxImage.trailingAnchor, constant: Size.nameLabel.leading),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Size.nameLabel.trailing),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Size.nameLabel.top),
+            nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Size.nameLabel.bottom)
+            ])
     }
 }
 
@@ -65,6 +82,11 @@ private extension ALKFormMultiSelectItemCell {
             static let bottom: CGFloat = -10
             static let leading: CGFloat = 10
             static let trailing: CGFloat = -40
+        }
+        enum checkBoxImage {
+            static let leading: CGFloat = 10
+            static let height: CGFloat = 25
+            static let width: CGFloat = 25
         }
     }
 }
