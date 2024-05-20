@@ -53,7 +53,7 @@ extension Date {
             dateFormatter.dateStyle = .medium
             dateFormatter.doesRelativeDateFormatting = true
         } else {
-            let fromTemplate = (day < 7 ? "EEEE" : "EdMMM")
+            let fromTemplate = (day < 7 ? "EEEE" : "EEEE MMM dd, yyyy")
             let dateFormat = DateFormatter.dateFormat(fromTemplate: fromTemplate, options: 0, locale: Locale.current)
             dateFormatter.dateFormat = dateFormat
         }
