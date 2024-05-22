@@ -173,26 +173,26 @@ public struct ALKConfiguration {
     // If true, then in-app notification banner will be disabled
     public var isInAppNotificationBannerDisabled: Bool = false
 
-    /// Set The In App Banner Color. By Default the color is black.
-    public var inAppBannerColor: UIColor = UIColor.black
+    /// Set The In App Banner Color. By default the color is white and in dark mode it's black (only if dark mode is enabled).
+    public var inAppBannerColor: UIColor = UIColor.kmDynamicColor(light: UIColor(netHex: 0xFFFFFF), dark: UIColor(netHex: 0x1D1B20))
     
-    /// Set The In App Banner Shadow Color. By Default the color is black.
-    public var inAppBannerShadowColor: UIColor = UIColor.black
+    /// Set The In App Banner Shadow Color. By default the color is gray.
+    public var inAppBannerShadowColor: UIColor = UIColor(netHex: 0x2C2C2C)
 
-    /// Set The In App Banner Shadow radius. By Default the value is 2.
-    public var inAppBannerShadowRadius: NSNumber = 2
+    /// Set The In App Banner Shadow radius. By default the value is 4.
+    public var inAppBannerShadowRadius: NSNumber = 4
     
-    /// Set The In App Banner Shadow radius. By Default the value is 12.
-    public var inAppBannerRadius: NSNumber = 12
+    /// Set The In App Banner Shadow radius. By default the value is 8.
+    public var inAppBannerRadius: NSNumber = 8
     
-    /// Set The In App Banner Shadow Opacity. By Default the value is 0.5.
-    public var inAppBannerShadowOpacity: NSNumber = 0.5
+    /// Set The In App Banner Shadow Opacity. By default the value is 0.25.
+    public var inAppBannerShadowOpacity: NSNumber = 0.25
     
-    /// Set The In App Banner Text Color. By Default the color is white.
-    public var inAppBannerTextColor: UIColor = UIColor.white
+    /// Set The In App Banner Text Color. By default the color is black for light mode and white for dark mode (only if dark mode is enabled).
+    public var inAppBannerTextColor: UIColor = UIColor.kmDynamicColor(light: UIColor(netHex: 0x313131), dark: UIColor(netHex: 0xEFEFEF))
     
-    /// Set The In App Banner Content Color. By Default the color is white.
-    public var inAppBannerContentColor: UIColor = UIColor.white
+    /// Set The In App Banner Content Color. By default the color is black for light mode and white for dark mode (only if dark mode is enabled).
+    public var inAppBannerContentColor: UIColor = UIColor.kmDynamicColor(light: UIColor(netHex: 0x67757E), dark: UIColor(netHex: 0xB3B3B3))
     
     // If true, then link preview will be disabled
     public var isLinkPreviewDisabled: Bool = false
