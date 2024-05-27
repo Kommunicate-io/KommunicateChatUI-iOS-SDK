@@ -1,6 +1,13 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [1.3.3] 2024-05-27
+- Fixed color difference in Attachment Icon.
+- Added Five Star CSAT Ratting.
+- Exposed Funtion to show or hide Attachment Options.
+- Updated Check Box UI for Form.
+- Updated Time and Date Format.(Similar to Android & Web)
+
 ## [1.3.2] 2024-04-23
 - Updated the default color for send message text to white.
 
