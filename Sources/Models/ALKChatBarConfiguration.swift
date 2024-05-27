@@ -31,6 +31,9 @@ public struct ALKChatBarConfiguration {
         case some([AttachmentType])
     }
 
+    /// if true then Attachment Options Will be hidden when bot is handeling the conversartion. By Default the value is False.
+    public var hideAttachmentOptionsForBotConvesations = false
+    
     /// If true then button tint color will be disabled for attachment buttons, send button.
     public var disableButtonTintColor = false
     

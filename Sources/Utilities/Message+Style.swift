@@ -110,7 +110,7 @@ public enum ALKMessageStyle {
 
     public struct Bubble {
         enum DefaultColor {
-            static let sentBubbleColor = UIColor(netHex: 0xF1F0F0)
+            static let sentBubbleColor = UIColor(netHex: 0x5553B7)
             static let receivedBubbleColor = UIColor(netHex: 0xF1F0F0)
         }
 
@@ -144,7 +144,7 @@ public enum ALKMessageStyle {
         }
     }
 
-    public static var sentBubble = Bubble(color: UIColor(netHex: 0xF1F0F0), style: .edge) {
+    public static var sentBubble = Bubble(color: UIColor(netHex: 0x5553B7), style: .edge) {
         didSet {
             let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
             appSettingsUserDefaults.setSentMessageBackgroundColor(color: sentBubble.color)

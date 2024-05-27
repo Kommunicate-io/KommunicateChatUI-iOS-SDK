@@ -30,7 +30,22 @@ public struct ALKAppSettingsUserDefaults {
         }
         return UIColor.navigationOceanBlue()
     }
-
+    
+    /// This method is used for set the CSAT Rating Base
+    public func setCSATRatingBase(value: Int) {
+        let appSettings = getDefaultAppSettings()
+        appSettings.csatRatingBase = value
+        setAppSettings(appSettings: appSettings)
+    }
+    
+    /// CSAT Rating Base
+    public func getCSATRatingBase() -> Int {
+        if let appSettings = getAppSettings(){
+            return appSettings.csatRatingBase
+        }
+        return 3
+    }
+    
     /// This method is used for set the primary color of app
     public func setAppPrimaryColorColor(color: UIColor) {
         var appSettings = getAppSettings()
@@ -204,6 +219,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         static let hidePostCTAEnabled = "hidePostCTAEnabled"
         static let defaultUploadOverrideUrl = "defaultUploadOverrideUrl"
         static let defaultUploadOverrideHeaders = "defaultUploadOverrideHeaders"
+        static let csatRatingBase = "csatRatingBase"
         
     }
 
@@ -220,6 +236,7 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var hidePostCTAEnabled: Bool = false
     public var defaultUploadOverrideUrl: String?
     public var defaultUploadOverrideHeaders: [String:String]?
+    public var csatRatingBase: Int = 3
 
     // MARK: - Public Initialization
 
@@ -238,6 +255,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         hidePostCTAEnabled = coder.decodeBool(forKey: CoderKey.hidePostCTAEnabled)
         defaultUploadOverrideUrl = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideUrl) as? String
         defaultUploadOverrideHeaders = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideHeaders) as? [String:String]
+        csatRatingBase = coder.decodeInteger(forKey: CoderKey.csatRatingBase)
     }
 
     // MARK: - Public methods
@@ -251,5 +269,6 @@ public class ALKAppSettings: NSObject, NSCoding {
         coder.encode(attachmentIconsTintColor, forKey: CoderKey.attachmentIconsTintColor)
         coder.encode(buttonPrimaryColor, forKey: CoderKey.buttonPrimaryColor)
         coder.encode(hidePostCTAEnabled, forKey: CoderKey.hidePostCTAEnabled)
+        coder.encode(csatRatingBase, forKey: CoderKey.csatRatingBase)
     }
 }

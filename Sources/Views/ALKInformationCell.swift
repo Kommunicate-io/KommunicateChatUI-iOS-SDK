@@ -181,9 +181,10 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             }
             rating = feedback["rating"]! as! Int
         }
-        
+        let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+        let csatBaseValue = userDefaults.integer(forKey: "CSAT_RATTING_BASE")
         let imageAttachment = NSTextAttachment()
-        imageAttachment.image = RatingHelper().getRatingIconFor(rating: rating)
+        imageAttachment.image = csatBaseValue == 5 ? RatingHelper().getRatingIconForFiveStar(rating: rating) : RatingHelper().getRatingIconFor(rating: rating)
         guard let attachedImage = imageAttachment.image else {
             let textString = getFormattedFeedbackString(viewModel)
             setupViews(feedbackString: textString, comment: comment)
@@ -193,7 +194,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         let imageString = NSAttributedString(attachment: imageAttachment)
         let textString = getFormattedFeedbackString(viewModel)
         textString.append(imageString)
-        setupViews(feedbackString: textString, comment: comment)
+        setupViews(feedbackString: csatBaseValue == 5 ?  NSMutableAttributedString(attributedString: imageString) : textString, comment: comment)
     }
     
     fileprivate func setupViews(feedbackString: NSMutableAttributedString, comment: String){

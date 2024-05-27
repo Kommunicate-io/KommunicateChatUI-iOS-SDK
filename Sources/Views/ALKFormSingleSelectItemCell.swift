@@ -18,7 +18,15 @@ class ALKFormSingleSelectItemCell: UITableViewCell {
             nameLabel.text = item.label
         }
     }
-
+    
+    var isSelectedCell : Bool = false
+    
+    let checkBoxImage: UIImageView = {
+       let image = UIImageView()
+        image.image = UIImage(named: "radiobutton_unchecked", in: Bundle.km, compatibleWith: nil)
+        return image
+    }()
+    
     let nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = Font.medium(size: 17).font()
@@ -47,14 +55,19 @@ class ALKFormSingleSelectItemCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        addViewsForAutolayout(views: [nameLabel])
-        nameLabel.layout {
-            $0.leading == leadingAnchor + Size.nameLabel.leading
-            $0.trailing == trailingAnchor + Size.nameLabel.trailing
-            $0.top == topAnchor + Size.nameLabel.top
-            $0.bottom <= bottomAnchor + Size.nameLabel.bottom
-        }
+        addViewsForAutolayout(views: [checkBoxImage, nameLabel])
+        NSLayoutConstraint.activate([
+            checkBoxImage.leadingAnchor.constraint(equalTo: leadingAnchor,constant: Size.checkBoxImage.leading),
+            checkBoxImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            checkBoxImage.heightAnchor.constraint(equalToConstant: Size.checkBoxImage.height),
+            checkBoxImage.widthAnchor.constraint(equalToConstant: Size.checkBoxImage.width),
+            nameLabel.leadingAnchor.constraint(equalTo: checkBoxImage.trailingAnchor, constant: Size.nameLabel.leading),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Size.nameLabel.trailing),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Size.nameLabel.top),
+            nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Size.nameLabel.bottom)
+            ])
     }
+
 }
 
 private extension ALKFormSingleSelectItemCell {
@@ -64,6 +77,11 @@ private extension ALKFormSingleSelectItemCell {
             static let bottom: CGFloat = -10
             static let leading: CGFloat = 10
             static let trailing: CGFloat = -40
+        }
+        enum checkBoxImage {
+            static let leading: CGFloat = 10
+            static let height: CGFloat = 25
+            static let width: CGFloat = 25
         }
     }
 }
