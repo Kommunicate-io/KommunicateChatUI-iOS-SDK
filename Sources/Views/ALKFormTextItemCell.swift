@@ -29,8 +29,12 @@ class ALKFormTextItemCell: UITableViewCell {
         return label
     }()
 
-    let valueTextField: UITextField = {
-        let textfield = UITextField(frame: .zero)
+    let valueTextField: KMPaddedTextField = {
+        let textfield = KMPaddedTextField(frame: .zero)
+        textfield.layer.borderColor = UIColor(netHex: 0xDCDCDC).cgColor
+        textfield.layer.borderWidth = 2
+        textfield.layer.cornerRadius = 4.0
+        textfield.textPadding = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         return textfield
     }()
 
@@ -75,7 +79,7 @@ class ALKFormTextItemCell: UITableViewCell {
         }
         valueTextField.layout {
             $0.leading == nameLabel.leadingAnchor
-            $0.trailing == nameLabel.trailingAnchor
+            $0.trailing == trailingAnchor - 15
             $0.top == nameLabel.bottomAnchor + 5
         }
         errorStackView.layout {
@@ -108,10 +112,13 @@ class ALKFormTextAreaItemCell: UITableViewCell {
         return label
     }()
 
-    let valueTextField: UITextView = {
-        let textfield = UITextView(frame: .zero)
-        textfield.font = Font.medium(size: 17).font()
+    let valueTextField: KMPaddedTextView = {
+        let textfield = KMPaddedTextView(frame: .zero)
+        textfield.font = Font.normal(size: 17).font()
         textfield.backgroundColor = UIColor.clear
+        textfield.layer.borderColor = UIColor(netHex: 0xDCDCDC).cgColor
+        textfield.layer.borderWidth = 2
+        textfield.layer.cornerRadius = 4.0
         return textfield
     }()
 
@@ -146,8 +153,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
 
     private func addConstraints() {
         addViewsForAutolayout(views: [nameLabel, valueTextField, errorStackView])
-        valueTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        valueTextField.text = "new1"
+        valueTextField.heightAnchor.constraint(equalToConstant: 80).isActive = true
         errorStackView.addArrangedSubview(errorLabel)
         errorStackView.bringSubviewToFront(errorLabel)
         nameLabel.layout {
@@ -157,7 +163,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
         }
         valueTextField.layout {
             $0.leading == nameLabel.leadingAnchor
-            $0.trailing == nameLabel.trailingAnchor
+            $0.trailing == trailingAnchor - 15
             $0.top == nameLabel.bottomAnchor + 10
         }
         errorStackView.layout {
@@ -206,5 +212,47 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
             $0.top == topAnchor + 10
             $0.bottom <= bottomAnchor - 10
         }
+    }
+}
+
+
+class KMPaddedTextField: UITextField {
+
+    var textPadding = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: textPadding)
+    }
+
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: textPadding)
+    }
+
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: textPadding)
+    }
+}
+
+
+class KMPaddedTextView: UITextView {
+
+    var textPadding: UIEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8) {
+        didSet {
+            textContainerInset = textPadding
+        }
+    }
+
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        commonInit()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+
+    private func commonInit() {
+        textContainerInset = textPadding
     }
 }

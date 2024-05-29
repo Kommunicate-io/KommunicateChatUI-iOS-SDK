@@ -120,7 +120,7 @@ class KMFormDropDownCell: UITableViewCell {
         let view = UIView(frame: .zero)
         view.layer.cornerRadius = 4
         view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.gray.cgColor
+        view.layer.borderColor = UIColor(netHex: 0xDCDCDC).cgColor
         return view
     }()
   
@@ -154,7 +154,7 @@ class KMFormDropDownCell: UITableViewCell {
             view.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight),
             view.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             view.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
+            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15)
         ])
         
         errorStackView.layout {

@@ -163,7 +163,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         itemListView.estimatedRowHeight = 50
         itemListView.estimatedSectionHeaderHeight = 50
         itemListView.rowHeight = UITableView.automaticDimension
-        itemListView.separatorStyle = .singleLine
+        itemListView.separatorStyle = .none
         itemListView.allowsSelection = false
         itemListView.isScrollEnabled = false
         itemListView.alwaysBounceVertical = false
@@ -331,7 +331,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                 return cell
             } else {
                 let cell: ALKFormMultiSelectItemCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                itemListView.separatorStyle = .singleLine
+                itemListView.separatorStyle = .none
                 cell.cellSelected = {
                     if let formDataSubmit = self.formData {
                         if var array = formDataSubmit.multiSelectFields[indexPath.section] {
