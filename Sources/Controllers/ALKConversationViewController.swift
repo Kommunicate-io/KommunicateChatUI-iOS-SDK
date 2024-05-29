@@ -203,38 +203,38 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var isChatBarHidden: Bool = false {
         didSet {
             chatBar.isHidden = isChatBarHidden
-            backgroundViewChatBarBottomConstraint?.isActive = !isChatBarHidden
-            replyViewChatBarBottomConstraint?.isActive = !isChatBarHidden
-            backgroundViewBottomConstraint?.isActive = isChatBarHidden
-            replyViewBottomConstraint?.isActive = isChatBarHidden
+            UIView.performWithoutAnimation {
+                backgroundViewChatBarBottomConstraint?.isActive = !isChatBarHidden
+                replyViewChatBarBottomConstraint?.isActive = !isChatBarHidden
+                backgroundViewBottomConstraint?.isActive = isChatBarHidden
+                replyViewBottomConstraint?.isActive = isChatBarHidden
+            }
             let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)
         }
     }
-    
+
     public var isChatBarResticted: Bool = false {
         didSet {
-            if isChatBarResticted {
-                chatBar.textView.textAlignment = .center
-                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = false
-                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = false
-                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = false
-                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = false
-                chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-                chatBar.sendButton.isHidden = isChatBarResticted
-            } else {
-                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = false
-                
-                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
-                
-                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
-                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
-                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
-
-                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
-                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
-                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
+            UIView.performWithoutAnimation {
+                if isChatBarResticted {
+                    chatBar.textView.textAlignment = .center
+                    if chatBar.sendButton.constraints.isEmpty == false {
+                        NSLayoutConstraint.deactivate(chatBar.sendButton.constraints)
+                    }
+                    chatBar.sendButton.isHidden = isChatBarResticted
+                    chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                } else {
+                    chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
+                    chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+                    chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                    chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+                    chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+                    chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
+                    chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+                    chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
+                    chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
+                }
             }
             chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
             chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
@@ -2224,7 +2224,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
     
     @objc open func checkRestrictedMesssaging() {
-        isChatBarResticted = checkRestriceted()
+        let checkForRestricted = checkRestriceted()
+        if isChatBarResticted != checkForRestricted {
+            isChatBarResticted = checkForRestricted
+        }
     }
     
     @objc open func checkRestriceted() -> Bool {
@@ -2285,7 +2288,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: false)
         }
         if ALApplozicSettings.isAgentAppConfigurationEnabled() {
-            isChatBarResticted = checkRestriceted()
+            let checkForRestricted = checkRestriceted()
+            if isChatBarResticted != checkForRestricted {
+                isChatBarResticted = checkForRestricted
+            }
         }
         print("loading finished")
         DispatchQueue.main.async {
