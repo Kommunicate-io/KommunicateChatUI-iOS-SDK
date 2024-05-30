@@ -193,7 +193,7 @@ public struct FormDropDownStyle {
     public struct Color {
         public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
         public static var rowBackgroundColor: UIColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
-        public static var textColor: UIColor = UIColor.kmDynamicColor(light: UIColor.gray, dark: UIColor.white)
+        public static var textColor: UIColor = UIColor.kmDynamicColor(light: .darkGray, dark: .lightText)
         public static var arrowColor: UIColor = UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white)
         public static var optionsTextColor: UIColor = UIColor.kmDynamicColor(light: .darkGray, dark: .lightText)
     }
