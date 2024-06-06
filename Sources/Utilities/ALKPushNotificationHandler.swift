@@ -36,13 +36,6 @@ public class ALKPushNotificationHandler: Localizable {
                     message,
                     andForContactId: notificationData.userId,
                     withGroupId: notificationData.groupId,
-                    titleTest: configuration.inAppBannerTextColor,
-                    contentTextColor: configuration.inAppBannerContentColor,
-                    backgroundColor: configuration.inAppBannerColor,
-                    backgroundShadowColor: configuration.inAppBannerShadowColor,
-                    shadowRadius: configuration.inAppBannerShadowRadius,
-                    cornerRadius: configuration.inAppBannerRadius,
-                    shadowOpacity: configuration.inAppBannerShadowOpacity,
                     completionHandler: {
                         _ in
                         weakSelf.launchIndividualChatWith(notificationData: notificationData)
