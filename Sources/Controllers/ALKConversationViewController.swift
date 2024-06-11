@@ -2230,9 +2230,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     
     @objc open func checkRestrictedMesssaging() {
         let checkForRestricted = checkRestriceted()
-        if isChatBarResticted != checkForRestricted {
-            isChatBarResticted = checkForRestricted
-        }
+        isChatBarResticted = checkForRestricted
     }
     
     @objc open func checkRestriceted() -> Bool {
