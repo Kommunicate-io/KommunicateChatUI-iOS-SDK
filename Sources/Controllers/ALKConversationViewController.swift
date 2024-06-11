@@ -857,6 +857,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public func configureChatBar() {
         chatBar.setDefaultText(viewModel.prefilledMessage ?? "")
+        if ALUserDefaultsHandler.isTeamModeEnabled(), let teamID = ALUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let metadata = ALChannelService().getChannelByKey(viewModel.channelKey).metadata, let newTeamID = metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
+            isChatBarResticted = true
+            chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
+            return
+        }
         if viewModel.isOpenGroup {
             chatBar.updateMediaViewVisibility(hide: true)
             chatBar.hideMicButton()
@@ -2234,6 +2239,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let channelKey = viewModel.channelKey
         let channelService = ALChannelService()
         let channel = channelService.getChannelByKey(channelKey)
+        
+        if ALUserDefaultsHandler.isTeamModeEnabled(), let teamID = ALUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
+            chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
+            return true
+        }
         
         if isZendeskConversation(channel: channel){
             chatBar.textView.text = "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users."
