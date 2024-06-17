@@ -856,17 +856,29 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func configureChatBar() {
-        chatBar.setDefaultText(viewModel.prefilledMessage ?? "")
-        if ALUserDefaultsHandler.isTeamModeEnabled(), let teamID = ALUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let metadata = ALChannelService().getChannelByKey(viewModel.channelKey).metadata, let newTeamID = metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
-            isChatBarResticted = true
-            chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
-            return
-        }
-        if viewModel.isOpenGroup {
-            chatBar.updateMediaViewVisibility(hide: true)
-            chatBar.hideMicButton()
-        } else {
-            chatBar.updateMediaViewVisibility()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.chatBar.setDefaultText(self.viewModel.prefilledMessage ?? "")
+            
+            if ALApplozicSettings.isAgentAppConfigurationEnabled(),
+                ALUserDefaultsHandler.isTeamModeEnabled(),
+               let teamID = ALUserDefaultsHandler.getAssignedTeamIds(),
+               let teamIDArray = teamID as? [String],
+               let metadata = ALChannelService().getChannelByKey(self.viewModel.channelKey).metadata,
+               let newTeamID = metadata["KM_TEAM_ID"] as? String,
+               !teamIDArray.contains(newTeamID) {
+                
+                self.isChatBarResticted = true
+                self.chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
+                return
+            }
+            
+            if self.viewModel.isOpenGroup {
+                self.chatBar.updateMediaViewVisibility(hide: true)
+                self.chatBar.hideMicButton()
+            } else {
+                self.chatBar.updateMediaViewVisibility()
+            }
         }
     }
 
