@@ -844,6 +844,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(KMStaticTopMessageCell.self)
         tableView.register(KMMyVideoTemplateCell.self)
         tableView.register(KMFriendVideoTemplateCell.self)
+        tableView.register(KMFriendSourceURLViewCell.self)
         tableView.register(KMTypingIndicator.self)
     }
 

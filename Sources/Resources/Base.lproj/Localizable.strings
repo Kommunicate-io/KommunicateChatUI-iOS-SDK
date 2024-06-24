@@ -98,6 +98,7 @@ AreTyping = " are typing";
 Copy = "Copy";
 Reply = "Reply";
 You = "You";
+Source = "Source";
 
 NotPartOfGroup = "You are not part of this group";
 MuteChannel = "Mute group %@";
