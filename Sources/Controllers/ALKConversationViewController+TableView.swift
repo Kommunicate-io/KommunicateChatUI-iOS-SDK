@@ -74,7 +74,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
 
-            } else if let messageMetadata = message.metadata, let _ = messageMetadata["sourceURLs"], !message.isMyMessage {
+            } else if let messageMetadata = message.metadata, let _ = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier], !message.isMyMessage {
                 var cell = KMFriendSourceURLViewCell()
                 cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMFriendSourceURLViewCell
                 cell.showReport = true

@@ -314,7 +314,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         switch messageModel.messageType {
         case .text, .html, .email:
             guard !configuration.isLinkPreviewDisabled, messageModel.messageType == .text, ALKLinkPreviewManager.extractURLAndAddInCache(from: messageModel.message, identifier: messageModel.identifier) != nil else {
-                if let messageMetadata = messageModel.metadata, let metadataValue = messageMetadata["sourceURLs"], !messageModel.isMyMessage {
+                if let messageMetadata = messageModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier], !messageModel.isMyMessage {
                     let height = KMFriendSourceURLViewCell.rowHeigh(viewModel: messageModel, width: maxWidth, displayNames: { userIds in
                         self.displayNames(ofUserIds: userIds)
                     })

@@ -9,6 +9,10 @@ import Kingfisher
 import KommunicateCore_iOS_SDK
 import UIKit
 
+public struct KMSourceURLIdentifier {
+    public static let sourceURLIdentifier: String = "sourceURLs"
+}
+
 open class KMFriendSourceURLViewCell: ALKMessageCell {
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
@@ -364,7 +368,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         nameLabel.text = viewModel.displayName
         var urls = [""]
         
-        if let messageMetadata = viewModel.metadata, let metadataValue = messageMetadata["sourceURLs"] as? [String] {
+        if let messageMetadata = viewModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
             urls = metadataValue
         }
         urlStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -408,7 +412,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         
         /// For calculating the height according to the number of urls
         var urlCount = 0
-        if let messageMetadata = viewModel.metadata, let metadataValue = messageMetadata["sourceURLs"] as? [String] {
+        if let messageMetadata = viewModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
             urlCount = metadataValue.count
         }
         
