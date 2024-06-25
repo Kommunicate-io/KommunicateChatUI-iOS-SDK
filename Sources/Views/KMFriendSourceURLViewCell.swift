@@ -367,9 +367,16 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
                                            fileName: localizedStringFileName)
         nameLabel.text = viewModel.displayName
         var urls = [""]
-        
-        if let messageMetadata = viewModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
-            urls = metadataValue
+        if let messageMetadata = viewModel.metadata {
+            if let sourceURLsArray = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
+                urls = sourceURLsArray
+            } else if let sourceURLsString = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? String {
+                urls = KMFriendSourceURLViewCell.extractArrayFromString(from: sourceURLsString)
+            } else {
+                print("\(KMSourceURLIdentifier.sourceURLIdentifier) value is not in format of STRING or [STRING]")
+            }
+        } else {
+            print("metadata is not present in message")
         }
         urlStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         for url in urls {
@@ -412,8 +419,16 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         
         /// For calculating the height according to the number of urls
         var urlCount = 0
-        if let messageMetadata = viewModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
-            urlCount = metadataValue.count
+        if let messageMetadata = viewModel.metadata {
+            if let sourceURLsArray = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
+                urlCount = sourceURLsArray.count
+            } else if let sourceURLsString = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? String {
+                urlCount = extractArrayFromString(from: sourceURLsString).count
+            } else {
+                print("\(KMSourceURLIdentifier.sourceURLIdentifier) value is not in format of STRING or [STRING]")
+            }
+        } else {
+            print("metadata is not present in message")
         }
         
         let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.SourceView.height +  (CGFloat(urlCount) * Padding.URLView.height)
@@ -428,6 +443,21 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         return totalHeight + Padding.ReplyView.height
     }
 
+    class func extractArrayFromString(from stringArray: String) -> [String] {
+        if let data = stringArray.data(using: .utf8) {
+            do {
+                if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [String] {
+                    return jsonArray
+                } else {
+                    print("The value is not a valid array of strings.")
+                }
+            } catch {
+                print("Failed to convert string to array of strings: \(error.localizedDescription)")
+            }
+        }
+        return []
+    }
+    
     @objc private func avatarTappedAction() {
         avatarTapped?()
     }
