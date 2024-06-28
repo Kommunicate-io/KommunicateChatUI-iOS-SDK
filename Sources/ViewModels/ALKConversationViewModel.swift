@@ -1373,6 +1373,25 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.delegate?.updateDisplay(contact: contact, channel: nil)
         })
     }
+    
+    func removeAlreadyDeletedMessageFromConversation() {
+        for message in alMessages {
+            if let metadata = message.metadata, let deleteGroupMessageForAll = metadata["AL_DELETE_GROUP_MESSAGE_FOR_ALL"] as? String, deleteGroupMessageForAll == "true" {
+                removeMessageFromTheConversation(message: message)
+            }
+        }
+    }
+    
+    func removeMessageFromTheConversation(message: ALMessage) {
+        if let index = messageModels.firstIndex(where: { $0.identifier == message.identifier }) {
+            messageModels.remove(at: index)
+        }
+        if let index = alMessages.firstIndex(where: { $0.identifier == message.identifier }) {
+            alMessages.remove(at: index)
+        }
+        let messageService = ALMessageDBService()
+        messageService.deleteMessage(byKey: message.identifier)
+    }
 
     func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> Void) {
         if channelKey != nil {
@@ -1457,6 +1476,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
             }
+            self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: self.messageModels)
             self.membersInGroup { members in
                 self.groupMembers = members

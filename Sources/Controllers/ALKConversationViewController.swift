@@ -403,6 +403,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             weakSelf.updateUserDetail(userId)
         })
 
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "AL_GROUP_MESSAGE_METADATA_UPDATE"), object: nil, queue: nil, using: { [weak self] notification in
+            if let messages = notification.object as? [ALMessage] {
+                for message in messages {
+                    if let metadata = message.metadata, let deleteGroupMessageForAll = metadata["AL_DELETE_GROUP_MESSAGE_FOR_ALL"] as? String, deleteGroupMessageForAll == "true" {
+                        guard
+                            let weakSelf = self,
+                            weakSelf.viewModel != nil 
+                        else { return }
+                        weakSelf.removeMessageFromConversation(message: message)
+                    }
+                }
+            } else {
+                NSLog("Failed to cast notification object to [ALMessage]")
+            }
+        })
+        
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: { [weak self] _ in
             NSLog("update group name notification received")
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
@@ -517,6 +533,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         contentOffsetDictionary = [NSObject: AnyObject]()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
+        viewModel.removeAlreadyDeletedMessageFromConversation()
     }
 
     override open func viewDidAppear(_: Bool) {}
@@ -2986,6 +3003,12 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         guard let userId = userId else { return }
         print("update user detail")
         viewModel.updateUserDetail(userId)
+    }
+    
+    public func removeMessageFromConversation(message: ALMessage) {
+        print("remove message conversation")
+        viewModel.removeMessageFromTheConversation(message: message)
+        tableView.reloadData()
     }
 
     private func shouldRetryConnectionToMQTT() -> Bool {
