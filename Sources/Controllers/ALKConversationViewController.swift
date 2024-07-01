@@ -533,7 +533,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
         contentOffsetDictionary = [NSObject: AnyObject]()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
-        viewModel.removeAlreadyDeletedMessageFromConversation()
     }
 
     override open func viewDidAppear(_: Bool) {}
@@ -3006,7 +3005,6 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     }
     
     public func removeMessageFromConversation(message: ALMessage) {
-        print("remove message conversation")
         viewModel.removeMessageFromTheConversation(message: message)
         tableView.reloadData()
     }

@@ -1707,6 +1707,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
             self.messageModels.insert(contentsOf: models, at: 0)
+            self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: models)
             if isFirstTime {
                 self.membersInGroup { members in
@@ -1857,6 +1858,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
                 self.alMessages.insert(mesg, at: 0)
                 self.messageModels.insert(mesg.messageModel, at: 0)
+                self.removeAlreadyDeletedMessageFromConversation()
                 self.removeMessageForHidePostCTA(messages: [mesg.messageModel])
             }
             self.delegate?.loadingFinished(error: nil)
