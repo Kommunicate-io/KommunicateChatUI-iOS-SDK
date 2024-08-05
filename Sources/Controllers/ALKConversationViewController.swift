@@ -2563,13 +2563,14 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             return
         }
         viewModel.markConversationRead()
-        var lastMessage = viewModel.messageModels.last
-        guard let lastMessage = lastMessage,
-              let placeholder = lastMessage.getKmField()?.placeholder
-        else {
-            return
+        if let lastALMessage = viewModel.alMessages.last?.autoSuggestionData,
+           let data = convertToDictionary(text: lastALMessage),
+           let placeholderValue = data["placeholder"] as? String {
+            chatBar.placeHolder.text = placeholderValue
+        } else if let lastMessage = viewModel.messageModels.last,
+                  let placeholder = lastMessage.getKmField()?.placeholder {
+            chatBar.placeHolder.text = placeholder
         }
-        chatBar.placeHolder.text = placeholder
     }
 
     public func messageSent(at indexPath: IndexPath) {
