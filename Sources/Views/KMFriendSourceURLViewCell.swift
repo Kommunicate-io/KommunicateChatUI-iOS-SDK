@@ -10,10 +10,17 @@ import KommunicateCore_iOS_SDK
 import UIKit
 
 public struct KMSourceURLIdentifier {
-    public static let sourceURLIdentifier: String = "sourceURLs"
+    public static let sourceURLIdentifier: String = "answerSource"
+}
+
+struct KMAnswerSourceModel: Codable {
+    let name: String?
+    let url: String
 }
 
 open class KMFriendSourceURLViewCell: ALKMessageCell {
+    private var answerSourceList: [KMAnswerSourceModel] = []
+    
     private var avatarImageView: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -338,6 +345,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
             messageStyle: ALKMessageStyle.receivedMessage,
             mentionStyle: ALKMessageStyle.receivedMention
         )
+        answerSourceList = []
 
         if viewModel.isReplyMessage {
             guard
@@ -366,12 +374,20 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
                                            withDefaultValue: SystemMessage.LabelName.Source,
                                            fileName: localizedStringFileName)
         nameLabel.text = viewModel.displayName
-        var urls = [""]
         if let messageMetadata = viewModel.metadata {
-            if let sourceURLsArray = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
-                urls = sourceURLsArray
+            if let sourceURLsObjec = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [[String:String]] {
+                for sourceURLObjec in sourceURLsObjec {
+                    if let url = sourceURLObjec["url"] {
+                        answerSourceList.append(KMAnswerSourceModel(name: sourceURLObjec["name"], url: url))
+                    }
+                }
             } else if let sourceURLsString = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? String {
-                urls = KMFriendSourceURLViewCell.extractArrayFromString(from: sourceURLsString)
+                let sourceURLsObjec: [[String: String?]]  = KMFriendSourceURLViewCell.extractObjectFromString(from: sourceURLsString)
+                for sourceURLObjec in sourceURLsObjec {
+                    if let url = sourceURLObjec["url"] ?? "" {
+                        answerSourceList.append(KMAnswerSourceModel(name: sourceURLObjec["name"] ?? "", url: url))
+                    }
+                }
             } else {
                 print("\(KMSourceURLIdentifier.sourceURLIdentifier) value is not in format of STRING or [STRING]")
             }
@@ -379,20 +395,25 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
             print("metadata is not present in message")
         }
         urlStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        for url in urls {
-            let linkLabel = UILabel()
-            linkLabel.textColor = .blue
-            linkLabel.font = UIFont.systemFont(ofSize: 14)
-            linkLabel.text = url
+
+        for url in answerSourceList {
+            let name = url.name ?? KMFriendSourceURLViewCell.extractLastTitle(from: url.url)
+            let linkLabel = KMLabelWithIconView()
+            linkLabel.configure(withText: name, withURL: url.url)
             linkLabel.isUserInteractionEnabled = true
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(linkLabelTapped(_:)))
             linkLabel.addGestureRecognizer(tapGesture)
             urlStackView.addArrangedSubview(linkLabel)
         }
+
+        urlStackView.axis = .vertical
+        urlStackView.alignment = .leading
+        urlStackView.distribution = .fill
+        urlStackView.spacing = 8
     }
 
     @objc private func linkLabelTapped(_ sender: UITapGestureRecognizer) {
-        guard let label = sender.view as? UILabel, let urlString = label.text, let url = URL(string: urlString) else { return }
+        guard let label = sender.view as? KMLabelWithIconView, let urlString = label.urlLink, let url = URL(string: urlString) else { return }
         UIApplication.shared.open(url)
     }
     
@@ -420,17 +441,16 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         /// For calculating the height according to the number of urls
         var urlCount = 0
         if let messageMetadata = viewModel.metadata {
-            if let sourceURLsArray = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [String] {
-                urlCount = sourceURLsArray.count
+            if let sourceURLsObjc = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [[String: String]] {
+                urlCount = sourceURLsObjc.count
             } else if let sourceURLsString = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? String {
-                urlCount = extractArrayFromString(from: sourceURLsString).count
+                urlCount = extractObjectFromString(from: sourceURLsString).count
             } else {
                 print("\(KMSourceURLIdentifier.sourceURLIdentifier) value is not in format of STRING or [STRING]")
             }
         } else {
             print("metadata is not present in message")
         }
-        
         let heightPadding = Padding.NameLabel.top + Padding.NameLabel.height + Padding.ReplyView.top + Padding.MessageView.top + Padding.MessageView.bottom + Padding.BubbleView.bottom + Padding.SourceView.height +  (CGFloat(urlCount) * Padding.URLView.height)
         
         let totalHeight = max(messageHeight + heightPadding, minimumHeight)
@@ -443,19 +463,38 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         return totalHeight + Padding.ReplyView.height
     }
 
-    class func extractArrayFromString(from stringArray: String) -> [String] {
+    class func extractObjectFromString(from stringArray: String) -> [[String: String?]] {
         if let data = stringArray.data(using: .utf8) {
             do {
-                if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [String] {
-                    return jsonArray
+                if let jsonObjc = try JSONSerialization.jsonObject(with: data, options: []) as? [[String : String?]] {
+                    return jsonObjc
                 } else {
-                    print("The value is not a valid array of strings.")
+                    print("The value is not a valid object of strings.")
                 }
             } catch {
-                print("Failed to convert string to array of strings: \(error.localizedDescription)")
+                print("Failed to convert string to object of strings: \(error.localizedDescription)")
             }
         }
-        return []
+        return [[:]]
+    }
+    
+    class func extractLastTitle(from urlString: String) -> String {
+        guard let url = URL(string: urlString) else { return urlString }
+        
+        let pathComponents = url.pathComponents.filter { !$0.isEmpty && $0 != "/" }
+        
+        if let lastComponent = pathComponents.last {
+            return lastComponent
+        }
+        
+        if let host = url.host {
+            let hostComponents = host.split(separator: ".")
+            if let lastPart = hostComponents.dropLast().last {
+                return String(lastPart)
+            }
+        }
+        
+        return urlString
     }
     
     @objc private func avatarTappedAction() {
