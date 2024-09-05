@@ -138,6 +138,7 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
         let latLonArgument = String(format: "%f,%f", lat, lon)
         guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else {
             print("⚠️ Warning: Please add the Google Map API key, or Map Image will not work as expected. Use `ALUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.")
+            locationImageView.image = UIImage( named: "map_no_data", in: Bundle.km, compatibleWith: nil )
             return
         }
 
