@@ -136,7 +136,11 @@ class ALKLocationCell: ALKChatBaseCell<ALKMessageViewModel>,
             return
         }
         let latLonArgument = String(format: "%f,%f", lat, lon)
-        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else { return }
+        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey() else {
+            print("⚠️ Warning: Please add the Google Map API key, or Map Image will not work as expected. Use `ALUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.")
+            locationImageView.image = UIImage( named: "map_no_data", in: Bundle.km, compatibleWith: nil )
+            return
+        }
 
         // swiftlint:disable:next line_length
         let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
