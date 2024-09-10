@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 class KMLabelWithIconView: UIView {
     var urlLink: String?
