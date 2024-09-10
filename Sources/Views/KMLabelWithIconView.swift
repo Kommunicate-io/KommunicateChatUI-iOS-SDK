@@ -25,7 +25,7 @@ class KMLabelWithIconView: UIView {
 
     private let iconImageView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "link", in: Bundle.richMessageKit, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        imgView.image = UIImage(named: "link", in: Bundle.km, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         imgView.tintColor = .black
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.contentMode = .scaleAspectFit
