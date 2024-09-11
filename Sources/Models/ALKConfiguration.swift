@@ -49,6 +49,9 @@ public struct ALKConfiguration {
     /// If true then audio option in chat bar will be hidden.
     public var hideAudioOptionInChatBar = false
 
+    /// If false Root Detection is Disabled. By Default the value is true.
+    public var rootDetection = true
+
     /// If true then the start new chat button will be hidden.
     public var hideStartChatButton = false
 

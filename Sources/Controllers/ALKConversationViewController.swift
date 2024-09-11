@@ -203,38 +203,38 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public var isChatBarHidden: Bool = false {
         didSet {
             chatBar.isHidden = isChatBarHidden
-            backgroundViewChatBarBottomConstraint?.isActive = !isChatBarHidden
-            replyViewChatBarBottomConstraint?.isActive = !isChatBarHidden
-            backgroundViewBottomConstraint?.isActive = isChatBarHidden
-            replyViewBottomConstraint?.isActive = isChatBarHidden
+            UIView.performWithoutAnimation {
+                backgroundViewChatBarBottomConstraint?.isActive = !isChatBarHidden
+                replyViewChatBarBottomConstraint?.isActive = !isChatBarHidden
+                backgroundViewBottomConstraint?.isActive = isChatBarHidden
+                replyViewBottomConstraint?.isActive = isChatBarHidden
+            }
             let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)
         }
     }
-    
+
     public var isChatBarResticted: Bool = false {
         didSet {
-            if isChatBarResticted {
-                chatBar.textView.textAlignment = .center
-                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = false
-                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = false
-                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = false
-                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = false
-                chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-                chatBar.sendButton.isHidden = isChatBarResticted
-            } else {
-                chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = false
-                
-                chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
-                
-                chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-                chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
-                chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
-                chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
-
-                chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
-                chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
-                chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
+            UIView.performWithoutAnimation {
+                if isChatBarResticted {
+                    chatBar.textView.textAlignment = .center
+                    if chatBar.sendButton.constraints.isEmpty == false {
+                        NSLayoutConstraint.deactivate(chatBar.sendButton.constraints)
+                    }
+                    chatBar.sendButton.isHidden = isChatBarResticted
+                    chatBar.textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                } else {
+                    chatBar.lineImageView.trailingAnchor.constraint(equalTo: chatBar.sendButton.leadingAnchor, constant: -15).isActive = true
+                    chatBar.textView.trailingAnchor.constraint(equalTo: chatBar.lineImageView.leadingAnchor).isActive = true
+                    chatBar.sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+                    chatBar.sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+                    chatBar.sendButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+                    chatBar.sendButton.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -7).isActive = true
+                    chatBar.lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+                    chatBar.lineImageView.topAnchor.constraint(equalTo: chatBar.textView.topAnchor, constant: 10).isActive = true
+                    chatBar.lineImageView.bottomAnchor.constraint(equalTo: chatBar.textView.bottomAnchor, constant: -10).isActive = true
+                }
             }
             chatBar.toggleUserInteractionForViews(enabled: !isChatBarResticted)
             chatBar.textView.isUserInteractionEnabled = !isChatBarResticted
@@ -403,6 +403,22 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             weakSelf.updateUserDetail(userId)
         })
 
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "AL_GROUP_MESSAGE_METADATA_UPDATE"), object: nil, queue: nil, using: { [weak self] notification in
+            if let messages = notification.object as? [ALMessage] {
+                for message in messages {
+                    if let metadata = message.metadata, let deleteGroupMessageForAll = metadata["AL_DELETE_GROUP_MESSAGE_FOR_ALL"] as? String, deleteGroupMessageForAll == "true" {
+                        guard
+                            let weakSelf = self,
+                            weakSelf.viewModel != nil 
+                        else { return }
+                        weakSelf.removeMessageFromConversation(message: message)
+                    }
+                }
+            } else {
+                NSLog("Failed to cast notification object to [ALMessage]")
+            }
+        })
+        
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UPDATE_CHANNEL_NAME"), object: nil, queue: nil, using: { [weak self] _ in
             NSLog("update group name notification received")
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
@@ -844,6 +860,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         tableView.register(KMStaticTopMessageCell.self)
         tableView.register(KMMyVideoTemplateCell.self)
         tableView.register(KMFriendVideoTemplateCell.self)
+        tableView.register(KMFriendSourceURLViewCell.self)
         tableView.register(KMTypingIndicator.self)
     }
 
@@ -856,12 +873,16 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func configureChatBar() {
-        chatBar.setDefaultText(viewModel.prefilledMessage ?? "")
-        if viewModel.isOpenGroup {
-            chatBar.updateMediaViewVisibility(hide: true)
-            chatBar.hideMicButton()
+        self.chatBar.setDefaultText(self.viewModel.prefilledMessage ?? "")
+        if self.viewModel.isOpenGroup {
+            self.chatBar.updateMediaViewVisibility(hide: true)
+            self.chatBar.hideMicButton()
         } else {
-            chatBar.updateMediaViewVisibility()
+            self.chatBar.updateMediaViewVisibility()
+        }
+        if ALApplozicSettings.isAgentAppConfigurationEnabled(),
+            ALUserDefaultsHandler.isTeamModeEnabled() {
+            self.checkRestrictedMesssaging()
         }
     }
 
@@ -2224,13 +2245,19 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
     
     @objc open func checkRestrictedMesssaging() {
-        isChatBarResticted = checkRestriceted()
+        let checkForRestricted = checkRestriceted()
+        isChatBarResticted = checkForRestricted
     }
     
     @objc open func checkRestriceted() -> Bool {
         let channelKey = viewModel.channelKey
         let channelService = ALChannelService()
         let channel = channelService.getChannelByKey(channelKey)
+        
+        if ALUserDefaultsHandler.isTeamModeEnabled(), let teamID = ALUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
+            chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
+            return true
+        }
         
         if isZendeskConversation(channel: channel){
             chatBar.textView.text = "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users."
@@ -2285,7 +2312,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: false)
         }
         if ALApplozicSettings.isAgentAppConfigurationEnabled() {
-            isChatBarResticted = checkRestriceted()
+            let checkForRestricted = checkRestriceted()
+            if isChatBarResticted != checkForRestricted {
+                isChatBarResticted = checkForRestricted
+            }
         }
         print("loading finished")
         DispatchQueue.main.async {
@@ -2960,6 +2990,11 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         guard let userId = userId else { return }
         print("update user detail")
         viewModel.updateUserDetail(userId)
+    }
+    
+    public func removeMessageFromConversation(message: ALMessage) {
+        viewModel.removeMessageFromTheConversation(message: message)
+        tableView.reloadData()
     }
 
     private func shouldRetryConnectionToMQTT() -> Bool {

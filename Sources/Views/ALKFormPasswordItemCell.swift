@@ -30,9 +30,13 @@ class ALKFormPasswordItemCell: UITableViewCell {
         return label
     }()
 
-    let valueTextField: UITextField = {
-        let textfield = UITextField(frame: .zero)
+    let valueTextField: KMPaddedTextField = {
+        let textfield = KMPaddedTextField(frame: .zero)
         textfield.isSecureTextEntry = true
+        textfield.layer.borderColor = UIColor(netHex: 0xDCDCDC).cgColor
+        textfield.layer.borderWidth = 2
+        textfield.layer.cornerRadius = 4.0
+        textfield.textPadding = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         return textfield
     }()
 
@@ -58,7 +62,7 @@ class ALKFormPasswordItemCell: UITableViewCell {
         }
         valueTextField.layout {
             $0.leading == nameLabel.leadingAnchor
-            $0.trailing == nameLabel.trailingAnchor
+            $0.trailing == trailingAnchor - 15
             $0.top == nameLabel.bottomAnchor + 5
             $0.bottom <= bottomAnchor - 10
         }

@@ -120,7 +120,7 @@ class KMFormDropDownCell: UITableViewCell {
         let view = UIView(frame: .zero)
         view.layer.cornerRadius = 4
         view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.gray.cgColor
+        view.layer.borderColor = UIColor(netHex: 0xDCDCDC).cgColor
         return view
     }()
   
@@ -154,7 +154,7 @@ class KMFormDropDownCell: UITableViewCell {
             view.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight),
             view.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             view.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
+            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15)
         ])
         
         errorStackView.layout {
@@ -193,7 +193,7 @@ public struct FormDropDownStyle {
     public struct Color {
         public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
         public static var rowBackgroundColor: UIColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
-        public static var textColor: UIColor = UIColor.kmDynamicColor(light: UIColor.gray, dark: UIColor.white)
+        public static var textColor: UIColor = UIColor.kmDynamicColor(light: .darkGray, dark: .lightText)
         public static var arrowColor: UIColor = UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white)
         public static var optionsTextColor: UIColor = UIColor.kmDynamicColor(light: .darkGray, dark: .lightText)
     }

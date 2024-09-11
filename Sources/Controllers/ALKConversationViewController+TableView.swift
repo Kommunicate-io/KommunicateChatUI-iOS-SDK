@@ -74,6 +74,16 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
 
+            } else if let messageMetadata = message.metadata, let _ = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier], !message.isMyMessage {
+                var cell = KMFriendSourceURLViewCell()
+                cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMFriendSourceURLViewCell
+                cell.showReport = true
+                cell.avatarTapped = { [weak self] in
+                    guard let currentModel = cell.viewModel else { return }
+                    self?.messageAvatarViewDidTap(messageVM: currentModel, indexPath: indexPath)
+                }
+                necessarySetupForMessageCell(cell: cell, message: message)
+                return cell
             } else {
                 if message.isMyMessage {
                     let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKMyMessageCell

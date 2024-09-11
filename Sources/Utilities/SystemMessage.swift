@@ -180,6 +180,7 @@ struct SystemMessage: Localizable {
         static let DatePickerTimeTitle = localizedString(forKey: "DatePickerTimeTitle")
         static let DatePickerDateTitle = localizedString(forKey: "DatePickerDateTitle")
         static let DatePickerDateAndTimeTitle = localizedString(forKey: "DatePickerDateAndTimeTitle")
+        static let Source = localizedString(forKey: "Source")
     }
 
     enum Mute {

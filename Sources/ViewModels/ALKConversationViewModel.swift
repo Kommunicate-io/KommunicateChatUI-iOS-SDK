@@ -314,6 +314,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         switch messageModel.messageType {
         case .text, .html, .email:
             guard !configuration.isLinkPreviewDisabled, messageModel.messageType == .text, ALKLinkPreviewManager.extractURLAndAddInCache(from: messageModel.message, identifier: messageModel.identifier) != nil else {
+                if let messageMetadata = messageModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier], !messageModel.isMyMessage {
+                    let height = KMFriendSourceURLViewCell.rowHeigh(viewModel: messageModel, width: maxWidth, displayNames: { userIds in
+                        self.displayNames(ofUserIds: userIds)
+                    })
+                    return height.cached(with: cacheIdentifier)
+                }
                 if messageModel.isMyMessage {
                     let height = ALKMyMessageCell.rowHeigh(viewModel: messageModel, width: maxWidth, displayNames: { userIds in
                         self.displayNames(ofUserIds: userIds)
@@ -1373,6 +1379,25 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.delegate?.updateDisplay(contact: contact, channel: nil)
         })
     }
+    
+    func removeAlreadyDeletedMessageFromConversation() {
+        for message in alMessages {
+            if let metadata = message.metadata, let deleteGroupMessageForAll = metadata["AL_DELETE_GROUP_MESSAGE_FOR_ALL"] as? String, deleteGroupMessageForAll == "true" {
+                removeMessageFromTheConversation(message: message)
+            }
+        }
+    }
+    
+    func removeMessageFromTheConversation(message: ALMessage) {
+        if let index = messageModels.firstIndex(where: { $0.identifier == message.identifier }) {
+            messageModels.remove(at: index)
+        }
+        if let index = alMessages.firstIndex(where: { $0.identifier == message.identifier }) {
+            alMessages.remove(at: index)
+        }
+        let messageService = ALMessageDBService()
+        messageService.deleteMessage(byKey: message.identifier)
+    }
 
     func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> Void) {
         if channelKey != nil {
@@ -1457,6 +1482,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             } else {
                 self.messageModels = self.modelsToBeAddedAfterDelay
             }
+            self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: self.messageModels)
             self.membersInGroup { members in
                 self.groupMembers = members
@@ -1687,6 +1713,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
             self.messageModels.insert(contentsOf: models, at: 0)
+            self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: models)
             if isFirstTime {
                 self.membersInGroup { members in
@@ -1837,6 +1864,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.alMessageWrapper.getUpdatedMessageArray().insert(newMessages, at: 0)
                 self.alMessages.insert(mesg, at: 0)
                 self.messageModels.insert(mesg.messageModel, at: 0)
+                self.removeAlreadyDeletedMessageFromConversation()
                 self.removeMessageForHidePostCTA(messages: [mesg.messageModel])
             }
             self.delegate?.loadingFinished(error: nil)
