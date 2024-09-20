@@ -16,10 +16,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "KommunicateCore_iOS_SDK", url: "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK.git", from: "1.2.2"),
+        .package(name: "KommunicateCore_iOS_SDK", url: "https://github.com/Kommunicate-io/KommunicateCore-iOS-SDK.git", from: "1.2.3"),
         .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git", .exact("7.6.2")),
         .package(name: "SwipeCellKit", url: "https://github.com/SwipeCellKit/SwipeCellKit.git", from: "2.7.1"),
-        .package(name: "ZendeskChatProvidersSDK", url: "https://github.com/zendesk/chat_providers_sdk_ios",.exact("3.0.0")),
+        .package(name: "ZendeskChatProvidersSDK", url: "https://github.com/zendesk/chat_providers_sdk_ios",.exact("5.0.0")),
         .package(name: "iOSDropDown", url: "https://github.com/jriosdev/iOSDropDown.git", .upToNextMajor(from: "0.4.0"))
     ],
     targets: [

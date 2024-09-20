@@ -1,6 +1,8 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [1.3.5] 2024-20-11
+- Supports Xcode version 15.5 and above.
 ## [1.3.4] 2024-09-11
 - Jail Break Detection.
 - Source Url UI added.
