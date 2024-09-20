@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
     complete.dependency 'Kingfisher', '~> 7.6.2'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
-    complete.dependency 'ZendeskChatProvidersSDK',  '~> 3.0.0'
+    complete.dependency 'ZendeskChatProvidersSDK',  '~> 5.0.0'
     complete.dependency 'iOSDropDown'
     complete.dependency 'KommunicateCore-iOS-SDK',  '1.2.2'
     complete.dependency 'KommunicateChatUI-iOS-SDK/RichMessageKit'
