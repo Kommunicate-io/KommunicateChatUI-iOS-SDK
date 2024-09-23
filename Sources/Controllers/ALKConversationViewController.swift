@@ -752,7 +752,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         typingNoticeView.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor).isActive = true
         chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        if !isChatBarHidden {
+        if !isChatBarHidden && !configuration.chatBar.hideChatBarInConversaionScreen {
             bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             bottomConstraint?.isActive = true
         } else {
@@ -888,6 +888,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
+        if configuration.chatBar.hideChatBarInConversaionScreen {
+            chatBar.isHidden = true
+            return
+        }
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
             chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
         }

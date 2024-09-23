@@ -41,6 +41,9 @@ public struct ALKChatBarConfiguration {
     
     ///  If you set a color here then send button's tint color will be overridden by this color instead primary color.
     public var sendButtonTintColor: UIColor? = nil
+    
+    /// If you want to hide chat bar form the conversation list screen.
+    public var hideChatBarInConversaionScreen: Bool = false
 
     /// Set the maximum number of photos/videos that can be selected in the new photos UI.
     /// Maximum limit should be less than 30
