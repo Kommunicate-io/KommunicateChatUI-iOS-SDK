@@ -43,7 +43,7 @@ public struct ALKChatBarConfiguration {
     public var sendButtonTintColor: UIColor? = nil
     
     /// If you want to hide chat bar form the conversation list screen.
-    public var hideChatBarInConversaionScreen: Bool = false
+    public var hideChatBarForBotConvesations: Bool = false
 
     /// Set the maximum number of photos/videos that can be selected in the new photos UI.
     /// Maximum limit should be less than 30

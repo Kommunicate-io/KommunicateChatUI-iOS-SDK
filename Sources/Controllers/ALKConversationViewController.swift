@@ -452,8 +452,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func updateAssigneeDetails() {
+        let isBotHandelingConversation = viewModel.isBotHandelingConversation()
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
-            chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
+            chatBar.hideAllAttachmentButtonIcons(isHidden: isBotHandelingConversation)
+        }
+        if configuration.chatBar.hideChatBarForBotConvesations {
+            if chatBar.isHidden != isBotHandelingConversation {
+                isChatBarHidden = isBotHandelingConversation
+            }
         }
         self.viewModel.currentConversationProfile(completion: { profile in
             guard let profile = profile else { return }
@@ -752,7 +758,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         typingNoticeView.bottomAnchor.constraint(equalTo: replyMessageView.topAnchor).isActive = true
         chatBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        if !isChatBarHidden && !configuration.chatBar.hideChatBarInConversaionScreen {
+        if !isChatBarHidden {
             bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             bottomConstraint?.isActive = true
         } else {
@@ -888,12 +894,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
-        if configuration.chatBar.hideChatBarInConversaionScreen {
+        let isBotHandelingConversation = viewModel.isBotHandelingConversation()
+        if configuration.chatBar.hideChatBarForBotConvesations && isBotHandelingConversation {
             chatBar.isHidden = true
-            return
         }
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
-            chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
+            chatBar.hideAllAttachmentButtonIcons(isHidden: isBotHandelingConversation)
         }
         // Update ChatBar's top view which contains send button and the text view.
         chatBar.grayView.backgroundColor = UIColor.kmDynamicColor(light: configuration.backgroundColor, dark: configuration.backgroundDarkColor)
