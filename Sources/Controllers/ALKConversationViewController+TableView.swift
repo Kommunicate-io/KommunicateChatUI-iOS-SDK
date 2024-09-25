@@ -40,6 +40,17 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         }
         cell.messageView.linkTextAttributes = [.foregroundColor: (message.isMyMessage) ? configuration.linkAttributeColorForSentMessage : configuration.linkAttributeColorForReceivedMessage,
                                                .underlineStyle: NSUnderlineStyle.single.rawValue]
+        if isAgentApp {
+            if message.isMyMessage {
+                cell.bubbleView.backgroundColor = UIColor(netHex: 0xE2F6FE)
+            } else {
+                if message.receiverId == viewModel.conversationEndUserID {
+                    cell.bubbleView.backgroundColor = UIColor(netHex: 0xF5F5FA)
+                } else {
+                    cell.bubbleView.backgroundColor = UIColor(netHex: 0xFFF3DA)
+                }
+            }
+        }
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length

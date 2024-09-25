@@ -93,6 +93,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var messageModels: [ALKMessageModel] = []
+    
+    open var conversationEndUserID:  String = ""
 
     open var richMessages: [String: Any] = [:]
 
@@ -1495,6 +1497,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
     /*
         Since we are getting the welcome message from Api Call, we are using this method to Show Typing Delay Indicator for Welcome Messsages
      */
+    
+    public func getConversationEndUserID() {
+        self.membersInGroup { members in
+            guard let members = members else { return }
+            for member in members {
+                if member.roleType == 3 {
+                    guard let userId = member.userId else { return }
+                    self.conversationEndUserID = userId
+                }
+            }
+        }
+    }
     
     func getLastSentMessage() -> ALMessage? {
         for message in alMessages.reversed() {
