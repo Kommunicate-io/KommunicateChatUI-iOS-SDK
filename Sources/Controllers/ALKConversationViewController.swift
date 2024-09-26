@@ -452,8 +452,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func updateAssigneeDetails() {
+        let isBotHandelingConversation = viewModel.isBotHandelingConversation()
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
-            chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
+            chatBar.hideAllAttachmentButtonIcons(isHidden: isBotHandelingConversation)
+        }
+        if configuration.chatBar.hideChatBarForBotConvesations {
+            if chatBar.isHidden != isBotHandelingConversation {
+                isChatBarHidden = isBotHandelingConversation
+            }
         }
         self.viewModel.currentConversationProfile(completion: { profile in
             guard let profile = profile else { return }
@@ -888,8 +894,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
+        let isBotHandelingConversation = viewModel.isBotHandelingConversation()
+        if configuration.chatBar.hideChatBarForBotConvesations && isBotHandelingConversation {
+            chatBar.isHidden = true
+        }
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
-            chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
+            chatBar.hideAllAttachmentButtonIcons(isHidden: isBotHandelingConversation)
         }
         // Update ChatBar's top view which contains send button and the text view.
         chatBar.grayView.backgroundColor = UIColor.kmDynamicColor(light: configuration.backgroundColor, dark: configuration.backgroundDarkColor)
