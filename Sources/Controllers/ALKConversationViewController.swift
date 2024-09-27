@@ -526,9 +526,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         viewModel.delegate = self
         isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
-        if isAgentApp {
-            viewModel.getConversationEndUserID()
-        }
         refreshViewController()
 //        setupConstraints()
         
