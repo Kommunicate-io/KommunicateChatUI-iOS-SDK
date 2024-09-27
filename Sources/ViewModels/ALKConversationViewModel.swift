@@ -94,7 +94,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open var messageModels: [ALKMessageModel] = []
     
-    open var conversationEndUserID:  String = ""
+    open var conversationEndUserID: String {
+        if _conversationEndUserID.isEmpty {
+            getConversationEndUserID()
+        }
+        return _conversationEndUserID
+    }
+
+    private var _conversationEndUserID: String = ""
 
     open var richMessages: [String: Any] = [:]
 
@@ -1474,7 +1481,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if(ALKConversationViewModel.lastSentMessage == nil){
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
-
+            if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+                self.getConversationEndUserID()
+            }
             self.alMessageWrapper.addObject(toMessageArray: messages)
             
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
@@ -1499,12 +1508,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
      */
     
     public func getConversationEndUserID() {
-        self.membersInGroup { members in
-            guard let members = members else { return }
-            for member in members {
-                if member.roleType == 3 {
-                    guard let userId = member.userId else { return }
-                    self.conversationEndUserID = userId
+        guard let channelKey = channelKey else { return }
+        ALChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
+            guard let contacts = contacts, !contacts.isEmpty else { return }
+            for contact in contacts {
+                if contact.roleType == 3 {
+                    self._conversationEndUserID = contact.userId
                 }
             }
         }
@@ -1724,6 +1733,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessageWrapper.addObject(toMessageArray: messages)
             if(ALKConversationViewModel.lastSentMessage == nil){
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
+            }
+            if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+                self.getConversationEndUserID()
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
             self.messageModels.insert(contentsOf: models, at: 0)
