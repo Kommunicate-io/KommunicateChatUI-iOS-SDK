@@ -1217,9 +1217,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         hideMoreBar()
     }
     
-    public func showNewTypingLabel(status: Bool) {
+    public func showNewTypingLabel(status: Bool, isAgentApp: Bool = false) {
         if status {
-            self.viewModel.addTypingIndicatorMessage()
+            self.viewModel.addTypingIndicatorMessage(isAgentApp)
         } else {
             self.viewModel.removeTypingIndicatorMessage()
         }

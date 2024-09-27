@@ -1014,10 +1014,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         uploadAudio(alMessage: alMessage, indexPath: IndexPath(row: 0, section: messageModels.count - 1))
     }
     
-    open func addTypingIndicatorMessage() {
+    open func addTypingIndicatorMessage(_ isAgentApp: Bool) {
         if alMessages.contains(where: { $0.contentType == Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR) }) {
             self.removeTypingIndicatorMessage()
         }
+        guard !isAgentApp || alMessages.count != 0 else { return }
         addToWrapper(message: getTypingIndicatorMessage())
         self.delegate?.newMessagesAdded()
     }
