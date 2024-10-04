@@ -34,6 +34,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     /// Make this false if you want to use custom list view controller
     public var individualLaunch = true
 
+    public var isAgentApp = false
+    
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
     public lazy var autocompleteManager: KMAutoCompleteManager = {
         let manager = KMAutoCompleteManager(
@@ -529,6 +531,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         viewModel.delegate = self
+        isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
         refreshViewController()
 //        setupConstraints()
         
