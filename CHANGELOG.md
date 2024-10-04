@@ -1,8 +1,12 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
-## [1.3.5] 2024-20-11
+## [1.3.6] 2024-10-04
+- Exposed Funtion to show or hide Chat Bar for Bot Conversations.
+
+## [1.3.5] 2024-09-20
 - Supports Xcode version 15.5 and above.
+
 ## [1.3.4] 2024-09-11
 - Jail Break Detection.
 - Source Url UI added.

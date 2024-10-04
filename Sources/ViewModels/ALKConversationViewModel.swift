@@ -93,6 +93,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var messageModels: [ALKMessageModel] = []
+    
+    open var conversationEndUserID: String {
+        if _conversationEndUserID.isEmpty {
+            getConversationEndUserID()
+        }
+        return _conversationEndUserID
+    }
+
+    private var _conversationEndUserID: String = ""
 
     open var richMessages: [String: Any] = [:]
 
@@ -1014,10 +1023,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
         uploadAudio(alMessage: alMessage, indexPath: IndexPath(row: 0, section: messageModels.count - 1))
     }
     
-    open func addTypingIndicatorMessage() {
+    open func addTypingIndicatorMessage(_ isAgentApp: Bool) {
         if alMessages.contains(where: { $0.contentType == Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR) }) {
             self.removeTypingIndicatorMessage()
         }
+        guard !isAgentApp || alMessages.count != 0 else { return }
         addToWrapper(message: getTypingIndicatorMessage())
         self.delegate?.newMessagesAdded()
     }
@@ -1472,7 +1482,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if(ALKConversationViewModel.lastSentMessage == nil){
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
-
+            if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+                self.getConversationEndUserID()
+            }
             self.alMessageWrapper.addObject(toMessageArray: messages)
             
             self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
@@ -1495,6 +1507,18 @@ open class ALKConversationViewModel: NSObject, Localizable {
     /*
         Since we are getting the welcome message from Api Call, we are using this method to Show Typing Delay Indicator for Welcome Messsages
      */
+    
+    public func getConversationEndUserID() {
+        guard let channelKey = channelKey else { return }
+        ALChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
+            guard let contacts = contacts, !contacts.isEmpty else { return }
+            for contact in contacts {
+                if contact.roleType == 3 {
+                    self._conversationEndUserID = contact.userId
+                }
+            }
+        }
+    }
     
     func getLastSentMessage() -> ALMessage? {
         for message in alMessages.reversed() {
@@ -1710,6 +1734,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessageWrapper.addObject(toMessageArray: messages)
             if(ALKConversationViewModel.lastSentMessage == nil){
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
+            }
+            if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+                self.getConversationEndUserID()
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
             self.messageModels.insert(contentsOf: models, at: 0)

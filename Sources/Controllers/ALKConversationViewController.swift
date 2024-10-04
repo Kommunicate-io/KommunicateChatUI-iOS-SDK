@@ -34,6 +34,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     /// Make this false if you want to use custom list view controller
     public var individualLaunch = true
 
+    public var isAgentApp = false
+    
     public lazy var chatBar = ALKChatBar(frame: CGRect.zero, configuration: self.configuration)
     public lazy var autocompleteManager: KMAutoCompleteManager = {
         let manager = KMAutoCompleteManager(
@@ -452,8 +454,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func updateAssigneeDetails() {
+        let isBotHandelingConversation = viewModel.isBotHandelingConversation()
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
-            chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
+            chatBar.hideAllAttachmentButtonIcons(isHidden: isBotHandelingConversation)
+        }
+        if configuration.chatBar.hideChatBarForBotConvesations {
+            if chatBar.isHidden != isBotHandelingConversation {
+                isChatBarHidden = isBotHandelingConversation
+            }
         }
         self.viewModel.currentConversationProfile(completion: { profile in
             guard let profile = profile else { return }
@@ -523,6 +531,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         viewModel.delegate = self
+        isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
         refreshViewController()
 //        setupConstraints()
         
@@ -888,8 +897,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func prepareChatBar() {
+        let isBotHandelingConversation = viewModel.isBotHandelingConversation()
+        if configuration.chatBar.hideChatBarForBotConvesations && isBotHandelingConversation {
+            chatBar.isHidden = true
+        }
         if configuration.chatBar.hideAttachmentOptionsForBotConvesations {
-            chatBar.hideAllAttachmentButtonIcons(isHidden: viewModel.isBotHandelingConversation())
+            chatBar.hideAllAttachmentButtonIcons(isHidden: isBotHandelingConversation)
         }
         // Update ChatBar's top view which contains send button and the text view.
         chatBar.grayView.backgroundColor = UIColor.kmDynamicColor(light: configuration.backgroundColor, dark: configuration.backgroundDarkColor)
@@ -1207,9 +1220,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         hideMoreBar()
     }
     
-    public func showNewTypingLabel(status: Bool) {
+    public func showNewTypingLabel(status: Bool, isAgentApp: Bool = false) {
         if status {
-            self.viewModel.addTypingIndicatorMessage()
+            self.viewModel.addTypingIndicatorMessage(isAgentApp)
         } else {
             self.viewModel.removeTypingIndicatorMessage()
         }
