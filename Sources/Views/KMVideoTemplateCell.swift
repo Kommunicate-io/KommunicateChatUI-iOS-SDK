@@ -57,6 +57,10 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
                                                 right: ChatCellPadding.ReceivedMessage.Message.right,
                                                 top: ChatCellPadding.ReceivedMessage.Message.top,
                                                 bottom: 0)
+        static let captionViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Caption.left,
+                                                right: ChatCellPadding.ReceivedMessage.Caption.right,
+                                                top: ChatCellPadding.ReceivedMessage.Caption.top,
+                                                bottom: ChatCellPadding.ReceivedMessage.Caption.top)
     }
 
     var timeLabel: UILabel = {
@@ -107,7 +111,8 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         let isMessageEmpty = viewModel.isMessageEmpty
         let messageModel = viewModel.messageDetails()
         let messagePadding = isMessageEmpty ? 0.0 : ReceivedMessageViewSizeCalculator().rowHeight(messageModel: messageModel, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
-        heigh += ((50.0 + messagePadding) / CGFloat(model.count))
+        let captionArray: [String?] =  model.map(\.caption)
+        heigh += ((50.0 + messagePadding) / CGFloat(model.count)) + ReceivedMessageCaptionViewSizeCalculator().rowHeight(captionArray: captionArray, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.captionViewPadding) 
         return heigh * CGFloat(model.count)
     }
 
@@ -186,6 +191,11 @@ extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
         } else {
             heigh = ceil((width * 0.64) / model.ratio)
         }
-        return heigh
+
+        /// To calculate caption height
+        guard let videoModel = model.videoTemplate() else { return heigh }
+        let captionArray: [String?] =  videoModel.map(\.caption)
+        let totalHeight: CGFloat = heigh + ReceivedMessageCaptionViewSizeCalculator().rowHeight(captionArray: captionArray, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.captionViewPadding)
+        return totalHeight
     }
 }
