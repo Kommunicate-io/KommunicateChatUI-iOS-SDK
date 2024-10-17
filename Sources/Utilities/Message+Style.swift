@@ -72,6 +72,12 @@ public enum ALKMessageStyle {
         text: UIColor.white,
         background: UIColor.gray
     )
+    
+    public static var summaryMessage = Style(
+        font: UIFont.font(.normal(size: 12.0)),
+        text: UIColor.white,
+        background: UIColor.gray
+    )
 
     // Style for feedback comments
     public static var feedbackComment = Style(
