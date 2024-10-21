@@ -57,6 +57,43 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         return tv
     }()
     
+    fileprivate var summaryUILable: UILabel = {
+        let lbl = UILabel()
+        lbl.font = .boldSystemFont(ofSize: 14)
+        lbl.textColor = .black
+        lbl.numberOfLines = 0
+        return lbl
+    }()
+    
+    fileprivate var summaryMessageView: UITextView = {
+        let tv = UITextView()
+        tv.isEditable = false
+        tv.backgroundColor = .clear
+        tv.isSelectable = false
+        tv.isScrollEnabled = false
+        tv.isUserInteractionEnabled = false
+        tv.textAlignment = .left
+        return tv
+    }()
+    
+    fileprivate var summaryBubbleView: UIView = {
+        let bv = UIView()
+        bv.backgroundColor = UIColor(netHex: 0xEFEFEF)
+        bv.layer.cornerRadius = 12
+        bv.isUserInteractionEnabled = false
+        return bv
+    }()
+    
+    fileprivate var summaryReadMoreButton: KMExtendedTouchAreaButton = {
+        let btn = KMExtendedTouchAreaButton()
+        btn.extraTouchArea = UIEdgeInsets(top: -20, left: -20, bottom: -10, right: -20)
+        btn.backgroundColor = .clear
+        btn.isUserInteractionEnabled = true
+        return btn
+    }()
+
+    fileprivate var summaryMessage = ""
+    
     fileprivate var assignTextView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
@@ -113,6 +150,12 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
+        if ALApplozicSettings.isAgentAppConfigurationEnabled(),
+           let metadata = viewModel.metadata,
+           let summaryValue = metadata["KM_SUMMARY"] as? String,
+           summaryValue == "true" {
+            return 150
+        }
         let widthNoPadding: CGFloat = 300
         var messageHeigh: CGFloat = 0
         if let message = viewModel.message {
@@ -157,11 +200,25 @@ final class ALKInformationCell: UITableViewCell, Localizable {
                 commentTextView.text = ""
                 setupConstraintsForAssignedTo()
             } else {
-                messageView.text = viewModel.message
-                commentTextView.text = ""
-                lineViewLeft.isHidden = true
-                lineViewRight.isHidden = true
-                setupConstraints()
+                if let metadata = viewModel.metadata,
+                   let summaryValue = metadata["KM_SUMMARY"] as? String,
+                   summaryValue == "true", let summary = viewModel.message {
+                    hideSummaryView(isHidden: false)
+                    setupSummaryUILableText()
+                    setSummaryMessageText(summary, characterLimit: 70)
+                    lineViewLeft.isHidden = true
+                    lineViewRight.isHidden = true
+                    summaryReadMoreButton.addTarget(self, action: #selector(readMoreButtonTapped), for: .touchUpInside)
+                    summaryMessage = summary
+                    setupSummaryConstraints()
+                } else {
+                    hideSummaryView(isHidden: true)
+                    messageView.text = viewModel.message
+                    commentTextView.text = ""
+                    lineViewLeft.isHidden = true
+                    lineViewRight.isHidden = true
+                    setupConstraints()
+                }
             }
             return
         }
@@ -197,6 +254,13 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         setupViews(feedbackString: csatBaseValue == 5 ?  NSMutableAttributedString(attributedString: imageString) : textString, comment: comment)
     }
     
+    func hideSummaryView(isHidden: Bool) {
+        summaryUILable.isHidden = isHidden
+        summaryBubbleView.isHidden = isHidden
+        summaryMessageView.isHidden = isHidden
+        summaryReadMoreButton.isHidden = isHidden
+    }
+    
     fileprivate func setupViews(feedbackString: NSMutableAttributedString, comment: String){
         messageView.attributedText = feedbackString
         if !comment.isEmpty {
@@ -208,6 +272,17 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         setUpConstraintsForRating()
     }
     
+    fileprivate func setupSummaryUILableText() {
+        summaryUILable.text = localizedString(forKey: "SummaryInfoLabel", withDefaultValue: SystemMessage.SummaryUI.SummaryInfoLabel, fileName: configuration.localizedStringFileName)
+        let title = localizedString(forKey: "SummaryReadMoreLabel", withDefaultValue: SystemMessage.SummaryUI.SummaryReadMoreLabel, fileName: configuration.localizedStringFileName)
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+            .foregroundColor: UIColor.black,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        let attributedTitle = NSAttributedString(string: title, attributes: attributes)
+        summaryReadMoreButton.setAttributedTitle(attributedTitle, for: .normal)
+    }
     
     fileprivate func getFormattedFeedbackString(_ viewModel: ALKMessageViewModel) -> NSMutableAttributedString {
         let userLabel = localizedString(forKey: "RatingLabelTitle", withDefaultValue: SystemMessage.Feedback.RatingLabelTitle, fileName: configuration.localizedStringFileName)
@@ -232,6 +307,50 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         messageView.setFont(ALKMessageStyle.infoMessage.font)
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
+    }
+    
+    fileprivate func setupSummaryConstraints() {
+        contentView.addViewsForAutolayout(views: [summaryBubbleView, summaryUILable, summaryMessageView, summaryReadMoreButton])
+
+        summaryBubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
+        summaryBubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        summaryBubbleView.leftAnchor.constraint(equalTo: messageView.leftAnchor, constant: -5).isActive = true
+        summaryBubbleView.rightAnchor.constraint(equalTo: messageView.rightAnchor, constant: 5).isActive = true
+
+        summaryUILable.topAnchor.constraint(equalTo: summaryBubbleView.topAnchor, constant: 10).isActive = true
+        summaryUILable.centerXAnchor.constraint(equalTo: summaryBubbleView.centerXAnchor).isActive = true
+        summaryUILable.widthAnchor.constraint(lessThanOrEqualTo: summaryBubbleView.widthAnchor, constant: -10).isActive = true
+        
+        summaryMessageView.topAnchor.constraint(equalTo: summaryUILable.bottomAnchor, constant: Padding.MessageView.top).isActive = true
+        summaryMessageView.leadingAnchor.constraint(equalTo: summaryBubbleView.leadingAnchor, constant: 10).isActive = true
+        summaryMessageView.trailingAnchor.constraint(equalTo: summaryBubbleView.trailingAnchor, constant: -5).isActive = true
+        summaryMessageView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
+        summaryReadMoreButton.topAnchor.constraint(equalTo: summaryMessageView.bottomAnchor).isActive = true
+        summaryReadMoreButton.centerXAnchor.constraint(equalTo: summaryBubbleView.centerXAnchor).isActive = true
+        summaryReadMoreButton.bottomAnchor.constraint(equalTo: summaryBubbleView.bottomAnchor, constant: -10).isActive = true
+
+        summaryMessageView.font = ALKMessageStyle.summaryMessage.font
+        contentView.backgroundColor = .clear
+        backgroundColor = .clear
+    }
+
+    func setSummaryMessageText(_ text: String, characterLimit: Int = 30) {
+        if text.count > characterLimit {
+            let truncatedText = String(text.prefix(characterLimit)) + "..."
+            summaryMessageView.text = truncatedText
+        } else {
+            summaryMessageView.text = text
+        }
+    }
+    
+    @objc func readMoreButtonTapped() {
+        if let parentVC = self.parentViewController() {
+            let popupVC = KMTextViewPopUPVC()
+            popupVC.modalPresentationStyle = .overFullScreen
+            popupVC.update(title: localizedString(forKey: "SummaryPopUpTitle", withDefaultValue: SystemMessage.SummaryUI.SummaryPopUpTitle, fileName: configuration.localizedStringFileName), content: summaryMessage)
+            parentVC.present(popupVC, animated: false, completion: nil)
+        }
     }
     
     fileprivate func setupConstraintsForAssignedTo() {
