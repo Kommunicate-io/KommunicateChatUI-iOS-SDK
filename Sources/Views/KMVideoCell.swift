@@ -25,6 +25,7 @@ class KMVideoCell: UITableViewCell {
         let button = UIButton(type: .custom)
         let image = UIImage(named: "PLAY", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
+        button.accessibilityIdentifier = "KMVideoPlayer"
         return button
     }()
     

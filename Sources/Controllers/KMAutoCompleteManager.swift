@@ -55,7 +55,7 @@ public class KMAutoCompleteManager: NSObject {
         self.textView = textView
         autocompletionView = tableview
         super.init()
-
+        self.autocompletionView.accessibilityIdentifier = "KMAutoCompletionTableView"
         self.textView.add(delegate: self)
         autocompletionView.dataSource = self
         autocompletionView.delegate = self
