@@ -26,7 +26,10 @@ class KMYoutubeVideoCell: UITableViewCell {
     var captionLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .gray
-        lbl.font = UIFont.boldSystemFont(ofSize: 12)
+        lbl.font = Font.bold(size: 12).font()
+        lbl.numberOfLines = 0
+        lbl.lineBreakMode = .byWordWrapping
+        lbl.textAlignment = .center
         return lbl
     }()
 
@@ -48,7 +51,8 @@ class KMYoutubeVideoCell: UITableViewCell {
         webView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.48).isActive = true
 
         captionLabel.topAnchor.constraint(equalTo: webView.bottomAnchor).isActive = true
-        captionLabel.centerXAnchor.constraint(equalTo: webView.centerXAnchor).isActive = true
+        captionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
+        captionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5).isActive = true
         captionLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
