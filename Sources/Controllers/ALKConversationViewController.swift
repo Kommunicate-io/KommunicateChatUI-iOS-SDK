@@ -467,20 +467,21 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let profile = profile else { return }
             self.navigationBar.updateView(profile: profile)
         })
+        #if canImport(ChatProvidersSDK)
+            guard KMZendeskChatHandler.shared.isZendeskEnabled(),
+                  let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
+                  isZendeskConversation(channel: channel),
+                  !channel.isClosedConversation,
+                  let assigneeUserId = channel.assigneeUserId,
+                  let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
+                  let roleType = assignee.roleType as? UInt32,
+                  roleType == AL_APPLICATION_WEB_ADMIN.rawValue,
+                  let channelKeyString = viewModel.channelKey?.stringValue else {
+                return
+            }
         
-        guard KMZendeskChatHandler.shared.isZendeskEnabled(),
-              let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
-              isZendeskConversation(channel: channel),
-              !channel.isClosedConversation,
-              let assigneeUserId = channel.assigneeUserId,
-              let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
-              let roleType = assignee.roleType as? UInt32,
-              roleType == AL_APPLICATION_WEB_ADMIN.rawValue,
-              let channelKeyString = viewModel.channelKey?.stringValue else {
-            return
-        }
-        
-        KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString, happendNow: true)
+            KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString, happendNow: true)
+        #endif
     }
     
     open func updateAssigneeOnlineStatus(userId: String){}

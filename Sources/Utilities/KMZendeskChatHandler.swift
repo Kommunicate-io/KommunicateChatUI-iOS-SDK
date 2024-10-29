@@ -6,8 +6,11 @@
 //
 
 import Foundation
-import ChatProvidersSDK
 import KommunicateCore_iOS_SDK
+
+#if canImport(ChatProvidersSDK)
+    import ChatProvidersSDK
+#endif
 
 struct KommunicateURL {
     static let attachmentURL = "https://chat.kommunicate.io/rest/ws/attachment/"
@@ -29,6 +32,7 @@ public protocol KMZendeskChatProtocol {
     func setGroupId(_ groupId: String)
 }
 // swiftlint:disable type_body_length
+#if canImport(ChatProvidersSDK)
 public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatProtocol {
     public static let shared = KMZendeskChatHandler()
     var groupId: String = ""
@@ -548,3 +552,4 @@ public class KMZendeskChatHandler : NSObject, JWTAuthenticator, KMZendeskChatPro
         return ["name":attachment.name, "mime_type": attachment.mimeType, "size": attachment.size, "url": attachment.url]
     }
 }
+#endif
