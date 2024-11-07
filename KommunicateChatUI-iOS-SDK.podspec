@@ -18,12 +18,16 @@ Pod::Spec.new do |s|
     richMessage.resources = 'RichMessageKit/**/*{xcassets}'
   end
 
+  s.subspec 'Zendesk' do |zendesk|
+    zendesk.dependency 'ZendeskChatProvidersSDK', '~> 5.0.0'
+  end
+
+
   s.subspec 'Complete' do |complete|
     complete.source_files = 'Sources/**/*.swift'
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
     complete.dependency 'Kingfisher', '~> 7.6.2'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
-    complete.dependency 'ZendeskChatProvidersSDK',  '~> 5.0.0'
     complete.dependency 'iOSDropDown'
     complete.dependency 'KommunicateCore-iOS-SDK',  '1.2.3'
     complete.dependency 'KommunicateChatUI-iOS-SDK/RichMessageKit'
