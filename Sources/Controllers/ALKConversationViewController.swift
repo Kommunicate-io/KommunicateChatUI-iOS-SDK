@@ -1965,15 +1965,17 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             switch element.type {
             case .time:
                 if let formViewModelTimeItem = element as? FormViewModelTimeItem {
-                    postFormData[formViewModelTimeItem.label] = String(timeInMillSecs)
+                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.timeFormat, timeInMillSecs: timeInMillSecs)
+                    postFormData[formViewModelTimeItem.label] = String(formattedDate)
                 }
             case .date:
                 if let formViewModelDateItem = element as? FormViewModelDateItem {
-                    postFormData[formViewModelDateItem.label] = String(timeInMillSecs)
+                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.dateFormat, timeInMillSecs: timeInMillSecs)
+                    postFormData[formViewModelDateItem.label] = String(formattedDate)
                 }
             case .dateTimeLocal:
                 if let formViewModelDateTimeLocalItem = element as? FormViewModelDateTimeLocalItem {
-                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.formFormat, timeInMillSecs: timeInMillSecs)
+                    let formattedDate = Date.formatedDate(formateString: Date.Formates.DateTimeForForm.dateTimeFormat, timeInMillSecs: timeInMillSecs)
                     postFormData[formViewModelDateTimeLocalItem.label] = String(formattedDate)
                 }
             default:
