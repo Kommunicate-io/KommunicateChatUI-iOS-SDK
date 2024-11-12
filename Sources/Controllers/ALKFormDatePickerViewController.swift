@@ -80,6 +80,11 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
             datePicker.preferredDatePickerStyle = .compact
         }
         datePicker.date = Date()
+        
+        // This apply light mode to UIDatePicker when dark mode is disabled.
+        if !UIColor.isKMDarkModeEnabled {
+            datePicker.overrideUserInterfaceStyle = .light
+        }
         return datePicker
     }()
 
