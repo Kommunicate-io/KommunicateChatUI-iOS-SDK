@@ -84,6 +84,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     let registerUserClientService = ALRegisterUserClientService()
 
     var loadingIndicator = ALKLoadingIndicator(frame: .zero)
+    
+    public var collectEmailOnAwayMode: Bool = false
 
     /// See configuration.
     var isGroupDetailActionEnabled = true
@@ -485,6 +487,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     open func updateAssigneeOnlineStatus(userId: String){}
+    
+    open func showEmailCollectionUI() {}
+    
+    open func showInvalidEmail() {}
+    
+    open func awayModeEmailUpdated() {}
     
     open func addMessagesToList(_ messageList: [Any]) {
         viewModel.addMessagesToList(messageList)
@@ -2234,6 +2242,15 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
     
+    public func isEmailUpdatedforUser(status: Bool) {
+        if status {
+            collectEmailOnAwayMode = false
+            awayModeEmailUpdated()
+        } else {
+            showInvalidEmail()
+        }
+    }
+    
     public func showInvalidReplyAlert(kmField: KMField) {
         
         guard let validation = kmField.validation else {
@@ -2595,6 +2612,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             reloadProcessedMessages(index: indexPath.section)
         }
         moveTableViewToBottom(indexPath: indexPath)
+        if collectEmailOnAwayMode {
+            showEmailCollectionUI()
+        }
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
