@@ -23,6 +23,8 @@ public protocol ALKConversationViewModelDelegate: AnyObject {
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
     func showInvalidReplyAlert(kmField : KMField)
+    func isEmailSentForUpdatingUser(status: Bool)
+    func emailUpdatedForUser()
 }
 
 // swiftlint:disable:next type_body_length
@@ -67,6 +69,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open var isFirstTime = true
     var timer = Timer()
     var welcomeMessagePosition = 0
+    open var emailCollectionAwayModeEnabled: Bool = false
     var modelsToBeAddedAfterDelay : [ALKMessageModel] = []
 
     open var isGroup: Bool {
@@ -204,6 +207,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     func clearViewModel() {
         isFirstTime = true
+        emailCollectionAwayModeEnabled = false
         messageModels.removeAll()
         alMessages.removeAll()
         richMessages.removeAll()
@@ -795,6 +799,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             updateUser(kmField: kmField, message: alMessage.message)
         }
+        
+        if emailCollectionAwayModeEnabled {
+            if(!message.isValidEmail()) {
+                delegate?.isEmailSentForUpdatingUser(status: false)
+                return
+            }
+            emailCollectionAwayModeEnabled = false
+            updateEmailFromCollectEmail(email: message)
+            delegate?.isEmailSentForUpdatingUser(status: true)
+        }
             
         var indexPath = IndexPath(row: 0, section: messageModels.count - 1)
         if !alMessage.isHiddenMessage() {
@@ -843,6 +857,17 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if let lastMessage = alMessages.last?.messageModel,
            let replyMetaData = lastMessage.getReplyMetaData() {
             message.metadata.addEntries(from: replyMetaData)
+        }
+    }
+    
+    func updateEmailFromCollectEmail(email: String) {
+        ALUserClientService().updateUser(nil, email: email, ofUser: nil) { theJson, error in
+            if(error == nil){
+                print("User's email updated")
+                self.delegate?.emailUpdatedForUser()
+            } else {
+                print("error occured while updating user's email \(String(describing: error?.localizedDescription))")
+            }
         }
     }
     
