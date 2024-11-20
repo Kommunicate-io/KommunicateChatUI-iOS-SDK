@@ -23,7 +23,8 @@ public protocol ALKConversationViewModelDelegate: AnyObject {
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
     func showInvalidReplyAlert(kmField : KMField)
-    func isEmailUpdatedforUser(status: Bool)
+    func isEmailSentForUpdatingUser(status: Bool)
+    func emailUpdatedForUser()
 }
 
 // swiftlint:disable:next type_body_length
@@ -801,12 +802,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         
         if emailCollectionAwayModeEnabled {
             if(!message.isValidEmail()) {
-                delegate?.isEmailUpdatedforUser(status: false)
+                delegate?.isEmailSentForUpdatingUser(status: false)
                 return
             }
             emailCollectionAwayModeEnabled = false
             updateEmailFromCollectEmail(email: message)
-            delegate?.isEmailUpdatedforUser(status: true)
+            delegate?.isEmailSentForUpdatingUser(status: true)
         }
             
         var indexPath = IndexPath(row: 0, section: messageModels.count - 1)
@@ -863,6 +864,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         ALUserClientService().updateUser(nil, email: email, ofUser: nil) { theJson, error in
             if(error == nil){
                 print("User's email updated")
+                self.delegate?.emailUpdatedForUser()
             } else {
                 print("error occured while updating user's email \(String(describing: error?.localizedDescription))")
             }

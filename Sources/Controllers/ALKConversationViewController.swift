@@ -494,6 +494,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     open func awayModeEmailUpdated() {}
     
+    open func awayModeEmailUpdatedSuccesfully() {}
+    
     open func addMessagesToList(_ messageList: [Any]) {
         viewModel.addMessagesToList(messageList)
     }
@@ -2242,13 +2244,18 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
     
-    public func isEmailUpdatedforUser(status: Bool) {
+    public func isEmailSentForUpdatingUser(status: Bool) {
         if status {
             collectEmailOnAwayMode = false
             awayModeEmailUpdated()
         } else {
             showInvalidEmail()
         }
+    }
+    
+    public func emailUpdatedForUser() {
+        collectEmailOnAwayMode = false
+        awayModeEmailUpdatedSuccesfully()
     }
     
     public func showInvalidReplyAlert(kmField: KMField) {
