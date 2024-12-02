@@ -7,6 +7,9 @@
 
 import Foundation
 import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
 
 public class ReceivedMessageCaptionViewSizeCalculator {
     public init() {}
