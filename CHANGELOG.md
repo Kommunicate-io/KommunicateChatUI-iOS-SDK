@@ -1,6 +1,11 @@
 # CHANGELOG
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
+## [1.3.8] 2024-12-03
+- Fixed an issue where captions were cut off in Video Rich Messages.
+- Made the Zendesk Plugin optional for integration flexibility.
+- Added a new feature to collect email addresses in Away Mode.
+
 ## [1.3.6] 2024-10-04
 - Exposed Funtion to show or hide Chat Bar for Bot Conversations.
 
