@@ -175,6 +175,11 @@ AddGroupDescriptionPlaceHolder = "Add group description";
 /* Feedback */
  RatingLabelTitle = "You";
 
+/* Summary UI */
+ SummaryPopUpTitle = "Summary";
+ SummaryInfoLabel = "Conversation Summary";
+ SummaryReadMoreLabel = "Read More";
+
 /* Assigned To */
  AssignedLabel = "Conversation transferred to";
 

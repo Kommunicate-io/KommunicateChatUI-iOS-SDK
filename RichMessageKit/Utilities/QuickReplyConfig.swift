@@ -34,6 +34,13 @@ public enum ChatCellPadding {
             public static let right: CGFloat = 95
             public static let top: CGFloat = 2
         }
+        
+        public enum Caption {
+            public static let left: CGFloat = 5
+            public static let right: CGFloat = 5
+            public static let top: CGFloat = 8
+            public static let bottom: CGFloat = 8
+        }
 
         public enum QuickReply {
             public static let left: CGFloat = 5

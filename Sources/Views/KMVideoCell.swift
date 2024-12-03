@@ -25,6 +25,7 @@ class KMVideoCell: UITableViewCell {
         let button = UIButton(type: .custom)
         let image = UIImage(named: "PLAY", in: Bundle.km, compatibleWith: nil)
         button.setImage(image, for: .normal)
+        button.accessibilityIdentifier = "KMVideoPlayer"
         return button
     }()
     
@@ -40,6 +41,9 @@ class KMVideoCell: UITableViewCell {
         let lbl = UILabel()
         lbl.textColor = .gray
         lbl.font = Font.bold(size: 12).font()
+        lbl.numberOfLines = 0
+        lbl.lineBreakMode = .byWordWrapping
+        lbl.textAlignment = .center
         return lbl
     }()
     
@@ -53,21 +57,22 @@ class KMVideoCell: UITableViewCell {
     }
     
     func addConstraints() {
-        addViewsForAutolayout(views: [photoView, captionLabel,playButton, progressView])
+        addViewsForAutolayout(views: [photoView, captionLabel, playButton, progressView])
         
         photoView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         photoView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         photoView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        photoView.heightAnchor.constraint(equalToConstant:UIScreen.main.bounds.width*0.48).isActive = true
+        photoView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.48).isActive = true
         
         captionLabel.topAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
-        captionLabel.centerXAnchor.constraint(equalTo: photoView.centerXAnchor).isActive = true
+        captionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
+        captionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5).isActive = true
         captionLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
         playButton.centerXAnchor.constraint(equalTo: photoView.centerXAnchor).isActive = true
         playButton.centerYAnchor.constraint(equalTo: photoView.centerYAnchor).isActive = true
         playButton.widthAnchor.constraint(equalToConstant: 50.0).isActive = true
         playButton.heightAnchor.constraint(equalToConstant: 50.0).isActive = true
-        
         playButton.addTarget(self, action: #selector(playButtonAction(_:)), for: .touchUpInside)
 
         progressView.heightAnchor.constraint(equalToConstant: 25.0).isActive = true

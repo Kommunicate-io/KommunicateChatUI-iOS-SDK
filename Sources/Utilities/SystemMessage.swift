@@ -231,6 +231,12 @@ struct SystemMessage: Localizable {
         static let RatingLabelTitle = localizedString(forKey: "RatingLabelTitle")
     }
     
+    enum SummaryUI {
+        static let SummaryPopUpTitle = localizedString(forKey: "SummaryPopUpTitle")
+        static let SummaryInfoLabel = localizedString(forKey: "SummaryInfoLabel")
+        static let SummaryReadMoreLabel = localizedString(forKey: "SummaryReadMoreLabel")
+    }
+    
     enum AssignedInfo {
         static let AssignedLabel = localizedString(forKey: "AssignedLabel")
     }

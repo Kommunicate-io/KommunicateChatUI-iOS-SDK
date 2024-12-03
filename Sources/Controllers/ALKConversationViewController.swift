@@ -84,6 +84,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     let registerUserClientService = ALRegisterUserClientService()
 
     var loadingIndicator = ALKLoadingIndicator(frame: .zero)
+    
+    public var collectEmailOnAwayMode: Bool = false
 
     /// See configuration.
     var isGroupDetailActionEnabled = true
@@ -467,23 +469,32 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let profile = profile else { return }
             self.navigationBar.updateView(profile: profile)
         })
+        #if canImport(ChatProvidersSDK)
+            guard KMZendeskChatHandler.shared.isZendeskEnabled(),
+                  let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
+                  isZendeskConversation(channel: channel),
+                  !channel.isClosedConversation,
+                  let assigneeUserId = channel.assigneeUserId,
+                  let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
+                  let roleType = assignee.roleType as? UInt32,
+                  roleType == AL_APPLICATION_WEB_ADMIN.rawValue,
+                  let channelKeyString = viewModel.channelKey?.stringValue else {
+                return
+            }
         
-        guard KMZendeskChatHandler.shared.isZendeskEnabled(),
-              let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
-              isZendeskConversation(channel: channel),
-              !channel.isClosedConversation,
-              let assigneeUserId = channel.assigneeUserId,
-              let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
-              let roleType = assignee.roleType as? UInt32,
-              roleType == AL_APPLICATION_WEB_ADMIN.rawValue,
-              let channelKeyString = viewModel.channelKey?.stringValue else {
-            return
-        }
-        
-        KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString, happendNow: true)
+            KMZendeskChatHandler.shared.handedOffToAgent(groupId: channelKeyString, happendNow: true)
+        #endif
     }
     
     open func updateAssigneeOnlineStatus(userId: String){}
+    
+    open func showEmailCollectionUI() {}
+    
+    open func showInvalidEmail() {}
+    
+    open func awayModeEmailUpdated() {}
+    
+    open func awayModeEmailUpdatedSuccesfully() {}
     
     open func addMessagesToList(_ messageList: [Any]) {
         viewModel.addMessagesToList(messageList)
@@ -2233,6 +2244,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
 extension ALKConversationViewController: ALKConversationViewModelDelegate {
     
+    public func isEmailSentForUpdatingUser(status: Bool) {
+        if status {
+            collectEmailOnAwayMode = false
+            awayModeEmailUpdated()
+        } else {
+            showInvalidEmail()
+        }
+    }
+    
+    public func emailUpdatedForUser() {
+        collectEmailOnAwayMode = false
+        awayModeEmailUpdatedSuccesfully()
+    }
+    
     public func showInvalidReplyAlert(kmField: KMField) {
         
         guard let validation = kmField.validation else {
@@ -2594,6 +2619,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             reloadProcessedMessages(index: indexPath.section)
         }
         moveTableViewToBottom(indexPath: indexPath)
+        if collectEmailOnAwayMode {
+            showEmailCollectionUI()
+        }
     }
 
     public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
