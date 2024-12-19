@@ -265,12 +265,12 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             playButton.isHidden = true
             progressView.isHidden = true
             loadThumbnail()
-        case .downloaded:
+        case let .downloaded(filePath):
             uploadButton.isHidden = true
             downloadButton.isHidden = true
             progressView.isHidden = true
             playButton.isHidden = false
-            loadThumbnail()
+            loadThumbnail(isDownloaded: true,filePath: filePath)
         case let .downloading(progress, _):
             // show progress bar
             print("downloading")
@@ -299,7 +299,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         }
     }
 
-    func loadThumbnail() {
+    func loadThumbnail(isDownloaded : Bool = false, filePath : String? = nil) {
         guard let message = viewModel, let metadata = message.fileMetaInfo else {
             return
         }
@@ -309,9 +309,19 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             return
         }
         /*
+            if Video is already Downloaded, then the Thumbnail will be directly fetched from file.
+         */
+        if isDownloaded, let filePath = filePath {
+            let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let path = docDirPath.appendingPathComponent(filePath)
+            let fileUtills = ALKFileUtils()
+            photoView.image = fileUtills.getThumbnail(filePath: path) ?? placeHolderImage
+            return
+        }
+        /*
             if URL is exist on metadata, then it was upload by S3 Service. if not it was uploaded by Google
          */
-        if metadata.url == nil {
+        if metadata.url == nil && !message.isMyMessage {
             photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolderImage)
             return
         }
