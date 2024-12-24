@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.3.9] 2024-12-24
+- Fixed the issue where video thumbnails were not displaying correctly.
+
 ## [1.3.8] 2024-12-03
 - Fixed an issue where captions were cut off in Video Rich Messages.
 - Made the Zendesk Plugin optional for integration flexibility.
