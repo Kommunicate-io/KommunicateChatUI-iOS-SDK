@@ -11,101 +11,99 @@ import UIKit
     import RichMessageKit
 #endif
 public enum ALKMessageStyle {
-    public static var displayName = Style(
-        font: UIFont.font(.normal(size: 14)),
-        text: .text(.gray9B)
-    )
+    private static let syncQueue = DispatchQueue(label: "com.kommunicate.ALKMessageStyle.syncQueue")
 
-    public static var playTime = Style(
-        font: UIFont.font(.normal(size: 16)),
-        text: .text(.black00)
-    )
+    private static var _displayName = Style(font: UIFont.font(.normal(size: 14)), text: .text(.gray9B))
+    public static var displayName: Style {
+        get { syncQueue.sync { _displayName } }
+        set { syncQueue.sync { _displayName = newValue } }
+    }
 
-    public static var time = Style(
-        font: UIFont.font(.medium(size: 12)),
-        text: UIColor(hexString: "67757E")
-    )
+    private static var _playTime = Style(font: UIFont.font(.normal(size: 16)), text: .text(.black00))
+    public static var playTime: Style {
+        get { syncQueue.sync { _playTime } }
+        set { syncQueue.sync { _playTime = newValue } }
+    }
 
-    // Received message text style
-    public static var receivedMessage = Style(
-        font: UIFont.font(.normal(size: 14)),
-        text: UIColor.kmDynamicColor(light: .text(.black00), dark: .text(.white))
-    )
+    private static var _time = Style(font: UIFont.font(.medium(size: 12)), text: UIColor(hexString: "67757E"))
+    public static var time: Style {
+        get { syncQueue.sync { _time } }
+        set { syncQueue.sync { _time = newValue } }
+    }
 
-    // Sent message text style
-    public static var sentMessage = Style(
-        font: UIFont.font(.normal(size: 14)),
-        text: .text(.white)
-    )
+    private static var _receivedMessage = Style(font: UIFont.font(.normal(size: 14)), text: UIColor.kmDynamicColor(light: .text(.black00), dark: .text(.white)))
+    public static var receivedMessage: Style {
+        get { syncQueue.sync { _receivedMessage } }
+        set { syncQueue.sync { _receivedMessage = newValue } }
+    }
 
-    /// Style for mentions in sent message text
-    public static var sentMention = Style(
-        font: UIFont.systemFont(ofSize: 14),
-        text: UIColor.blue,
-        background: UIColor.blue.withAlphaComponent(0.1)
-    )
+    private static var _sentMessage = Style(font: UIFont.font(.normal(size: 14)), text: .text(.white))
+    public static var sentMessage: Style {
+        get { syncQueue.sync { _sentMessage } }
+        set { syncQueue.sync { _sentMessage = newValue } }
+    }
 
-    /// Style for mentions in received message text
-    public static var receivedMention = Style(
-        font: UIFont.systemFont(ofSize: 14),
-        text: UIColor.blue,
-        background: UIColor.blue.withAlphaComponent(0.1)
-    )
+    private static var _infoMessage = Style(font: UIFont.font(.bold(size: 12.0)), text: UIColor.white, background: UIColor.gray)
+    public static var infoMessage: Style {
+        get { syncQueue.sync { _infoMessage } }
+        set { syncQueue.sync { _infoMessage = newValue } }
+    }
 
-    /// Style for channel feedback messages in chat
-    public static var feedbackMessage = Style(
-        font: UIFont.font(.normal(size: 12)),
-        text: UIColor.gray,
-        background: UIColor.gray
-    )
+    private static var _dateSeparator = Style(font: UIFont.font(.bold(size: 12.0)), text: UIColor.white, background: UIColor.gray)
+    public static var dateSeparator: Style {
+        get { syncQueue.sync { _dateSeparator } }
+        set { syncQueue.sync { _dateSeparator = newValue } }
+    }
+
+    private static var _feedbackMessage = Style(font: UIFont.font(.normal(size: 12)), text: UIColor.gray, background: UIColor.gray)
+    public static var feedbackMessage: Style {
+        get { syncQueue.sync { _feedbackMessage } }
+        set { syncQueue.sync { _feedbackMessage = newValue } }
+    }
+
+    private static var _assignmentMessage = Style(font: UIFont.font(.normal(size: 12)), text: UIColor.gray, background: UIColor.gray)
+    public static var assignmentMessage: Style {
+        get { syncQueue.sync { _assignmentMessage } }
+        set { syncQueue.sync { _assignmentMessage = newValue } }
+    }
+
+    private static var _summaryMessage = Style(font: UIFont.font(.normal(size: 12.0)), text: UIColor.white, background: UIColor.gray)
+    public static var summaryMessage: Style {
+        get { syncQueue.sync { _summaryMessage } }
+        set { syncQueue.sync { _summaryMessage = newValue } }
+    }
+
+    private static var _feedbackComment = Style(font: UIFont.font(.italic(size: 12)), text: UIColor.lightGray, background: UIColor.clear)
+    public static var feedbackComment: Style {
+        get { syncQueue.sync { _feedbackComment } }
+        set { syncQueue.sync { _feedbackComment = newValue } }
+    }
+
+    private static var _staticTopMessage = Style(font: UIFont.font(.normal(size: 15.0)), text: UIColor.black)
+    public static var staticTopMessage: Style {
+        get { syncQueue.sync { _staticTopMessage } }
+        set { syncQueue.sync { _staticTopMessage = newValue } }
+    }
+
+    private static var _receivedMention = Style(font: UIFont.systemFont(ofSize: 14), text: UIColor.blue, background: UIColor.blue.withAlphaComponent(0.1))
+    public static var receivedMention: Style {
+        get { syncQueue.sync { _receivedMention } }
+        set { syncQueue.sync { _receivedMention = newValue } }
+    }
     
-    /// Style for Assignment Message in chat
-    public static var assignmentMessage = Style(
-        font: UIFont.font(.normal(size: 12)),
-        text: UIColor.gray,
-        background: UIColor.gray
-    )
+    private static var _sentMention = Style(font: UIFont.systemFont(ofSize: 14), text: UIColor.blue, background: UIColor.blue.withAlphaComponent(0.1))
+    public static var sentMention: Style {
+        get { syncQueue.sync { _sentMention } }
+        set { syncQueue.sync { _sentMention = newValue } }
+    }
     
-    /// Style for channel info messages in chat
-    public static var infoMessage = Style(
-        font: UIFont.font(.bold(size: 12.0)),
-        text: UIColor.white,
-        background: UIColor.gray
-    )
-    
-    public static var summaryMessage = Style(
-        font: UIFont.font(.normal(size: 12.0)),
-        text: UIColor.white,
-        background: UIColor.gray
-    )
-
-    // Style for feedback comments
-    public static var feedbackComment = Style(
-        font: UIFont.font(.italic(size: 12)),
-        text: UIColor.lightGray,
-        background: UIColor.clear
-    )
-
-    /// Style for date cell in chat
-    public static var dateSeparator = Style(
-        font: UIFont.font(.bold(size: 12.0)),
-        text: UIColor.white,
-        background: UIColor.gray
-    )
-    
-    /// Style for static top message cell
-    public static var staticTopMessage = Style(
-        font: UIFont.font(.normal(size: 15.0)), text: UIColor.black
-    )
-
-    @available(*, deprecated, message: "Use `receivedMessage` and `sentMessage`")
-    public static var message = Style(
-        font: UIFont.font(.normal(size: 14)),
-        text: .text(.black00)
-    ) {
-        didSet {
-            receivedMessage = message
-            sentMessage = message
+    public static var message: Style {
+        get { syncQueue.sync { Style(font: UIFont.font(.normal(size: 14)), text: .text(.black00)) } }
+        set {
+            syncQueue.sync {
+                _receivedMessage = newValue
+                _sentMessage = newValue
+            }
         }
     }
 
@@ -115,55 +113,47 @@ public enum ALKMessageStyle {
     }
 
     public struct Bubble {
-        enum DefaultColor {
-            static let sentBubbleColor = UIColor(netHex: 0x5553B7)
-            static let receivedBubbleColor = UIColor(netHex: 0xF1F0F0)
-        }
-
         public struct Border {
             public var color = UIColor.clear
             public var width: CGFloat = 0
         }
 
-        /// Message bubble's background color.
         public var color: UIColor
-
-        /// Message bubble corner Radius
         public var cornerRadius: CGFloat
-
-        /// BubbleStyle of the message bubble.
         public var style: BubbleStyle
-
-        /// For setting border to bubble.
-        /// Note: Only works when `BubbleStyle` is `round`
         public var border = Border()
-
-        /// Width padding which will be used for message view's
-        /// right and left padding.
-        public let widthPadding: CGFloat
+        public let widthPadding: CGFloat = 10.0
 
         public init(color: UIColor, style: BubbleStyle) {
             self.color = color
             self.style = style
-            widthPadding = 10.0
-            cornerRadius = 12
+            self.cornerRadius = 12
         }
     }
 
-    public static var sentBubble = Bubble(color: UIColor(netHex: 0x5553B7), style: .edge) {
-        didSet {
-            let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
-            appSettingsUserDefaults.setSentMessageBackgroundColor(color: sentBubble.color)
+    private static var _sentBubble: Bubble = Bubble(color: UIColor(netHex: 0x5553B7), style: .edge)
+    public static var sentBubble: Bubble {
+        get { syncQueue.sync { _sentBubble } }
+        set {
+            syncQueue.sync {
+                _sentBubble = newValue
+                let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+                appSettingsUserDefaults.setSentMessageBackgroundColor(color: _sentBubble.color)
+            }
         }
     }
 
-    public static var receivedBubble = Bubble(color: UIColor.kmDynamicColor(light: UIColor(netHex: 0xF1F0F0), dark: UIColor.appBarDarkColor()), style: .edge) {
-        didSet {
-            let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
-            appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: receivedBubble.color)
+    private static var _receivedBubble: Bubble = Bubble(color: UIColor.kmDynamicColor(light: UIColor(netHex: 0xF1F0F0), dark: UIColor.appBarDarkColor()), style: .edge)
+    public static var receivedBubble: Bubble {
+        get { syncQueue.sync { _receivedBubble } }
+        set {
+            syncQueue.sync {
+                _receivedBubble = newValue
+                let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+                appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: _receivedBubble.color)
+            }
         }
     }
 
-    /// Style for sent message status icon like read, delivered etc.
     public static var messageStatus = SentMessageStatus()
 }
