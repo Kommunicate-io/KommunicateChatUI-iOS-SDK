@@ -97,6 +97,7 @@ public enum ALKMessageStyle {
         set { syncQueue.sync { _sentMention = newValue } }
     }
     
+    @available(*, deprecated, message: "Use `receivedMessage` and `sentMessage`")
     public static var message: Style {
         get { syncQueue.sync { Style(font: UIFont.font(.normal(size: 14)), text: .text(.black00)) } }
         set {
