@@ -61,16 +61,45 @@ public struct ALKChatBarConfiguration {
 
     /// Style for textview's text and placeholder
     public enum TextView {
-        /// Style for place holder.
-        public static var placeholder = Style(
+        // DispatchQueue for thread safety
+        private static let queue = DispatchQueue(label: "com.kommunicateChatUI.textView.configQueue")
+
+        // Private stored properties
+        private static var _placeholder = Style(
             font: Font.normal(size: 14).font(),
             text: .text(.gray9B)
         )
-        /// Style for text view.
-        public static var text = Style(
+
+        private static var _text = Style(
             font: Font.normal(size: 16.0).font(),
             text: .text(.black00)
         )
+
+        // Public computed properties with thread-safe access
+
+        /// Style for placeholder.
+        public static var placeholder: Style {
+            get { accessProperty(&_placeholder) }
+            set { updateProperty(&_placeholder, value: newValue) }
+        }
+
+        /// Style for text view.
+        public static var text: Style {
+            get { accessProperty(&_text) }
+            set { updateProperty(&_text, value: newValue) }
+        }
+
+        // MARK: - Private Helper Methods
+
+        /// Thread-safe property access
+        private static func accessProperty(_ property: inout Style) -> Style {
+            return queue.sync { property }
+        }
+
+        /// Thread-safe property update
+        private static func updateProperty(_ property: inout Style, value: Style) {
+            queue.sync { property = value }
+        }
     }
 
     private(set) var attachmentIcons: [AttachmentType: UIImage?] = {
