@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum KMCustomEvent: String {
+public enum KMCustomEvent: String, CaseIterable {
     case messageSend = "ON_MESSAGE_SEND"
     case faqClick = "ON_FAQ_CLICK"
     case newConversation = "ON_START_NEW_CONVERSATION_CLICK"
@@ -18,4 +18,8 @@ public enum KMCustomEvent: String {
     case messageReceive = "ON_MESSAGE_RECEIVE"
     case conversationInfoClick = "ON_CONVERSATION_INFO_CLICK"
     
+    
+    public static var allEvents: [KMCustomEvent] {
+        return Array(self.allCases)
+    }
 }
