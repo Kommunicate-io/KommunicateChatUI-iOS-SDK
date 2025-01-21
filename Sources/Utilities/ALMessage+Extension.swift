@@ -239,6 +239,15 @@ extension ALMessage: ALKChatViewModelProtocol {
         }
         return tagsArray
     }
+    
+    public var isWatingQueueConversation: Bool {
+        guard let channel = ALChannelService().getChannelByKey(channelKey),
+              let conversationStatus = channel.metadata.value(forKey: AL_CHANNEL_CONVERSATION_STATUS) as? String,
+              conversationStatus == "7" else {
+            return false
+        }
+        return true
+    }
 }
 
 extension ALMessage {
