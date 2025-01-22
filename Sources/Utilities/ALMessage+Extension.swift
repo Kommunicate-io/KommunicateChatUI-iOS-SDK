@@ -20,6 +20,10 @@ enum ChannelMetadataKey {
     static let conversationSubject = "KM_CONVERSATION_SUBJECT"
 }
 
+public enum KMConversationStatus: String {
+    case waiting = "7"
+}
+
 let emailSourceType = 7
 
 extension ALMessage: ALKChatViewModelProtocol {
@@ -240,10 +244,11 @@ extension ALMessage: ALKChatViewModelProtocol {
         return tagsArray
     }
     
-    public var isWatingQueueConversation: Bool {
+    public var isWaitingQueueConversation: Bool {
+        guard let channelKey = channelKey else { return false }
         guard let channel = ALChannelService().getChannelByKey(channelKey),
               let conversationStatus = channel.metadata.value(forKey: AL_CHANNEL_CONVERSATION_STATUS) as? String,
-              conversationStatus == "7" else {
+              conversationStatus == KMConversationStatus.waiting.rawValue else {
             return false
         }
         return true

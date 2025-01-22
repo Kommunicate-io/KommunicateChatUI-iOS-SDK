@@ -126,7 +126,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         else {
             return false
         }
-        return conversationStatus == "7"
+        return conversationStatus == KMConversationStatus.waiting.rawValue
     }
     
     open var assignedTeamId: String? {

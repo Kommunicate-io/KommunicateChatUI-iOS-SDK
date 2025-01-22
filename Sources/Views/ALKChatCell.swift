@@ -31,7 +31,7 @@ public protocol ALKChatViewModelProtocol {
     var messageMetadata: NSMutableDictionary? { get }
     var platformSource: String? { get }
     var assignedTags: [KMAssignedTags]? { get }
-    var isWatingQueueConversation: Bool { get }
+    var isWaitingQueueConversation: Bool { get }
 }
 
 extension ALKChatViewModelProtocol {
@@ -279,7 +279,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
     public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
         self.viewModel = viewModel
         
-        if viewModel.isWatingQueueConversation {
+        if viewModel.isWaitingQueueConversation {
             avatarImageView.image = UIImage(named: "watingQueueProfile", in: Bundle.km, compatibleWith: nil)
             nameLabel.text = localizedString(forKey: LocalizationKey.waitingQueTitle, withDefaultValue: "In queue...", fileName:localizationFileName)
             messageLabel.text = ""
