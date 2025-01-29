@@ -17,6 +17,20 @@ class ALKFileUtils: NSObject {
             }
             return (localPathName as NSString).lastPathComponent as String
         }
+        return removeFirstAWSEncrypted(from: fileName)
+    }
+    
+    /// This function removes the "AWS-ENCRYPTED-" prefix from a file name only if it's at the start and the remaining content has meaningful text before the file extension.
+    func removeFirstAWSEncrypted(from fileName: String) -> String {
+        let prefix = "AWS-ENCRYPTED-"
+        
+        if fileName.hasPrefix(prefix) {
+            let remaining = String(fileName.dropFirst(prefix.count))
+            if let dotIndex = remaining.firstIndex(of: "."), remaining.distance(from: remaining.startIndex, to: dotIndex) > 0 {
+                return remaining
+            }
+        }
+        
         return fileName
     }
 
