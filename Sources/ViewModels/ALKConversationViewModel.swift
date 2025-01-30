@@ -118,6 +118,28 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return alchannel.type == 6
     }
     
+    open var isWaitingQueueConversation: Bool {
+        let alChannelService = ALChannelService()
+        guard let channelKey = channelKey,
+              let alchannel = alChannelService.getChannelByKey(channelKey),
+              let conversationStatus = alchannel.metadata[AL_CHANNEL_CONVERSATION_STATUS] as? String
+        else {
+            return false
+        }
+        return conversationStatus == KMConversationStatus.waiting.rawValue
+    }
+    
+    open var assignedTeamId: String? {
+        let alChannelService = ALChannelService()
+        guard let channelKey = channelKey,
+              let alchannel = alChannelService.getChannelByKey(channelKey),
+              let teamID = alchannel.metadata["KM_TEAM_ID"] as? String
+        else {
+            return nil
+        }
+        return teamID
+    }
+    
     // To get Conversation created time based on its first message.
     open var conversationCreatedTime: NSNumber? {
         if alMessages.isEmpty {

@@ -31,6 +31,7 @@ public protocol ALKChatViewModelProtocol {
     var messageMetadata: NSMutableDictionary? { get }
     var platformSource: String? { get }
     var assignedTags: [KMAssignedTags]? { get }
+    var isWaitingQueueConversation: Bool { get }
 }
 
 extension ALKChatViewModelProtocol {
@@ -103,6 +104,9 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         case iconWidthIdentifier = "iconViewWidth"
     }
 
+    enum LocalizationKey {
+        static let waitingQueTitle = "waitingQueueTitle"
+    }
     enum Padding {
         enum Email {
             static let top: CGFloat = 4
@@ -274,47 +278,55 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
     public func update(viewModel: ALKChatViewModelProtocol, identity _: ALKIdentityProtocol?, placeholder: UIImage? = nil) {
         self.viewModel = viewModel
-        let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
         
-        if let avatarImage = viewModel.avatarImage {
-              if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
-                let resource = Kingfisher.ImageResource(downloadURL: imgURL, cacheKey: imgStr)
-                avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
-              } else if let avatar = viewModel.avatar {
+        if viewModel.isWaitingQueueConversation {
+            avatarImageView.image = UIImage(named: "watingQueueProfile", in: Bundle.km, compatibleWith: nil)
+            nameLabel.text = localizedString(forKey: LocalizationKey.waitingQueTitle, withDefaultValue: "In queue...", fileName:localizationFileName)
+            messageLabel.text = ""
+            attachmentImageView.image = nil
+        } else {
+            let placeHolder = placeholderImage(placeholder, viewModel: viewModel)
+            
+            if let avatarImage = viewModel.avatarImage {
+                if let imgStr = viewModel.avatarGroupImageUrl, let imgURL = URL(string: imgStr) {
+                    let resource = Kingfisher.ImageResource(downloadURL: imgURL, cacheKey: imgStr)
+                    avatarImageView.kf.setImage(with: resource, placeholder: avatarImage)
+                } else if let avatar = viewModel.avatar {
+                    let resource = Kingfisher.ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
+                    avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+                } else {
+                    avatarImageView.image = placeHolder
+                }
+            } else if let avatar = viewModel.avatar {
                 let resource = Kingfisher.ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
                 avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-              } else {
+            } else {
                 avatarImageView.image = placeHolder
-              }
-            } else if let avatar = viewModel.avatar {
-            let resource = Kingfisher.ImageResource(downloadURL: avatar, cacheKey: avatar.absoluteString)
-            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
-        } else {
-            avatarImageView.image = placeHolder
+            }
+            
+            let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
+            nameLabel.text = name
+            
+            let attrs: [NSAttributedString.Key: Any] = [
+                NSAttributedString.Key.font: messageLabel.font ?? Font.normal(size: 14.0).font(),
+                NSAttributedString.Key.foregroundColor: messageLabel.textColor ?? UIColor(netHex: 0x9B9B9B),
+            ]
+            
+            if let attributedText = viewModel
+                .attributedTextWithMentions(
+                    defaultAttributes: [:],
+                    mentionAttributes: attrs as [NSAttributedString.Key: Any],
+                    displayNames: displayNames
+                )
+            {
+                messageLabel.attributedText = attributedText
+            } else {
+                let lastMessage = viewModel.theLastMessage != nil ? localizedString(forKey: viewModel.theLastMessage!, withDefaultValue: viewModel.theLastMessage!, fileName:localizationFileName) :  ""
+                messageLabel.text = lastMessage
+            }
+            
+            updateAttchmentIcon(type: viewModel.messageType)
         }
-
-        let name = viewModel.isGroupChat ? viewModel.groupName : viewModel.name
-        nameLabel.text = name
-
-        let attrs: [NSAttributedString.Key: Any] = [
-            NSAttributedString.Key.font: messageLabel.font ?? Font.normal(size: 14.0).font(),
-            NSAttributedString.Key.foregroundColor: messageLabel.textColor ?? UIColor(netHex: 0x9B9B9B),
-        ]
-
-        if let attributedText = viewModel
-            .attributedTextWithMentions(
-                defaultAttributes: [:],
-                mentionAttributes: attrs as [NSAttributedString.Key: Any],
-                displayNames: displayNames
-            )
-         {
-            messageLabel.attributedText = attributedText
-        } else {
-            let lastMessage = viewModel.theLastMessage != nil ? localizedString(forKey: viewModel.theLastMessage!, withDefaultValue: viewModel.theLastMessage!, fileName:localizationFileName) :  ""
-            messageLabel.text = lastMessage
-        }
-        
-        updateAttchmentIcon(type: viewModel.messageType)
         
         muteIcon.isHidden = !isConversationMuted(viewModel: viewModel)
 
