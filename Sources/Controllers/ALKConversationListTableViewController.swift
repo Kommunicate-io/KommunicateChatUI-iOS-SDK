@@ -57,7 +57,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     fileprivate var showSearch: Bool
     fileprivate var localizedStringFileName: String
     fileprivate var tapToDismiss: UITapGestureRecognizer!
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate var searchActive: Bool = false
     fileprivate var searchFilteredChat: [Any] = []
