@@ -14,7 +14,7 @@ class ALKDocumentViewerController: UIViewController, WKNavigationDelegate {
     var filePath: String = ""
     var fileUrl = URL(fileURLWithPath: "")
 
-    let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     required init() {
         super.init(nibName: nil, bundle: nil)

@@ -10,7 +10,7 @@ import KommunicateCore_iOS_SDK
 import UIKit
 
 public class ALKSearchResultViewController: ALKBaseViewController {
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     let viewModel = SearchResultViewModel()
     lazy var viewController = ALKConversationListTableViewController(

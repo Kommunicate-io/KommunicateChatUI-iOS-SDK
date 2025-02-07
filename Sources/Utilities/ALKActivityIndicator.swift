@@ -21,7 +21,7 @@ public class ALKActivityIndicator: UIView {
 
     let size: Size
 
-    fileprivate var indicator = UIActivityIndicatorView(style: .whiteLarge)
+    fileprivate var indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
 
     /// Initializers
     ///

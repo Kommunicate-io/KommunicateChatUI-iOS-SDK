@@ -109,7 +109,7 @@ class KMTypingIndicator: ALKMessageCell {
 
     private func startTypingAnimation() {
         for index in 0..<3 {
-            let dotView = typingIndicatorView.subviews[index] as! UIView
+            let dotView = typingIndicatorView.subviews[index]
 
             UIView.animate(withDuration: Padding.TypingIndicator.animationDuration, delay: TimeInterval(index) * 0.2, options: [.repeat, .autoreverse], animations: {
                 dotView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)

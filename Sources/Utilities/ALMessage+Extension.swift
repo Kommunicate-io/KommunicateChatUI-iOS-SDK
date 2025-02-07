@@ -104,7 +104,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         return contact.getDisplayName()
     }
     public var theLastMessage: String? {
-        var defaultMessage = "Message"
+        let defaultMessage = "Message"
         switch messageType {
         case .text:
             return message

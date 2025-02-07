@@ -10,7 +10,7 @@ import UIKit
 public class ALKLoadingIndicator: UIStackView, Localizable {
     // MARK: - Properties
 
-    var activityIndicator = UIActivityIndicatorView(style: .gray)
+    var activityIndicator = UIActivityIndicatorView(style: .medium)
 
     var loadingLabel: UILabel = {
         let label = UILabel(frame: .zero)

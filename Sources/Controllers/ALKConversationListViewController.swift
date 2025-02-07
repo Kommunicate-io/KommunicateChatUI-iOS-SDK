@@ -55,7 +55,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     fileprivate var tapToDismiss: UITapGestureRecognizer!
     fileprivate var alMqttConversationService: ALMQTTConversationService!
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
     fileprivate var localizedStringFileName: String!
 
     // MQTT connection retry
@@ -395,14 +395,14 @@ extension ALKConversationListViewController: ALMessagesDelegate {
 }
 
 extension ALKConversationListViewController: ALKConversationListViewModelDelegate {
-    open func startedLoading() {
+    public func startedLoading() {
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
             self.tableView.isUserInteractionEnabled = false
         }
     }
 
-    open func listUpdated() {
+    public func listUpdated() {
         DispatchQueue.main.async {
             print("Number of rows \(self.tableView.numberOfRows(inSection: 0))")
             self.tableView.reloadData()
@@ -411,7 +411,7 @@ extension ALKConversationListViewController: ALKConversationListViewModelDelegat
         }
     }
 
-    open func rowUpdatedAt(position: Int) {
+    public func rowUpdatedAt(position: Int) {
         tableView.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
     }
 }
@@ -425,7 +425,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
     
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
-        print("Status Changed \(contactId) \(status)")
+        print("Status Changed \(String(describing: contactId)) \(String(describing: status))")
     }
     
     open func updateUserDetail(_ userId: String!) {
