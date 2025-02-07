@@ -118,7 +118,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     fileprivate let moreBar = ALKMoreBar(frame: .zero)
     fileprivate lazy var typingNoticeView = TypingNotice(localizedStringFileName: configuration.localizedStringFileName)
     fileprivate var alMqttConversationService: ALMQTTConversationService!
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     fileprivate var keyboardSize: CGRect?
 
@@ -343,7 +343,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: { [weak self]
             notification in
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
-            let msgArray = notification.object as? [ALMessage]
             guard let list = notification.object as? [Any], !list.isEmpty, weakSelf.isViewLoaded else { return }
             weakSelf.addMessagesToList(list)
             weakSelf.newFormMessageAdded()
@@ -1093,7 +1092,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     public func updatePlaceholder(){
-        guard let isCustomDataRichMessage = viewModel.lastMessage?.messageModel.isCustomDataRichMessage(),
+        guard let _ = viewModel.lastMessage?.messageModel.isCustomDataRichMessage(),
               let placeholder = viewModel.lastMessage?.messageModel.getKmField()?.placeholder else {
             return
         }
@@ -1227,7 +1226,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     public func scrollViewWillBeginDecelerating(_: UIScrollView) {
-        UIMenuController.shared.setMenuVisible(false, animated: true)
+        UIMenuController.shared.hideMenu()
         hideMoreBar()
     }
     
@@ -1576,12 +1575,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard !configuration.disableRichMessageButtonAction else { return }
         let defaultText = element?.title
         guard let action = action, let type = action.type  else {
-            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element , "type": ""])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue ?? "Conversation ID not Present","action": element ?? "Element not Present" , "type": ""])
             print("Type not defined for action")
             return
         }
 
-        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue,"action": element, "type": type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue ?? "Conversation ID not Present","action": element ?? "Element not Present", "type": type])
         switch type {
         case ActionType.link.rawValue:
             guard let urlString = action.url, let url = URL(string: urlString), !configuration.restrictLinkNavigationOnListTemplateTap else { return }
@@ -1993,7 +1992,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         
-        for (position,(index,option)) in formData.dropDownFields {
+        for (position,(_,option)) in formData.dropDownFields {
             let element = viewModelItems[position]
             if let dropdownModel = element as? FormViewModelDropdownItem {
                 postFormData[dropdownModel.name] = option
@@ -2109,8 +2108,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 if let dropdownModel = item as? FormViewModelDropdownItem {
                     postBackMessageString.append("\(dropdownModel.name) : \(postFormData[dropdownModel.name] ?? "")\n")
                 }
-            default:
-                print("\(item.type) form template type is not part of the form list view")
             }
         }
         for element in formTemplate.elements {
@@ -2546,7 +2543,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     func processRadioElement(_ options: [KMFormTemplate.Option], at elementIndex: Int, formData: inout FormDataSubmit) {
         for (optionIndex, option) in options.enumerated() {
             if let selected = option.selected, selected {
-                if let value = option.value {
+                if option.value != nil {
                     formData.singleSelectFields[elementIndex] = optionIndex
                 }
             }
@@ -2992,7 +2989,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
     }
     
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
-        print("Status Changed \(contactId) \(status)")
+        print("Status Changed \(String(describing: contactId)) \(String(describing: status))")
         updateAssigneeOnlineStatus(userId: contactId)
     }
 

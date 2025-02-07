@@ -268,6 +268,8 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
                     // whatever
                 }
             }
+        case .limited:
+            print("limited authorization granted")
         @unknown default:
             print("Unknown Photo Library Permission state")
         }
@@ -342,8 +344,11 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
 
         // orientation of video
         var initialVideoOrientation = AVCaptureVideoOrientation.portrait
-        if let application = UIApplication.sharedUIApplication(), application.statusBarOrientation != UIInterfaceOrientation.unknown {
-            initialVideoOrientation = AVCaptureVideoOrientation(rawValue: application.statusBarOrientation.rawValue)!
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let interfaceOrientation = windowScene.interfaceOrientation
+            if interfaceOrientation != .unknown {
+                initialVideoOrientation = AVCaptureVideoOrientation(rawValue: interfaceOrientation.rawValue) ?? .portrait
+            }
         }
 
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
@@ -495,10 +500,10 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = allPhotos.object(at: indexPath.item)
         activityIndicator.startAnimating()
-        PHCachingImageManager.default().requestImageData(
+        PHCachingImageManager.default().requestImageDataAndOrientation(
             for: asset,
             options: imageRequestOptions
-        ) { imageData, _, _, _ in
+        ) { imageData, _, orientation, _ in
             self.activityIndicator.stopAnimating()
             guard let imageData = imageData, let image = UIImage(data: imageData) else {
                 self.showImageExportFailureAlert()

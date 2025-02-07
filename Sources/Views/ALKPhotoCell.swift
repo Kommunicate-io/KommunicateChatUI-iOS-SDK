@@ -63,7 +63,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return button
     }()
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     var captionLabel: UILabel = {
         let label = UILabel()

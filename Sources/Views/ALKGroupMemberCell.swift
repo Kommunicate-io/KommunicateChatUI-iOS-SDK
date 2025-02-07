@@ -85,7 +85,7 @@ class ALKGroupMemberCell: UICollectionViewCell {
         return label
     }()
 
-    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    let activityIndicator = UIActivityIndicatorView(style: .medium)
 
     var model: GroupMemberInfo?
 

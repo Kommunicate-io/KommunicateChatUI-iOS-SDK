@@ -253,7 +253,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 }
             }
 
-            let htmlFont = htmlMessage.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
             print("message og html \(message)  att : \(attributedText)")
             
             /// Check for a condition where the user has not passed a font. In this scenario, set the font to the system's default font.

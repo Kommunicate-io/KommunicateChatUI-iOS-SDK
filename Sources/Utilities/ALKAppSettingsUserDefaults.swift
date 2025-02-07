@@ -177,7 +177,7 @@ public struct ALKAppSettingsUserDefaults {
     /// This method will be used for getting the app settings data
     public func getAppSettings() -> ALKAppSettings? {
         guard let data = UserDefaults.standard.object(forKey: appSettingsKey) as? Data,
-              let appSettings = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? ALKAppSettings
+              let appSettings = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ALKAppSettings.self, from: data)
         else {
             return nil
         }

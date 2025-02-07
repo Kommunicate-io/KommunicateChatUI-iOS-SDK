@@ -37,7 +37,8 @@ class KMMuteConversationViewController: UIViewController, Localizable {
 
     private let timePicker: UIPickerView = {
         let picker = UIPickerView()
-        picker.showsSelectionIndicator = true
+        // No longer needed, so commented this line
+        // picker.showsSelectionIndicator = true
         return picker
     }()
 

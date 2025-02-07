@@ -54,7 +54,7 @@ public class ALKCustomEventHandler {
                 let conversationId =  data["conversationId"] as? String ?? ""
                 let action = data["action"]
                 let type = data["type"] as? String ?? ""
-                delegate.richMessageClicked(conversationId: conversationId, action:action , type: type)
+                delegate.richMessageClicked(conversationId: conversationId, action:action ?? "Action Not Present" , type: type)
             case .conversationBackPress:
                 delegate.onBackButtonClick(isConversationOpened: true)
             case .conversationListBackPress:

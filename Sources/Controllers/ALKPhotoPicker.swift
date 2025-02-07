@@ -43,7 +43,7 @@ class ALKPhotoPicker: NSObject, Localizable {
     ) {
         var selectedImages: [UIImage] = []
         var selectedVideosPath: [String] = []
-        var selectedGifsPath: [String] = []
+        let selectedGifsPath: [String] = []
         let exportGroup = DispatchGroup()
         DispatchQueue.global(qos: .userInitiated).async {
             for result in results {

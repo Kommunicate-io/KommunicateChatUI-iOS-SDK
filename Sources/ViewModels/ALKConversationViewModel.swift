@@ -349,7 +349,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         switch messageModel.messageType {
         case .text, .html, .email:
             guard !configuration.isLinkPreviewDisabled, messageModel.messageType == .text, ALKLinkPreviewManager.extractURLAndAddInCache(from: messageModel.message, identifier: messageModel.identifier) != nil else {
-                if let messageMetadata = messageModel.metadata, let metadataValue = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier], !messageModel.isMyMessage {
+                if let messageMetadata = messageModel.metadata, let _ = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier], !messageModel.isMyMessage {
                     let height = KMFriendSourceURLViewCell.rowHeigh(viewModel: messageModel, width: maxWidth, displayNames: { userIds in
                         self.displayNames(ofUserIds: userIds)
                     })
@@ -909,7 +909,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if(error == nil){
                     print("User's display name updated")
                 } else {
-                    print("error occured while updating user's display name \(error?.localizedDescription)")
+                    print("error occured while updating user's display name \(String(describing: error?.localizedDescription))")
                 }
             }
         case "email":
@@ -917,7 +917,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if(error == nil){
                     print("User's email updated")
                 } else {
-                    print("error occured while updating user's email \(error?.localizedDescription)")
+                    print("error occured while updating user's email \(String(describing: error?.localizedDescription))")
                 }
             }
         case "phone_number":
@@ -925,7 +925,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if(error == nil){
                     print("User's phone number updated")
                 } else {
-                    print("error occured while updating user's phone number \(error?.localizedDescription)")
+                    print("error occured while updating user's phone number \(String(describing: error?.localizedDescription))")
                 }
             }
         default:
@@ -933,7 +933,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if(error == nil){
                     print("User info updated")
                 } else {
-                    print("error occured while updating user info \(error?.localizedDescription)")
+                    print("error occured while updating user info \(String(describing: error?.localizedDescription))")
                 }
             }
         }
@@ -1005,7 +1005,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var context: [String: Any] = [:]
 
         do {
-            let contextDict = try chatContextFromMessageMetadata(messageMetadata: metadata as? [AnyHashable : Any])
+            let contextDict = chatContextFromMessageMetadata(messageMetadata: metadata as? [AnyHashable : Any])
             context = contextDict ?? [:]
             context.merge(info, uniquingKeysWith: { $1 })
 
@@ -1619,7 +1619,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let currentTimeInMilliSec = date.timeIntervalSince1970 * 1000
         let diff = currentTimeInMilliSec - createdTimeInMilliSec
         // Checking time difference of 10 seconds.
-        if currentTimeInMilliSec - createdTimeInMilliSec < 10000 {
+        if diff < 10000 {
             return false
         }
         return true
