@@ -112,6 +112,10 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             }
         case .limited:
             print("limited authorization granted")
+            getAllImage(completion: { [weak self] isGrant in
+                guard let weakSelf = self else { return }
+                weakSelf.createScrollGallery(isGrant: isGrant)
+            })
         @unknown default:
             print("Unknown Permission for photo Library")
         }
