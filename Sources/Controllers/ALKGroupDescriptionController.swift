@@ -51,7 +51,7 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
     var groupDescriptionPlaceHolder: String?
     var remaingCharactersLabelText: String?
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     private let descriptionTextView: UITextView = {
         let textView = UITextView()

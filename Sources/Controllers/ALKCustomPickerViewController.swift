@@ -110,6 +110,12 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                     // whatever
                 }
             }
+        case .limited:
+            print("limited authorization granted")
+            getAllImage(completion: { [weak self] isGrant in
+                guard let weakSelf = self else { return }
+                weakSelf.createScrollGallery(isGrant: isGrant)
+            })
         @unknown default:
             print("Unknown Permission for photo Library")
         }
@@ -240,7 +246,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, orientation, _) in
             guard let imageData = data else {
                 completion(nil)
                 return
@@ -324,7 +330,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, orientation, _) in
             guard let imageData = data else {
                 completion(nil, false)
                 return

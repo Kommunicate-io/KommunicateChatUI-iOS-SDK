@@ -134,10 +134,8 @@ open class ALKChatBar: UIView, Localizable {
         var image = UIImage(named: "ic_language", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         let tintColor = ALKAppSettingsUserDefaults().getAttachmentIconsTintColor()
-        if tintColor != nil {
-            image = image?.withRenderingMode(.alwaysTemplate)
-            button.imageView?.tintColor = tintColor
-        }
+        image = image?.withRenderingMode(.alwaysTemplate)
+        button.imageView?.tintColor = tintColor
         button.setImage(image, for: .normal)
         button.isHidden = true
         return button

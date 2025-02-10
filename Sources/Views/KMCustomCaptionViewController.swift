@@ -248,7 +248,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, orientation, _, _) in
             guard let imageData = data else {
                 completion(nil, false)
                 return
@@ -325,7 +325,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+            PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, orientation, _, _) in
             guard let imageData = data else {
                 completion(nil)
                 return
@@ -361,7 +361,6 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         let caption = captionBar.text ?? ""
         export { images, gifs, videos, error in
             self.activityIndicator.stopAnimating()
-            var check =  images.count != 0 || gifs.count != 0 || videos.count != 0
             if error {
                 let alertTitle = self.localizedString(
                     forKey: "PhotoAlbumFailureTitle",

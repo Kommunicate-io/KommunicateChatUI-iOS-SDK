@@ -29,7 +29,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         )
     )
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     // MARK: - Life cycle
 

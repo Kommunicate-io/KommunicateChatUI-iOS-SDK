@@ -59,7 +59,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
                 _ = canBecomeFirstResponder
             }
 
-            guard let gestureView = sender.view, let superView = sender.view?.superview else {
+            guard let gestureView = sender.view, let _ = sender.view?.superview else {
                 return
             }
 
@@ -86,8 +86,7 @@ open class ALKChatBaseCell<T>: ALKBaseCell<T>, Localizable {
             }
 
             menuController.menuItems = menus
-            menuController.setTargetRect(gestureView.frame, in: superView)
-            menuController.setMenuVisible(true, animated: true)
+            menuController.showMenu(from: gestureView, rect: gestureView.bounds)
         }
     }
     

@@ -317,7 +317,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 return cell
             } else {
-                var cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendGenericCardMessageCell
+                let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as ALKFriendGenericCardMessageCell
                 cell.menuOptionsToShow = configuration.messageMenuOptions
                 cell.showReport = true
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)

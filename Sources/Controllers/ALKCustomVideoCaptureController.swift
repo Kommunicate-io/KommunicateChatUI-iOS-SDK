@@ -204,8 +204,11 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
 
         // orientation of video
         var initialVideoOrientation = AVCaptureVideoOrientation.portrait
-        if let application = UIApplication.sharedUIApplication(), application.statusBarOrientation != UIInterfaceOrientation.unknown {
-            initialVideoOrientation = AVCaptureVideoOrientation(rawValue: application.statusBarOrientation.rawValue)!
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let interfaceOrientation = windowScene.interfaceOrientation
+            if interfaceOrientation != .unknown {
+                initialVideoOrientation = AVCaptureVideoOrientation(rawValue: interfaceOrientation.rawValue) ?? .portrait
+            }
         }
 
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill

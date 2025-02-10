@@ -91,7 +91,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
 
     public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         let isMessageEmpty = viewModel.isMessageEmpty
-        if let check = viewModel.suggestedReply() {
+        if let _ = viewModel.suggestedReply() {
             quickReplyView.isHidden = false
         }
         let model = viewModel.messageDetails()

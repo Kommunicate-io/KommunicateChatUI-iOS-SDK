@@ -573,7 +573,7 @@ extension ALKFormCell {
             case .dropdown:
                 let dropdownItem = element as? FormViewModelDropdownItem
                 
-                guard let validation = dropdownItem?.validation else {
+                guard let _ = dropdownItem?.validation else {
                     formDataSubmit.validationFields[index] = FormData.valid
                     formData = formDataSubmit
                     continue
@@ -586,7 +586,7 @@ extension ALKFormCell {
                     continue
                 }
 
-                var disabled = dropdownItem?.options[selectedIndex].disabled
+                let disabled = dropdownItem?.options[selectedIndex].disabled
                 
                 if(disabled == nil){
                     if (dropdownItem?.options[selectedIndex].value == nil) {

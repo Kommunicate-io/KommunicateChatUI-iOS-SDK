@@ -79,7 +79,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
     fileprivate var tempSelectedImg: UIImage!
     fileprivate var cropedImage: UIImage?
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     fileprivate lazy var localizedStringFileName: String = configuration.localizedStringFileName
 
