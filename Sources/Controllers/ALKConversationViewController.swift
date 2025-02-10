@@ -2929,28 +2929,57 @@ extension ALKConversationViewController: ALKAudioPlayerProtocol, ALKVoiceCellPro
 
     func audioPause(maxDuration _: CGFloat, atSec: CGFloat, identifier: String) {
         DispatchQueue.main.async { [weak self] in
-            guard
-                let weakSelf = self,
-                var currentVoice = weakSelf.viewModel.messageForRow(identifier: identifier),
-                currentVoice.messageType == .voice,
-                let section = weakSelf.viewModel.sectionFor(identifier: identifier)
-            else { return }
+            guard let weakSelf = self else { return }
+
+            // Validate section index
+            guard let section = weakSelf.viewModel.sectionFor(identifier: identifier),
+                  section < weakSelf.tableView.numberOfSections else {
+                print("Invalid section for identifier: \(identifier)")
+                return
+            }
+
+            // Validate message
+            guard var currentVoice = weakSelf.viewModel.messageForRow(identifier: identifier),
+                  currentVoice.messageType == .voice else {
+                print("Invalid or non-voice message for identifier: \(identifier)")
+                return
+            }
+
+            // Update message state
             currentVoice.voiceCurrentState = .pause
             currentVoice.voiceCurrentDuration = atSec
-            weakSelf.tableView.reloadSections([section], with: .none)
+
+            // Perform batch updates safely
+            weakSelf.tableView.performBatchUpdates({
+                weakSelf.tableView.reloadSections(IndexSet(integer: section), with: .none)
+            }, completion: nil)
         }
     }
 
     func stopAudioPlayer() {
         DispatchQueue.main.async { [weak self] in
             guard let weakSelf = self else { return }
-            if var lastMessage = weakSelf.viewModel.messageForRow(identifier: weakSelf.audioPlayer.getCurrentAudioTrack()) {
-                if lastMessage.voiceCurrentState == .playing {
-                    weakSelf.audioPlayer.pauseAudio()
-                    lastMessage.voiceCurrentState = .pause
-                    weakSelf.reloadVoiceCell()
-                }
+
+            // Get the current track identifier
+            let currentTrack = weakSelf.audioPlayer.getCurrentAudioTrack()
+            
+            // Validate message
+            guard var lastMessage = weakSelf.viewModel.messageForRow(identifier: currentTrack),
+                  lastMessage.voiceCurrentState == .playing,
+                  let section = weakSelf.viewModel.sectionFor(identifier: currentTrack),
+                  section < weakSelf.tableView.numberOfSections else {
+                print("Invalid message or section for identifier: \(currentTrack)")
+                return
             }
+
+            // Pause the audio
+            weakSelf.audioPlayer.pauseAudio()
+            lastMessage.voiceCurrentState = .pause
+
+            // Perform updates in batch
+            weakSelf.tableView.performBatchUpdates({
+                weakSelf.reloadVoiceCell()
+            }, completion: nil)
         }
     }
 }
