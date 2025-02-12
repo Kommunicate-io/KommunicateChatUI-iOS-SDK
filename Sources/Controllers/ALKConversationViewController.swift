@@ -2478,16 +2478,26 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     func updateTableView() {
         let oldCount = tableView.numberOfSections
         let newCount = viewModel.numberOfSections()
-        guard newCount > oldCount else {
-            tableView.reloadData()
-            print("😱Tableview shouldn't have more number of sections than viewModel😱")
+        
+        guard newCount >= oldCount else {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            print("😱 TableView has more sections than viewModel! Reloading data. 😱")
             return
         }
-        let indexSet = IndexSet(integersIn: oldCount ... newCount - 1)
+        
+        guard newCount > oldCount else { return } // Prevents empty index set crash
 
-        tableView.beginUpdates()
-        tableView.insertSections(indexSet, with: .automatic)
-        tableView.endUpdates()
+        let indexSet = IndexSet(integersIn: oldCount..<newCount) // Safe range
+
+        DispatchQueue.main.async {
+            self.tableView.performBatchUpdates({
+                self.tableView.insertSections(indexSet, with: .automatic)
+            }, completion: { _ in
+                print("✅ Successfully inserted sections: \(indexSet)")
+            })
+        }
     }
 
     @objc open func newFormMessageAdded() {
