@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.4.1] 2025-02-14
+- Updated Kingfisher from 7.6.2 to 7.10.0 to align with Privacy Manifest requirements.
+
 ## [1.4.0] 2025-01-03
 - Added Waiting Queue UI and related functions.
 - Synchronized Chat UI configuration for Swift 6 support.
