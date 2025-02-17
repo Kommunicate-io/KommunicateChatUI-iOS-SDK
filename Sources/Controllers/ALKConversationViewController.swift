@@ -2462,11 +2462,10 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     // And thats why when we check whether last cell is visible or not, it gives false result since the last cell is sometimes not fully visible.
     // This is a known apple bug and has a thread in stackoverflow: https://stackoverflow.com/questions/25686490/ios-8-auto-cell-height-cant-scroll-to-last-row
     public func moveTableViewToBottom(indexPath: IndexPath) {
-        guard indexPath.section >= 0 else {
-            return
-        }
-        let sectionCount = self.tableView.numberOfSections
-        if indexPath.section <= sectionCount {
+        guard indexPath.section >= 0 else { return }
+
+        let sectionCount = tableView.numberOfSections
+        if indexPath.section < sectionCount {
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
         }
     }
@@ -2491,13 +2490,11 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
         let indexSet = IndexSet(integersIn: oldCount..<newCount) // Safe range
 
-        DispatchQueue.main.async {
-            self.tableView.performBatchUpdates({
-                self.tableView.insertSections(indexSet, with: .automatic)
-            }, completion: { _ in
-                print("✅ Successfully inserted sections: \(indexSet)")
-            })
-        }
+        self.tableView.performBatchUpdates({
+            self.tableView.insertSections(indexSet, with: .automatic)
+        }, completion: { _ in
+            print("✅ Successfully inserted sections: \(indexSet)")
+        })
     }
 
     @objc open func newFormMessageAdded() {
@@ -2575,28 +2572,36 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     }
 
     @objc open func newMessagesAdded() {
-        let lastSectionBeforeUpdate = tableView.lastSection()
+        let lastSectionBeforeUpdate = tableView.numberOfSections - 1
         updateTableView()
+
         // Check if current user is removed from the group
         isChannelLeft()
-        let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
+
+        guard viewModel.messageModels.count > 0 else { return }
+        
+        let lastSection = viewModel.messageModels.count - 1
+        let indexPath = IndexPath(row: 0, section: lastSection)
+
         if isViewLoadedFromTappingOnNotification {
             if let lastMessage = viewModel.messageModels.last {
                 reloadIfFormMessage(message: lastMessage, indexPath: indexPath)
             }
             moveTableViewToBottom(indexPath: indexPath)
             isViewLoadedFromTappingOnNotification = false
-        } else if tableView.isCellVisible(section: lastSectionBeforeUpdate - 1, row: 0) {
+        } else if tableView.isCellVisible(section: max(0, lastSectionBeforeUpdate), row: 0) {
             moveTableViewToBottom(indexPath: indexPath)
-        } else if viewModel.messageModels.count > 1 && !tableView.isCellVisible(section: viewModel.messageModels.count - 2, row: 0){ // Check if the function is called before message is added. It happens when user is added in the group.
-            // the second condition is for checking if the message is visible in screen or its hidden in case if the message is vissible it will not allow to enter in this condition
+        } else if viewModel.messageModels.count > 1 &&
+                  !tableView.isCellVisible(section: max(0, viewModel.messageModels.count - 2), row: 0) {
+            // Ensure the function is called before a message is added.
+            // If the message is visible on screen, don't show the unread button.
             unreadScrollButton.isHidden = false
         }
-        
-        guard isViewLoaded, view.window != nil, !viewModel.isOpenGroup else {
-            return
-        }
+
+        guard isViewLoaded, view.window != nil, !viewModel.isOpenGroup else { return }
+
         viewModel.markConversationRead()
+
         if let lastALMessage = viewModel.alMessages.last?.autoSuggestionData,
            let data = convertToDictionary(text: lastALMessage),
            let placeholderValue = data["placeholder"] as? String {
