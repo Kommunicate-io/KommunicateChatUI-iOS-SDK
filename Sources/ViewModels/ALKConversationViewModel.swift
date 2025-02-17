@@ -2160,7 +2160,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     private func updateMessageStatus(filteredList: [ALMessage], status: Int32) {
-        self.showTypingIndicatorTillBotNewMessage()
+        if status == Int32(DELIVERED_AND_READ.rawValue) {
+            self.showTypingIndicatorTillBotNewMessage()
+        }
         if !filteredList.isEmpty {
             let message = filteredList.first
             message?.status = status as NSNumber
