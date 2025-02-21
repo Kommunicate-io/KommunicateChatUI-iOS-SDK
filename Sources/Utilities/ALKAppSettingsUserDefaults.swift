@@ -207,7 +207,9 @@ public struct ALKAppSettingsUserDefaults {
 }
 
 /// `ALKAppSettings`class is used for creating a app settings details
-public class ALKAppSettings: NSObject, NSCoding {
+public class ALKAppSettings: NSObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool = true
+
     enum CoderKey {
         static let primaryColor = "primaryColor"
         static let showPoweredBy = "showPoweredBy"
@@ -220,7 +222,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         static let defaultUploadOverrideUrl = "defaultUploadOverrideUrl"
         static let defaultUploadOverrideHeaders = "defaultUploadOverrideHeaders"
         static let csatRatingBase = "csatRatingBase"
-        
+        static let botTypingIndicatorInterval = "botTypingIndicatorInterval"
     }
 
     var primaryColor: String
@@ -237,6 +239,7 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var defaultUploadOverrideUrl: String?
     public var defaultUploadOverrideHeaders: [String:String]?
     public var csatRatingBase: Int = 3
+    public var botTypingIndicatorInterval: Int = 0
 
     // MARK: - Public Initialization
 
@@ -256,6 +259,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         defaultUploadOverrideUrl = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideUrl) as? String
         defaultUploadOverrideHeaders = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideHeaders) as? [String:String]
         csatRatingBase = coder.decodeInteger(forKey: CoderKey.csatRatingBase)
+        botTypingIndicatorInterval = coder.decodeInteger(forKey: CoderKey.botTypingIndicatorInterval)
     }
 
     // MARK: - Public methods
@@ -270,5 +274,6 @@ public class ALKAppSettings: NSObject, NSCoding {
         coder.encode(buttonPrimaryColor, forKey: CoderKey.buttonPrimaryColor)
         coder.encode(hidePostCTAEnabled, forKey: CoderKey.hidePostCTAEnabled)
         coder.encode(csatRatingBase, forKey: CoderKey.csatRatingBase)
+        coder.encode(botTypingIndicatorInterval, forKey: CoderKey.botTypingIndicatorInterval)
     }
 }

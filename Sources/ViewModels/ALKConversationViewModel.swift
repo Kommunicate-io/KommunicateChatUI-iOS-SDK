@@ -779,6 +779,30 @@ open class ALKConversationViewModel: NSObject, Localizable {
             updateMessageStatus(filteredList: newFilteredList, status: status)
         }
     }
+    
+    func showTypingIndicatorTillBotNewMessage() {
+        guard
+              let channel = ALChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
+              let assigneeUserId = channel.assigneeUserId,
+              let alContact = ALContactService().loadContact(byKey: "userId", value:  assigneeUserId),
+              alContact.roleType == NSNumber.init(value: AL_BOT.rawValue)
+        else { return }
+
+        let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
+        let botDelayTime = userDefaults.integer(forKey: "BOT_TYPING_INDICATOR_INTERVAL") / 1000
+        
+        guard botDelayTime > 0 else { return }
+
+        self.addTypingIndicatorMessage(false)
+
+        Task {
+            try? await Task.sleep(nanoseconds: UInt64(botDelayTime) * 1_000_000_000)
+            
+            if self.lastMessage?.contentType == Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR) {
+                self.removeTypingIndicatorMessage()
+            }
+        }
+    }
 
     open func updateStatusReportForConversation(contactId: String, status: Int32) {
         guard let id = self.contactId, id == contactId else { return }
@@ -2136,6 +2160,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     private func updateMessageStatus(filteredList: [ALMessage], status: Int32) {
+        if status == Int32(DELIVERED_AND_READ.rawValue) {
+            self.showTypingIndicatorTillBotNewMessage()
+        }
         if !filteredList.isEmpty {
             let message = filteredList.first
             message?.status = status as NSNumber
