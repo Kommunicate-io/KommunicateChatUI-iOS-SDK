@@ -2698,6 +2698,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
                     ratingIcon = icon.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 25, height: 25))
                 }
                 let morebutton = UIBarButtonItem(title: "", image: ratingIcon, primaryAction: nil, menu: UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems))
+                morebutton.accessibilityIdentifier = "more_button"
                 rightBarButtonItems.append(morebutton)
             } else {
                 let rateIcon = UIImage(named: "icon_favorite", in: Bundle.km, compatibleWith: nil)
