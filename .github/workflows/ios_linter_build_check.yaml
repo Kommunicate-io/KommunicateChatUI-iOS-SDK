@@ -3,7 +3,6 @@ name: iOS Linter Build Check Workflow
 on:
   pull_request:
     branches:
-      - dev
       - master
     types:
       - opened
