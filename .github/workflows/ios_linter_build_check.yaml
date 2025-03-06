@@ -29,9 +29,6 @@ jobs:
         with:
           xcode-version: '16.1.0'
 
-      - name: Install Dependencies
-        run: pod install
-
       - name: Run Linter Check
         run: |
           pod lib lint --allow-warnings
