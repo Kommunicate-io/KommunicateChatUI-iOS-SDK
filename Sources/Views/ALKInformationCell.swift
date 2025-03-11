@@ -14,7 +14,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     
     enum Padding {
         
-        enum view {
+        enum View {
             static let top: CGFloat = 8
             static let bottom: CGFloat = 8
         }
@@ -142,11 +142,11 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     class func topPadding() -> CGFloat {
-        return Padding.view.top
+        return Padding.View.top
     }
 
     class func bottomPadding() -> CGFloat {
-        return Padding.view.bottom
+        return Padding.View.bottom
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
