@@ -90,8 +90,7 @@ class SearchResultViewModel: BaseMessageViewModel {
     }
 
     func searchMessage(with key: String,
-                       _ completion: @escaping ((_ result: Bool) -> Void))
-    {
+                       _ completion: @escaping ((_ result: Bool) -> Void)) {
         searchMessages(with: key) { messages, error in
             guard let messages = messages, error == nil else {
                 print("Error \(String(describing: error)) while searching messages")

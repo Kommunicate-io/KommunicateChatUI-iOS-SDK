@@ -82,7 +82,7 @@ class KMTextViewPopUPVC: UIViewController {
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 20)
         ])
         
         NSLayoutConstraint.activate([
@@ -119,4 +119,3 @@ class KMTextViewPopUPVC: UIViewController {
         dismiss(animated: false, completion: nil)
     }
 }
-

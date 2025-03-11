@@ -12,7 +12,7 @@ import UIKit
     import RichMessageKit
 #endif
 
-class KMFriendVideoTemplateCell : KMVideoTemplateCell {
+class KMFriendVideoTemplateCell: KMVideoTemplateCell {
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
 
     fileprivate lazy var messageView = KMMessageView(
@@ -51,7 +51,6 @@ class KMFriendVideoTemplateCell : KMVideoTemplateCell {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
     }
-    
     
     override func setupViews() {
         super.setupViews()

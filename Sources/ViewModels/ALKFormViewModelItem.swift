@@ -96,8 +96,7 @@ class FormViewModelTextItem: FormViewModelItem {
 
     init(label: String,
          placeholder: String?,
-         validation: Validation?)
-    {
+         validation: Validation?) {
         self.label = label
         self.placeholder = placeholder
         self.validation = validation
@@ -116,8 +115,7 @@ class FormViewModelTextAreaItem: FormViewModelItem {
 
     init(title: String,
          placeholder: String?,
-         validation: Validation?)
-    {
+         validation: Validation?) {
         self.title = title
         self.placeholder = placeholder
         self.validation = validation
@@ -179,19 +177,17 @@ class FormViewModelDropdownItem: FormViewModelItem {
         return .dropdown
     }
     
-    let title:String
+    let title: String
     let name: String
     var options: [Option]
     let validation: Validation?
 
-
-    init(title: String, name: String,options: [Option], validation: Validation?) {
+    init(title: String, name: String, options: [Option], validation: Validation?) {
         self.title = title
         self.name = name
         self.options = options
         self.validation = validation
     }
-    
     
 }
 

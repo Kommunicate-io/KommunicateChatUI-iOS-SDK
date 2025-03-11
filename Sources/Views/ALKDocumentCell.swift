@@ -182,10 +182,6 @@ class ALKDocumentCell: ALKChatBaseCell<ALKMessageViewModel> {
         progressView.widthAnchor.constraint(equalToConstant: 27).isActive = true
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
-        return super.rowHeigh(viewModel: viewModel, width: width)
-    }
-
     @objc func openWKWebView(gesture _: UITapGestureRecognizer) {
         guard (viewModel?.filePath) != nil else {
             print("File is not downloaded")

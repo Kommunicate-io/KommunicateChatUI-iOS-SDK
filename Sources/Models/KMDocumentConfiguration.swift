@@ -22,7 +22,7 @@ public struct KMDocumentConfiguration {
     
     public static var shared =  KMDocumentConfiguration()
     
-    public var documentOptions: DocumentOptions = .some([.text,.xls,.pdf,.presentation,.spreadsheet,.doc])
+    public var documentOptions: DocumentOptions = .some([.text, .xls, .pdf, .presentation, .spreadsheet, .doc])
     
     public enum DocumentOptions {
         case all
@@ -56,4 +56,3 @@ public struct KMDocumentConfiguration {
         }
     }
 }
-

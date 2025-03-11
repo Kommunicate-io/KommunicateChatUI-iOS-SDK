@@ -114,7 +114,6 @@ public class ALKCustomEventHandler {
         subscribedEvents.removeAll()
     }
     
-    
     /// This method is used to retrieve a list of all available events.
     public func availableEvents() -> [KMCustomEvent] {
         return KMCustomEvent.allEvents

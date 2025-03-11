@@ -23,9 +23,9 @@ class KMFormMultiSelectButtonItemCell: UITableViewCell {
         addConstraints()
     }
 
-    func update(item: FormViewModelMultiselectItem.Option, isChecked: Bool = false){
+    func update(item: FormViewModelMultiselectItem.Option, isChecked: Bool = false) {
         self.item = item
-        button.update(title: item.label,isSelected: isChecked)
+        button.update(title: item.label, isSelected: isChecked)
         button.delegate = self
     }
     

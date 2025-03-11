@@ -29,11 +29,10 @@ public class KMLanguageView: UIView {
             public static var bottom = 2.0
         }
     }
-
     
     let title: String
     let maxWidth: CGFloat
-    var languageObjectList : [KMLanguage]
+    var languageObjectList: [KMLanguage]
     var languageTapped: ((KMLanguage) -> Void)?
     
     private let label = UILabel()
@@ -43,7 +42,6 @@ public class KMLanguageView: UIView {
         view.backgroundColor = UIColor.lightGray
         return view
     }()
-    
 
     public init(title: String, languageList: [KMLanguage], maxWidth: CGFloat = UIScreen.main.bounds.width) {
         self.title = title
@@ -89,7 +87,6 @@ public class KMLanguageView: UIView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(languageTap))
         self.addGestureRecognizer(tapGesture)
     }
-    
     
     @objc func languageTap() {
         if let selectedLanguage = languageObjectList.first(where: {$0.name == title}) {

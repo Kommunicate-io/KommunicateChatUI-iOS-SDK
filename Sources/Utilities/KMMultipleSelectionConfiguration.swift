@@ -15,9 +15,9 @@ public struct KMMultipleSelectionConfiguration {
     /// Font for text inside view.
     public var normalfont: UIFont = Font.normal(size: 16).font()
     
-    public var image : UIImage? =  UIImage(named: "checked", in: Bundle.km, compatibleWith: nil)
+    public var image: UIImage? =  UIImage(named: "checked", in: Bundle.km, compatibleWith: nil)
     
-    public var postSubmitImage : UIImage? = UIImage(named: "selectedCheck", in: Bundle.km, compatibleWith: nil)
+    public var postSubmitImage: UIImage? = UIImage(named: "selectedCheck", in: Bundle.km, compatibleWith: nil)
     
     public var backgroundColor: UIColor = UIColor.clear
     
@@ -37,7 +37,7 @@ public struct KMMultipleSelectionConfiguration {
     
     public var postSubmitTitleColor: UIColor = UIColor(hexString: "8F8F8F")
     
-    public var topPadding : CGFloat = 12
+    public var topPadding: CGFloat = 12
     
     public var bottomPadding: CGFloat = 12
     

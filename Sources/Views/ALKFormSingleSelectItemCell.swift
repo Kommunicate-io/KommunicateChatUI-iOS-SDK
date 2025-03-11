@@ -19,7 +19,7 @@ class ALKFormSingleSelectItemCell: UITableViewCell {
         }
     }
     
-    var isSelectedCell : Bool = false
+    var isSelectedCell: Bool = false
     
     let checkBoxImage: UIImageView = {
        let image = UIImageView()
@@ -57,7 +57,7 @@ class ALKFormSingleSelectItemCell: UITableViewCell {
     private func addConstraints() {
         addViewsForAutolayout(views: [checkBoxImage, nameLabel])
         NSLayoutConstraint.activate([
-            checkBoxImage.leadingAnchor.constraint(equalTo: leadingAnchor,constant: Size.CheckBoxImage.leading),
+            checkBoxImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Size.CheckBoxImage.leading),
             checkBoxImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             checkBoxImage.heightAnchor.constraint(equalToConstant: Size.CheckBoxImage.height),
             checkBoxImage.widthAnchor.constraint(equalToConstant: Size.CheckBoxImage.width),

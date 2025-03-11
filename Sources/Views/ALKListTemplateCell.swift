@@ -132,7 +132,7 @@ public class ALKMyMessageListTemplateCell: ALKListTemplateCell {
         let width = CGFloat(ALKMessageStyle.sentBubble.widthPadding)
         let templateLeftPadding = leftPadding + width
         var templateRightPadding = rightPadding - width
-        if (templateRightPadding == 0) {
+        if templateRightPadding == 0 {
             templateRightPadding = 10.0
         }
         listTemplateView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: ViewPadding.ListTemplateView.top).isActive = true
@@ -263,8 +263,7 @@ public class ALKFriendMessageListTemplateCell: ALKListTemplateCell {
     }
 
     override public class func rowHeight(viewModel: ALKMessageViewModel,
-                                         maxWidth: CGFloat) -> CGFloat
-    {
+                                         maxWidth: CGFloat) -> CGFloat {
         let isMessageEmpty = viewModel.isMessageEmpty
         var height: CGFloat = 0
         let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
@@ -373,7 +372,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
             return
         }
         if viewModel.isActionButtonHidden() {
-            template.buttons?.removeAll{ button in
+            template.buttons?.removeAll { button in
                 return button.action?.type != "link" && button.action?.type != "submit"
             }
         }
@@ -390,7 +389,7 @@ public class ALKListTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
             return CGFloat(0)
         }
         if viewModel.isActionButtonHidden() {
-            template.buttons?.removeAll{ button in
+            template.buttons?.removeAll { button in
                 return button.action?.type != "link" && button.action?.type != "submit"
             }
         }

@@ -253,16 +253,14 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
     private func isConversationMuted(viewModel: ALKChatViewModelProtocol) -> Bool {
         if let channelKey = viewModel.channelKey,
-           let channel = ALChannelService().getChannelByKey(channelKey)
-        {
+           let channel = ALChannelService().getChannelByKey(channelKey) {
             if channel.isNotificationMuted() {
                 return true
             } else {
                 return false
             }
         } else if let contactId = viewModel.contactId,
-                  let contact = ALContactService().loadContact(byKey: "userId", value: contactId)
-        {
+                  let contact = ALContactService().loadContact(byKey: "userId", value: contactId) {
             if contact.isNotificationMuted() {
                 return true
             } else {
@@ -281,7 +279,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
         
         if viewModel.isWaitingQueueConversation {
             avatarImageView.image = UIImage(named: "watingQueueProfile", in: Bundle.km, compatibleWith: nil)
-            nameLabel.text = localizedString(forKey: LocalizationKey.waitingQueTitle, withDefaultValue: "In queue...", fileName:localizationFileName)
+            nameLabel.text = localizedString(forKey: LocalizationKey.waitingQueTitle, withDefaultValue: "In queue...", fileName: localizationFileName)
             messageLabel.text = ""
             attachmentImageView.image = nil
         } else {
@@ -309,7 +307,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
             
             let attrs: [NSAttributedString.Key: Any] = [
                 NSAttributedString.Key.font: messageLabel.font ?? Font.normal(size: 14.0).font(),
-                NSAttributedString.Key.foregroundColor: messageLabel.textColor ?? UIColor(netHex: 0x9B9B9B),
+                NSAttributedString.Key.foregroundColor: messageLabel.textColor ?? UIColor(netHex: 0x9B9B9B)
             ]
             
             if let attributedText = viewModel
@@ -317,11 +315,10 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
                     defaultAttributes: [:],
                     mentionAttributes: attrs as [NSAttributedString.Key: Any],
                     displayNames: displayNames
-                )
-            {
+                ) {
                 messageLabel.attributedText = attributedText
             } else {
-                let lastMessage = viewModel.theLastMessage != nil ? localizedString(forKey: viewModel.theLastMessage!, withDefaultValue: viewModel.theLastMessage!, fileName:localizationFileName) :  ""
+                let lastMessage = viewModel.theLastMessage != nil ? localizedString(forKey: viewModel.theLastMessage!, withDefaultValue: viewModel.theLastMessage!, fileName: localizationFileName) :  ""
                 messageLabel.text = lastMessage
             }
             
@@ -484,10 +481,6 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
     func setComingSoonDelegate(delegate: UIView) {
         comingSoonDelegate = delegate
-    }
-
-    override public func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
     }
 
     private func getRandomColor() -> UIColor {

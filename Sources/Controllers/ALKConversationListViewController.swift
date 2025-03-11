@@ -104,7 +104,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             using: { [weak self] _ in
                 guard let weakSelf = self else { return }
 
-                if weakSelf.navigationController?.visibleViewController as? ALKConversationListViewController != nil, weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
+                if weakSelf.navigationController?.visibleViewController is ALKConversationListViewController, weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
                     weakSelf.showNavigationItems()
                 }
             }
@@ -325,8 +325,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         if let viewController = conversationViewController,
            viewController.viewModel != nil,
            viewController.viewModel.contactId == message.contactId,
-           viewController.viewModel.channelKey == message.groupId
-        {
+           viewController.viewModel.channelKey == message.groupId {
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
@@ -461,8 +460,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         if let vm = viewController?.viewModel, vm.contactId != nil || vm.channelKey != nil,
            let visibleController = navigationController?.visibleViewController,
            visibleController.isKind(of: ALKConversationViewController.self),
-           isNewMessageForActiveThread(alMessage: alMessage, vm: vm)
-        {
+           isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
             viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
         } else if !isMessageSentByLoggedInUser(alMessage: alMessage) {
@@ -476,8 +474,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             }
         }
         if let visibleController = navigationController?.visibleViewController,
-           visibleController.isKind(of: ALKConversationListViewController.self)
-        {
+           visibleController.isKind(of: ALKConversationListViewController.self) {
             sync(message: alMessage)
         }
     }

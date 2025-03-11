@@ -16,7 +16,7 @@ public protocol ALKCustomEventCallback: AnyObject {
     func onBackButtonClick(isConversationOpened: Bool)
     func faqClicked(url: String)
     func conversationCreated(conversationId: String)
-    func ratingSubmitted(conversationId: String,rating:Int, comment: String)
-    func richMessageClicked(conversationId:String,action:Any, type:String)
+    func ratingSubmitted(conversationId: String, rating: Int, comment: String)
+    func richMessageClicked(conversationId: String, action: Any, type: String)
     func conversationInfoClicked()
 }

@@ -9,10 +9,10 @@ import Foundation
 import KommunicateCore_iOS_SDK
 import UIKit
 
-class ALKMultipleLanguageSelectionViewController : UIViewController {
+class ALKMultipleLanguageSelectionViewController: UIViewController {
     
     private var configuration: ALKConfiguration
-    private var languages : [String] = []
+    private var languages: [String] = []
     public var languageSelected: ((KMLanguage) -> Void)?
     public var closeButtonTapped: (() -> Void)?
 
@@ -88,7 +88,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
         }
         
         for item in self.languages {
-            let view = KMLanguageView(title: item,languageList: configuration.languagesForSpeechToText)
+            let view = KMLanguageView(title: item, languageList: configuration.languagesForSpeechToText)
             view.languageTapped = { [weak self] language in
                 guard let weakSelf = self else {
                     return
@@ -98,7 +98,7 @@ class ALKMultipleLanguageSelectionViewController : UIViewController {
             languageStackView.addArrangedSubview(view)
         }
         
-        view.addViewsForAutolayout(views: [titleLabel,closeButton,languageStackView])
+        view.addViewsForAutolayout(views: [titleLabel, closeButton, languageStackView])
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
        

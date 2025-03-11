@@ -10,7 +10,6 @@ import UIKit
 import AVFoundation
 import AVKit
 
-
 class KMVideoCell: UITableViewCell {
     
     var progressView: KDCircularProgress = {
@@ -86,11 +85,10 @@ class KMVideoCell: UITableViewCell {
         photoView.layer.cornerRadius = 5
     }
     
-    
     func updateVideModel(model: KMVideoTemplate) {
         self.viewModel = model
         captionLabel.text = model.caption ?? ""
-        if let url = URL(string:model.url) {
+        if let url = URL(string: model.url) {
             self.setThumbnailImageFromVideoUrl(url: url)
         } else {
             playButton.isHidden = false
@@ -106,7 +104,6 @@ class KMVideoCell: UITableViewCell {
         guard let model = viewModel else {return}
         tapped?(model.url)
     }
-    
     
     func setThumbnailImageFromVideoUrl(url: URL) {
         DispatchQueue.global().async {
@@ -124,7 +121,7 @@ class KMVideoCell: UITableViewCell {
                     self.playButton.isHidden = false
                 }
             } catch {
-                print(error.localizedDescription) //10
+                print(error.localizedDescription) // 10
                 self.progressView.isHidden = true
                 self.playButton.isHidden = false
             }

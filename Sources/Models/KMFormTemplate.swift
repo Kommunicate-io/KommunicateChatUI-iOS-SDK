@@ -17,7 +17,7 @@ struct KMFormTemplate: Decodable {
         let title, name, label, value, placeholder: String?
         let formAction, message, requestType, postFormDataAsMessage: String?
         var postBackToKommunicate: Bool?
-        var metadata : [String:String]?
+        var metadata: [String: String]?
     }
 
     struct Details: Decodable {
@@ -28,14 +28,14 @@ struct KMFormTemplate: Decodable {
     }
 
     struct Option: Decodable {
-        let label : String
-        let value : String?
-        let selected, disabled : Bool?
+        let label: String
+        let value: String?
+        let selected, disabled: Bool?
     }
 
     struct Action: Decodable {
         let formAction, message, requestType: String?, postFormDataAsMessage: String?
-        var metadata : [String:String]?
+        var metadata: [String: String]?
     }
 
     struct Validation: Decodable {

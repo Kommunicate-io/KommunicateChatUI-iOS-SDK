@@ -26,10 +26,6 @@ class ALKMapViewController: UIViewController, Localizable {
     var isInitialized = false
     weak var delegate: ALKShareLocationViewControllerDelegate?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
     override func viewWillAppear(_: Bool) {
         view.backgroundColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         title = localizedString(forKey: "ShareLocationTitle", withDefaultValue: SystemMessage.Map.ShareLocationTitle, fileName: configuration.localizedStringFileName)

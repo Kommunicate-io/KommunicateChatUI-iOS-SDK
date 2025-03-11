@@ -82,8 +82,7 @@ class ALKAttatchmentView: UIView {
         let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
         
         if let url = messageObject.fileMetaInfo?.url,
-           !serviceEnabled
-        {
+           !serviceEnabled {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = self
             let task = ALKDownloadTask(downloadUrl: url, fileName: messageObject.fileMetaInfo?.name)

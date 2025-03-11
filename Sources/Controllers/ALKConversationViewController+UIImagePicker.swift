@@ -10,8 +10,7 @@ import KommunicateCore_iOS_SDK
 
 extension ALKConversationViewController:
     UIImagePickerControllerDelegate,
-    UINavigationControllerDelegate
-{
+    UINavigationControllerDelegate {
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
@@ -22,8 +21,7 @@ extension ALKConversationViewController:
     ) {
         // Video attachment
         if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String,
-           mediaType == "public.movie"
-        {
+           mediaType == "public.movie" {
             guard let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL else { return }
             print("video path is: ", url.path)
             viewModel.encodeVideo(videoURL: url, completion: {

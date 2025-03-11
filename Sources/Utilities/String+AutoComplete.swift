@@ -36,8 +36,7 @@ extension String {
         // short circuit with the right word part + its range
         if let characterBeforeRange = index(range.lowerBound, offsetBy: -1, limitedBy: startIndex),
            let character = self[characterBeforeRange].unicodeScalars.first,
-           NSCharacterSet.whitespaces.contains(character)
-        {
+           NSCharacterSet.whitespaces.contains(character) {
             let right = parts.right
             return (String(right), right.startIndex ..< right.endIndex)
         }

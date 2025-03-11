@@ -27,7 +27,7 @@
         
         func updateLanguage(code: String) {
             guard !code.isEmpty else { return }
-            speechRecognizer = SFSpeechRecognizer(locale:Locale(identifier: code))
+            speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: code))
         }
 
         override open var intrinsicContentSize: CGSize {
@@ -53,7 +53,6 @@
         }()
 
         private lazy var speechRecognizer = SFSpeechRecognizer()
-       
         
         private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
         private var recognitionTask: SFSpeechRecognitionTask?
@@ -66,7 +65,7 @@
             )
             let attributes: [NSAttributedString.Key: Any] = [
                 NSAttributedString.Key.font: ALKChatBarConfiguration.TextView.placeholder.font,
-                NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.placeholder.text,
+                NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.placeholder.text
             ]
             let styledText = NSAttributedString(string: placeholderText, attributes: attributes)
             return styledText

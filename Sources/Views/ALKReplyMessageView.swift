@@ -120,8 +120,7 @@ open class ALKReplyMessageView: UIView, Localizable {
                defaultAttributes: Theme.message.toAttributes,
                mentionAttributes: Theme.mention.toAttributes,
                displayNames: displayNames
-           )
-        {
+           ) {
             messageLabel.attributedText = attributedText
         } else {
             messageLabel.text = getMessageText()

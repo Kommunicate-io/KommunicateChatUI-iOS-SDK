@@ -11,7 +11,7 @@ import UIKit
 #endif
 class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UITextViewDelegate {
     
-    var cell : KMFormDropDownCell?
+    var cell: KMFormDropDownCell?
     
     enum FormData {
         static let valid = 1
@@ -215,8 +215,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.valueTextField.delegate = self
             cell.valueTextField.tag = indexPath.section
             if let formDataSubmit = formData,
-               let text = formDataSubmit.textFields[indexPath.section]
-            {
+               let text = formDataSubmit.textFields[indexPath.section] {
                 cell.valueTextField.text = text
             } else {
                 cell.valueTextField.text = ""
@@ -248,8 +247,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.valueTextField.delegate = self
             cell.valueTextField.tag = indexPath.section
             if let formDataSubmit = formData,
-               let text = formDataSubmit.textFields[indexPath.section]
-            {
+               let text = formDataSubmit.textFields[indexPath.section] {
                 cell.valueTextField.text = text
             } else {
                 cell.valueTextField.text = ""
@@ -275,13 +273,12 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
 
             if let formDataSubmit = formData,
                let singleSelectFields = formDataSubmit.singleSelectFields[indexPath.section],
-               singleSelectFields == indexPath.row
-            {
+               singleSelectFields == indexPath.row {
                 cell.checkBoxImage.image = UIImage(named: "radiobutton_checked", in: Bundle.km, compatibleWith: nil)
             } else {
                 cell.checkBoxImage.image = UIImage(named: "radiobutton_unchecked", in: Bundle.km, compatibleWith: nil)
             }
-            if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+            if let checkForFormSubmitted = viewModel?.isFormSubmitted(), checkForFormSubmitted {
                 cell.tintColor = .darkGray
             } else {
                 cell.tintColor = UIColor.systemBlue
@@ -315,15 +312,14 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                    }
                }
                 if let formDataSubmit = formData,
-                       let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
-                    {
+                       let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row) {
                     
-                    cell.update(item: multiselectItem.options[indexPath.row],isChecked : true)
+                    cell.update(item: multiselectItem.options[indexPath.row], isChecked: true)
 
                     } else {
                         cell.update(item: multiselectItem.options[indexPath.row])
                 }
-                if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+                if let checkForFormSubmitted = viewModel?.isFormSubmitted(), checkForFormSubmitted {
                     cell.button.layer.borderColor = KMMultipleSelectionConfiguration.shared.postSubmitBorderColor.cgColor
                     cell.button.label.textColor = KMMultipleSelectionConfiguration.shared.postSubmitTitleColor
                     cell.button.imageView.image = KMMultipleSelectionConfiguration.shared.postSubmitImage
@@ -354,8 +350,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                 }
     
                 if let formDataSubmit = formData,
-                   let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row)
-                {
+                   let multiSelectFields = formDataSubmit.multiSelectFields[indexPath.section], multiSelectFields.contains(indexPath.row) {
                     cell.isSelectedCell = true
                     cell.checkBoxImage.image = UIImage(named: "checkbox_checked", in: Bundle.km, compatibleWith: nil)
                 } else {
@@ -363,7 +358,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
                     cell.checkBoxImage.image = UIImage(named: "checkbox_unchecked", in: Bundle.km, compatibleWith: nil)
                 }
                 cell.item = multiselectItem.options[indexPath.row]
-                if let checkForFormSubmitted = viewModel?.isFormSubmitted() , checkForFormSubmitted {
+                if let checkForFormSubmitted = viewModel?.isFormSubmitted(), checkForFormSubmitted {
                     cell.tintColor = .darkGray
                 } else {
                     cell.tintColor = UIColor.systemBlue
@@ -430,7 +425,7 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             self.cell = cell
             
             if let formDataSubmit = formData,
-               let fields = formDataSubmit.dropDownFields[indexPath.section]{
+               let fields = formDataSubmit.dropDownFields[indexPath.section] {
                 cell.menu.selectedIndex = fields.0
                 cell.menu.text = cell.options?[fields.0].label
             }
@@ -474,8 +469,7 @@ extension ALKFormCell: ALKDatePickerButtonClickProtocol {
     func confirmButtonClick(position: Int,
                             date: Date,
                             messageKey: String,
-                            datePickerMode: UIDatePicker.Mode)
-    {
+                            datePickerMode: UIDatePicker.Mode) {
         guard identifier == messageKey else { return }
 
         var timeInMillSecs: Int64 = 0
@@ -511,13 +505,13 @@ extension ALKFormCell: KMFormDropDownSelectionProtocol {
             print("Can't be updated due to incorrect index")
             return
         }
-        formSubmittedData.dropDownFields[position] = (index,selectedText)
+        formSubmittedData.dropDownFields[position] = (index, selectedText)
         formData = formSubmittedData
     }
     
     func defaultOptionSelected(position: Int, selectedText: String?, index: Int) {
         guard let formSubmittedData = formData else { return }
-        formSubmittedData.dropDownFields[position] = (index,selectedText)
+        formSubmittedData.dropDownFields[position] = (index, selectedText)
         formData = formSubmittedData
     }
 }
@@ -541,8 +535,7 @@ extension ALKFormCell {
                 let enteredText = formDataSubmit.textFields[index] ?? ""
 
                 if let validation = textFieldModel?.validation,
-                   let regxPattern = validation.regex
-                {
+                   let regxPattern = validation.regex {
                     do {
                         let isCurrentValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
                         isValid = isValid && isCurrentValid
@@ -558,8 +551,7 @@ extension ALKFormCell {
                 let enteredText = formDataSubmit.textViews[index] ?? ""
 
                 if let validation = textFieldModel?.validation,
-                   let regxPattern = validation.regex
-                {
+                   let regxPattern = validation.regex {
                     do {
                         let isCurrentValid = try ALKRegexValidator.matchPattern(text: enteredText, pattern: regxPattern)
                         isValid = isValid && isCurrentValid
@@ -588,15 +580,15 @@ extension ALKFormCell {
 
                 let disabled = dropdownItem?.options[selectedIndex].disabled
                 
-                if(disabled == nil){
-                    if (dropdownItem?.options[selectedIndex].value == nil) {
+                if disabled == nil {
+                    if dropdownItem?.options[selectedIndex].value == nil {
                         isValid = false
                         formDataSubmit.validationFields[index] = FormData.inValid
                     } else {
                         formDataSubmit.validationFields[index] = FormData.valid
                     }
                 } else {
-                    if (dropdownItem?.options[selectedIndex].value == nil) {
+                    if dropdownItem?.options[selectedIndex].value == nil {
                         isValid = isValid && !disabled!
                         formDataSubmit.validationFields[index] = disabled! ? FormData.inValid : FormData.valid
                     } else {
@@ -633,7 +625,7 @@ class FormDataSubmit {
     var singleSelectFields = [Int: Int]()
     var multiSelectFields = [Int: [Int]]()
     var dateFields = [Int: Int64]()
-    var dropDownFields = [Int: (Int,String?)]()
+    var dropDownFields = [Int: (Int, String?)]()
     var validationFields = [Int: Int]()
 }
 

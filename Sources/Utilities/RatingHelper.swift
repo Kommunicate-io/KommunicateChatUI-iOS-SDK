@@ -8,11 +8,11 @@
 import Foundation
 import UIKit
 
-class RatingHelper : Localizable {
+class RatingHelper: Localizable {
 
      var configuration = ALKConfiguration()
 
-     func getRatingIconFor(rating : Int) -> UIImage? {
+     func getRatingIconFor(rating: Int) -> UIImage? {
          var imageName = String()
          switch rating {
          case 1:
@@ -29,7 +29,7 @@ class RatingHelper : Localizable {
 
      }
     
-    func getRatingIconForFiveStar(rating : Int) -> UIImage? {
+    func getRatingIconForFiveStar(rating: Int) -> UIImage? {
         var imageName = String()
         switch rating {
         case 1:

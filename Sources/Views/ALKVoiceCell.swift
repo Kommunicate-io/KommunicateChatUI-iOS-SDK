@@ -25,8 +25,7 @@ public enum ALKVoiceCellState {
 }
 
 class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
-{
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
     var soundPlayerView: UIView = {
         let mv = UIView()
         mv.contentMode = .scaleAspectFill
@@ -88,17 +87,6 @@ class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     class func bottomPadding() -> CGFloat {
         return 12
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
     override class func rowHeigh(viewModel _: ALKMessageViewModel, width _: CGFloat) -> CGFloat {

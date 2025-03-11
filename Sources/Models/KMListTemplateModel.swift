@@ -19,7 +19,7 @@ public struct KMListTemplate: Codable {
         public let title: String?
         public let description: String?
         public let action: Action?
-        public let articleId: [String:String?]?
+        public let articleId: [String: String?]?
     }
 
     public struct Button: Codable {

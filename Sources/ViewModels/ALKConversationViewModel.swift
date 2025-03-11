@@ -22,7 +22,7 @@ public protocol ALKConversationViewModelDelegate: AnyObject {
     func updateDisplay(contact: ALContact?, channel: ALChannel?)
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
-    func showInvalidReplyAlert(kmField : KMField)
+    func showInvalidReplyAlert(kmField: KMField)
     func isEmailSentForUpdatingUser(status: Bool)
     func emailUpdatedForUser()
 }
@@ -50,8 +50,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var isSearch: Bool = false
-    open var lastMessage : ALMessage?
-    internal static var lastSentMessage : ALMessage?
+    open var lastMessage: ALMessage?
+    internal static var lastSentMessage: ALMessage?
 
     // For topic based chat
     open var conversationProxy: ALConversationProxy? {
@@ -70,7 +70,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     var timer = Timer()
     var welcomeMessagePosition = 0
     open var emailCollectionAwayModeEnabled: Bool = false
-    var modelsToBeAddedAfterDelay : [ALKMessageModel] = []
+    var modelsToBeAddedAfterDelay: [ALKMessageModel] = []
 
     open var isGroup: Bool {
         guard channelKey != nil else {
@@ -222,7 +222,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessageWrapper.addALMessage(toMessageArray: message)
         alMessages.append(message)
         messageModels.append(message.messageModel)
-        if(message.isMyMessage){
+        if message.isMyMessage {
             ALKConversationViewModel.lastSentMessage = message
         }
     }
@@ -241,8 +241,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     /// This method used to check a message is present in the viewmodel.
     /// - Parameters:
     ///   - message: Pass ALMessage object.
-    public func containsMessage(_ message:ALMessage) -> Bool {
-        guard !alMessages.isEmpty else{
+    public func containsMessage(_ message: ALMessage) -> Bool {
+        guard !alMessages.isEmpty else {
             return false
         }
         return alMessages.contains(message)
@@ -561,14 +561,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
             let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
             let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             if let json = jsonResult as? [String: Any],
-               let templates = json["templates"] as? [Any]
-            {
+               let templates = json["templates"] as? [Any] {
                 NSLog("Template json: ", json.description)
                 var templateModels: [ALKTemplateMessageModel] = []
                 for element in templates {
                     if let template = element as? [String: Any],
-                       let model = ALKTemplateMessageModel(json: template)
-                    {
+                       let model = ALKTemplateMessageModel(json: template) {
                         templateModels.append(model)
                     }
                 }
@@ -591,7 +589,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
 
         if message.fileMetaInfo!.name.hasPrefix(awsEncryptionPrefix) {
-          ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey,isS3URL: true) { fileUrl, error in
+          ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: true) { fileUrl, error in
                guard error == nil, let fileUrl = fileUrl else {
                    print("Error downloading attachment :: \(String(describing: error))")
                    return
@@ -616,8 +614,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
        }
         
         if let url = message.fileMetaInfo?.url,
-           !serviceEnabled
-        {
+           !serviceEnabled {
             let httpManager = ALKHTTPManager()
             httpManager.downloadDelegate = view as? ALKHTTPManagerDownloadDelegate
             let task = ALKDownloadTask(downloadUrl: url, fileName: message.fileMetaInfo?.name)
@@ -681,7 +678,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         guard !sortedArray.isEmpty else { return }
         
-        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageReceive, data: ["messageList":sortedArray])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageReceive, data: ["messageList": sortedArray])
         if alMessages.isEmpty, !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
             sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
         }
@@ -784,8 +781,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard
               let channel = ALChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
               let assigneeUserId = channel.assigneeUserId,
-              let alContact = ALContactService().loadContact(byKey: "userId", value:  assigneeUserId),
-              alContact.roleType == NSNumber.init(value: AL_BOT.rawValue)
+              let alContact = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
+              alContact.roleType == NSNumber(value: AL_BOT.rawValue)
         else { return }
 
         let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
@@ -836,10 +833,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alMessage = getMessageToPost(isTextMessage: true)
         alMessage.message = message
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
-        updateMetaDataForCustomField(message : alMessage)
+        updateMetaDataForCustomField(message: alMessage)
         
         if let kmField = alMessages.last?.messageModel.getKmField() {
-            if(!isValidReply(message: alMessage)){
+            if !isValidReply(message: alMessage) {
                 delegate?.showInvalidReplyAlert(kmField: kmField)
                 return
             }
@@ -847,7 +844,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         
         if emailCollectionAwayModeEnabled {
-            if(!message.isValidEmail()) {
+            if !message.isValidEmail() {
                 delegate?.isEmailSentForUpdatingUser(status: false)
                 return
             }
@@ -868,9 +865,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
                 self.showTypingIndicatorAfterMessageSent()
-                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageSend, data: ["message":alMessage])
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageSend, data: ["message": alMessage])
                 #if canImport(ChatProvidersSDK)
-                    if KMZendeskChatHandler.shared.isZendeskEnabled()  {
+                    if KMZendeskChatHandler.shared.isZendeskEnabled() {
                         KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                     }
                 #endif
@@ -885,9 +882,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
                 self.showTypingIndicatorAfterMessageSent()
-                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageSend, data: ["message":alMessage])
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.messageSend, data: ["message": alMessage])
                 #if canImport(ChatProvidersSDK)
-                    if KMZendeskChatHandler.shared.isZendeskEnabled()  {
+                    if KMZendeskChatHandler.shared.isZendeskEnabled() {
                         KMZendeskChatHandler.shared.sendMessage(message: alMessage)
                     }
                 #endif
@@ -899,7 +896,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    func updateMetaDataForCustomField(message : ALMessage){
+    func updateMetaDataForCustomField(message: ALMessage) {
         if let lastMessage = alMessages.last?.messageModel,
            let replyMetaData = lastMessage.getReplyMetaData() {
             message.metadata.addEntries(from: replyMetaData)
@@ -907,8 +904,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     func updateEmailFromCollectEmail(email: String) {
-        ALUserClientService().updateUser(nil, email: email, ofUser: nil) { theJson, error in
-            if(error == nil){
+        ALUserClientService().updateUser(nil, email: email, ofUser: nil) { _, error in
+            if error == nil {
                 print("User's email updated")
                 self.delegate?.emailUpdatedForUser()
             } else {
@@ -927,34 +924,34 @@ open class ALKConversationViewModel: NSObject, Localizable {
         
         let alUserClientService = ALUserClientService()
         
-        switch(fieldType.lowercased()){
+        switch fieldType.lowercased() {
         case "name":
-            alUserClientService.updateUserDisplayName(message, andUserImageLink: nil, userStatus: nil, metadata: nil) { theJson, error in
-                if(error == nil){
+            alUserClientService.updateUserDisplayName(message, andUserImageLink: nil, userStatus: nil, metadata: nil) { _, error in
+                if error == nil {
                     print("User's display name updated")
                 } else {
                     print("error occured while updating user's display name \(String(describing: error?.localizedDescription))")
                 }
             }
         case "email":
-            alUserClientService.updateUser(nil, email: message, ofUser: nil) { theJson, error in
-                if(error == nil){
+            alUserClientService.updateUser(nil, email: message, ofUser: nil) { _, error in
+                if error == nil {
                     print("User's email updated")
                 } else {
                     print("error occured while updating user's email \(String(describing: error?.localizedDescription))")
                 }
             }
         case "phone_number":
-            alUserClientService.updateUser(message, email: nil, ofUser: nil) { theJson, error in
-                if(error == nil){
+            alUserClientService.updateUser(message, email: nil, ofUser: nil) { _, error in
+                if error == nil {
                     print("User's phone number updated")
                 } else {
                     print("error occured while updating user's phone number \(String(describing: error?.localizedDescription))")
                 }
             }
         default:
-            alUserClientService.updateUserDisplayName(nil , andUserImageLink: nil, userStatus: nil, metadata: [kmField.field : message]) { theJson, error in
-                if(error == nil){
+            alUserClientService.updateUserDisplayName(nil, andUserImageLink: nil, userStatus: nil, metadata: [kmField.field: message]) { _, error in
+                if error == nil {
                     print("User info updated")
                 } else {
                     print("error occured while updating user info \(String(describing: error?.localizedDescription))")
@@ -963,7 +960,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    func isValidReply(message : ALMessage) -> Bool {
+    func isValidReply(message: ALMessage) -> Bool {
 
         guard let lastMessage = alMessages.last?.messageModel,
               let kmField = lastMessage.getKmField(),
@@ -973,16 +970,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return true
         }
 
-        do{
+        do {
             return try ALKRegexValidator.matchPattern(text: messageText, pattern: regex)
         } catch {
             guard let fieldType = kmField.fieldType else {
                 return true
             }
-            switch(fieldType.lowercased()){
-            case "email" :
+            switch fieldType.lowercased() {
+            case "email": 
                 return fieldType.isValidEmail(email: messageText)
-            case "phone_number" :
+            case "phone_number": 
                 return fieldType.isValidPhoneNumber
             default:
                 return true
@@ -996,10 +993,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
               !self.alMessages.isEmpty,
               let channel = ALChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
               let assigneeUserId = channel.assigneeUserId,
-              let alContact = ALContactService().loadContact(byKey: "userId", value:  assigneeUserId),
-              alContact.roleType == NSNumber.init(value: AL_BOT.rawValue)
+              let alContact = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
+              alContact.roleType == NSNumber(value: AL_BOT.rawValue)
         else { return }
-        self.delegate?.updateTyingStatus(status: true, userId:alContact.displayName)
+        self.delegate?.updateTyingStatus(status: true, userId: alContact.displayName)
 
     }
 
@@ -1020,16 +1017,16 @@ open class ALKConversationViewModel: NSObject, Localizable {
         
         let languageCode = NSLocale.preferredLanguages.first?.prefix(2)
         
-        updateMessageMetadataChatContext(info: ["kmUserLocale" : languageCode as Any], metadata: metaData)
+        updateMessageMetadataChatContext(info: ["kmUserLocale": languageCode as Any], metadata: metaData)
         
         return metaData
     }
     
-    func updateMessageMetadataChatContext(info: [String: Any], metadata : NSMutableDictionary) {
+    func updateMessageMetadataChatContext(info: [String: Any], metadata: NSMutableDictionary) {
         var context: [String: Any] = [:]
 
         do {
-            let contextDict = chatContextFromMessageMetadata(messageMetadata: metadata as? [AnyHashable : Any])
+            let contextDict = chatContextFromMessageMetadata(messageMetadata: metadata as? [AnyHashable: Any])
             context = contextDict ?? [:]
             context.merge(info, uniquingKeysWith: { $1 })
 
@@ -1042,7 +1039,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    private func chatContextFromMessageMetadata(messageMetadata : [AnyHashable: Any]?) -> [String: Any]? {
+    private func chatContextFromMessageMetadata(messageMetadata: [AnyHashable: Any]?) -> [String: Any]? {
         guard
             let messageMetadata = messageMetadata,
             let chatContext = messageMetadata["KM_CHAT_CONTEXT"] as? String,
@@ -1187,11 +1184,10 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alHandler = ALDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
               let message = messageService.createMessageEntity(dbMessage) else { return }
-        
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
 
-        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty,let metadata = fileInfo["metadata"] as? [String:Any] {
+        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty, let metadata = fileInfo["metadata"] as? [String: Any] {
             message.metadata = modfiedMessageMetadata(alMessage: message, metadata: metadata)
         } else if ALApplozicSettings.isS3StorageServiceEnabled() {
             message.fileMeta.populate(fileInfo)
@@ -1554,7 +1550,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
             
-            if(ALKConversationViewModel.lastSentMessage == nil){
+            if ALKConversationViewModel.lastSentMessage == nil {
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
             if ALApplozicSettings.isAgentAppConfigurationEnabled() {
@@ -1597,7 +1593,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     func getLastSentMessage() -> ALMessage? {
         for message in alMessages.reversed() {
-            if(message.isMyMessage){
+            if message.isMyMessage {
                 return message
             }
         }
@@ -1606,7 +1602,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     public func getLastReceivedMessage() -> ALMessage? {
         for message in alMessages.reversed() {
-            if(message.isReceivedMessage() && message.to != "bot"){
+            if message.isReceivedMessage() && message.to != "bot" {
                 return message
             }
         }
@@ -1619,15 +1615,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
         let delay = TimeInterval(botDelayTime)
-        self.timer = Timer.scheduledTimer(withTimeInterval:delay, repeats: false) {[self] timer in
-            guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else{
+        self.timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) {[self] _ in
+            guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else {
                 return
             }
             self.removeTypingIndicatorMessage()
             self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
             self.delegate?.messageUpdated()
             self.timer.invalidate()
-            if welcomeMessagePosition >= alMessages.count  {
+            if welcomeMessagePosition >= alMessages.count {
                 welcomeMessagePosition = 0
             } else {
                 welcomeMessagePosition += 1
@@ -1650,13 +1646,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     func isConversationAssignedToBot() -> Bool {
-        //If Welcome message is not configured, then return false
+        // If Welcome message is not configured, then return false
         guard !self.alMessages.isEmpty else { return false }
 
         let contactService = ALContactService()
-        if let alContact = contactService.loadContact(byKey: "userId", value:  self.alMessages[0].to),
+        if let alContact = contactService.loadContact(byKey: "userId", value: self.alMessages[0].to),
            let role = alContact.roleType,
-           role ==  NSNumber.init(value: AL_BOT.rawValue) {
+           role ==  NSNumber(value: AL_BOT.rawValue) {
             return true
         }
         return false
@@ -1667,7 +1663,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let assigneeUserId = channel.assigneeUserId,
         let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
         let roleType = assignee.roleType,
-        roleType ==  NSNumber.init(value: AL_BOT.rawValue) {
+        roleType ==  NSNumber(value: AL_BOT.rawValue) {
             return true
         }
         return false
@@ -1753,8 +1749,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 if let metadata = msg.metadata,
                    let replyKey = metadata.value(forKey: AL_MESSAGE_REPLY_KEY) as? String,
                    messageDb.getMessageByKey("key", value: replyKey) == nil,
-                   !replyMessageKeys.contains(replyKey)
-                {
+                   !replyMessageKeys.contains(replyKey) {
                     replyMessageKeys.add(replyKey)
                 }
             }
@@ -1789,12 +1784,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     func loadMessagesFromDB(isFirstTime: Bool = true) {
         
-        let startTime = alMessages.first?.createdAtTime ?? nil;
+        let startTime = alMessages.first?.createdAtTime ?? nil
         
         ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
             messages in
             guard let messages = messages, messages.count != 0 else {
-                if(ALUserDefaultsHandler.isShowLoadEarlierOption(self.chatId)){
+                if ALUserDefaultsHandler.isShowLoadEarlierOption(self.chatId) {
                     self.loadEarlierMessages()
                 }
                 self.delegate?.loadingFinished(error: nil)
@@ -1807,7 +1802,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             self.alMessages.insert(contentsOf: messages as! [ALMessage], at: 0)
 
             self.alMessageWrapper.addObject(toMessageArray: messages)
-            if(ALKConversationViewModel.lastSentMessage == nil){
+            if ALKConversationViewModel.lastSentMessage == nil {
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
             if ALApplozicSettings.isAgentAppConfigurationEnabled() {
@@ -1829,7 +1824,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         self.lastMessage = alMessages.last
     }
     
-    func removeMessageForHidePostCTA(messages : [ALKMessageModel]){
+    func removeMessageForHidePostCTA(messages: [ALKMessageModel]) {
         guard let lastSentMessageTime = ALKConversationViewModel.lastSentMessage?.createdAtTime,
                   UserDefaults.standard.bool(forKey: SuggestedReplyView.hidePostCTA) else { return }
 
@@ -1942,8 +1937,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(),
            messageList.count > 1,
-           let first = alMessages.first
-        {
+           let first = alMessages.first {
             time = first.createdAtTime
         }
         let messageListRequest = MessageListRequest()
@@ -2073,7 +2067,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private func processAttachment(
         filePath: URL,
-        text : String,
+        text: String,
         contentType: Int,
         isVideo _: Bool = false,
         metadata: [AnyHashable: Any]?,
