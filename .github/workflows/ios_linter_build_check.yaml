@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
@@ -37,7 +37,7 @@ jobs:
 
       - name: Post Lint Test Results to PR
         if: github.event_name == 'pull_request' && success()
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.1.0
         with:
           script: |
             const comment = `✅ **iOS Lint Test Result**\nCongratulations! Linter Check Passed Successfully 🎉`;
