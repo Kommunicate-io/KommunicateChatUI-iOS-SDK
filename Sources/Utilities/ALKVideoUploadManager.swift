@@ -28,8 +28,7 @@ class ALKVideoUploadManager: NSObject {
         let clientService = ALMessageClientService()
         // If already thumbnail is uploaded we will directly upload the video else will upload thumbnail on success will upload the video.
         if let thumbnailUrl = dbMessage.fileMetaInfo.thumbnailUrl,
-           !thumbnailUrl.isEmpty
-        {
+           !thumbnailUrl.isEmpty {
             clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
                 urlStr, error in
                 guard error == nil, let urlStr = urlStr,
@@ -81,7 +80,7 @@ class ALKVideoUploadManager: NSObject {
 
                 guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
                 
-                if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String:String] {
+                if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
                     for (key, value) in customHeaders {
                         postURLRequest.setValue(value, forHTTPHeaderField: key)
                     }
@@ -133,9 +132,9 @@ class ALKVideoUploadManager: NSObject {
 
         if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
             body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-            body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n",  "data").data(using: .utf8)!)
+            body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n", "data").data(using: .utf8)!)
             body.append(String(format: "Content-Type:%@\r\n\r\n", "application/json").data(using: .utf8)!)
-            body.append(String(format: "{\"groupId\": \"%@\"}\r\n",groupId ?? "").data(using: .utf8)!)
+            body.append(String(format: "{\"groupId\": \"%@\"}\r\n", groupId ?? "").data(using: .utf8)!)
         }
         body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
 
@@ -234,4 +233,3 @@ extension ALKVideoUploadManager: URLSessionDataDelegate {
         }
     }
 }
-

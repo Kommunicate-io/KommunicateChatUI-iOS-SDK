@@ -22,8 +22,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard viewModel != nil else { return }
             if updatedVM.contactId == viewModel.contactId,
                updatedVM.channelKey == viewModel.channelKey,
-               updatedVM.conversationProxy == viewModel.conversationProxy
-            {
+               updatedVM.conversationProxy == viewModel.conversationProxy {
                 isFirstTime = false
             } else {
                 isFirstTime = true
@@ -97,7 +96,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     private var isProfileTapActionEnabled = true
     
     private var botDelayTime = 0
-
 
     private var isFirstTime = true
     private var bottomConstraint: NSLayoutConstraint?
@@ -250,8 +248,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     var contentOffsetDictionary: [AnyHashable: AnyObject]!
 
     public init(configuration: ALKConfiguration,
-                individualLaunch: Bool)
-    {
+                individualLaunch: Bool) {
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         self.individualLaunch = individualLaunch
         super.init(configuration: configuration)
@@ -485,7 +482,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         #endif
     }
     
-    open func updateAssigneeOnlineStatus(userId: String){}
+    open func updateAssigneeOnlineStatus(userId: String) {}
     
     open func showEmailCollectionUI() {}
     
@@ -628,7 +625,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
         backgroundView.backgroundColor = UIColor.kmDynamicColor(light: configuration.backgroundColor, dark: configuration.backgroundDarkColor)
         prepareTable()
-        if moreBar.isHidden{
+        if moreBar.isHidden {
             prepareMoreBar()
         }
         prepareChatBar()
@@ -694,7 +691,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
     
     @objc func conversationInfoViewTap(_: UITapGestureRecognizer) {
-        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.conversationInfoClick, data:  nil)
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.conversationInfoClick, data: nil)
     }
 
     private func toggleVisibilityOfContextTitleView(_ show: Bool) {
@@ -741,7 +738,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         if configuration.conversationInfoModel == nil {
             conversationInfoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
         }
-        let gesture = UITapGestureRecognizer(target: self, action:  #selector(conversationInfoViewTap(_:)))
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(conversationInfoViewTap(_:)))
         conversationInfoView.addGestureRecognizer(gesture)
         
         templateView?.bottomAnchor.constraint(equalTo: typingNoticeView.topAnchor, constant: -5.0).isActive = true
@@ -1091,7 +1088,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
     }
     
-    public func updatePlaceholder(){
+    public func updatePlaceholder() {
         guard let _ = viewModel.lastMessage?.messageModel.isCustomDataRichMessage(),
               let placeholder = viewModel.lastMessage?.messageModel.getKmField()?.placeholder else {
             return
@@ -1120,7 +1117,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         #endif
     }
     
-    open func addLanguageToMetadata(language:String){}
+    open func addLanguageToMetadata(language: String) {}
 
     private func setupProfanityFilter() {
         func makeProfanityFilter(
@@ -1199,8 +1196,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         viewModel.channelKey = notificationData.groupId
         var convProxy: ALConversationProxy?
         if let convId = notificationData.conversationId,
-           let conversationProxy = ALConversationService().getConversationByKey(convId)
-        {
+           let conversationProxy = ALConversationService().getConversationByKey(convId) {
             convProxy = conversationProxy
         }
         viewModel.conversationProxy = convProxy
@@ -1257,7 +1253,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             let userDefaults = UserDefaults(suiteName: "group.kommunicate.sdk") ?? .standard
             botDelayTime = userDefaults.integer(forKey: "BOT_MESSAGE_DELAY_INTERVAL") / 1000
             // Add Delay only for Bot
-            if botDelayTime > 0 && contact.roleType == NSNumber.init(value: AL_BOT.rawValue) {
+            if botDelayTime > 0 && contact.roleType == NSNumber(value: AL_BOT.rawValue) {
                let timeInterval = TimeInterval(botDelayTime)
                if timerTask.isValid {
                    Timer.scheduledTimer(timeInterval: (timeInterval + 1), target: self, selector: #selector(delayedSecondTimer(timer:)), userInfo: nil, repeats: true)
@@ -1300,9 +1296,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
     }
     
-    public func syncAutoSuggestionMessage(message: ALMessage?){
+    public func syncAutoSuggestionMessage(message: ALMessage?) {
         guard let message = message else { return }
-        if message.isAutoSuggestion(),!ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if message.isAutoSuggestion(), !ALApplozicSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
     }
@@ -1310,7 +1306,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
-        if message.isAutoSuggestion(),!ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if message.isAutoSuggestion(), !ALApplozicSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
         guard !viewModel.isOpenGroup else {
@@ -1509,8 +1505,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     func richButtonSelected(index: Int,
                             title: String,
                             message: ALKMessageViewModel,
-                            isButtonClickDisabled: Bool)
-    {
+                            isButtonClickDisabled: Bool) {
         guard let template = message.payloadFromMetadata() else { return }
         sendNotification(withName: "RichMessageButtonSelected", buttonName: title, buttonIndex: index, template: template, messageKey: message.identifier)
 
@@ -1525,7 +1520,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         if let conversationId = message.channelKey {
-            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId": conversationId.stringValue,"action": action, "type": type])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["conversationId": conversationId.stringValue, "action": action, "type": type])
         }
         
         switch type {
@@ -1562,12 +1557,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             type == "link"
         else {
             /// Submit Button
-            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "submit"])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["action": selectedButton, "type": "submit"])
             let text = selectedButton["replyText"] as? String ?? selectedButton["name"] as! String
             submitButtonSelected(metadata: message.metadata!, text: text)
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["action": selectedButton, "type": "link"])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["action": selectedButton, "type": "link"])
         linkButtonSelected(selectedButton)
     }
 
@@ -1575,12 +1570,12 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard !configuration.disableRichMessageButtonAction else { return }
         let defaultText = element?.title
         guard let action = action, let type = action.type  else {
-            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue ?? "Conversation ID not Present","action": element ?? "Element not Present" , "type": ""])
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["conversationId": viewModel.channelKey?.stringValue ?? "Conversation ID not Present", "action": element ?? "Element not Present", "type": ""])
             print("Type not defined for action")
             return
         }
 
-        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["conversationId":viewModel.channelKey?.stringValue ?? "Conversation ID not Present","action": element ?? "Element not Present", "type": type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["conversationId": viewModel.channelKey?.stringValue ?? "Conversation ID not Present", "action": element ?? "Element not Present", "type": type])
         switch type {
         case ActionType.link.rawValue:
             guard let urlString = action.url, let url = URL(string: urlString), !configuration.restrictLinkNavigationOnListTemplateTap else { return }
@@ -1616,7 +1611,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             print("\(tag) Button for this card is nil unexpectedly :: \(template)")
             return
         }
-        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data:  ["action": action, "type": action.type])
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.richMessageClick, data: ["action": action, "type": action.type])
 
         switch action.type {
         case CardTemplateActionType.link.rawValue:
@@ -1842,26 +1837,23 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         var formAction: String?
         var message: String?
         var isFormDataReplytoChat = false
-        var actionMessageMetaData = [String:String]()
+        var actionMessageMetaData = [String: String]()
 
         for element in formTemplate.elements {
             if element.contentType == .hidden,
                let elementData = element.data,
                let hiddenName = elementData.name,
-               let hiddenValue = elementData.value
-            {
+               let hiddenValue = elementData.value {
                 postFormData[hiddenName] = hiddenValue
             } else if element.contentType == .hidden,
                       let hiddenName = element.name,
-                      let hiddenValue = element.value
-            {
+                      let hiddenValue = element.value {
                 postFormData[hiddenName] = hiddenValue
             }
 
             if element.contentType == .submit,
                let elementData = element.data,
-               let action = elementData.action
-            {
+               let action = elementData.action {
                 if let formTemplateRequest = action.requestType {
                     requestType = formTemplateRequest
                 }
@@ -1876,7 +1868,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     isFormDataReplytoChat = true
                 }
                 
-                if let metadata = action.metadata  {
+                if let metadata = action.metadata {
                     actionMessageMetaData = metadata
                 }
             }
@@ -1896,7 +1888,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     isFormDataReplytoChat = true
                 }
                 
-                if let metadata = element.metadata  {
+                if let metadata = element.metadata {
                     actionMessageMetaData = metadata
                 }
             }
@@ -1943,8 +1935,6 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 break
             }
         }
-        
-        
 
         for (section, pos) in formData.singleSelectFields {
             guard let singleSelectModel = viewModelItems[section] as? FormViewModelSingleselectItem else {
@@ -1960,7 +1950,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
             var selectedArray = [String]()
             for selectedPos in pos {
-                guard let value = multiSelect.options[selectedPos].value else{
+                guard let value = multiSelect.options[selectedPos].value else {
                     continue
                 }
                 selectedArray.append(value)
@@ -1992,7 +1982,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         
-        for (position,(_,option)) in formData.dropDownFields {
+        for (position, (_, option)) in formData.dropDownFields {
             let element = viewModelItems[position]
             if let dropdownModel = element as? FormViewModelDropdownItem {
                 postFormData[dropdownModel.name] = option
@@ -2078,7 +2068,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             case .multiselect:
                 if let multiSelectionItemModel = item as? FormViewModelMultiselectItem {
                     var multiSelectString: String
-                    if let multiSelectionSelectedItemArray = postFormData[multiSelectionItemModel.name] as? [String], !multiSelectionSelectedItemArray.isEmpty  {
+                    if let multiSelectionSelectedItemArray = postFormData[multiSelectionItemModel.name] as? [String], !multiSelectionSelectedItemArray.isEmpty {
                         multiSelectString = multiSelectionSelectedItemArray.joined(separator: ", ")
 
                         postBackMessageString.append("\(multiSelectionItemModel.name) : \(multiSelectString) \n")
@@ -2113,8 +2103,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         for element in formTemplate.elements {
             if element.contentType == .hidden,
                let elementData = element.data,
-               let hiddenName = elementData.name
-            {
+               let hiddenName = elementData.name {
                 postBackMessageString.append("\(hiddenName) : \(postFormData[hiddenName] ?? "")\n")
                 break
             }
@@ -2129,8 +2118,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
        
         do {
             // merge the messsage metadata if it exists
-            if let messageMeta = configuration.messageMetadata as? [String:Any],
-               let jsonData = messageMeta["KM_CHAT_CONTEXT"] as? String,!jsonData.isEmpty,
+            if let messageMeta = configuration.messageMetadata as? [String: Any],
+               let jsonData = messageMeta["KM_CHAT_CONTEXT"] as? String, !jsonData.isEmpty,
                let data = jsonData.data(using: .utf8),
                let chatContextData = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
                 formJsonData.merge(chatContextData, uniquingKeysWith: {$1})
@@ -2209,8 +2198,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                                   identifier: String,
                                   position: Int,
                                   datePickerMode: UIDatePicker.Mode,
-                                  localizedStringFileName: String)
-    {
+                                  localizedStringFileName: String) {
         let datePickerVC = ALKFormDatePickerViewController(delegate: delegate,
                                                            messageKey: identifier,
                                                            position: position,
@@ -2296,7 +2284,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             return true
         }
         
-        if isZendeskConversation(channel: channel){
+        if isZendeskConversation(channel: channel) {
             chatBar.textView.text = "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users."
             return true
         }
@@ -2313,7 +2301,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
     
-    private func isZendeskConversation(channel : ALChannel?) -> Bool{
+    private func isZendeskConversation(channel: ALChannel?) -> Bool {
         guard let channel = channel,
               let channelMetaData = channel.metadata,
               let conversationInfoString = channelMetaData["conversationMetadata"] as? String,
@@ -2323,7 +2311,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
         
         do {
-            let conversationInfoDict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
+            let conversationInfoDict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject]
             return (conversationInfoDict?["source"] as? String) == "zopim" ? true : false
         } catch {
             print("\(#file) \(#line) Parsing failed while checking for zendesk conversation")
@@ -2387,9 +2375,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
     
-    func deleteProcessedMessages(index : Int){
+    func deleteProcessedMessages(index: Int) {
         
-        for messageIndex in stride(from: index-1, to: -1, by: -1){
+        for messageIndex in stride(from: index-1, to: -1, by: -1) {
             let message = viewModel.messageModels[messageIndex]
             
             guard !message.isMyMessage else {
@@ -2406,9 +2394,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
     
-    func reloadProcessedMessages(index : Int){
+    func reloadProcessedMessages(index: Int) {
         
-        for messageIndex in stride(from: index-1, to: -1, by: -1){
+        for messageIndex in stride(from: index-1, to: -1, by: -1) {
             let message = viewModel.messageModels[messageIndex]
             
             guard !message.isMyMessage else {
@@ -2428,27 +2416,27 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         moveTableViewToBottom(indexPath: IndexPath(row: 0, section: tableView.numberOfSections - 1))
     }
     
-    func containsOnlyNormalButton(message : ALKMessageModel) -> Bool {
+    func containsOnlyNormalButton(message: ALKMessageModel) -> Bool {
         
         guard message.message == nil else {
             return false
         }
         
         var buttons = message.linkOrSubmitButton()?.suggestion
-        if let buttons = buttons{
+        if let buttons = buttons {
             for button in buttons {
                 if button.type == .link ||
-                    button.type == .submit{
+                    button.type == .submit {
                     return false
                 }
             }
         }
         
         buttons = message.allButtons()?.suggestion
-        if let buttons = buttons{
+        if let buttons = buttons {
             for button in buttons {
                 if button.type == .link ||
-                    button.type == .submit{
+                    button.type == .submit {
                     return false
                 }
             }
@@ -3091,12 +3079,12 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
 }
 
 extension ALKConversationViewController: ALKCustomPickerDelegate {
-    func filesSelected(images: [UIImage], gifs: [String],videos: [String], caption: String) {
+    func filesSelected(images: [UIImage], gifs: [String], videos: [String], caption: String) {
         let fileCount = images.count + videos.count + gifs.count
         for index in 0 ..< fileCount {
             if index < images.count {
                 let image = images[index]
-                guard image.getSizeInMb() < Double(ALApplozicSettings.getMaxImageSizeForUploadInMB()) else{
+                guard image.getSizeInMb() < Double(ALApplozicSettings.getMaxImageSizeForUploadInMB()) else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })

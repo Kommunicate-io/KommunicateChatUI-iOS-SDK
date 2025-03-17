@@ -64,28 +64,28 @@ extension UIAlertController {
 }
 
 extension UIViewController {
-    private enum activityAlert {
+    private enum ActivityAlert {
         static var activityIndicatorAlert: UIAlertController?
     }
 
     func displayIPActivityAlert(title: String) {
-        activityAlert.activityIndicatorAlert = UIAlertController(
+        ActivityAlert.activityIndicatorAlert = UIAlertController(
             title: title,
             message: nil,
             preferredStyle: UIAlertController.Style.alert
         )
-        activityAlert.activityIndicatorAlert!.addActivityIndicator()
+        ActivityAlert.activityIndicatorAlert!.addActivityIndicator()
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = scene.windows.first(where: { $0.isKeyWindow }),
               var topController = window.rootViewController else { return }
         while topController.presentedViewController != nil {
             topController = topController.presentedViewController!
         }
-        topController.present(activityAlert.activityIndicatorAlert!, animated: true, completion: nil)
+        topController.present(ActivityAlert.activityIndicatorAlert!, animated: true, completion: nil)
     }
 
     func dismissIPActivityAlert(completion: (() -> Void)?) {
-        activityAlert.activityIndicatorAlert!.dismissActivityIndicator(completion)
-        activityAlert.activityIndicatorAlert = nil
+        ActivityAlert.activityIndicatorAlert!.dismissActivityIndicator(completion)
+        ActivityAlert.activityIndicatorAlert = nil
     }
 }

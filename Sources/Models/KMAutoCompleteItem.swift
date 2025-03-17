@@ -13,7 +13,7 @@ public struct KMAutoCompleteItem {
     public let displayImageURL: URL?
     public let supportsRichMessage: Bool?
 
-    public init(key: String, content: String, displayImageURL: URL? = nil, supportsRichMessage : Bool? = nil) {
+    public init(key: String, content: String, displayImageURL: URL? = nil, supportsRichMessage: Bool? = nil) {
         self.key = key
         self.content = content
         self.displayImageURL = displayImageURL

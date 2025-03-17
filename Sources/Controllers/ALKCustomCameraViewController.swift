@@ -128,8 +128,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
         let cameraOutput = self.cameraOutput as? AVCapturePhotoOutput
         if let connection = cameraOutput?.connection(with: AVMediaType.video) {
             if connection.isVideoOrientationSupported,
-               let orientation = AVCaptureVideoOrientation(orientation: UIDevice.current.orientation)
-            {
+               let orientation = AVCaptureVideoOrientation(orientation: UIDevice.current.orientation) {
                 connection.videoOrientation = orientation
             }
 
@@ -151,8 +150,7 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
             print("Error in camera photo output", error)
         } else if
             let data = photo.fileDataRepresentation(),
-            let image = UIImage(data: data)
-        {
+            let image = UIImage(data: data) {
             selectedImage = image
             switch cameraMode {
             case .cropOption:
@@ -170,11 +168,6 @@ final class ALKCustomCameraViewController: ALKBaseViewController, AVCapturePhoto
     override func viewDidLayoutSubviews() {
         // set frame
         previewLayer?.frame = previewView.frame
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Set protocol and Observer
@@ -503,7 +496,7 @@ extension ALKCustomCameraViewController: UICollectionViewDelegate, UICollectionV
         PHCachingImageManager.default().requestImageDataAndOrientation(
             for: asset,
             options: imageRequestOptions
-        ) { imageData, _, orientation, _ in
+        ) { imageData, _, _, _ in
             self.activityIndicator.stopAnimating()
             guard let imageData = imageData, let image = UIImage(data: imageData) else {
                 self.showImageExportFailureAlert()

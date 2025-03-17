@@ -119,7 +119,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             tableView.sectionHeaderTopPadding = 0
         }
         tableView.estimatedRowHeight = 0
-        guard configuration.enableDeleteConversationOnLongpress else{ return }
+        guard configuration.enableDeleteConversationOnLongpress else { return }
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
         tableView.addGestureRecognizer(longPress)
     }
@@ -136,7 +136,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     }
     
     func showDeleteAlert(conversation: ALMessage) {
-        let alert = UIAlertController(title: localizedString(forKey: "DeleteConversationTitle",withDefaultValue: SystemMessage.DeleteConversationPopup.title,fileName: localizedStringFileName), message:localizedString(forKey: "DeleteConversationContent",withDefaultValue: SystemMessage.DeleteConversationPopup.content,fileName: localizedStringFileName),preferredStyle: .alert)
+        let alert = UIAlertController(title: localizedString(forKey: "DeleteConversationTitle", withDefaultValue: SystemMessage.DeleteConversationPopup.title, fileName: localizedStringFileName), message: localizedString(forKey: "DeleteConversationContent", withDefaultValue: SystemMessage.DeleteConversationPopup.content, fileName: localizedStringFileName), preferredStyle: .alert)
 
         let cancelButton = UIAlertAction(
             title: localizedString(
@@ -148,7 +148,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
             handler: nil
         )
                 
-        let deleteButton = UIAlertAction(title: localizedString(forKey: "DeleteButtonName",withDefaultValue: "Delete",fileName: localizedStringFileName), style: .destructive, handler: { [weak self] _ in
+        let deleteButton = UIAlertAction(title: localizedString(forKey: "DeleteButtonName", withDefaultValue: "Delete", fileName: localizedStringFileName), style: .destructive, handler: { [weak self] _ in
             guard let weakSelf = self, ALDataNetworkConnection.checkDataNetworkAvailable() else { return }
             weakSelf.deleteConversation(conversation: conversation)
         })
@@ -166,7 +166,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                 alert.dismiss(animated: false)
                 guard error == nil else {
                     print("Failed to delete the conversation: \(error.debugDescription)")
-                    self.showAlertWithSingleAction(message:self.localizedString(
+                    self.showAlertWithSingleAction(message: self.localizedString(
                         forKey: "DeleteConversationFailureMessage",
                         withDefaultValue: SystemMessage.DeleteConversationPopup.failure,
                         fileName: self.localizedStringFileName
@@ -190,7 +190,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
     
     private func showAlertWithSingleAction(message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let okButton = UIAlertAction(title: localizedString(forKey: "OkayMessage", withDefaultValue:SystemMessage.ButtonName.okay, fileName: localizedStringFileName), style: .default, handler: nil)
+        let okButton = UIAlertAction(title: localizedString(forKey: "OkayMessage", withDefaultValue: SystemMessage.ButtonName.okay, fileName: localizedStringFileName), style: .default, handler: nil)
         alert.addAction(okButton)
         self.present(alert, animated: true, completion: nil)
     }
@@ -217,7 +217,6 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
 
         return loadingAlertController
     }
-
 
     override public func viewWillDisappear(_: Bool) {
         if let text = searchBar.text, !text.isEmpty {

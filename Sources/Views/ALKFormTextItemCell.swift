@@ -215,7 +215,6 @@ class ALKFormItemHeaderView: UITableViewHeaderFooterView {
     }
 }
 
-
 class KMPaddedTextField: UITextField {
 
     var textPadding = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
@@ -232,7 +231,6 @@ class KMPaddedTextField: UITextField {
         return bounds.inset(by: textPadding)
     }
 }
-
 
 class KMPaddedTextView: UITextView {
 

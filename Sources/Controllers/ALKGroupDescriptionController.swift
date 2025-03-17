@@ -83,8 +83,7 @@ class ALKGroupDescriptionController: ALKBaseViewController, Localizable {
 
     init(channelKey: NSNumber,
          configuration: ALKConfiguration,
-         isFromGroupCreate: Bool)
-    {
+         isFromGroupCreate: Bool) {
         self.channelKey = channelKey
         self.isFromGroupCreate = isFromGroupCreate
         super.init(configuration: configuration)

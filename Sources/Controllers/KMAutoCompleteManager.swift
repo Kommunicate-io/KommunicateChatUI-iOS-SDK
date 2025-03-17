@@ -12,7 +12,7 @@ import UIKit
 
 public protocol KMAutoCompletionDelegate: AnyObject {
     func didMatch(prefix: String, message: String, updated: Bool)
-    func sendMessage(content : String)
+    func sendMessage(content: String)
 }
 
 public protocol KMAutoCompletionItemCell: UITableViewCell {
@@ -191,8 +191,8 @@ extension KMAutoCompleteManager: UITextViewDelegate {
     }
 
     public func textViewDidChangeSelection(_ textView: UITextView) {
-        if(isAutoSuggestion){
-            guard let result = textView.find(prefixes: [""]) else{
+        if isAutoSuggestion {
+            guard let result = textView.find(prefixes: [""]) else {
                 cancelAndHide()
                 return
             }
@@ -220,7 +220,7 @@ extension Style {
         return [
             .foregroundColor: text,
             .backgroundColor: background,
-            .font: font,
+            .font: font
         ]
     }
 }

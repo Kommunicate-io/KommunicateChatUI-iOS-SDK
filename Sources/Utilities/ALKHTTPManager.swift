@@ -156,12 +156,12 @@ class ALKHTTPManager: NSObject {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
-        if ALApplozicSettings.isS3StorageServiceEnabled() , let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), uploadUrl.isEmpty {
+        if ALApplozicSettings.isS3StorageServiceEnabled(), let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), uploadUrl.isEmpty {
             task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
         }
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
         
-        if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String:String] {
+        if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
             for (key, value) in customHeaders {
                 postURLRequest.setValue(value, forHTTPHeaderField: key)
             }
@@ -192,13 +192,12 @@ class ALKHTTPManager: NSObject {
                     body.append(data)
                     body.append(String(format: "\r\n").data(using: .utf8)!)
                 }
-               
                 
                 if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
                     body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
-                    body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n",  "data").data(using: .utf8)!)
+                    body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n", "data").data(using: .utf8)!)
                     body.append(String(format: "Content-Type:%@\r\n\r\n", "application/json").data(using: .utf8)!)
-                    body.append(String(format: "{\"groupId\": \"%@\"}\r\n",task.groupdId ?? "").data(using: .utf8)!)
+                    body.append(String(format: "{\"groupId\": \"%@\"}\r\n", task.groupdId ?? "").data(using: .utf8)!)
                 }
                 
                 body.append(String(format: "--%@--\r\n", boundary).data(using: .utf8)!)
@@ -312,4 +311,3 @@ extension ALKHTTPManager: URLSessionDataDelegate {
         }
     }
 }
-

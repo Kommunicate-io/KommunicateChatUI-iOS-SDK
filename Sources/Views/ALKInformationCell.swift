@@ -14,7 +14,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     
     enum Padding {
         
-        enum view {
+        enum View {
             static let top: CGFloat = 8
             static let bottom: CGFloat = 8
         }
@@ -127,12 +127,12 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         return tv
     }()
     
-    fileprivate var lineViewLeft : UIView = {
+    fileprivate var lineViewLeft: UIView = {
         let view = UIView()
         return view
     }()
     
-    fileprivate var lineViewRight : UIView = {
+    fileprivate var lineViewRight: UIView = {
         let view = UIView()
         return view
     }()
@@ -142,11 +142,11 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     class func topPadding() -> CGFloat {
-        return Padding.view.top
+        return Padding.View.top
     }
 
     class func bottomPadding() -> CGFloat {
-        return Padding.view.bottom
+        return Padding.View.bottom
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
@@ -166,7 +166,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
                                                                    attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
                                                                    context: nil)
             //  Get feedback dictionary for view
-            if let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel),dictionary["comments"] != nil  {
+            if let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel), dictionary["comments"] != nil {
                 messageHeigh = (rect.height + Padding.MessageView.height + Padding.CommentView.height)
             } else {
                 messageHeigh = rect.height + Padding.MessageView.height
@@ -247,7 +247,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             setupViews(feedbackString: textString, comment: comment)
             return
         }
-        imageAttachment.bounds = CGRect(x: 0, y: -5 , width: attachedImage.size.width, height: attachedImage.size.height)
+        imageAttachment.bounds = CGRect(x: 0, y: -5, width: attachedImage.size.width, height: attachedImage.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
         let textString = getFormattedFeedbackString(viewModel)
         textString.append(imageString)
@@ -261,11 +261,11 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         summaryReadMoreButton.isHidden = isHidden
     }
     
-    fileprivate func setupViews(feedbackString: NSMutableAttributedString, comment: String){
+    fileprivate func setupViews(feedbackString: NSMutableAttributedString, comment: String) {
         messageView.attributedText = feedbackString
         if !comment.isEmpty {
             commentTextView.text = "“\(comment)”"
-        }else{
+        } else {
             commentTextView.text = ""
         }
         setupStyle()
@@ -290,7 +290,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     fileprivate func setupConstraints() {
-        contentView.addViewsForAutolayout(views: [messageView,bubbleView])
+        contentView.addViewsForAutolayout(views: [messageView, bubbleView])
         contentView.bringSubviewToFront(messageView)
 
         messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.MessageView.top).isActive = true
@@ -427,8 +427,6 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         lineViewLeft.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
         lineViewRight.heightAnchor.constraint(equalToConstant: Padding.LineView.height).isActive = true
     }
-    
-    
 
     func setupStyle() {
         contentView.backgroundColor = UIColor.clear
@@ -440,10 +438,10 @@ final class ALKInformationCell: UITableViewCell, Localizable {
         commentTextView.textColor = ALKMessageStyle.feedbackComment.text
     }
     
-    func getFeedback(viewModel: ALKMessageViewModel) -> Dictionary<String,Any>? {
+    func getFeedback(viewModel: ALKMessageViewModel) -> [String: Any]? {
         guard let feedbackString = viewModel.metadata?["feedback"] as? String else { return nil }
         guard let data = feedbackString.data(using: .utf8),
-            let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] else { return nil }
+            let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return nil }
         return dictionary
     }
 }

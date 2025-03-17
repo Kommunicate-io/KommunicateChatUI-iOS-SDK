@@ -253,7 +253,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         let attr: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.font: font,
             NSAttributedString.Key(rawValue: NSAttributedString.Key.paragraphStyle.rawValue): style,
-            NSAttributedString.Key.foregroundColor: UIColor.placeholderGray(),
+            NSAttributedString.Key.foregroundColor: UIColor.placeholderGray()
         ]
 
         let typeGroupNameMsg = localizedString(forKey: "TypeGroupName", withDefaultValue: SystemMessage.LabelName.TypeGroupName, fileName: localizedStringFileName)
@@ -269,8 +269,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
 
     func setCurrentGroupSelected(groupId: NSNumber,
                                  groupProfile: String?,
-                                 delegate: ALKCreateGroupChatAddFriendProtocol)
-    {
+                                 delegate: ALKCreateGroupChatAddFriendProtocol) {
         groupDelegate = delegate
         self.groupId = groupId
         groupName = ALChannelService().getChannelByKey(groupId)?.name ?? ""
@@ -502,8 +501,7 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == CollectionViewSection.groupDescription ||
-            section == CollectionViewSection.addMemeber
-        {
+            section == CollectionViewSection.addMemeber {
             return 1
         }
         return viewModel.numberOfRows()
@@ -634,8 +632,7 @@ extension ALKCreateGroupViewController: UICollectionViewDelegate, UICollectionVi
 
     func showParticpentsTapActionView(options: [Options],
                                       row: Int,
-                                      groupViewModel: ALKCreateGroupViewModel)
-    {
+                                      groupViewModel: ALKCreateGroupViewModel) {
         let memberInfo = groupViewModel.rowAt(index: row)
         let optionMenu = UIAlertController(title: nil, message: memberInfo.name, preferredStyle: .actionSheet)
         options.forEach {

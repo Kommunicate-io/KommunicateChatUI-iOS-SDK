@@ -217,8 +217,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
 
         let metaData = NSMutableDictionary()
         if let descriptionText = groupDescription,
-           !descriptionText.trim().isEmpty
-        {
+           !descriptionText.trim().isEmpty {
             metaData[ALKGroupDescriptionViewModel.GroupDescription.key] = descriptionText
         }
 

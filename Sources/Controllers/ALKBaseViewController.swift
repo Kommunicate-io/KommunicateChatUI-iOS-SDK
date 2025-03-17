@@ -36,8 +36,7 @@ open class ALKBaseViewController: UIViewController, ALKConfigurable {
         if navigationController?.viewControllers.first != self {
             navigationItem.leftBarButtonItem = backBarButtonItem()
         } else if let vc = navigationController?.viewControllers.first,
-                  vc.isKind(of: ALKConversationViewController.self)
-        {
+                  vc.isKind(of: ALKConversationViewController.self) {
             navigationItem.leftBarButtonItem = backBarButtonItem()
         }
 

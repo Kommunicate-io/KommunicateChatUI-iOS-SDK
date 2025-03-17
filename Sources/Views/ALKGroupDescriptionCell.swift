@@ -49,8 +49,7 @@ class ALKGroupDescriptionCell: UICollectionViewCell, Localizable {
 
     func updateView(localizedStringFileName: String,
                     descriptionText: String?,
-                    channelDetailConfig: ALKChannelDetailViewConfiguration?)
-    {
+                    channelDetailConfig: ALKChannelDetailViewConfiguration?) {
         self.localizedStringFileName = localizedStringFileName
         self.channelDetailConfig = channelDetailConfig
         guard let groupDescriptionText = descriptionText, !groupDescriptionText.trim().isEmpty else {
@@ -119,8 +118,7 @@ class ALKGroupHeaderTitleCell: UICollectionViewCell {
 
     func updateView(titleText: String,
                     localizedStringFileName: String,
-                    channelDetailConfig: ALKChannelDetailViewConfiguration)
-    {
+                    channelDetailConfig: ALKChannelDetailViewConfiguration) {
         self.localizedStringFileName = localizedStringFileName
         headerTitleLabel.text = titleText
         headerTitleLabel.font = channelDetailConfig.participantHeaderTitle.font

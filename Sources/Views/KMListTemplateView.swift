@@ -266,7 +266,7 @@ class ListTemplateView: UIView {
             return
         }
         guard let selected = selected else { return }
-        selected(nil,selectedButton.name, action)
+        selected(nil, selectedButton.name, action)
     }
 
     private func setupButtons() {
@@ -293,7 +293,7 @@ class ListTemplateView: UIView {
             item.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
             item.selected = { [weak self] element in
                 guard let weakSelf = self, let selected = weakSelf.selected else { return }
-                selected(element,nil,element.action)
+                selected(element, nil, element.action)
             }
             return item
         }

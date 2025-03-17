@@ -124,7 +124,7 @@ open class KMAudioRecordButton: UIButton {
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
             AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue,
+            AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue
         ]
         do {
             try recordingSession.setCategory(.playAndRecord, mode: .default)

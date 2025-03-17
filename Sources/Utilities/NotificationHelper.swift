@@ -124,8 +124,7 @@ public class NotificationHelper {
         viewController.unsubscribingChannel()
         if !isChatThreadIsOpen(notification,
                                userId: viewController.viewModel.contactId,
-                               groupId: viewController.viewModel.channelKey)
-        {
+                               groupId: viewController.viewModel.channelKey) {
             viewController.viewModel.prefilledMessage = nil
         }
         viewController.viewModel.contactId = notification.userId
@@ -157,8 +156,7 @@ public class NotificationHelper {
             return true
         default:
             if let searchVC = topVC as? UISearchController,
-               searchVC.searchResultsController as? ALKSearchResultViewController != nil
-            {
+               searchVC.searchResultsController is ALKSearchResultViewController {
                 return true
             }
             return false
@@ -180,8 +178,7 @@ public class NotificationHelper {
             refreshConversation(vc, with: notification)
         default:
             if let searchVC = topVC as? UISearchController,
-               let vc = searchVC.presentingViewController as? ALKConversationListViewController
-            {
+               let vc = searchVC.presentingViewController as? ALKConversationListViewController {
                 openConversationFromListVC(vc, notification: notification)
                 return
             }
@@ -227,8 +224,7 @@ public class NotificationHelper {
     }
 
     private func findControllerInStack(_ vc: UIViewController,
-                                       completion: @escaping () -> Void)
-    {
+                                       completion: @escaping () -> Void) {
         guard !String(describing: vc.classForCoder).hasPrefix("ALKConversation") else {
             completion()
             return

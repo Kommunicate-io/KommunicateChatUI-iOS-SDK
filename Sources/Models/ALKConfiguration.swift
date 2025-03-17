@@ -191,7 +191,7 @@ public struct ALKConfiguration {
     public var enableTextToSpeechInConversation: Bool = false
         
     // If true then Navigation bar will be hidden. By default it is false
-    public var hideNavigationBarOnChat : Bool = false
+    public var hideNavigationBarOnChat: Bool = false
     
     // If false then new conversation button (at bottom) will not be visible. By default it is true.
     public var hideBottomStartNewConversationButton: Bool = false
@@ -218,15 +218,15 @@ public struct ALKConfiguration {
     public var rateConversationMenuOption = false
    
    /// List of languages for speech to text.
-    public var languagesForSpeechToText : [KMLanguage] = []
+    public var languagesForSpeechToText: [KMLanguage] = []
 
     /// if false then chat  will be popped up on helpcenter(FAQ) page, By default it is true.
     public var hideChatInHelpcenter: Bool = true
 
-    public var conversationInfoModel : KMConversationInfoViewModel?
+    public var conversationInfoModel: KMConversationInfoViewModel?
     
     /// if true then delete option will be enabled for end user on long press, By default it is false
-    public var enableDeleteConversationOnLongpress : Bool = false
+    public var enableDeleteConversationOnLongpress: Bool = false
     
     /// if true then webview will be pushed once formaction url returns with response, By default it is false
     public var pushWebviewWithFormActionResponse = false
@@ -239,7 +239,6 @@ public struct ALKConfiguration {
     
     /// Changing this will change the color of link text present inside the received message
     public var linkAttributeColorForReceivedMessage = UIColor.blue
-
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")

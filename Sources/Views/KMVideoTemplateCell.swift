@@ -21,7 +21,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     
     public var playtapped: ((_ url: String) -> Void)?
 
-    var messageModel : ALKMessageViewModel?
+    var messageModel: ALKMessageViewModel?
     
     private var template: [KMVideoTemplate]? {
         didSet {
@@ -157,7 +157,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 }
 
-extension KMVideoTemplateCell :  UITableViewDataSource, UITableViewDelegate {
+extension KMVideoTemplateCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return template?.count ?? 0
     }

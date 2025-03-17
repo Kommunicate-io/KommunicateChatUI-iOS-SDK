@@ -69,7 +69,7 @@ public protocol ALKMessageViewModel {
     var metadata: [String: Any]? { get }
     var source: Int16 { get }
     var contentType: Message.ContentType { get }
-    var createdAtTime : NSNumber? { get set }
+    var createdAtTime: NSNumber? { get set }
 }
 
 public class ALKMessageModel: ALKMessageViewModel {
@@ -185,16 +185,16 @@ public extension ALKMessageViewModel {
     }
 }
 
-public struct KMField : Decodable {
+public struct KMField: Decodable {
     public var label: String?
     public var field: String?
     public var fieldType: String?
     public var placeholder: String?
     public var action: Action?
-    public var validation: [String : String]?
+    public var validation: [String: String]?
     
-    public struct Action : Decodable {
-        public var updateUserDetails : Bool?
+    public struct Action: Decodable {
+        public var updateUserDetails: Bool?
     }
     
 }
@@ -218,7 +218,7 @@ extension ALKMessageViewModel {
         return nil
     }
 
-    func getReplyMetaData() -> [String:String]? {
+    func getReplyMetaData() -> [String: String]? {
         do {
             guard let metadata = metadata, let replyMetadata = metadata["replyMetadata"] as? String else {
                 return nil
@@ -227,7 +227,7 @@ extension ALKMessageViewModel {
             guard let replydata = replydata else {
                 return nil
             }
-            let replyMetaData = try JSONDecoder().decode([String : String].self, from: replydata)
+            let replyMetaData = try JSONDecoder().decode([String: String].self, from: replydata)
             return replyMetaData
         } catch {
             print("Error decoding replyMetaData: \(error)")

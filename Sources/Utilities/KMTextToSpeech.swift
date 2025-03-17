@@ -10,8 +10,8 @@ import AVFoundation
 import KommunicateCore_iOS_SDK
 
 // To handle Text To Speech in the conversation
-class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
-    private let synthesizer : AVSpeechSynthesizer = AVSpeechSynthesizer()
+class KMTextToSpeech: NSObject, AVSpeechSynthesizerDelegate {
+    private let synthesizer: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var messageToBeProcessed = 0
     private var speechStarted = false
    
@@ -21,7 +21,7 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
     }
     
     public static let shared = KMTextToSpeech()
-    var messageQueue : [ALMessage] = []
+    var messageQueue: [ALMessage] = []
    
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         messageToBeProcessed += 1
@@ -35,7 +35,7 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
         - triggeredEvent : event type
         - data : data of triggered event
      */
-    func speakCurrentMessage(){
+    func speakCurrentMessage() {
          guard messageToBeProcessed < messageQueue.count else {return speechStarted = false}
          let utterance = AVSpeechUtterance(string: messageQueue[messageToBeProcessed].message ?? "")
          synthesizer.speak(utterance)
@@ -52,7 +52,7 @@ class KMTextToSpeech : NSObject, AVSpeechSynthesizerDelegate  {
                 messageQueue.append(messagge)
             }
         }
-        guard speechStarted == false, messageToBeProcessed < messageQueue.count else{return}
+        guard speechStarted == false, messageToBeProcessed < messageQueue.count else {return}
         speakCurrentMessage()
         speechStarted = true
     }

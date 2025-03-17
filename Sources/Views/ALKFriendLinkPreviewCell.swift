@@ -257,7 +257,7 @@ class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
             timeLabel.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
                 constant: Padding.TimeLabel.bottom
-            ),
+            )
         ])
         nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
@@ -333,8 +333,7 @@ class ALKFriendLinkPreviewCell: ALKLinkPreviewBaseCell {
 
         var isReplyMessage = false
         if let metadata = viewModel.metadata,
-           metadata[AL_MESSAGE_REPLY_KEY] as? String != nil
-        {
+           metadata[AL_MESSAGE_REPLY_KEY] is String {
             isReplyMessage = true
         }
 

@@ -8,8 +8,7 @@
 import Foundation
 import UIKit
 
-
-class KMMyVideoTemplateCell : KMVideoTemplateCell {
+class KMMyVideoTemplateCell: KMVideoTemplateCell {
     
     fileprivate var stateView: UIImageView = {
         let sv = UIImageView()

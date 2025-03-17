@@ -206,7 +206,7 @@ open class ALKMyMessageCell: ALKMessageCell {
             timeLabel.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
                 constant: 2
-            ),
+            )
         ])
     }
 
@@ -244,8 +244,7 @@ open class ALKMyMessageCell: ALKMessageCell {
 
     class func rowHeigh(viewModel: ALKMessageViewModel,
                         width: CGFloat,
-                        displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat
-    {
+                        displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
         /// Calculating messageHeight
         let leftSpacing = Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding
         let rightSpacing = Padding.BubbleView.right + bubbleViewRightPadding
@@ -262,7 +261,7 @@ open class ALKMyMessageCell: ALKMessageCell {
 
         let totalHeight = messageHeight + heightPadding
         guard let metadata = viewModel.metadata,
-              metadata[AL_MESSAGE_REPLY_KEY] as? String != nil
+              metadata[AL_MESSAGE_REPLY_KEY] is String
         else {
             return totalHeight
         }

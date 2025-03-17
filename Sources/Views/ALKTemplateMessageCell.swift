@@ -10,7 +10,7 @@ import UIKit
 open class ALKTemplateMessageCell: UICollectionViewCell {
     // ALKTemplateMessageCell Can be customized via this.
     public enum Style {
-        public static var borderColor : UIColor = UIColor.blue
+        public static var borderColor: UIColor = UIColor.blue
         public static var textColor: UIColor = UIColor.black
         public static var cornorRadious: CGFloat = 10.0
         public static var textSize: CGFloat = 16.0

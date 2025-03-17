@@ -13,8 +13,7 @@ import UIKit
     import RichMessageKit
 #endif
 class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
-{
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
     enum State {
         case download
         case downloading(progress: Double, totalCount: Int64)
@@ -270,7 +269,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             downloadButton.isHidden = true
             progressView.isHidden = true
             playButton.isHidden = false
-            loadThumbnail(isDownloaded: true,filePath: filePath)
+            loadThumbnail(isDownloaded: true, filePath: filePath)
         case let .downloading(progress, _):
             // show progress bar
             print("downloading")
@@ -299,7 +298,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         }
     }
 
-    func loadThumbnail(isDownloaded : Bool = false, filePath : String? = nil) {
+    func loadThumbnail(isDownloaded: Bool = false, filePath: String? = nil) {
         guard let message = viewModel, let metadata = message.fileMetaInfo else {
             return
         }
@@ -336,7 +335,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             updatedBlobKey = thumbnailBlobKey.replacingOccurrences(of: " ", with: "%20")
         }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl,isS3URL: metadata.url != nil ,blobKey: updatedBlobKey) { url, error in
+            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl, isS3URL: metadata.url != nil, blobKey: updatedBlobKey) { url, error in
                 guard error == nil,
                       let url = url
                 else {

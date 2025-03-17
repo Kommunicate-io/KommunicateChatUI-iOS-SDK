@@ -91,11 +91,6 @@ final class ALKCustomVideoViewController: ALKBaseViewController, Localizable {
         previewLayer?.frame = previewView.frame
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: - Set protocol and Observer
 
     func setCustomCamDelegate(camMode: ALKCameraPhotoType, camDelegate: ALKCustomCameraProtocol) {

@@ -62,8 +62,7 @@ public class KMMultiSelectButton: UIView {
     }()
     
     // MARK: Initializers
-    public init()
-    {
+    public init() {
         super.init(frame: .zero)
     }
     
@@ -73,7 +72,7 @@ public class KMMultiSelectButton: UIView {
     ///   - image: Optional. If used, an image of size KMMultiSelectButton.Config.Image will be shown to the right of text.
     ///   - config: `CurvedImageButton.Config`. It can be used to customize UI of button.
     ///   - maxWidth: Maximum width of button so that it can render in multiple lines of text is large.
-    func update(title: String,maxWidth: CGFloat = UIScreen.main.bounds.width, isSelected: Bool) {
+    func update(title: String, maxWidth: CGFloat = UIScreen.main.bounds.width, isSelected: Bool) {
         self.title = title
         self.isButtonselected = isSelected
         setupView()
@@ -123,8 +122,7 @@ public class KMMultiSelectButton: UIView {
     public class func buttonSize(text: String,
                                  image: UIImage? = nil,
                                  maxWidth: CGFloat = UIScreen.main.bounds.width,
-                                 config: Config = Config()) -> CGSize
-    {
+                                 config: Config = Config()) -> CGSize {
         var config = config
        
         if image == nil {
@@ -180,7 +178,7 @@ public class KMMultiSelectButton: UIView {
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
-        if isButtonselected,let image = KMMultipleSelectionConfiguration.shared.image  {
+        if isButtonselected, let image = KMMultipleSelectionConfiguration.shared.image {
             self.imageView.image = image
             self.imageView.isHidden = false
         } else {
@@ -194,14 +192,14 @@ public class KMMultiSelectButton: UIView {
         addViewsForAutolayout(views: [label, imageView])
         
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo:leadingAnchor, constant: 10),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             imageView.widthAnchor.constraint(equalToConstant: 20),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
-            label.topAnchor.constraint(equalTo: topAnchor,constant: configuration.topPadding),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -configuration.bottomPadding),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: configuration.topPadding),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -configuration.bottomPadding)
 
         ])
     }

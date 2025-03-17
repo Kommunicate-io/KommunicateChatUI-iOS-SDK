@@ -6,8 +6,8 @@
 
 import Foundation
 
-struct KMVideoTemplate : Decodable {
-    let source : String?
+struct KMVideoTemplate: Decodable {
+    let source: String?
     let url: String
     let caption: String?
 }

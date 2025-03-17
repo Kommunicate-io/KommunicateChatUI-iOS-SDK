@@ -67,7 +67,7 @@ public class ALKActivityIndicator: UIView {
             indicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             indicator.widthAnchor.constraint(equalToConstant: size.width / 2),
-            indicator.heightAnchor.constraint(equalToConstant: size.height / 2),
+            indicator.heightAnchor.constraint(equalToConstant: size.height / 2)
         ])
     }
 }

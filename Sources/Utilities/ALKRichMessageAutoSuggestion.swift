@@ -15,11 +15,11 @@ extension ALKConversationViewController {
         }
         guard let jsonData = message.autoSuggestionData else { return }
         let data = convertToDictionary(text: jsonData)
-        guard let placeholderValue = data?["placeholder"] as? String else{ return }
+        guard let placeholderValue = data?["placeholder"] as? String else { return }
         chatBar.placeHolder.text = placeholderValue
         if let suggestion = data?["source"] as? [String] {
             suggestionArray = suggestion
-        } else if let suggestion = data?["source"] as? [[String : Any]] {
+        } else if let suggestion = data?["source"] as? [[String: Any]] {
             suggestionDict = suggestion
         } else if let sourceDictionary = data?["source"] as? [String: Any], let url = sourceDictionary["url"] as? String {
             autoSuggestionApi = url
@@ -83,7 +83,6 @@ extension ALKConversationViewController {
 }
 
 class QuickReplyItemCell: UITableViewCell {
-
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)

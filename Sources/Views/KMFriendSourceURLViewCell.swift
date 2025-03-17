@@ -313,7 +313,6 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
                 equalTo: bubbleView.bottomAnchor,
                 constant: -Padding.MessageView.bottom
             ),
-
             
             timeLabel.leadingAnchor.constraint(
                 equalTo: bubbleView.trailingAnchor,
@@ -322,14 +321,13 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
             timeLabel.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
                 constant: Padding.TimeLabel.bottom
-            ),
+            )
         ])
 
         let linktapGesture = UITapGestureRecognizer(target: self, action: #selector(viewEmailTappedAction))
         emailBottomView.emailLinkLabel.addGestureRecognizer(linktapGesture)
         nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
-    
     
     override func setupStyle() {
         super.setupStyle()
@@ -375,7 +373,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
                                            fileName: localizedStringFileName)
         nameLabel.text = viewModel.displayName
         if let messageMetadata = viewModel.metadata {
-            if let sourceURLsObjec = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [[String:String]] {
+            if let sourceURLsObjec = messageMetadata[KMSourceURLIdentifier.sourceURLIdentifier] as? [[String: String]] {
                 for sourceURLObjec in sourceURLsObjec {
                     if let url = sourceURLObjec["url"] {
                         answerSourceList.append(KMAnswerSourceModel(name: sourceURLObjec["name"], url: url))
@@ -456,7 +454,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
         let totalHeight = max(messageHeight + heightPadding, minimumHeight)
         
         guard let metadata = viewModel.metadata,
-              metadata[AL_MESSAGE_REPLY_KEY] as? String != nil
+              metadata[AL_MESSAGE_REPLY_KEY] is String
         else {
             return totalHeight
         }
@@ -466,7 +464,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
     class func extractObjectFromString(from stringArray: String) -> [[String: String?]] {
         if let data = stringArray.data(using: .utf8) {
             do {
-                if let jsonObjc = try JSONSerialization.jsonObject(with: data, options: []) as? [[String : String?]] {
+                if let jsonObjc = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String?]] {
                     return jsonObjc
                 } else {
                     print("The value is not a valid object of strings.")

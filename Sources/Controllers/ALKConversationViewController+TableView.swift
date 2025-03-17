@@ -41,7 +41,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         cell.messageView.linkTextAttributes = [.foregroundColor: (message.isMyMessage) ? configuration.linkAttributeColorForSentMessage : configuration.linkAttributeColorForReceivedMessage,
                                                .underlineStyle: NSUnderlineStyle.single.rawValue]
         if isAgentApp && !message.isMyMessage {
-            if (viewModel.conversationEndUserID == message.contactId) {
+            if viewModel.conversationEndUserID == message.contactId {
                 cell.bubbleView.backgroundColor = UIColor(netHex: 0xF5F5FA)
             } else {
                 cell.bubbleView.backgroundColor = UIColor(netHex: 0xFFF3DA)
@@ -54,7 +54,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
         guard let message = viewModel.messageForRow(indexPath: indexPath) else {
             return UITableViewCell()
         }
-        print("Cell updated at row: ", indexPath.row ,"section: ", indexPath.section, "and type is: ", message.messageType)
+        print("Cell updated at row: ", indexPath.row, "section: ", indexPath.section, "and type is: ", message.messageType)
 
         switch message.messageType {
         case .text, .html, .email:
@@ -404,7 +404,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(viewModel: message, maxWidth: UIScreen.main.bounds.width)
                 cell.templateSelected = { [weak self] element, defaultText, action in
                     guard let weakSelf = self else { return }
-                    weakSelf.listTemplateSelected(element:element, defaultText:defaultText,  action: action)
+                    weakSelf.listTemplateSelected(element: element, defaultText: defaultText, action: action)
                 }
                 cell.update(chatBar: chatBar)
                 return cell
@@ -415,7 +415,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                 cell.update(chatBar: chatBar)
                 cell.templateSelected = { [weak self] element, defaultText, action in
                     guard let weakSelf = self else { return }
-                    weakSelf.listTemplateSelected(element:element, defaultText:defaultText,  action: action)
+                    weakSelf.listTemplateSelected(element: element, defaultText: defaultText, action: action)
                 }
                 return cell
             }
@@ -543,8 +543,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
                     } else {
                         // The form data is valid to reload the existing form cell to remove error labels in the form.
                         if let validationFields = submitData?.validationFields,
-                           !validationFields.isEmpty
-                        {
+                           !validationFields.isEmpty {
                             weakSelf.reloadSectionFor(identifier: message.identifier)
                         }
                         weakSelf.formSubmitButtonSelected(formSubmitData: submitData,
@@ -573,7 +572,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             cell.updateMessage(viewModel: message)
             return cell
         case .videoTemplate:
-            //This is video Template not the attachments
+            // This is video Template not the attachments
             if message.isMyMessage {
                 let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as KMMyVideoTemplateCell
                 cell.update(viewModel: message)
@@ -609,24 +608,21 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
     public func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let message = viewModel.messageForRow(indexPath: indexPath),
            message.messageType == .form,
-           message.formTemplate() != nil
-        {
+           message.formTemplate() != nil {
             return UITableView.automaticDimension
-        } else if (indexPath.section >= viewModel.messageModels.count) {
+        } else if indexPath.section >= viewModel.messageModels.count {
             return UITableView.automaticDimension
         } else {
             return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)
         }
     }
 
-
     public func tableView(_: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if let message = viewModel.messageForRow(indexPath: indexPath),
            message.messageType == .form,
-           message.formTemplate() != nil
-        {
+           message.formTemplate() != nil {
             return UITableView.automaticDimension
-        } else if (indexPath.section >= viewModel.messageModels.count) {
+        } else if indexPath.section >= viewModel.messageModels.count {
             return UITableView.automaticDimension
         } else {
             return viewModel.heightForRow(indexPath: indexPath, cellFrame: view.frame, configuration: configuration)

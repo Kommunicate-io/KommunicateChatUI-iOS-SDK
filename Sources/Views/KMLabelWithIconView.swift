@@ -60,7 +60,7 @@ class KMLabelWithIconView: UIView {
             
             // Height Constraint
             self.heightAnchor.constraint(equalToConstant: 16),
-            self.widthAnchor.constraint(equalToConstant: 250),
+            self.widthAnchor.constraint(equalToConstant: 250)
         ])
     }
 

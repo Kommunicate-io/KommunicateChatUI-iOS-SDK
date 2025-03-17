@@ -255,7 +255,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
             timeLabel.bottomAnchor.constraint(
                 equalTo: bubbleView.bottomAnchor,
                 constant: Padding.TimeLabel.bottom
-            ),
+            )
         ])
 
         let linktapGesture = UITapGestureRecognizer(target: self, action: #selector(viewEmailTappedAction))
@@ -330,7 +330,7 @@ open class ALKFriendMessageCell: ALKMessageCell {
         let totalHeight = max(messageHeight + heightPadding, minimumHeight)
 
         guard let metadata = viewModel.metadata,
-              metadata[AL_MESSAGE_REPLY_KEY] as? String != nil
+              metadata[AL_MESSAGE_REPLY_KEY] is String
         else {
             return totalHeight
         }
