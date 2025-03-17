@@ -24,8 +24,10 @@ public class ALKCustomEventHandler {
 
         switch triggeredEvent {
             case .faqClick:
-                if let urlString = data?["faqUrl"] as? String,
-                   let url = URL(string: urlString) {
+                if let url = data?["faqUrl"] as? URL {
+                    delegate.faqClicked(url: url.absoluteString)
+                } else if let urlString = data?["faqUrl"] as? String,
+                          let url = URL(string: urlString) {
                     delegate.faqClicked(url: url.absoluteString)
                 }
 
