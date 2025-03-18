@@ -17,7 +17,7 @@ jobs:
   build-and-lint:
     name: Build and Lint
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout Repository
