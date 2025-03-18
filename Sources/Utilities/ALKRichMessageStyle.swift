@@ -17,7 +17,7 @@ public enum ALKRichMessageStyle {
     static let styles: [ColorProtocol.Type] = [
         ALKListTemplateCell.ListStyle.self,
         ALKGenericCardCell.CardStyle.self,
-        CurvedImageButton.QuickReplyButtonStyle.self,
+        CurvedImageButton.QuickReplyButtonStyle.self
     ]
 
     public static var primaryColor = UIColor.actionButtonColor() {

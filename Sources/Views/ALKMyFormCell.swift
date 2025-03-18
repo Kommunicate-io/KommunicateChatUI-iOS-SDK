@@ -97,7 +97,7 @@ class ALKMyFormCell: ALKFormCell {
             messageView,
             itemListView,
             stateView,
-            timeLabel,
+            timeLabel
         ])
         stateView.topAnchor.constraint(equalTo: timeLabel.topAnchor, constant: ViewPadding.StateView.top).isActive = true
         stateView.trailingAnchor.constraint(equalTo: itemListView.trailingAnchor, constant: -ViewPadding.StateView.right).isActive = true

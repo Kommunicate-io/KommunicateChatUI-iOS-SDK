@@ -29,17 +29,6 @@ class ALKLinkPreviewBaseCell: ALKMessageCell {
         messageView.delegate = self
     }
 
-    override func setupStyle() {
-        super.setupStyle()
-    }
-
-    override class func messageHeight(viewModel: ALKMessageViewModel,
-                                      width: CGFloat, font: UIFont, mentionStyle: Style,
-                                      displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat
-    {
-        return super.messageHeight(viewModel: viewModel, width: width, font: font, mentionStyle: mentionStyle, displayNames: displayNames)
-    }
-
     @objc private func openUrl() {
         guard let stringURL = url, let openURL = URL(string: stringURL) else { return }
         UIApplication.sharedUIApplication()?.open(openURL)
@@ -50,11 +39,11 @@ class ALKLinkPreviewBaseCell: ALKMessageCell {
     }
     
     // To show Menu Controller if user long presses the Link
-    func showMenuControllerForLink(_ gestureView : UIView) {
+    func showMenuControllerForLink(_ gestureView: UIView) {
         NotificationCenter.default.addObserver(self, selector: #selector(menuWillShow(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuWillHide(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
 
-        guard let superView = gestureView.superview else {return}
+        guard gestureView.superview != nil else {return}
         
         let menuController = UIMenuController.shared
 
@@ -79,8 +68,7 @@ class ALKLinkPreviewBaseCell: ALKMessageCell {
         }
 
         menuController.menuItems = menus
-        menuController.setTargetRect(gestureView.frame, in: superView)
-        menuController.setMenuVisible(true, animated: true)
+        menuController.showMenu(from: gestureView, rect: gestureView.bounds)
     }
 }
 extension ALKLinkPreviewBaseCell: UITextViewDelegate {

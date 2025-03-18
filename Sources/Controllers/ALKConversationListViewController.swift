@@ -55,7 +55,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     fileprivate var tapToDismiss: UITapGestureRecognizer!
     fileprivate var alMqttConversationService: ALMQTTConversationService!
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
     fileprivate var localizedStringFileName: String!
 
     // MQTT connection retry
@@ -104,7 +104,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
             using: { [weak self] _ in
                 guard let weakSelf = self else { return }
 
-                if weakSelf.navigationController?.visibleViewController as? ALKConversationListViewController != nil, weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
+                if weakSelf.navigationController?.visibleViewController is ALKConversationListViewController, weakSelf.configuration.isMessageSearchEnabled, weakSelf.searchBar.searchBar.text == "" {
                     weakSelf.showNavigationItems()
                 }
             }
@@ -325,8 +325,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         if let viewController = conversationViewController,
            viewController.viewModel != nil,
            viewController.viewModel.contactId == message.contactId,
-           viewController.viewModel.channelKey == message.groupId
-        {
+           viewController.viewModel.channelKey == message.groupId {
             print("Contact id matched1")
             viewController.viewModel.addMessagesToList([message])
         }
@@ -395,14 +394,14 @@ extension ALKConversationListViewController: ALMessagesDelegate {
 }
 
 extension ALKConversationListViewController: ALKConversationListViewModelDelegate {
-    open func startedLoading() {
+    public func startedLoading() {
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
             self.tableView.isUserInteractionEnabled = false
         }
     }
 
-    open func listUpdated() {
+    public func listUpdated() {
         DispatchQueue.main.async {
             print("Number of rows \(self.tableView.numberOfRows(inSection: 0))")
             self.tableView.reloadData()
@@ -411,7 +410,7 @@ extension ALKConversationListViewController: ALKConversationListViewModelDelegat
         }
     }
 
-    open func rowUpdatedAt(position: Int) {
+    public func rowUpdatedAt(position: Int) {
         tableView.reloadRows(at: [IndexPath(row: position, section: 0)], with: .automatic)
     }
 }
@@ -425,7 +424,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
     }
     
     public func userOnlineStatusChanged(_ contactId: String!, status: String!) {
-        print("Status Changed \(contactId) \(status)")
+        print("Status Changed \(String(describing: contactId)) \(String(describing: status))")
     }
     
     open func updateUserDetail(_ userId: String!) {
@@ -461,8 +460,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         if let vm = viewController?.viewModel, vm.contactId != nil || vm.channelKey != nil,
            let visibleController = navigationController?.visibleViewController,
            visibleController.isKind(of: ALKConversationViewController.self),
-           isNewMessageForActiveThread(alMessage: alMessage, vm: vm)
-        {
+           isNewMessageForActiveThread(alMessage: alMessage, vm: vm) {
             viewModel.syncCall(viewController: viewController, message: message, isChatOpen: true)
 
         } else if !isMessageSentByLoggedInUser(alMessage: alMessage) {
@@ -476,8 +474,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
             }
         }
         if let visibleController = navigationController?.visibleViewController,
-           visibleController.isKind(of: ALKConversationListViewController.self)
-        {
+           visibleController.isKind(of: ALKConversationListViewController.self) {
             sync(message: alMessage)
         }
     }

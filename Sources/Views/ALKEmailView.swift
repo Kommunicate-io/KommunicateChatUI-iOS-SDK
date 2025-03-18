@@ -67,7 +67,7 @@ class ALKEmailTopView: UIView {
             emailLabel.topAnchor.constraint(equalTo: topAnchor),
             emailLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             emailLabel.leadingAnchor.constraint(equalTo: emailImage.trailingAnchor),
-            emailLabel.heightAnchor.constraint(equalToConstant: ALKEmailTopView.height),
+            emailLabel.heightAnchor.constraint(equalToConstant: ALKEmailTopView.height)
         ])
     }
 }
@@ -95,7 +95,7 @@ class ALKEmailBottomView: UIView {
         let attributedStringforNowLabel = NSMutableAttributedString(string: "Have trouble viewing?", attributes: [
             .font: UIFont(name: "HelveticaNeue-Light", size: 13.0)!,
             .foregroundColor: UIColor(red: 53.0 / 255.0, green: 53.0 / 255.0, blue: 52.0 / 255.0, alpha: 1.0),
-            .kern: 0.04,
+            .kern: 0.04
         ])
         label.attributedText = attributedStringforNowLabel
         label.isOpaque = true
@@ -108,7 +108,7 @@ class ALKEmailBottomView: UIView {
         let attributedStringforNowLabel = NSMutableAttributedString(string: "See it in full view", attributes: [
             .font: UIFont(name: "HelveticaNeue-Light", size: 13.0)!,
             .foregroundColor: UIColor(red: 81.0 / 255.0, green: 78.0 / 255.0, blue: 239.0 / 255.0, alpha: 1.0),
-            .kern: 0.04,
+            .kern: 0.04
         ])
         label.isUserInteractionEnabled = true
         label.attributedText = attributedStringforNowLabel
@@ -153,7 +153,7 @@ class ALKEmailBottomView: UIView {
             emailLinkLabel.topAnchor.constraint(equalTo: topAnchor),
             emailLinkLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             emailLinkLabel.leadingAnchor.constraint(equalTo: emailInfo.trailingAnchor, constant: Padding.EmailLink.left),
-            emailLinkLabel.heightAnchor.constraint(equalToConstant: Padding.EmailLink.height),
+            emailLinkLabel.heightAnchor.constraint(equalToConstant: Padding.EmailLink.height)
         ])
     }
 }

@@ -13,8 +13,7 @@ import UIKit
 // MARK: - ALKPhotoCell
 
 class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
-    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol
-{
+    ALKReplyMenuItemProtocol, ALKReportMessageMenuItemProtocol {
     var photoView: UIImageView = {
         let mv = UIImageView()
         mv.backgroundColor = .clear
@@ -63,7 +62,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return button
     }()
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     var captionLabel: UILabel = {
         let label = UILabel()
@@ -352,7 +351,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             updatedBlobKey = thumbnailBlobKey.replacingOccurrences(of: " ", with: "%20")
         }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl, isS3URL: metadata.url != nil,blobKey: updatedBlobKey) { url, error in
+            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl, isS3URL: metadata.url != nil, blobKey: updatedBlobKey) { url, error in
                 guard error == nil,
                       let url = url
                 else {

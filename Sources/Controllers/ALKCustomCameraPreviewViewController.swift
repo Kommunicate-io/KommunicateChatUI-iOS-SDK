@@ -56,11 +56,6 @@ final class ALKCustomCameraPreviewViewController: ALKBaseViewController, Localiz
         updateConstraintsForSize(size: view.bounds.size)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: - Method of class
 
     private func validateEnvironment() {

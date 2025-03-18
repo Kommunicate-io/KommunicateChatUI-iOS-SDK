@@ -253,7 +253,6 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 }
             }
 
-            let htmlFont = htmlMessage.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
             print("message og html \(message)  att : \(attributedText)")
             
             /// Check for a condition where the user has not passed a font. In this scenario, set the font to the system's default font.
@@ -298,8 +297,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                              width: CGFloat,
                              font: UIFont,
                              mentionStyle: Style,
-                             displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat
-    {
+                             displayNames: ((Set<String>) -> ([String: String]?))?) -> CGFloat {
         dummyMessageView.font = font
 
         /// Check if message is nil
@@ -314,8 +312,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                     defaultAttributes: dummyMessageView.typingAttributes,
                     mentionAttributes: mentionStyle.toAttributes,
                     displayNames: displayNames
-                )
-            {
+                ) {
                 return TextViewSizeCalculator.height(dummyMessageView, attributedText: attributedText, maxWidth: width)
             }
             return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
@@ -366,7 +363,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             for captureGroupIndex in 1...3 {
                 if let captureRange = Range(match.range(at: captureGroupIndex), in: htmlMessage) {
                     let heightInString = String(htmlMessage[captureRange])
-                    if heightInString.contains("%"){
+                    if heightInString.contains("%") {
                         return 150
                     }
                     return extractIntFromString(heightInString)
@@ -387,7 +384,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
             for captureGroupIndex in 1...3 {
                 if let captureRange = Range(match.range(at: captureGroupIndex), in: htmlMessage) {
                     let widthInString = String(htmlMessage[captureRange])
-                    if widthInString.contains("%"){
+                    if widthInString.contains("%") {
                         return 250
                     }
                     return extractIntFromString(widthInString)
@@ -441,7 +438,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 data: htmlText,
                 options: [
                     .documentType: NSAttributedString.DocumentType.html,
-                    .characterEncoding: String.Encoding.utf8.rawValue,
+                    .characterEncoding: String.Encoding.utf8.rawValue
                 ],
                 documentAttributes: nil
             )
@@ -555,8 +552,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                defaultAttributes: [:],
                mentionAttributes: mentionStyle.toAttributes,
                displayNames: displayNames
-           )
-        {
+           ) {
             replyMessageLabel.attributedText = attributedText
         } else {
             replyMessageLabel.text =
@@ -573,8 +569,7 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
                 defaultAttributes: messageView.typingAttributes,
                 mentionAttributes: mentionStyle.toAttributes,
                 displayNames: displayNames
-            )
-        {
+            ) {
             messageView.attributedText = attributedText
         } else {
             messageView.text = viewModel.message

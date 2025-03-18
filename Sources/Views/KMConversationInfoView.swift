@@ -36,11 +36,10 @@ open class KMConversationInfoView: UIView {
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
     
     func setupConstraints() {
         let view = self
-        view.addViewsForAutolayout(views: [titleLabel,leadingImageView,trailingImageView])
+        view.addViewsForAutolayout(views: [titleLabel, leadingImageView, trailingImageView])
         
         NSLayoutConstraint.activate([
             // Leading Image
@@ -58,7 +57,7 @@ open class KMConversationInfoView: UIView {
             trailingImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
             trailingImageView.widthAnchor.constraint(equalToConstant: 20),
             trailingImageView.heightAnchor.constraint(equalToConstant: 20),
-            trailingImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
+            trailingImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15)
         ])
     }
     

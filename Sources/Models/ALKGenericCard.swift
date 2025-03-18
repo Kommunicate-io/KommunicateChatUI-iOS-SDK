@@ -9,9 +9,6 @@ import Foundation
 
 public struct ALKGenericCardTemplate {
     public var cards: [ALKGenericCard]
-    init(cards: [ALKGenericCard]) {
-        self.cards = cards
-    }
 }
 
 public struct ALKGenericCard: Codable {

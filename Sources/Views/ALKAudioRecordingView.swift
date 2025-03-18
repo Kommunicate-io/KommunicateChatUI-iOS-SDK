@@ -218,8 +218,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
             return
         }
         if slideView.frame.origin.x <= recordingViewStartLocation,
-           redDot.frame.origin.x + (location.x - previousGestureLocation) <= redDotStartLocation
-        {
+           redDot.frame.origin.x + (location.x - previousGestureLocation) <= redDotStartLocation {
             recordingView.frame.origin.x += (location.x - previousGestureLocation)
             redDot.frame.origin.x += (location.x - previousGestureLocation)
             if recordingView.frame.origin.x <= 0.0 {
@@ -238,8 +237,7 @@ open class ALKAudioRecorderView: UIView, Localizable {
         }
         let slideViewEnd = slideView.frame.origin.x + slideView.frame.size.width
         if slideViewEnd >= recordingViewStartLocation,
-           redDot.frame.origin.x + (location.x - previousGestureLocation) >= redDotStartLocation
-        {
+           redDot.frame.origin.x + (location.x - previousGestureLocation) >= redDotStartLocation {
             recordingView.frame.origin.x += (location.x - previousGestureLocation)
             redDot.frame.origin.x += (location.x - previousGestureLocation)
             if recordingView.frame.origin.x + recordingView.frame.size.width >= redDotStartLocation + 30 {

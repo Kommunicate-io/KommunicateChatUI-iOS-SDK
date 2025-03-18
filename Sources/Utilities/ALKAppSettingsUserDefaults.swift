@@ -40,7 +40,7 @@ public struct ALKAppSettingsUserDefaults {
     
     /// CSAT Rating Base
     public func getCSATRatingBase() -> Int {
-        if let appSettings = getAppSettings(){
+        if let appSettings = getAppSettings() {
             return appSettings.csatRatingBase
         }
         return 3
@@ -125,8 +125,7 @@ public struct ALKAppSettingsUserDefaults {
     /// Button primary color
     public func getButtonPrimaryColor() -> UIColor {
         if let appSettings = getAppSettings(),
-           let buttonPrimaryColor = appSettings.buttonPrimaryColor
-        {
+           let buttonPrimaryColor = appSettings.buttonPrimaryColor {
             return UIColor(hexString: buttonPrimaryColor)
         }
         return UIColor.actionButtonColor()
@@ -150,20 +149,17 @@ public struct ALKAppSettingsUserDefaults {
         } else {
             /// Keep the sent message or received message background color . If some one set from MessageStyle
             if let settings = existingAppSettings,
-               let existingSentMessageBackgroundColor = settings.sentMessageBackgroundColor
-            {
+               let existingSentMessageBackgroundColor = settings.sentMessageBackgroundColor {
                 appSettings.sentMessageBackgroundColor = existingSentMessageBackgroundColor
             }
 
             if let settings = existingAppSettings,
-               let existingReceivedMessageBackgroundColor = settings.receivedMessageBackgroundColor
-            {
+               let existingReceivedMessageBackgroundColor = settings.receivedMessageBackgroundColor {
                 appSettings.receivedMessageBackgroundColor = existingReceivedMessageBackgroundColor
             }
 
             if let settings = existingAppSettings,
-               let existingButtonPrimaryColor = settings.buttonPrimaryColor
-            {
+               let existingButtonPrimaryColor = settings.buttonPrimaryColor {
                 appSettings.buttonPrimaryColor = existingButtonPrimaryColor
             }
             setAppSettings(appSettings: appSettings)
@@ -177,7 +173,7 @@ public struct ALKAppSettingsUserDefaults {
     /// This method will be used for getting the app settings data
     public func getAppSettings() -> ALKAppSettings? {
         guard let data = UserDefaults.standard.object(forKey: appSettingsKey) as? Data,
-              let appSettings = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? ALKAppSettings
+              let appSettings = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ALKAppSettings.self, from: data)
         else {
             return nil
         }
@@ -207,7 +203,9 @@ public struct ALKAppSettingsUserDefaults {
 }
 
 /// `ALKAppSettings`class is used for creating a app settings details
-public class ALKAppSettings: NSObject, NSCoding {
+public class ALKAppSettings: NSObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool = true
+
     enum CoderKey {
         static let primaryColor = "primaryColor"
         static let showPoweredBy = "showPoweredBy"
@@ -220,7 +218,7 @@ public class ALKAppSettings: NSObject, NSCoding {
         static let defaultUploadOverrideUrl = "defaultUploadOverrideUrl"
         static let defaultUploadOverrideHeaders = "defaultUploadOverrideHeaders"
         static let csatRatingBase = "csatRatingBase"
-        
+        static let botTypingIndicatorInterval = "botTypingIndicatorInterval"
     }
 
     var primaryColor: String
@@ -235,8 +233,9 @@ public class ALKAppSettings: NSObject, NSCoding {
     public var buttonPrimaryColor: String?
     public var hidePostCTAEnabled: Bool = false
     public var defaultUploadOverrideUrl: String?
-    public var defaultUploadOverrideHeaders: [String:String]?
+    public var defaultUploadOverrideHeaders: [String: String]?
     public var csatRatingBase: Int = 3
+    public var botTypingIndicatorInterval: Int = 0
 
     // MARK: - Public Initialization
 
@@ -254,8 +253,9 @@ public class ALKAppSettings: NSObject, NSCoding {
         buttonPrimaryColor = coder.decodeObject(forKey: CoderKey.buttonPrimaryColor) as? String
         hidePostCTAEnabled = coder.decodeBool(forKey: CoderKey.hidePostCTAEnabled)
         defaultUploadOverrideUrl = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideUrl) as? String
-        defaultUploadOverrideHeaders = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideHeaders) as? [String:String]
+        defaultUploadOverrideHeaders = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideHeaders) as? [String: String]
         csatRatingBase = coder.decodeInteger(forKey: CoderKey.csatRatingBase)
+        botTypingIndicatorInterval = coder.decodeInteger(forKey: CoderKey.botTypingIndicatorInterval)
     }
 
     // MARK: - Public methods
@@ -270,5 +270,6 @@ public class ALKAppSettings: NSObject, NSCoding {
         coder.encode(buttonPrimaryColor, forKey: CoderKey.buttonPrimaryColor)
         coder.encode(hidePostCTAEnabled, forKey: CoderKey.hidePostCTAEnabled)
         coder.encode(csatRatingBase, forKey: CoderKey.csatRatingBase)
+        coder.encode(botTypingIndicatorInterval, forKey: CoderKey.botTypingIndicatorInterval)
     }
 }

@@ -18,7 +18,6 @@ public enum KMCustomEvent: String, CaseIterable {
     case messageReceive = "ON_MESSAGE_RECEIVE"
     case conversationInfoClick = "ON_CONVERSATION_INFO_CLICK"
     
-    
     public static var allEvents: [KMCustomEvent] {
         return Array(self.allCases)
     }

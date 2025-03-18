@@ -124,8 +124,7 @@ class ALKFormDatePickerViewController: UIViewController, Localizable {
          messageKey: String,
          position: Int,
          datePickerMode: UIDatePicker.Mode,
-         localizedStringFileName: String)
-    {
+         localizedStringFileName: String) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         self.messageKey = messageKey

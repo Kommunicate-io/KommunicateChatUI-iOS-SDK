@@ -45,7 +45,6 @@ class KMStaticTopMessageCell: ALKMessageCell {
         return label
     }()
     
-    
     private var leftIcon: UIImageView = {
         let imv = UIImageView()
         imv.contentMode = .scaleAspectFill
@@ -71,28 +70,27 @@ class KMStaticTopMessageCell: ALKMessageCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-
     private func addConstraints() {
         self.backgroundColor = .clear
         addViewsForAutolayout(views: [view])
-        view.leadingAnchor.constraint(equalTo: leadingAnchor,constant:  ViewPadding.View.leading).isActive = true
+        view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.View.leading).isActive = true
         view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: ViewPadding.View.trailing).isActive = true
-        view.topAnchor.constraint(equalTo: topAnchor, constant:  ViewPadding.View.top).isActive = true
-        view.bottomAnchor.constraint(equalTo: bottomAnchor, constant:  ViewPadding.View.bottom).isActive = true
-        view.addViewsForAutolayout(views: [contentLabel,leftIcon])
+        view.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.View.top).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: ViewPadding.View.bottom).isActive = true
+        view.addViewsForAutolayout(views: [contentLabel, leftIcon])
         view.layer.cornerRadius = ViewPadding.View.cornorRadius
         
-        contentLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant:  ViewPadding.ContentLabel.leading).isActive = true
-        contentLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:  ViewPadding.ContentLabel.trailing).isActive = true
+        contentLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ViewPadding.ContentLabel.leading).isActive = true
+        contentLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ViewPadding.ContentLabel.trailing).isActive = true
         contentLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: ViewPadding.ContentLabel.top).isActive = true
-        leftIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:  ViewPadding.LeftIcon.leading).isActive = true
+        leftIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ViewPadding.LeftIcon.leading).isActive = true
         leftIcon.widthAnchor.constraint(equalToConstant: ViewPadding.LeftIcon.width).isActive = true
-        leftIcon.heightAnchor.constraint(equalToConstant:  ViewPadding.LeftIcon.height).isActive = true
+        leftIcon.heightAnchor.constraint(equalToConstant: ViewPadding.LeftIcon.height).isActive = true
         leftIcon.topAnchor.constraint(equalTo: contentLabel.topAnchor).isActive = true
     }
     
     public static func rowHeight(model: ALKMessageModel, width: CGFloat) -> CGFloat {
-        let height =  super.messageHeight(viewModel: model, width: width - 100, font: ALKMessageStyle.staticTopMessage.font, mentionStyle: ALKMessageStyle.receivedMention , displayNames: nil)
+        let height =  super.messageHeight(viewModel: model, width: width - 100, font: ALKMessageStyle.staticTopMessage.font, mentionStyle: ALKMessageStyle.receivedMention, displayNames: nil)
         return height + ViewPadding.topSpacing + ViewPadding.bottomSpacing
     }
     
@@ -100,10 +98,9 @@ class KMStaticTopMessageCell: ALKMessageCell {
         contentLabel.text = viewModel.message
     }
     
-    override func setupStyle(){
+    override func setupStyle() {
         let style = ALKMessageStyle.staticTopMessage
         contentLabel.textColor = style.text
         contentLabel.font = style.font
     }
 }
-

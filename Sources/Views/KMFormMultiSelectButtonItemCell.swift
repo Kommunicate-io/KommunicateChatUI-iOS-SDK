@@ -23,9 +23,9 @@ class KMFormMultiSelectButtonItemCell: UITableViewCell {
         addConstraints()
     }
 
-    func update(item: FormViewModelMultiselectItem.Option, isChecked: Bool = false){
+    func update(item: FormViewModelMultiselectItem.Option, isChecked: Bool = false) {
         self.item = item
-        button.update(title: item.label,isSelected: isChecked)
+        button.update(title: item.label, isSelected: isChecked)
         button.delegate = self
     }
     
@@ -41,10 +41,10 @@ class KMFormMultiSelectButtonItemCell: UITableViewCell {
     private func addConstraints() {
         addViewsForAutolayout(views: [button])
         button.layout {
-            $0.leading == leadingAnchor + Size.nameLabel.leading
-            $0.trailing == trailingAnchor + Size.nameLabel.trailing
-            $0.top == topAnchor + Size.nameLabel.top
-            $0.bottom <= bottomAnchor + Size.nameLabel.bottom
+            $0.leading == leadingAnchor + Size.NameLabel.leading
+            $0.trailing == trailingAnchor + Size.NameLabel.trailing
+            $0.top == topAnchor + Size.NameLabel.top
+            $0.bottom <= bottomAnchor + Size.NameLabel.bottom
         }
         
     }
@@ -52,7 +52,7 @@ class KMFormMultiSelectButtonItemCell: UITableViewCell {
 
 private extension KMFormMultiSelectButtonItemCell {
     enum Size {
-        enum nameLabel {
+        enum NameLabel {
             static let top: CGFloat = 5
             static let bottom: CGFloat = -5
             static let leading: CGFloat = 10

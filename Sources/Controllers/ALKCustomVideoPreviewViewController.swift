@@ -44,10 +44,6 @@ final class ALKCustomVideoPreviewViewController: ALKBaseViewController, Localiza
         super.init(configuration: configuration)
     }
 
-    override func loadView() {
-        super.loadView()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         playVideo()

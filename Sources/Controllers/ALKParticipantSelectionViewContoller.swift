@@ -59,8 +59,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
         setupUI()
 
         if let textField = searchController.searchBar.textField,
-           UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft
-        {
+           UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             textField.textAlignment = .right
         }
 
@@ -186,7 +185,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
                     completion()
                 }
 
-            } catch (_) {
+            } catch _ {
                 completion()
             }
         }

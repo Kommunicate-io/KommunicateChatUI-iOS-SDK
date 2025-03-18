@@ -118,7 +118,7 @@ extension TranslucentView {
             UIView.AutoresizingMask.flexibleBottomMargin,
             UIView.AutoresizingMask.flexibleLeftMargin,
             UIView.AutoresizingMask.flexibleRightMargin,
-            UIView.AutoresizingMask.flexibleTopMargin,
+            UIView.AutoresizingMask.flexibleTopMargin
         ]
         nonExistentSubview = _nonExistentSubview
         insertSubview(nonExistentSubview!, at: 0)
@@ -130,7 +130,7 @@ extension TranslucentView {
             UIView.AutoresizingMask.flexibleBottomMargin,
             UIView.AutoresizingMask.flexibleLeftMargin,
             UIView.AutoresizingMask.flexibleRightMargin,
-            UIView.AutoresizingMask.flexibleTopMargin,
+            UIView.AutoresizingMask.flexibleTopMargin
         ]
         toolbarContainerClipView = _toolbarContainerClipView
         nonExistentSubview!.addSubview(toolbarContainerClipView!)

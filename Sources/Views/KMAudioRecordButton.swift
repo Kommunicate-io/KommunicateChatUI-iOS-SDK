@@ -81,7 +81,7 @@ open class KMAudioRecordButton: UIButton {
     }
 
     override open var intrinsicContentSize: CGSize {
-        if state == .none {
+        if state == .normal {
             return recordButton.intrinsicContentSize
         } else {
             return CGSize(width: recordButton.intrinsicContentSize.width * 3, height: recordButton.intrinsicContentSize.height)
@@ -124,7 +124,7 @@ open class KMAudioRecordButton: UIButton {
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
             AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue,
+            AVEncoderAudioQualityKey: AVAudioQuality.medium.rawValue
         ]
         do {
             try recordingSession.setCategory(.playAndRecord, mode: .default)
@@ -185,7 +185,7 @@ open class KMAudioRecordButton: UIButton {
             delegate?.moveButton(location: location)
 
         case .ended:
-            if state == .none {
+            if state == .normal {
                 return
             }
             stopAudioRecord()

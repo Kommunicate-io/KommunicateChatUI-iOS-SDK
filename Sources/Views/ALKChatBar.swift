@@ -134,10 +134,8 @@ open class ALKChatBar: UIView, Localizable {
         var image = UIImage(named: "ic_language", in: Bundle.km, compatibleWith: nil)
         image = image?.imageFlippedForRightToLeftLayoutDirection()
         let tintColor = ALKAppSettingsUserDefaults().getAttachmentIconsTintColor()
-        if tintColor != nil {
-            image = image?.withRenderingMode(.alwaysTemplate)
-            button.imageView?.tintColor = tintColor
-        }
+        image = image?.withRenderingMode(.alwaysTemplate)
+        button.imageView?.tintColor = tintColor
         button.setImage(image, for: .normal)
         button.isHidden = true
         return button
@@ -257,7 +255,7 @@ open class ALKChatBar: UIView, Localizable {
         let attrs = [
             NSAttributedString.Key.paragraphStyle: style,
             NSAttributedString.Key.font: ALKChatBarConfiguration.TextView.text.font,
-            NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.text.text,
+            NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.text.text
         ]
         return attrs
     }() {
@@ -504,7 +502,7 @@ open class ALKChatBar: UIView, Localizable {
             placeHolder,
             soundRec,
             poweredByMessageTextView,
-            languageSelectionButton,
+            languageSelectionButton
         ])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
@@ -526,7 +524,7 @@ open class ALKChatBar: UIView, Localizable {
                 constant: buttonSize.height,
                 identifier: ConstraintIdentifier.mediaStackViewHeight.rawValue
             ),
-            attachmentButtonStackView.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor),
+            attachmentButtonStackView.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor)
         ]
         stackViewConstraints.append(contentsOf: buttonheightConstraints)
         NSLayoutConstraint.activate(stackViewConstraints)
@@ -557,10 +555,8 @@ open class ALKChatBar: UIView, Localizable {
             sendButton.isHidden = true
         }
         
-       
-        
         if !configuration.languagesForSpeechToText.isEmpty {
-            languageSelectionButton.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 5).isActive = true
+            languageSelectionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
             languageSelectionButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
             languageSelectionButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
             languageSelectionButton.topAnchor.constraint(equalTo: micButton.topAnchor).isActive = true
@@ -744,8 +740,7 @@ open class ALKChatBar: UIView, Localizable {
             var image = image?.imageFlippedForRightToLeftLayoutDirection()
             image = image?.scale(with: size)
             if tintColor != nil,
-               !chatBarConfiguration.disableButtonTintColor
-            {
+               !chatBarConfiguration.disableButtonTintColor {
                 image = image?.withRenderingMode(.alwaysTemplate)
                 button.imageView?.tintColor = tintColor
             }
@@ -897,8 +892,7 @@ extension ALKChatBar: ALKAudioRecorderViewProtocol {
 extension UITextView {
     func hyperLink(mutableAttributedString: NSMutableAttributedString,
                    url: URL,
-                   clickString: String)
-    {
+                   clickString: String) {
         let range = mutableAttributedString.string.range(of: clickString)
 
         guard let subStringRange = range else {

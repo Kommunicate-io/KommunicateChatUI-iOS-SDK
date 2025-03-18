@@ -110,6 +110,12 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
                     // whatever
                 }
             }
+        case .limited:
+            print("limited authorization granted")
+            getAllImage(completion: { [weak self] isGrant in
+                guard let weakSelf = self else { return }
+                weakSelf.createScrollGallery(isGrant: isGrant)
+            })
         @unknown default:
             print("Unknown Permission for photo Library")
         }
@@ -191,7 +197,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             return
         }
         guard !self.configuration.enableCaptionScreenForAttachments else {
-            let vc = KMCustomCaptionViewController.init(configuration: self.configuration, selectedFiles: self.selectedFiles, allPhotos: allPhotos)
+            let vc = KMCustomCaptionViewController(configuration: self.configuration, selectedFiles: self.selectedFiles, allPhotos: allPhotos)
             vc.delegate = self
             self.navigationController?.pushViewController(vc, animated: true)
             return
@@ -240,7 +246,7 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
             guard let imageData = data else {
                 completion(nil)
                 return
@@ -263,7 +269,6 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
             }
         }
     }
-
 
     func export(_ completion: @escaping ((_ images: [UIImage], _ gifs: [String], _ videos: [String], _ error: Bool) -> Void)) {
         var selectedImages = [UIImage]()
@@ -324,12 +329,11 @@ class ALKCustomPickerViewController: ALKBaseViewController, Localizable {
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
             guard let imageData = data else {
                 completion(nil, false)
                 return
             }
-
             
             if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "gif" as CFString, nil)?.takeRetainedValue(),
                UTTypeConformsTo(uti, kUTTypeGIF) {

@@ -69,10 +69,6 @@ class ALKFriendNewChatCell: UITableViewCell {
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     func setFriendCellDelegate(cellDelegate: ALKFriendCellProtocol?, indexPath: IndexPath) {
         delegate = cellDelegate
         self.indexPath = indexPath

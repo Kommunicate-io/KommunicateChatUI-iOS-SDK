@@ -12,7 +12,7 @@ extension ALKConversationViewController: KMAutoCompletionDelegate {
     public func sendMessage(content: String) {}
     
     public func didMatch(prefix: String, message: String, updated: Bool) {
-        if isAutoSuggestionRichMessage , message.count >= 2 {
+        if isAutoSuggestionRichMessage, message.count >= 2 {
             var arrayOfAutocomplete: [KMAutoCompleteItem] = []
             if suggestionArray.isEmpty {
                 if !autoSuggestionApi.isEmpty {
@@ -27,11 +27,10 @@ extension ALKConversationViewController: KMAutoCompletionDelegate {
                             arrayOfAutocomplete.append(autoCompleteItem)
                         }
                     }
-                }
-                else {
+                } else {
                     let items = suggestionDict
                     for dictionary in items {
-                        if let key = dictionary["searchKey" ] as? String, let content = dictionary["message"] as? String{
+                        if let key = dictionary["searchKey" ] as? String, let content = dictionary["message"] as? String {
                             let autoCompleteItem = KMAutoCompleteItem(key: key, content: content)
                             arrayOfAutocomplete.append(autoCompleteItem)
                         }
@@ -39,13 +38,13 @@ extension ALKConversationViewController: KMAutoCompletionDelegate {
                 }
             } else {
                 let items = suggestionArray
-                arrayOfAutocomplete = items.map{ KMAutoCompleteItem(key: $0, content: $0)}
+                arrayOfAutocomplete = items.map { KMAutoCompleteItem(key: $0, content: $0)}
             }
             if message.isEmpty {
                 autoSuggestionManager.items = arrayOfAutocomplete
             } else {
                 let searchMessage = message.dropFirst()
-                autoSuggestionManager.items = arrayOfAutocomplete.filter{ $0.key.lowercased().contains(searchMessage) }
+                autoSuggestionManager.items = arrayOfAutocomplete.filter { $0.key.lowercased().contains(searchMessage) }
             }
                     
             UIView.performWithoutAnimation {
@@ -54,7 +53,7 @@ extension ALKConversationViewController: KMAutoCompletionDelegate {
             autoSuggestionManager.hide(false)
         } else {
             autoSuggestionManager.hide(true)
-            if !updated{
+            if !updated {
                 currentText = message
             }
         }

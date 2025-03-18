@@ -104,7 +104,7 @@ extension ALMessage: ALKChatViewModelProtocol {
         return contact.getDisplayName()
     }
     public var theLastMessage: String? {
-        var defaultMessage = "Message"
+        let defaultMessage = "Message"
         switch messageType {
         case .text:
             return message
@@ -114,7 +114,7 @@ extension ALMessage: ALKChatViewModelProtocol {
             return "Location"
         case .html:
             return defaultMessage
-        case .information,.allButtons:
+        case .information, .allButtons:
             return isMessageEmpty ? defaultMessage : message
         case .faqTemplate:
             return isMessageEmpty ? "FAQ" : message
@@ -257,7 +257,7 @@ extension ALMessage: ALKChatViewModelProtocol {
 
 extension ALMessage {
     var isMyMessage: Bool {
-        if (contentType == 10) { return false }
+        if contentType == 10 { return false }
         return (type != nil) ? (type == myMessage) : false
     }
 
@@ -393,8 +393,7 @@ extension ALMessage {
         }
         // Check if type is double or string
         if let lat = lat as? Double,
-           let lon = lon as? Double
-        {
+           let lon = lon as? Double {
             let location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
             return Geocode(coordinates: location)
         } else {

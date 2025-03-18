@@ -194,8 +194,7 @@ struct MessageMentionDecoder {
             )
             // Check if it's a valid range and starts with the prefix
             if let validRange = Range(range, in: message),
-               message[validRange].starts(with: MessageMention.Prefix)
-            {
+               message[validRange].starts(with: MessageMention.Prefix) {
                 mentions.append((MessageMention.Prefix + userId, range))
             }
         }

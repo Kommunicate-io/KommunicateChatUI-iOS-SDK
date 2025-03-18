@@ -39,11 +39,11 @@ class ALKPhotoPicker: NSObject, Localizable {
     @available(iOS 14, *)
     private func export(
         results: [PHPickerResult],
-        completion: @escaping (_ images: [UIImage],_ gifs: [String], _ videos: [String]) -> Void
+        completion: @escaping (_ images: [UIImage], _ gifs: [String], _ videos: [String]) -> Void
     ) {
         var selectedImages: [UIImage] = []
         var selectedVideosPath: [String] = []
-        var selectedGifsPath: [String] = []
+        let selectedGifsPath: [String] = []
         let exportGroup = DispatchGroup()
         DispatchQueue.global(qos: .userInitiated).async {
             for result in results {

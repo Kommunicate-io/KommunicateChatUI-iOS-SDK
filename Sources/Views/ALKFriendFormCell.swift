@@ -142,7 +142,7 @@ class ALKFriendFormCell: ALKFormCell {
             messageView,
             itemListView,
             submitButtonView,
-            timeLabel,
+            timeLabel
         ])
         nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.NameLabel.top).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.NameLabel.leading).isActive = true

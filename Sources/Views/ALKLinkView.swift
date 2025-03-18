@@ -164,7 +164,7 @@ class ALKLinkView: UIView, Localizable {
         return ALKLinkView.CommonPadding.View.height + ALKLinkView.CommonPadding.PreviewImageView.top
     }
 
-    func updateView(linkPreviewMeta: KMLinkPreviewMeta, linkPreviewURL:  String) {
+    func updateView(linkPreviewMeta: KMLinkPreviewMeta, linkPreviewURL: String) {
         let placeHolder = UIImage(named: "default_image", in: Bundle.km, compatibleWith: nil)
 
         if let stringURL = linkPreviewMeta.image ?? linkPreviewMeta.icon, let url = URL(string: stringURL), currentURL == linkPreviewURL {

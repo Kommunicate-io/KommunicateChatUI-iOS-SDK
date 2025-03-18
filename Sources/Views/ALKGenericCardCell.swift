@@ -42,7 +42,7 @@ open class ALKGenericCardCollectionView: ALKIndexedCollectionView {
                 var templates = try TemplateDecoder.decode([KMCardTemplate].self, from: metadata)
                 if message.isActionButtonHidden() {
                     for index in 0...templates.count - 1 {
-                        templates[index].buttons?.removeAll{ button in
+                        templates[index].buttons?.removeAll { button in
                             return button.action?.type != "link" && button.action?.type != "submit"
                         }
                     }
@@ -107,8 +107,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
         /// Shadow color of the overlay text
         public static var overlayTextShadowColor = UIColor.black.cgColor
     }
-    
-    
 
     public enum Config {
         public static let buttonHeight: CGFloat = 40
@@ -133,7 +131,7 @@ open class ALKGenericCardCell: UICollectionViewCell {
         /// The value for the card corner radius. The default value for this is 10.0.
         public static var cardCornerRadius: CGFloat = 10.0
         /// Content Mode type for the card cover image. The default value for this is scaleToFill.
-        public static var coverImageContentMode : ContentMode = .scaleToFill
+        public static var coverImageContentMode: ContentMode = .scaleToFill
 
     }
 
@@ -227,10 +225,6 @@ open class ALKGenericCardCell: UICollectionViewCell {
     open var actionButtons = [UIButton]()
     open var card: KMCardTemplate!
     open var buttonSelected: ((_ index: Int, _ name: String, _ card: KMCardTemplate) -> Void)?
-
-    override open func awakeFromNib() {
-        super.awakeFromNib()
-    }
 
     override public init(frame: CGRect) {
         super.init(frame: frame)

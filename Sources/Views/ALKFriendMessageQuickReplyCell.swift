@@ -91,7 +91,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
 
     public func update(viewModel: ALKMessageViewModel, maxWidth: CGFloat) {
         let isMessageEmpty = viewModel.isMessageEmpty
-        if let check = viewModel.suggestedReply() {
+        if let _ = viewModel.suggestedReply() {
             quickReplyView.isHidden = false
         }
         let model = viewModel.messageDetails()
@@ -208,7 +208,7 @@ public class ALKFriendMessageQuickReplyCell: ALKChatBaseCell<ALKMessageViewModel
             timeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1 * ViewPadding.TimeLabel.bottom),
             timeLabelWidth,
             timeLabelHeight,
-            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
+            timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
         ])
         nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }

@@ -69,8 +69,7 @@ extension Date {
     }
 
     static func formatedDate(formateString: String,
-                             timeInMillSecs: Int64) -> String
-    {
+                             timeInMillSecs: Int64) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = formateString
         let date = Date(timeIntervalSince1970: TimeInterval(timeInMillSecs / 1000))

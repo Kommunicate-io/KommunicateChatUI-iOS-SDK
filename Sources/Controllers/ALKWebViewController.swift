@@ -14,7 +14,7 @@ class ALKWebViewController: UIViewController, WKNavigationDelegate {
     let url: URL?
     let navTitle: String
 
-    let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     init(htmlString: String?, url: URL?, title: String) {
         self.htmlString = htmlString

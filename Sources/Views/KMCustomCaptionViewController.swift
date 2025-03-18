@@ -116,7 +116,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            collectionView.heightAnchor.constraint(lessThanOrEqualToConstant: 500),
+            collectionView.heightAnchor.constraint(lessThanOrEqualToConstant: 500)
         ])
     }
 
@@ -183,7 +183,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             dividerView.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
             dividerView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: -5),
             dividerView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
-            dividerView.centerXAnchor.constraint(equalTo: stackView.centerXAnchor),
+            dividerView.centerXAnchor.constraint(equalTo: stackView.centerXAnchor)
         ])
     }
 
@@ -248,7 +248,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
             guard let imageData = data else {
                 completion(nil, false)
                 return
@@ -325,7 +325,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         let options = PHImageRequestOptions()
         options.isSynchronous = false
 
-        PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+            PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
             guard let imageData = data else {
                 completion(nil)
                 return
@@ -348,7 +348,6 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             }
         }
     }
-
         
     // MARK: - Button Actions
 
@@ -361,7 +360,6 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         let caption = captionBar.text ?? ""
         export { images, gifs, videos, error in
             self.activityIndicator.stopAnimating()
-            var check =  images.count != 0 || gifs.count != 0 || videos.count != 0
             if error {
                 let alertTitle = self.localizedString(
                     forKey: "PhotoAlbumFailureTitle",
@@ -464,7 +462,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! KMImageCell
             
-        if indexPath.item == savedPhotos.count  {
+        if indexPath.item == savedPhotos.count {
             // Placeholder image (last cell)
             cell.imageView.image = UIImage()
             cell.deleteButton.isHidden = true
@@ -607,7 +605,7 @@ class KMImageCell: UICollectionViewCell {
             addButton.topAnchor.constraint(equalTo: imageView.topAnchor),
             addButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
             addButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
-            addButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            addButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor)
         ])
     }
     

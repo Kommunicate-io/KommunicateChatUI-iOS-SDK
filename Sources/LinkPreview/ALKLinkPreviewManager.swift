@@ -11,8 +11,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
     private let responseMainQueue: DispatchQueue
 
     init(workBckQueue: DispatchQueue = DispatchQueue.global(qos: .background),
-         responseMainQueue: DispatchQueue = DispatchQueue.main)
-    {
+         responseMainQueue: DispatchQueue = DispatchQueue.main) {
         self.workBckQueue = workBckQueue
         self.responseMainQueue = responseMainQueue
     }
@@ -47,8 +46,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
 
                 if let data = data, let urlResponse = response,
                    let encoding = urlResponse.textEncodingName,
-                   let source = NSString(data: data, encoding: CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(encoding as CFString)))
-                {
+                   let source = NSString(data: data, encoding: CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(encoding as CFString))) {
                     linkPreview = weakSelf.parseHtmlAndUpdateLinkPreviewMeta(text: source as String, baseUrl: url.absoluteString)
 
                 } else {
@@ -102,7 +100,7 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
         let possibleTags: [String] = [
             KMLinkPreviewMeta.Key.title.rawValue,
             KMLinkPreviewMeta.Key.description.rawValue,
-            KMLinkPreviewMeta.Key.image.rawValue,
+            KMLinkPreviewMeta.Key.image.rawValue
         ]
         for metatag in tags {
             for tag in possibleTags {
@@ -113,11 +111,9 @@ class ALKLinkPreviewManager: NSObject, URLSessionDelegate {
                     metatag.range(of: "name=\"\(tag)") != nil ||
                     metatag.range(of: "name='\(tag)") != nil ||
                     metatag.range(of: "itemprop=\"\(tag)") != nil ||
-                    metatag.range(of: "itemprop='\(tag)") != nil
-                {
+                    metatag.range(of: "itemprop='\(tag)") != nil {
                     if let key = KMLinkPreviewMeta.Key(rawValue: tag),
-                       result.value(for: key) == nil
-                    {
+                       result.value(for: key) == nil {
                         if let value = KMLinkPreviewRegex.pregMatchFirst(metatag, pattern: KMLinkPreviewRegex.Pattern.Meta.content, index: 2) {
                             let value = value.decodedHtml.extendedTrim
                             if tag == "image" {
@@ -284,7 +280,7 @@ extension String {
         let attributedOptions: [NSAttributedString.DocumentReadingOptionKey: Any] =
             [
                 .documentType: NSAttributedString.DocumentType.html,
-                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue),
+                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue)
             ]
         do {
             let attributedString = try NSAttributedString(data: encodedData, options: attributedOptions, documentAttributes: nil)

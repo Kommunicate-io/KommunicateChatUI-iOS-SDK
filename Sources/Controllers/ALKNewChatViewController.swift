@@ -29,7 +29,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
         )
     )
 
-    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
 
     // MARK: - Life cycle
 
@@ -217,8 +217,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
 
         let metaData = NSMutableDictionary()
         if let descriptionText = groupDescription,
-           !descriptionText.trim().isEmpty
-        {
+           !descriptionText.trim().isEmpty {
             metaData[ALKGroupDescriptionViewModel.GroupDescription.key] = descriptionText
         }
 

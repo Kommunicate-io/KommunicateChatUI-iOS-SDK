@@ -37,7 +37,8 @@ class KMMuteConversationViewController: UIViewController, Localizable {
 
     private let timePicker: UIPickerView = {
         let picker = UIPickerView()
-        picker.showsSelectionIndicator = true
+        // No longer needed, so commented this line
+        // picker.showsSelectionIndicator = true
         return picker
     }()
 
@@ -71,7 +72,7 @@ class KMMuteConversationViewController: UIViewController, Localizable {
         let values = [
             localizedString(forKey: "EightHour", withDefaultValue: SystemMessage.MutePopup.EightHour, fileName: configuration.localizedStringFileName),
             localizedString(forKey: "OneWeek", withDefaultValue: SystemMessage.MutePopup.OneWeek, fileName: configuration.localizedStringFileName),
-            localizedString(forKey: "OneYear", withDefaultValue: SystemMessage.MutePopup.OneYear, fileName: configuration.localizedStringFileName),
+            localizedString(forKey: "OneYear", withDefaultValue: SystemMessage.MutePopup.OneYear, fileName: configuration.localizedStringFileName)
         ]
         return values
     }()

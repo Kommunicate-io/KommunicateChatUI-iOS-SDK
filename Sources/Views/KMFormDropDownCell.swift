@@ -10,8 +10,8 @@ import UIKit
 import iOSDropDown
 
 protocol KMFormDropDownSelectionProtocol {
-    func optionSelected(position: Int,selectedText: String?,index:Int)
-    func defaultOptionSelected(position: Int,selectedText: String?,index:Int)
+    func optionSelected(position: Int, selectedText: String?, index: Int)
+    func defaultOptionSelected(position: Int, selectedText: String?, index: Int)
 }
 
 class KMFormDropDownCell: UITableViewCell {
@@ -42,7 +42,6 @@ class KMFormDropDownCell: UITableViewCell {
         menu.arrowColor = FormDropDownStyle.Color.arrowColor
         menu.itemsColor = FormDropDownStyle.Color.optionsTextColor
     }
-
     
     let errorLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -87,7 +86,7 @@ class KMFormDropDownCell: UITableViewCell {
         }
     }
     
-    var options: [KMFormTemplate.Option]? = nil
+    var options: [KMFormTemplate.Option]?
     var name: String = ""
     var optionsDict: [String: KMFormTemplate.Option] = [:]
     var delegate: KMFormDropDownSelectionProtocol?
@@ -102,7 +101,7 @@ class KMFormDropDownCell: UITableViewCell {
         return label
     }()
     
-    let  menu : DropDown = {
+    let  menu: DropDown = {
         let dropdown = DropDown(frame: .zero)
         dropdown.selectedRowColor = FormDropDownStyle.Color.selectedRowBackgroundColor
         dropdown.rowBackgroundColor = FormDropDownStyle.Color.rowBackgroundColor
@@ -114,7 +113,6 @@ class KMFormDropDownCell: UITableViewCell {
         dropdown.itemsColor = FormDropDownStyle.Color.optionsTextColor
         return dropdown
     }()
-
     
     let view: UIView = {
         let view = UIView(frame: .zero)
@@ -137,7 +135,7 @@ class KMFormDropDownCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func addDefultDataInCache(position: Int,selectedText: String?,index:Int) {
+    private func addDefultDataInCache(position: Int, selectedText: String?, index: Int) {
         DispatchQueue.main.async {
             self.delegate?.defaultOptionSelected(position: position, selectedText: selectedText, index: index)
         }
@@ -148,7 +146,7 @@ class KMFormDropDownCell: UITableViewCell {
         errorStackView.addArrangedSubview(errorLabel)
         errorStackView.bringSubviewToFront(errorLabel)
         NSLayoutConstraint.activate([
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             view.heightAnchor.constraint(equalToConstant: FormDropDownStyle.Size.dropdownBoxHeight),
@@ -171,7 +169,7 @@ class KMFormDropDownCell: UITableViewCell {
         menu.topAnchor.constraint(equalTo: view.topAnchor, constant: 10).isActive = true
         menu.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
 
-        menu.didSelect{(selectedText , index ,id) in
+        menu.didSelect {(selectedText, index, _) in
             guard let selectedvalue = self.optionsDict[selectedText]
             else {
                 print("Could not retreive selected option in Dropdown Menu")
@@ -191,7 +189,7 @@ extension KMFormDropDownCell: UITextFieldDelegate {
 
 public struct FormDropDownStyle {
     public struct Color {
-        public static var selectedRowBackgroundColor : UIColor = UIColor.init(hexString: "#87CEFA")
+        public static var selectedRowBackgroundColor: UIColor = UIColor(hexString: "#87CEFA")
         public static var rowBackgroundColor: UIColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.backgroundDarkColor())
         public static var textColor: UIColor = UIColor.kmDynamicColor(light: .darkGray, dark: .lightText)
         public static var arrowColor: UIColor = UIColor.kmDynamicColor(light: UIColor.black, dark: UIColor.white)
@@ -202,6 +200,6 @@ public struct FormDropDownStyle {
         public static var rowHeight: CGFloat = 30.0
         public static var listHeight: CGFloat = 150.0
         public static var dropdownBoxHeight: CGFloat = 40.0
-        public static var arrowSize : CGFloat = 15.0
+        public static var arrowSize: CGFloat = 15.0
     }
 }

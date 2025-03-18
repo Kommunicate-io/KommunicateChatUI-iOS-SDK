@@ -21,50 +21,60 @@ public class ALKCustomEventHandler {
     public func publish(triggeredEvent: KMCustomEvent, data: [String: Any]?) {
         guard let delegate = delegate,
               subscribedEvents.contains(triggeredEvent) else { return }
-              
+
         switch triggeredEvent {
             case .faqClick:
-                guard let data = data,
-                      let url = data["faqUrl"] as? URL else { return }
-                delegate.faqClicked(url: url.absoluteString)
+                if let url = data?["faqUrl"] as? URL {
+                    delegate.faqClicked(url: url.absoluteString)
+                } else if let urlString = data?["faqUrl"] as? String,
+                          let url = URL(string: urlString) {
+                    delegate.faqClicked(url: url.absoluteString)
+                }
+
             case .messageSend:
-                guard let data = data,
-                      let message = data["message"] as? ALMessage else {return}
-                delegate.messageSent(message: message)
+                if let message = data?["message"] as? ALMessage {
+                    delegate.messageSent(message: message)
+                }
+
             case .newConversation:
-                guard let data = data,
-                      let conversationId = data["conversationId"] as? String else { return }
-                delegate.conversationCreated(conversationId: conversationId)
+                if let conversationId = data?["conversationId"] as? String {
+                    delegate.conversationCreated(conversationId: conversationId)
+                }
+
             case .submitRatingClick:
-                guard let data = data,
-                      let conversationId = data["conversationId"] as? Int,
-                      let rating = data["rating"] as? Int,
-                      let comment = data["comment"] as? String  else { return }
-                delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
+                if let conversationId = data?["conversationId"] as? Int,
+                   let rating = data?["rating"] as? Int,
+                   let comment = data?["comment"] as? String {
+                    delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
+                }
+
             case .resolveConversation:
-                guard let data = data else { return }
-                let conversationId =  data["conversationId"] as? String ?? ""
-                delegate.conversationResolved(conversationId: conversationId)
+                if let conversationId = data?["conversationId"] as? String {
+                    delegate.conversationResolved(conversationId: conversationId)
+                }
+
             case .restartConversationClick:
-                guard let data = data,
-                      let conversationId = data["conversationId"] as? Int else { return }
-                delegate.conversationRestarted(conversationId: String(conversationId))
+                if let conversationId = data?["conversationId"] as? Int {
+                    delegate.conversationRestarted(conversationId: String(conversationId))
+                }
+
             case .richMessageClick:
-                guard let data = data else { return }
-                let conversationId =  data["conversationId"] as? String ?? ""
-                let action = data["action"]
-                let type = data["type"] as? String ?? ""
-                delegate.richMessageClicked(conversationId: conversationId, action:action , type: type)
+                let conversationId = data?["conversationId"] as? String ?? ""
+                let action = data?["action"] ?? "Action Not Present"
+                let type = data?["type"] as? String ?? ""
+                delegate.richMessageClicked(conversationId: conversationId, action: action, type: type)
+
             case .conversationBackPress:
                 delegate.onBackButtonClick(isConversationOpened: true)
+
             case .conversationListBackPress:
                 delegate.onBackButtonClick(isConversationOpened: false)
+
             case .messageReceive:
-                guard let data = data,
-                      let messages = data["messageList"] as? [ALMessage] else {return}
-                for message in messages {
-                    delegate.messageReceived(message: message)
+                if let messages = data?["messageList"] as? [ALMessage] {
+                    messages.forEach { delegate.messageReceived(message: $0) }
                 }
+
             case .conversationInfoClick:
                 delegate.conversationInfoClicked()
         }
@@ -105,7 +115,6 @@ public class ALKCustomEventHandler {
     public func unsubscribeEvents() {
         subscribedEvents.removeAll()
     }
-    
     
     /// This method is used to retrieve a list of all available events.
     public func availableEvents() -> [KMCustomEvent] {
