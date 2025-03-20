@@ -194,6 +194,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return contextView
     }()
     
+    open var businessHourView: KMBusinessHoursView = {
+        let contextView = KMBusinessHoursView(frame: CGRect.zero)
+        return contextView
+    }()
+ 
     open var templateView: ALKTemplateMessagesView?
 
     open lazy var replyMessageView: ALKReplyMessageView = {
@@ -690,6 +695,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         conversationInfoView.configureViewWith(model: conversationInfoModel)
     }
     
+    private var businessHourViewHeightConstraint: NSLayoutConstraint?
+
+    public func prepareBusinessHoursInfoView(message: String, isVisible: Bool = false) {
+        let appsetting = ALKAppSettingsUserDefaults()
+        businessHourView.configureMessage(message: message)
+        businessHourView.backgroundColor = UIColor.kmDynamicColor(light: appsetting.getAppBarTintColor(), dark: UIColor.appBarDarkColor())
+        let estimatedHeight = businessHourView.estimateHeightForMessage(message)
+        businessHourViewHeightConstraint?.constant = isVisible ? estimatedHeight : 0
+
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     @objc func conversationInfoViewTap(_: UITapGestureRecognizer) {
         ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.conversationInfoClick, data: nil)
     }
@@ -704,7 +723,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupConstraints() {
-        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, autoSuggestionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, conversationInfoView]
+        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, autoSuggestionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, businessHourView, conversationInfoView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -730,7 +749,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView).isActive = true
 
-        conversationInfoView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        businessHourView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        businessHourView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        businessHourView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        
+        businessHourViewHeightConstraint = businessHourView.heightAnchor.constraint(equalToConstant: 0)
+        businessHourViewHeightConstraint?.isActive = true
+        
+        conversationInfoView.topAnchor.constraint(equalTo: businessHourView.bottomAnchor).isActive = true
         conversationInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         conversationInfoView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         conversationInfoView.backgroundColor = UIColor.kmDynamicColor(light: configuration.conversationInfoModel?.backgroundColor ?? .gray, dark: configuration.conversationInfoModel?.darkBackgroundColor ?? .white)
