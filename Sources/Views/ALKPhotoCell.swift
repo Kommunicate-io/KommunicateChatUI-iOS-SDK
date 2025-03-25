@@ -329,7 +329,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
         guard let message = viewModel, let metadata = message.fileMetaInfo else {
             return
         }
-        guard ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled() else {
+        guard KMCoreSettings.isS3StorageServiceEnabled() || KMCoreSettings.isGoogleCloudServiceEnabled() else {
             photoView.kf.setImage(with: message.thumbnailURL)
             return
         }
