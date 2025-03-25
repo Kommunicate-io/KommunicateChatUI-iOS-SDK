@@ -543,7 +543,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         viewModel.delegate = self
-        isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
+        isAgentApp = KMCoreSettings.isAgentAppConfigurationEnabled()
         refreshViewController()
 //        setupConstraints()
         
@@ -668,13 +668,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let members = ALChannelService().getListOfAllUsers(inChannel: channelKey) as? [String] else {
             return
         }
-        if channel.type != 6 && channel.type != 10 && !members.contains(ALUserDefaultsHandler.getUserId()) {
+        if channel.type != 6 && channel.type != 10 && !members.contains(KMCoreUserDefaultsHandler.getUserId()) {
             chatBar.disableChat(message: localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName))
         } else {
             chatBar.enableChat()
         }
         // Disable group details for support group, open group and when user is not a member.
-        navigationBar.disableTitleAction = channel.type == 10 || channel.type == 6 || !members.contains(ALUserDefaultsHandler.getUserId())
+        navigationBar.disableTitleAction = channel.type == 10 || channel.type == 6 || !members.contains(KMCoreUserDefaultsHandler.getUserId())
     }
 
     func prepareContextView() {
@@ -922,8 +922,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } else {
             self.chatBar.updateMediaViewVisibility()
         }
-        if ALApplozicSettings.isAgentAppConfigurationEnabled(),
-            ALUserDefaultsHandler.isTeamModeEnabled() {
+        if KMCoreSettings.isAgentAppConfigurationEnabled(),
+            KMCoreUserDefaultsHandler.isTeamModeEnabled() {
             self.checkRestrictedMesssaging()
         }
     }
@@ -1236,7 +1236,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard viewModel != nil, alMqttConversationService != nil else { return }
         if !viewModel.isOpenGroup {
             alMqttConversationService.sendTypingStatus(
-                ALUserDefaultsHandler.getApplicationKey(),
+                KMCoreUserDefaultsHandler.getApplicationKey(),
                 userID: viewModel.contactId,
                 andChannelKey: viewModel.channelKey,
                 typing: false
@@ -1332,7 +1332,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     public func syncAutoSuggestionMessage(message: ALMessage?) {
         guard let message = message else { return }
-        if message.isAutoSuggestion(), !ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if message.isAutoSuggestion(), !KMCoreSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
     }
@@ -1340,7 +1340,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
-        if message.isAutoSuggestion(), !ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if message.isAutoSuggestion(), !KMCoreSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
         guard !viewModel.isOpenGroup else {
@@ -1422,7 +1422,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } else if !viewModel.isGroup {
             alMqttConversationService.subscribe(toChannelConversation: nil)
         }
-        if viewModel.isGroup, ALUserDefaultsHandler.isUserLoggedInUserSubscribedMQTT() {
+        if viewModel.isGroup, KMCoreUserDefaultsHandler.isUserLoggedInUserSubscribedMQTT() {
             alMqttConversationService.unSubscribe(toChannelConversation: nil)
         }
     }
@@ -2315,7 +2315,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let channelService = ALChannelService()
         let channel = channelService.getChannelByKey(channelKey)
         
-        if ALUserDefaultsHandler.isTeamModeEnabled(), let teamID = ALUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
+        if KMCoreUserDefaultsHandler.isTeamModeEnabled(), let teamID = KMCoreUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
             chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
             return true
         }
@@ -2372,7 +2372,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             let offset = newSectionCount - oldSectionCount - 1
             tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: false)
         }
-        if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if KMCoreSettings.isAgentAppConfigurationEnabled() {
             let checkForRestricted = checkRestriceted()
             if isChatBarResticted != checkForRestricted {
                 isChatBarResticted = checkForRestricted
@@ -3120,7 +3120,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
         for index in 0 ..< fileCount {
             if index < images.count {
                 let image = images[index]
-                guard image.getSizeInMb() < Double(ALApplozicSettings.getMaxImageSizeForUploadInMB()) else {
+                guard image.getSizeInMb() < Double(KMCoreSettings.getMaxImageSizeForUploadInMB()) else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })
@@ -3147,7 +3147,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else if index < gifs.count + images.count {
                 let gif = gifs[index - images.count]
-                if let size = FileManager().sizeOfFile(atPath: gif), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024 {
+                if let size = FileManager().sizeOfFile(atPath: gif), size > KMCoreSettings.getMaxImageSizeForUploadInMB() * 1024 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })
@@ -3171,7 +3171,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
             } else {
                 let path = videos[index - images.count - gifs.count]
                 
-                if let size = FileManager().sizeOfFile(atPath: path), size > (ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024) {
+                if let size = FileManager().sizeOfFile(atPath: path), size > (KMCoreSettings.getMaxImageSizeForUploadInMB() * 1024) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })

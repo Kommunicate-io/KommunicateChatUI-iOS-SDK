@@ -483,7 +483,7 @@ extension ALKConversationListTableViewController {
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
                         } else {
-                            channelService.leaveChannel(conversation.groupId, andUserId: ALUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
+                            channelService.leaveChannel(conversation.groupId, andUserId: KMCoreUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
                                 error in
                                 self?.stopLoadingIndicator()
                                 guard error == nil else {
@@ -541,7 +541,7 @@ extension ALKConversationListTableViewController {
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
                         } else {
-                            channelService.leaveChannel(conversation.groupId, andUserId: ALUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
+                            channelService.leaveChannel(conversation.groupId, andUserId: KMCoreUserDefaultsHandler.getUserId(), orClientChannelKey: nil, withCompletion: {
                                 error in
                                 self?.stopLoadingIndicator()
                                 guard error == nil else {
