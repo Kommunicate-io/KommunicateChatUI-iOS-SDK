@@ -1246,6 +1246,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
         }
     }
+    
+    // Disables replies if the conversation is resolved and restart button is hidden.
+    open func isConversationResolvedAndReplyEnabled() -> Bool {
+        guard let channel = ALChannelService().getChannelByKey(viewModel.channelKey) else {
+            return true
+        }
+        return !channel.isClosedConversation || !configuration.hideRestartConversationButton
+    }
 
     public func scrollViewWillBeginDecelerating(_: UIScrollView) {
         UIMenuController.shared.hideMenu()
@@ -1812,6 +1820,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     /// For templateId 3, formData is a string.
     /// But for templateId 11, formData is a dictionary.
     private func submitButtonSelected(metadata: [String: Any], text: String) {
+        guard isConversationResolvedAndReplyEnabled() else { return }
         guard
             let urlString = metadata["formAction"] as? String,
             let url = URL(string: urlString)
@@ -1848,6 +1857,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func formSubmitButtonSelected(formSubmitData: FormDataSubmit?, messageModel: ALKMessageViewModel, isButtonClickDisabled: Bool) {
+        guard isConversationResolvedAndReplyEnabled() else { return }
         guard let formData = formSubmitData else {
             print("Invalid form data for submit")
             return
