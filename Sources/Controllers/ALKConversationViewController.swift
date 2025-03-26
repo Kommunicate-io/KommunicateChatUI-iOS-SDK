@@ -3045,7 +3045,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         showNewTypingLabel(status: status)
     }
 
-    public func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
+    public func updateLastSeen(atStatus alUserDetail: KMCoreUserDetail!) {
         print("Last seen updated")
         guard let contact = contactService.loadContact(byKey: "userId", value: alUserDetail.userId) else {
             return
