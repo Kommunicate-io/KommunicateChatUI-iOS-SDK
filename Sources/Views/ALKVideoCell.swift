@@ -303,7 +303,7 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
             return
         }
         let placeHolderImage = UIImage(named: "VIDEO", in: Bundle.km, compatibleWith: nil)
-        guard ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled() else {
+        guard KMCoreSettings.isS3StorageServiceEnabled() || KMCoreSettings.isGoogleCloudServiceEnabled() else {
             photoView.kf.setImage(with: message.thumbnailURL, placeholder: placeHolderImage)
             return
         }

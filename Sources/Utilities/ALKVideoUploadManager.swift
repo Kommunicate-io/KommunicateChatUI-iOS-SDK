@@ -80,7 +80,7 @@ class ALKVideoUploadManager: NSObject {
 
                 guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
                 
-                if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
+                if let customHeaders = KMCoreSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
                     for (key, value) in customHeaders {
                         postURLRequest.setValue(value, forHTTPHeaderField: key)
                     }
@@ -117,7 +117,7 @@ class ALKVideoUploadManager: NSObject {
         let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
         urlRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
         var body = Data()
-        let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
+        let fileParamConstant = KMCoreSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
 
         let imageData = NSData(contentsOfFile: path)
 
@@ -130,7 +130,7 @@ class ALKVideoUploadManager: NSObject {
              body.append(String(format: "\r\n").data(using: .utf8)!)
          }
 
-        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
+        if let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
             body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
             body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n", "data").data(using: .utf8)!)
             body.append(String(format: "Content-Type:%@\r\n\r\n", "application/json").data(using: .utf8)!)
@@ -159,7 +159,7 @@ class ALKVideoUploadManager: NSObject {
         let imageFileMeta = ALFileMetaInfo()
         newMessage.fileMeta = imageFileMeta
 
-        if ALApplozicSettings.isS3StorageServiceEnabled() {
+        if KMCoreSettings.isS3StorageServiceEnabled() {
             newMessage.fileMeta.populate(fileInfo)
         } else {
             guard let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return nil }

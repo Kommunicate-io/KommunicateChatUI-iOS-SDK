@@ -41,9 +41,9 @@ extension ALKMessageViewModel {
     }
     
     func fetchCustomBotName(userId: String) -> String? {
-        guard let customBotId = ALApplozicSettings.getCustomizedBotId(),
+        guard let customBotId = KMCoreSettings.getCustomizedBotId(),
               customBotId == userId,
-              let customBotName = ALApplozicSettings.getCustomBotName()
+              let customBotName = KMCoreSettings.getCustomBotName()
         else { return nil }
         return customBotName
     }
