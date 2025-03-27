@@ -287,7 +287,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         fetchMessages(channelKey: channelKey) {[self] messages, error, userArray in
             print("FETCHED MESSAGES FOR CHAT TRANSCRIPT")
             guard let messageList = messages,
-                  let userDetails = userArray as? [ALUserDetail],
+                  let userDetails = userArray as? [KMCoreUserDetail],
                   !userDetails.isEmpty,
                   let almessages = messageList.reversed() as? [ALMessage] else {
                 self.isChatTranscriptInProgress = false
@@ -345,7 +345,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         }
     }
     
-    func getBotNameById(botId: String, userdetails: [ALUserDetail]) -> String {
+    func getBotNameById(botId: String, userdetails: [KMCoreUserDetail]) -> String {
         for userdetail in userdetails {
             if userdetail.userId == botId {
                 return userdetail.displayName ?? ""
