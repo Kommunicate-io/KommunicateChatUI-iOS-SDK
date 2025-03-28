@@ -192,7 +192,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         delegate?.listUpdated()
     }
 
-    public func updateStatusFor(userDetail: ALUserDetail) {
+    public func updateStatusFor(userDetail: KMCoreUserDetail) {
         guard let alMessages = allMessages as? [ALMessage], let userId = userDetail.userId else { return }
         let messages = alMessages.filter { ($0.contactId != nil) ? $0.contactId == userId : false }
         guard let firstMessage = messages.first, let index = alMessages.firstIndex(of: firstMessage) else { return }
@@ -206,7 +206,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func fetchMoreMessages(dbService: ALMessageDBService) {
-        guard !ALUserDefaultsHandler.getFlagForAllConversationFetched() else { return }
+        guard !KMCoreUserDefaultsHandler.getFlagForAllConversationFetched() else { return }
         delegate?.startedLoading()
         dbService.fetchConversationfromServer(completion: {
             _ in

@@ -18,7 +18,7 @@ public enum AttachmentType: CaseIterable, Equatable {
     case gallery
     case video
     /// Add your Google Map API key to view the map on the Conversation screen.
-    /// Use `ALUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.
+    /// Use `KMCoreUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.
     case location
     case document
 }

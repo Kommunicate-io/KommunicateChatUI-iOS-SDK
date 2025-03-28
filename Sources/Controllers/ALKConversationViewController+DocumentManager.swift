@@ -11,7 +11,7 @@ import UIKit
 extension ALKConversationViewController: ALKDocumentManagerDelegate {
     func documentSelected(at url: URL, fileName: String) {
         // We are getting file size in KB
-        if let size = FileManager().sizeOfFile(atPath: url.path), size > (ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024) {
+        if let size = FileManager().sizeOfFile(atPath: url.path), size > (KMCoreSettings.getMaxImageSizeForUploadInMB() * 1024) {
             showUploadRestrictionAlert()
             return
         }

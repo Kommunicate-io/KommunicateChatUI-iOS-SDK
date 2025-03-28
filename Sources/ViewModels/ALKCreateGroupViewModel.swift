@@ -77,7 +77,7 @@ class ALKCreateGroupViewModel: Localizable {
         guard let channel = ALChannelDBService().loadChannel(byKey: groupId) else {
             return true /// Allow adding participants while creating group.
         }
-        return channel.type == PUBLIC.rawValue || isAdmin(userId: ALUserDefaultsHandler.getUserId())
+        return channel.type == PUBLIC.rawValue || isAdmin(userId: KMCoreUserDefaultsHandler.getUserId())
     }()
 
     let localizationFileName: String
@@ -115,7 +115,7 @@ class ALKCreateGroupViewModel: Localizable {
 
             self.membersInfo =
                 alContacts
-                    .filter { $0 != nil && $0?.userId != ALUserDefaultsHandler.getUserId() }
+                    .filter { $0 != nil && $0?.userId != KMCoreUserDefaultsHandler.getUserId() }
                     .map {
                         let user = $0!
                         return GroupMemberInfo(
@@ -160,7 +160,7 @@ class ALKCreateGroupViewModel: Localizable {
         /// Pressed on user
         var options: [Options] = shouldShowInfoOption ? [.info, .sendMessage] : [.sendMessage]
 
-        if isAdmin(userId: ALUserDefaultsHandler.getUserId()) {
+        if isAdmin(userId: KMCoreUserDefaultsHandler.getUserId()) {
             membersInfo[index].isAdmin ? options.append(.dismissAdmin) : options.append(.makeAdmin)
             options.append(.remove)
             options.append(.cancel)
@@ -179,13 +179,13 @@ class ALKCreateGroupViewModel: Localizable {
     }
 
     private func getCurrentUserInfo() -> GroupMemberInfo {
-        let currentUser = ALContactDBService().loadContact(byKey: "userId", value: ALUserDefaultsHandler.getUserId())!
+        let currentUser = ALContactDBService().loadContact(byKey: "userId", value: KMCoreUserDefaultsHandler.getUserId())!
         let name = localizedString(forKey: "You", withDefaultValue: SystemMessage.LabelName.You, fileName: localizationFileName)
         return GroupMemberInfo(
             id: currentUser.userId,
             name: name,
             image: currentUser.contactImageUrl,
-            isAdmin: isAdmin(userId: ALUserDefaultsHandler.getUserId()),
+            isAdmin: isAdmin(userId: KMCoreUserDefaultsHandler.getUserId()),
             addCell: false,
             adminText: adminText
         )

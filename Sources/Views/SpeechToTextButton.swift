@@ -102,7 +102,7 @@
             longPress.allowableMovement = 10
             longPress.minimumPressDuration = 0.2
             recordButton.addGestureRecognizer(longPress)
-            if let existingCode = ALApplozicSettings.getSelectedLanguageForSpeechToText() {
+            if let existingCode = KMCoreSettings.getSelectedLanguageForSpeechToText() {
                 updateLanguage(code: existingCode)
             }
         }

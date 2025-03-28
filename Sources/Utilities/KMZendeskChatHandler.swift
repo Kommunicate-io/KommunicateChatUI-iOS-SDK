@@ -83,7 +83,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         self.groupId = groupId
         isHandOffHappened = true
         if happendNow &&
-           !ALApplozicSettings.isChatTranscriptSent(self.groupId) &&
+           !KMCoreSettings.isChatTranscriptSent(self.groupId) &&
            !isChatTranscriptInProgress {
             sendChatInfo()
             sendChatTranscript()
@@ -110,7 +110,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
     }
     
     public func isZendeskEnabled() -> Bool {
-        guard let key = ALApplozicSettings.getZendeskSdkAccountKey(), !key.isEmpty, zenChatIntialized else {
+        guard let key = KMCoreSettings.getZendeskSdkAccountKey(), !key.isEmpty, zenChatIntialized else {
             return false
         }
         return true
@@ -150,7 +150,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
     }
     
     func observeChatLogs() {
-        lastSyncTime = ALApplozicSettings.getZendeskLastSyncTime() ?? 0
+        lastSyncTime = KMCoreSettings.getZendeskLastSyncTime() ?? 0
         let stateToken = Chat.chatProvider?.observeChatState { (state) in
             // Handle logs, agent events, queue position changes and other events
             self.processChatLogs(logs: state.logs)
@@ -159,12 +159,12 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
     }
     
     func fetchUserId() {
-        guard let id = ALUserDefaultsHandler.getUserId() else {return}
+        guard let id = KMCoreUserDefaultsHandler.getUserId() else {return}
         self.userId = id
     }
     
     func authenticateUser() {
-        let userHandler = ALUserDefaultsHandler.self
+        let userHandler = KMCoreUserDefaultsHandler.self
         
         if let externalId = userHandler.getUserId(), !externalId.isEmpty,
            let name = userHandler.getDisplayName(), !name.isEmpty,
@@ -287,7 +287,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         fetchMessages(channelKey: channelKey) {[self] messages, error, userArray in
             print("FETCHED MESSAGES FOR CHAT TRANSCRIPT")
             guard let messageList = messages,
-                  let userDetails = userArray as? [ALUserDetail],
+                  let userDetails = userArray as? [KMCoreUserDetail],
                   !userDetails.isEmpty,
                   let almessages = messageList.reversed() as? [ALMessage] else {
                 self.isChatTranscriptInProgress = false
@@ -332,7 +332,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
                 switch result {
                 case .success:
                     self.isChatTranscriptSent = true
-                    ALApplozicSettings.setIsChatTranscriptSent(self.groupId)
+                    KMCoreSettings.setIsChatTranscriptSent(self.groupId)
                     self.isChatTranscriptInProgress = false
                     print("Chat Transcript Sent to Zendesk Successfully")
                 case .failure(let error):
@@ -345,7 +345,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         }
     }
     
-    func getBotNameById(botId: String, userdetails: [ALUserDetail]) -> String {
+    func getBotNameById(botId: String, userdetails: [KMCoreUserDetail]) -> String {
         for userdetail in userdetails {
             if userdetail.userId == botId {
                 return userdetail.displayName ?? ""
@@ -376,7 +376,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
             lastSyncTime = log.createdTimestamp as NSNumber
         }
         // Save the last sync time
-        ALApplozicSettings.saveZendeskLastSyncTime(lastSyncTime)
+        KMCoreSettings.saveZendeskLastSyncTime(lastSyncTime)
     }
     
     func getMessageForTranscript(message: ALMessage) -> String {
@@ -481,7 +481,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         var messageProxy = createMessageProxy(displayName: message.displayName, agentId: message.nick.replace(":", with: "-"), conversationId: groupId, messageTimeStamp: message.createdTimestamp)
         let attachmentDict = createAttachmentDict(attachment: attachmentMessage.attachment)
         messageProxy["fileAttachment"] = attachmentDict
-        messageProxy["auth"] = ALUserDefaultsHandler.getAuthToken()
+        messageProxy["auth"] = KMCoreUserDefaultsHandler.getAuthToken()
         sendAgentMessageGroup.enter()
         let postdata: Data? = try? JSONSerialization.data(withJSONObject: messageProxy, options: [])
         var theParamString: String?

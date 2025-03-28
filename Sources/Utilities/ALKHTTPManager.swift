@@ -116,7 +116,7 @@ class ALKHTTPManager: NSObject {
         } else {
             let configuration = URLSessionConfiguration.default
             guard !urlString.isEmpty else { return }
-            let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
+            let serviceEnabled = KMCoreSettings.isS3StorageServiceEnabled() || KMCoreSettings.isGoogleCloudServiceEnabled()
             guard let urlRequest = serviceEnabled ? ALRequestHandler.createGETRequest(withUrlStringWithoutHeader: urlString, paramString: nil) :
                 ALRequestHandler.createGETRequest(withUrlString: urlString, paramString: nil) else { return }
             session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
@@ -156,12 +156,12 @@ class ALKHTTPManager: NSObject {
         let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imageFilePath = task.filePath
         let filePath = docDirPath.appendingPathComponent(imageFilePath ?? "")
-        if ALApplozicSettings.isS3StorageServiceEnabled(), let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), uploadUrl.isEmpty {
+        if KMCoreSettings.isS3StorageServiceEnabled(), let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), uploadUrl.isEmpty {
             task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
         }
         guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
         
-        if let customHeaders = ALApplozicSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
+        if let customHeaders = KMCoreSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
             for (key, value) in customHeaders {
                 postURLRequest.setValue(value, forHTTPHeaderField: key)
             }
@@ -180,7 +180,7 @@ class ALKHTTPManager: NSObject {
                 let contentType = String(format: "multipart/form-data; boundary=%@", boundary)
                 request.setValue(contentType, forHTTPHeaderField: "Content-Type")
                 var body = Data()
-                let fileParamConstant = ALApplozicSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
+                let fileParamConstant = KMCoreSettings.isS3StorageServiceEnabled() ? Constants.paramForS3Storage : Constants.paramForDefaultStorage
                 
                 let imageData = NSData(contentsOfFile: filePath.path)
 
@@ -193,7 +193,7 @@ class ALKHTTPManager: NSObject {
                     body.append(String(format: "\r\n").data(using: .utf8)!)
                 }
                 
-                if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
+                if let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
                     body.append(String(format: "--%@\r\n", boundary).data(using: .utf8)!)
                     body.append(String(format: "Content-Disposition: form-data; name=\"%@\";\r\n", "data").data(using: .utf8)!)
                     body.append(String(format: "Content-Type:%@\r\n\r\n", "application/json").data(using: .utf8)!)

@@ -150,7 +150,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     }
 
     class func rowHeigh(viewModel: ALKMessageViewModel, width _: CGFloat) -> CGFloat {
-        if ALApplozicSettings.isAgentAppConfigurationEnabled(),
+        if KMCoreSettings.isAgentAppConfigurationEnabled(),
            let metadata = viewModel.metadata,
            let summaryValue = metadata["KM_SUMMARY"] as? String,
            summaryValue == "true" {
@@ -191,7 +191,7 @@ final class ALKInformationCell: UITableViewCell, Localizable {
     func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         guard let feedback = getFeedback(viewModel: viewModel) else {
-            if !ALApplozicSettings.isAgentAppConfigurationEnabled() {
+            if !KMCoreSettings.isAgentAppConfigurationEnabled() {
                 let assignmentTitle = localizedString(forKey: "AssignedLabel", withDefaultValue: SystemMessage.AssignedInfo.AssignedLabel, fileName: configuration.localizedStringFileName)
                 let message = viewModel.message?.replacingOccurrences(of: "Assigned to", with: assignmentTitle, options: .literal, range: nil)
                 assignTextView.text = message

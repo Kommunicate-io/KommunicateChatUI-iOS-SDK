@@ -14,7 +14,7 @@ import MapKit
 let friendsMessage = "4"
 let myMessage = "5"
 
-let imageBaseUrl = ALUserDefaultsHandler.getFILEURL() + "/rest/ws/aws/file/"
+let imageBaseUrl = KMCoreUserDefaultsHandler.getFILEURL() + "/rest/ws/aws/file/"
 
 enum ChannelMetadataKey {
     static let conversationSubject = "KM_CONVERSATION_SUBJECT"
@@ -68,9 +68,9 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
     
     func fetchCustomBotName(userId: String) -> String {
-        guard let customBotId = ALApplozicSettings.getCustomizedBotId(),
+        guard let customBotId = KMCoreSettings.getCustomizedBotId(),
               customBotId == userId,
-              let customBotName = ALApplozicSettings.getCustomBotName()
+              let customBotName = KMCoreSettings.getCustomBotName()
         else { return "" }
 
         return customBotName
@@ -270,7 +270,7 @@ extension ALMessage {
             return .email
         }
         
-        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty, Int32(contentType) == ALMESSAGE_CONTENT_ATTACHMENT {
+        if let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty, Int32(contentType) == ALMESSAGE_CONTENT_ATTACHMENT {
             return richMessageType()
         }
         

@@ -78,8 +78,8 @@ class ALKAttatchmentView: UIView {
         guard let messageObject = message else {
             return
         }
-        // if ALApplozicSettings.isS3StorageServiceEnabled or ALApplozicSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
-        let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
+        // if KMCoreSettings.isS3StorageServiceEnabled or KMCoreSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
+        let serviceEnabled = KMCoreSettings.isS3StorageServiceEnabled() || KMCoreSettings.isGoogleCloudServiceEnabled()
         
         if let url = messageObject.fileMetaInfo?.url,
            !serviceEnabled {

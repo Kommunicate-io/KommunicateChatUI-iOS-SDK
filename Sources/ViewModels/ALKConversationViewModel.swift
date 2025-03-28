@@ -205,7 +205,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
 
-        if ALUserDefaultsHandler.isServerCallDone(forMSGList: chatId) {
+        if KMCoreUserDefaultsHandler.isServerCallDone(forMSGList: chatId) {
             delegate?.loadingStarted()
             loadMessagesFromDB()
         } else {
@@ -284,7 +284,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let membersId = members.map { $0 as? String }
         let alContactDbService = ALContactDBService()
         let alContacts = membersId.map { alContactDbService.loadContact(byKey: "userId", value: $0) }
-        let models = alContacts.filter { $0?.userId != ALUserDefaultsHandler.getUserId() }.map { ALKFriendViewModel(identity: $0!) }
+        let models = alContacts.filter { $0?.userId != KMCoreUserDefaultsHandler.getUserId() }.map { ALKFriendViewModel(identity: $0!) }
         print("all models: ", models.count)
         return models
     }
@@ -585,8 +585,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
             notificationView.noDataConnectionNotificationView()
             return
         }
-        // if ALApplozicSettings.isS3StorageServiceEnabled or ALApplozicSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
-        let serviceEnabled = ALApplozicSettings.isS3StorageServiceEnabled() || ALApplozicSettings.isGoogleCloudServiceEnabled()
+        // if KMCoreSettings.isS3StorageServiceEnabled or KMCoreSettings.isGoogleCloudServiceEnabled is true its private url we wont be able to download it directly.
+        let serviceEnabled = KMCoreSettings.isS3StorageServiceEnabled() || KMCoreSettings.isGoogleCloudServiceEnabled()
 
         if message.fileMetaInfo!.name.hasPrefix(awsEncryptionPrefix) {
           ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: true) { fileUrl, error in
@@ -1187,9 +1187,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
         guard let fileInfo = responseDict as? [String: Any] else { return }
 
-        if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty, let metadata = fileInfo["metadata"] as? [String: Any] {
+        if let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty, let metadata = fileInfo["metadata"] as? [String: Any] {
             message.metadata = modfiedMessageMetadata(alMessage: message, metadata: metadata)
-        } else if ALApplozicSettings.isS3StorageServiceEnabled() {
+        } else if KMCoreSettings.isS3StorageServiceEnabled() {
             message.fileMeta.populate(fileInfo)
         } else {
             guard let fileMeta = fileInfo["fileMeta"] as? [String: Any] else { return }
@@ -1218,7 +1218,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             guard let mesg = updatedMessage else { return }
             DispatchQueue.main.async {
                 NSLog("UI updated at section: \(indexPath.section), \(message.isSent)")
-                if let uploadUrl = ALApplozicSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
+                if let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), !uploadUrl.isEmpty {
                     // while storing message type was photo.Since Attachment is uploaded to client server, now its a rich message. thatswhy replacing it in DB.
                     messageService.deleteMessage(byKey: message.key)
                     messageService.add(updatedMessage)
@@ -1239,7 +1239,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     @objc func sendTypingStatus() {
-        mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: contactId, andChannelKey: channelKey, typing: true)
+        mqttObject?.sendTypingStatus(KMCoreUserDefaultsHandler.getApplicationKey(), userID: contactId, andChannelKey: channelKey, typing: true)
     }
 
     open func sendKeyboardBeginTyping() {
@@ -1252,14 +1252,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func sendKeyboardDoneTyping() {
         shouldSendTyping = true
         typingTimerTask.invalidate()
-        mqttObject?.sendTypingStatus(ALUserDefaultsHandler.getApplicationKey(), userID: contactId, andChannelKey: channelKey, typing: false)
+        mqttObject?.sendTypingStatus(KMCoreUserDefaultsHandler.getApplicationKey(), userID: contactId, andChannelKey: channelKey, typing: false)
     }
 
     func syncOpenGroup(message: ALMessage) {
         guard let groupId = message.groupId,
               groupId == channelKey,
               !message.isMyMessage,
-              message.deviceKey != ALUserDefaultsHandler.getDeviceKeyString()
+              message.deviceKey != KMCoreUserDefaultsHandler.getDeviceKeyString()
         else {
             return
         }
@@ -1276,7 +1276,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
         ALMessageService.getLatestMessage(
-            forUser: ALUserDefaultsHandler.getDeviceKeyString(),
+            forUser: KMCoreUserDefaultsHandler.getDeviceKeyString(),
             withCompletion: { messageList, error in
                 self.delegate?.loadingFinished(error: error)
                 guard error == nil,
@@ -1553,7 +1553,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if ALKConversationViewModel.lastSentMessage == nil {
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
-            if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+            if KMCoreSettings.isAgentAppConfigurationEnabled() {
                 self.getConversationEndUserID()
             }
             self.alMessageWrapper.addObject(toMessageArray: messages)
@@ -1789,7 +1789,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
             messages in
             guard let messages = messages, messages.count != 0 else {
-                if ALUserDefaultsHandler.isShowLoadEarlierOption(self.chatId) {
+                if KMCoreUserDefaultsHandler.isShowLoadEarlierOption(self.chatId) {
                     self.loadEarlierMessages()
                 }
                 self.delegate?.loadingFinished(error: nil)
@@ -1805,7 +1805,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if ALKConversationViewModel.lastSentMessage == nil {
                 ALKConversationViewModel.lastSentMessage = self.getLastSentMessage()
             }
-            if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+            if KMCoreSettings.isAgentAppConfigurationEnabled() {
                 self.getConversationEndUserID()
             }
             let models = messages.map { ($0 as! ALMessage).messageModel }
@@ -1867,7 +1867,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard let members = groupMembers else { return [] }
         let items =
             members
-                .filter { $0.userId != ALUserDefaultsHandler.getUserId() }
+                .filter { $0.userId != KMCoreUserDefaultsHandler.getUserId() }
                 .map { KMAutoCompleteItem(key: $0.userId, content: $0.displayName ?? $0.userId, displayImageURL: $0.friendDisplayImgURL) }
                 .sorted { $0.content < $1.content }
         return items
@@ -2039,7 +2039,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let date = Date().timeIntervalSince1970 * 1000
         alMessage.createdAtTime = NSNumber(value: date)
         alMessage.sendToDevice = false
-        alMessage.deviceKey = ALUserDefaultsHandler.getDeviceKeyString()
+        alMessage.deviceKey = KMCoreUserDefaultsHandler.getDeviceKeyString()
         alMessage.shared = false
         alMessage.fileMeta = nil
         alMessage.storeOnDevice = false

@@ -273,9 +273,9 @@ open class ALKReplyMessageView: UIView, Localizable {
         else { return nil }
 
         let latLonArgument = String(format: "%f,%f", lat, lon)
-        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey()
+        guard let apiKey = KMCoreUserDefaultsHandler.getGoogleMapAPIKey()
         else {
-            print("⚠️ Warning: Please add the Google Map API key, or Map Image will not work as expected. Use `ALUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.")
+            print("⚠️ Warning: Please add the Google Map API key, or Map Image will not work as expected. Use `KMCoreUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.")
             return nil
         }
         // swiftlint:disable:next line_length

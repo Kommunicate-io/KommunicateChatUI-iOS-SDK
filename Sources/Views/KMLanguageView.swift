@@ -61,7 +61,7 @@ public class KMLanguageView: UIView {
         label.text = title
         label.textColor = Style.languageNameTextColor
         label.font = Style.languageNameFont
-        if let savedLanguageCode = ALApplozicSettings.getSelectedLanguageForSpeechToText(),
+        if let savedLanguageCode = KMCoreSettings.getSelectedLanguageForSpeechToText(),
            let savedLanguage = languageObjectList.first(where: {$0.code == savedLanguageCode}), savedLanguage.name == title {
             label.setBackgroundColor(Style.selectedBackgroundColor)
             label.setTextColor(Style.selectedNameTextColor)
@@ -90,7 +90,7 @@ public class KMLanguageView: UIView {
     
     @objc func languageTap() {
         if let selectedLanguage = languageObjectList.first(where: {$0.name == title}) {
-            ALApplozicSettings.setSelectedLanguageForSpeechToText(selectedLanguage.code)
+            KMCoreSettings.setSelectedLanguageForSpeechToText(selectedLanguage.code)
             languageTapped?(selectedLanguage)
         }
     }
