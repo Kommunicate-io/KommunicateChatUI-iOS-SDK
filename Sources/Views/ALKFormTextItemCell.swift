@@ -98,8 +98,7 @@ class ALKFormTextAreaItemCell: UITableViewCell {
                 return
             }
             nameLabel.text = item.title
-            valueTextField.text = item.placeholder
-            valueTextField.textColor = .lightGray
+            valueTextField.placeholder = item.placeholder
         }
     }
 
@@ -240,6 +239,28 @@ class KMPaddedTextView: UITextView {
         }
     }
 
+    var placeholder: String? {
+        didSet {
+            placeholderLabel.text = placeholder
+            updatePlaceholderVisibility()
+        }
+    }
+
+    private lazy var placeholderLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray  // Placeholder color
+        label.font = self.font
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    override var text: String! {
+        didSet {
+            updatePlaceholderVisibility()
+        }
+    }
+
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         commonInit()
@@ -252,5 +273,39 @@ class KMPaddedTextView: UITextView {
 
     private func commonInit() {
         textContainerInset = textPadding
+        textColor = .black  // Ensure default text color is black
+        addSubview(placeholderLabel)
+
+        NSLayoutConstraint.activate([
+            placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: textPadding.left + 5),
+            placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -textPadding.right - 5),
+            placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: textPadding.top)
+        ])
+
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification, object: self)
+        delegate = self
+    }
+
+    @objc private func textDidChange() {
+        updatePlaceholderVisibility()
+    }
+
+    private func updatePlaceholderVisibility() {
+        placeholderLabel.isHidden = !(text?.isEmpty ?? true)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}
+
+// MARK: - UITextViewDelegate
+extension KMPaddedTextView: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.textColor = .black // Ensure text color is black when typing
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.textColor = textView.text.isEmpty ? .lightGray : .black
     }
 }
