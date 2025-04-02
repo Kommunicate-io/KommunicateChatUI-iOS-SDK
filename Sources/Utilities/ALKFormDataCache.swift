@@ -10,7 +10,7 @@ import Foundation
 public class ALKFormDataCache {
     public static let shared = ALKFormDataCache()
     private let cache = NSCache<NSString, FormDataSubmit>()
-    private let userDefaultsKeyPrefix = "KOMMUNICATE_FormDataCache_"
+    private let userDefaultsKeyPrefix = "io.kommunicate.formDataCache."
 
     private init() {
         cache.name = "FormDataCache"
