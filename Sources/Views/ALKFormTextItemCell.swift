@@ -273,7 +273,7 @@ class KMPaddedTextView: UITextView {
 
     private func commonInit() {
         textContainerInset = textPadding
-        textColor = .black  // Ensure default text color is black
+        textColor = .kmDynamicColor(light: .black, dark: .white)
         addSubview(placeholderLabel)
 
         NSLayoutConstraint.activate([
@@ -302,10 +302,10 @@ class KMPaddedTextView: UITextView {
 // MARK: - UITextViewDelegate
 extension KMPaddedTextView: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.textColor = .black // Ensure text color is black when typing
+        textView.textColor = .kmDynamicColor(light: .black, dark: .white)
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
-        textView.textColor = textView.text.isEmpty ? .lightGray : .black
+        textView.textColor = textView.text.isEmpty ? .lightGray : .kmDynamicColor(light: .black, dark: .white)
     }
 }
