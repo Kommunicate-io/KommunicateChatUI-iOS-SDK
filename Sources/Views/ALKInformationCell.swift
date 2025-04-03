@@ -157,23 +157,42 @@ final class ALKInformationCell: UITableViewCell, Localizable {
             return 150
         }
         let widthNoPadding: CGFloat = 300
-        var messageHeigh: CGFloat = 0
+        var messageHeight: CGFloat = 0
         if let message = viewModel.message {
             let nomalizedMessage = message.replacingOccurrences(of: " ", with: "d")
 
-            let rect = (nomalizedMessage as NSString).boundingRect(with: CGSize(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude),
-                                                                   options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                                   attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
-                                                                   context: nil)
+            let rect = (nomalizedMessage as NSString).boundingRect(
+                with: CGSize(width: widthNoPadding, height: CGFloat.greatestFiniteMagnitude),
+                options: NSStringDrawingOptions.usesLineFragmentOrigin,
+                attributes: [NSAttributedString.Key.font: ALKMessageStyle.infoMessage.font],
+                context: nil
+            )
             //  Get feedback dictionary for view
-            if let dictionary = ALKInformationCell().getFeedback(viewModel: viewModel), dictionary["comments"] != nil {
-                messageHeigh = (rect.height + Padding.MessageView.height + Padding.CommentView.height)
+            if let feedback = ALKInformationCell().getFeedback(viewModel: viewModel),
+               let comment = feedback["comments"] as? String {
+                
+                let normalizedComment = comment.replacingOccurrences(of: " ", with: "d")
+                
+                let commentBoundingRect = (normalizedComment as NSString).boundingRect(
+                    with: CGSize(width: widthNoPadding, height: .greatestFiniteMagnitude),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: ALKMessageStyle.infoMessage.font],
+                    context: nil
+                )
+                var commentHeight = Padding.CommentView.height
+                if commentBoundingRect.height > Padding.CommentView.height {
+                    commentHeight = commentBoundingRect.height + bottomPadding()
+                }
+                
+                messageHeight = rect.height +
+                                Padding.MessageView.height +
+                                commentHeight
             } else {
-                messageHeigh = rect.height + Padding.MessageView.height
+                messageHeight = rect.height + Padding.MessageView.height
             }
-            messageHeigh = ceil(messageHeigh)
+            messageHeight = ceil(messageHeight)
         }
-        return topPadding() + messageHeigh + bottomPadding()
+        return topPadding() + messageHeight + bottomPadding()
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
