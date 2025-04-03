@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.4.3] 2025-04-03
+- Fixed Recording button not wotking properly.
+
 ## [1.4.2] 2025-03-18
 - Internal Code Refactor.
 - Typing indicator For bot message delay.
