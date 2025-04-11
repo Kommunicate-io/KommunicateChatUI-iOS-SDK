@@ -23,60 +23,89 @@ public class ALKCustomEventHandler {
               subscribedEvents.contains(triggeredEvent) else { return }
 
         switch triggeredEvent {
-            case .faqClick:
-                if let url = data?["faqUrl"] as? URL {
-                    delegate.faqClicked(url: url.absoluteString)
-                } else if let urlString = data?["faqUrl"] as? String,
-                          let url = URL(string: urlString) {
-                    delegate.faqClicked(url: url.absoluteString)
-                }
+        case .faqClick:
+            if let url = data?["faqUrl"] as? URL {
+                delegate.faqClicked(url: url.absoluteString)
+            } else if let urlString = data?["faqUrl"] as? String,
+                      let url = URL(string: urlString) {
+                delegate.faqClicked(url: url.absoluteString)
+            }
 
-            case .messageSend:
-                if let message = data?["message"] as? ALMessage {
-                    delegate.messageSent(message: message)
-                }
+        case .messageSend:
+            if let message = data?["message"] as? ALMessage {
+                delegate.messageSent(message: message)
+            }
 
-            case .newConversation:
-                if let conversationId = data?["conversationId"] as? String {
-                    delegate.conversationCreated(conversationId: conversationId)
-                }
+        case .newConversation:
+            if let conversationId = data?["conversationId"] as? String {
+                delegate.conversationCreated(conversationId: conversationId)
+            }
 
-            case .submitRatingClick:
-                if let conversationId = data?["conversationId"] as? Int,
-                   let rating = data?["rating"] as? Int,
-                   let comment = data?["comment"] as? String {
-                    delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
-                }
+        case .submitRatingClick:
+            if let conversationId = data?["conversationId"] as? Int,
+                let rating = data?["rating"] as? Int,
+                let comment = data?["comment"] as? String {
+                delegate.ratingSubmitted(conversationId: String(conversationId), rating: rating, comment: comment)
+            }
 
-            case .resolveConversation:
-                if let conversationId = data?["conversationId"] as? String {
-                    delegate.conversationResolved(conversationId: conversationId)
-                }
+        case .resolveConversation:
+            if let conversationId = data?["conversationId"] as? String {
+                delegate.conversationResolved(conversationId: conversationId)
+            }
 
-            case .restartConversationClick:
-                if let conversationId = data?["conversationId"] as? Int {
-                    delegate.conversationRestarted(conversationId: String(conversationId))
-                }
+        case .restartConversationClick:
+            if let conversationId = data?["conversationId"] as? Int {
+                delegate.conversationRestarted(conversationId: String(conversationId))
+            }
 
-            case .richMessageClick:
-                let conversationId = data?["conversationId"] as? String ?? ""
-                let action = data?["action"] ?? "Action Not Present"
-                let type = data?["type"] as? String ?? ""
-                delegate.richMessageClicked(conversationId: conversationId, action: action, type: type)
+        case .richMessageClick:
+            let conversationId = data?["conversationId"] as? String ?? ""
+            let action = data?["action"] ?? "Action Not Present"
+            let type = data?["type"] as? String ?? ""
+            delegate.richMessageClicked(conversationId: conversationId, action: action, type: type)
 
-            case .conversationBackPress:
-                delegate.onBackButtonClick(isConversationOpened: true)
+        case .conversationBackPress:
+            delegate.onBackButtonClick(isConversationOpened: true)
 
-            case .conversationListBackPress:
-                delegate.onBackButtonClick(isConversationOpened: false)
+        case .conversationListBackPress:
+            delegate.onBackButtonClick(isConversationOpened: false)
 
-            case .messageReceive:
-                if let messages = data?["messageList"] as? [ALMessage] {
-                    messages.forEach { delegate.messageReceived(message: $0) }
-                }
+        case .messageReceive:
+            if let messages = data?["messageList"] as? [ALMessage] {
+                messages.forEach { delegate.messageReceived(message: $0) }
+            }
 
-            case .conversationInfoClick:
-                delegate.conversationInfoClicked()
+        case .conversationInfoClick:
+            delegate.conversationInfoClicked()
+        
+        case .attachmentOptionClicked:
+            if let attachmentType = data?["attachmentType"] as? String {
+                delegate.attachmentOptionClicked(attachemntType: attachmentType)
+            }
+            
+        case .voiceButtonClicked:
+            if let currentState = data?["currentState"] as? KMVoiceRecordingState {
+                delegate.voiceButtonClicked(currentState: currentState)
+            }
+            
+        case .locationButtonClicked:
+            delegate.locationButtonClicked()
+            
+        case .rateConversationEmotionsClicked:
+            if let rating = data?["rating"] as? Int {
+                delegate.rateConversationEmotionsClicked(rating: rating)
+            }
+            
+        case .cameraButtonClicked:
+            delegate.cameraButtonClicked()
+            
+        case .videoButtonClicked:
+            delegate.videoButtonClicked()
+            
+        case .currentOpenedConversation:
+            if let conversationId = data?["conversationId"] as? Int {
+                delegate.currentOpenedConversation(conversationId: String(conversationId))
+            }
         }
     }
 
