@@ -130,7 +130,6 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
 
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextView = textView
-        textView.text = nil
         textView.textColor = .kmDynamicColor(light: .black, dark: .white)
     }
 
@@ -233,6 +232,12 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             cell.item = item
             cell.valueTextField.delegate = self
             cell.valueTextField.tag = indexPath.section
+            if let formDataSubmit = formData,
+               let text = formDataSubmit.textViews[indexPath.section] {
+                cell.valueTextField.text = text
+            } else {
+                cell.valueTextField.text = ""
+            }
             if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
                 let formViewModelTextAreaItem = item as? FormViewModelTextAreaItem
                 cell.errorLabel.text = formViewModelTextAreaItem?.validation?.errorText ?? localizedString(forKey: "InvalidDatErrorInForm", withDefaultValue: SystemMessage.UIError.InvalidDatErrorInForm, fileName: localizedStringFileName)
