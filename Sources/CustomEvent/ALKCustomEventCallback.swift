@@ -19,4 +19,18 @@ public protocol ALKCustomEventCallback: AnyObject {
     func ratingSubmitted(conversationId: String, rating: Int, comment: String)
     func richMessageClicked(conversationId: String, action: Any, type: String)
     func conversationInfoClicked()
+    func currentOpenedConversation(conversationId: String)
+    func attachmentOptionClicked(attachemntType: String)
+    func voiceButtonClicked(currentState: KMVoiceRecordingState)
+    func locationButtonClicked()
+    func rateConversationEmotionsClicked(rating: Int)
+    func cameraButtonClicked()
+    func videoButtonClicked()
+}
+
+// Voice Recording Sate
+public enum KMVoiceRecordingState: String {
+    case started = "Voice Recording Started"
+    case stopped = "Voice Recording Stopped"
+    case cancelled = "Voice Recording Cancelled"
 }

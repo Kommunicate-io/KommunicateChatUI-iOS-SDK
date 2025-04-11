@@ -17,6 +17,13 @@ public enum KMCustomEvent: String, CaseIterable {
     case conversationListBackPress = "ON_CONVERSATION_LIST_BACK_CLICK"
     case messageReceive = "ON_MESSAGE_RECEIVE"
     case conversationInfoClick = "ON_CONVERSATION_INFO_CLICK"
+    case attachmentOptionClicked = "ON_ATTACHEMENT_OPTION_CLICK"
+    case voiceButtonClicked = "ON_VOICE_BUTTON_CLICK"
+    case locationButtonClicked = "ON_LOCATION_BUTTON_CLICK"
+    case rateConversationEmotionsClicked = "ON_RATE_CONVERSATION_EMOTIONS_CLICK"
+    case cameraButtonClicked = "ON_CAMERA_BUTTON_CLICK"
+    case videoButtonClicked = "ON_VIDEO_BUTTON_CLICK"
+    case currentOpenedConversation = "ON_CURRENT_OPENED_CONVERSATION"
     
     public static var allEvents: [KMCustomEvent] {
         return Array(self.allCases)

@@ -854,12 +854,14 @@ extension ALKChatBar: UITextViewDelegate {
 
 extension ALKChatBar: ALKAudioRecorderProtocol {
     public func startRecordingAudio() {
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.voiceButtonClicked, data: ["currentState": KMVoiceRecordingState.started])
         changeButton()
         action?(.startVoiceRecord)
         soundRec.userDidStartRecording()
     }
 
     public func finishRecordingAudio(soundData: NSData) {
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.voiceButtonClicked, data: ["currentState": KMVoiceRecordingState.stopped])
         textView.resignFirstResponder()
         if soundRec.isRecordingTimeSufficient() {
             action?(.sendVoice(soundData))
@@ -868,6 +870,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
     }
 
     public func cancelRecordingAudio() {
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.voiceButtonClicked, data: ["currentState": KMVoiceRecordingState.cancelled])
         stopRecording()
     }
 
@@ -882,6 +885,7 @@ extension ALKChatBar: ALKAudioRecorderProtocol {
 
 extension ALKChatBar: ALKAudioRecorderViewProtocol {
     public func cancelAudioRecording() {
+        ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.voiceButtonClicked, data: ["currentState": KMVoiceRecordingState.cancelled])
         #if !SPEECH_REC
             micButton.cancelAudioRecord()
         #endif
