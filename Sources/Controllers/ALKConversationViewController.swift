@@ -2018,10 +2018,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         
-        for (position, (_, option)) in formData.dropDownFields {
+        for (position, option) in formData.dropDownFields {
             let element = viewModelItems[position]
             if let dropdownModel = element as? FormViewModelDropdownItem {
-                postFormData[dropdownModel.name] = option
+                postFormData[dropdownModel.name] = option.text // Access the `text` property
             }
         }
 

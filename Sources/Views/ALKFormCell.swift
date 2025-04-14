@@ -431,8 +431,8 @@ extension ALKFormCell: UITableViewDataSource, UITableViewDelegate {
             
             if let formDataSubmit = formData,
                let fields = formDataSubmit.dropDownFields[indexPath.section] {
-                cell.menu.selectedIndex = fields.0
-                cell.menu.text = cell.options?[fields.0].label
+                cell.menu.selectedIndex = fields.id
+                cell.menu.text = cell.options?[fields.id].label
             }
             
             if let validationField = formData?.validationFields[indexPath.section], validationField == FormData.inValid {
@@ -510,13 +510,13 @@ extension ALKFormCell: KMFormDropDownSelectionProtocol {
             print("Can't be updated due to incorrect index")
             return
         }
-        formSubmittedData.dropDownFields[position] = (index, selectedText)
+        formSubmittedData.dropDownFields[position] = DropDownField(id: index, text: selectedText)
         formData = formSubmittedData
     }
     
     func defaultOptionSelected(position: Int, selectedText: String?, index: Int) {
         guard let formSubmittedData = formData else { return }
-        formSubmittedData.dropDownFields[position] = (index, selectedText)
+        formSubmittedData.dropDownFields[position] = DropDownField(id: index, text: selectedText)
         formData = formSubmittedData
     }
 }
@@ -624,14 +624,21 @@ class NestedCellTableView: UITableView {
     }
 }
 
-class FormDataSubmit {
-    var textFields = [Int: String]()
-    var textViews = [Int: String]()
-    var singleSelectFields = [Int: Int]()
-    var multiSelectFields = [Int: [Int]]()
-    var dateFields = [Int: Int64]()
-    var dropDownFields = [Int: (Int, String?)]()
-    var validationFields = [Int: Int]()
+struct DropDownField: Codable {
+    var id: Int
+    var text: String?
+}
+
+class FormDataSubmit: Codable {
+    var textFields: [Int: String] = [:]
+    var textViews: [Int: String] = [:]
+    var singleSelectFields: [Int: Int] = [:]
+    var multiSelectFields: [Int: [Int]] = [:]
+    var dateFields: [Int: Int64] = [:]
+    var dropDownFields: [Int: DropDownField] = [:] // Replaced tuple with struct
+    var validationFields: [Int: Int] = [:]
+
+    init() {}
 }
 
 public struct KMHidePostCTAForm {
