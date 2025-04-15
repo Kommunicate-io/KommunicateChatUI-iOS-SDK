@@ -51,7 +51,7 @@ public final class ALKNewChatViewController: ALKBaseViewController, Localizable 
     override public func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
-        ALUserDefaultsHandler.setContactServerCallIsDone(false)
+        KMCoreUserDefaultsHandler.setContactServerCallIsDone(false)
         if let textField = searchBar.textField {
             guard UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft else { return }
             textField.textAlignment = .right
@@ -176,7 +176,7 @@ extension ALKNewChatViewController: UIScrollViewDelegate {
         // Update only when the search is not active
         guard (searchBar.text?.isEmpty)! else { return }
 
-        if !ALApplozicSettings.isContactsGroupEnabled() {
+        if !KMCoreSettings.isContactsGroupEnabled() {
             let height = scrollView.frame.size.height
             let contentYoffset = scrollView.contentOffset.y
             let reloadDistance: CGFloat = 40.0 // Added this so that loading starts 40 points before the end
@@ -186,7 +186,7 @@ extension ALKNewChatViewController: UIScrollViewDelegate {
                 viewModel.getContacts(completion: {
                     self.searchBar.text = nil
                     self.tableView.reloadData()
-                    ALUserDefaultsHandler.setContactServerCallIsDone(true)
+                    KMCoreUserDefaultsHandler.setContactServerCallIsDone(true)
                     self.activityIndicator.stopAnimating()
                 })
             }

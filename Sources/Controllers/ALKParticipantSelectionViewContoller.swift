@@ -142,8 +142,8 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
     }
 
     func getAllFriends(completion: @escaping () -> Void) {
-        if ALApplozicSettings.isContactsGroupEnabled() {
-            channelService.getMembersFromContactGroupOfType(ALApplozicSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
+        if KMCoreSettings.isContactsGroupEnabled() {
+            channelService.getMembersFromContactGroupOfType(KMCoreSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
 
                 guard let alChannel = channel else {
                     completion()
@@ -160,8 +160,8 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
             var predicate = NSPredicate()
             fetchReq.returnsDistinctResults = true
-            if !ALUserDefaultsHandler.getLoginUserConatactVisibility() {
-                predicate = NSPredicate(format: "userId!=%@ AND deletedAtTime == nil", ALUserDefaultsHandler.getUserId())
+            if !KMCoreUserDefaultsHandler.getLoginUserConatactVisibility() {
+                predicate = NSPredicate(format: "userId!=%@ AND deletedAtTime == nil", KMCoreUserDefaultsHandler.getUserId())
             }
 
             fetchReq.predicate = predicate
@@ -198,7 +198,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
         var models = [ALKFriendViewModel]()
         let contactService = ALContactService()
-        let savedLoginUserId = ALUserDefaultsHandler.getUserId() as String
+        let savedLoginUserId = KMCoreUserDefaultsHandler.getUserId() as String
 
         for memberId in alChannel.membersId {
             if let memberIdStr = memberId as? String, memberIdStr != savedLoginUserId {

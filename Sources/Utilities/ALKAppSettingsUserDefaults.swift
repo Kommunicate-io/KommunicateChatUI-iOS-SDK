@@ -166,8 +166,8 @@ public struct ALKAppSettingsUserDefaults {
         }
         UserDefaults.standard.set(appSettings.hidePostCTAEnabled, forKey: "HidePostCTAEnabled")
 
-        ALApplozicSettings.setDefaultOverrideuploadUrl(appSettings.defaultUploadOverrideUrl ?? "")
-        ALApplozicSettings.setDefaultOverrideuploadHeaders(NSMutableDictionary(dictionary: appSettings.defaultUploadOverrideHeaders ?? [:]))
+        KMCoreSettings.setDefaultOverrideuploadUrl(appSettings.defaultUploadOverrideUrl ?? "")
+        KMCoreSettings.setDefaultOverrideuploadHeaders(NSMutableDictionary(dictionary: appSettings.defaultUploadOverrideHeaders ?? [:]))
     }
 
     /// This method will be used for getting the app settings data

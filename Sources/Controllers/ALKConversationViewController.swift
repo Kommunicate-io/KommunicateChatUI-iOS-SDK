@@ -194,6 +194,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         return contextView
     }()
     
+    open var businessHourView: KMBusinessHoursView = {
+        let contextView = KMBusinessHoursView(frame: CGRect.zero)
+        return contextView
+    }()
+ 
     open var templateView: ALKTemplateMessagesView?
 
     open lazy var replyMessageView: ALKReplyMessageView = {
@@ -525,7 +530,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             backgroundViewBottomConstraint?.isActive = isChatBarHidden
             replyViewBottomConstraint?.isActive = isChatBarHidden
         }
-        
+        collectEmailOnAwayMode = false
         edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.lightGray
@@ -538,7 +543,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         }
 
         viewModel.delegate = self
-        isAgentApp = ALApplozicSettings.isAgentAppConfigurationEnabled()
+        isAgentApp = KMCoreSettings.isAgentAppConfigurationEnabled()
         refreshViewController()
 //        setupConstraints()
         
@@ -663,13 +668,13 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard let members = ALChannelService().getListOfAllUsers(inChannel: channelKey) as? [String] else {
             return
         }
-        if channel.type != 6 && channel.type != 10 && !members.contains(ALUserDefaultsHandler.getUserId()) {
+        if channel.type != 6 && channel.type != 10 && !members.contains(KMCoreUserDefaultsHandler.getUserId()) {
             chatBar.disableChat(message: localizedString(forKey: "NotPartOfGroup", withDefaultValue: SystemMessage.Information.NotPartOfGroup, fileName: configuration.localizedStringFileName))
         } else {
             chatBar.enableChat()
         }
         // Disable group details for support group, open group and when user is not a member.
-        navigationBar.disableTitleAction = channel.type == 10 || channel.type == 6 || !members.contains(ALUserDefaultsHandler.getUserId())
+        navigationBar.disableTitleAction = channel.type == 10 || channel.type == 6 || !members.contains(KMCoreUserDefaultsHandler.getUserId())
     }
 
     func prepareContextView() {
@@ -690,6 +695,20 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         conversationInfoView.configureViewWith(model: conversationInfoModel)
     }
     
+    private var businessHourViewHeightConstraint: NSLayoutConstraint?
+
+    public func prepareBusinessHoursInfoView(message: String, isVisible: Bool = false) {
+        let appsetting = ALKAppSettingsUserDefaults()
+        businessHourView.configureMessage(message: message)
+        businessHourView.backgroundColor = UIColor.kmDynamicColor(light: appsetting.getAppBarTintColor(), dark: UIColor.appBarDarkColor())
+        let estimatedHeight = businessHourView.estimateHeightForMessage(message)
+        businessHourViewHeightConstraint?.constant = isVisible ? estimatedHeight : 0
+
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     @objc func conversationInfoViewTap(_: UITapGestureRecognizer) {
         ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.conversationInfoClick, data: nil)
     }
@@ -704,7 +723,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     private func setupConstraints() {
-        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, autoSuggestionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, conversationInfoView]
+        var allViews = [backgroundView, contextTitleView, tableView, autocompletionView, autoSuggestionView, moreBar, chatBar, typingNoticeView, unreadScrollButton, replyMessageView, businessHourView, conversationInfoView]
         if let templateView = templateView {
             allViews.append(templateView)
         }
@@ -730,7 +749,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         contextTitleView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         contextTitleView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.contextTitleView).isActive = true
 
-        conversationInfoView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        businessHourView.topAnchor.constraint(equalTo: contextTitleView.bottomAnchor).isActive = true
+        businessHourView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        businessHourView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        
+        businessHourViewHeightConstraint = businessHourView.heightAnchor.constraint(equalToConstant: 0)
+        businessHourViewHeightConstraint?.isActive = true
+        
+        conversationInfoView.topAnchor.constraint(equalTo: businessHourView.bottomAnchor).isActive = true
         conversationInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         conversationInfoView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         conversationInfoView.backgroundColor = UIColor.kmDynamicColor(light: configuration.conversationInfoModel?.backgroundColor ?? .gray, dark: configuration.conversationInfoModel?.darkBackgroundColor ?? .white)
@@ -896,8 +922,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } else {
             self.chatBar.updateMediaViewVisibility()
         }
-        if ALApplozicSettings.isAgentAppConfigurationEnabled(),
-            ALUserDefaultsHandler.isTeamModeEnabled() {
+        if KMCoreSettings.isAgentAppConfigurationEnabled(),
+            KMCoreUserDefaultsHandler.isTeamModeEnabled() {
             self.checkRestrictedMesssaging()
         }
     }
@@ -1210,7 +1236,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         guard viewModel != nil, alMqttConversationService != nil else { return }
         if !viewModel.isOpenGroup {
             alMqttConversationService.sendTypingStatus(
-                ALUserDefaultsHandler.getApplicationKey(),
+                KMCoreUserDefaultsHandler.getApplicationKey(),
                 userID: viewModel.contactId,
                 andChannelKey: viewModel.channelKey,
                 typing: false
@@ -1219,6 +1245,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } else {
             alMqttConversationService.unSubscribe(toOpenChannel: viewModel.channelKey)
         }
+    }
+    
+    // Disables replies if the conversation is resolved and restart button is hidden.
+    open func isConversationResolvedAndReplyEnabled() -> Bool {
+        guard let channel = ALChannelService().getChannelByKey(viewModel.channelKey) else {
+            return true
+        }
+        return !channel.isClosedConversation || !configuration.hideRestartConversationButton
     }
 
     public func scrollViewWillBeginDecelerating(_: UIScrollView) {
@@ -1298,7 +1332,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     public func syncAutoSuggestionMessage(message: ALMessage?) {
         guard let message = message else { return }
-        if message.isAutoSuggestion(), !ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if message.isAutoSuggestion(), !KMCoreSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
     }
@@ -1306,7 +1340,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     public func sync(message: ALMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
-        if message.isAutoSuggestion(), !ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if message.isAutoSuggestion(), !KMCoreSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
         guard !viewModel.isOpenGroup else {
@@ -1388,7 +1422,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         } else if !viewModel.isGroup {
             alMqttConversationService.subscribe(toChannelConversation: nil)
         }
-        if viewModel.isGroup, ALUserDefaultsHandler.isUserLoggedInUserSubscribedMQTT() {
+        if viewModel.isGroup, KMCoreUserDefaultsHandler.isUserLoggedInUserSubscribedMQTT() {
             alMqttConversationService.unSubscribe(toChannelConversation: nil)
         }
     }
@@ -1786,6 +1820,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     /// For templateId 3, formData is a string.
     /// But for templateId 11, formData is a dictionary.
     private func submitButtonSelected(metadata: [String: Any], text: String) {
+        guard isConversationResolvedAndReplyEnabled() else { return }
         guard
             let urlString = metadata["formAction"] as? String,
             let url = URL(string: urlString)
@@ -1822,6 +1857,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     func formSubmitButtonSelected(formSubmitData: FormDataSubmit?, messageModel: ALKMessageViewModel, isButtonClickDisabled: Bool) {
+        guard isConversationResolvedAndReplyEnabled() else { return }
         guard let formData = formSubmitData else {
             print("Invalid form data for submit")
             return
@@ -1982,10 +2018,10 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             }
         }
         
-        for (position, (_, option)) in formData.dropDownFields {
+        for (position, option) in formData.dropDownFields {
             let element = viewModelItems[position]
             if let dropdownModel = element as? FormViewModelDropdownItem {
-                postFormData[dropdownModel.name] = option
+                postFormData[dropdownModel.name] = option.text // Access the `text` property
             }
         }
 
@@ -2279,7 +2315,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         let channelService = ALChannelService()
         let channel = channelService.getChannelByKey(channelKey)
         
-        if ALUserDefaultsHandler.isTeamModeEnabled(), let teamID = ALUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
+        if KMCoreUserDefaultsHandler.isTeamModeEnabled(), let teamID = KMCoreUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
             chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
             return true
         }
@@ -2336,7 +2372,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
             let offset = newSectionCount - oldSectionCount - 1
             tableView.scrollToRow(at: IndexPath(row: 0, section: offset), at: .none, animated: false)
         }
-        if ALApplozicSettings.isAgentAppConfigurationEnabled() {
+        if KMCoreSettings.isAgentAppConfigurationEnabled() {
             let checkForRestricted = checkRestriceted()
             if isChatBarResticted != checkForRestricted {
                 isChatBarResticted = checkForRestricted
@@ -3019,7 +3055,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         showNewTypingLabel(status: status)
     }
 
-    public func updateLastSeen(atStatus alUserDetail: ALUserDetail!) {
+    public func updateLastSeen(atStatus alUserDetail: KMCoreUserDetail!) {
         print("Last seen updated")
         guard let contact = contactService.loadContact(byKey: "userId", value: alUserDetail.userId) else {
             return
@@ -3084,7 +3120,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
         for index in 0 ..< fileCount {
             if index < images.count {
                 let image = images[index]
-                guard image.getSizeInMb() < Double(ALApplozicSettings.getMaxImageSizeForUploadInMB()) else {
+                guard image.getSizeInMb() < Double(KMCoreSettings.getMaxImageSizeForUploadInMB()) else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })
@@ -3111,7 +3147,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
                 viewModel.uploadImage(view: cell, indexPath: newIndexPath)
             } else if index < gifs.count + images.count {
                 let gif = gifs[index - images.count]
-                if let size = FileManager().sizeOfFile(atPath: gif), size > ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024 {
+                if let size = FileManager().sizeOfFile(atPath: gif), size > KMCoreSettings.getMaxImageSizeForUploadInMB() * 1024 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })
@@ -3135,7 +3171,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
             } else {
                 let path = videos[index - images.count - gifs.count]
                 
-                if let size = FileManager().sizeOfFile(atPath: path), size > (ALApplozicSettings.getMaxImageSizeForUploadInMB() * 1024) {
+                if let size = FileManager().sizeOfFile(atPath: path), size > (KMCoreSettings.getMaxImageSizeForUploadInMB() * 1024) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                         self.showUploadRestrictionAlert()
                     })

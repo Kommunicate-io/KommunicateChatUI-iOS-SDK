@@ -507,9 +507,9 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
         else { return nil }
 
         let latLonArgument = String(format: "%f,%f", lat, lon)
-        guard let apiKey = ALUserDefaultsHandler.getGoogleMapAPIKey()
+        guard let apiKey = KMCoreUserDefaultsHandler.getGoogleMapAPIKey()
         else {
-            print("⚠️ Warning: Please add the Google Map API key, or Map Image will not work as expected. Use `ALUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.")
+            print("⚠️ Warning: Please add the Google Map API key, or Map Image will not work as expected. Use `KMCoreUserDefaultsHandler.setGoogleMapAPIKey(<Your-Google-Map-Api-Key>)`.")
             return nil
         }
         let urlString = "https://maps.googleapis.com/maps/api/staticmap?center=\(latLonArgument)&zoom=17&size=375x295&maptype=roadmap&format=png&visual_refresh=true&markers=\(latLonArgument)&key=\(apiKey)"
