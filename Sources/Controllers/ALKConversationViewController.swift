@@ -530,7 +530,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             backgroundViewBottomConstraint?.isActive = isChatBarHidden
             replyViewBottomConstraint?.isActive = isChatBarHidden
         }
-        
+        collectEmailOnAwayMode = false
         edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
         activityIndicator.color = UIColor.lightGray
