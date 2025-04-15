@@ -2,6 +2,13 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.5.0] 2025-04-15
+- Added Business Hours feature.
+- Disabled conversation restart when the restart button is hidden.
+- Enabled form data persistence in local cache.
+- Fixed character limit bug in Dialogflow bot.
+- Resolved bug in Text Area component.
+
 ## [1.4.3] 2025-04-03
 - Fixed Recording button not wotking properly.
 
