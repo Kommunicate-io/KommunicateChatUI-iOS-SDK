@@ -1051,6 +1051,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.viewModel.send(voiceMessage: voice as Data, metadata: self?.configuration.messageMetadata)
 
             case .startVideoRecord:
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.videoButtonClicked, data: nil)
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
                     AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {
                         granted in
@@ -1079,6 +1080,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     weakSelf.showAlertForApplicationSettings(title: title, message: msg)
                 }
             case .showImagePicker:
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.attachmentOptionClicked, data: ["attachmentType": "Image/Video"])
                 if #available(iOS 14, *), weakSelf.configuration.isNewSystemPhotosUIEnabled {
                     weakSelf.photoPicker.openGallery(from: weakSelf)
                 } else {
@@ -1089,6 +1091,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     weakSelf.present(vc, animated: true, completion: nil)
                 }
             case .showLocation:
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.locationButtonClicked, data: nil)
                 let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mapView, bundle: Bundle.km)
 
                 guard let nav = storyboard.instantiateInitialViewController() as? ALKBaseNavigationViewController else { return }
@@ -1097,6 +1100,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 mapViewVC.setConfiguration(weakSelf.configuration)
                 self?.present(nav, animated: true, completion: {})
             case let .cameraButtonClicked(button):
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.cameraButtonClicked, data: nil)
                 guard let vc = ALKCustomCameraViewController.makeInstanceWith(delegate: weakSelf, and: weakSelf.configuration)
                 else {
                     button.isUserInteractionEnabled = true
@@ -1105,6 +1109,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                 weakSelf.present(vc, animated: true, completion: nil)
                 button.isUserInteractionEnabled = true
             case .showDocumentPicker:
+                ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.attachmentOptionClicked, data: ["attachmentType": "Document"])
                 weakSelf.documentManager.showPicker(from: weakSelf)
             case .languageSelection:
                 weakSelf.showLanguageSelection()
@@ -2387,6 +2392,9 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
         guard !viewModel.isOpenGroup else { return }
         viewModel.markConversationRead()
+        if let channelKey = viewModel.channelKey {
+            ALKCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.currentOpenedConversation, data: ["conversationId": Int(truncating: channelKey)])
+        }
     }
 
     public func messageUpdated() {
