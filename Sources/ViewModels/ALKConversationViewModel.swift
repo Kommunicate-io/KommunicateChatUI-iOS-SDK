@@ -1019,6 +1019,13 @@ open class ALKConversationViewModel: NSObject, Localizable {
         
         updateMessageMetadataChatContext(info: ["kmUserLocale": languageCode as Any], metadata: metaData)
         
+        /// For Dialogflow bot, pass language code with region using key `kmUserLanguageCode`
+        if let languageCodeWithRegion = [Locale.current.languageCode, Locale.current.regionCode]
+            .compactMap({ $0 })
+            .joined(separator: "_") as String?, !languageCodeWithRegion.isEmpty {
+            updateMessageMetadataChatContext( info: ["kmUserLanguageCode": languageCodeWithRegion], metadata: metaData)
+        }
+        
         return metaData
     }
     
