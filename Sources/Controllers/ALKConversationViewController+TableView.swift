@@ -510,6 +510,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             if message.isMyMessage {
                 let cell: ALKMyFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.updateConfiguration(configuration)
                 cell.activeTextFieldChanged = { textField in
                     self.activeTextField = textField
                 }
@@ -530,6 +531,7 @@ extension ALKConversationViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 let cell: ALKFriendFormCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.updateConfiguration(configuration)
                 cell.activeTextFieldChanged = { textField in
                     self.activeTextField = textField
                 }

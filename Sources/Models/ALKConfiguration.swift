@@ -143,6 +143,9 @@ public struct ALKConfiguration {
     /// Use this to customize chat input bar items like attachment
     /// button icons or their visibility.
     public var chatBar = ALKChatBarConfiguration()
+    
+    /// Use this to customize Form Style.
+    public var formStyle = KMFormConfiguration()
 
     /// Right  Navigation bar items in conversation list view
     public var navigationItemsForConversationList = [ALKNavigationItem]() {

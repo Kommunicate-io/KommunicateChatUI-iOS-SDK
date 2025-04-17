@@ -25,7 +25,7 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     let itemListView = NestedCellTableView()
     var submitButton: CurvedImageButton?
     var identifier: String?
-    let formBorderColor: CGColor = UIColor.kmDynamicColor(light: UIColor(red: 230/255, green: 229/255, blue: 236/255, alpha: 1.0), dark: UIColor.darkGray).cgColor
+    var configuration: ALKConfiguration = ALKConfiguration()
     var activeTextField: UITextField? {
         didSet {
             activeTextFieldChanged?(activeTextField)
@@ -78,6 +78,23 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
             itemListView.isUserInteractionEnabled = false
         } else {
             itemListView.isUserInteractionEnabled = true
+        }
+    }
+    
+    func updateConfiguration(_ configuration: ALKConfiguration) {
+        self.configuration = configuration
+        itemListView.backgroundColor = configuration.formStyle.formBackgroundColor
+        itemListView.layer.borderColor = configuration.formStyle.formBorderColor
+        itemListView.layer.borderWidth = configuration.formStyle.formBorderWidth
+        itemListView.layer.cornerRadius = configuration.formStyle.cornerRadius
+        
+        /// If shadowOffset is present then only the shadow will be visible.
+        if let shadowOffset = configuration.formStyle.formShadowOffset {
+            itemListView.layer.masksToBounds = false
+            itemListView.layer.shadowOffset = shadowOffset
+            itemListView.layer.shadowRadius = configuration.formStyle.formShadowRadius
+            itemListView.layer.shadowOpacity = configuration.formStyle.formShadowOpacity
+            itemListView.layer.shadowColor = configuration.formStyle.formShadowColor
         }
     }
 
@@ -158,7 +175,6 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
     }
 
     private func setUpTableView() {
-        itemListView.backgroundColor = UIColor.kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
         itemListView.estimatedRowHeight = 50
         itemListView.estimatedSectionHeaderHeight = 50
         itemListView.rowHeight = UITableView.automaticDimension
@@ -168,9 +184,6 @@ class ALKFormCell: ALKChatBaseCell<ALKMessageViewModel>, UITextFieldDelegate, UI
         itemListView.alwaysBounceVertical = false
         itemListView.delegate = self
         itemListView.dataSource = self
-        itemListView.layer.borderColor = formBorderColor
-        itemListView.layer.borderWidth = 1
-        itemListView.layer.cornerRadius = 5
         if #available(iOS 15.0, *) {  /// this is to remove the extra top padding form the cell
             itemListView.sectionHeaderTopPadding = 0
         }
