@@ -36,6 +36,11 @@ final class KMMediaViewerViewController: UIViewController {
         setupCloseButtonIfNeeded()
         playCurrentVideo()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        playerViewController?.player?.pause()
+    }
 
     // MARK: - Setup Methods
 
