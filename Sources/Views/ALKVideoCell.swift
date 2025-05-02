@@ -224,16 +224,6 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
     }
 
     @objc private func playButtonAction(_: UIButton) {
-        let initialVC = UIStoryboard.name(
-            storyboard: UIStoryboard.Storyboard.mediaViewer,
-            bundle: Bundle.km
-        )
-        .instantiateInitialViewController()
-        guard let nav = initialVC as? ALKBaseNavigationViewController,
-              let vc = nav.viewControllers.first as? ALKMediaViewerViewController
-        else {
-            return
-        }
         let dbService = ALMessageDBService()
         guard let messages = dbService.getAllMessagesWithAttachment(
             forContact: viewModel?.contactId,
@@ -246,7 +236,16 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         guard let viewModel = viewModel as? ALKMessageModel,
               let currentIndex = messageModels.firstIndex(of: viewModel) else { return }
-        vc.viewModel = ALKMediaViewerViewModel(messages: messageModels, currentIndex: currentIndex, localizedStringFileName: localizedStringFileName)
+
+        let mediaViewerViewModel = ALKMediaViewerViewModel(
+            messages: messageModels,
+            currentIndex: currentIndex,
+            localizedStringFileName: localizedStringFileName
+        )
+        
+        let mediaVC = KMMediaViewerViewController(viewModel: mediaViewerViewModel)
+        let nav = ALKBaseNavigationViewController(rootViewController: mediaVC)
+        nav.modalPresentationStyle = .formSheet
         UIViewController.topViewController()?.present(nav, animated: true, completion: {
             self.playButton.isEnabled = true
         })
