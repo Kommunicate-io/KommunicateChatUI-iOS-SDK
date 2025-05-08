@@ -32,9 +32,6 @@ class ALKMyVideoCell: ALKVideoCell {
             .constraint(equalTo: contentView.topAnchor, constant: Padding.PhotoView.top)
             .isActive = true
 
-        photoView.leadingAnchor
-            .constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: 48)
-            .isActive = true
         photoView.trailingAnchor
             .constraint(equalTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
             .isActive = true
