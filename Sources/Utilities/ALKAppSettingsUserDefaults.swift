@@ -244,16 +244,25 @@ public class ALKAppSettings: NSObject, NSSecureCoding {
     }
 
     public required init?(coder: NSCoder) {
-        primaryColor = coder.decodeObject(forKey: CoderKey.primaryColor) as! String
+        guard let primaryColor = coder.decodeObject(of: NSString.self, forKey: CoderKey.primaryColor) as String? else {
+            return nil
+        }
+        self.primaryColor = primaryColor
+
         showPoweredBy = coder.decodeBool(forKey: CoderKey.showPoweredBy)
-        secondaryColor = coder.decodeObject(forKey: CoderKey.secondaryColor) as? String
-        sentMessageBackgroundColor = coder.decodeObject(forKey: CoderKey.sentMessageBackgroundColor) as? String
-        receivedMessageBackgroundColor = coder.decodeObject(forKey: CoderKey.receivedMessageBackgroundColor) as? String
-        attachmentIconsTintColor = coder.decodeObject(forKey: CoderKey.attachmentIconsTintColor) as? String
-        buttonPrimaryColor = coder.decodeObject(forKey: CoderKey.buttonPrimaryColor) as? String
+        secondaryColor = coder.decodeObject(of: NSString.self, forKey: CoderKey.secondaryColor) as String?
+        sentMessageBackgroundColor = coder.decodeObject(of: NSString.self, forKey: CoderKey.sentMessageBackgroundColor) as String?
+        receivedMessageBackgroundColor = coder.decodeObject(of: NSString.self, forKey: CoderKey.receivedMessageBackgroundColor) as String?
+        attachmentIconsTintColor = coder.decodeObject(of: NSString.self, forKey: CoderKey.attachmentIconsTintColor) as String?
+        buttonPrimaryColor = coder.decodeObject(of: NSString.self, forKey: CoderKey.buttonPrimaryColor) as String?
         hidePostCTAEnabled = coder.decodeBool(forKey: CoderKey.hidePostCTAEnabled)
-        defaultUploadOverrideUrl = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideUrl) as? String
-        defaultUploadOverrideHeaders = coder.decodeObject(forKey: CoderKey.defaultUploadOverrideHeaders) as? [String: String]
+        defaultUploadOverrideUrl = coder.decodeObject(of: NSString.self, forKey: CoderKey.defaultUploadOverrideUrl) as String?
+
+        defaultUploadOverrideHeaders = coder.decodeObject(
+            of: [NSDictionary.self, NSString.self],
+            forKey: CoderKey.defaultUploadOverrideHeaders
+        ) as? [String: String]
+
         csatRatingBase = coder.decodeInteger(forKey: CoderKey.csatRatingBase)
         botTypingIndicatorInterval = coder.decodeInteger(forKey: CoderKey.botTypingIndicatorInterval)
     }
