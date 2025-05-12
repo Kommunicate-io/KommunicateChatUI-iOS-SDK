@@ -14,22 +14,36 @@ class ALKMyVideoCell: ALKVideoCell {
         sv.contentMode = .center
         return sv
     }()
+    
+    enum Padding {
+        enum PhotoView {
+            static let right: CGFloat = 14
+            static let top: CGFloat = 6
+        }
+    }
 
     let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
     override func setupViews() {
         super.setupViews()
 
-        let width = UIScreen.main.bounds.width
-
         contentView.addViewsForAutolayout(views: [stateView])
 
-        photoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
+        photoView.topAnchor
+            .constraint(equalTo: contentView.topAnchor, constant: Padding.PhotoView.top)
+            .isActive = true
 
-        photoView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: 48).isActive = true
-        photoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14).isActive = true
+        photoView.trailingAnchor
+            .constraint(equalTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
+            .isActive = true
 
-        photoView.widthAnchor.constraint(equalToConstant: width * 0.60).isActive = true
-        photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6).isActive = true
+        photoView.widthAnchor
+            .constraint(equalToConstant: ALKVideoCell.maxWidth * ALKVideoCell.widthPercentage)
+            .isActive = true
+        photoView.heightAnchor
+            .constraint(equalToConstant: ALKVideoCell.maxWidth * ALKVideoCell.heightPercentage)
+            .isActive = true
+
+        bubbleView.backgroundColor = UIColor.hex8(Color.Background.grayF2.rawValue).withAlphaComponent(0.26)
 
         fileSizeLabel.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: 0).isActive = true
         stateView.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -1.0).isActive = true
@@ -57,6 +71,8 @@ class ALKMyVideoCell: ALKVideoCell {
             photoView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
             bubbleView.layer.cornerRadius = ALKMessageStyle.sentBubble.cornerRadius
         }
+        captionLabel.font = ALKMessageStyle.sentMessage.font
+        captionLabel.textColor = ALKMessageStyle.sentMessage.text
         setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
     }
 }

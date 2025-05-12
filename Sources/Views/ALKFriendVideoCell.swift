@@ -35,9 +35,17 @@ class ALKFriendVideoCell: ALKVideoCell {
         return 28
     }
 
+    enum Padding {
+        enum PhotoView {
+            static let right: CGFloat = 56
+        }
+    }
+
     override func setupStyle() {
         super.setupStyle()
         nameLabel.setStyle(ALKMessageStyle.displayName)
+        captionLabel.font = ALKMessageStyle.receivedMessage.font
+        captionLabel.textColor = ALKMessageStyle.receivedMessage.text
         if ALKMessageStyle.receivedBubble.style == .edge {
             bubbleView.layer.cornerRadius = ALKMessageStyle.receivedBubble.cornerRadius
             bubbleView.backgroundColor = appSettingsUserDefaults.getReceivedMessageBackgroundColor()
@@ -49,7 +57,6 @@ class ALKFriendVideoCell: ALKVideoCell {
 
     override func setupViews() {
         super.setupViews()
-        let width = UIScreen.main.bounds.width
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avatarTappedAction))
         avatarImageView.addGestureRecognizer(tapGesture)
@@ -72,11 +79,15 @@ class ALKFriendVideoCell: ALKVideoCell {
         avatarImageView.heightAnchor.constraint(equalToConstant: 37).isActive = true
         avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor).isActive = true
 
-        photoView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -56).isActive = true
-        photoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
-
-        photoView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 6).isActive = true
-        photoView.widthAnchor.constraint(equalToConstant: width * 0.60).isActive = true
+        photoView.trailingAnchor
+            .constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -Padding.PhotoView.right)
+            .isActive = true
+        photoView.widthAnchor
+            .constraint(equalToConstant: ALKVideoCell.maxWidth * ALKVideoCell.widthPercentage)
+            .isActive = true
+        photoView.heightAnchor
+            .constraint(equalToConstant: ALKVideoCell.maxWidth * ALKVideoCell.heightPercentage)
+            .isActive = true
 
         timeLabel.leadingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: 2).isActive = true
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true

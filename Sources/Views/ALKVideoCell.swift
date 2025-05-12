@@ -21,6 +21,25 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         case upload(filePath: String)
         case uploaded
     }
+    
+    // This will be used to calculate the size of the photo view.
+    static var heightPercentage: CGFloat = 0.5
+    static var widthPercentage: CGFloat = 0.48
+        
+    static var maxWidth = UIScreen.main.bounds.width
+
+    enum Padding {
+        enum CaptionLabel {
+            static var bottom: CGFloat = 10.0
+            static var left: CGFloat = 5.0
+            static var right: CGFloat = 5.0
+        }
+    }
+    
+    // To be changed from the class that is subclassing `ALVideoCell`
+    class var messageTextFont: UIFont {
+        return Font.normal(size: 12).font()
+    }
 
     var photoView: UIImageView = {
         let imageView = UIImageView()
@@ -28,6 +47,12 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
+    }()
+    
+    var captionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        return label
     }()
 
     var timeLabel: UILabel = {
@@ -107,22 +132,38 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         return 16
     }
 
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
-        let heigh: CGFloat
+    override class func rowHeigh(
+        viewModel: ALKMessageViewModel,
+        width: CGFloat
+    ) -> CGFloat {
+        var mediaHeight = ceil(width * heightPercentage)
 
-        if viewModel.ratio < 1 {
-            heigh = viewModel.ratio == 0 ? (width * 0.48) : ceil((width * 0.48) / viewModel.ratio)
-        } else {
-            heigh = ceil((width * 0.64) / viewModel.ratio)
+        if let message = viewModel.message, !message.isEmpty {
+            if viewModel.ratio < 1 {
+                mediaHeight = viewModel.ratio == 0
+                    ? ceil(width * heightPercentage)
+                    : ceil((width * heightPercentage) / viewModel.ratio)
+            } else {
+                mediaHeight = ceil((width * 0.64) / viewModel.ratio)
+            }
+
+            let messageWidth = width * widthPercentage
+            let messageHeight = message.rectWithConstrainedWidth(
+                messageWidth,
+                font: messageTextFont
+            ).height.rounded(.up)
+
+            mediaHeight += messageHeight + Padding.CaptionLabel.bottom
         }
 
-        return topPadding() + heigh + bottomPadding()
+        return topPadding() + mediaHeight + bottomPadding()
     }
 
     override func update(viewModel: ALKMessageViewModel) {
         self.viewModel = viewModel
         timeLabel.text = viewModel.time
-
+        captionLabel.text = viewModel.message
+        
         if viewModel.isMyMessage {
             if viewModel.isSent || viewModel.isAllRead || viewModel.isAllReceived {
                 if let filePath = viewModel.filePath, !filePath.isEmpty {
@@ -165,7 +206,18 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         uploadButton.addTarget(self, action: #selector(ALKVideoCell.uploadButtonAction(_:)), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(ALKVideoCell.playButtonAction(_:)), for: .touchUpInside)
 
-        contentView.addViewsForAutolayout(views: [frontView, photoView, bubbleView, timeLabel, fileSizeLabel, downloadButton, playButton, progressView, uploadButton])
+        contentView.addViewsForAutolayout(views:
+            [frontView,
+             photoView,
+             bubbleView,
+             timeLabel,
+             fileSizeLabel,
+             captionLabel,
+             downloadButton,
+             playButton,
+             progressView,
+             uploadButton])
+
         contentView.bringSubviewToFront(photoView)
         contentView.bringSubviewToFront(frontView)
         contentView.bringSubviewToFront(actionButton)
@@ -180,9 +232,11 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         frontView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
 
         bubbleView.topAnchor.constraint(equalTo: photoView.topAnchor).isActive = true
-        bubbleView.bottomAnchor.constraint(equalTo: photoView.bottomAnchor).isActive = true
+        bubbleView.bottomAnchor.constraint(equalTo: captionLabel.bottomAnchor).isActive = true
         bubbleView.leftAnchor.constraint(equalTo: photoView.leftAnchor).isActive = true
         bubbleView.rightAnchor.constraint(equalTo: photoView.rightAnchor).isActive = true
+        
+        fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
 
         downloadButton.centerXAnchor.constraint(equalTo: photoView.centerXAnchor).isActive = true
         downloadButton.centerYAnchor.constraint(equalTo: photoView.centerYAnchor).isActive = true
@@ -203,8 +257,13 @@ class ALKVideoCell: ALKChatBaseCell<ALKMessageViewModel>,
         progressView.centerYAnchor.constraint(equalTo: photoView.centerYAnchor).isActive = true
         progressView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         progressView.widthAnchor.constraint(equalToConstant: 60).isActive = true
-
-        fileSizeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
+        
+        captionLabel.layout {
+            $0.leading == photoView.leadingAnchor + Padding.CaptionLabel.left
+            $0.trailing == photoView.trailingAnchor - Padding.CaptionLabel.right
+            $0.top == photoView.bottomAnchor
+            $0.bottom == contentView.bottomAnchor - ALKVideoCell.bottomPadding()
+        }
     }
 
     deinit {
