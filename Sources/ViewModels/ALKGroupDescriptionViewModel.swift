@@ -15,7 +15,7 @@ struct ALKGroupDescriptionViewModel {
         static let key = "AL_GROUP_DESCRIPTION"
     }
 
-    let channelService = ALChannelService()
+    let channelService = KMCoreChannelService()
     let channelKey: NSNumber
 
     /// Update the group description

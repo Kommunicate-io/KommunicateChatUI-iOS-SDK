@@ -29,7 +29,7 @@ public class NotificationHelper {
 
             /// For group check mute only.
             if let groupId = groupId {
-                let group = ALChannelService().getChannelByKey(groupId)
+                let group = KMCoreChannelService().getChannelByKey(groupId)
                 isMute = group?.isNotificationMuted() ?? false
             }
         }

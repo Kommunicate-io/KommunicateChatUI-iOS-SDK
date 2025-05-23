@@ -35,8 +35,8 @@ extension ALMessage: ALKChatViewModelProtocol {
         return alContact
     }
 
-    private var alChannel: ALChannel? {
-        let alChannelService = ALChannelService()
+    private var alChannel: KMCoreChannel? {
+        let alChannelService = KMCoreChannelService()
 
         // TODO: This is a workaround as other method uses closure.
         // Later replace this with:
@@ -217,10 +217,10 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
     
     public var platformSource: String? {
-        guard let sourceChannel = ALChannelDBService().getChannelByKey(channelKey) else { return ""}
-        if sourceChannel.platformSource == nil, let channel = ALChannelService().getChannelByKey(channelKey) {
+        guard let sourceChannel = KMCoreChannelDBService().getChannelByKey(channelKey) else { return ""}
+        if sourceChannel.platformSource == nil, let channel = KMCoreChannelService().getChannelByKey(channelKey) {
             guard let sourceFromMeta = channel.metadata.value(forKey: "source") else { return nil }
-            ALChannelDBService().updatePlatformSource(channelKey, platformSource: sourceFromMeta as? String)
+            KMCoreChannelDBService().updatePlatformSource(channelKey, platformSource: sourceFromMeta as? String)
         }
         
         let source = sourceChannel.platformSource
@@ -228,7 +228,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
     
     public var assignedTags: [KMAssignedTags]? {
-        guard let channel = ALChannelService().getChannelByKey(channelKey),
+        guard let channel = KMCoreChannelService().getChannelByKey(channelKey),
               let tags = channel.metadata.value(forKey: "KM_TAGS") as? String,
               let data = tags.data(using: .utf8),
               let tagsList = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else { return nil }
@@ -246,7 +246,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     
     public var isWaitingQueueConversation: Bool {
         guard let channelKey = channelKey else { return false }
-        guard let channel = ALChannelService().getChannelByKey(channelKey),
+        guard let channel = KMCoreChannelService().getChannelByKey(channelKey),
               let conversationStatus = channel.metadata.value(forKey: AL_CHANNEL_CONVERSATION_STATUS) as? String,
               conversationStatus == KMConversationStatus.waiting.rawValue else {
             return false

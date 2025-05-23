@@ -211,7 +211,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
 
         // Server call
 
-        let newChannel = ALChannelService()
+        let newChannel = KMCoreChannelService()
         let membersList = NSMutableArray()
         _ = friendsSelected.map { membersList.add($0.friendUUID as Any) }
 
@@ -221,7 +221,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             metaData[ALKGroupDescriptionViewModel.GroupDescription.key] = descriptionText
         }
 
-        let channelInfo = ALChannelInfo()
+        let channelInfo = KMCoreChannelInfo()
         channelInfo.groupName = groupName
         channelInfo.groupMemberList = membersList
         channelInfo.imageUrl = groupImgUrl

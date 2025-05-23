@@ -19,7 +19,7 @@ public protocol ALKConversationViewModelDelegate: AnyObject {
     func updateMessageAt(indexPath: IndexPath)
     func newMessagesAdded()
     func messageSent(at: IndexPath)
-    func updateDisplay(contact: ALContact?, channel: ALChannel?)
+    func updateDisplay(contact: ALContact?, channel: KMCoreChannel?)
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
     func showInvalidReplyAlert(kmField: KMField)
@@ -86,7 +86,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard conversationProxy == nil else { return true }
         guard
             let channelKey = channelKey,
-            let alChannel = ALChannelService().getChannelByKey(channelKey),
+            let alChannel = KMCoreChannelService().getChannelByKey(channelKey),
             let metadata = alChannel.metadata,
             let contextBased = metadata["AL_CONTEXT_BASED_CHAT"] as? String
         else {
@@ -109,7 +109,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open var richMessages: [String: Any] = [:]
 
     open var isOpenGroup: Bool {
-        let alChannelService = ALChannelService()
+        let alChannelService = KMCoreChannelService()
         guard let channelKey = channelKey,
               let alchannel = alChannelService.getChannelByKey(channelKey)
         else {
@@ -119,7 +119,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     open var isWaitingQueueConversation: Bool {
-        let alChannelService = ALChannelService()
+        let alChannelService = KMCoreChannelService()
         guard let channelKey = channelKey,
               let alchannel = alChannelService.getChannelByKey(channelKey),
               let conversationStatus = alchannel.metadata[AL_CHANNEL_CONVERSATION_STATUS] as? String
@@ -130,7 +130,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     open var assignedTeamId: String? {
-        let alChannelService = ALChannelService()
+        let alChannelService = KMCoreChannelService()
         guard let channelKey = channelKey,
               let alchannel = alChannelService.getChannelByKey(channelKey),
               let teamID = alchannel.metadata["KM_TEAM_ID"] as? String
@@ -271,7 +271,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func friends() -> [ALKFriendViewModel] {
-        let alChannelService = ALChannelService()
+        let alChannelService = KMCoreChannelService()
 
         // TODO: This is a workaround as other method uses closure.
         // Later replace this with:
@@ -540,7 +540,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if let proxy = conversationProxy, let topicDetail = proxy.getTopicDetail() {
             return topicDetail
         } else {
-            guard let metadata = ALChannelService().getChannelByKey(channelKey)?.metadata else { return nil }
+            guard let metadata = KMCoreChannelService().getChannelByKey(channelKey)?.metadata else { return nil }
             let topicDetail = ALTopicDetail()
             topicDetail.title = metadata["title"] as? String
             topicDetail.subtitle = metadata["price"] as? String
@@ -726,7 +726,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func markConversationRead() {
         if let channelKey = channelKey {
             print("mark read1")
-            ALChannelService.sharedInstance().markConversation(asRead: channelKey, withCompletion: {
+            KMCoreChannelService.sharedInstance().markConversation(asRead: channelKey, withCompletion: {
                 _, error in
                 print("mark read")
                 if let error = error {
@@ -779,7 +779,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     func showTypingIndicatorTillBotNewMessage() {
         guard
-              let channel = ALChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
+              let channel = KMCoreChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
               let assigneeUserId = channel.assigneeUserId,
               let alContact = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
               alContact.roleType == NSNumber(value: AL_BOT.rawValue)
@@ -991,7 +991,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         // If KMConversationScreenConfiguration.showTypingIndicatorWhileFetchingResponse is true and assignee is bot then typing indicator will be shown
         guard KMConversationScreenConfiguration.showTypingIndicatorWhileFetchingResponse,
               !self.alMessages.isEmpty,
-              let channel = ALChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
+              let channel = KMCoreChannelService().getChannelByKey(self.alMessages[0].groupId as NSNumber),
               let assigneeUserId = channel.assigneeUserId,
               let alContact = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
               alContact.roleType == NSNumber(value: AL_BOT.rawValue)
@@ -1274,7 +1274,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open func refresh() {
-        if let key = channelKey, ALChannelService.isChannelDeleted(key) {
+        if let key = channelKey, KMCoreChannelService.isChannelDeleted(key) {
             return
         }
         delegate?.loadingStarted()
@@ -1489,7 +1489,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     func currentConversationProfile(completion: @escaping (ALKConversationProfile?) -> Void) {
         if channelKey != nil {
-            ALChannelService().getChannelInformation(channelKey, orClientChannelKey: nil) { channel in
+            KMCoreChannelService().getChannelInformation(channelKey, orClientChannelKey: nil) { channel in
                 guard let channel = channel else {
                     print("Error while fetching channel details")
                     completion(nil)
@@ -1517,7 +1517,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    func conversationProfileFrom(contact: ALContact?, channel: ALChannel?) -> ALKConversationProfile {
+    func conversationProfileFrom(contact: ALContact?, channel: KMCoreChannel?) -> ALKConversationProfile {
         var conversationProfile = ALKConversationProfile()
         conversationProfile.name = channel?.name ?? contact?.getDisplayName() ?? ""
         conversationProfile.imageUrl = channel?.channelImageURL ?? contact?.contactImageUrl
@@ -1588,7 +1588,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     
     public func getConversationEndUserID() {
         guard let channelKey = channelKey else { return }
-        ALChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
+        KMCoreChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
             guard let contacts = contacts, !contacts.isEmpty else { return }
             for contact in contacts {
                 if contact.roleType == 3 {
@@ -1666,7 +1666,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
     
     func isBotHandelingConversation() -> Bool {
-        if let channel = ALChannelService().getChannelByKey(channelKey),
+        if let channel = KMCoreChannelService().getChannelByKey(channelKey),
         let assigneeUserId = channel.assigneeUserId,
         let assignee = ALContactService().loadContact(byKey: "userId", value: assigneeUserId),
         let roleType = assignee.roleType,
@@ -1918,7 +1918,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         completion: @escaping (Bool) -> Void
     ) {
         guard let groupId = groupKey() else { return }
-        let alchanneService = ALChannelService()
+        let alchanneService = KMCoreChannelService()
         alchanneService.updateChannel(
             groupId, andNewName: groupName,
             andImageURL: groupImage,
@@ -2014,7 +2014,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private func addMembersToGroup(users: [ALKFriendViewModel], completion: @escaping (Bool) -> Void) {
         guard let groupId = groupKey() else { return }
-        let alchanneService = ALChannelService()
+        let alchanneService = KMCoreChannelService()
         let channels = NSMutableArray(object: groupId)
         let channelUsers = NSMutableArray(array: users.map { $0.friendUUID as Any })
         alchanneService.addMultipleUsers(toChannel: channels, channelUsers: channelUsers, andCompletion: {
@@ -2195,7 +2195,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     private func updateInfo() {
         guard let groupId = groupKey() else { return }
-        let channel = ALChannelService().getChannelByKey(groupId)
+        let channel = KMCoreChannelService().getChannelByKey(groupId)
         delegate?.updateDisplay(contact: nil, channel: channel)
     }
 
@@ -2220,7 +2220,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             completion(nil)
             return
         }
-        ALChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
+        KMCoreChannelDBService().membersInGroup(channelKey: channelKey) { contacts in
             guard let contacts = contacts, !contacts.isEmpty else {
                 completion(nil)
                 return
@@ -2230,12 +2230,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 }
 
-public extension ALChannel {
+public extension KMCoreChannel {
     static let ConversationAssignee = "CONVERSATION_ASSIGNEE"
 
     var assigneeUserId: String? {
         guard type == Int16(SUPPORT_GROUP.rawValue),
-              let assigneeId = metadata?[ALChannel.ConversationAssignee] as? String
+              let assigneeId = metadata?[KMCoreChannel.ConversationAssignee] as? String
         else {
             return nil
         }

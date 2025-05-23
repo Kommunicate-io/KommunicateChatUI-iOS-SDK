@@ -27,7 +27,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
 
     fileprivate let searchController = UISearchController(searchResultsController: nil)
 
-    let channelService = ALChannelService()
+    let channelService = KMCoreChannelService()
 
     // MARK: - Data Stuff
 
@@ -191,7 +191,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
         }
     }
 
-    func addCategorizeContacts(channel: ALChannel?) {
+    func addCategorizeContacts(channel: KMCoreChannel?) {
         guard let alChannel = channel else {
             return
         }

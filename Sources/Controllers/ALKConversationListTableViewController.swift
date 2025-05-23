@@ -173,7 +173,7 @@ public class ALKConversationListTableViewController: UITableViewController, Loca
                     ))
                     return
                 }
-                let channelDbService = ALChannelDBService()
+                let channelDbService = KMCoreChannelDBService()
                 channelDbService.deleteChannel(conversation.groupId)
                 self.viewModel.remove(message: conversation)
                 self.tableView.reloadData()
@@ -465,7 +465,7 @@ extension ALKConversationListTableViewController {
                     self?.startLoadingIndicator()
                     let messageService = ALMessageService()
                     if conversation.isGroupChat {
-                        let channelService = ALChannelService()
+                        let channelService = KMCoreChannelService()
 
                         if channelService.isChannelLeft(conversation.groupId) {
                             messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
@@ -476,8 +476,8 @@ extension ALKConversationListTableViewController {
                                 weakSelf.viewModel.remove(message: conversation)
                                 weakSelf.tableView.reloadData()
                             })
-                        } else if ALChannelService.isChannelDeleted(conversation.groupId) {
-                            let channelDbService = ALChannelDBService()
+                        } else if KMCoreChannelService.isChannelDeleted(conversation.groupId) {
+                            let channelDbService = KMCoreChannelDBService()
                             channelDbService.deleteChannel(conversation.groupId)
                             weakSelf.searchFilteredChat.remove(at: indexPath.row)
                             weakSelf.viewModel.remove(message: conversation)
@@ -525,7 +525,7 @@ extension ALKConversationListTableViewController {
                     guard let weakSelf = self else { return }
                     self?.startLoadingIndicator()
                     if conversation.isGroupChat {
-                        let channelService = ALChannelService()
+                        let channelService = KMCoreChannelService()
                         if channelService.isChannelLeft(conversation.groupId) {
                             messageService.deleteMessageThread(nil, orChannelKey: conversation.groupId, withCompletion: {
                                 _, error in
@@ -535,8 +535,8 @@ extension ALKConversationListTableViewController {
                                 weakSelf.viewModel.remove(message: conversation)
                                 weakSelf.tableView.reloadData()
                             })
-                        } else if ALChannelService.isChannelDeleted(conversation.groupId) {
-                            let channelDbService = ALChannelDBService()
+                        } else if KMCoreChannelService.isChannelDeleted(conversation.groupId) {
+                            let channelDbService = KMCoreChannelDBService()
                             channelDbService.deleteChannel(conversation.groupId)
                             weakSelf.viewModel.remove(message: conversation)
                             weakSelf.tableView.reloadData()
@@ -731,7 +731,7 @@ extension ALKConversationListTableViewController {
             fileName: localizedStringFileName
         )
 
-        let isChannelLeft = ALChannelService().isChannelLeft(conversation.groupId)
+        let isChannelLeft = KMCoreChannelService().isChannelLeft(conversation.groupId)
 
         let popupMessageForChannel = isChannelLeft ? deleteGroupPopupMessage : leaveGroupPopupMessage
         let prefixTextForPopupMessage = conversation.isGroupChat ?
@@ -750,7 +750,7 @@ extension ALKConversationListTableViewController {
             fileName: localizedStringFileName
         )
 
-        if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
+        if conversation.isGroupChat, let channel = KMCoreChannelService().getChannelByKey(conversation.groupId) {
             let unmuteChannelFormat = localizedString(
                 forKey: "UnmuteChannel",
                 withDefaultValue: SystemMessage.Mute.UnmuteChannel,
@@ -811,7 +811,7 @@ extension ALKConversationListTableViewController {
     }
 
     private func popupTitleToMute(conversation: ALMessage) -> String? {
-        if conversation.isGroupChat, let channel = ALChannelService().getChannelByKey(conversation.groupId) {
+        if conversation.isGroupChat, let channel = KMCoreChannelService().getChannelByKey(conversation.groupId) {
             let muteChannelFormat = localizedString(forKey: "MuteChannel", withDefaultValue: SystemMessage.Mute.MuteChannel, fileName: localizedStringFileName)
             return String(format: muteChannelFormat, channel.name)
         } else if let contact = ALContactService().loadContact(byKey: "userId", value: conversation.contactId) {
@@ -912,7 +912,7 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
 
             deleteButton.backgroundColor = UIColor.mainRed()
 
-            if !message.isGroupChat || (message.channelKey != nil && ALChannelService().isChannelLeft(message.channelKey)) {
+            if !message.isGroupChat || (message.channelKey != nil && KMCoreChannelService().isChannelLeft(message.channelKey)) {
                 let deleteTitle = localizedString(forKey: "DeleteButtonName", withDefaultValue: SystemMessage.ButtonName.Delete, fileName: configuration.localizedStringFileName)
                 deleteButton.title = deleteTitle
             } else {
@@ -949,7 +949,7 @@ extension ALKConversationListTableViewController: SwipeTableViewCellDelegate {
 
     private func isConversationMuted(viewModel: ALKChatViewModelProtocol) -> Bool {
         if let channelKey = viewModel.channelKey,
-           let channel = ALChannelService().getChannelByKey(channelKey) {
+           let channel = KMCoreChannelService().getChannelByKey(channelKey) {
             if channel.isNotificationMuted() {
                 return true
             } else {

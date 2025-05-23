@@ -522,7 +522,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         
         let messageListRequest = MessageListRequest()
         messageListRequest.channelKey = channelKey
-        if let channel = ALChannelService().getChannelByKey(channelKey) {
+        if let channel = KMCoreChannelService().getChannelByKey(channelKey) {
             messageListRequest.channelType = channel.type
         }
         

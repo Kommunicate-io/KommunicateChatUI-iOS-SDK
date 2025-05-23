@@ -38,7 +38,7 @@ public final class ALKNewChatViewModel {
 
     func getContacts(userService: ALUserService = ALUserService(), completion: @escaping () -> Void) {
         if KMCoreSettings.isContactsGroupEnabled() {
-            let channelService = ALChannelService()
+            let channelService = KMCoreChannelService()
             channelService.getMembersFromContactGroupOfType(KMCoreSettings.getContactsGroupId(), withGroupType: 9) { _, channel in
 
                 guard let alChannel = channel else {
@@ -62,7 +62,7 @@ public final class ALKNewChatViewModel {
         }
     }
 
-    func addCategorizeContacts(channel: ALChannel?) {
+    func addCategorizeContacts(channel: KMCoreChannel?) {
         guard let alChannel = channel else {
             return
         }

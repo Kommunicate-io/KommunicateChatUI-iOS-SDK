@@ -429,7 +429,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard let weakSelf = self, weakSelf.viewModel != nil else { return }
             print("update group detail")
             guard weakSelf.viewModel.isGroup else { return }
-            let alChannelService = ALChannelService()
+            let alChannelService = KMCoreChannelService()
             guard let key = weakSelf.viewModel.channelKey,
                   let channel = alChannelService.getChannelByKey(key),
                   channel.name != nil
@@ -472,7 +472,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         })
         #if canImport(ChatProvidersSDK)
             guard KMZendeskChatHandler.shared.isZendeskEnabled(),
-                  let channel = ALChannelService().getChannelByKey(viewModel.channelKey),
+                  let channel = KMCoreChannelService().getChannelByKey(viewModel.channelKey),
                   isZendeskConversation(channel: channel),
                   !channel.isClosedConversation,
                   let assigneeUserId = channel.assigneeUserId,
@@ -661,11 +661,11 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     }
 
     open func isChannelLeft() {
-        guard let channelKey = viewModel.channelKey, let channel = ALChannelService().getChannelByKey(channelKey) else {
+        guard let channelKey = viewModel.channelKey, let channel = KMCoreChannelService().getChannelByKey(channelKey) else {
             return
         }
         // TODO: This returns nil sometimes. Find a better way.
-        guard let members = ALChannelService().getListOfAllUsers(inChannel: channelKey) as? [String] else {
+        guard let members = KMCoreChannelService().getListOfAllUsers(inChannel: channelKey) as? [String] else {
             return
         }
         if channel.type != 6 && channel.type != 10 && !members.contains(KMCoreUserDefaultsHandler.getUserId()) {
@@ -1254,7 +1254,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
     
     // Disables replies if the conversation is resolved and restart button is hidden.
     open func isConversationResolvedAndReplyEnabled() -> Bool {
-        guard let channel = ALChannelService().getChannelByKey(viewModel.channelKey) else {
+        guard let channel = KMCoreChannelService().getChannelByKey(viewModel.channelKey) else {
             return true
         }
         return !channel.isClosedConversation || !configuration.hideRestartConversationButton
@@ -1417,8 +1417,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
 
     public func subscribeChannelToMqtt() {
         guard viewModel != nil, alMqttConversationService != nil else { return }
-        let channelService = ALChannelService()
-        if viewModel.isGroup, let groupId = viewModel.channelKey, !channelService.isChannelLeft(groupId), !ALChannelService.isChannelDeleted(groupId) {
+        let channelService = KMCoreChannelService()
+        if viewModel.isGroup, let groupId = viewModel.channelKey, !channelService.isChannelLeft(groupId), !KMCoreChannelService.isChannelDeleted(groupId) {
             if !viewModel.isOpenGroup {
                 alMqttConversationService.subscribe(toChannelConversation: groupId)
             } else {
@@ -2317,7 +2317,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
     
     @objc open func checkRestriceted() -> Bool {
         let channelKey = viewModel.channelKey
-        let channelService = ALChannelService()
+        let channelService = KMCoreChannelService()
         let channel = channelService.getChannelByKey(channelKey)
         
         if KMCoreUserDefaultsHandler.isTeamModeEnabled(), let teamID = KMCoreUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
@@ -2342,7 +2342,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
     
-    private func isZendeskConversation(channel: ALChannel?) -> Bool {
+    private func isZendeskConversation(channel: KMCoreChannel?) -> Bool {
         guard let channel = channel,
               let channelMetaData = channel.metadata,
               let conversationInfoString = channelMetaData["conversationMetadata"] as? String,
@@ -2668,7 +2668,7 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
         }
     }
 
-    public func updateDisplay(contact: ALContact?, channel: ALChannel?) {
+    public func updateDisplay(contact: ALContact?, channel: KMCoreChannel?) {
         let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel)
         navigationBar.updateView(profile: profile)
     }
@@ -3208,7 +3208,7 @@ extension ALKConversationViewController: ALKCustomPickerDelegate {
     }
 }
 
-extension ALChannel {
+extension KMCoreChannel {
     static let ClosedStatus = 2
 
     var isClosedConversation: Bool {
@@ -3216,6 +3216,6 @@ extension ALChannel {
             return false
         }
         return type == Int16(SUPPORT_GROUP.rawValue) &&
-            Int(conversationStatus) ?? 0 == ALChannel.ClosedStatus
+            Int(conversationStatus) ?? 0 == KMCoreChannel.ClosedStatus
     }
 }

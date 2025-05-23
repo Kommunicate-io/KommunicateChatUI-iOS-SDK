@@ -87,7 +87,7 @@ public protocol ALKConversationListViewModelProtocol: AnyObject {
 public final class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol {
     public weak var delegate: ALKConversationListViewModelDelegate?
 
-    var alChannelService = ALChannelService()
+    var alChannelService = KMCoreChannelService()
     var alContactService = ALContactService()
     var conversationService = ALConversationService()
 
@@ -222,12 +222,12 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void) {
-        if message.isGroupChat, let channel = ALChannelService().getChannelByKey(message.groupId) {
+        if message.isGroupChat, let channel = KMCoreChannelService().getChannelByKey(message.groupId) {
             // Unmute channel
             let muteRequest = ALMuteRequest()
             muteRequest.id = channel.key
             muteRequest.notificationAfterTime = tillTime as NSNumber
-            ALChannelService().muteChannel(muteRequest) { _, error in
+            KMCoreChannelService().muteChannel(muteRequest) { _, error in
                 if error != nil {
                     withCompletion(false)
                 }
