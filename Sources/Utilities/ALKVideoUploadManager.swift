@@ -149,7 +149,7 @@ class ALKVideoUploadManager: NSObject {
         }
 
         let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
+        let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMessageByKey("key", value: key) as? DB_Message,
               let message = messageService.createMessageEntity(dbMessage) else { return nil }
 

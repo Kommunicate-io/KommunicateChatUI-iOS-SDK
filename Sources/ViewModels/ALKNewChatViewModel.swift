@@ -85,7 +85,7 @@ public final class ALKNewChatViewModel {
     }
 
     func fetchContactsFromDB() -> [ALKContactProtocol]? {
-        let dbHandler = ALDBHandler.sharedInstance()
+        let dbHandler = KMCoreDBHandler.sharedInstance()
         let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
         var predicate = NSPredicate()
         fetchReq.returnsDistinctResults = true

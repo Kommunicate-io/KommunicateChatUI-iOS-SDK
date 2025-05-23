@@ -1157,7 +1157,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func uploadVideo(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
         let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
+        let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
             return
         }
@@ -1188,7 +1188,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         guard alMessages.count > indexPath.section else { return }
         let alMessage = alMessages[indexPath.section]
         let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
+        let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
               let message = messageService.createMessageEntity(dbMessage) else { return }
 
@@ -1297,7 +1297,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func uploadAudio(alMessage: ALMessage, indexPath: IndexPath) {
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
+        let alHandler = KMCoreDBHandler.sharedInstance()
 
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
             return
@@ -1334,7 +1334,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let alMessage = alMessages[indexPath.section]
         let clientService = ALMessageClientService()
         let messageService = ALMessageDBService()
-        let alHandler = ALDBHandler.sharedInstance()
+        let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
             return
         }
@@ -2104,7 +2104,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
         alMessage.fileMeta.size = String(format: "%lu", imageData.length)
 
-        let dbHandler = ALDBHandler.sharedInstance()
+        let dbHandler = KMCoreDBHandler.sharedInstance()
         let messageService = ALMessageDBService()
 
         guard let messageEntity = messageService.createMessageEntityForDBInsertion(with: alMessage) else {

@@ -154,7 +154,7 @@ class ALKParticipantSelectionViewContoller: ALKBaseViewController, Localizable {
             }
 
         } else {
-            let dbHandler = ALDBHandler.sharedInstance()
+            let dbHandler = KMCoreDBHandler.sharedInstance()
 
             let fetchReq = NSFetchRequest<DB_CONTACT>(entityName: "DB_CONTACT")
 
