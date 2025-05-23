@@ -1536,7 +1536,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     func loadMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
-            time = (messageList.firstObject as! KMCoreMessage).createdAtTime
+            guard let firstMessage = messageList.firstObject as? KMCoreMessage else { return }
+            time = firstMessage.createdAtTime
         }
         let messageListRequest = MessageListRequest()
         messageListRequest.userId = contactId
@@ -1551,7 +1552,11 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             NSLog("messages loaded: ", messages)
 
-            self.alMessages = messages.reversed() as! [KMCoreMessage]
+            guard let kmMessages = messages as? [KMCoreMessage] else {
+                self.delegate?.loadingFinished(error: NSError(domain: "TypeCastError", code: -1))
+                return
+            }
+            self.alMessages = kmMessages.reversed()
 
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
