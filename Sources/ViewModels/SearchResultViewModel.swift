@@ -72,9 +72,9 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
         return convViewModel
     }
 
-    private func conversationProxyFrom(conversationId: NSNumber?) -> ALConversationProxy? {
+    private func conversationProxyFrom(conversationId: NSNumber?) -> KMCoreConversationProxy? {
         guard let convId = conversationId,
-              let conversationProxy = ALConversationService().getConversationByKey(convId)
+              let conversationProxy = KMCoreConversationService().getConversationByKey(convId)
         else {
             return nil
         }

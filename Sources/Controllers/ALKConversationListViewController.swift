@@ -573,7 +573,7 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
             viewController: self
         )
         let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, localizedStringFileName: configuration.localizedStringFileName)
-        let convService = ALConversationService()
+        let convService = KMCoreConversationService()
         if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
         }

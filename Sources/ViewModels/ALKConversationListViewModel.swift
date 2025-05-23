@@ -89,7 +89,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
 
     var alChannelService = KMCoreChannelService()
     var alContactService = ALContactService()
-    var conversationService = ALConversationService()
+    var conversationService = KMCoreConversationService()
 
     override public init() {
         super.init()
@@ -313,7 +313,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         conversationId: NSNumber?,
         localizedStringFileName: String?
     ) -> ALKConversationViewModel {
-        var convProxy: ALConversationProxy?
+        var convProxy: KMCoreConversationProxy?
         if let convId = conversationId, let conversationProxy = conversationService.getConversationByKey(convId) {
             convProxy = conversationProxy
         }

@@ -129,8 +129,8 @@ public class NotificationHelper {
         }
         viewController.viewModel.contactId = notification.userId
         viewController.viewModel.channelKey = notification.groupId
-        var convProxy: ALConversationProxy?
-        if let convId = notification.conversationId, let conversationProxy = ALConversationService().getConversationByKey(convId) {
+        var convProxy: KMCoreConversationProxy?
+        if let convId = notification.conversationId, let conversationProxy = KMCoreConversationService().getConversationByKey(convId) {
             convProxy = conversationProxy
         }
         viewController.viewModel.conversationProxy = convProxy

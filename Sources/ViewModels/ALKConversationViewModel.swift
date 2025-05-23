@@ -54,7 +54,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     internal static var lastSentMessage: KMCoreMessage?
 
     // For topic based chat
-    open var conversationProxy: ALConversationProxy? {
+    open var conversationProxy: KMCoreConversationProxy? {
         didSet {
             if conversationProxy != nil {
                 chatId = conversationProxy?.id?.stringValue
@@ -175,7 +175,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     public required init(
         contactId: String?,
         channelKey: NSNumber?,
-        conversationProxy: ALConversationProxy? = nil,
+        conversationProxy: KMCoreConversationProxy? = nil,
         localizedStringFileName: String!,
         prefilledMessage: String? = nil
     ) {

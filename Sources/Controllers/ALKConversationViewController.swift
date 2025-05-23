@@ -1225,9 +1225,9 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         unsubscribingChannel()
         viewModel.contactId = notificationData.userId
         viewModel.channelKey = notificationData.groupId
-        var convProxy: ALConversationProxy?
+        var convProxy: KMCoreConversationProxy?
         if let convId = notificationData.conversationId,
-           let conversationProxy = ALConversationService().getConversationByKey(convId) {
+           let conversationProxy = KMCoreConversationService().getConversationByKey(convId) {
             convProxy = conversationProxy
         }
         viewModel.conversationProxy = convProxy
