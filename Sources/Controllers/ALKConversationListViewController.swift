@@ -32,7 +32,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
 
     lazy var resultVC = ALKSearchResultViewController(configuration: configuration)
 
-    var dbService = ALMessageDBService()
+    var dbService = KMCoreMessageDBService()
     var viewModel = ALKConversationListViewModel()
 
     // To check if coming from push notification
@@ -90,7 +90,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     override open func addObserver() {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newMessageNotification"), object: nil, queue: nil, using: { [weak self] notification in
             guard let weakSelf = self else { return }
-            let msgArray = notification.object as? [ALMessage]
+            let msgArray = notification.object as? [KMCoreMessage]
             print("new notification received: ", msgArray?.first?.message ?? "")
             guard let list = notification.object as? [Any], !list.isEmpty else { return }
             weakSelf.viewModel.addMessages(messages: list)
@@ -129,7 +129,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
                 contactId = object
             }
 
-            let message = ALMessage()
+            let message = KMCoreMessage()
             message.contactIds = contactId
             message.groupId = groupId
             let info = notification.userInfo
@@ -321,7 +321,7 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: ALKNavigationItem.NSNotificationForConversationListNavigationTap), object: self, userInfo: ["identifier": identifier])
     }
 
-    func sync(message: ALMessage) {
+    func sync(message: KMCoreMessage) {
         if let viewController = conversationViewController,
            viewController.viewModel != nil,
            viewController.viewModel.contactId == message.contactId,
@@ -377,9 +377,9 @@ open class ALKConversationListViewController: ALKBaseViewController, Localizable
     }
 }
 
-// MARK: ALMessagesDelegate
+// MARK: KMCoreMessagesDelegate
 
-extension ALKConversationListViewController: ALMessagesDelegate {
+extension ALKConversationListViewController: KMCoreMessagesDelegate {
     public func getMessagesArray(_ messagesArray: NSMutableArray!) {
         guard let messages = messagesArray as? [Any] else {
             return
@@ -437,7 +437,7 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         }
     }
 
-    func isNewMessageForActiveThread(alMessage: ALMessage, vm: ALKConversationViewModel) -> Bool {
+    func isNewMessageForActiveThread(alMessage: KMCoreMessage, vm: ALKConversationViewModel) -> Bool {
         let isGroupMessage = alMessage.groupId != nil && alMessage.groupId == vm.channelKey
         let isOneToOneMessage = alMessage.groupId == nil && vm.channelKey == nil && alMessage.contactId == vm.contactId
         if isGroupMessage || isOneToOneMessage {
@@ -446,14 +446,14 @@ extension ALKConversationListViewController: ALMQTTConversationDelegate {
         return false
     }
 
-    func isMessageSentByLoggedInUser(alMessage: ALMessage) -> Bool {
+    func isMessageSentByLoggedInUser(alMessage: KMCoreMessage) -> Bool {
         if alMessage.isSentMessage() {
             return true
         }
         return false
     }
 
-    open func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
+    open func syncCall(_ alMessage: KMCoreMessage!, andMessageList _: NSMutableArray!) {
         print("sync call: ", alMessage.message ?? "empty")
         guard let message = alMessage else { return }
         let viewController = navigationController?.visibleViewController as? ALKConversationViewController
@@ -573,7 +573,7 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
             viewController: self
         )
         let convViewModel = conversationViewModelType.init(contactId: chat.contactId, channelKey: chat.channelKey, localizedStringFileName: configuration.localizedStringFileName)
-        let convService = ALConversationService()
+        let convService = KMCoreConversationService()
         if let convId = chat.conversationId, let convProxy = convService.getConversationByKey(convId) {
             convViewModel.conversationProxy = convProxy
         }
@@ -595,7 +595,7 @@ extension ALKConversationListViewController: ALKConversationListTableViewDelegat
         viewModel.userBlockNotification(userId: userId, isBlocked: isBlocked)
     }
 
-    public func muteNotification(conversation: ALMessage, isMuted: Bool) {
+    public func muteNotification(conversation: KMCoreMessage, isMuted: Bool) {
         viewModel.muteNotification(conversation: conversation, isMuted: isMuted)
     }
 

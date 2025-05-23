@@ -74,7 +74,7 @@ class ALKCreateGroupViewModel: Localizable {
     weak var delegate: ALKCreateGroupViewModelDelegate?
 
     lazy var isAddAllowed: Bool = {
-        guard let channel = ALChannelDBService().loadChannel(byKey: groupId) else {
+        guard let channel = KMCoreChannelDBService().loadChannel(byKey: groupId) else {
             return true /// Allow adding participants while creating group.
         }
         return channel.type == PUBLIC.rawValue || isAdmin(userId: KMCoreUserDefaultsHandler.getUserId())
@@ -104,7 +104,7 @@ class ALKCreateGroupViewModel: Localizable {
     }
 
     func fetchParticipants() {
-        ALChannelDBService().fetchChannelMembersAsync(withChannelKey: groupId) { members in
+        KMCoreChannelDBService().fetchChannelMembersAsync(withChannelKey: groupId) { members in
             guard let members = members as? [String], !members.isEmpty else {
                 return
             }
@@ -171,7 +171,7 @@ class ALKCreateGroupViewModel: Localizable {
     }
 
     private func isAdmin(userId: String) -> Bool {
-        return ALChannelDBService()
+        return KMCoreChannelDBService()
             .loadChannelUserX(
                 byUserId: groupId,
                 andUserId: userId

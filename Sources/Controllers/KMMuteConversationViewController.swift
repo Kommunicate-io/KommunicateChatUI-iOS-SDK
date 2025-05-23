@@ -9,14 +9,14 @@ import Foundation
 import KommunicateCore_iOS_SDK
 
 @objc protocol Muteable: AnyObject {
-    @objc func mute(conversation: ALMessage, forTime: Int64, atIndexPath: IndexPath)
+    @objc func mute(conversation: KMCoreMessage, forTime: Int64, atIndexPath: IndexPath)
 }
 
 class KMMuteConversationViewController: UIViewController, Localizable {
     var configuration: ALKConfiguration!
 
     weak var delegate: Muteable?
-    var conversation: ALMessage!
+    var conversation: KMCoreMessage!
     var indexPath: IndexPath!
 
     private let modalView: UIView = {
@@ -77,7 +77,7 @@ class KMMuteConversationViewController: UIViewController, Localizable {
         return values
     }()
 
-    init(delegate: Muteable, conversation: ALMessage, atIndexPath: IndexPath, configuration: ALKConfiguration) {
+    init(delegate: Muteable, conversation: KMCoreMessage, atIndexPath: IndexPath, configuration: ALKConfiguration) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         self.conversation = conversation

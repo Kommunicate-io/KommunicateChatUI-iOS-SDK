@@ -117,7 +117,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                 [weak self] notification in
                     guard
                         let weakSelf = self,
-                        let channel = notification.object as? ALChannel,
+                        let channel = notification.object as? KMCoreChannel,
                         channel.key == weakSelf.groupId
                     else {
                         return
@@ -272,7 +272,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
                                  delegate: ALKCreateGroupChatAddFriendProtocol) {
         groupDelegate = delegate
         self.groupId = groupId
-        groupName = ALChannelService().getChannelByKey(groupId)?.name ?? ""
+        groupName = KMCoreChannelService().getChannelByKey(groupId)?.name ?? ""
         guard let image = groupProfile else { return }
         groupProfileImgUrl = image
     }
@@ -346,7 +346,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
             return
         }
         let member = viewModel.rowAt(index: index)
-        let channelUser = ALChannelUser()
+        let channelUser = KMCoreChannelUser()
         channelUser.role = role
         channelUser.userId = member.id
         guard let channelUserDictionary = channelUser.dictionary() else {
@@ -356,7 +356,7 @@ final class ALKCreateGroupViewController: ALKBaseViewController, Localizable {
         let cell = tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
         cell?.channelDetailConfig = configuration.channelDetail
         cell?.showLoading()
-        ALChannelService().updateChannel(
+        KMCoreChannelService().updateChannel(
             groupId,
             andNewName: nil,
             andImageURL: nil,
@@ -416,7 +416,7 @@ extension ALKCreateGroupViewController: ALKCreateGroupViewModelDelegate {
             let cell = self.tblParticipants.cellForItem(at: indexPath) as? ALKGroupMemberCell
             cell?.channelDetailConfig = self.configuration.channelDetail
             cell?.showLoading()
-            ALChannelService().removeMember(fromChannel: member.id, andChannelKey: self.groupId, orClientChannelKey: nil, withCompletion: { error, response in
+            KMCoreChannelService().removeMember(fromChannel: member.id, andChannelKey: self.groupId, orClientChannelKey: nil, withCompletion: { error, response in
                 guard response != nil, error == nil else {
                     print("Error while removing member from group \(String(describing: error))")
                     return

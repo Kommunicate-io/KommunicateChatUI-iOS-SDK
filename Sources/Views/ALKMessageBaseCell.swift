@@ -410,8 +410,8 @@ open class ALKMessageCell: ALKChatBaseCell<ALKMessageViewModel> {
     }
 
     func getMessageFor(key: String) -> ALKMessageViewModel? {
-        let messageService = ALMessageService()
-        return messageService.getALMessage(byKey: key)?.messageModel
+        let messageService = KMCoreMessageService()
+        return messageService.getKMCoreMessage(byKey: key)?.messageModel
     }
 
     @objc func replyViewTapped() {

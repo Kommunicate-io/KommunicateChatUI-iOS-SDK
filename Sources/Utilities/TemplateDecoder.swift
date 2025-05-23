@@ -12,10 +12,10 @@ enum TemplateDecodingError: Error {
     case payloadMissing
 }
 
-/// A type that decodes a template(payload) from ALMessage's metadata.
+/// A type that decodes a template(payload) from KMCoreMessage's metadata.
 enum TemplateDecoder {
     /// Decodes a Template from the metadata.
-    /// - parameter metadata: Metadata present in the `ALMessage` which contains the `payload`.
+    /// - parameter metadata: Metadata present in the `KMCoreMessage` which contains the `payload`.
     /// - throws: `TemplateDecodingError.payloadMissing` if the payload key is not present or if it doesn't contain a `String`.
     /// - throws: An error if any value throws an error during decoding.
     static func decode<T>(_ to: T.Type, from metadata: [String: Any]) throws -> T where T: Decodable {

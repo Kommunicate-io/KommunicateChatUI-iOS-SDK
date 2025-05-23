@@ -1,5 +1,5 @@
 //
-//  ALMessage+Extension.swift
+//  KMCoreMessage+Extension.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
@@ -26,7 +26,7 @@ public enum KMConversationStatus: String {
 
 let emailSourceType = 7
 
-extension ALMessage: ALKChatViewModelProtocol {
+extension KMCoreMessage: ALKChatViewModelProtocol {
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
         guard let alContact = alContactDbService.loadContact(byKey: "userId", value: to) else {
@@ -35,8 +35,8 @@ extension ALMessage: ALKChatViewModelProtocol {
         return alContact
     }
 
-    private var alChannel: ALChannel? {
-        let alChannelService = ALChannelService()
+    private var alChannel: KMCoreChannel? {
+        let alChannelService = KMCoreChannelService()
 
         // TODO: This is a workaround as other method uses closure.
         // Later replace this with:
@@ -217,10 +217,10 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
     
     public var platformSource: String? {
-        guard let sourceChannel = ALChannelDBService().getChannelByKey(channelKey) else { return ""}
-        if sourceChannel.platformSource == nil, let channel = ALChannelService().getChannelByKey(channelKey) {
+        guard let sourceChannel = KMCoreChannelDBService().getChannelByKey(channelKey) else { return ""}
+        if sourceChannel.platformSource == nil, let channel = KMCoreChannelService().getChannelByKey(channelKey) {
             guard let sourceFromMeta = channel.metadata.value(forKey: "source") else { return nil }
-            ALChannelDBService().updatePlatformSource(channelKey, platformSource: sourceFromMeta as? String)
+            KMCoreChannelDBService().updatePlatformSource(channelKey, platformSource: sourceFromMeta as? String)
         }
         
         let source = sourceChannel.platformSource
@@ -228,7 +228,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
     
     public var assignedTags: [KMAssignedTags]? {
-        guard let channel = ALChannelService().getChannelByKey(channelKey),
+        guard let channel = KMCoreChannelService().getChannelByKey(channelKey),
               let tags = channel.metadata.value(forKey: "KM_TAGS") as? String,
               let data = tags.data(using: .utf8),
               let tagsList = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else { return nil }
@@ -246,7 +246,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     
     public var isWaitingQueueConversation: Bool {
         guard let channelKey = channelKey else { return false }
-        guard let channel = ALChannelService().getChannelByKey(channelKey),
+        guard let channel = KMCoreChannelService().getChannelByKey(channelKey),
               let conversationStatus = channel.metadata.value(forKey: AL_CHANNEL_CONVERSATION_STATUS) as? String,
               conversationStatus == KMConversationStatus.waiting.rawValue else {
             return false
@@ -255,7 +255,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 }
 
-extension ALMessage {
+extension KMCoreMessage {
     var isMyMessage: Bool {
         if contentType == 10 { return false }
         return (type != nil) ? (type == myMessage) : false
@@ -478,7 +478,7 @@ extension ALMessage {
     }
 }
 
-public extension ALMessage {
+public extension KMCoreMessage {
     var messageModel: ALKMessageModel {
         let messageModel = ALKMessageModel()
         messageModel.message = message
@@ -514,9 +514,9 @@ public extension ALMessage {
     }
 }
 
-extension ALMessage {
+extension KMCoreMessage {
     override open func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? ALMessage, let objectKey = object.key, let key = key {
+        if let object = object as? KMCoreMessage, let objectKey = object.key, let key = key {
             return key == objectKey
         } else {
             return false

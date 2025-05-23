@@ -211,7 +211,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
 
         // Server call
 
-        let newChannel = ALChannelService()
+        let newChannel = KMCoreChannelService()
         let membersList = NSMutableArray()
         _ = friendsSelected.map { membersList.add($0.friendUUID as Any) }
 
@@ -221,7 +221,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
             metaData[ALKGroupDescriptionViewModel.GroupDescription.key] = descriptionText
         }
 
-        let channelInfo = ALChannelInfo()
+        let channelInfo = KMCoreChannelInfo()
         channelInfo.groupName = groupName
         channelInfo.groupMemberList = membersList
         channelInfo.imageUrl = groupImgUrl
@@ -236,7 +236,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
 
             print("group created")
 
-            let message = ALMessage()
+            let message = KMCoreMessage()
             message.groupId = alChannel.key
             let list = NSMutableArray(object: message)
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTable"), object: list)

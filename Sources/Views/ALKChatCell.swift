@@ -253,7 +253,7 @@ public final class ALKChatCell: SwipeTableViewCell, Localizable {
 
     private func isConversationMuted(viewModel: ALKChatViewModelProtocol) -> Bool {
         if let channelKey = viewModel.channelKey,
-           let channel = ALChannelService().getChannelByKey(channelKey) {
+           let channel = KMCoreChannelService().getChannelByKey(channelKey) {
             if channel.isNotificationMuted() {
                 return true
             } else {

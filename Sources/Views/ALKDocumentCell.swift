@@ -299,7 +299,7 @@ extension ALKDocumentCell: ALKHTTPManagerDownloadDelegate {
             }
             return
         }
-        ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
+        KMCoreMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         DispatchQueue.main.async {
             self.updateView(for: .downloaded(filePath: filePath))
         }

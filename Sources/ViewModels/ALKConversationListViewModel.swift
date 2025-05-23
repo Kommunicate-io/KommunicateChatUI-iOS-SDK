@@ -50,7 +50,7 @@ public protocol ALKConversationListViewModelProtocol: AnyObject {
      This method is used to remove a message from the message list.
      - Parameter message: The message object to be removed from the message list.
      */
-    func remove(message: ALMessage)
+    func remove(message: KMCoreMessage)
 
     /**
      This method is used to mute a particular conversation thread.
@@ -59,7 +59,7 @@ public protocol ALKConversationListViewModelProtocol: AnyObject {
      - tillTime: NSNumber determining the amount of time conversation is to be muted.
      - withCompletion: Escaping Closure when the mute request is complete.
      */
-    func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void)
+    func sendMuteRequestFor(message: KMCoreMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void)
 
     /**
      This method is used to unmute a particular conversation thread.
@@ -67,29 +67,29 @@ public protocol ALKConversationListViewModelProtocol: AnyObject {
      - message: The message object whose conversation is to be unmuted.
      - withCompletion: Escaping Closure when the unmute request is complete.
      */
-    func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> Void)
+    func sendUnmuteRequestFor(message: KMCoreMessage, withCompletion: @escaping (Bool) -> Void)
 
     /// This method is used to block a user whose conversation is present in chatlist.
     ///
     /// - Parameters:
     ///   - conversation: Message with the user whom we are going to block
     ///   - withCompletion: Escaping closure when block request is complete.
-    func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void)
+    func block(conversation: KMCoreMessage, withCompletion: @escaping (Error?, Bool) -> Void)
 
     /// This method is used to unblock a user whose conversation is present in chatlist.
     ///
     /// - Parameters:
     ///   - conversation: Message with the user whom we are going to unblock
     ///   - withCompletion: Escaping closure when unblock request is complete.
-    func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void)
+    func unblock(conversation: KMCoreMessage, withCompletion: @escaping (Error?, Bool) -> Void)
 }
 
 public final class ALKConversationListViewModel: NSObject, ALKConversationListViewModelProtocol {
     public weak var delegate: ALKConversationListViewModelDelegate?
 
-    var alChannelService = ALChannelService()
+    var alChannelService = KMCoreChannelService()
     var alContactService = ALContactService()
-    var conversationService = ALConversationService()
+    var conversationService = KMCoreConversationService()
 
     override public init() {
         super.init()
@@ -97,7 +97,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
 
     fileprivate var allMessages = [Any]()
 
-    public func prepareController(dbService: ALMessageDBService) {
+    public func prepareController(dbService: KMCoreMessageDBService) {
         delegate?.startedLoading()
         dbService.getMessages(nil)
     }
@@ -119,16 +119,16 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
             return nil
         }
 
-        guard let alMessage = allMessages[indexPath.row] as? ALMessage else {
+        guard let alMessage = allMessages[indexPath.row] as? KMCoreMessage else {
             return nil
         }
         return alMessage
     }
 
-    public func remove(message: ALMessage) {
-        let messageToDelete = allMessages.filter { ($0 as? ALMessage) == message }
-        guard let messageDel = messageToDelete.first as? ALMessage,
-              let index = (allMessages as? [ALMessage])?.firstIndex(of: messageDel)
+    public func remove(message: KMCoreMessage) {
+        let messageToDelete = allMessages.filter { ($0 as? KMCoreMessage) == message }
+        guard let messageDel = messageToDelete.first as? KMCoreMessage,
+              let index = (allMessages as? [KMCoreMessage])?.firstIndex(of: messageDel)
         else {
             return
         }
@@ -165,12 +165,12 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func addMessages(messages: Any) {
-        guard let alMessages = messages as? [ALMessage], var allMessages = allMessages as? [ALMessage] else {
+        guard let alMessages = messages as? [KMCoreMessage], var allMessages = allMessages as? [KMCoreMessage] else {
             return
         }
 
         for currentMessage in alMessages {
-            var messagePresent = [ALMessage]()
+            var messagePresent = [KMCoreMessage]()
             if currentMessage.groupId != nil {
                 messagePresent = allMessages.filter { ($0.groupId != nil) ? $0.groupId == currentMessage.groupId : false }
             } else {
@@ -193,19 +193,19 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
     }
 
     public func updateStatusFor(userDetail: KMCoreUserDetail) {
-        guard let alMessages = allMessages as? [ALMessage], let userId = userDetail.userId else { return }
+        guard let alMessages = allMessages as? [KMCoreMessage], let userId = userDetail.userId else { return }
         let messages = alMessages.filter { ($0.contactId != nil) ? $0.contactId == userId : false }
         guard let firstMessage = messages.first, let index = alMessages.firstIndex(of: firstMessage) else { return }
         delegate?.rowUpdatedAt(position: index)
     }
 
-    public func syncCall(viewController: ALKConversationViewController?, message: ALMessage, isChatOpen: Bool) {
+    public func syncCall(viewController: ALKConversationViewController?, message: KMCoreMessage, isChatOpen: Bool) {
         if isChatOpen {
             viewController?.sync(message: message)
         }
     }
 
-    public func fetchMoreMessages(dbService: ALMessageDBService) {
+    public func fetchMoreMessages(dbService: KMCoreMessageDBService) {
         guard !KMCoreUserDefaultsHandler.getFlagForAllConversationFetched() else { return }
         delegate?.startedLoading()
         dbService.fetchConversationfromServer(completion: {
@@ -214,20 +214,20 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         })
     }
 
-    public func sendUnmuteRequestFor(message: ALMessage, withCompletion: @escaping (Bool) -> Void) {
+    public func sendUnmuteRequestFor(message: KMCoreMessage, withCompletion: @escaping (Bool) -> Void) {
         let time = (Int(Date().timeIntervalSince1970) * 1000)
         sendMuteRequestFor(message: message, tillTime: time as NSNumber) { success in
             withCompletion(success)
         }
     }
 
-    public func sendMuteRequestFor(message: ALMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void) {
-        if message.isGroupChat, let channel = ALChannelService().getChannelByKey(message.groupId) {
+    public func sendMuteRequestFor(message: KMCoreMessage, tillTime: NSNumber, withCompletion: @escaping (Bool) -> Void) {
+        if message.isGroupChat, let channel = KMCoreChannelService().getChannelByKey(message.groupId) {
             // Unmute channel
             let muteRequest = ALMuteRequest()
             muteRequest.id = channel.key
             muteRequest.notificationAfterTime = tillTime as NSNumber
-            ALChannelService().muteChannel(muteRequest) { _, error in
+            KMCoreChannelService().muteChannel(muteRequest) { _, error in
                 if error != nil {
                     withCompletion(false)
                 }
@@ -249,7 +249,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         }
     }
 
-    public func block(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
+    public func block(conversation: KMCoreMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
         ALUserService().blockUser(conversation.contactIds) { error, _ in
             guard let error = error else {
                 print("UserId \(String(describing: conversation.contactIds)) is successfully blocked")
@@ -261,7 +261,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         }
     }
 
-    public func unblock(conversation: ALMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
+    public func unblock(conversation: KMCoreMessage, withCompletion: @escaping (Error?, Bool) -> Void) {
         ALUserService().unblockUser(conversation.contactIds) { error, _ in
             guard let error = error else {
                 print("UserId \(String(describing: conversation.contactIds)) is successfully unblocked")
@@ -286,7 +286,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         })
     }
 
-    public func muteNotification(conversation: ALMessage, isMuted: Bool) {
+    public func muteNotification(conversation: KMCoreMessage, isMuted: Bool) {
         var dic = [AnyHashable: Any]()
         dic["Muted"] = isMuted
         dic["Controller"] = self
@@ -313,7 +313,7 @@ public final class ALKConversationListViewModel: NSObject, ALKConversationListVi
         conversationId: NSNumber?,
         localizedStringFileName: String?
     ) -> ALKConversationViewModel {
-        var convProxy: ALConversationProxy?
+        var convProxy: KMCoreConversationProxy?
         if let convId = conversationId, let conversationProxy = conversationService.getConversationByKey(convId) {
             convProxy = conversationProxy
         }

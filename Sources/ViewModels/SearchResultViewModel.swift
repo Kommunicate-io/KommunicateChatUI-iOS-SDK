@@ -10,7 +10,7 @@ import Foundation
 import KommunicateCore_iOS_SDK
 
 class BaseMessageViewModel: ALKConversationListViewModelProtocol {
-    var allMessages = [ALMessage]()
+    var allMessages = [KMCoreMessage]()
 
     func numberOfSections() -> Int {
         return 1
@@ -29,7 +29,7 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
         return allMessages
     }
 
-    func remove(message: ALMessage) {
+    func remove(message: KMCoreMessage) {
         let messageToDelete = allMessages.filter { $0 == message }
         guard let messageDel = messageToDelete.first,
               let index = allMessages.firstIndex(of: messageDel)
@@ -39,19 +39,19 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
         allMessages.remove(at: index)
     }
 
-    func sendMuteRequestFor(message _: ALMessage, tillTime _: NSNumber, withCompletion _: @escaping (Bool) -> Void) {
+    func sendMuteRequestFor(message _: KMCoreMessage, tillTime _: NSNumber, withCompletion _: @escaping (Bool) -> Void) {
         print("Not supported")
     }
 
-    func sendUnmuteRequestFor(message _: ALMessage, withCompletion _: @escaping (Bool) -> Void) {
+    func sendUnmuteRequestFor(message _: KMCoreMessage, withCompletion _: @escaping (Bool) -> Void) {
         print("Not supported")
     }
 
-    func block(conversation _: ALMessage, withCompletion _: @escaping (Error?, Bool) -> Void) {
+    func block(conversation _: KMCoreMessage, withCompletion _: @escaping (Error?, Bool) -> Void) {
         print("Not supported")
     }
 
-    func unblock(conversation _: ALMessage, withCompletion _: @escaping (Error?, Bool) -> Void) {
+    func unblock(conversation _: KMCoreMessage, withCompletion _: @escaping (Error?, Bool) -> Void) {
         print("Not supported")
     }
 
@@ -72,9 +72,9 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
         return convViewModel
     }
 
-    private func conversationProxyFrom(conversationId: NSNumber?) -> ALConversationProxy? {
+    private func conversationProxyFrom(conversationId: NSNumber?) -> KMCoreConversationProxy? {
         guard let convId = conversationId,
-              let conversationProxy = ALConversationService().getConversationByKey(convId)
+              let conversationProxy = KMCoreConversationService().getConversationByKey(convId)
         else {
             return nil
         }
@@ -113,14 +113,14 @@ class SearchResultViewModel: BaseMessageViewModel {
 
     public func searchMessages(
         with key: String,
-        _ completion: @escaping (_ message: [ALMessage]?, _ error: Any?) -> Void
+        _ completion: @escaping (_ message: [KMCoreMessage]?, _ error: Any?) -> Void
     ) {
-        let service = ALMessageClientService()
+        let service = KMCoreMessageClientService()
         let request = ALSearchRequest()
         request.searchText = key
         service.searchMessage(with: request) { messages, error in
             guard
-                let messages = messages as? [ALMessage]
+                let messages = messages as? [KMCoreMessage]
             else {
                 completion(nil, error)
                 return

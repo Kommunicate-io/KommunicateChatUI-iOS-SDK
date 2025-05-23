@@ -29,7 +29,7 @@ public class NotificationHelper {
 
             /// For group check mute only.
             if let groupId = groupId {
-                let group = ALChannelService().getChannelByKey(groupId)
+                let group = KMCoreChannelService().getChannelByKey(groupId)
                 isMute = group?.isNotificationMuted() ?? false
             }
         }
@@ -129,8 +129,8 @@ public class NotificationHelper {
         }
         viewController.viewModel.contactId = notification.userId
         viewController.viewModel.channelKey = notification.groupId
-        var convProxy: ALConversationProxy?
-        if let convId = notification.conversationId, let conversationProxy = ALConversationService().getConversationByKey(convId) {
+        var convProxy: KMCoreConversationProxy?
+        if let convId = notification.conversationId, let conversationProxy = KMCoreConversationService().getConversationByKey(convId) {
             convProxy = conversationProxy
         }
         viewController.viewModel.conversationProxy = convProxy

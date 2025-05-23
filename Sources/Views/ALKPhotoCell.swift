@@ -161,12 +161,12 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
-        let dbService = ALMessageDBService()
+        let dbService = KMCoreMessageDBService()
         guard let messages = dbService.getAllMessagesWithAttachment(
             forContact: viewModel?.contactId,
             andChannelKey: viewModel?.channelKey,
             onlyDownloadedAttachments: true
-        ) as? [ALMessage] else { return }
+        ) as? [KMCoreMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages)
@@ -351,7 +351,7 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
             updatedBlobKey = thumbnailBlobKey.replacingOccurrences(of: " ", with: "%20")
         }
         guard let thumbnailPath = metadata.thumbnailFilePath else {
-            ALMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl, isS3URL: metadata.url != nil, blobKey: updatedBlobKey) { url, error in
+            KMCoreMessageClientService().downloadImageThumbnailUrlV2(metadata.thumbnailUrl, isS3URL: metadata.url != nil, blobKey: updatedBlobKey) { url, error in
                 guard error == nil,
                       let url = url
                 else {
@@ -393,10 +393,10 @@ class ALKPhotoCell: ALKChatBaseCell<ALKMessageViewModel>,
 
     fileprivate func updateThumbnailPath(_ key: String, filePath: String) {
         let messageKey = ThumbnailIdentifier.removePrefix(from: key)
-        guard let dbMessage = ALMessageDBService().getMessageByKey("key", value: messageKey) as? DB_Message else { return }
+        guard let dbMessage = KMCoreMessageDBService().getMessageByKey("key", value: messageKey) as? DB_Message else { return }
         dbMessage.fileMetaInfo.thumbnailFilePath = filePath
 
-        let dbHandler = ALDBHandler.sharedInstance()
+        let dbHandler = KMCoreDBHandler.sharedInstance()
         let error = dbHandler?.saveContext()
         if error != nil {
             print("Not saved due to error \(String(describing: error))")
@@ -471,7 +471,7 @@ extension ALKPhotoCell: ALKHTTPManagerDownloadDelegate {
             updateThumbnailPath(identifier, filePath: filePath)
             return
         }
-        ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
+        KMCoreMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         DispatchQueue.main.async {
             self.updateView(for: .downloaded(filePath: filePath))
         }

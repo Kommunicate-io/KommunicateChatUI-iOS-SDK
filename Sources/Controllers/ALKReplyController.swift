@@ -163,7 +163,7 @@ class ALKReplyController: UIViewController, Localizable {
     }
 
     func proccessAndUpdateView() {
-        let messageDatabase = ALMessageDBService()
+        let messageDatabase = KMCoreMessageDBService()
         guard let message = messageDatabase.getMessageByKey(messageKey) else {
             return
         }

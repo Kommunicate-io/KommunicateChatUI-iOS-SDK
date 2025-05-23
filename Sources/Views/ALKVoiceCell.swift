@@ -252,12 +252,12 @@ class ALKVoiceCell: ALKChatBaseCell<ALKMessageViewModel>,
 
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
         let vc = nav?.viewControllers.first as? ALKMediaViewerViewController
-        let dbService = ALMessageDBService()
+        let dbService = KMCoreMessageDBService()
         guard let messages = dbService.getAllMessagesWithAttachment(
             forContact: viewModel?.contactId,
             andChannelKey: viewModel?.channelKey,
             onlyDownloadedAttachments: true
-        ) as? [ALMessage] else { return }
+        ) as? [KMCoreMessage] else { return }
 
         let messageModels = messages.map { $0.messageModel }
         NSLog("Messages with attachment: ", messages)
@@ -285,7 +285,7 @@ extension ALKVoiceCell: ALKHTTPManagerDownloadDelegate {
         guard task.downloadError == nil, let filePath = task.filePath, let identifier = task.identifier, viewModel != nil else {
             return
         }
-        ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
+        KMCoreMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         if let data = NSData(contentsOfFile: documentsURL.appendingPathComponent(task.filePath ?? "").path) as Data? {
             updateViewForDownloadedState(data: data)
