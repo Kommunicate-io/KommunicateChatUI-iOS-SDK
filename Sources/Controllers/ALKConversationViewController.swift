@@ -393,7 +393,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
             guard
                 let weakSelf = self,
                 weakSelf.viewModel != nil,
-                let message = notification.object as? ALMessage
+                let message = notification.object as? KMCoreMessage
             else { return }
             weakSelf.viewModel.updateSendStatus(message: message)
         })
@@ -409,7 +409,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         })
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "AL_GROUP_MESSAGE_METADATA_UPDATE"), object: nil, queue: nil, using: { [weak self] notification in
-            if let messages = notification.object as? [ALMessage] {
+            if let messages = notification.object as? [KMCoreMessage] {
                 for message in messages {
                     if let metadata = message.metadata, let deleteGroupMessageForAll = metadata["AL_DELETE_GROUP_MESSAGE_FOR_ALL"] as? String, deleteGroupMessageForAll == "true" {
                         guard
@@ -420,7 +420,7 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
                     }
                 }
             } else {
-                NSLog("Failed to cast notification object to [ALMessage]")
+                NSLog("Failed to cast notification object to [KMCoreMessage]")
             }
         })
         
@@ -1335,14 +1335,14 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(invalidateTimerAndUpdateHeightConstraint), userInfo: nil, repeats: false)
     }
     
-    public func syncAutoSuggestionMessage(message: ALMessage?) {
+    public func syncAutoSuggestionMessage(message: KMCoreMessage?) {
         guard let message = message else { return }
         if message.isAutoSuggestion(), !KMCoreSettings.isAgentAppConfigurationEnabled() {
             setupAutoSuggestion(message)
         }
     }
     
-    public func sync(message: ALMessage) {
+    public func sync(message: KMCoreMessage) {
         /// Return if message is sent by loggedin user
         guard !message.isSentMessage() else { return }
         if message.isAutoSuggestion(), !KMCoreSettings.isAgentAppConfigurationEnabled() {
@@ -1504,8 +1504,8 @@ open class ALKConversationViewController: ALKBaseViewController, Localizable {
         else {
             return
         }
-        let messageService = ALMessageService()
-        let actualMessage = messageService.getALMessage(byKey: replyId).messageModel
+        let messageService = KMCoreMessageService()
+        let actualMessage = messageService.getKMCoreMessage(byKey: replyId).messageModel
         guard let indexPath = viewModel.getIndexpathFor(message: actualMessage)
         else {
             let controller = ALKReplyController(messageKey: replyId, configuration: configuration)
@@ -2634,8 +2634,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
         viewModel.markConversationRead()
 
-        if let lastALMessage = viewModel.alMessages.last?.autoSuggestionData,
-           let data = convertToDictionary(text: lastALMessage),
+        if let lastKMCoreMessage = viewModel.alMessages.last?.autoSuggestionData,
+           let data = convertToDictionary(text: lastKMCoreMessage),
            let placeholderValue = data["placeholder"] as? String {
             chatBar.placeHolder.text = placeholderValue
         } else if let lastMessage = viewModel.messageModels.last,
@@ -3041,7 +3041,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         updateAssigneeOnlineStatus(userId: contactId)
     }
 
-    public func syncCall(_ alMessage: ALMessage!, andMessageList _: NSMutableArray!) {
+    public func syncCall(_ alMessage: KMCoreMessage!, andMessageList _: NSMutableArray!) {
         guard let message = alMessage else { return }
         sync(message: message)
     }
@@ -3110,7 +3110,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
         viewModel.updateUserDetail(userId)
     }
     
-    public func removeMessageFromConversation(message: ALMessage) {
+    public func removeMessageFromConversation(message: KMCoreMessage) {
         viewModel.removeMessageFromTheConversation(message: message)
         tableView.reloadData()
     }

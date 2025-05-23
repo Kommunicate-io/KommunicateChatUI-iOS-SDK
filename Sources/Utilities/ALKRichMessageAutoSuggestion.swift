@@ -9,7 +9,7 @@ import UIKit
 import KommunicateCore_iOS_SDK
 
 extension ALKConversationViewController {
-    public func setupAutoSuggestion(_ message: ALMessage) {
+    public func setupAutoSuggestion(_ message: KMCoreMessage) {
         if message.autoSuggestionData == nil {
             message.autoSuggestionData = message.metadata[AUTO_SUGGESTION_TYPE_MESSAGE] as? String
         }

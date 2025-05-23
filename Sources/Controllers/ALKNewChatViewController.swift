@@ -236,7 +236,7 @@ extension ALKNewChatViewController: ALKCreateGroupChatAddFriendProtocol {
 
             print("group created")
 
-            let message = ALMessage()
+            let message = KMCoreMessage()
             message.groupId = alChannel.key
             let list = NSMutableArray(object: message)
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTable"), object: list)

@@ -48,7 +48,7 @@ open class ALKTemplateMessagesViewModel: NSObject {
         return messageTemplates[row]
     }
 
-    open func updateLast(message _: ALMessage) {
+    open func updateLast(message _: KMCoreMessage) {
         // Use last message to check the message type and to see if it's receiver's or sender's message
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ALMessageDBService+Extension.swift
+//  KMCoreMessageDBService+Extension.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Shivam Pokhriyal on 13/05/19.
@@ -7,7 +7,7 @@
 
 import KommunicateCore_iOS_SDK
 
-extension ALMessageDBService {
+extension KMCoreMessageDBService {
     func updateDbMessageWith(key: String, value: String, filePath: String) {
         let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = getMessageByKey(key, value: value) as? DB_Message else {

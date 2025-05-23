@@ -50,8 +50,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     open var isSearch: Bool = false
-    open var lastMessage: ALMessage?
-    internal static var lastSentMessage: ALMessage?
+    open var lastMessage: KMCoreMessage?
+    internal static var lastSentMessage: KMCoreMessage?
 
     // For topic based chat
     open var conversationProxy: ALConversationProxy? {
@@ -155,9 +155,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
     private lazy var chatId: String? = conversationId?.stringValue ?? channelKey?.stringValue ?? contactId
 
     private let maxWidth = UIScreen.main.bounds.width
-    private var alMessageWrapper = ALMessageArrayWrapper()
+    private var alMessageWrapper = KMCoreMessageArrayWrapper()
 
-    open var alMessages: [ALMessage] = []
+    open var alMessages: [KMCoreMessage] = []
 
     private let mqttObject = ALMQTTConversationService.sharedInstance()
 
@@ -214,12 +214,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    public func addToWrapper(message: ALMessage) {
+    public func addToWrapper(message: KMCoreMessage) {
         guard !alMessageWrapper.contains(message: message) else { return }
         if messageModels.last?.contentType == .typingIndicator {
             removeTypingIndicatorMessage()
         }
-        alMessageWrapper.addALMessage(toMessageArray: message)
+        alMessageWrapper.addKMCoreMessage(toMessageArray: message)
         alMessages.append(message)
         messageModels.append(message.messageModel)
         if message.isMyMessage {
@@ -233,15 +233,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         messageModels.removeAll()
         alMessages.removeAll()
         richMessages.removeAll()
-        alMessageWrapper = ALMessageArrayWrapper()
+        alMessageWrapper = KMCoreMessageArrayWrapper()
         groupMembers = nil
         welcomeMessagePosition = 0
     }
     
     /// This method used to check a message is present in the viewmodel.
     /// - Parameters:
-    ///   - message: Pass ALMessage object.
-    public func containsMessage(_ message: ALMessage) -> Bool {
+    ///   - message: Pass KMCoreMessage object.
+    public func containsMessage(_ message: KMCoreMessage) -> Bool {
         guard !alMessages.isEmpty else {
             return false
         }
@@ -589,7 +589,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         let serviceEnabled = KMCoreSettings.isS3StorageServiceEnabled() || KMCoreSettings.isGoogleCloudServiceEnabled()
 
         if message.fileMetaInfo!.name.hasPrefix(awsEncryptionPrefix) {
-          ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: true) { fileUrl, error in
+          KMCoreMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: true) { fileUrl, error in
                guard error == nil, let fileUrl = fileUrl else {
                    print("Error downloading attachment :: \(String(describing: error))")
                    return
@@ -633,7 +633,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             return
         }
         
-        ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil ) { fileUrl, error in
+        KMCoreMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil ) { fileUrl, error in
             guard error == nil, let fileUrl = fileUrl else {
                 print("Error downloading attachment :: \(String(describing: error))")
                 return
@@ -658,9 +658,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     /// Received from notification
     open func addMessagesToList(_ messageList: [Any]) {
-        guard let messages = messageList as? [ALMessage] else { return }
+        guard let messages = messageList as? [KMCoreMessage] else { return }
 
-        var filteredArray = [ALMessage]()
+        var filteredArray = [KMCoreMessage]()
 
         for message in messages {
             if channelKey != nil, channelKey == message.groupId {
@@ -682,7 +682,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if alMessages.isEmpty, !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
             sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
         }
-        _ = sortedArray.map { self.alMessageWrapper.addALMessage(toMessageArray: $0) }
+        _ = sortedArray.map { self.alMessageWrapper.addKMCoreMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
@@ -706,8 +706,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
     
-    private func getInitialStaticFirstMessage() -> ALMessage {
-        let initialMessage = ALMessage()
+    private func getInitialStaticFirstMessage() -> KMCoreMessage {
+        let initialMessage = KMCoreMessage()
         initialMessage.message = KMConversationScreenConfiguration.staticTopMessage
         initialMessage.contentType = Int16(ALMESSAGE_CONTENT_INITIAL_STATIC_MESSAGE)
         let date = Date().timeIntervalSince1970 * 1000
@@ -715,8 +715,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return initialMessage
     }
     
-    private func getTypingIndicatorMessage() -> ALMessage {
-        let typingIndicatorMessage = ALMessage()
+    private func getTypingIndicatorMessage() -> KMCoreMessage {
+        let typingIndicatorMessage = KMCoreMessage()
         typingIndicatorMessage.contentType = Int16(ALMESSAGE_CONTENT_TYPING_INDICATOR)
         let date = Date().timeIntervalSince1970 * 1000
         typingIndicatorMessage.createdAtTime = NSNumber(value: date)
@@ -768,7 +768,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         if !filteredList.isEmpty {
             updateMessageStatus(filteredList: filteredList, status: status)
         } else {
-            guard let mesgFromService = ALMessageService
+            guard let mesgFromService = KMCoreMessageService
                 .getMessagefromKeyValuePair("key", andValue: messageKey),
                 let objectId = mesgFromService.msgDBObjectId else { return }
             let newFilteredList = mesgArray
@@ -817,7 +817,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func updateSendStatus(message: ALMessage) {
+    open func updateSendStatus(message: KMCoreMessage) {
         let filteredList = alMessages.filter { $0 == message }
         if let alMessage = filteredList.first, let index = alMessages.firstIndex(of: alMessage) {
             alMessage.sentToServer = true
@@ -860,7 +860,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             delegate?.messageSent(at: indexPath)
         }
         if isOpenGroup {
-            let messageClientService = ALMessageClientService()
+            let messageClientService = KMCoreMessageClientService()
             messageClientService.sendMessage(alMessage.dictionary(), withCompletionHandler: { _, error in
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message in open group")
@@ -877,7 +877,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 self.delegate?.updateMessageAt(indexPath: indexPath)
             })
         } else {
-            ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: { _, error in
+            KMCoreMessageService.sharedInstance().sendMessages(alMessage, withCompletion: { _, error in
                 NSLog("Message sent section: \(indexPath.section), \(String(describing: alMessage.message))")
                 guard error == nil, indexPath.section < self.messageModels.count else { return }
                 NSLog("No errors while sending the message")
@@ -896,7 +896,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    func updateMetaDataForCustomField(message: ALMessage) {
+    func updateMetaDataForCustomField(message: KMCoreMessage) {
         if let lastMessage = alMessages.last?.messageModel,
            let replyMetaData = lastMessage.getReplyMetaData() {
             message.metadata.addEntries(from: replyMetaData)
@@ -960,7 +960,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    func isValidReply(message: ALMessage) -> Bool {
+    func isValidReply(message: KMCoreMessage) -> Bool {
 
         guard let lastMessage = alMessages.last?.messageModel,
               let kmField = lastMessage.getKmField(),
@@ -1000,7 +1000,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     }
 
-    func modfiedMessageMetadata(alMessage: ALMessage, metadata: [AnyHashable: Any]?) -> NSMutableDictionary {
+    func modfiedMessageMetadata(alMessage: KMCoreMessage, metadata: [AnyHashable: Any]?) -> NSMutableDictionary {
         var metaData = NSMutableDictionary()
 
         if alMessage.metadata != nil {
@@ -1064,7 +1064,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return nil
     }
 
-    open func send(photo: UIImage, metadata: [AnyHashable: Any]?, caption: String) -> (ALMessage?, IndexPath?) {
+    open func send(photo: UIImage, metadata: [AnyHashable: Any]?, caption: String) -> (KMCoreMessage?, IndexPath?) {
         print("image is:  ", photo)
         let filePath = ALKFileUtils().saveImageToDocDirectory(image: photo)
         print("filepath:: \(String(describing: filePath))")
@@ -1119,7 +1119,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    open func add(geocode: Geocode, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
+    open func add(geocode: Geocode, metadata: [AnyHashable: Any]?) -> (KMCoreMessage?, IndexPath?) {
         let latlonString = ["lat": "\(geocode.location.latitude)", "lon": "\(geocode.location.longitude)"]
         guard let jsonString = createJson(dict: latlonString) else { return (nil, nil) }
         let message = getLocationMessage(latLonString: jsonString)
@@ -1129,7 +1129,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return (message, indexPath)
     }
 
-    open func sendGeocode(message: ALMessage, indexPath: IndexPath) {
+    open func sendGeocode(message: KMCoreMessage, indexPath: IndexPath) {
         send(alMessage: message) { updatedMessage in
             guard let mesg = updatedMessage else { return }
             DispatchQueue.main.async {
@@ -1142,7 +1142,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable: Any]?, caption: String) -> (ALMessage?, IndexPath?) {
+    open func sendVideo(atPath path: String, sourceType: UIImagePickerController.SourceType, metadata: [AnyHashable: Any]?, caption: String) -> (KMCoreMessage?, IndexPath?) {
         guard let url = URL(string: path) else { return (nil, nil) }
         var contentType = ALMESSAGE_CONTENT_ATTACHMENT
         if sourceType == .camera {
@@ -1156,7 +1156,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func uploadVideo(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
-        let messageService = ALMessageDBService()
+        let messageService = KMCoreMessageDBService()
         let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
             return
@@ -1187,7 +1187,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         // populate metadata and send message
         guard alMessages.count > indexPath.section else { return }
         let alMessage = alMessages[indexPath.section]
-        let messageService = ALMessageDBService()
+        let messageService = KMCoreMessageDBService()
         let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message,
               let message = messageService.createMessageEntity(dbMessage) else { return }
@@ -1262,7 +1262,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         mqttObject?.sendTypingStatus(KMCoreUserDefaultsHandler.getApplicationKey(), userID: contactId, andChannelKey: channelKey, typing: false)
     }
 
-    func syncOpenGroup(message: ALMessage) {
+    func syncOpenGroup(message: KMCoreMessage) {
         guard let groupId = message.groupId,
               groupId == channelKey,
               !message.isMyMessage,
@@ -1282,21 +1282,21 @@ open class ALKConversationViewModel: NSObject, Localizable {
             loadOpenGroupMessages()
             return
         }
-        ALMessageService.getLatestMessage(
+        KMCoreMessageService.getLatestMessage(
             forUser: KMCoreUserDefaultsHandler.getDeviceKeyString(),
             withCompletion: { messageList, error in
                 self.delegate?.loadingFinished(error: error)
                 guard error == nil,
-                      let messages = messageList as? [ALMessage],
+                      let messages = messageList as? [KMCoreMessage],
                       !messages.isEmpty else { return }
                 self.loadMessagesFromDB()
             }
         )
     }
 
-    open func uploadAudio(alMessage: ALMessage, indexPath: IndexPath) {
-        let clientService = ALMessageClientService()
-        let messageService = ALMessageDBService()
+    open func uploadAudio(alMessage: KMCoreMessage, indexPath: IndexPath) {
+        let clientService = KMCoreMessageClientService()
+        let messageService = KMCoreMessageDBService()
         let alHandler = KMCoreDBHandler.sharedInstance()
 
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
@@ -1332,8 +1332,8 @@ open class ALKConversationViewModel: NSObject, Localizable {
 
     open func uploadImage(view: UIView, indexPath: IndexPath) {
         let alMessage = alMessages[indexPath.section]
-        let clientService = ALMessageClientService()
-        let messageService = ALMessageDBService()
+        let clientService = KMCoreMessageClientService()
+        let messageService = KMCoreMessageDBService()
         let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMeesageBy(alMessage.msgDBObjectId) as? DB_Message else {
             return
@@ -1476,14 +1476,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    func removeMessageFromTheConversation(message: ALMessage) {
+    func removeMessageFromTheConversation(message: KMCoreMessage) {
         if let index = messageModels.firstIndex(where: { $0.identifier == message.identifier }) {
             messageModels.remove(at: index)
         }
         if let index = alMessages.firstIndex(where: { $0.identifier == message.identifier }) {
             alMessages.remove(at: index)
         }
-        let messageService = ALMessageDBService()
+        let messageService = KMCoreMessageDBService()
         messageService.deleteMessage(byKey: message.identifier)
     }
 
@@ -1529,21 +1529,21 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return conversationProfile
     }
     
-    open func checkForTextToSpeech(list: [ALMessage]) {
+    open func checkForTextToSpeech(list: [KMCoreMessage]) {
         KMTextToSpeech.shared.addMessagesToSpeech(list)
     }
    
     func loadMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
-            time = (messageList.firstObject as! ALMessage).createdAtTime
+            time = (messageList.firstObject as! KMCoreMessage).createdAtTime
         }
         let messageListRequest = MessageListRequest()
         messageListRequest.userId = contactId
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
-        ALMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
+        KMCoreMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, _ in
             guard error == nil, let messages = messages else {
                 self.delegate?.loadingFinished(error: error)
@@ -1551,7 +1551,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             }
             NSLog("messages loaded: ", messages)
 
-            self.alMessages = messages.reversed() as! [ALMessage]
+            self.alMessages = messages.reversed() as! [KMCoreMessage]
 
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
@@ -1598,7 +1598,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
     
-    func getLastSentMessage() -> ALMessage? {
+    func getLastSentMessage() -> KMCoreMessage? {
         for message in alMessages.reversed() {
             if message.isMyMessage {
                 return message
@@ -1607,7 +1607,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return nil
     }
     
-    public func getLastReceivedMessage() -> ALMessage? {
+    public func getLastReceivedMessage() -> KMCoreMessage? {
         for message in alMessages.reversed() {
             if message.isReceivedMessage() && message.to != "bot" {
                 return message
@@ -1679,7 +1679,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     func loadSearchMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
-            guard let message = messageList.firstObject as? ALMessage else {
+            guard let message = messageList.firstObject as? KMCoreMessage else {
                 return
             }
             time = message.createdAtTime
@@ -1689,7 +1689,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
-        ALMessageClientService().getMessageList(forUser: messageListRequest, isSearch: true) { [weak self] messages, error in
+        KMCoreMessageClientService().getMessageList(forUser: messageListRequest, isSearch: true) { [weak self] messages, error in
             guard error == nil, let messages = messages, let weakSelf = self else {
                 self?.delegate?.loadingFinished(error: error)
                 return
@@ -1703,7 +1703,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                     }
                     switch result {
                     case let .success(messagesArray):
-                        for mesg in messagesArray as! [ALMessage] {
+                        for mesg in messagesArray as! [KMCoreMessage] {
                             guard let msg = self?.alMessages.first, let time = Double(msg.createdAtTime.stringValue) else { continue }
                             if let msgTime = Double(mesg.createdAtTime.stringValue), time <= msgTime {
                                 continue
@@ -1730,7 +1730,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
                 }
                 switch result {
                 case let .success(messagesArray):
-                    replyWeakSelf.alMessages = messagesArray.reversed() as! [ALMessage]
+                    replyWeakSelf.alMessages = messagesArray.reversed() as! [KMCoreMessage]
                     replyWeakSelf.alMessageWrapper.addObject(toMessageArray: messages)
                     let models = replyWeakSelf.alMessages.map { $0.messageModel }
                     replyWeakSelf.messageModels = models
@@ -1744,14 +1744,14 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     func fetchReplyMessages(from messages: NSMutableArray, _ completion: @escaping (Result<NSMutableArray, Error>) -> Void) {
-        let service = ALMessageService()
-        let messageDb = ALMessageDBService()
+        let service = KMCoreMessageService()
+        let messageDb = KMCoreMessageDBService()
         let replyMessageKeys = NSMutableArray()
         let contactService = ALContactService()
         let contactDBService = ALContactDBService()
 
         let alUserService = ALUserService()
-        if let newMessages = messages as? [ALMessage] {
+        if let newMessages = messages as? [KMCoreMessage] {
             for msg in newMessages {
                 if let metadata = msg.metadata,
                    let replyKey = metadata.value(forKey: AL_MESSAGE_REPLY_KEY) as? String,
@@ -1764,7 +1764,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             service.fetchReplyMessages(replyMessageKeys) { replyMessages in
                 var userNotPresentIds = [String]()
 
-                if let newMessages = replyMessages as? [ALMessage], !newMessages.isEmpty {
+                if let newMessages = replyMessages as? [KMCoreMessage], !newMessages.isEmpty {
                     for replyMessage in newMessages {
                         if !contactService.isContactExist(replyMessage.to) {
                             userNotPresentIds.append(replyMessage.to)
@@ -1793,7 +1793,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         
         let startTime = alMessages.first?.createdAtTime ?? nil
         
-        ALMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
+        KMCoreMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
             messages in
             guard let messages = messages, messages.count != 0 else {
                 if KMCoreUserDefaultsHandler.isShowLoadEarlierOption(self.chatId) {
@@ -1806,7 +1806,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 messages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
-            self.alMessages.insert(contentsOf: messages as! [ALMessage], at: 0)
+            self.alMessages.insert(contentsOf: messages as! [KMCoreMessage], at: 0)
 
             self.alMessageWrapper.addObject(toMessageArray: messages)
             if ALKConversationViewModel.lastSentMessage == nil {
@@ -1815,7 +1815,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
             if KMCoreSettings.isAgentAppConfigurationEnabled() {
                 self.getConversationEndUserID()
             }
-            let models = messages.map { ($0 as! ALMessage).messageModel }
+            let models = messages.map { ($0 as! KMCoreMessage).messageModel }
             self.messageModels.insert(contentsOf: models, at: 0)
             self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: models)
@@ -1855,7 +1855,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
     open func loadOpenGroupMessages() {
         var time: NSNumber?
         if let messageList = alMessageWrapper.getUpdatedMessageArray(), messageList.count > 1 {
-            time = (messageList.firstObject as! ALMessage).createdAtTime
+            time = (messageList.firstObject as! KMCoreMessage).createdAtTime
         }
         NSLog("Last time: \(String(describing: time))")
         fetchOpenGroupMessages(time: time, contactId: contactId, channelKey: channelKey, completion: {
@@ -1889,7 +1889,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return names
     }
 
-    func sendFile(at url: URL, fileName: String, metadata: [AnyHashable: Any]?) -> (ALMessage?, IndexPath?) {
+    func sendFile(at url: URL, fileName: String, metadata: [AnyHashable: Any]?) -> (KMCoreMessage?, IndexPath?) {
         var fileData: Data?
         do {
             fileData = try Data(contentsOf: url)
@@ -1952,9 +1952,9 @@ open class ALKConversationViewModel: NSObject, Localizable {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
-        ALMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
+        KMCoreMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, _ in
-            guard error == nil, let newMessages = messages as? [ALMessage] else {
+            guard error == nil, let newMessages = messages as? [KMCoreMessage] else {
                 self.delegate?.loadingFinished(error: error)
                 return
             }
@@ -1974,19 +1974,19 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
 
-    private func fetchOpenGroupMessages(time: NSNumber?, contactId: String?, channelKey: NSNumber?, completion: @escaping ([ALMessage]?) -> Void) {
+    private func fetchOpenGroupMessages(time: NSNumber?, contactId: String?, channelKey: NSNumber?, completion: @escaping ([KMCoreMessage]?) -> Void) {
         let messageListRequest = MessageListRequest()
         messageListRequest.userId = contactId
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
-        let messageClientService = ALMessageClientService()
+        let messageClientService = KMCoreMessageClientService()
         messageClientService.getMessageList(forUser: messageListRequest, withCompletion: {
             messages, _, userDetailsList in
 
             let contactDbService = ALContactDBService()
             contactDbService.addUserDetails(userDetailsList)
-            guard let alMessages = messages as? [ALMessage] else {
+            guard let alMessages = messages as? [KMCoreMessage] else {
                 completion(nil)
                 return
             }
@@ -2029,12 +2029,12 @@ open class ALKConversationViewModel: NSObject, Localizable {
     }
 
     private func updateDbMessageWith(key: String, value: String, filePath: String) {
-        let messageService = ALMessageDBService()
+        let messageService = KMCoreMessageDBService()
         messageService.updateDbMessageWith(key: key, value: value, filePath: filePath)
     }
 
-    private func getMessageToPost(isTextMessage: Bool = false) -> ALMessage {
-        var alMessage = ALMessage()
+    private func getMessageToPost(isTextMessage: Bool = false) -> KMCoreMessage {
+        var alMessage = KMCoreMessage()
         // If it's a text message then set the reply id
         if isTextMessage { alMessage = setReplyId(message: alMessage) }
 
@@ -2079,7 +2079,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         isVideo _: Bool = false,
         metadata: [AnyHashable: Any]?,
         fileName: String? = nil
-    ) -> ALMessage? {
+    ) -> KMCoreMessage? {
         let alMessage = getMessageToPost()
         alMessage.metadata = modfiedMessageMetadata(alMessage: alMessage, metadata: metadata)
         alMessage.contentType = Int16(contentType)
@@ -2105,7 +2105,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         alMessage.fileMeta.size = String(format: "%lu", imageData.length)
 
         let dbHandler = KMCoreDBHandler.sharedInstance()
-        let messageService = ALMessageDBService()
+        let messageService = KMCoreMessageDBService()
 
         guard let messageEntity = messageService.createMessageEntityForDBInsertion(with: alMessage) else {
             return nil
@@ -2133,15 +2133,15 @@ open class ALKConversationViewModel: NSObject, Localizable {
         return str
     }
 
-    private func getLocationMessage(latLonString: String) -> ALMessage {
+    private func getLocationMessage(latLonString: String) -> KMCoreMessage {
         let alMessage = getMessageToPost()
         alMessage.contentType = Int16(ALMESSAGE_CONTENT_LOCATION)
         alMessage.message = latLonString
         return alMessage
     }
 
-    private func send(alMessage: ALMessage, completion: @escaping (ALMessage?) -> Void) {
-        ALMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
+    private func send(alMessage: KMCoreMessage, completion: @escaping (KMCoreMessage?) -> Void) {
+        KMCoreMessageService.sharedInstance().sendMessages(alMessage, withCompletion: {
             message, error in
             let newMesg = alMessage
             #if canImport(ChatProvidersSDK)
@@ -2160,7 +2160,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         })
     }
 
-    private func updateMessageStatus(filteredList: [ALMessage], status: Int32) {
+    private func updateMessageStatus(filteredList: [KMCoreMessage], status: Int32) {
         if status == Int32(DELIVERED_AND_READ.rawValue) {
             self.showTypingIndicatorTillBotNewMessage()
         }
@@ -2184,7 +2184,7 @@ open class ALKConversationViewModel: NSObject, Localizable {
         }
     }
 
-    private func setReplyId(message: ALMessage) -> ALMessage {
+    private func setReplyId(message: KMCoreMessage) -> KMCoreMessage {
         if let replyMessage = getSelectedMessageToReply() {
             let metaData = NSMutableDictionary()
             metaData[AL_MESSAGE_REPLY_KEY] = replyMessage.identifier

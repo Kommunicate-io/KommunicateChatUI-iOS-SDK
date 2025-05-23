@@ -15,7 +15,7 @@ public class ALKSearchResultViewController: ALKBaseViewController {
     let viewModel = SearchResultViewModel()
     lazy var viewController = ALKConversationListTableViewController(
         viewModel: self.viewModel,
-        dbService: ALMessageDBService(),
+        dbService: KMCoreMessageDBService(),
         configuration: self.configuration,
         showSearch: false
     )
@@ -88,7 +88,7 @@ public class ALKSearchResultViewController: ALKBaseViewController {
 }
 
 extension ALKSearchResultViewController: ALKConversationListTableViewDelegate {
-    public func muteNotification(conversation _: ALMessage, isMuted _: Bool) {}
+    public func muteNotification(conversation _: KMCoreMessage, isMuted _: Bool) {}
 
     public func userBlockNotification(userId _: String, isBlocked _: Bool) {}
 

@@ -40,7 +40,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
     var userId = ""
     var isChatTranscriptSent = false
     var isHandOffHappened = false
-    var messageBufffer = [ALMessage]()
+    var messageBufffer = [KMCoreMessage]()
     
     var lastSyncTime: NSNumber = 0
     var rootViewController: UIViewController?
@@ -228,7 +228,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         }
     }
     
-    func sendMessage(message: ALMessage) {
+    func sendMessage(message: KMCoreMessage) {
         guard isHandOffHappened else {
             sendLogToKMServer(message: "iOS SDK:Failed to send message\(message.messageId) to zendesk due to handoff")
             return
@@ -262,14 +262,14 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         }
     }
     
-    func addMessageToBuffer(message: ALMessage) {
+    func addMessageToBuffer(message: KMCoreMessage) {
         guard !messageBufffer.contains(message) else {
             return
         }
         messageBufffer.append(message)
     }
     
-    func removeMessageFromBuffer(message: ALMessage) {
+    func removeMessageFromBuffer(message: KMCoreMessage) {
         if messageBufffer.contains(message) {
             messageBufffer.remove(object: message)
         }
@@ -289,7 +289,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
             guard let messageList = messages,
                   let userDetails = userArray as? [KMCoreUserDetail],
                   !userDetails.isEmpty,
-                  let almessages = messageList.reversed() as? [ALMessage] else {
+                  let almessages = messageList.reversed() as? [KMCoreMessage] else {
                 self.isChatTranscriptInProgress = false
                 return
             }
@@ -310,7 +310,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
                 transcriptString.append("\(userName): \(message)\n")
             }
             // for logs
-            let transcriptMessage = ALMessage()
+            let transcriptMessage = KMCoreMessage()
             transcriptMessage.message = transcriptString
             
             guard isHandOffHappened else {
@@ -379,7 +379,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         KMCoreSettings.saveZendeskLastSyncTime(lastSyncTime)
     }
     
-    func getMessageForTranscript(message: ALMessage) -> String {
+    func getMessageForTranscript(message: KMCoreMessage) -> String {
         if let message = message.message, !message.isEmpty {
             return message
         } else if let fileMeta = message.fileMeta, let blobkey = fileMeta.blobKey {
@@ -392,7 +392,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
     
     func sendChatInfo() {
         let infoString = "This chat is initiated from Kommunicate widget, look for more here: \(KommunicateURL.dashboardURL)\(groupId)"
-        let infoMessage = ALMessage()
+        let infoMessage = KMCoreMessage()
         infoMessage.message = infoString
         
         guard isHandOffHappened else {
@@ -419,8 +419,8 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
         })
     }
     
-    func sendAttachment(message: ALMessage) {
-        ALMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil) { fileUrl, error in
+    func sendAttachment(message: KMCoreMessage) {
+        KMCoreMessageClientService().downloadImageUrlV2(message.fileMetaInfo?.blobKey, isS3URL: message.fileMetaInfo?.url != nil) { fileUrl, error in
             guard error == nil, let fileUrl = fileUrl, let url = URL(string: fileUrl) else {
                 print("Error Finding attachment URL :: \(String(describing: error))")
                 return
@@ -526,7 +526,7 @@ public class KMZendeskChatHandler: NSObject, JWTAuthenticator, KMZendeskChatProt
             messageListRequest.channelType = channel.type
         }
         
-        ALMessageClientService().getMessageList(forUser: messageListRequest, withOpenGroup: messageListRequest.channelType == 6) { messages, error, userArray in
+        KMCoreMessageClientService().getMessageList(forUser: messageListRequest, withOpenGroup: messageListRequest.channelType == 6) { messages, error, userArray in
             completion(messages, error, userArray)
         }
     }

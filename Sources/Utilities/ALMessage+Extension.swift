@@ -1,5 +1,5 @@
 //
-//  ALMessage+Extension.swift
+//  KMCoreMessage+Extension.swift
 //  KommunicateChatUI-iOS-SDK
 //
 //  Created by Mukesh Thawani on 04/05/17.
@@ -26,7 +26,7 @@ public enum KMConversationStatus: String {
 
 let emailSourceType = 7
 
-extension ALMessage: ALKChatViewModelProtocol {
+extension KMCoreMessage: ALKChatViewModelProtocol {
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
         guard let alContact = alContactDbService.loadContact(byKey: "userId", value: to) else {
@@ -255,7 +255,7 @@ extension ALMessage: ALKChatViewModelProtocol {
     }
 }
 
-extension ALMessage {
+extension KMCoreMessage {
     var isMyMessage: Bool {
         if contentType == 10 { return false }
         return (type != nil) ? (type == myMessage) : false
@@ -478,7 +478,7 @@ extension ALMessage {
     }
 }
 
-public extension ALMessage {
+public extension KMCoreMessage {
     var messageModel: ALKMessageModel {
         let messageModel = ALKMessageModel()
         messageModel.message = message
@@ -514,9 +514,9 @@ public extension ALMessage {
     }
 }
 
-extension ALMessage {
+extension KMCoreMessage {
     override open func isEqual(_ object: Any?) -> Bool {
-        if let object = object as? ALMessage, let objectKey = object.key, let key = key {
+        if let object = object as? KMCoreMessage, let objectKey = object.key, let key = key {
             return key == objectKey
         } else {
             return false

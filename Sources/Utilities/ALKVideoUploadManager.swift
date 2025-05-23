@@ -19,13 +19,13 @@ class ALKVideoUploadManager: NSObject {
         static let paramForDefaultStorage = "files[]"
     }
 
-    func uploadVideo(alMessage: ALMessage) {
-        let messageService = ALMessageDBService()
+    func uploadVideo(alMessage: KMCoreMessage) {
+        let messageService = KMCoreMessageDBService()
         let responseHandler = ALResponseHandler()
         guard let dbMessage = messageService.getMessageByKey("key", value: alMessage.key) as? DB_Message else {
             return
         }
-        let clientService = ALMessageClientService()
+        let clientService = KMCoreMessageClientService()
         // If already thumbnail is uploaded we will directly upload the video else will upload thumbnail on success will upload the video.
         if let thumbnailUrl = dbMessage.fileMetaInfo.thumbnailUrl,
            !thumbnailUrl.isEmpty {
@@ -143,19 +143,19 @@ class ALKVideoUploadManager: NSObject {
         return urlRequest
     }
 
-    func updateImageFileMeta(messageKey: String?, responseDict: Any?) -> ALMessage? {
+    func updateImageFileMeta(messageKey: String?, responseDict: Any?) -> KMCoreMessage? {
         guard let key = messageKey else {
             return nil
         }
 
-        let messageService = ALMessageDBService()
+        let messageService = KMCoreMessageDBService()
         let alHandler = KMCoreDBHandler.sharedInstance()
         guard let dbMessage = messageService.getMessageByKey("key", value: key) as? DB_Message,
               let message = messageService.createMessageEntity(dbMessage) else { return nil }
 
         guard let fileInfo = responseDict as? [String: Any] else { return nil }
 
-        let newMessage = ALMessage()
+        let newMessage = KMCoreMessage()
         let imageFileMeta = ALFileMetaInfo()
         newMessage.fileMeta = imageFileMeta
 
@@ -200,7 +200,7 @@ extension ALKVideoUploadManager: URLSessionDataDelegate {
                 uploadTask.completed = true
                 let alMessage = self.updateImageFileMeta(messageKey: uploadTask.identifier, responseDict: responseDictionary)
 
-                let clientService = ALMessageClientService()
+                let clientService = KMCoreMessageClientService()
                 clientService.sendPhoto(forUserInfo: nil, withCompletion: {
                     urlStr, error in
                     guard error == nil, let urlStr = urlStr,

@@ -12,7 +12,7 @@ import UIKit
 
 class ALKAttatchmentView: UIView {
     let loadingIndicator = ALKLoadingIndicator(frame: .zero, color: UIColor.gray)
-    var message: ALMessage?
+    var message: KMCoreMessage?
 
     enum Padding {
         enum ImgaeView {
@@ -41,7 +41,7 @@ class ALKAttatchmentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(message: ALMessage, localizationFileName: String) {
+    func update(message: KMCoreMessage, localizationFileName: String) {
         self.message = message
         loadingIndicator.startLoading(localizationFileName: localizationFileName)
         if message.imageFilePath == nil, message.contentType != Int16(ALMESSAGE_CONTENT_LOCATION) {
@@ -92,7 +92,7 @@ class ALKAttatchmentView: UIView {
             return
         }
         
-        ALMessageClientService().downloadImageUrlV2(messageObject.fileMetaInfo?.blobKey, isS3URL: messageObject.fileMetaInfo?.url != nil) { fileUrl, error in
+        KMCoreMessageClientService().downloadImageUrlV2(messageObject.fileMetaInfo?.blobKey, isS3URL: messageObject.fileMetaInfo?.url != nil) { fileUrl, error in
             guard error == nil, let fileUrl = fileUrl else {
                 print("Error downloading attachment :: \(String(describing: error))")
                 return
@@ -159,7 +159,7 @@ extension ALKAttatchmentView: ALKHTTPManagerDownloadDelegate {
             return
         }
         DispatchQueue.main.async {
-            ALMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
+            KMCoreMessageDBService().updateDbMessageWith(key: "key", value: identifier, filePath: filePath)
             self.message?.imageFilePath = filePath
             self.updateView(filePath: filePath)
         }

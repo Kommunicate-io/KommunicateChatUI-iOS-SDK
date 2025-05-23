@@ -9,8 +9,8 @@ import Foundation
 import KommunicateCore_iOS_SDK
 
 public protocol ALKCustomEventCallback: AnyObject {
-    func messageSent(message: ALMessage)
-    func messageReceived(message: ALMessage)
+    func messageSent(message: KMCoreMessage)
+    func messageReceived(message: KMCoreMessage)
     func conversationResolved(conversationId: String)
     func conversationRestarted(conversationId: String)
     func onBackButtonClick(isConversationOpened: Bool)

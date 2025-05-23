@@ -29,7 +29,7 @@ public class ConversationListTableViewDataSource: NSObject, UITableViewDataSourc
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let message = viewModel.chatFor(indexPath: indexPath) as? ALMessage else {
+        guard let message = viewModel.chatFor(indexPath: indexPath) as? KMCoreMessage else {
             return UITableViewCell()
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
