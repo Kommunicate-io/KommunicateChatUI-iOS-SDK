@@ -32,7 +32,7 @@ public class ALKCustomEventHandler {
             }
 
         case .messageSend:
-            if let message = data?["message"] as? ALMessage {
+            if let message = data?["message"] as? KMCoreMessage {
                 delegate.messageSent(message: message)
             }
 
@@ -71,7 +71,7 @@ public class ALKCustomEventHandler {
             delegate.onBackButtonClick(isConversationOpened: false)
 
         case .messageReceive:
-            if let messages = data?["messageList"] as? [ALMessage] {
+            if let messages = data?["messageList"] as? [KMCoreMessage] {
                 messages.forEach { delegate.messageReceived(message: $0) }
             }
 
