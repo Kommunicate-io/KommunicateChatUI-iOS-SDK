@@ -60,6 +60,13 @@ struct SystemMessage: Localizable {
         static let UpdateProfileName = localizedString(forKey: "UpdateProfileSuccessMessage")
         static let Failed = localizedString(forKey: "FailedToUpdateMessage")
     }
+    
+    enum SuspendedScreen {
+        static let ChurnedUserDisconnectionMessage = localizedString(forKey: "ChurnedUserDisconnectionMessage")
+        static let MobileNotSupportedMessage = localizedString(forKey: "MobileNotSupportedMessage")
+        static let TrialUserDisconnectionMessage = localizedString(forKey: "TrialUserDisconnectionMessage")
+
+    }
 
     enum Warning {
         static let NoEmail = localizedString(forKey: "EnterEmailMessage")
