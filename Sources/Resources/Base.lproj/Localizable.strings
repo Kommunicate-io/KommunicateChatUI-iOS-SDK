@@ -204,3 +204,10 @@ Document = "Document";
 Contact = "Contact";
 Buttons = "Buttons";
 File = "File";
+
+
+/* Suspension Screen Messages */
+
+TrialUserDisconnectionMessage = "Trial users cannot access this feature in release mode. Please upgrade your plan to continue. \nFor further assistance, contact support at support@kommunicate.io.";
+MobileNotSupportedMessage = "Your current plan does not support mobile access. \nPlease update your subscription to gain full access.";
+ChurnedUserDisconnectionMessage = "Your app provider needs to renew their subscription to enable access to messaging features.";
