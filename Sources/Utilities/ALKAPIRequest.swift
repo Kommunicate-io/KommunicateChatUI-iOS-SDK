@@ -1,5 +1,5 @@
 //
-//  ALKAPIRequest.swift
+//  KMChatAPIRequest.swift
 //
 //
 //  Created by Mukesh Thawani on 04/05/17.
@@ -9,7 +9,7 @@
 // import Alamofire
 // import ObjectMapper
 
-// enum ALKAPIRequestType {
+// enum KMChatAPIRequestType {
 //    case get
 //    case post
 //    case delete
@@ -25,23 +25,23 @@
 //    }
 // }
 //
-// enum ALKAPIParameterType {
+// enum KMChatAPIParameterType {
 //    case url
 //    case urlEncodedInURL
 //    case json
 // }
 //
-// class ALKAPIRequest {
+// class KMChatAPIRequest {
 //    // MARK: - Variables and Types
 //    // MARK: Protected
 //
-//    var methodType: ALKAPIRequestType = .get
+//    var methodType: KMChatAPIRequestType = .get
 //
-//    var type: ALKAPIRequestType {
+//    var type: KMChatAPIRequestType {
 //        return self.methodType
 //    }
 //
-//    var paramsType: ALKAPIParameterType {
+//    var paramsType: KMChatAPIParameterType {
 //        switch self.type {
 //        case .post, .put, .delete:
 //            return .json

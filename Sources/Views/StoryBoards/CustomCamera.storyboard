@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Camera-->
         <scene sceneID="2DX-2n-Pdk">
             <objects>
-                <viewController storyboardIdentifier="ALKCustomCameraViewController" id="Wqs-0E-ffm" customClass="ALKCustomCameraViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="KMChatCustomCameraViewController" id="Wqs-0E-ffm" customClass="KMChatCustomCameraViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bxm-Pg-fdC"/>
                         <viewControllerLayoutGuide type="bottom" id="KEN-YE-PSa"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7Tr-pD-Cka">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0sR-12-CM9">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <color key="backgroundColor" systemColor="darkTextColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yoC-4o-vjy">
@@ -35,7 +34,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TEN-Ql-cPI">
-                                <rect key="frame" x="0.0" y="424" width="375" height="199"/>
+                                <rect key="frame" x="0.0" y="404" width="375" height="199"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ZDL-RQ-BEr">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="86"/>
@@ -50,7 +49,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" restorationIdentifier="ALKPhotoCollectionCell" reuseIdentifier="ALKPhotoCollectionCell" id="pAN-eb-FKY" customClass="ALKPhotoCollectionCell" customModule="KommunicateChatUI_iOS_SDK">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" restorationIdentifier="KMChatPhotoCollectionCell" reuseIdentifier="KMChatPhotoCollectionCell" id="pAN-eb-FKY" customClass="KMChatPhotoCollectionCell" customModule="KommunicateChatUI_iOS_SDK">
                                                 <rect key="frame" x="0.0" y="0.0" width="86" height="86"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -122,7 +121,7 @@
                         <outlet property="btnSwitchCam" destination="yoC-4o-vjy" id="qQq-A3-qu6"/>
                         <outlet property="previewGallery" destination="ZDL-RQ-BEr" id="p84-Qd-Y3A"/>
                         <outlet property="previewView" destination="0sR-12-CM9" id="E4r-fx-DIl"/>
-                        <segue destination="dyl-zf-n0M" kind="show" identifier="pushToALKCustomCameraPreviewViewController" id="oSZ-Ct-1yw"/>
+                        <segue destination="dyl-zf-n0M" kind="show" identifier="pushToKMChatCustomCameraPreviewViewController" id="oSZ-Ct-1yw"/>
                         <segue destination="iTB-q3-GAc" kind="show" identifier="goToCropImageView" id="Yte-cB-Qgn"/>
                     </connections>
                 </viewController>
@@ -130,10 +129,10 @@
             </objects>
             <point key="canvasLocation" x="140.625" y="50"/>
         </scene>
-        <!--Base Navigation View Controller-->
+        <!--Chat Base Navigation View Controller-->
         <scene sceneID="Ooi-AW-QZ4">
             <objects>
-                <navigationController storyboardIdentifier="CustomCameraNavigationController" id="1GD-nr-JWf" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="CustomCameraNavigationController" id="1GD-nr-JWf" customClass="KMChatBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="XoI-Ni-03l">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -155,14 +154,14 @@
                         <viewControllerLayoutGuide type="bottom" id="sxR-hS-pkZ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BiX-m0-OcR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mJP-2B-M1h">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="GuL-mi-PKR">
-                                        <rect key="frame" x="20" y="554" width="331" height="30"/>
+                                        <rect key="frame" x="20" y="534" width="331" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bd3-Ua-mWS" customClass="AXBorderButton" customModule="KommunicateChatUI_iOS_SDK">
                                                 <rect key="frame" x="0.0" y="0.0" width="150.5" height="30"/>
@@ -233,17 +232,17 @@
         <!--Send Photo-->
         <scene sceneID="Cxi-8O-Zkf">
             <objects>
-                <viewController storyboardIdentifier="ALKCustomCameraPreviewViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dyl-zf-n0M" customClass="ALKCustomCameraPreviewViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="KMChatCustomCameraPreviewViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dyl-zf-n0M" customClass="KMChatCustomCameraPreviewViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ylW-LG-s6H"/>
                         <viewControllerLayoutGuide type="bottom" id="Dnq-L0-ql2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JZe-R1-hhH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jjH-Ng-oKf">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="416" translatesAutoresizingMaskIntoConstraints="NO" id="eBc-b7-fFI">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
@@ -258,7 +257,7 @@
                                 </constraints>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qmd-9l-XcD">
-                                <rect key="frame" x="321" y="569" width="38" height="38"/>
+                                <rect key="frame" x="321" y="549" width="38" height="38"/>
                                 <color key="backgroundColor" red="0.019607843137254902" green="0.47058823529411764" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="S9q-oT-pvp"/>

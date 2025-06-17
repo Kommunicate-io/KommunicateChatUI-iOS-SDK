@@ -1,0 +1,205 @@
+//
+//  KMChatFriendFormCell.swift
+//  KommunicateChatUI-iOS-SDK
+//
+//  Created by Mukesh on 09/07/20.
+//
+
+import Kingfisher
+import UIKit
+#if canImport(RichMessageKit)
+    import RichMessageKit
+#endif
+class KMChatFriendFormCell: KMChatFormCell {
+    enum ViewPadding {
+        enum NameLabel {
+            static let top: CGFloat = 6
+            static let leading: CGFloat = 57
+            static let trailing: CGFloat = 57
+            static let height: CGFloat = 16
+        }
+
+        enum AvatarImageView {
+            static let top: CGFloat = 18
+            static let leading: CGFloat = 9
+            static let height: CGFloat = 37
+            static let width: CGFloat = 37
+        }
+
+        enum TimeLabel {
+            static var leading: CGFloat = 2.0
+            static var bottom: CGFloat = 2.0
+            static let maxWidth: CGFloat = 200
+        }
+
+        static let maxWidth = UIScreen.main.bounds.width
+            - (ViewPadding.AvatarImageView.width + ViewPadding.AvatarImageView.leading)
+
+        static let messageViewPadding = Padding(left: ChatCellPadding.ReceivedMessage.Message.left,
+                                                right: ChatCellPadding.ReceivedMessage.Message.right,
+                                                top: ChatCellPadding.ReceivedMessage.Message.top,
+                                                bottom: 0)
+    }
+
+    fileprivate var timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.isOpaque = true
+        return lb
+    }()
+
+    fileprivate var avatarImageView: UIImageView = {
+        let imv = UIImageView()
+        imv.contentMode = .scaleAspectFill
+        imv.clipsToBounds = true
+        let layer = imv.layer
+        layer.cornerRadius = 18.5
+        layer.masksToBounds = true
+        imv.isUserInteractionEnabled = true
+        return imv
+    }()
+
+    fileprivate var nameLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.isOpaque = true
+        return label
+    }()
+
+    fileprivate lazy var messageView = KMMessageView(
+        bubbleStyle: MessageTheme.receivedMessage.bubble,
+        messageStyle: MessageTheme.receivedMessage.message,
+        maxWidth: ViewPadding.maxWidth - (ViewPadding.messageViewPadding.left + ViewPadding.messageViewPadding.right)
+    )
+
+    fileprivate var submitButtonView = UIView(frame: .zero)
+
+    fileprivate lazy var timeLabelWidth = timeLabel.widthAnchor.constraint(equalToConstant: 0)
+    fileprivate lazy var timeLabelHeight = timeLabel.heightAnchor.constraint(equalToConstant: 0)
+
+    lazy var messageViewHeight = self.messageView.heightAnchor.constraint(equalToConstant: 0)
+    lazy var submitButtonViewHeight = self.submitButtonView.heightAnchor.constraint(equalToConstant: 0)
+
+    override func setupViews() {
+        super.setupViews()
+        setupConstraints()
+    }
+
+    override func update(viewModel: KMChatMessageViewModel) {
+        identifier = viewModel.identifier
+        super.update(viewModel: viewModel)
+        let isMessageEmpty = viewModel.isMessageEmpty
+        let model = viewModel.messageDetails()
+
+        messageViewHeight.constant = isMessageEmpty ? 0 :
+            ReceivedMessageViewSizeCalculator().rowHeight(messageModel: model, maxWidth: ViewPadding.maxWidth, padding: ViewPadding.messageViewPadding)
+
+        if !isMessageEmpty {
+            messageView.update(model: model)
+        } else if #available(iOS 17, *) {
+            messageView.update(model: model)
+        }
+        messageView.updateHeighOfView(hideView: isMessageEmpty, model: model)
+        let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
+
+        if let url = viewModel.avatarURL {
+            let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
+        } else {
+            avatarImageView.image = placeHolder
+        }
+
+        nameLabel.text = viewModel.displayName
+        nameLabel.setStyle(KMChatMessageStyle.displayName)
+
+        if let submitButton = submitButton {
+            submitButtonView.subviews.forEach { $0.removeFromSuperview() }  
+            submitButtonViewHeight.constant = submitButton.buttonHeight()
+            submitButtonView.addSubview(submitButton)
+            submitButton.bindFrameToSuperviewBounds()
+        }
+        if viewModel.isFormSubmitButtonHidden() {
+            submitButtonView.isHidden = true
+            submitButtonViewHeight.constant = 0
+        } else if KMHidePostCTAForm.shared.enabledHidePostCTAForm, let submitButton = submitButton {
+            submitButtonView.isHidden = false
+            submitButtonViewHeight.constant = submitButton.buttonHeight()
+        }
+        timeLabel.setStyle(KMChatMessageStyle.time)
+        timeLabel.text = viewModel.time
+        let timeLabelSize = viewModel.time!.rectWithConstrainedWidth(
+            ViewPadding.TimeLabel.maxWidth,
+            font: KMChatMessageStyle.time.font
+        )
+        timeLabelHeight.constant = timeLabelSize.height.rounded(.up)
+        timeLabelWidth.constant = timeLabelSize.width.rounded(.up)
+        layoutIfNeeded()
+    }
+
+    private func setupConstraints() {
+        addViewsForAutolayout(views: [
+            nameLabel,
+            avatarImageView,
+            messageView,
+            itemListView,
+            submitButtonView,
+            timeLabel
+        ])
+        nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.NameLabel.top).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.NameLabel.leading).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ViewPadding.NameLabel.trailing).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: ViewPadding.NameLabel.height).isActive = true
+
+        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.AvatarImageView.top).isActive = true
+        avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ViewPadding.AvatarImageView.leading).isActive = true
+        avatarImageView.heightAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.height).isActive = true
+        avatarImageView.widthAnchor.constraint(equalToConstant: ViewPadding.AvatarImageView.width).isActive = true
+
+        timeLabel.leadingAnchor.constraint(equalTo: itemListView.leadingAnchor, constant: ViewPadding.TimeLabel.leading).isActive = true
+        timeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -ViewPadding.TimeLabel.bottom)
+            .isActive = true
+        timeLabelWidth.isActive = true
+        timeLabelHeight.isActive = true
+        timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor).isActive = true
+
+        let leftPadding = ChatCellPadding.ReceivedMessage.Message.left
+        let rightPadding = ChatCellPadding.ReceivedMessage.Message.right
+        let templateLeftPadding = CGFloat(KMChatMessageStyle.receivedBubble.widthPadding)
+        messageViewHeight.isActive = true
+        submitButtonViewHeight.isActive = true
+        messageView.layout {
+            $0.top == nameLabel.bottomAnchor
+            $0.leading == avatarImageView.trailingAnchor + leftPadding
+            $0.trailing <= trailingAnchor - rightPadding
+        }
+        itemListView.layout {
+            $0.top == messageView.bottomAnchor + ChatCellPadding.ReceivedMessage.MessageButton.top
+            $0.bottom == submitButtonView.topAnchor - ChatCellPadding.ReceivedMessage.MessageButton.bottom
+            $0.leading == avatarImageView.trailingAnchor + templateLeftPadding
+            $0.trailing == trailingAnchor - ChatCellPadding.ReceivedMessage.MessageButton.right
+        }
+        submitButtonView.layout {
+            $0.bottom == timeLabel.topAnchor - ChatCellPadding.ReceivedMessage.MessageButton.bottom
+            $0.leading == itemListView.leadingAnchor
+        }
+        submitButtonView.trailingAnchor.constraint(lessThanOrEqualTo: messageView.trailingAnchor).isActive = true
+        nameLabel.isHidden = KMCellConfiguration.hideSenderName
+    }
+}
+extension UIView {
+    
+    /*
+     Adds constraints to this `UIView` instances `superview` object to make sure this always has the same size as the superview.  Please note that this has no effect if its `superview` is `nil` – add this `UIView` instance as a subview before calling this.
+     */
+     func bindFrameToSuperviewBounds() {
+         guard let superview = self.superview
+         else {
+             print("Error! `superview` was nil – call `addSubview(view: UIView)` before calling `bindFrameToSuperviewBounds()` to fix this.")
+             return
+         }
+         self.translatesAutoresizingMaskIntoConstraints = false
+         self.topAnchor.constraint(equalTo: superview.topAnchor, constant: 0).isActive = true
+         self.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: 0).isActive = true
+         self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 0).isActive = true
+         self.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: 0).isActive = true
+     }
+}

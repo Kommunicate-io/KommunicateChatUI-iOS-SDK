@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6Qw-CT-Hx8">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6Qw-CT-Hx8">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Preview Image View Controller-->
+        <!--Chat Preview Image View Controller-->
         <scene sceneID="Qbz-nv-kcz">
             <objects>
-                <viewController storyboardIdentifier="PreviewImageViewController" id="T7c-VG-5fK" customClass="ALKPreviewImageViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PreviewImageViewController" id="T7c-VG-5fK" customClass="KMChatPreviewImageViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FNY-tx-eBm"/>
                         <viewControllerLayoutGuide type="bottom" id="JnI-lM-Svd"/>
@@ -46,10 +45,10 @@
             </objects>
             <point key="canvasLocation" x="838" y="197"/>
         </scene>
-        <!--Base Navigation View Controller-->
+        <!--Chat Base Navigation View Controller-->
         <scene sceneID="816-hg-X2G">
             <objects>
-                <navigationController storyboardIdentifier="PreviewImageNavigationViewController" id="6Qw-CT-Hx8" customClass="ALKBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PreviewImageNavigationViewController" id="6Qw-CT-Hx8" customClass="KMChatBaseNavigationViewController" customModule="KommunicateChatUI_iOS_SDK" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="SjS-fh-lRq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

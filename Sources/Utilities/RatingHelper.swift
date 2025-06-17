@@ -10,7 +10,7 @@ import UIKit
 
 class RatingHelper: Localizable {
 
-     var configuration = ALKConfiguration()
+     var configuration = KMChatConfiguration()
 
      func getRatingIconFor(rating: Int) -> UIImage? {
          var imageName = String()

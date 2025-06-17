@@ -48,7 +48,7 @@ public struct KMCardTemplate: Codable {
 }
 
 public class Util {
-    public func cardTemplate(from genericCard: ALKGenericCard) -> KMCardTemplate {
+    public func cardTemplate(from genericCard: KMChatGenericCard) -> KMCardTemplate {
         let header = KMCardTemplate.Header(imgSrc: genericCard.imageUrl?.absoluteString, overlayText: genericCard.overlayText)
 
         var buttons: [KMCardTemplate.Button]?
@@ -56,7 +56,7 @@ public class Util {
             buttons = [KMCardTemplate.Button]()
             for btn in cardButtons {
                 let payload = KMCardTemplate.Payload(url: nil, title: btn.name, message: btn.action, text: btn.data, updateLanguage: nil, formAction: nil, requestType: nil, formData: nil)
-                let action = KMCardTemplate.Action(type: "ALKGenericCard", payload: payload)
+                let action = KMCardTemplate.Action(type: "KMChatGenericCard", payload: payload)
                 let button = KMCardTemplate.Button(name: btn.name, action: action)
                 buttons!.append(button)
             }

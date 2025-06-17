@@ -13,7 +13,7 @@ extension Bundle {
         #if SWIFT_PACKAGE
             return Bundle.module
         #else
-            return Bundle(for: ALKConversationListViewController.self)
+            return Bundle(for: KMChatConversationListViewController.self)
         #endif
     }
 }
