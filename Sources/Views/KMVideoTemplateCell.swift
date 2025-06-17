@@ -15,13 +15,13 @@ import UIKit
     import RichMessageKit
 #endif
 
-class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
+class KMVideoTemplateCell: KMChatChatBaseCell<KMChatMessageViewModel> {
    
     var videoTableview =  UITableView()
     
     public var playtapped: ((_ url: String) -> Void)?
 
-    var messageModel: ALKMessageViewModel?
+    var messageModel: KMChatMessageViewModel?
     
     private var template: [KMVideoTemplate]? {
         didSet {
@@ -80,8 +80,8 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         return bv
     }()
 
-    private var frontView: ALKTappableView = {
-        let view = ALKTappableView()
+    private var frontView: KMChatTappableView = {
+        let view = KMChatTappableView()
         view.alpha = 1.0
         view.backgroundColor = .clear
         view.isUserInteractionEnabled = true
@@ -96,7 +96,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         return 16
     }
         
-    override class func rowHeigh(viewModel: ALKMessageViewModel, width: CGFloat) -> CGFloat {
+    override class func rowHeigh(viewModel: KMChatMessageViewModel, width: CGFloat) -> CGFloat {
         guard let model = viewModel.videoTemplate() else {
             return 0
         }
@@ -116,7 +116,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
         return heigh * CGFloat(model.count)
     }
 
-    override func update(viewModel: ALKMessageViewModel) {
+    override func update(viewModel: KMChatMessageViewModel) {
         super.update(viewModel: viewModel)
         self.messageModel = viewModel
         self.template = viewModel.videoTemplate()
@@ -126,7 +126,7 @@ class KMVideoTemplateCell: ALKChatBaseCell<ALKMessageViewModel> {
     override func setupStyle() {
         super.setupStyle()
 
-        timeLabel.setStyle(ALKMessageStyle.time)
+        timeLabel.setStyle(KMChatMessageStyle.time)
     }
 
     override func setupViews() {

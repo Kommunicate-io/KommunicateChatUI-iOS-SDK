@@ -78,7 +78,7 @@ extension UITextView {
         textAlignment = isRTL ? .right : .left
     }
 
-    // For ALK ChatBar Place Holder
+    // For KMChat ChatBar Place Holder
     func changePlaceHolderDirection() {
         let language = NSLocale.preferredLanguages[0]
         let direction = NSLocale.characterDirection(forLanguage: language)

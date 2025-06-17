@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class KMStaticTopMessageCell: ALKMessageCell {
+class KMStaticTopMessageCell: KMChatMessageCell {
     
     enum ViewPadding {
         static let topSpacing = 35.0
@@ -89,17 +89,17 @@ class KMStaticTopMessageCell: ALKMessageCell {
         leftIcon.topAnchor.constraint(equalTo: contentLabel.topAnchor).isActive = true
     }
     
-    public static func rowHeight(model: ALKMessageModel, width: CGFloat) -> CGFloat {
-        let height =  super.messageHeight(viewModel: model, width: width - 100, font: ALKMessageStyle.staticTopMessage.font, mentionStyle: ALKMessageStyle.receivedMention, displayNames: nil)
+    public static func rowHeight(model: KMChatMessageModel, width: CGFloat) -> CGFloat {
+        let height =  super.messageHeight(viewModel: model, width: width - 100, font: KMChatMessageStyle.staticTopMessage.font, mentionStyle: KMChatMessageStyle.receivedMention, displayNames: nil)
         return height + ViewPadding.topSpacing + ViewPadding.bottomSpacing
     }
     
-    public func updateMessage(viewModel: ALKMessageViewModel) {
+    public func updateMessage(viewModel: KMChatMessageViewModel) {
         contentLabel.text = viewModel.message
     }
     
     override func setupStyle() {
-        let style = ALKMessageStyle.staticTopMessage
+        let style = KMChatMessageStyle.staticTopMessage
         contentLabel.textColor = style.text
         contentLabel.font = style.font
     }

@@ -26,8 +26,8 @@ public class KMMessageView: UIView {
     let maxWidth: CGFloat
 
     /// Dummy view required to calculate height for normal text.
-    fileprivate static var dummyMessageView: ALKTextView = {
-        let textView = ALKTextView(frame: .zero)
+    fileprivate static var dummyMessageView: KMChatTextView = {
+        let textView = KMChatTextView(frame: .zero)
         textView.isUserInteractionEnabled = true
         textView.isSelectable = true
         textView.isEditable = false
@@ -46,8 +46,8 @@ public class KMMessageView: UIView {
     /// Required because we are using static textview which doesn't clear attributes
     /// once attributed string is used.
     /// See this question https://stackoverflow.com/q/21731207/6671572
-    fileprivate static var dummyAttributedMessageView: ALKTextView = {
-        let textView = ALKTextView(frame: .zero)
+    fileprivate static var dummyAttributedMessageView: KMChatTextView = {
+        let textView = KMChatTextView(frame: .zero)
         textView.isUserInteractionEnabled = true
         textView.isSelectable = true
         textView.isEditable = false
@@ -64,8 +64,8 @@ public class KMMessageView: UIView {
 
     fileprivate static var attributedStringCache = NSCache<NSString, NSAttributedString>()
 
-    let messageTextView: ALKTextView = {
-        let textView = ALKTextView(frame: .zero)
+    let messageTextView: KMChatTextView = {
+        let textView = KMChatTextView(frame: .zero)
         textView.isUserInteractionEnabled = true
         textView.isSelectable = true
         textView.isEditable = false

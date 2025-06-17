@@ -64,12 +64,12 @@ public class NotificationHelper {
     /// - Returns: Bool value indicating whether notification is for active chat.
     public func isNotificationForActiveThread(_ notification: NotificationData) -> Bool {
         guard
-            let topVC = ALPushAssist().topViewController as? ALKConversationViewController,
+            let topVC = ALPushAssist().topViewController as? KMChatConversationViewController,
             let viewModel = topVC.viewModel
         else {
             guard let topVC = ALPushAssist().topViewController,
-                  let navVC = topVC.presentingViewController as? ALKBaseNavigationViewController,
-                  let conversationViewController = navVC.topViewController as? ALKConversationViewController,
+                  let navVC = topVC.presentingViewController as? KMChatBaseNavigationViewController,
+                  let conversationViewController = navVC.topViewController as? KMChatConversationViewController,
                   let viewModel = conversationViewController.viewModel
             else {
                 return false
@@ -88,39 +88,39 @@ public class NotificationHelper {
         return false
     }
 
-    /// Launches `ALKConversationViewController` from list.
+    /// Launches `KMChatConversationViewController` from list.
     ///
     /// - NOTE: Use this when list is at the top.
     /// - Parameters:
-    ///   - viewController: `ALKConversationListViewController` instance which is on top.
+    ///   - viewController: `KMChatConversationListViewController` instance which is on top.
     ///   - notification: notification that is tapped.
-    public func openConversationFromListVC(_ viewController: ALKConversationListViewController, notification: NotificationData) {
+    public func openConversationFromListVC(_ viewController: KMChatConversationListViewController, notification: NotificationData) {
         viewController.launchChat(contactId: notification.userId, groupId: notification.groupId, conversationId: notification.conversationId)
     }
 
     /// Returns an instance of list view controller which should be pushed from outside.
-    /// It will launch `ALKConversationViewController`.
+    /// It will launch `KMChatConversationViewController`.
     ///
     /// - NOTE: Use this to launch chat when some other screen is opened.
     /// - Parameters:
     ///   - notification: notification that is tapped.
-    ///   - configuration: `ALKConfiguration` object.
-    /// - Returns: An instance of `ALKConversationListViewController`
-    public func getConversationVCToLaunch(notification: NotificationData, configuration: ALKConfiguration) -> ALKConversationListViewController {
-        let viewController = ALKConversationListViewController(configuration: configuration)
+    ///   - configuration: `KMChatConfiguration` object.
+    /// - Returns: An instance of `KMChatConversationListViewController`
+    public func getConversationVCToLaunch(notification: NotificationData, configuration: KMChatConfiguration) -> KMChatConversationListViewController {
+        let viewController = KMChatConversationListViewController(configuration: configuration)
         viewController.contactId = notification.userId
         viewController.conversationId = notification.conversationId
         viewController.channelKey = notification.groupId
         return viewController
     }
 
-    /// Refrehses `ALKConversationViewController` for the arrived notification.
+    /// Refrehses `KMChatConversationViewController` for the arrived notification.
     ///
-    /// - NOTE: Use this when `ALKConversationViewController` is at top
+    /// - NOTE: Use this when `KMChatConversationViewController` is at top
     /// - Parameters:
-    ///   - viewController: An instance of `ALKConversationViewController` which is at top.
+    ///   - viewController: An instance of `KMChatConversationViewController` which is at top.
     ///   - notification: notification that is tapped.
-    public func refreshConversation(_ viewController: ALKConversationViewController, with notification: NotificationData) {
+    public func refreshConversation(_ viewController: KMChatConversationViewController, with notification: NotificationData) {
         viewController.unsubscribingChannel()
         if !isChatThreadIsOpen(notification,
                                userId: viewController.viewModel.contactId,
@@ -147,16 +147,16 @@ public class NotificationHelper {
         let topVCName = String(describing: topVC.classForCoder)
         switch topVCName {
         case "MuteConversationViewController",
-             "ALKWebViewController",
+             "KMChatWebViewController",
              "CNContactPickerViewController",
              "CAMImagePickerCameraViewController",
              "UIDocumentPickerViewController":
             return true
-        case _ where topVCName.hasPrefix("ALK"):
+        case _ where topVCName.hasPrefix("KMChat"):
             return true
         default:
             if let searchVC = topVC as? UISearchController,
-               searchVC.searchResultsController is ALKSearchResultViewController {
+               searchVC.searchResultsController is KMChatSearchResultViewController {
                 return true
             }
             return false
@@ -170,15 +170,15 @@ public class NotificationHelper {
     public func handleNotificationTap(_ notification: NotificationData) {
         guard let topVC = ALPushAssist().topViewController else { return }
         switch topVC {
-        case let vc as ALKConversationListViewController:
+        case let vc as KMChatConversationListViewController:
             print("ConversationListViewController on top")
             openConversationFromListVC(vc, notification: notification)
-        case let vc as ALKConversationViewController:
+        case let vc as KMChatConversationViewController:
             print("ConversationViewController on top")
             refreshConversation(vc, with: notification)
         default:
             if let searchVC = topVC as? UISearchController,
-               let vc = searchVC.presentingViewController as? ALKConversationListViewController {
+               let vc = searchVC.presentingViewController as? KMChatConversationListViewController {
                 openConversationFromListVC(vc, notification: notification)
                 return
             }
@@ -225,7 +225,7 @@ public class NotificationHelper {
 
     private func findControllerInStack(_ vc: UIViewController,
                                        completion: @escaping () -> Void) {
-        guard !String(describing: vc.classForCoder).hasPrefix("ALKConversation") else {
+        guard !String(describing: vc.classForCoder).hasPrefix("KMChatConversation") else {
             completion()
             return
         }

@@ -17,7 +17,7 @@ class KMMyVideoTemplateCell: KMVideoTemplateCell {
         return sv
     }()
 
-    let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+    let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
     
     override func setupViews() {
         super.setupViews()
@@ -39,9 +39,9 @@ class KMMyVideoTemplateCell: KMVideoTemplateCell {
         timeLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
     }
 
-    override func update(viewModel: ALKMessageViewModel) {
+    override func update(viewModel: KMChatMessageViewModel) {
         super.update(viewModel: viewModel)
-        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
+        setStatusStyle(statusView: stateView, KMChatMessageStyle.messageStatus)
     }
 
     override class func bottomPadding() -> CGFloat {
@@ -50,6 +50,6 @@ class KMMyVideoTemplateCell: KMVideoTemplateCell {
 
     override func setupStyle() {
         super.setupStyle()
-        setStatusStyle(statusView: stateView, ALKMessageStyle.messageStatus)
+        setStatusStyle(statusView: stateView, KMChatMessageStyle.messageStatus)
     }
 }

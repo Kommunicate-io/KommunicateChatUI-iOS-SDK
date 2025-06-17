@@ -23,7 +23,7 @@ public protocol KMAutoCompletionItemCell: UITableViewCell {
 /// finding prefixes in user text and showing autocomplete suggestions.
 public class KMAutoCompleteManager: NSObject {
     public let autocompletionView: UITableView
-    public let textView: ALKChatBarTextView
+    public let textView: KMChatChatBarTextView
     public weak var autocompletionDelegate: KMAutoCompletionDelegate?
     public var items = [KMAutoCompleteItem]()
     public var isAutoSuggestion: Bool = false
@@ -49,7 +49,7 @@ public class KMAutoCompleteManager: NSObject {
     private var prefixCells: [String: KMAutoCompletionItemCell.Type] = [:]
 
     public init(
-        textView: ALKChatBarTextView,
+        textView: KMChatChatBarTextView,
         tableview: UITableView
     ) {
         self.textView = textView

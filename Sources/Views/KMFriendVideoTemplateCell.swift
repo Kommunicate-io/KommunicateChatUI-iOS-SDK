@@ -13,7 +13,7 @@ import UIKit
 #endif
 
 class KMFriendVideoTemplateCell: KMVideoTemplateCell {
-    let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+    let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
 
     fileprivate lazy var messageView = KMMessageView(
         bubbleStyle: MessageTheme.receivedMessage.bubble,
@@ -49,7 +49,7 @@ class KMFriendVideoTemplateCell: KMVideoTemplateCell {
     
     override func setupStyle() {
         super.setupStyle()
-        nameLabel.setStyle(ALKMessageStyle.displayName)
+        nameLabel.setStyle(KMChatMessageStyle.displayName)
     }
     
     override func setupViews() {
@@ -83,7 +83,7 @@ class KMFriendVideoTemplateCell: KMVideoTemplateCell {
         messageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -1 * rightPadding).isActive = true
         messageViewHeight.isActive = true
 
-        let templateLeftPadding = CGFloat(ALKMessageStyle.receivedBubble.widthPadding)
+        let templateLeftPadding = CGFloat(KMChatMessageStyle.receivedBubble.widthPadding)
 
         videoTableview.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: templateLeftPadding).isActive = true
         videoTableview.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -56).isActive = true
@@ -98,7 +98,7 @@ class KMFriendVideoTemplateCell: KMVideoTemplateCell {
         nameLabel.isHidden = KMCellConfiguration.hideSenderName
     }
     
-    override func update(viewModel: ALKMessageViewModel) {
+    override func update(viewModel: KMChatMessageViewModel) {
         super.update(viewModel: viewModel)
         nameLabel.text = viewModel.displayName
         let isMessageEmpty = viewModel.isMessageEmpty

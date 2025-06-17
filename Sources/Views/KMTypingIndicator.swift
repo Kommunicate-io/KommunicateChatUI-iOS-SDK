@@ -8,7 +8,7 @@
 import KommunicateCore_iOS_SDK
 import UIKit
 
-class KMTypingIndicator: ALKMessageCell {
+class KMTypingIndicator: KMChatMessageCell {
 
     private let typingIndicatorView: UIView = {
         let view = UIView()
@@ -48,7 +48,7 @@ class KMTypingIndicator: ALKMessageCell {
 
     override func setupStyle() {
         super.setupStyle()
-        bubbleView.setStyle(ALKMessageStyle.receivedBubble, isReceiverSide: true)
+        bubbleView.setStyle(KMChatMessageStyle.receivedBubble, isReceiverSide: true)
     }
 
     // MARK: - UI Setup

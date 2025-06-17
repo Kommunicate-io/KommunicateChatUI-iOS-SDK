@@ -27,18 +27,18 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
     var dividerView: UIView!
     var selectedFiles = [IndexPath]()
     let option = PHImageRequestOptions()
-    var configuration: ALKConfiguration
+    var configuration: KMChatConfiguration
     var allPhotos: PHFetchResult<PHAsset>!
     var savedPhotos = [PHAsset]()
         
     private lazy var localizedStringFileName: String = configuration.localizedStringFileName
-    fileprivate let indicatorSize = ALKActivityIndicator.Size(width: 50, height: 50)
-    fileprivate lazy var activityIndicator = ALKActivityIndicator(frame: .zero, backgroundColor: .lightGray, indicatorColor: .white, size: indicatorSize)
+    fileprivate let indicatorSize = KMChatActivityIndicator.Size(width: 50, height: 50)
+    fileprivate lazy var activityIndicator = KMChatActivityIndicator(frame: .zero, backgroundColor: .lightGray, indicatorColor: .white, size: indicatorSize)
     weak var delegate: KMCustomUploadCaptionDelegate?
 
     // MARK: - Initialization
 
-    init(configuration: ALKConfiguration, selectedFiles: [IndexPath], allPhotos: PHFetchResult<PHAsset>) {
+    init(configuration: KMChatConfiguration, selectedFiles: [IndexPath], allPhotos: PHFetchResult<PHAsset>) {
         self.configuration = configuration
         self.selectedFiles = selectedFiles
         self.allPhotos = allPhotos
@@ -85,7 +85,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
             return
         }
 
-        if navigationController?.viewControllers.first != self || navigationController?.viewControllers.first?.isKind(of: ALKConversationViewController.self) == true {
+        if navigationController?.viewControllers.first != self || navigationController?.viewControllers.first?.isKind(of: KMChatConversationViewController.self) == true {
             navigationItem.leftBarButtonItem = backBarButtonItem()
         }
 

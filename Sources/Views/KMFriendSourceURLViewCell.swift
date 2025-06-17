@@ -18,7 +18,7 @@ struct KMAnswerSourceModel: Codable {
     let url: String
 }
 
-open class KMFriendSourceURLViewCell: ALKMessageCell {
+open class KMFriendSourceURLViewCell: KMChatMessageCell {
     private var answerSourceList: [KMAnswerSourceModel] = []
     
     private var avatarImageView: UIImageView = {
@@ -140,10 +140,10 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
 
     static let bubbleViewLeftPadding: CGFloat = {
         /// For edge add extra 5
-        guard ALKMessageStyle.receivedBubble.style == .edge else {
-            return ALKMessageStyle.receivedBubble.widthPadding
+        guard KMChatMessageStyle.receivedBubble.style == .edge else {
+            return KMChatMessageStyle.receivedBubble.widthPadding
         }
-        return ALKMessageStyle.receivedBubble.widthPadding + 5
+        return KMChatMessageStyle.receivedBubble.widthPadding + 5
     }()
 
     override func setupViews() {
@@ -276,11 +276,11 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
             ),
             emailTopView.trailingAnchor.constraint(
                 equalTo: bubbleView.trailingAnchor,
-                constant: -ALKMessageStyle.receivedBubble.widthPadding
+                constant: -KMChatMessageStyle.receivedBubble.widthPadding
             ),
             emailTopView.leadingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
-                constant: ALKFriendMessageCell.bubbleViewLeftPadding
+                constant: KMChatFriendMessageCell.bubbleViewLeftPadding
             ),
             emailTopHeight,
 
@@ -289,11 +289,11 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
             ),
             messageView.trailingAnchor.constraint(
                 equalTo: bubbleView.trailingAnchor,
-                constant: -ALKMessageStyle.receivedBubble.widthPadding
+                constant: -KMChatMessageStyle.receivedBubble.widthPadding
             ),
             messageView.leadingAnchor.constraint(
                 equalTo: bubbleView.leadingAnchor,
-                constant: ALKFriendMessageCell.bubbleViewLeftPadding
+                constant: KMChatFriendMessageCell.bubbleViewLeftPadding
             ),
 
             operationLineView.topAnchor.constraint(equalTo: messageView.bottomAnchor, constant: Padding.OperationLineView.top),
@@ -332,16 +332,16 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
     override func setupStyle() {
         super.setupStyle()
 
-        nameLabel.setStyle(ALKMessageStyle.displayName)
-        messageView.setStyle(ALKMessageStyle.receivedMessage)
-        bubbleView.setStyle(ALKMessageStyle.receivedBubble, isReceiverSide: true)
+        nameLabel.setStyle(KMChatMessageStyle.displayName)
+        messageView.setStyle(KMChatMessageStyle.receivedMessage)
+        bubbleView.setStyle(KMChatMessageStyle.receivedBubble, isReceiverSide: true)
     }
 
-    override func update(viewModel: ALKMessageViewModel) {
+    override func update(viewModel: KMChatMessageViewModel) {
         super.update(
             viewModel: viewModel,
-            messageStyle: ALKMessageStyle.receivedMessage,
-            mentionStyle: ALKMessageStyle.receivedMention
+            messageStyle: KMChatMessageStyle.receivedMessage,
+            mentionStyle: KMChatMessageStyle.receivedMention
         )
         answerSourceList = []
 
@@ -416,14 +416,14 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
     }
     
     class func rowHeigh(
-        viewModel: ALKMessageViewModel,
+        viewModel: KMChatMessageViewModel,
         width: CGFloat,
         displayNames: ((Set<String>) -> ([String: String]?))?
     ) -> CGFloat {
         let minimumHeight = Padding.AvatarImage.top + Padding.AvatarImage.height + 5
         /// Calculating available width for messageView
         let leftSpacing = Padding.AvatarImage.left + Padding.AvatarImage.width + Padding.BubbleView.left + bubbleViewLeftPadding
-        let rightSpacing = Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
+        let rightSpacing = Padding.BubbleView.right + KMChatMessageStyle.receivedBubble.widthPadding
         let messageWidth = width - (leftSpacing + rightSpacing)
         
         /// Calculating messageHeight
@@ -431,8 +431,8 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
             .messageHeight(
                 viewModel: viewModel,
                 width: messageWidth,
-                font: ALKMessageStyle.receivedMessage.font,
-                mentionStyle: ALKMessageStyle.receivedMention,
+                font: KMChatMessageStyle.receivedMessage.font,
+                mentionStyle: KMChatMessageStyle.receivedMention,
                 displayNames: displayNames
             )
         
@@ -502,7 +502,7 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
     @objc private func viewEmailTappedAction() {
         let text = localizedString(forKey: "EmailWebViewTitle", withDefaultValue: SystemMessage.NavbarTitle.emailWebViewTitle, fileName: localizedStringFileName)
 
-        let emailWebViewController = ALKWebViewController(htmlString: viewModel?.message ?? "", url: nil, title: text)
+        let emailWebViewController = KMChatWebViewController(htmlString: viewModel?.message ?? "", url: nil, title: text)
         let pushAssist = ALPushAssist()
         pushAssist.topViewController.navigationController?.pushViewController(emailWebViewController, animated: true)
     }
@@ -511,9 +511,9 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
 
     override func menuWillShow(_ sender: Any) {
         super.menuWillShow(sender)
-        if ALKMessageStyle.receivedBubble.style == .edge {
+        if KMChatMessageStyle.receivedBubble.style == .edge {
             bubbleView.image = bubbleView.imageBubble(
-                for: ALKMessageStyle.receivedBubble.style,
+                for: KMChatMessageStyle.receivedBubble.style,
                 isReceiverSide: true,
                 showHangOverImage: true
             )
@@ -522,9 +522,9 @@ open class KMFriendSourceURLViewCell: ALKMessageCell {
 
     override func menuWillHide(_ sender: Any) {
         super.menuWillHide(sender)
-        if ALKMessageStyle.receivedBubble.style == .edge {
+        if KMChatMessageStyle.receivedBubble.style == .edge {
             bubbleView.image = bubbleView.imageBubble(
-                for: ALKMessageStyle.receivedBubble.style,
+                for: KMChatMessageStyle.receivedBubble.style,
                 isReceiverSide: true,
                 showHangOverImage: false
             )

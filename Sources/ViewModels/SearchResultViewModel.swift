@@ -9,7 +9,7 @@
 import Foundation
 import KommunicateCore_iOS_SDK
 
-class BaseMessageViewModel: ALKConversationListViewModelProtocol {
+class BaseMessageViewModel: KMChatConversationListViewModelProtocol {
     var allMessages = [KMCoreMessage]()
 
     func numberOfSections() -> Int {
@@ -20,7 +20,7 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
         return allMessages.count
     }
 
-    func chatFor(indexPath: IndexPath) -> ALKChatViewModelProtocol? {
+    func chatFor(indexPath: IndexPath) -> KMChatChatViewModelProtocol? {
         guard indexPath.row < allMessages.count else { return nil }
         return allMessages[indexPath.row]
     }
@@ -60,10 +60,10 @@ class BaseMessageViewModel: ALKConversationListViewModelProtocol {
         channelId: NSNumber?,
         conversationId: NSNumber?,
         localizationFileName: String
-    ) -> ALKConversationViewModel {
+    ) -> KMChatConversationViewModel {
         let conversationProxy = conversationProxyFrom(conversationId: conversationId)
 
-        let convViewModel = ALKConversationViewModel(
+        let convViewModel = KMChatConversationViewModel(
             contactId: contactId,
             channelKey: channelId,
             conversationProxy: conversationProxy,

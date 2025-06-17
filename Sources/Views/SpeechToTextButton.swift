@@ -12,12 +12,12 @@
 
     open class SpeechToTextButton: UIButton, Localizable {
         
-        public enum ALKSoundRecorderState {
+        public enum KMChatSoundRecorderState {
             case recording
             case none
         }
 
-        public var states: ALKSoundRecorderState = .none {
+        public var states: KMChatSoundRecorderState = .none {
             didSet {
                 invalidateIntrinsicContentSize()
                 setNeedsLayout()
@@ -38,10 +38,10 @@
             }
         }
 
-        weak var delegate: ALKAudioRecorderProtocol?
+        weak var delegate: KMChatAudioRecorderProtocol?
         let textView: UITextView
         let localizedStringFileName: String
-        let config: ALKConfiguration
+        let config: KMChatConfiguration
 
         private let recordButton: UIButton = {
             let button = UIButton(type: .custom)
@@ -64,14 +64,14 @@
                 fileName: self.localizedStringFileName
             )
             let attributes: [NSAttributedString.Key: Any] = [
-                NSAttributedString.Key.font: ALKChatBarConfiguration.TextView.placeholder.font,
-                NSAttributedString.Key.foregroundColor: ALKChatBarConfiguration.TextView.placeholder.text
+                NSAttributedString.Key.font: KMChatChatBarConfiguration.TextView.placeholder.font,
+                NSAttributedString.Key.foregroundColor: KMChatChatBarConfiguration.TextView.placeholder.text
             ]
             let styledText = NSAttributedString(string: placeholderText, attributes: attributes)
             return styledText
         }()
 
-        public init(textView: UITextView, localizedStringFileName: String, configuration: ALKConfiguration) {
+        public init(textView: UITextView, localizedStringFileName: String, configuration: KMChatConfiguration) {
             self.textView = textView
             self.localizedStringFileName = localizedStringFileName
             self.config = configuration
@@ -85,7 +85,7 @@
             fatalError("init(coder:) has not been implemented")
         }
 
-        func setAudioRecDelegate(recorderDelegate: ALKAudioRecorderProtocol?) {
+        func setAudioRecDelegate(recorderDelegate: KMChatAudioRecorderProtocol?) {
             delegate = recorderDelegate
         }
 

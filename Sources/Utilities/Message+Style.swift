@@ -10,8 +10,8 @@ import UIKit
 #if canImport(RichMessageKit)
     import RichMessageKit
 #endif
-public enum ALKMessageStyle {
-    private static let syncQueue = DispatchQueue(label: "com.kommunicate.ALKMessageStyle.syncQueue")
+public enum KMChatMessageStyle {
+    private static let syncQueue = DispatchQueue(label: "com.kommunicate.KMChatMessageStyle.syncQueue")
 
     private static var _displayName = Style(font: UIFont.font(.normal(size: 14)), text: .text(.gray9B))
     public static var displayName: Style {
@@ -138,7 +138,7 @@ public enum ALKMessageStyle {
         set {
             syncQueue.sync {
                 _sentBubble = newValue
-                let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+                let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
                 appSettingsUserDefaults.setSentMessageBackgroundColor(color: _sentBubble.color)
             }
         }
@@ -150,7 +150,7 @@ public enum ALKMessageStyle {
         set {
             syncQueue.sync {
                 _receivedBubble = newValue
-                let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+                let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
                 appSettingsUserDefaults.setReceivedMessageBackgroundColor(color: _receivedBubble.color)
             }
         }

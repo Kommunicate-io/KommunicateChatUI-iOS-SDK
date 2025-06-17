@@ -8,7 +8,7 @@
 import Foundation
 
 /// Gives infomation about message status.
-public enum ALKMessageStatus: CaseIterable {
+public enum KMChatMessageStatus: CaseIterable {
     case pending
     case sent
     case delivered
@@ -37,7 +37,7 @@ public struct Message {
         isMyMessage: Bool,
         time: String,
         displayName: String?,
-        status: ALKMessageStatus?,
+        status: KMChatMessageStatus?,
         imageURL: URL?,
         contentType: Message.ContentType
     ) {
@@ -73,7 +73,7 @@ public struct Message {
     /// Status of message whether it is in pending/sent/delivered/read state.
     ///
     /// - Important: Mandatory for sent message.
-    public var status: ALKMessageStatus?
+    public var status: KMChatMessageStatus?
 
     /// Image url of sender.
     public var imageURL: URL?

@@ -26,7 +26,7 @@ public enum KMConversationStatus: String {
 
 let emailSourceType = 7
 
-extension KMCoreMessage: ALKChatViewModelProtocol {
+extension KMCoreMessage: KMChatChatViewModelProtocol {
     private var alContact: ALContact? {
         let alContactDbService = ALContactDBService()
         guard let alContact = alContactDbService.loadContact(byKey: "userId", value: to) else {
@@ -133,7 +133,7 @@ extension KMCoreMessage: ALKChatViewModelProtocol {
             }
             return messageText as? String
         case .document:
-            let path = ALKFileUtils().getFileName(filePath: filePath, fileMeta: fileMeta)
+            let path = KMChatFileUtils().getFileName(filePath: filePath, fileMeta: fileMeta)
             return path.isEmpty ? "File" : path
         case .staticTopMessage:
             return message
@@ -261,7 +261,7 @@ extension KMCoreMessage {
         return (type != nil) ? (type == myMessage) : false
     }
 
-    public var messageType: ALKMessageType {
+    public var messageType: KMChatMessageType {
         guard source != emailSourceType else {
             // Attachments come as separate message.
             if message == nil, let type = getAttachmentType() {
@@ -413,7 +413,7 @@ extension KMCoreMessage {
         return fileMeta ?? nil
     }
 
-    private func getAttachmentType() -> ALKMessageType? {
+    private func getAttachmentType() -> KMChatMessageType? {
         guard let fileMeta = fileMeta, let contentType = fileMeta.contentType else { return nil }
         if contentType.hasPrefix("image") {
             return .photo
@@ -426,7 +426,7 @@ extension KMCoreMessage {
         }
     }
 
-    private func richMessageType() -> ALKMessageType {
+    private func richMessageType() -> KMChatMessageType {
         guard let metadata = metadata,
               let contentType = metadata["contentType"] as? String, contentType == "300",
               let templateId = metadata["templateId"] as? String
@@ -479,8 +479,8 @@ extension KMCoreMessage {
 }
 
 public extension KMCoreMessage {
-    var messageModel: ALKMessageModel {
-        let messageModel = ALKMessageModel()
+    var messageModel: KMChatMessageModel {
+        let messageModel = KMChatMessageModel()
         messageModel.message = message
         messageModel.isMyMessage = isMyMessage
         messageModel.identifier = identifier

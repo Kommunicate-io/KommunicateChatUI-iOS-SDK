@@ -12,12 +12,12 @@ final class KMMediaViewerViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let viewModel: ALKMediaViewerViewModel
+    private let viewModel: KMChatMediaViewerViewModel
     private var playerViewController: AVPlayerViewController?
 
     // MARK: - Initialization
 
-    init(viewModel: ALKMediaViewerViewModel) {
+    init(viewModel: KMChatMediaViewerViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         self.viewModel.delegate = self
@@ -126,9 +126,9 @@ final class KMMediaViewerViewController: UIViewController {
     }
 }
 
-// MARK: - ALKMediaViewerViewModelDelegate
+// MARK: - KMChatMediaViewerViewModelDelegate
 
-extension KMMediaViewerViewController: ALKMediaViewerViewModelDelegate {
+extension KMMediaViewerViewController: KMChatMediaViewerViewModelDelegate {
     func reloadView() {
         navigationItem.title = viewModel.getTitle()
         playerViewController?.player?.pause()

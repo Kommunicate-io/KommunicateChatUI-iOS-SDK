@@ -92,7 +92,7 @@ class KMListTemplateElementView: UIView {
     }
 
     private func setupStyle() {
-        let style = ALKListTemplateCell.ListStyle.shared
+        let style = KMChatListTemplateCell.ListStyle.shared
         title.textColor = UIColor.kmDynamicColor(light: style.listTemplateElementViewStyle.titleTextColor, dark: .text(.white))
         subtitle.textColor = UIColor.kmDynamicColor(light: style.listTemplateElementViewStyle.subtitleTextColor, dark: .text(.grayCC))
     }
@@ -159,7 +159,7 @@ class ListTemplateView: UIView {
 
     lazy var headerImageHeight = self.headerImage.heightAnchor.constraint(equalToConstant: ListTemplateView.imageHeight)
     lazy var headerTextHeight = self.headerText.heightAnchor.constraint(equalToConstant: ListTemplateView.textHeight)
-    let listStyle = ALKListTemplateCell.ListStyle.shared
+    let listStyle = KMChatListTemplateCell.ListStyle.shared
 
     var item: KMListTemplate?
     var selected: ((_ element: KMListTemplate.Element?, _ text: String?, _ action: KMListTemplate.Action?) -> Void)?
@@ -237,8 +237,8 @@ class ListTemplateView: UIView {
     }
 
     static func rowHeight(template: KMListTemplate) -> CGFloat {
-        let leftSpacing = ALKMyMessageCell.Padding.BubbleView.left + ALKMessageStyle.sentBubble.widthPadding + ALKMyMessageCell.Padding.ReplyMessageLabel.right + ALKMyMessageCell.Padding.BubbleView.right
-        let rightSpacing = ALKMyMessageCell.Padding.BubbleView.right + ALKMessageStyle.receivedBubble.widthPadding
+        let leftSpacing = KMChatMyMessageCell.Padding.BubbleView.left + KMChatMessageStyle.sentBubble.widthPadding + KMChatMyMessageCell.Padding.ReplyMessageLabel.right + KMChatMyMessageCell.Padding.BubbleView.right
+        let rightSpacing = KMChatMyMessageCell.Padding.BubbleView.right + KMChatMessageStyle.receivedBubble.widthPadding
         let messageWidth = UIScreen.main.bounds.width - (leftSpacing + rightSpacing)
 
         if template.headerText != nil {

@@ -48,7 +48,7 @@ public extension NSMutableAttributedString {
 }
 
 public extension NSAttributedString.Key {
-    static let secondaryFont = NSAttributedString.Key("ALKSecondaryFont")
+    static let secondaryFont = NSAttributedString.Key("KMChatSecondaryFont")
 }
 
 extension NSMutableAttributedString {
