@@ -46,7 +46,7 @@ public enum MessageTheme {
 }
 
 public extension MessageTheme {
-    typealias MessageStatusType = ALKMessageStatus
+    typealias MessageStatusType = KMChatMessageStatus
 
     enum StatusIcon {
         case templateImageWithTint(image: UIImage, tintColor: UIColor)

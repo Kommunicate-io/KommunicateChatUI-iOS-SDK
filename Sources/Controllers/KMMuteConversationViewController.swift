@@ -13,7 +13,7 @@ import KommunicateCore_iOS_SDK
 }
 
 class KMMuteConversationViewController: UIViewController, Localizable {
-    var configuration: ALKConfiguration!
+    var configuration: KMChatConfiguration!
 
     weak var delegate: Muteable?
     var conversation: KMCoreMessage!
@@ -77,7 +77,7 @@ class KMMuteConversationViewController: UIViewController, Localizable {
         return values
     }()
 
-    init(delegate: Muteable, conversation: KMCoreMessage, atIndexPath: IndexPath, configuration: ALKConfiguration) {
+    init(delegate: Muteable, conversation: KMCoreMessage, atIndexPath: IndexPath, configuration: KMChatConfiguration) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         self.conversation = conversation

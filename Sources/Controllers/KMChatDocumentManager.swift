@@ -1,0 +1,61 @@
+//
+//  KMChatDocumentManager.swift
+//  KommunicateChatUI-iOS-SDK
+//
+//  Created by Mukesh on 06/08/20.
+//
+
+import MobileCoreServices
+import UIKit
+
+protocol KMChatDocumentManagerDelegate: AnyObject {
+    func documentSelected(at url: URL, fileName: String)
+}
+
+class KMChatDocumentManager: NSObject {
+    weak var delegate: KMChatDocumentManagerDelegate?
+
+    func showPicker(from controller: UIViewController) {
+        let types = KMDocumentConfiguration.shared.getDocumentOptions()
+        let importMenu = UIDocumentPickerViewController(documentTypes: types, in: .import)
+        importMenu.delegate = self
+        importMenu.modalPresentationStyle = .formSheet
+        controller.present(importMenu, animated: true)
+    }
+}
+
+extension KMChatDocumentManager: UIDocumentPickerDelegate, UINavigationControllerDelegate {
+    func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        print("Documents selected: \(urls.description)")
+        let url = urls[0]
+        let isSecuredURL = url.startAccessingSecurityScopedResource() == true
+        let coordinator = NSFileCoordinator()
+        var error: NSError?
+        coordinator.coordinate(
+            readingItemAt: url,
+            options: [NSFileCoordinator.ReadingOptions.forUploading],
+            error: &error
+        ) { readableFileURL in
+            let fileName = readableFileURL.lastPathComponent
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let uniqueFileName = "\(Int(Date().timeIntervalSince1970 * 1000))-\(fileName)"
+            let newFileURL = documentsURL.appendingPathComponent(uniqueFileName)
+            do {
+                if FileManager.default.fileExists(atPath: newFileURL.path) {
+                    try FileManager.default.removeItem(atPath: newFileURL.path)
+                }
+                try FileManager.default.moveItem(atPath: readableFileURL.path, toPath: newFileURL.path)
+            } catch {
+                print(error)
+            }
+            if isSecuredURL {
+                url.stopAccessingSecurityScopedResource()
+            }
+            delegate?.documentSelected(at: newFileURL, fileName: fileName)
+        }
+    }
+
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}

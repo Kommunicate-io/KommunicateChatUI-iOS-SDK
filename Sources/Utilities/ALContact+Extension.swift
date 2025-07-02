@@ -8,7 +8,7 @@
 import Foundation
 import KommunicateCore_iOS_SDK
 
-extension ALContact: ALKContactProtocol {
+extension ALContact: KMChatContactProtocol {
     public var friendUUID: String? {
         return userId
     }

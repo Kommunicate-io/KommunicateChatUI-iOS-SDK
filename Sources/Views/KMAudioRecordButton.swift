@@ -9,7 +9,7 @@ import AVFoundation
 import Foundation
 import KommunicateCore_iOS_SDK
 
-public protocol ALKAudioRecorderProtocol: AnyObject {
+public protocol KMChatAudioRecorderProtocol: AnyObject {
     func moveButton(location: CGPoint)
     func finishRecordingAudio(soundData: NSData)
     func startRecordingAudio()
@@ -18,12 +18,12 @@ public protocol ALKAudioRecorderProtocol: AnyObject {
 }
 
 open class KMAudioRecordButton: UIButton {
-    public enum ALKSoundRecorderState {
+    public enum KMChatSoundRecorderState {
         case recording
         case none
     }
 
-    public var states: ALKSoundRecorderState = .none {
+    public var states: KMChatSoundRecorderState = .none {
         didSet {
             invalidateIntrinsicContentSize()
             setNeedsLayout()
@@ -31,7 +31,7 @@ open class KMAudioRecordButton: UIButton {
         }
     }
 
-    weak var delegate: ALKAudioRecorderProtocol?
+    weak var delegate: KMChatAudioRecorderProtocol?
 
     // aduio session
     private var recordingSession: AVAudioSession!
@@ -41,7 +41,7 @@ open class KMAudioRecordButton: UIButton {
 
     let recordButton = KMExtendedTouchAreaButton(type: .custom)
 
-    func setAudioRecDelegate(recorderDelegate: ALKAudioRecorderProtocol?) {
+    func setAudioRecDelegate(recorderDelegate: KMChatAudioRecorderProtocol?) {
         delegate = recorderDelegate
     }
 

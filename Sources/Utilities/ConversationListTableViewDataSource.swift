@@ -10,12 +10,12 @@ import KommunicateCore_iOS_SDK
 
 public class ConversationListTableViewDataSource: NSObject, UITableViewDataSource {
     /// A closure to configure tableview cell with the message object
-    public typealias CellConfigurator = (ALKChatViewModelProtocol, UITableViewCell) -> Void
+    public typealias CellConfigurator = (KMChatChatViewModelProtocol, UITableViewCell) -> Void
     public var cellConfigurator: CellConfigurator
 
-    public var viewModel: ALKConversationListViewModelProtocol
+    public var viewModel: KMChatConversationListViewModelProtocol
 
-    public init(viewModel: ALKConversationListViewModelProtocol, cellConfigurator: @escaping CellConfigurator) {
+    public init(viewModel: KMChatConversationListViewModelProtocol, cellConfigurator: @escaping CellConfigurator) {
         self.viewModel = viewModel
         self.cellConfigurator = cellConfigurator
     }
