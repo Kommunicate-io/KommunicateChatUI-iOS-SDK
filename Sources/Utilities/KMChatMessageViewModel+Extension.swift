@@ -27,12 +27,18 @@ extension KMChatMessageViewModel {
     }
 
     func imageMessage() -> ImageMessage? {
-        let payload = payloadFromMetadata()
-        precondition(payload != nil, "Payload cannot be nil")
-        guard let imageData = payload?[0], let url = imageData["url"] as? String else {
+        guard let payload = payloadFromMetadata(), !payload.isEmpty else {
+            assertionFailure("Payload is nil or empty.")
+            return nil
+        }
+        
+        let imageData = payload[0]
+        
+        guard let url = imageData["url"] as? String else {
             assertionFailure("Payload must contain url.")
             return nil
         }
+        
         return ImageMessage(
             caption: imageData["caption"] as? String,
             url: url,
