@@ -21,7 +21,7 @@ class KMTextToSpeech: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     public static let shared = KMTextToSpeech()
-    var messageQueue: [ALMessage] = []
+    var messageQueue: [KMCoreMessage] = []
    
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         messageToBeProcessed += 1
@@ -44,9 +44,9 @@ class KMTextToSpeech: NSObject, AVSpeechSynthesizerDelegate {
     /**
     This method is to add message to existing list for the specch
    - Parameters:
-   - list : [ALMessage]
+   - list : [KMCoreMessage]
      */
-    func addMessagesToSpeech(_ list: [ALMessage]) {
+    func addMessagesToSpeech(_ list: [KMCoreMessage]) {
         for messagge in list {
             if !messageQueue.contains(where: { $0 === messagge }) {
                 messageQueue.append(messagge)

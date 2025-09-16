@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Use this instead of `ALKGenericListTemplate`
+/// Use this instead of `KMChatGenericListTemplate`
 public struct KMListTemplate: Codable {
     public let headerImgSrc: String?
     public let headerText: String?
