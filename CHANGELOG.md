@@ -2,6 +2,13 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.5.1] 2025-09-16
+- Form UI Customisation Added.
+- Video Preview Inhancement.
+- Subscription requirement Message Box Updated.
+- Bug Fixes.
+- Caption Support in Video.
+
 ## [1.5.0] 2025-04-15
 - Added Business Hours feature.
 - Disabled conversation restart when the restart button is hidden.
