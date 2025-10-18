@@ -227,6 +227,14 @@ final class KMChatMediaViewerViewController: UIViewController {
         default:
             print("Other type")
         }
+        if #available(iOS 26.0, *) {
+            navigationItem.rightBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+            navigationItem.leftBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+        }
     }
 
     @IBAction private func downlaodImgPress(_: Any) {

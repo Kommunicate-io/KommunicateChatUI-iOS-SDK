@@ -242,6 +242,18 @@ public struct KMChatConfiguration {
     
     /// Changing this will change the color of link text present inside the received message
     public var linkAttributeColorForReceivedMessage = UIColor.blue
+    
+    /// Customisation for Refresh Button icon Color
+    public var refreshButtonIconColor = UIColor.white
+    
+    /// Customisation for Navigation Bar Create Conversation Icon Color
+    public var navCreateConversationIconColor = UIColor.white
+    
+    /// Customisation for Converation List Screen Back Button Icon Color
+    public var conversationListScreenBackButtonColor = UIColor.white
+    
+    /// Customisation for Bottom Sheet Navigation Icon Color
+    public var bottomSheetNavIconColor = UIColor.white
 
     /// If true, contact share option in chatbar will be hidden.
     @available(*, deprecated, message: "Use .chatBar.optionsToShow instead")

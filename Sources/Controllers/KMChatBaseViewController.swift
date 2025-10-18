@@ -43,6 +43,14 @@ open class KMChatBaseViewController: UIViewController, KMChatConfigurable {
         if configuration.hideNavigationBarBottomLine {
             navigationController?.navigationBar.hideBottomHairline()
         }
+        if #available(iOS 26.0, *) {
+            navigationItem.rightBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+            navigationItem.leftBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+        }
     }
 
     override open func viewDidLoad() {

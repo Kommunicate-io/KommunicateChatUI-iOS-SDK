@@ -44,6 +44,14 @@ class KMChatDocumentViewerController: UIViewController, WKNavigationDelegate {
         super.viewWillAppear(animated)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(showShare(_:)))
         title = fileName
+        if #available(iOS 26.0, *) {
+            navigationItem.rightBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+            navigationItem.leftBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+        }
     }
 
     @objc func showShare(_: Any?) {

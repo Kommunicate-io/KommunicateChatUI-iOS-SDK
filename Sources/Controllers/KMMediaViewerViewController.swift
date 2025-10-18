@@ -65,6 +65,14 @@ final class KMMediaViewerViewController: UIViewController {
         closeButton.addTarget(self, action: #selector(dismissViewController), for: .touchUpInside)
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        if #available(iOS 26.0, *) {
+            navigationItem.rightBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+            navigationItem.leftBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+        }
     }
 
     // MARK: - Video Playback

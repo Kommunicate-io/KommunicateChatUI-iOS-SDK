@@ -182,7 +182,17 @@ final class KMChatCustomCameraViewController: KMChatBaseViewController, AVCaptur
     private func setupNavigation() {
         var backImage = UIImage(named: "icon_back", in: Bundle.km, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissCameraPress(_:)))
+        var backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissCameraPress(_:)))
+        backButton.tintColor = configuration.bottomSheetNavIconColor
+        navigationItem.leftBarButtonItem = backButton
+        if #available(iOS 26.0, *) {
+            navigationItem.rightBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+            navigationItem.leftBarButtonItems?.forEach {
+                $0.hidesSharedBackground = true
+            }
+        }
     }
 
     private func setupView() {
