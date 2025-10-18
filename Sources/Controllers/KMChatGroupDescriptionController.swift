@@ -174,14 +174,7 @@ class KMChatGroupDescriptionController: KMChatBaseViewController, Localizable {
         let saveButtonTitleText = localizedString(forKey: "SaveButtonTitle", withDefaultValue: SystemMessage.ButtonName.Save, fileName: configuration.localizedStringFileName)
         let saveButonItem = UIBarButtonItem(title: saveButtonTitleText, style: .plain, target: self, action: #selector(saveButtonAction))
         navigationItem.rightBarButtonItem = saveButonItem
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
 
     private func setupView() {

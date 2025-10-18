@@ -86,7 +86,9 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
         }
 
         if navigationController?.viewControllers.first != self || navigationController?.viewControllers.first?.isKind(of: KMChatConversationViewController.self) == true {
-            navigationItem.leftBarButtonItem = backBarButtonItem()
+            let backButton = backBarButtonItem()
+            backButton.tintColor = configuration.bottomSheetNavIconColor
+            navigationItem.leftBarButtonItem = backButton
         }
 
         if configuration.hideNavigationBarBottomLine {

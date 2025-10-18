@@ -856,14 +856,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         guard !items.contains(where: { $0.customView == navigationBar }) else { return }
         items.append(UIBarButtonItem(customView: navigationBar))
         navigationItem.leftBarButtonItems = items
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
 
     private func prepareTable() {
@@ -2695,14 +2688,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
     public func updateDisplay(contact: ALContact?, channel: KMCoreChannel?) {
         let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel)
         navigationBar.updateView(profile: profile)
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
 
     // Call this if the last message is not fully visible.
@@ -2790,14 +2776,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
         if !rightBarButtonItems.isEmpty {
             navigationItem.rightBarButtonItems = rightBarButtonItems
         }
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
     
     @objc open func showFeedback() {}
@@ -2847,14 +2826,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
             self.loadingIndicator.stopLoading()
             self.navigationBar.updateView(profile: profile)
         }
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
     
     public func showChatBarForOperator() {

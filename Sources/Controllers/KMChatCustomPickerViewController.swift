@@ -83,14 +83,7 @@ class KMChatCustomPickerViewController: KMChatBaseViewController, Localizable {
         var backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissAction(_:)))
         backButton.tintColor = configuration.bottomSheetNavIconColor
         navigationItem.leftBarButtonItem = backButton
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
 
     private func checkPhotoLibraryPermission() {

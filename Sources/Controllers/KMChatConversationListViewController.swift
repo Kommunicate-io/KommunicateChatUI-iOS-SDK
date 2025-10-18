@@ -240,14 +240,7 @@ open class KMChatConversationListViewController: KMChatBaseViewController, Local
         if !configuration.hideBackButtonInConversationList {
             navigationItem.leftBarButtonItem = leftBarButtonItem
         }
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
 
     func setupNavigationRightButtons() {
@@ -280,14 +273,7 @@ open class KMChatConversationListViewController: KMChatBaseViewController, Local
             navigationItem.rightBarButtonItems = rightButtons
         }
 
-        if #available(iOS 26.0, *) {
-            navigationItem.rightBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-            navigationItem.leftBarButtonItems?.forEach {
-                $0.hidesSharedBackground = true
-            }
-        }
+        configureNavigationBarButtonsForIOS26()
     }
 
     func setupSearchController() {
