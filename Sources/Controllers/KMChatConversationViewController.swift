@@ -438,6 +438,14 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
             }
             let profile = weakSelf.viewModel.conversationProfileFrom(contact: nil, channel: channel)
             weakSelf.navigationBar.updateView(profile: profile)
+            if #available(iOS 26.0, *) {
+                weakSelf.navigationItem.rightBarButtonItems?.forEach {
+                    $0.hidesSharedBackground = true
+                }
+                weakSelf.navigationItem.leftBarButtonItems?.forEach {
+                    $0.hidesSharedBackground = true
+                }
+            }
             weakSelf.newMessagesAdded()
         })
 
@@ -469,6 +477,14 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         self.viewModel.currentConversationProfile(completion: { profile in
             guard let profile = profile else { return }
             self.navigationBar.updateView(profile: profile)
+            if #available(iOS 26.0, *) {
+                self.navigationItem.rightBarButtonItems?.forEach {
+                    $0.hidesSharedBackground = true
+                }
+                self.navigationItem.leftBarButtonItems?.forEach {
+                    $0.hidesSharedBackground = true
+                }
+            }
         })
         #if canImport(ChatProvidersSDK)
             guard KMZendeskChatHandler.shared.isZendeskEnabled(),
@@ -840,6 +856,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         guard !items.contains(where: { $0.customView == navigationBar }) else { return }
         items.append(UIBarButtonItem(customView: navigationBar))
         navigationItem.leftBarButtonItems = items
+        configureNavigationBarButtonsForIOS26()
     }
 
     private func prepareTable() {
@@ -2671,6 +2688,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
     public func updateDisplay(contact: ALContact?, channel: KMCoreChannel?) {
         let profile = viewModel.conversationProfileFrom(contact: contact, channel: channel)
         navigationBar.updateView(profile: profile)
+        configureNavigationBarButtonsForIOS26()
     }
 
     // Call this if the last message is not fully visible.
@@ -2695,13 +2713,14 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
         if configuration.rightNavBarSystemIconForConversationView == .refresh {
             selector = #selector(KMChatConversationViewController.refreshButtonAction(_:))
             let refresh = UIImage(named: "refreshIcon", in: Bundle.km, compatibleWith: nil)
-            let refreshIcon = refresh?.withRenderingMode(.alwaysOriginal).scale(with: CGSize(width: 20, height: 20))
+            let refreshIcon = refresh?.withRenderingMode(.alwaysTemplate).scale(with: CGSize(width: 20, height: 20))
             button = UIBarButtonItem(
                 image: refreshIcon,
                 style: .plain,
                 target: self,
                 action: selector
             )
+            button.tintColor = configuration.refreshButtonIconColor
             
         } else {
             button = UIBarButtonItem(
@@ -2757,6 +2776,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
         if !rightBarButtonItems.isEmpty {
             navigationItem.rightBarButtonItems = rightBarButtonItems
         }
+        configureNavigationBarButtonsForIOS26()
     }
     
     @objc open func showFeedback() {}
@@ -2806,6 +2826,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
             self.loadingIndicator.stopLoading()
             self.navigationBar.updateView(profile: profile)
         }
+        configureNavigationBarButtonsForIOS26()
     }
     
     public func showChatBarForOperator() {

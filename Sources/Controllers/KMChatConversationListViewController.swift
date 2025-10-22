@@ -240,6 +240,7 @@ open class KMChatConversationListViewController: KMChatBaseViewController, Local
         if !configuration.hideBackButtonInConversationList {
             navigationItem.leftBarButtonItem = leftBarButtonItem
         }
+        configureNavigationBarButtonsForIOS26()
     }
 
     func setupNavigationRightButtons() {
@@ -251,7 +252,8 @@ open class KMChatConversationListViewController: KMChatBaseViewController, Local
             let barButton = UIBarButtonItem(
                 image: UIImage(named: "search", in: Bundle.km, compatibleWith: nil),
                 style: .plain,
-                target: self, action: #selector(searchTapped)
+                target: self,
+                action: #selector(searchTapped)
             )
             rightBarButtonItems.append(barButton)
         }
@@ -261,16 +263,17 @@ open class KMChatConversationListViewController: KMChatBaseViewController, Local
         }
 
         for item in navigationItems {
-            let uiBarButtonItem = item.barButton(target: self, action: #selector(customButtonEvent(_:)))
-
-            if let barButtonItem = uiBarButtonItem {
+            if let barButtonItem = item.barButton(target: self, action: #selector(customButtonEvent(_:))) {
                 rightBarButtonItems.append(barButtonItem)
             }
         }
+
         if !rightBarButtonItems.isEmpty {
-            let rightButtons = rightBarButtonItems.prefix(3)
-            navigationItem.rightBarButtonItems = Array(rightButtons)
+            let rightButtons = Array(rightBarButtonItems.prefix(3))
+            navigationItem.rightBarButtonItems = rightButtons
         }
+
+        configureNavigationBarButtonsForIOS26()
     }
 
     func setupSearchController() {

@@ -44,6 +44,7 @@ class KMChatCustomPickerViewController: KMChatBaseViewController, Localizable {
         super.viewDidLoad()
         view.backgroundColor = UIColor.kmDynamicColor(light: UIColor.white, dark: UIColor.appBarDarkColor())
         doneButton.title = localizedString(forKey: "DoneButton", withDefaultValue: SystemMessage.ButtonName.Done, fileName: localizedStringFileName)
+        doneButton.tintColor = configuration.bottomSheetNavIconColor
         title = localizedString(forKey: "PhotosTitle", withDefaultValue: SystemMessage.LabelName.Photos, fileName: localizedStringFileName)
         checkPhotoLibraryPermission()
         previewGallery.delegate = self
@@ -79,7 +80,10 @@ class KMChatCustomPickerViewController: KMChatBaseViewController, Localizable {
     private func setupNavigation() {
         var backImage = UIImage(named: "icon_back", in: Bundle.km, compatibleWith: nil)
         backImage = backImage?.imageFlippedForRightToLeftLayoutDirection()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissAction(_:)))
+        var backButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(dismissAction(_:)))
+        backButton.tintColor = configuration.bottomSheetNavIconColor
+        navigationItem.leftBarButtonItem = backButton
+        configureNavigationBarButtonsForIOS26()
     }
 
     private func checkPhotoLibraryPermission() {
