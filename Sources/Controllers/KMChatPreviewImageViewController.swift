@@ -47,6 +47,7 @@ final class KMChatPreviewImageViewController: KMChatBaseViewController, Localiza
         let button = UIBarButtonItem(image: image?.scale(with: CGSize(width: 24, height: 24)), style: .plain, target: self, action: #selector(downlaodImgPress(_:)))
         button.tintColor = UINavigationBar.appearance().tintColor
         navigationItem.rightBarButtonItem = button
+        configureNavigationBarButtonsForIOS26()
     }
 
     override func viewWillAppear(_ animated: Bool) {
