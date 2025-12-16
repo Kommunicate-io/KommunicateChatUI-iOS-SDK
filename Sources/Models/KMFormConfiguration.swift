@@ -5,7 +5,7 @@
 //  Created by Abhijeet Ranjan on 16/04/25.
 //
 
-import Foundation
+import UIKit
 
 /// A configuration structure for styling a form's appearance.
 public struct KMFormConfiguration {
