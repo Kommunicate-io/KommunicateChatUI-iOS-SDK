@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.5.3] 2025-12-16
+- Fixed SPM Build Issue
+
 ## [1.5.2] 2025-10-22
 - Fixed the glass effect bug with iOS 26 versions.
 - Fixed dark icon issue with iOS 26 versions.
