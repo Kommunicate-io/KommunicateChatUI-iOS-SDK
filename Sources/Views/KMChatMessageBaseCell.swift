@@ -212,6 +212,11 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
         case .text:
             emailTopHeight.constant = 0
             emailBottomViewHeight.constant = 0
+            if let rawText = viewModel.message, #available(iOS 15, *),
+               let rendered = KMChatMessageCell.attributedMarkdown(rawText, baseFont: messageStyle.font) {
+                self.messageView.attributedText = rendered
+                return
+            }
             setMessageText(viewModel: viewModel, mentionStyle: mentionStyle)
             return
         case .html:
@@ -307,6 +312,10 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
 
         switch viewModel.messageType {
         case .text, .staticTopMessage:
+            if #available(iOS 15, *), let raw = viewModel.message,
+               let rendered = KMChatMessageCell.attributedMarkdown(raw, baseFont: font) {
+                return TextViewSizeCalculator.height(dummyAttributedMessageView, attributedText: rendered, maxWidth: width)
+            }
             if let attributedText = viewModel
                 .attributedTextWithMentions(
                     defaultAttributes: dummyMessageView.typingAttributes,
@@ -542,6 +551,19 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
         messageView.setStyle(style)
     }
 
+    @available(iOS 15, *)
+    private static func attributedMarkdown(_ markdown: String, baseFont: UIFont) -> NSAttributedString? {
+        var parsingOptions = AttributedString.MarkdownParsingOptions()
+        parsingOptions.interpretedSyntax = .inlineOnlyPreservingWhitespace
+        guard let attributed = try? AttributedString(markdown: markdown, options: parsingOptions) else {
+            return nil
+        }
+        let nsAttr = NSAttributedString(attributed)
+        let mutable = NSMutableAttributedString(attributedString: nsAttr)
+        mutable.setBaseFont(baseFont: baseFont)
+        return mutable
+    }
+
     private func setReplyMessageText(
         viewModel: KMChatMessageViewModel,
         mentionStyle: Style
@@ -576,3 +598,4 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
         }
     }
 }
+
