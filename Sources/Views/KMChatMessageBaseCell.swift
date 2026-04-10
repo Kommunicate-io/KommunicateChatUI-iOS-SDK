@@ -307,15 +307,46 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
 
         switch viewModel.messageType {
         case .text, .staticTopMessage:
-            if let attributedText = viewModel
+            let mentionAttributed = viewModel
                 .attributedTextWithMentions(
                     defaultAttributes: dummyMessageView.typingAttributes,
                     mentionAttributes: mentionStyle.toAttributes,
                     displayNames: displayNames
-                ) {
-                return TextViewSizeCalculator.height(dummyMessageView, attributedText: attributedText, maxWidth: width)
+                )
+
+            let markdownAttributed = KMMarkdownRenderer.attributedString(
+                from: message,
+                baseFont: font,
+                baseAttributes: dummyMessageView.typingAttributes
+            )
+
+            let finalAttributed: NSAttributedString
+            if let mentionAttributed = mentionAttributed {
+                let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
+
+                mentionAttributed.enumerateAttributes(
+                    in: NSRange(location: 0, length: mentionAttributed.length),
+                    options: []
+                ) { attributes, range, _ in
+                    if attributes.keys.contains(.foregroundColor) ||
+                       attributes.keys.contains(.backgroundColor) ||
+                       attributes.keys.contains(.font) {
+                        mutable.addAttributes(attributes, range: range)
+                    }
+                }
+                finalAttributed = mutable
+            } else {
+                finalAttributed = markdownAttributed
             }
-            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
+
+            dummyAttributedMessageView.font = font
+
+            return TextViewSizeCalculator.height(
+                dummyAttributedMessageView,
+                attributedText: finalAttributed,
+                maxWidth: width
+            )
+
         case .html:
             guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
                 return 0
@@ -564,15 +595,64 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
         viewModel: KMChatMessageViewModel,
         mentionStyle: Style
     ) {
-        if let attributedText = viewModel
+        guard let message = viewModel.message else {
+            messageView.text = nil
+            return
+        }
+        
+        let shouldUseMarkdown = KMMarkdownDetector.containsMarkdown(message)
+
+        if !viewModel.isMyMessage && shouldUseMarkdown {
+            applyMarkdownText(message: message, mentionStyle: mentionStyle, viewModel: viewModel)
+        } else {
+            if let attributedText = viewModel
+                .attributedTextWithMentions(
+                    defaultAttributes: messageView.typingAttributes,
+                    mentionAttributes: mentionStyle.toAttributes,
+                    displayNames: displayNames
+                ) {
+                messageView.attributedText = attributedText
+            } else {
+                messageView.text = message
+            }
+        }
+    }
+    
+    private func applyMarkdownText(
+        message: String,
+        mentionStyle: Style,
+        viewModel: KMChatMessageViewModel
+    ) {
+        let markdownAttributed = KMMarkdownRenderer.attributedString(
+            from: message,
+            baseFont: messageView.font ?? UIFont.systemFont(ofSize: 16),
+            baseAttributes: messageView.typingAttributes
+        )
+
+        let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
+        let styleColor = messageView.textColor ?? UIColor.label
+        
+        mutable.addAttribute(
+            .foregroundColor,
+            value: styleColor,
+            range: NSRange(location: 0, length: mutable.length)
+        )
+        
+        if let mentionAttributed = viewModel
             .attributedTextWithMentions(
                 defaultAttributes: messageView.typingAttributes,
                 mentionAttributes: mentionStyle.toAttributes,
                 displayNames: displayNames
             ) {
-            messageView.attributedText = attributedText
-        } else {
-            messageView.text = viewModel.message
+            mentionAttributed.enumerateAttributes(
+                in: NSRange(location: 0, length: mentionAttributed.length),
+                options: []
+            ) { attributes, range, _ in
+                mutable.addAttributes(attributes, range: range)
+            }
         }
+        
+        messageView.attributedText = mutable
     }
+
 }
