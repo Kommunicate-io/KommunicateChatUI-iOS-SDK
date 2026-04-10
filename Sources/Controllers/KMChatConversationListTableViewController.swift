@@ -196,7 +196,7 @@ public class KMChatConversationListTableViewController: UITableViewController, L
     }
     
     private func displayLoadingAlert(viewController: KMChatConversationListTableViewController) -> UIAlertController {
-        let alertTitle = localizedString(forKey: "WaitMessage", withDefaultValue: "Please wait...", fileName: localizedStringFileName)
+        let alertTitle = localizedString(forKey: "WaitMessage", withDefaultValue: "Please Wait", fileName: localizedStringFileName)
         
         let loadingAlertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false

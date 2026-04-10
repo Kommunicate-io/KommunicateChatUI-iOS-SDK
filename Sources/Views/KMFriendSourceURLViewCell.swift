@@ -125,7 +125,7 @@ open class KMFriendSourceURLViewCell: KMChatMessageCell {
     private var sourceLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(netHex: 0x313131)
-        label.text = KMFriendSourceURLViewCell.localizedString(forKey: "SourceLabel")
+        label.text = "Source"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()

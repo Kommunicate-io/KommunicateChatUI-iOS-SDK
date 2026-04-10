@@ -7,7 +7,7 @@
 
 import UIKit
 
-class KMChatEmailTopView: UIView, Localizable {
+class KMChatEmailTopView: UIView {
     static let height: CGFloat = 20
 
     // MARK: - Private properties
@@ -25,7 +25,7 @@ class KMChatEmailTopView: UIView, Localizable {
 
     fileprivate var emailLabel: UILabel = {
         let label = UILabel()
-        label.text = KMChatEmailTopView.localizedString(forKey: "ViaEmailLabel")
+        label.text = "via email"
         label.numberOfLines = 1
         label.font = UIFont(name: "Helvetica", size: 12)
         label.isOpaque = true

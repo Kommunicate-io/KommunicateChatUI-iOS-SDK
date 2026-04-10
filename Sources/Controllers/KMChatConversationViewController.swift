@@ -2338,20 +2338,12 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
         let channel = channelService.getChannelByKey(channelKey)
         
         if KMCoreUserDefaultsHandler.isTeamModeEnabled(), let teamID = KMCoreUserDefaultsHandler.getAssignedTeamIds(), let teamIDArray = teamID as? [String], let newTeamID = channel?.metadata["KM_TEAM_ID"] as? String, !teamIDArray.contains(newTeamID) {
-            chatBar.textView.text = localizedString(
-                forKey: "ConversationRestrictedMessage",
-                withDefaultValue: "You are restricted to type or send any message as you are no longer part of this conversation.",
-                fileName: configuration.localizedStringFileName
-            )
+            chatBar.textView.text = "You are restricted to type or send any message as you are no longer part of this conversation."
             return true
         }
         
         if isZendeskConversation(channel: channel) {
-            chatBar.textView.text = localizedString(
-                forKey: "ZendeskConversationInfoMessage",
-                withDefaultValue: "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users.",
-                fileName: configuration.localizedStringFileName
-            )
+            chatBar.textView.text = "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users."
             return true
         }
         
@@ -2360,11 +2352,7 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
            whatsappSource.contains(platformSource),
            let lastMessageTime = viewModel.getLastReceivedMessage()?.createdAtTime,
            Double(truncating: lastMessageTime) <= twentyFourHoursAgoTimeStamp() {
-            chatBar.textView.text = localizedString(
-                forKey: "TemplateMessageRestrictionInfo",
-                withDefaultValue: "The last message received from this contact was over 24 hours ago. To send Template message, go to the dashboard.",
-                fileName: configuration.localizedStringFileName
-            )
+            chatBar.textView.text = "The last message received from this contact was over 24 hours ago. To send Template message, go to the dashboard."
             return true
         } else {
             return false
@@ -2751,17 +2739,9 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
             if #available(iOS 14, *) {
                 var menuItems: [UIAction] {
                    return [
-                       UIAction(
-                           title: localizedString(
-                               forKey: "ConversationRatingMenuTitle",
-                               withDefaultValue: SystemMessage.Feedback.ConversationRatingMenuTitle,
-                               fileName: configuration.localizedStringFileName
-                           ),
-                           image: UIImage(named: "icon_favorite_active", in: Bundle.km, compatibleWith: nil),
-                           handler: { (_) in
-                               self.showFeedback()
-                           }
-                       )
+                       UIAction(title: "Rate this conversation", image: UIImage(named: "icon_favorite_active", in: Bundle.km, compatibleWith: nil), handler: { (_) in
+                           self.showFeedback()
+                       })
                    ]
                 }
                 var ratingIcon = configuration.ratingMenuIcon

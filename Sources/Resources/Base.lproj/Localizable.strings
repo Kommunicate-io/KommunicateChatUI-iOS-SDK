@@ -174,18 +174,6 @@ AddGroupDescriptionPlaceHolder = "Add group description";
 
 /* Feedback */
  RatingLabelTitle = "You";
- ConversationRatingMenuTitle = "Rate this conversation";
-
-/* Conversation Restriction */
-ConversationRestrictedMessage = "You are restricted to type or send any message as you are no longer part of this conversation.";
-ZendeskConversationInfoMessage = "This chat is integrated with Zendesk Zopim. Please use Zendesk dashboard to respond and communicate with the users.";
-TemplateMessageRestrictionInfo = "The last message received from this contact was over 24 hours ago. To send Template message, go to the dashboard.";
-
-/* Misc */
-SelectLanguageTitle = "Select a language";
-ViaEmailLabel = "via email";
-SourceLabel = "Source";
-NewAttachmentLabel = "New Attachment";
 
 /* Summary UI */
  SummaryPopUpTitle = "Summary";

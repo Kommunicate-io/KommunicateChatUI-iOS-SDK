@@ -236,7 +236,6 @@ struct SystemMessage: Localizable {
     
     enum Feedback {
         static let RatingLabelTitle = localizedString(forKey: "RatingLabelTitle")
-        static let ConversationRatingMenuTitle = localizedString(forKey: "ConversationRatingMenuTitle")
     }
     
     enum SummaryUI {
