@@ -238,7 +238,8 @@ open class KMChatGenericCardCell: UICollectionViewCell {
     }
 
     private class func headerHeight(_ header: KMCardTemplate.Header) -> CGFloat {
-        guard let urlString = header.imgSrc,
+        let tokenizedURL = header.imgSrc.map { KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0) }
+        guard let urlString = tokenizedURL,
               URL(string: urlString) != nil
         else {
             if let text = header.overlayText, !text.isEmpty {
@@ -352,7 +353,8 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         }
         coverImageHeight.constant = KMChatGenericCardCell.headerHeight(header)
 
-        guard let urlString = header.imgSrc, let url = URL(string: urlString) else {
+        let tokenizedURL = header.imgSrc.map { KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0) }
+        guard let urlString = tokenizedURL, let url = URL(string: urlString) else {
             coverImageView.isHidden = true
             overlayText.backgroundColor = UIColor(red: 230, green: 229, blue: 236)
             overlayText.layer.masksToBounds = true

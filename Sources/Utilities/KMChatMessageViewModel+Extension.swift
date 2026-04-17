@@ -38,10 +38,12 @@ extension KMChatMessageViewModel {
             assertionFailure("Payload must contain url.")
             return nil
         }
-        
+
+        let tokenizedURL = KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: url)
+
         return ImageMessage(
             caption: imageData["caption"] as? String,
-            url: url,
+            url: tokenizedURL,
             message: messageDetails()
         )
     }
@@ -188,7 +190,13 @@ extension KMChatMessageViewModel {
         do {
             let json = try JSONSerialization.data(withJSONObject: payload)
             let videoTemplate = try JSONDecoder().decode([KMVideoTemplate].self, from: json)
-            return videoTemplate
+            return videoTemplate.map {
+                KMVideoTemplate(
+                    source: $0.source,
+                    url: KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0.url),
+                    caption: $0.caption
+                )
+            }
         } catch {
             print("Error while decoding video template \(error.localizedDescription)")
             return nil
