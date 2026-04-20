@@ -217,6 +217,7 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
         static let hidePostCTAEnabled = "hidePostCTAEnabled"
         static let defaultUploadOverrideUrl = "defaultUploadOverrideUrl"
         static let defaultUploadOverrideHeaders = "defaultUploadOverrideHeaders"
+        static let sasT = "sasT"
         static let csatRatingBase = "csatRatingBase"
         static let botTypingIndicatorInterval = "botTypingIndicatorInterval"
     }
@@ -234,6 +235,7 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
     public var hidePostCTAEnabled: Bool = false
     public var defaultUploadOverrideUrl: String?
     public var defaultUploadOverrideHeaders: [String: String]?
+    public var sasT: String?
     public var csatRatingBase: Int = 3
     public var botTypingIndicatorInterval: Int = 0
 
@@ -262,6 +264,7 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
             of: [NSDictionary.self, NSString.self],
             forKey: CoderKey.defaultUploadOverrideHeaders
         ) as? [String: String]
+        sasT = coder.decodeObject(of: NSString.self, forKey: CoderKey.sasT) as String?
 
         csatRatingBase = coder.decodeInteger(forKey: CoderKey.csatRatingBase)
         botTypingIndicatorInterval = coder.decodeInteger(forKey: CoderKey.botTypingIndicatorInterval)
@@ -278,6 +281,9 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
         coder.encode(attachmentIconsTintColor, forKey: CoderKey.attachmentIconsTintColor)
         coder.encode(buttonPrimaryColor, forKey: CoderKey.buttonPrimaryColor)
         coder.encode(hidePostCTAEnabled, forKey: CoderKey.hidePostCTAEnabled)
+        coder.encode(defaultUploadOverrideUrl, forKey: CoderKey.defaultUploadOverrideUrl)
+        coder.encode(defaultUploadOverrideHeaders, forKey: CoderKey.defaultUploadOverrideHeaders)
+        coder.encode(sasT, forKey: CoderKey.sasT)
         coder.encode(csatRatingBase, forKey: CoderKey.csatRatingBase)
         coder.encode(botTypingIndicatorInterval, forKey: CoderKey.botTypingIndicatorInterval)
     }
