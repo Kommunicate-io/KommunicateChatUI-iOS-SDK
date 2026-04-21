@@ -53,7 +53,8 @@ class KMListTemplateElementView: UIView {
         self.item = item
         title.text = item.title
         subtitle.text = item.description
-        guard let urlString = item.imgSrc, let url = URL(string: urlString) else {
+        let tokenizedURL = item.imgSrc.map { KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0) }
+        guard let urlString = tokenizedURL, let url = URL(string: urlString) else {
             thumbnail.isHidden = true
             thumbnail.widthAnchor.constraint(equalToConstant: 0).isActive = true
             thumbnail.heightAnchor.constraint(equalToConstant: 0).isActive = true
@@ -187,7 +188,8 @@ class ListTemplateView: UIView {
     }
 
     private func updateHeaderImage(_ urlString: String?) {
-        guard let urlString = urlString, let url = URL(string: urlString) else {
+        let tokenizedURL = urlString.map { KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0) }
+        guard let urlString = tokenizedURL, let url = URL(string: urlString) else {
             headerImageHeight.constant = 0
             return
         }

@@ -307,15 +307,51 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
 
         switch viewModel.messageType {
         case .text, .staticTopMessage:
-            if let attributedText = viewModel
+            let mentionAttributed = viewModel
                 .attributedTextWithMentions(
                     defaultAttributes: dummyMessageView.typingAttributes,
                     mentionAttributes: mentionStyle.toAttributes,
                     displayNames: displayNames
-                ) {
-                return TextViewSizeCalculator.height(dummyMessageView, attributedText: attributedText, maxWidth: width)
+                )
+            let shouldUseMarkdown = KMMarkdownDetector.containsMarkdown(message)
+
+            let finalAttributed: NSAttributedString
+            if !viewModel.isMyMessage && shouldUseMarkdown {
+                let markdownAttributed = KMMarkdownRenderer.attributedString(
+                    from: message,
+                    baseFont: font,
+                    baseAttributes: dummyMessageView.typingAttributes
+                )
+
+                if let mentionAttributed = mentionAttributed {
+                    let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
+
+                    Self.mergeMentionAttributes(
+                        from: mentionAttributed,
+                        into: mutable,
+                        allowedKeys: [.foregroundColor, .backgroundColor, .font]
+                    )
+                    finalAttributed = mutable
+                } else {
+                    finalAttributed = markdownAttributed
+                }
+            } else if let mentionAttributed = mentionAttributed {
+                finalAttributed = mentionAttributed
+            } else {
+                finalAttributed = NSAttributedString(
+                    string: message,
+                    attributes: dummyMessageView.typingAttributes
+                )
             }
-            return TextViewSizeCalculator.height(dummyMessageView, text: message, maxWidth: width)
+
+            dummyAttributedMessageView.font = font
+
+            return TextViewSizeCalculator.height(
+                dummyAttributedMessageView,
+                attributedText: finalAttributed,
+                maxWidth: width
+            )
+
         case .html:
             guard let attributedText = attributedStringFrom(message, for: viewModel.identifier) else {
                 return 0
@@ -424,6 +460,28 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
     }
 
     // MARK: - Private helper methods
+
+    private class func mergeMentionAttributes(
+        from mentionAttributed: NSAttributedString,
+        into mutable: NSMutableAttributedString,
+        allowedKeys: Set<NSAttributedString.Key>? = nil
+    ) {
+        mentionAttributed.enumerateAttributes(
+            in: NSRange(location: 0, length: mentionAttributed.length),
+            options: []
+        ) { attributes, range, _ in
+            guard range.location < mutable.length else { return }
+            let safeRange = NSRange(
+                location: range.location,
+                length: min(range.length, mutable.length - range.location)
+            )
+            guard safeRange.length > 0 else { return }
+            if let allowedKeys, attributes.keys.allSatisfy({ !allowedKeys.contains($0) }) {
+                return
+            }
+            mutable.addAttributes(attributes, range: safeRange)
+        }
+    }
 
     private class func attributedStringFrom(_ text: String, for id: String) -> NSAttributedString? {
         if !id.isEmpty, let attributedString = attributedStringCache.object(forKey: id as NSString) {
@@ -564,15 +622,59 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
         viewModel: KMChatMessageViewModel,
         mentionStyle: Style
     ) {
-        if let attributedText = viewModel
+        guard let message = viewModel.message else {
+            messageView.text = nil
+            return
+        }
+        
+        let shouldUseMarkdown = KMMarkdownDetector.containsMarkdown(message)
+
+        if !viewModel.isMyMessage && shouldUseMarkdown {
+            applyMarkdownText(message: message, mentionStyle: mentionStyle, viewModel: viewModel)
+        } else {
+            if let attributedText = viewModel
+                .attributedTextWithMentions(
+                    defaultAttributes: messageView.typingAttributes,
+                    mentionAttributes: mentionStyle.toAttributes,
+                    displayNames: displayNames
+                ) {
+                messageView.attributedText = attributedText
+            } else {
+                messageView.text = message
+            }
+        }
+    }
+    
+    private func applyMarkdownText(
+        message: String,
+        mentionStyle: Style,
+        viewModel: KMChatMessageViewModel
+    ) {
+        let markdownAttributed = KMMarkdownRenderer.attributedString(
+            from: message,
+            baseFont: messageView.font ?? UIFont.systemFont(ofSize: 16),
+            baseAttributes: messageView.typingAttributes
+        )
+
+        let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
+        let styleColor = messageView.textColor ?? UIColor.label
+        
+        mutable.addAttribute(
+            .foregroundColor,
+            value: styleColor,
+            range: NSRange(location: 0, length: mutable.length)
+        )
+        
+        if let mentionAttributed = viewModel
             .attributedTextWithMentions(
                 defaultAttributes: messageView.typingAttributes,
                 mentionAttributes: mentionStyle.toAttributes,
                 displayNames: displayNames
             ) {
-            messageView.attributedText = attributedText
-        } else {
-            messageView.text = viewModel.message
+            Self.mergeMentionAttributes(from: mentionAttributed, into: mutable)
         }
+        
+        messageView.attributedText = mutable
     }
+
 }

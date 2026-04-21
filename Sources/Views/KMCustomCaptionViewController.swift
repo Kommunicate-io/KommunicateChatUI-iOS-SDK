@@ -535,7 +535,7 @@ class KMCustomCaptionViewController: UIViewController, UICollectionViewDelegate,
     }
 }
 
-class KMImageCell: UICollectionViewCell {
+class KMImageCell: UICollectionViewCell, Localizable {
     
     let imageView: UIImageView = {
         let view = UIImageView()
@@ -577,7 +577,7 @@ class KMImageCell: UICollectionViewCell {
     
     let newAttachmentLabel: UIView = {
         let label = UILabel()
-        label.text = "New Attachment"
+        label.text = KMImageCell.localizedString(forKey: "NewAttachmentLabel")
         label.font = .systemFont(ofSize: 14)
         label.textColor =  UIColor.kmDynamicColor(light: UIColor.text(.white), dark: UIColor.text(.grayCC))
         label.isHidden = true

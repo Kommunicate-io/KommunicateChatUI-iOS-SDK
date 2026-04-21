@@ -9,7 +9,7 @@ import Foundation
 import KommunicateCore_iOS_SDK
 import UIKit
 
-class KMChatMultipleLanguageSelectionViewController: UIViewController {
+class KMChatMultipleLanguageSelectionViewController: UIViewController, Localizable {
     
     private var configuration: KMChatConfiguration
     private var languages: [String] = []
@@ -20,7 +20,7 @@ class KMChatMultipleLanguageSelectionViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont(name: "HelveticaNeue-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor.kmDynamicColor(light: UIColor(red: 96, green: 94, blue: 94), dark: .lightText)
-        label.text = "Select a language"
+        label.text = ""
         return label
     }()
 
@@ -86,6 +86,12 @@ class KMChatMultipleLanguageSelectionViewController: UIViewController {
         languageStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
+
+        titleLabel.text = localizedString(
+            forKey: "SelectLanguageTitle",
+            withDefaultValue: "Select a language",
+            fileName: configuration.localizedStringFileName
+        )
         
         for item in self.languages {
             let view = KMLanguageView(title: item, languageList: configuration.languagesForSpeechToText)

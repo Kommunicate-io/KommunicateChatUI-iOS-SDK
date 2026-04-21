@@ -284,11 +284,25 @@ open class KMChatFriendMessageCell: KMChatMessageCell {
                 let replyId = metadata[AL_MESSAGE_REPLY_KEY] as? String,
                 let actualMessage = getMessageFor(key: replyId)
             else { return }
+
             showReplyView(true)
+
+            if let replyText = actualMessage.message {
+                replyMessageLabel.attributedText = KMMarkdownParser.attributedString(
+                    from: replyText,
+                    font: replyMessageLabel.font,
+                    textColor: replyMessageLabel.textColor
+                )
+            }
+
             if actualMessage.messageType == .text || actualMessage.messageType == .html {
-                previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.height)?.constant = 0
+                previewImageView.constraint(
+                    withIdentifier: ConstraintIdentifier.PreviewImage.height
+                )?.constant = 0
             } else {
-                previewImageView.constraint(withIdentifier: ConstraintIdentifier.PreviewImage.width)?.constant = Padding.PreviewImageView.width
+                previewImageView.constraint(
+                    withIdentifier: ConstraintIdentifier.PreviewImage.width
+                )?.constant = Padding.PreviewImageView.width
             }
         } else {
             showReplyView(false)
@@ -296,7 +310,10 @@ open class KMChatFriendMessageCell: KMChatMessageCell {
 
         let placeHolder = UIImage(named: "placeholder", in: Bundle.km, compatibleWith: nil)
         if let url = viewModel.avatarURL {
-            let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            let resource = Kingfisher.ImageResource(
+                downloadURL: url,
+                cacheKey: url.absoluteString
+            )
             avatarImageView.kf.setImage(with: resource, placeholder: placeHolder)
         } else {
             avatarImageView.image = placeHolder
