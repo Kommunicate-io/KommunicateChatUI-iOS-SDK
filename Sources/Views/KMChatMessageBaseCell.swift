@@ -313,25 +313,35 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
                     mentionAttributes: mentionStyle.toAttributes,
                     displayNames: displayNames
                 )
-
-            let markdownAttributed = KMMarkdownRenderer.attributedString(
-                from: message,
-                baseFont: font,
-                baseAttributes: dummyMessageView.typingAttributes
-            )
+            let shouldUseMarkdown = KMMarkdownDetector.containsMarkdown(message)
 
             let finalAttributed: NSAttributedString
-            if let mentionAttributed = mentionAttributed {
-                let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
-
-                Self.mergeMentionAttributes(
-                    from: mentionAttributed,
-                    into: mutable,
-                    allowedKeys: [.foregroundColor, .backgroundColor, .font]
+            if !viewModel.isMyMessage && shouldUseMarkdown {
+                let markdownAttributed = KMMarkdownRenderer.attributedString(
+                    from: message,
+                    baseFont: font,
+                    baseAttributes: dummyMessageView.typingAttributes
                 )
-                finalAttributed = mutable
+
+                if let mentionAttributed = mentionAttributed {
+                    let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
+
+                    Self.mergeMentionAttributes(
+                        from: mentionAttributed,
+                        into: mutable,
+                        allowedKeys: [.foregroundColor, .backgroundColor, .font]
+                    )
+                    finalAttributed = mutable
+                } else {
+                    finalAttributed = markdownAttributed
+                }
+            } else if let mentionAttributed = mentionAttributed {
+                finalAttributed = mentionAttributed
             } else {
-                finalAttributed = markdownAttributed
+                finalAttributed = NSAttributedString(
+                    string: message,
+                    attributes: dummyMessageView.typingAttributes
+                )
             }
 
             dummyAttributedMessageView.font = font
