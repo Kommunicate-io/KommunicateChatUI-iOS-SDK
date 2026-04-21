@@ -6,6 +6,7 @@ The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/
 - Fixed Xcode Error
 - Setting Changes required for rich Message
 - Markdown Support
+- Support For Missing Localizations 
 
 ## [1.5.3] 2025-12-16
 - Fixed SPM Build Issue
