@@ -324,16 +324,11 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
             if let mentionAttributed = mentionAttributed {
                 let mutable = NSMutableAttributedString(attributedString: markdownAttributed)
 
-                mentionAttributed.enumerateAttributes(
-                    in: NSRange(location: 0, length: mentionAttributed.length),
-                    options: []
-                ) { attributes, range, _ in
-                    if attributes.keys.contains(.foregroundColor) ||
-                       attributes.keys.contains(.backgroundColor) ||
-                       attributes.keys.contains(.font) {
-                        mutable.addAttributes(attributes, range: range)
-                    }
-                }
+                Self.mergeMentionAttributes(
+                    from: mentionAttributed,
+                    into: mutable,
+                    allowedKeys: [.foregroundColor, .backgroundColor, .font]
+                )
                 finalAttributed = mutable
             } else {
                 finalAttributed = markdownAttributed
@@ -455,6 +450,28 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
     }
 
     // MARK: - Private helper methods
+
+    private class func mergeMentionAttributes(
+        from mentionAttributed: NSAttributedString,
+        into mutable: NSMutableAttributedString,
+        allowedKeys: Set<NSAttributedString.Key>? = nil
+    ) {
+        mentionAttributed.enumerateAttributes(
+            in: NSRange(location: 0, length: mentionAttributed.length),
+            options: []
+        ) { attributes, range, _ in
+            guard range.location < mutable.length else { return }
+            let safeRange = NSRange(
+                location: range.location,
+                length: min(range.length, mutable.length - range.location)
+            )
+            guard safeRange.length > 0 else { return }
+            if let allowedKeys, attributes.keys.allSatisfy({ !allowedKeys.contains($0) }) {
+                return
+            }
+            mutable.addAttributes(attributes, range: safeRange)
+        }
+    }
 
     private class func attributedStringFrom(_ text: String, for id: String) -> NSAttributedString? {
         if !id.isEmpty, let attributedString = attributedStringCache.object(forKey: id as NSString) {
@@ -644,12 +661,7 @@ open class KMChatMessageCell: KMChatChatBaseCell<KMChatMessageViewModel> {
                 mentionAttributes: mentionStyle.toAttributes,
                 displayNames: displayNames
             ) {
-            mentionAttributed.enumerateAttributes(
-                in: NSRange(location: 0, length: mentionAttributed.length),
-                options: []
-            ) { attributes, range, _ in
-                mutable.addAttributes(attributes, range: range)
-            }
+            Self.mergeMentionAttributes(from: mentionAttributed, into: mutable)
         }
         
         messageView.attributedText = mutable
