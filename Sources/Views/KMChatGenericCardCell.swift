@@ -142,8 +142,6 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         case buttonsView
     }
 
-    let maxButtonCount = 8
-
     lazy var coverImageHeight = self.coverImageView.heightAnchor.constraint(equalToConstant: Config.imageHeight)
 
     open var coverImageView: UIImageView = {
@@ -275,8 +273,8 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         var stackViewSpacing = (Config.spacing * 2)
         stackViewSpacing += (card.buttons != nil) ? Config.spacing : 0
         stackViewSpacing += (card.description != nil) ? Config.spacing : 0
-        if let count = card.buttons?.count {
-            stackViewSpacing += CGFloat(count) - Config.buttonStackViewSpacing // 1 space between 2 buttons.
+        if let count = card.buttons?.count, count > 1 {
+            stackViewSpacing += CGFloat(count - 1) * Config.buttonStackViewSpacing
         }
 
         return headerHt + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
@@ -388,26 +386,44 @@ open class KMChatGenericCardCell: UICollectionViewCell {
 
     private func updateViewFor(_ buttons: [KMCardTemplate.Button]?) {
         guard let buttons = buttons else { return }
-        // Hide extra buttons
+        ensureActionButtonCount(buttons.count)
         actionButtons.enumerated().forEach {
             if $0 >= buttons.count { $1.isHidden = true } else { $1.isHidden = false; $1.setTitle(buttons[$0].name, for: .normal) }
         }
-        let count = CGFloat(min(buttons.count, actionButtons.count))
-        buttonStackView.constraint(withIdentifier: ConstraintIdentifier.buttonsView.rawValue)?.constant = count * Config.buttonHeight
+        buttonStackView.constraint(withIdentifier: ConstraintIdentifier.buttonsView.rawValue)?.constant = Self.buttonsHeight(count: buttons.count)
     }
 
     private func setUpButtons() {
-        let style = CardStyle.shared
-        actionButtons = (0 ..< maxButtonCount).map {
-            let button = UIButton()
-            button.setTitleColor(style.actionButton.textColor, for: .normal)
-            button.setFont(font: Font.button)
-            button.setTitle("Button", for: .normal)
-            button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
-            button.tag = $0
-            button.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
-            return button
+        actionButtons = (0 ..< 8).map { makeActionButton(index: $0) }
+    }
+
+    private func ensureActionButtonCount(_ count: Int) {
+        guard count > actionButtons.count else { return }
+        for index in actionButtons.count ..< count {
+            let button = makeActionButton(index: index)
+            actionButtons.append(button)
+            buttonStackView.addArrangedSubview(button)
+            button.heightAnchor.constraint(equalToConstant: Config.buttonHeight).isActive = true
         }
+    }
+
+    private func makeActionButton(index: Int) -> UIButton {
+        let style = CardStyle.shared
+        let button = UIButton()
+        button.setTitleColor(style.actionButton.textColor, for: .normal)
+        button.setFont(font: Font.button)
+        button.setTitle("Button", for: .normal)
+        button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
+        button.tag = index
+        button.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+        return button
+    }
+
+    private class func buttonsHeight(count: Int) -> CGFloat {
+        guard count > 0 else { return 0 }
+        let buttonHeight = CGFloat(count) * Config.buttonHeight
+        let separatorHeight = CGFloat(count - 1) * Config.buttonStackViewSpacing
+        return buttonHeight + separatorHeight
     }
 
     private func setupConstraints() {
