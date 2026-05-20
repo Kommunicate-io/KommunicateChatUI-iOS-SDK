@@ -268,14 +268,11 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         let descriptionConstraint = CGSize(width: maxWidth, height: Font.description.lineHeight)
         let descriptionHeight = textHeight(card.description, size: descriptionConstraint, font: Font.description) * CGFloat(KMChatGenericCardCell.Config.descriptionMaxLines)
 
-        let totalButtonHeight = Config.buttonHeight * CGFloat(card.buttons?.count ?? 0)
+        let totalButtonHeight = buttonsHeight(count: card.buttons?.count ?? 0)
 
         var stackViewSpacing = (Config.spacing * 2)
         stackViewSpacing += (card.buttons != nil) ? Config.spacing : 0
         stackViewSpacing += (card.description != nil) ? Config.spacing : 0
-        if let count = card.buttons?.count, count > 1 {
-            stackViewSpacing += CGFloat(count - 1) * Config.buttonStackViewSpacing
-        }
 
         return headerHt + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
     }
@@ -294,7 +291,7 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         setCoverImage(card.header)
         contentView.layoutIfNeeded()
         guard let buttons = card.buttons, !buttons.isEmpty else {
-            buttonStackView.isHidden = true
+            resetButtons()
             return
         }
         buttonStackView.isHidden = false
@@ -391,6 +388,12 @@ open class KMChatGenericCardCell: UICollectionViewCell {
             if $0 >= buttons.count { $1.isHidden = true } else { $1.isHidden = false; $1.setTitle(buttons[$0].name, for: .normal) }
         }
         buttonStackView.constraint(withIdentifier: ConstraintIdentifier.buttonsView.rawValue)?.constant = Self.buttonsHeight(count: buttons.count)
+    }
+
+    private func resetButtons() {
+        actionButtons.forEach { $0.isHidden = true }
+        buttonStackView.constraint(withIdentifier: ConstraintIdentifier.buttonsView.rawValue)?.constant = 0
+        buttonStackView.isHidden = true
     }
 
     private func setUpButtons() {
