@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.5.5] 2026-05-22
+- Fixed UI Issues For List Templates
+
 ## [1.5.4] 2026-04-21
 - Fixed Xcode Error
 - Setting Changes required for rich Message

@@ -211,9 +211,7 @@ class ListTemplateView: UIView {
             actionButtons.enumerated().forEach { $1.isHidden = true }
             return
         }
-        if buttons.count > actionButtons.count {
-            print("Number of buttons are >8. Only first 8 will be shown")
-        }
+        ensureActionButtonCount(buttons.count)
         actionButtons.enumerated().forEach {
             if $0 >= buttons.count { $1.isHidden = true } else {
                 $1.isHidden = false
@@ -227,9 +225,7 @@ class ListTemplateView: UIView {
             listItems.enumerated().forEach { $1.isHidden = true }
             return
         }
-        if elements.count > listItems.count {
-            print("Number of elements are >8. Only first 8 will be shown")
-        }
+        ensureListItemCount(elements.count)
         listItems.enumerated().forEach {
             if $0 >= elements.count { $1.isHidden = true } else {
                 $1.isHidden = false
@@ -250,11 +246,11 @@ class ListTemplateView: UIView {
         var height: CGFloat = 0
         height += template.headerImgSrc != nil ? imageHeight : CGFloat(0)
         height += template.headerText != nil ? textHeight : CGFloat(0)
-        let elementCount = min(8, template.elements?.count ?? 0)
+        let elementCount = template.elements?.count ?? 0
         height += CGFloat(elementCount) * KMListTemplateElementView.height()
-        let buttonCount = min(8, template.buttons?.count ?? 0)
+        let buttonCount = template.buttons?.count ?? 0
         height += CGFloat(buttonCount) * buttonHeight
-        let spacing = min(8, template.elements?.count ?? 0) + min(8, template.buttons?.count ?? 0)
+        let spacing = elementCount + buttonCount
         return height + CGFloat(spacing)
     }
 
@@ -272,33 +268,57 @@ class ListTemplateView: UIView {
     }
 
     private func setupButtons() {
-        let buttonTextColor = listStyle.actionButton.text
-        let buttonBackgroundColor = listStyle.actionButton.background
-        actionButtons = (0 ... 7).map {
-            let button = UIButton()
-            button.setTitleColor(buttonTextColor, for: .normal)
-            button.setFont(font: UIFont.font(.bold(size: 15.0)))
-            button.setTitle("Button", for: .normal)
-            button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
-            button.titleLabel?.numberOfLines = 1
-            button.tag = $0
-            button.backgroundColor = .kmDynamicColor(light: buttonBackgroundColor, dark: UIColor.appBarDarkColor())
-            button.layoutIfNeeded()
-            return button
-        }
+        actionButtons = (0 ... 7).map { makeActionButton(index: $0) }
     }
 
     private func setupElements() {
-        listItems = (0 ... 7).map {
-            let item = KMListTemplateElementView()
-            item.tag = $0
-            item.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
-            item.selected = { [weak self] element in
-                guard let weakSelf = self, let selected = weakSelf.selected else { return }
-                selected(element, nil, element.action)
-            }
-            return item
+        listItems = (0 ... 7).map { makeListItem(index: $0) }
+    }
+
+    private func ensureActionButtonCount(_ count: Int) {
+        guard count > actionButtons.count else { return }
+        for index in actionButtons.count ..< count {
+            let button = makeActionButton(index: index)
+            actionButtons.append(button)
+            buttonStackView.addArrangedSubview(button)
+            button.heightAnchor.constraint(equalToConstant: ListTemplateView.buttonHeight).isActive = true
         }
+    }
+
+    private func ensureListItemCount(_ count: Int) {
+        guard count > listItems.count else { return }
+        for index in listItems.count ..< count {
+            let item = makeListItem(index: index)
+            listItems.append(item)
+            elementStackView.addArrangedSubview(item)
+            item.heightAnchor.constraint(equalToConstant: KMListTemplateElementView.height()).isActive = true
+        }
+    }
+
+    private func makeActionButton(index: Int) -> UIButton {
+        let buttonTextColor = listStyle.actionButton.text
+        let buttonBackgroundColor = listStyle.actionButton.background
+        let button = UIButton()
+        button.setTitleColor(buttonTextColor, for: .normal)
+        button.setFont(font: UIFont.font(.bold(size: 15.0)))
+        button.setTitle("Button", for: .normal)
+        button.addTarget(self, action: #selector(buttonSelected(_:)), for: .touchUpInside)
+        button.titleLabel?.numberOfLines = 1
+        button.tag = index
+        button.backgroundColor = .kmDynamicColor(light: buttonBackgroundColor, dark: UIColor.appBarDarkColor())
+        button.layoutIfNeeded()
+        return button
+    }
+
+    private func makeListItem(index: Int) -> KMListTemplateElementView {
+        let item = KMListTemplateElementView()
+        item.tag = index
+        item.backgroundColor = .kmDynamicColor(light: .white, dark: UIColor.appBarDarkColor())
+        item.selected = { [weak self] element in
+            guard let weakSelf = self, let selected = weakSelf.selected else { return }
+            selected(element, nil, element.action)
+        }
+        return item
     }
 
     private func setupConstraints() {
