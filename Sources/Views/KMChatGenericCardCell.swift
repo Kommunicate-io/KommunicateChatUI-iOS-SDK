@@ -271,7 +271,7 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         let totalButtonHeight = buttonsHeight(count: card.buttons?.count ?? 0)
 
         var stackViewSpacing = (Config.spacing * 2)
-        stackViewSpacing += (card.buttons != nil) ? Config.spacing : 0
+        stackViewSpacing += (card.buttons?.isEmpty == false) ? Config.spacing : 0
         stackViewSpacing += (card.description != nil) ? Config.spacing : 0
 
         return headerHt + titleHeight + subtitleHeight + descriptionHeight + totalButtonHeight + CGFloat(stackViewSpacing)
