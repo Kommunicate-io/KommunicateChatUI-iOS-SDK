@@ -53,15 +53,29 @@ class LoginViewController: UIViewController {
     private func registerUserToKommunicate(alUser: ALUser) {
         let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
         alChatManager.connectUser(alUser, completion: { response, error in
-            if error == nil {
-                self.addContacts()
-                NSLog("[REGISTRATION] Kommunicate user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
-                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")
-                self.present(vc!, animated: true, completion: nil)
-            } else {
-                NSLog("[REGISTRATION] Kommunicate user registration error: %@", error.debugDescription)
+            DispatchQueue.main.async {
+                if error == nil {
+                    self.addContacts()
+                    NSLog("[REGISTRATION] Kommunicate user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
+                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") else {
+                        self.showLoginError("Unable to open the chat demo screen.")
+                        return
+                    }
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true, completion: nil)
+                } else {
+                    let message = error?.localizedDescription ?? "Unable to register user."
+                    NSLog("[REGISTRATION] Kommunicate user registration error: %@", error.debugDescription)
+                    self.showLoginError(message)
+                }
             }
         })
+    }
+
+    private func showLoginError(_ message: String) {
+        let alert = UIAlertController(title: "Kommunicate", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     func addContacts() {
