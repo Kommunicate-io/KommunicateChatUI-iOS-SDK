@@ -915,11 +915,11 @@
 /* Begin XCLocalSwiftPackageReference section */
 		5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ..;
+            relativePath = "..";
 		};
 		5F2B6C323029AF690030CA0C /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ..;
+            relativePath = "..";
 		};
 /* End XCLocalSwiftPackageReference section */
 
