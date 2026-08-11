@@ -56,15 +56,21 @@ class LoginViewController: UIViewController {
             DispatchQueue.main.async {
                 if error == nil {
                     self.addContacts()
-                    NSLog("[REGISTRATION] Kommunicate user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
+                    NSLog(
+                        "[REGISTRATION] Kommunicate user registration was successful: %@",
+                        String(describing: response?.isRegisteredSuccessfully())
+                    )
                     guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") else {
-                        self.showLoginError("Unable to open the chat demo screen.")
+                        self.showLoginError(
+                            NSLocalizedString("chat_demo_open_error", bundle: .main, comment: "")
+                        )
                         return
                     }
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true, completion: nil)
                 } else {
-                    let message = error?.localizedDescription ?? "Unable to register user."
+                    let message = error?.localizedDescription
+                        ?? NSLocalizedString("user_registration_error", bundle: .main, comment: "")
                     NSLog("[REGISTRATION] Kommunicate user registration error: %@", error.debugDescription)
                     self.showLoginError(message)
                 }
