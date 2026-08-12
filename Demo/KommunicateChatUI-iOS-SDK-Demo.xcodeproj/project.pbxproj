@@ -25,7 +25,6 @@
 		5F2B6C363029AF690030CA0C /* RichMessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2B6C353029AF690030CA0C /* RichMessageKit */; };
 		5F2B6C383029AFFC0030CA0C /* KommunicateChatUI-iOS-SDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2B6C373029AFFC0030CA0C /* KommunicateChatUI-iOS-SDK */; };
 		5F2B6C3A3029AFFF0030CA0C /* RichMessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2B6C393029AFFF0030CA0C /* RichMessageKit */; };
-		5F2B6C3E3029B0F90030CA0C /* KommunicateSPMCompatibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2B6C3D3029B0F90030CA0C /* KommunicateSPMCompatibility.swift */; };
 		5F6D908F302B0B7D007707AE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5F6D908E302B0B7D007707AE /* Localizable.strings */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
 		8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */; };
@@ -97,7 +96,6 @@
 		464E2C66277E4562009AEAEB /* KommunicateChatUI-iOS-SDK-DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "KommunicateChatUI-iOS-SDK-DemoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		464E2C68277E4562009AEAEB /* KommunicateChatUI_iOS_SDK_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KommunicateChatUI_iOS_SDK_DemoTests.swift; sourceTree = "<group>"; };
 		469E0C3627467D3C00895617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5F2B6C3D3029B0F90030CA0C /* KommunicateSPMCompatibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KommunicateSPMCompatibility.swift; sourceTree = "<group>"; };
 		5F504D2CB3F5D0E6D22C39A8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5F6D908E302B0B7D007707AE /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -252,7 +250,6 @@
 				1A661EDD2241146600093559 /* PushNotificationHandler.swift */,
 				1A96DD4122549DF600335C72 /* ContainerViewController.swift */,
 				469E0C3627467D3C00895617 /* Info.plist */,
-				5F2B6C3D3029B0F90030CA0C /* KommunicateSPMCompatibility.swift */,
 				5F6D908E302B0B7D007707AE /* Localizable.strings */,
 			);
 			path = "KommunicateChatUI-iOS-SDK-Demo";
@@ -431,9 +428,7 @@
 					};
 					8B36D0E31F3DC5E900FEFFD2 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 932BY3Q6F7;
 						LastSwiftMigration = 1150;
-						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -445,7 +440,6 @@
 					};
 					8B36D1021F3DC5EA00FEFFD2 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = C25JNDCBM4;
 						LastSwiftMigration = 1150;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 8B36D0E31F3DC5E900FEFFD2;
@@ -544,7 +538,6 @@
 				8BEF11AE1F619367000336AF /* LoginViewController.swift in Sources */,
 				8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */,
 				1A661EDE2241146600093559 /* PushNotificationHandler.swift in Sources */,
-				5F2B6C3E3029B0F90030CA0C /* KommunicateSPMCompatibility.swift in Sources */,
 				1A96DD4222549DF600335C72 /* ContainerViewController.swift in Sources */,
 				8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */,
 			);
@@ -777,12 +770,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "KommunicateChatUI-iOS-SDK-Demo/KommunicateChatUI-iOS-SDK-Demo.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 932BY3Q6F7;
+				DEVELOPMENT_TEAM = 932BY3Q6F7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -798,7 +789,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "KM Chat UI Demo App - Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
@@ -809,11 +799,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "KommunicateChatUI-iOS-SDK-Demo/KommunicateChatUI-iOS-SDK-Demo.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 932BY3Q6F7;
+				DEVELOPMENT_TEAM = 932BY3Q6F7;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -829,7 +818,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "KM Chat UI Demo App - Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
@@ -838,7 +826,7 @@
 		8B36D1131F3DC5EA00FEFFD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = C25JNDCBM4;
+				DEVELOPMENT_TEAM = 932BY3Q6F7;
 				INFOPLIST_FILE = "$(SRCROOT)/KommunicateDemoUITests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -856,7 +844,7 @@
 		8B36D1141F3DC5EA00FEFFD2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = C25JNDCBM4;
+				DEVELOPMENT_TEAM = 932BY3Q6F7;
 				INFOPLIST_FILE = "$(SRCROOT)/KommunicateDemoUITests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -915,11 +903,11 @@
 /* Begin XCLocalSwiftPackageReference section */
 		5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-            relativePath = "..";
+			relativePath = ..;
 		};
 		5F2B6C323029AF690030CA0C /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
-            relativePath = "..";
+			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 

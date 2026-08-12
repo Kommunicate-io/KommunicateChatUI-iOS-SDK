@@ -29,9 +29,9 @@ import KommunicateCore_iOS_SDK
 
 class PushNotificationHandler {
     public static let shared = PushNotificationHandler()
-    var configuration: ALKConfiguration!
+    var configuration: KMChatConfiguration!
 
-    public func handleNotification(with configuration: ALKConfiguration) {
+    public func handleNotification(with configuration: KMChatConfiguration) {
         self.configuration = configuration
 
         // No need to add removeObserver() as it is present in pushAssist.
@@ -51,7 +51,7 @@ class PushNotificationHandler {
                 /// Before showing notification check if it is for active conversation.
                 /// You can also check if notification came for muted or blocked conversation
                 /// using NotificationData and show notification accordingly.
-                /// - Note: This might not work if you added `ALKConversationViewController`
+                /// - Note: This might not work if you added `KMChatConversationViewController`
                 ///         inside container. If thats the case then handle accordingly.
                 guard !NotificationHelper().isNotificationForActiveThread(notificationData) else { return }
                 /// Here you can use any view to display notification.
@@ -117,7 +117,7 @@ class PushNotificationHandler {
             }
         case let vc as ViewController:
             let container = ContainerViewController()
-            let nav = ALKBaseNavigationViewController(rootViewController: container)
+            let nav = KMChatBaseNavigationViewController(rootViewController: container)
             vc.present(nav, animated: true) {
                 let listVC = NotificationHelper().getConversationVCToLaunch(notification: notificationData, configuration: self.configuration)
                 /// Navigate to the controller where list is added and use this instance there.
