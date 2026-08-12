@@ -39,13 +39,13 @@ class LoginViewController: UIViewController {
         alUser.userId = userName.text
         KMCoreUserDefaultsHandler.setUserId(alUser.userId)
         print("userName:: ", alUser.userId ?? "")
-        if !((emailId.text?.isEmpty)!) {
-            alUser.email = emailId.text
-            KMCoreUserDefaultsHandler.setEmailId(alUser.email)
+        if let email = emailId.text, !email.isEmpty {
+            alUser.email = email
+            KMCoreUserDefaultsHandler.setEmailId(email)
         }
-        if !((password.text?.isEmpty)!) {
-            alUser.password = password.text
-            KMCoreUserDefaultsHandler.setPassword(alUser.password)
+        if let password = password.text, !password.isEmpty {
+            alUser.password = password
+            KMCoreUserDefaultsHandler.setPassword(password)
         }
         registerUserToKommunicate(alUser: alUser)
     }
