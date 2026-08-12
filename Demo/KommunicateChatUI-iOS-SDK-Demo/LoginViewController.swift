@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        ALUserDefaultsHandler.setUserAuthenticationTypeId(1)
+        KMCoreUserDefaultsHandler.setUserAuthenticationTypeId(1)
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
 
     @IBAction func getStartedBtn(_: AnyObject) {
         let appId = ALChatManager.applicationId
-        let alUser = ALUser()
+        let alUser = KMCoreUser()
         alUser.applicationId = appId
 
         if ALChatManager.isNilOrEmpty(userName.text as NSString?) {
@@ -37,20 +37,20 @@ class LoginViewController: UIViewController {
             return
         }
         alUser.userId = userName.text
-        ALUserDefaultsHandler.setUserId(alUser.userId)
+        KMCoreUserDefaultsHandler.setUserId(alUser.userId)
         print("userName:: ", alUser.userId ?? "")
         if !((emailId.text?.isEmpty)!) {
             alUser.email = emailId.text
-            ALUserDefaultsHandler.setEmailId(alUser.email)
+            KMCoreUserDefaultsHandler.setEmailId(alUser.email)
         }
         if !((password.text?.isEmpty)!) {
             alUser.password = password.text
-            ALUserDefaultsHandler.setPassword(alUser.password)
+            KMCoreUserDefaultsHandler.setPassword(alUser.password)
         }
         registerUserToKommunicate(alUser: alUser)
     }
 
-    private func registerUserToKommunicate(alUser: ALUser) {
+    private func registerUserToKommunicate(alUser: KMCoreUser) {
         let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
         alChatManager.connectUser(alUser, completion: { response, error in
             DispatchQueue.main.async {

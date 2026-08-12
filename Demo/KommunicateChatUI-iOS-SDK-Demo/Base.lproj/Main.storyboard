@@ -13,7 +13,7 @@
         <!--Login View Controller-->
         <scene sceneID="ozB-0S-XSF">
             <objects>
-                <viewController storyboardIdentifier="LoginView" id="8Me-ai-yhR" customClass="LoginViewController" customModule="ApplozicSwiftDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginView" id="8Me-ai-yhR" customClass="LoginViewController" customModule="KommunicateChatUI_iOS_SDK_Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yzH-ho-FT3"/>
                         <viewControllerLayoutGuide type="bottom" id="iHy-zV-gug"/>
@@ -118,7 +118,7 @@
         <!--View Controller-->
         <scene sceneID="Z9C-rV-QIS">
             <objects>
-                <viewController storyboardIdentifier="ViewController" id="cKx-Tb-vxu" customClass="ViewController" customModule="ApplozicSwiftDemo" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="cKx-Tb-vxu" customClass="ViewController" customModule="KommunicateChatUI_iOS_SDK_Demo" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iSP-1U-0aB"/>
                         <viewControllerLayoutGuide type="bottom" id="8yT-Re-W4A"/>
