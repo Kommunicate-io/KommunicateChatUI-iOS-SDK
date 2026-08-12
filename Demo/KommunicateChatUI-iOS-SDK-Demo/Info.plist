@@ -20,6 +20,11 @@
     <string>1</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    <key>KOMMUNICATE_PRODUCTION</key>
+    <dict>
+        <key>AL_KBASE_URL</key>
+        <string>https://services.kommunicate.io</string>
+    </dict>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>

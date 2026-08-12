@@ -42,27 +42,27 @@ class ContainerViewController: UIViewController {
 //            let vc = ConversationContainerViewController()
 //            let navVC = UINavigationController(rootViewController: vc)
 //            self.present(navVC, animated: true, completion: nil)
-            let conversationVC = ALKConversationListViewController(configuration: ALChatManager.defaultConfiguration)
-            let nav = ALKBaseNavigationViewController(rootViewController: conversationVC)
+            let conversationVC = KMChatConversationListViewController(configuration: ALChatManager.defaultConfiguration)
+            let nav = KMChatBaseNavigationViewController(rootViewController: conversationVC)
             present(nav, animated: true, completion: nil)
         case .profile:
             print("Profile")
         }
     }
 
-    func openConversationFromNotification(_ viewController: ALKConversationListViewController) {
+    func openConversationFromNotification(_ viewController: KMChatConversationListViewController) {
         /// Use this if you'd used `ConversationContainerViewController` above.
 //        let vc = ConversationContainerViewController()
 //        vc.conversationVC = viewController
 //        let navVC = UINavigationController(rootViewController: vc)
 //        self.present(navVC, animated: true, completion: nil)
-        let nav = ALKBaseNavigationViewController(rootViewController: viewController)
+        let nav = KMChatBaseNavigationViewController(rootViewController: viewController)
         present(nav, animated: true, completion: nil)
     }
 }
 
 class ConversationContainerViewController: UIViewController {
-    lazy var conversationVC = ALKConversationListViewController(configuration: ALChatManager.defaultConfiguration)
+    lazy var conversationVC = KMChatConversationListViewController(configuration: ALChatManager.defaultConfiguration)
 
     override func viewDidLoad() {
         super.viewDidLoad()

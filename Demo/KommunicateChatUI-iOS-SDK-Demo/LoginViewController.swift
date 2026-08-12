@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        ALUserDefaultsHandler.setUserAuthenticationTypeId(1)
+        KMCoreUserDefaultsHandler.setUserAuthenticationTypeId(1)
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
 
     @IBAction func getStartedBtn(_: AnyObject) {
         let appId = ALChatManager.applicationId
-        let alUser = ALUser()
+        let alUser = KMCoreUser()
         alUser.applicationId = appId
 
         if ALChatManager.isNilOrEmpty(userName.text as NSString?) {
@@ -37,31 +37,51 @@ class LoginViewController: UIViewController {
             return
         }
         alUser.userId = userName.text
-        ALUserDefaultsHandler.setUserId(alUser.userId)
+        KMCoreUserDefaultsHandler.setUserId(alUser.userId)
         print("userName:: ", alUser.userId ?? "")
-        if !((emailId.text?.isEmpty)!) {
-            alUser.email = emailId.text
-            ALUserDefaultsHandler.setEmailId(alUser.email)
+        if let email = emailId.text, !email.isEmpty {
+            alUser.email = email
+            KMCoreUserDefaultsHandler.setEmailId(email)
         }
-        if !((password.text?.isEmpty)!) {
-            alUser.password = password.text
-            ALUserDefaultsHandler.setPassword(alUser.password)
+        if let password = password.text, !password.isEmpty {
+            alUser.password = password
+            KMCoreUserDefaultsHandler.setPassword(password)
         }
         registerUserToKommunicate(alUser: alUser)
     }
 
-    private func registerUserToKommunicate(alUser: ALUser) {
+    private func registerUserToKommunicate(alUser: KMCoreUser) {
         let alChatManager = ALChatManager(applicationKey: ALChatManager.applicationId as NSString)
         alChatManager.connectUser(alUser, completion: { response, error in
-            if error == nil {
-                self.addContacts()
-                NSLog("[REGISTRATION] Kommunicate user registration was successful: %@ \(String(describing: response?.isRegisteredSuccessfully()))")
-                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController")
-                self.present(vc!, animated: true, completion: nil)
-            } else {
-                NSLog("[REGISTRATION] Kommunicate user registration error: %@", error.debugDescription)
+            DispatchQueue.main.async {
+                if error == nil {
+                    self.addContacts()
+                    NSLog(
+                        "[REGISTRATION] Kommunicate user registration was successful: %@",
+                        String(describing: response?.isRegisteredSuccessfully())
+                    )
+                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") else {
+                        self.showLoginError(
+                            NSLocalizedString("chat_demo_open_error", bundle: .main, comment: "")
+                        )
+                        return
+                    }
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true, completion: nil)
+                } else {
+                    let message = error?.localizedDescription
+                        ?? NSLocalizedString("user_registration_error", bundle: .main, comment: "")
+                    NSLog("[REGISTRATION] Kommunicate user registration error: %@", error.debugDescription)
+                    self.showLoginError(message)
+                }
             }
         })
+    }
+
+    private func showLoginError(_ message: String) {
+        let alert = UIAlertController(title: "Kommunicate", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     func addContacts() {

@@ -24,7 +24,8 @@ import UIKit
         if applicationKey.length == 0 {
             fatalError("Please pass your applicationId in the ALChatManager file.")
         }
-        ALUserDefaultsHandler.setApplicationKey(applicationKey as String)
+        KMCoreUserDefaultsHandler.setApplicationKey(applicationKey as String)
+        setApplicationBaseUrl()
         defaultChatViewSettings()
     }
 
@@ -47,7 +48,7 @@ import UIKit
         }
         print("DEVICE_TOKEN_STRING :: \(deviceTokenString)")
 
-        if ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
+        if KMCoreUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
             let alRegisterUserClientService = ALRegisterUserClientService()
             alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { response, _ in
                 print("REGISTRATION_RESPONSE :: \(String(describing: response))")
@@ -58,10 +59,10 @@ import UIKit
     /// This method used for Authentication OR User Registration to kommunicate server
     /// It create a new user in kommunicate if user doesn't exist OR it will login to the existing user.
     /// - Parameters:
-    ///   - alUser: Pass ALUser object.
+    ///   - alUser: Pass KMCoreUser object.
     ///   - completion: Completion Handler will have ALRegistrationResponse in case of successful login else it will have Error in case of any error in login or registration.
-    @objc func connectUser(_ alUser: ALUser, completion: @escaping (_ response: ALRegistrationResponse?, _ error: NSError?) -> Void) {
-        ALUserDefaultsHandler.setApplicationKey(getApplicationKey() as String)
+    @objc func connectUser(_ alUser: KMCoreUser, completion: @escaping (_ response: ALRegistrationResponse?, _ error: NSError?) -> Void) {
+        KMCoreUserDefaultsHandler.setApplicationKey(getApplicationKey() as String)
         let registerUserClientService = ALRegisterUserClientService()
         registerUserClientService.initWithCompletion(alUser, withCompletion: { response, error in
             guard error == nil else {
@@ -85,14 +86,14 @@ import UIKit
     }
 
     func getApplicationKey() -> NSString {
-        let appKey = ALUserDefaultsHandler.getApplicationKey() as NSString?
+        let appKey = KMCoreUserDefaultsHandler.getApplicationKey() as NSString?
         let applicationKey = (appKey != nil) ? appKey : ALChatManager.applicationId as NSString?
         return applicationKey!
     }
 
     func isUserPresent() -> Bool {
-        guard let _ = ALUserDefaultsHandler.getApplicationKey() as String?,
-              let _ = ALUserDefaultsHandler.getUserId() as String?
+        guard let _ = KMCoreUserDefaultsHandler.getApplicationKey() as String?,
+              let _ = KMCoreUserDefaultsHandler.getUserId() as String?
         else {
             return false
         }
@@ -101,11 +102,11 @@ import UIKit
 
     @objc func logoutUser(completion: @escaping (Bool) -> Void) {
         let registerUserClientService = ALRegisterUserClientService()
-        if let _ = ALUserDefaultsHandler.getDeviceKeyString() {
+        if let _ = KMCoreUserDefaultsHandler.getDeviceKeyString() {
             registerUserClientService.logout(completionHandler: {
                 _, _ in
                 print("logout")
-                let appSettingsUserDefaults = ALKAppSettingsUserDefaults()
+                let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
                 appSettingsUserDefaults.clear()
                 completion(true)
             })
@@ -114,18 +115,18 @@ import UIKit
 
     /// Add the default chat settings here
     func defaultChatViewSettings() {
-        ALUserDefaultsHandler.setGoogleMapAPIKey("AIzaSyCOacEeJi-ZWLLrOtYyj3PKMTOFEG7HDlw") // REPLACE WITH YOUR GOOGLE MAPKEY
-        ALApplozicSettings.setListOfViewControllers([ALKConversationListViewController.description(), ALKConversationViewController.description()])
-        ALApplozicSettings.setFilterContactsStatus(false)
-        ALUserDefaultsHandler.setDebugLogsRequire(true)
-        ALApplozicSettings.setSwiftFramework(true)
+        KMCoreUserDefaultsHandler.setGoogleMapAPIKey("AIzaSyCOacEeJi-ZWLLrOtYyj3PKMTOFEG7HDlw") // REPLACE WITH YOUR GOOGLE MAPKEY
+        KMCoreSettings.setListOfViewControllers([KMChatConversationListViewController.description(), KMChatConversationViewController.description()])
+        KMCoreSettings.setFilterContactsStatus(false)
+        KMCoreUserDefaultsHandler.setDebugLogsRequire(true)
+        KMCoreSettings.setSwiftFramework(true)
     }
 
     /// Use this method for launching conversation list screen.
     /// - Parameter viewController: Pass the UIViewController.
     @objc func launchChatList(from viewController: UIViewController) {
-        let conversationVC = ALKConversationListViewController(configuration: ALChatManager.defaultConfiguration)
-        let navVC = ALKBaseNavigationViewController(rootViewController: conversationVC)
+        let conversationVC = KMChatConversationListViewController(configuration: ALChatManager.defaultConfiguration)
+        let navVC = KMChatBaseNavigationViewController(rootViewController: conversationVC)
         navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: true, completion: nil)
     }
@@ -142,8 +143,8 @@ import UIKit
             title = name
         }
         title = title.isEmpty ? "No name" : title
-        let convViewModel = ALKConversationViewModel(contactId: contactId, channelKey: nil, localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName, prefilledMessage: prefilledMessage)
-        let conversationViewController = ALKConversationViewController(configuration: ALChatManager.defaultConfiguration, individualLaunch: true)
+        let convViewModel = KMChatConversationViewModel(contactId: contactId, channelKey: nil, localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName, prefilledMessage: prefilledMessage)
+        let conversationViewController = KMChatConversationViewController(configuration: ALChatManager.defaultConfiguration, individualLaunch: true)
         conversationViewController.viewModel = convViewModel
         launch(viewController: conversationViewController, from: viewController)
     }
@@ -154,29 +155,29 @@ import UIKit
     ///   - viewController: Pass the UIViewController.
     ///   - prefilledMessage: Pass the prefilled Message in case if this needs to prefilled in chat box else it will be nil.
     @objc func launchGroupWith(clientGroupId: String, from viewController: UIViewController, prefilledMessage: String? = nil) {
-        let alChannelService = ALChannelService()
+        let alChannelService = KMCoreChannelService()
         alChannelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) { channel in
             guard let channel = channel, let key = channel.key else { return }
-            let convViewModel = ALKConversationViewModel(contactId: nil, channelKey: key, localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName, prefilledMessage: prefilledMessage)
-            let conversationViewController = ALKConversationViewController(configuration: ALChatManager.defaultConfiguration, individualLaunch: true)
+            let convViewModel = KMChatConversationViewModel(contactId: nil, channelKey: key, localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName, prefilledMessage: prefilledMessage)
+            let conversationViewController = KMChatConversationViewController(configuration: ALChatManager.defaultConfiguration, individualLaunch: true)
             conversationViewController.viewModel = convViewModel
             self.launch(viewController: conversationViewController, from: viewController)
         }
     }
 
     /// Use [launchGroupOfTwo](x-source-tag://GroupOfTwo) method instead.
-    @objc func launchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController) {
+    @objc func launchChatWith(conversationProxy: KMCoreConversationProxy, from viewController: UIViewController) {
         let userId = conversationProxy.userId
         let groupId = conversationProxy.groupId
-        let convViewModel = ALKConversationViewModel(contactId: userId, channelKey: groupId, conversationProxy: conversationProxy, localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName)
-        let conversationViewController = ALKConversationViewController(configuration: ALChatManager.defaultConfiguration, individualLaunch: true)
+        let convViewModel = KMChatConversationViewModel(contactId: userId, channelKey: groupId, conversationProxy: conversationProxy, localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName)
+        let conversationViewController = KMChatConversationViewController(configuration: ALChatManager.defaultConfiguration, individualLaunch: true)
         conversationViewController.viewModel = convViewModel
         launch(viewController: conversationViewController, from: viewController)
     }
 
     /// Use [launchGroupOfTwo](x-source-tag://GroupOfTwo) method instead.
-    func createAndLaunchChatWith(conversationProxy: ALConversationProxy, from viewController: UIViewController, configuration _: ALKConfiguration) {
-        let conversationService = ALConversationService()
+    func createAndLaunchChatWith(conversationProxy: KMCoreConversationProxy, from viewController: UIViewController, configuration _: KMChatConfiguration) {
+        let conversationService = KMCoreConversationService()
         conversationService.createConversation(conversationProxy) { error, response in
             guard let proxy = response, error == nil else {
                 print("Error creating conversation :: \(String(describing: error))")
@@ -209,12 +210,12 @@ import UIKit
         topic: String,
         from viewController: UIViewController
     ) {
-        let clientGroupId = String(format: "%@_%@_%@", topic, ALUserDefaultsHandler.getUserId(), userId)
-        let channelService = ALChannelService()
+        let clientGroupId = String(format: "%@_%@_%@", topic, KMCoreUserDefaultsHandler.getUserId(), userId)
+        let channelService = KMCoreChannelService()
         channelService.getChannelInformation(nil, orClientChannelKey: clientGroupId) {
             channel in
             guard let channel = channel else {
-                let channelInfo = ALChannelInfo()
+                let channelInfo = KMCoreChannelInfo()
                 channelInfo.clientGroupId = clientGroupId
                 channelInfo.groupName = userId
                 channelInfo.groupMemberList = [userId]
@@ -226,7 +227,7 @@ import UIKit
                         print("Error while creating channel : \(String(describing: error))")
                         return
                     }
-                    ALChannelDBService().addMember(toChannel: userId, andChannelKey: channel.key)
+                    KMCoreChannelDBService().addMember(toChannel: userId, andChannelKey: channel.key)
                     self.launchGroupWith(clientGroupId: clientGroupId, from: viewController)
                 }
                 return
@@ -243,7 +244,7 @@ import UIKit
     }
 
     func launchContactList(from viewController: UIViewController) {
-        let newChatVC = ALKNewChatViewController(configuration: ALChatManager.defaultConfiguration, viewModel: ALKNewChatViewModel(localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName))
+        let newChatVC = KMChatNewChatViewController(configuration: ALChatManager.defaultConfiguration, viewModel: KMChatNewChatViewModel(localizedStringFileName: ALChatManager.defaultConfiguration.localizedStringFileName))
         let navVC = UINavigationController(rootViewController: newChatVC)
         viewController.present(navVC, animated: true, completion: nil)
     }
@@ -254,19 +255,19 @@ import UIKit
         }
         /// Change URLs if they are present in the info dictionary.
         if let baseUrl = dict["AL_KBASE_URL"] as? String {
-            ALUserDefaultsHandler.setBASEURL(baseUrl)
+            KMCoreUserDefaultsHandler.setBASEURL(baseUrl)
         }
 
         if let mqttUrl = dict["AL_MQTT_URL"] as? String {
-            ALUserDefaultsHandler.setMQTTURL(mqttUrl)
+            KMCoreUserDefaultsHandler.setMQTTURL(mqttUrl)
         }
 
         if let fileUrl = dict["AL_FILE_URL"] as? String {
-            ALUserDefaultsHandler.setFILEURL(fileUrl)
+            KMCoreUserDefaultsHandler.setFILEURL(fileUrl)
         }
 
         if let mqttPort = dict["AL_MQTT_PORT"] as? String {
-            ALUserDefaultsHandler.setMQTTPort(mqttPort)
+            KMCoreUserDefaultsHandler.setMQTTPort(mqttPort)
         }
     }
 
@@ -275,19 +276,19 @@ import UIKit
     /// If user information is stored in DB or preference, Code to get user's information should go here.
     /// This can also be used to get existing user information in case of app update.
     /// - Returns: Logged-in user information
-    func getLoggedInUserInfo() -> ALUser {
-        let user = ALUser()
+    func getLoggedInUserInfo() -> KMCoreUser {
+        let user = KMCoreUser()
         user.applicationId = getApplicationKey() as String
-        user.appModuleName = ALUserDefaultsHandler.getAppModuleName()
-        user.userId = ALUserDefaultsHandler.getUserId()
-        user.email = ALUserDefaultsHandler.getEmailId()
-        user.password = ALUserDefaultsHandler.getPassword()
-        user.displayName = ALUserDefaultsHandler.getDisplayName()
+        user.appModuleName = KMCoreUserDefaultsHandler.getAppModuleName()
+        user.userId = KMCoreUserDefaultsHandler.getUserId()
+        user.email = KMCoreUserDefaultsHandler.getEmailId()
+        user.password = KMCoreUserDefaultsHandler.getPassword()
+        user.displayName = KMCoreUserDefaultsHandler.getDisplayName()
         return user
     }
 
-    private func conversationProxyFrom(original: ALConversationProxy, generated: ALConversationProxy) -> ALConversationProxy {
-        let finalProxy = ALConversationProxy()
+    private func conversationProxyFrom(original: KMCoreConversationProxy, generated: KMCoreConversationProxy) -> KMCoreConversationProxy {
+        let finalProxy = KMCoreConversationProxy()
         finalProxy.userId = generated.userId
         finalProxy.topicDetailJson = generated.topicDetailJson
         finalProxy.id = original.id
@@ -303,7 +304,7 @@ import UIKit
             return name
         }
         if let channelKey = groupId,
-           let channel = ALChannelService().getChannelByKey(channelKey)
+           let channel = KMCoreChannelService().getChannelByKey(channelKey)
         {
             return channel.name
         }
@@ -321,7 +322,7 @@ import UIKit
             deviceTokenString += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
         }
         print("Device token :: \(String(describing: deviceToken.description))")
-        if ALUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
+        if KMCoreUserDefaultsHandler.getApnDeviceToken() != deviceTokenString {
             let alRegisterUserClientService = ALRegisterUserClientService()
             alRegisterUserClientService.updateApnDeviceToken(withCompletion: deviceTokenString, withCompletion: { response, error in
                 if error != nil {
@@ -348,7 +349,7 @@ import UIKit
         ///       If you want to try this in our sample, then comment lines in ViewController's launchChatList method.
         ///       Finally, Uncomment below line
         /// PushNotificationHandler.shared.handleNotification(with: AppDelegate.config)
-        ALKPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(ALChatManager.defaultConfiguration)
+        KMChatPushNotificationHandler.shared.dataConnectionNotificationHandlerWith(ALChatManager.defaultConfiguration)
         let alApplocalNotificationHnadler = ALAppLocalNotifications.appLocalNotificationHandler()
         alApplocalNotificationHnadler?.dataConnectionNotificationHandler()
     }
@@ -362,7 +363,7 @@ import UIKit
     /// Use this method in AppDelegate applicationWillTerminate to save the context of the database.
     /// - Parameter application: Pass the UIApplication object.
     @objc func applicationWillTerminate(application _: UIApplication) {
-        ALDBHandler.sharedInstance().saveContext()
+        KMCoreDBHandler.sharedInstance().saveContext()
     }
 
     /// Use this method for proccessing the notificiation of background.
@@ -434,15 +435,15 @@ import UIKit
     }
 
     /// Setup your configuration here
-    static let defaultConfiguration: ALKConfiguration = {
-        var config = ALKConfiguration()
+    static let defaultConfiguration: KMChatConfiguration = {
+        var config = KMChatConfiguration()
         // Change config based on requirement like:
         // config.isTapOnNavigationBarEnabled = false
         return config
     }()
 
     private func launch(viewController: UIViewController, from vc: UIViewController) {
-        let navVC = ALKBaseNavigationViewController(rootViewController: viewController)
+        let navVC = KMChatBaseNavigationViewController(rootViewController: viewController)
         navVC.modalPresentationStyle = .fullScreen
         vc.present(navVC, animated: true, completion: nil)
     }
