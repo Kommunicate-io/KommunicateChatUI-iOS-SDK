@@ -101,15 +101,16 @@ import UIKit
     }
 
     @objc func logoutUser(completion: @escaping (Bool) -> Void) {
+        let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
         guard KMCoreUserDefaultsHandler.getDeviceKeyString() != nil else {
-            completion(false)
+            appSettingsUserDefaults.clear()
+            completion(true)
             return
         }
 
         let registerUserClientService = ALRegisterUserClientService()
         registerUserClientService.logout { _, _ in
             print("logout")
-            let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
             appSettingsUserDefaults.clear()
             completion(true)
         }

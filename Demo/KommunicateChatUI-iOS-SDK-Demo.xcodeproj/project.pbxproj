@@ -25,6 +25,7 @@
 		5F2B6C363029AF690030CA0C /* RichMessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2B6C353029AF690030CA0C /* RichMessageKit */; };
 		5F2B6C383029AFFC0030CA0C /* KommunicateChatUI-iOS-SDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2B6C373029AFFC0030CA0C /* KommunicateChatUI-iOS-SDK */; };
 		5F2B6C3A3029AFFF0030CA0C /* RichMessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2B6C393029AFFF0030CA0C /* RichMessageKit */; };
+		5F5B4FE9302F3B9100BC7297 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5F5B4FE8302F3B9100BC7297 /* Localizable.strings */; };
 		8B36D0E81F3DC5E900FEFFD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */; };
 		8B36D0EA1F3DC5E900FEFFD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */; };
 		8B36D0ED1F3DC5E900FEFFD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B36D0EB1F3DC5E900FEFFD2 /* Main.storyboard */; };
@@ -96,6 +97,7 @@
 		464E2C68277E4562009AEAEB /* KommunicateChatUI_iOS_SDK_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KommunicateChatUI_iOS_SDK_DemoTests.swift; sourceTree = "<group>"; };
 		469E0C3627467D3C00895617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5F504D2CB3F5D0E6D22C39A8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5F5B4FE7302F3B9100BC7297 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7ED781C442B64AD1D1B5AEE1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		81A1D05B99581079D018089B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		8B06E486225E353B00B7FA64 /* ProfanityFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfanityFilterTests.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				8B4836FA1F6976830067FC5E /* KommunicateChatUI-iOS-SDK-Demo.entitlements */,
+				5F5B4FE8302F3B9100BC7297 /* Localizable.strings */,
 				8B36D0E71F3DC5E900FEFFD2 /* AppDelegate.swift */,
 				8B36D0E91F3DC5E900FEFFD2 /* ViewController.swift */,
 				8BEF11AB1F618669000336AF /* ALChatManager.swift */,
@@ -480,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B36D0F21F3DC5E900FEFFD2 /* LaunchScreen.storyboard in Resources */,
+				5F5B4FE9302F3B9100BC7297 /* Localizable.strings in Resources */,
 				8B36D0EF1F3DC5E900FEFFD2 /* Assets.xcassets in Resources */,
 				8B36D0ED1F3DC5E900FEFFD2 /* Main.storyboard in Resources */,
 			);
@@ -563,6 +567,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		5F5B4FE8302F3B9100BC7297 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5F5B4FE7302F3B9100BC7297 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		8B36D0EB1F3DC5E900FEFFD2 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
