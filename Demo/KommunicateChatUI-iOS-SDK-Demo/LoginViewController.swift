@@ -37,15 +37,12 @@ class LoginViewController: UIViewController {
             return
         }
         alUser.userId = userName.text
-        KMCoreUserDefaultsHandler.setUserId(alUser.userId)
         print("userName:: ", alUser.userId ?? "")
         if let email = emailId.text, !email.isEmpty {
             alUser.email = email
-            KMCoreUserDefaultsHandler.setEmailId(email)
         }
         if let password = password.text, !password.isEmpty {
             alUser.password = password
-            KMCoreUserDefaultsHandler.setPassword(password)
         }
         registerUserToKommunicate(alUser: alUser)
     }
@@ -55,6 +52,7 @@ class LoginViewController: UIViewController {
         alChatManager.connectUser(alUser, completion: { response, error in
             DispatchQueue.main.async {
                 if error == nil {
+                    self.persistLoginState(for: alUser)
                     self.addContacts()
                     NSLog(
                         "[REGISTRATION] Kommunicate user registration was successful: %@",
@@ -76,6 +74,16 @@ class LoginViewController: UIViewController {
                 }
             }
         })
+    }
+
+    private func persistLoginState(for alUser: KMCoreUser) {
+        KMCoreUserDefaultsHandler.setUserId(alUser.userId)
+        if let email = alUser.email, !email.isEmpty {
+            KMCoreUserDefaultsHandler.setEmailId(email)
+        }
+        if let password = alUser.password, !password.isEmpty {
+            KMCoreUserDefaultsHandler.setPassword(password)
+        }
     }
 
     private func showLoginError(_ message: String) {
