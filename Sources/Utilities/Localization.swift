@@ -21,6 +21,6 @@ extension Localizable {
     }
 
     func localizedString(forKey: String, withDefaultValue: String, fileName: String) -> String {
-        return NSLocalizedString(forKey, tableName: fileName, bundle: Bundle.main, value: withDefaultValue, comment: "")
+        return NSLocalizedString(forKey, tableName: fileName, bundle: Bundle.km, value: withDefaultValue, comment: "")
     }
 }
