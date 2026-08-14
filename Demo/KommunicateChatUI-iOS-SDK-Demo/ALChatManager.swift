@@ -101,18 +101,20 @@ import UIKit
     }
 
     @objc func logoutUser(completion: @escaping (Bool) -> Void) {
+        guard KMCoreUserDefaultsHandler.getDeviceKeyString() != nil else {
+            completion(false)
+            return
+        }
+
         let registerUserClientService = ALRegisterUserClientService()
-        if let _ = KMCoreUserDefaultsHandler.getDeviceKeyString() {
-            registerUserClientService.logout(completionHandler: {
-                _, _ in
-                print("logout")
-                let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
-                appSettingsUserDefaults.clear()
-                completion(true)
-            })
+        registerUserClientService.logout { _, _ in
+            print("logout")
+            let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
+            appSettingsUserDefaults.clear()
+            completion(true)
         }
     }
-
+    
     /// Add the default chat settings here
     func defaultChatViewSettings() {
         if let googleMapAPIKey = Bundle.main.object(forInfoDictionaryKey: "GOOGLE_MAPS_API_KEY") as? String,
