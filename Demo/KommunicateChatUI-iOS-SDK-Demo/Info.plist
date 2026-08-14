@@ -25,6 +25,8 @@
         <key>AL_KBASE_URL</key>
         <string>https://services.kommunicate.io</string>
     </dict>
+    <key>GOOGLE_MAPS_API_KEY</key>
+    <string>&lt;GOOGLE_MAPS_API_KEY&gt;</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>

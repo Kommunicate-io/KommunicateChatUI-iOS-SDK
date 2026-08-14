@@ -115,7 +115,12 @@ import UIKit
 
     /// Add the default chat settings here
     func defaultChatViewSettings() {
-        KMCoreUserDefaultsHandler.setGoogleMapAPIKey("AIzaSyCOacEeJi-ZWLLrOtYyj3PKMTOFEG7HDlw") // REPLACE WITH YOUR GOOGLE MAPKEY
+        if let googleMapAPIKey = Bundle.main.object(forInfoDictionaryKey: "GOOGLE_MAPS_API_KEY") as? String,
+           !googleMapAPIKey.isEmpty,
+           googleMapAPIKey != "<GOOGLE_MAPS_API_KEY>"
+        {
+            KMCoreUserDefaultsHandler.setGoogleMapAPIKey(googleMapAPIKey)
+        }
         KMCoreSettings.setListOfViewControllers([KMChatConversationListViewController.description(), KMChatConversationViewController.description()])
         KMCoreSettings.setFilterContactsStatus(false)
         KMCoreUserDefaultsHandler.setDebugLogsRequire(true)

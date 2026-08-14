@@ -912,10 +912,6 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
 		};
-		5F2B6C323029AF690030CA0C /* XCLocalSwiftPackageReference ".." */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ..;
-		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -969,38 +965,41 @@
 			package = 5F225D2D3029BB5700BF6D2D /* XCRemoteSwiftPackageReference "Nimble-Snapshots" */;
 			productName = "Nimble-Snapshots";
 		};
-		5F225D313029BBA200BF6D2D /* KommunicateChatUI-iOS-SDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = "KommunicateChatUI-iOS-SDK";
-		};
-		5F225D343029C28B00BF6D2D /* KommunicateCore_iOS_SDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5F225D333029C28B00BF6D2D /* XCRemoteSwiftPackageReference "KommunicateCore-iOS-SDK" */;
-			productName = KommunicateCore_iOS_SDK;
-		};
-		5F225D363029C29B00BF6D2D /* KommunicateCore_iOS_SDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5F225D333029C28B00BF6D2D /* XCRemoteSwiftPackageReference "KommunicateCore-iOS-SDK" */;
-			productName = KommunicateCore_iOS_SDK;
-		};
-		5F2B6C333029AF690030CA0C /* KommunicateChatUI-iOS-SDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = "KommunicateChatUI-iOS-SDK";
-		};
-		5F2B6C353029AF690030CA0C /* RichMessageKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RichMessageKit;
-		};
-		5F2B6C373029AFFC0030CA0C /* KommunicateChatUI-iOS-SDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5F2B6C323029AF690030CA0C /* XCLocalSwiftPackageReference ".." */;
-			productName = "KommunicateChatUI-iOS-SDK";
-		};
-		5F2B6C393029AFFF0030CA0C /* RichMessageKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5F2B6C323029AF690030CA0C /* XCLocalSwiftPackageReference ".." */;
-			productName = RichMessageKit;
-		};
+        5F225D313029BBA200BF6D2D /* KommunicateChatUI-iOS-SDK */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */;
+            productName = "KommunicateChatUI-iOS-SDK";
+        };
+        5F225D343029C28B00BF6D2D /* KommunicateCore_iOS_SDK */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D333029C28B00BF6D2D /* XCRemoteSwiftPackageReference "KommunicateCore-iOS-SDK" */;
+            productName = KommunicateCore_iOS_SDK;
+        };
+        5F225D363029C29B00BF6D2D /* KommunicateCore_iOS_SDK */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D333029C28B00BF6D2D /* XCRemoteSwiftPackageReference "KommunicateCore-iOS-SDK" */;
+            productName = KommunicateCore_iOS_SDK;
+        };
+        5F2B6C333029AF690030CA0C /* KommunicateChatUI-iOS-SDK */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */;
+            productName = "KommunicateChatUI-iOS-SDK";
+        };
+        5F2B6C353029AF690030CA0C /* RichMessageKit */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */;
+            productName = RichMessageKit;
+        };
+        5F2B6C373029AFFC0030CA0C /* KommunicateChatUI-iOS-SDK */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */;
+            productName = "KommunicateChatUI-iOS-SDK";
+        };
+        5F2B6C393029AFFF0030CA0C /* RichMessageKit */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = 5F225D303029BBA200BF6D2D /* XCLocalSwiftPackageReference ".." */;
+            productName = RichMessageKit;
+        };
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8B36D0DC1F3DC5E900FEFFD2 /* Project object */;
