@@ -381,7 +381,7 @@
 				8B36D0E11F3DC5E900FEFFD2 /* Frameworks */,
 				8B36D0E21F3DC5E900FEFFD2 /* Resources */,
 				8B0E0D051F3DEF44000D976A /* Embed Frameworks */,
-				8B06E48A22618EC300B7FA64 /* ShellScript */,
+				8B06E48A22618EC300B7FA64 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -499,8 +499,9 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8B06E48A22618EC300B7FA64 /* ShellScript */ = {
+		8B06E48A22618EC300B7FA64 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -508,13 +509,14 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -x \"${PODS_ROOT}/SwiftLint/swiftlint\" ]; then\n    \"${PODS_ROOT}/SwiftLint/swiftlint\"\nelif command -v swiftlint >/dev/null 2>&1; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed; skipping lint.\"\nfi\n";
+			shellScript = "if command -v swiftlint >/dev/null 2>&1; then\n    swiftlint\nelse\n    echo \"error: SwiftLint is required. Install it with: brew install swiftlint\" >&2\n    exit 1\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -927,16 +929,16 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Quick/Quick";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = exactVersion;
+				version = 7.6.2;
 			};
 		};
 		5F225D2A3029BB3B00BF6D2D /* XCRemoteSwiftPackageReference "Nimble" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = exactVersion;
+				version = 13.2.0;
 			};
 		};
 		5F225D2D3029BB5700BF6D2D /* XCRemoteSwiftPackageReference "Nimble-Snapshots" */ = {

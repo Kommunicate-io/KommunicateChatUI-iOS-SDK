@@ -1,5 +1,5 @@
 {
-  "originHash" : "9e9aad509224cd0b153f6c14182c520f8c2378926f2e3ad2a6326312223aab47",
+  "originHash" : "aef43821fd2fdcbe360e005e3b6ad71b891b8a2437358aead15e76c80e542592",
   "pins" : [
     {
       "identity" : "chat_providers_sdk_ios",
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
       "state" : {
-        "branch" : "main",
-        "revision" : "727f75d91a0f7501d08d938966d17e6728b76a2a"
+        "revision" : "c1f3dd66222d5e7a1a20afc237f7e7bc432c564f",
+        "version" : "13.2.0"
       }
     },
     {
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Quick",
       "state" : {
-        "branch" : "main",
-        "revision" : "2b4547b230e94d84320724fd6df65e418b058be2"
+        "revision" : "1163a1b1b114a657c7432b63dd1f92ce99fe11a6",
+        "version" : "7.6.2"
       }
     },
     {
