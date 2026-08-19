@@ -14,12 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [ALKBaseNavigationViewController.self])
+        let navigationBarProxy = UINavigationBar.appearance(whenContainedInInstancesOf: [KMChatBaseNavigationViewController.self])
         navigationBarProxy.barTintColor
             = UIColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0) // light nav blue
         navigationBarProxy.isTranslucent = false
 
-        if ALUserDefaultsHandler.isLoggedIn() {
+        if KMCoreUserDefaultsHandler.isLoggedIn() {
             // Get login screen from storyboard and present it
             let viewController: UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as UIViewController
             window?.makeKeyAndVisible()

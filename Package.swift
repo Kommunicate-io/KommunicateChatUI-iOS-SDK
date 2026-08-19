@@ -32,6 +32,10 @@ let package = Package(
                                "iOSDropDown"],
                 path: "Sources",
                 exclude: ["Extras"],
+                resources: [
+                    .process("Resources"),
+                    .process("Views/StoryBoards")
+                ],
                 linkerSettings: [
                     .linkedFramework("Foundation"),
                     .linkedFramework("SystemConfiguration"),
@@ -40,6 +44,9 @@ let package = Package(
         .target(name: "RichMessageKit",
                 dependencies: [],
                 path: "RichMessageKit",
+                resources: [
+                    .process("Assets")
+                ],
                 linkerSettings: [
                     .linkedFramework("Foundation"),
                     .linkedFramework("UIKit", .when(platforms: [.iOS])),

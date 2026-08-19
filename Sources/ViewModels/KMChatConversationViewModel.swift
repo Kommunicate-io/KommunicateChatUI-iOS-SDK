@@ -551,7 +551,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
 
     open func getMessageTemplates() -> [KMChatTemplateMessageModel]? {
         // Get the json from the root folder, parse it and map it.
-        let bundle = Bundle.main
+        let bundle = Bundle.km
         guard let jsonPath = bundle.path(forResource: "message_template", ofType: "json")
         else {
             return nil
