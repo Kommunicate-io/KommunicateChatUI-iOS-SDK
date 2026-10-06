@@ -56,6 +56,8 @@ final class KMVoiceModeController: NSObject {
     private var sessionGeneration = 0
     private var processedMessageIDs = Set<String>()
     private var processedMessageIDOrder = [String]()
+    private var pendingSpeechTexts = [String]()
+    private var isSpeechInProgress = false
 
     init(
         delegate: KMVoiceModeControllerDelegate,
@@ -131,6 +133,8 @@ final class KMVoiceModeController: NSObject {
         isActive = true
         processedMessageIDs.removeAll(keepingCapacity: true)
         processedMessageIDOrder.removeAll(keepingCapacity: true)
+        pendingSpeechTexts.removeAll(keepingCapacity: true)
+        isSpeechInProgress = false
         audioRecorder.resetNoiseCalibration()
         beginListening(generation: sessionGeneration)
         return true
@@ -146,6 +150,8 @@ final class KMVoiceModeController: NSObject {
         playbackManager.stop()
         processedMessageIDs.removeAll(keepingCapacity: false)
         processedMessageIDOrder.removeAll(keepingCapacity: false)
+        pendingSpeechTexts.removeAll(keepingCapacity: false)
+        isSpeechInProgress = false
         if wasActive {
             try? audioSession.setActive(false, options: .notifyOthersOnDeactivation)
         }
@@ -176,10 +182,34 @@ final class KMVoiceModeController: NSObject {
             remember(messageID: messageID)
         }
 
+        pendingSpeechTexts.append(normalizedText)
+        speakNextQueuedMessageIfNeeded()
+        return true
+    }
+
+    func resumeListeningIfWaitingForResponse() {
+        dispatchPrecondition(condition: .onQueue(.main))
+        guard isActive,
+              state == .waitingForResponse,
+              !isSpeechInProgress,
+              pendingSpeechTexts.isEmpty
+        else {
+            return
+        }
+        beginListening(generation: sessionGeneration)
+    }
+
+    private func speakNextQueuedMessageIfNeeded() {
+        guard isActive, !isSpeechInProgress, !pendingSpeechTexts.isEmpty else {
+            return
+        }
+
+        let text = pendingSpeechTexts.removeFirst()
         let generation = sessionGeneration
+        isSpeechInProgress = true
         audioRecorder.stop()
         update(state: .processingResponse)
-        apiClient.synthesizeText(normalizedText) { [weak self] response, error in
+        apiClient.synthesizeText(text) { [weak self] response, error in
             DispatchQueue.main.async {
                 guard let self = self, self.isCurrent(generation: generation) else { return }
                 if let error = error {
@@ -202,7 +232,6 @@ final class KMVoiceModeController: NSObject {
                 }
             }
         }
-        return true
     }
 
     private func beginListening(generation: Int) {
@@ -254,7 +283,17 @@ final class KMVoiceModeController: NSObject {
         guard isCurrent(generation: generation) else { return }
         update(state: .error)
         delegate?.voiceModeController(self, didFail: error)
-        beginListening(generation: generation)
+        completeCurrentSpeech(generation: generation)
+    }
+
+    private func completeCurrentSpeech(generation: Int) {
+        guard isCurrent(generation: generation) else { return }
+        isSpeechInProgress = false
+        if pendingSpeechTexts.isEmpty {
+            beginListening(generation: generation)
+        } else {
+            speakNextQueuedMessageIfNeeded()
+        }
     }
 
     private func fail(with error: Error, generation: Int) {
@@ -342,7 +381,7 @@ extension KMVoiceModeController: KMVoiceAudioRecorderDelegate {
 
 extension KMVoiceModeController: KMVoicePlaybackManagerDelegate {
     func voicePlaybackManagerDidFinish(_ manager: KMVoicePlaybackManager) {
-        beginListening(generation: sessionGeneration)
+        completeCurrentSpeech(generation: sessionGeneration)
     }
 
     func voicePlaybackManager(_ manager: KMVoicePlaybackManager, didFail error: Error) {

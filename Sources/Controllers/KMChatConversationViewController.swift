@@ -711,22 +711,26 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         isChatBarHidden = chatBarHiddenBeforeVoiceMode
     }
 
-    private func handleVoiceBotMessage(_ message: KMChatMessageModel) {
+    @discardableResult
+    private func handleVoiceBotMessage(_ message: KMChatMessageModel) -> Bool {
         guard !message.isMyMessage,
               message.messageType == .text,
               let sender = ALContactService().loadContact(byKey: "userId", value: message.contactId),
               sender.roleType == NSNumber(value: AL_BOT.rawValue)
         else {
-            return
+            return false
         }
-        voiceModeLaunchTime = 0
         let fallbackIdentifier = [
             message.createdAtTime?.stringValue ?? "0",
             message.contactId ?? "",
             message.message ?? ""
         ].joined(separator: ":")
         let identifier = message.identifier.isEmpty ? fallbackIdentifier : message.identifier
-        voiceModeController.handleBotMessage(identifier: identifier, text: message.message)
+        let handled = voiceModeController.handleBotMessage(identifier: identifier, text: message.message)
+        if handled {
+            voiceModeLaunchTime = 0
+        }
+        return handled
     }
 
     private func speakLaunchWelcomeMessageIfAvailable() {
@@ -2899,11 +2903,21 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
     }
 
     @objc open func newMessagesAdded() {
-        let lastSectionBeforeUpdate = tableView.numberOfSections - 1
+        let oldSectionCount = tableView.numberOfSections
+        let lastSectionBeforeUpdate = oldSectionCount - 1
         updateTableView()
 
-        if isVoiceModeActive, let lastMessage = viewModel.messageModels.last {
-            handleVoiceBotMessage(lastMessage)
+        if isVoiceModeActive {
+            let newMessageCount = viewModel.messageModels.count
+            var queuedBotMessage = false
+            if oldSectionCount < newMessageCount {
+                for message in viewModel.messageModels[oldSectionCount..<newMessageCount] {
+                    queuedBotMessage = handleVoiceBotMessage(message) || queuedBotMessage
+                }
+            }
+            if !queuedBotMessage {
+                voiceModeController.resumeListeningIfWaitingForResponse()
+            }
         }
 
         // Check if current user is removed from the group
