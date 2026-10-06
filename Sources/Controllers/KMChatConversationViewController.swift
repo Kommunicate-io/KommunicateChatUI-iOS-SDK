@@ -611,6 +611,10 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         return voiceModeController.isActive
     }
 
+    var isVoiceModeUIVisible: Bool {
+        return !voiceModeView.isHidden
+    }
+
     private func showVoiceModeUI(animated: Bool = true) {
         view.endEditing(true)
         guard voiceModeView.isHidden else { return }
@@ -808,8 +812,6 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         super.viewDidLoad()
         KMHidePostCTAForm.shared.enabledHidePostCTAForm = configuration.hidePostFormSubmit
         KMHidePostCTAForm.shared.disableSelectionAfterSubmision = configuration.disableFormPostSubmit
-        // Horizontal message templates are intentionally disabled in the chat UI.
-        /*
         if let templates = viewModel.getMessageTemplates() {
             templateView = KMChatTemplateMessagesView(frame: CGRect.zero, viewModel: KMChatTemplateMessagesViewModel(messageTemplates: templates))
         }
@@ -817,7 +819,6 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         templateView?.messageSelected = { [weak self] template in
             self?.viewModel.selected(template: template, metadata: self?.configuration.messageMetadata)
         }
-        */
         
         setupConstraints()
         setRichMessageKitTheme()

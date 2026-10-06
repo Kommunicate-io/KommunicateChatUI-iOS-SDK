@@ -24,7 +24,7 @@ extension KMChatConversationViewController {
         } else if let sourceDictionary = data?["source"] as? [String: Any], let url = sourceDictionary["url"] as? String {
             autoSuggestionApi = url
         }
-        autoSuggestionView.isHidden = false
+        autoSuggestionView.isHidden = isVoiceModeUIVisible
         isAutoSuggestionRichMessage = true
         self.autoSuggestionManager.registerWithoutPrefix(cellType: QuickReplyItemCell.self)
     }
