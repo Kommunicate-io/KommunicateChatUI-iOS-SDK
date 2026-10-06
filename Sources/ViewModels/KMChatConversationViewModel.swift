@@ -23,8 +23,15 @@ public protocol KMChatConversationViewModelDelegate: AnyObject {
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
     func showInvalidReplyAlert(kmField: KMField)
+    func shouldSendMessage(_ message: String) -> Bool
     func isEmailSentForUpdatingUser(status: Bool)
     func emailUpdatedForUser()
+}
+
+public extension KMChatConversationViewModelDelegate {
+    func shouldSendMessage(_ message: String) -> Bool {
+        return true
+    }
 }
 
 // swiftlint:disable:next type_body_length
@@ -683,12 +690,12 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         if alMessages.isEmpty, !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
             sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
         }
+        self.removeTypingIndicatorMessage()
         _ = sortedArray.map { self.alMessageWrapper.addKMCoreMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
         print("new messages: ", models.map { $0.message })
-        self.removeTypingIndicatorMessage()
         delegate?.newMessagesAdded()
         newFormMessageAdded()
     }
@@ -833,7 +840,10 @@ open class KMChatConversationViewModel: NSObject, Localizable {
     @discardableResult
     open func trySend(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) -> Bool {
         let normalizedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !normalizedMessage.isEmpty else { return false }
+        guard !normalizedMessage.isEmpty,
+              delegate?.shouldSendMessage(normalizedMessage) ?? true else {
+            return false
+        }
 
         let candidate = getMessageToPost(isTextMessage: true)
         candidate.message = normalizedMessage

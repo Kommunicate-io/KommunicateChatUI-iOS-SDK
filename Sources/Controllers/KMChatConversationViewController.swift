@@ -2539,7 +2539,7 @@ extension KMChatConversationViewController: KMVoiceModeControllerDelegate {
 
     func voiceModeController(_ controller: KMVoiceModeController, didProduceTranscript transcript: String) -> Bool {
         let text = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, isMessageAllowedByProfanityFilter(text) else { return false }
+        guard !text.isEmpty else { return false }
 
         let didSend = viewModel.trySend(
             message: text,
@@ -2559,6 +2559,10 @@ extension KMChatConversationViewController: KMVoiceModeControllerDelegate {
 }
 
 extension KMChatConversationViewController: KMChatConversationViewModelDelegate {
+
+    public func shouldSendMessage(_ message: String) -> Bool {
+        return isMessageAllowedByProfanityFilter(message)
+    }
     
     public func isEmailSentForUpdatingUser(status: Bool) {
         if status {
