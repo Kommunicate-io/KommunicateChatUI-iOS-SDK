@@ -672,6 +672,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
 
         var sortedArray = filteredArray.filter {
             !alMessageWrapper.contains(message: $0)
+                && !containsEquivalentMessageModel($0.messageModel)
         }
         if sortedArray.count > 1 {
             sortedArray.sort { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
@@ -827,6 +828,30 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         } else {
             loadMessagesFromDB()
         }
+    }
+
+    @discardableResult
+    open func trySend(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) -> Bool {
+        let normalizedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedMessage.isEmpty else { return false }
+
+        let candidate = getMessageToPost(isTextMessage: true)
+        candidate.message = normalizedMessage
+        candidate.metadata = modfiedMessageMetadata(alMessage: candidate, metadata: metadata)
+        updateMetaDataForCustomField(message: candidate)
+
+        if let kmField = alMessages.last?.messageModel.getKmField(),
+           !isValidReply(message: candidate) {
+            delegate?.showInvalidReplyAlert(kmField: kmField)
+            return false
+        }
+        if emailCollectionAwayModeEnabled, !normalizedMessage.isValidEmail() {
+            delegate?.isEmailSentForUpdatingUser(status: false)
+            return false
+        }
+
+        send(message: normalizedMessage, isOpenGroup: isOpenGroup, metadata: metadata)
+        return true
     }
 
     open func send(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) {
@@ -1570,7 +1595,9 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             }
             self.alMessageWrapper.addObject(toMessageArray: messages)
             
-            self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
+            self.modelsToBeAddedAfterDelay = self.removingDuplicateMessageModels(
+                self.alMessages.map { $0.messageModel }
+            )
             // Check for Conversation Assignee and conversation first message created time to show Typing Indicator.
             if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
@@ -1621,6 +1648,27 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         return nil
     }
     
+    private func containsEquivalentMessageModel(_ candidate: KMChatMessageModel) -> Bool {
+        return messageModels.contains { areEquivalent($0, candidate) }
+    }
+
+    private func removingDuplicateMessageModels(_ models: [KMChatMessageModel]) -> [KMChatMessageModel] {
+        return models.reduce(into: []) { uniqueModels, candidate in
+            guard !uniqueModels.contains(where: { areEquivalent($0, candidate) }) else { return }
+            uniqueModels.append(candidate)
+        }
+    }
+
+    private func areEquivalent(_ lhs: KMChatMessageModel, _ rhs: KMChatMessageModel) -> Bool {
+        if !rhs.identifier.isEmpty, lhs.identifier == rhs.identifier {
+            return true
+        }
+        return lhs.messageType == rhs.messageType
+            && lhs.contactId == rhs.contactId
+            && lhs.message == rhs.message
+            && lhs.createdAtTime?.int64Value == rhs.createdAtTime?.int64Value
+    }
+
     func showTypingIndicatorForWelcomeMessage() {
         if welcomeMessagePosition >= alMessages.count {
             return
@@ -1632,7 +1680,10 @@ open class KMChatConversationViewModel: NSObject, Localizable {
                 return
             }
             self.removeTypingIndicatorMessage()
-            self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
+            let welcomeMessage = modelsToBeAddedAfterDelay[welcomeMessagePosition]
+            if !self.containsEquivalentMessageModel(welcomeMessage) {
+                self.messageModels.append(welcomeMessage)
+            }
             self.delegate?.messageUpdated()
             self.timer.invalidate()
             if welcomeMessagePosition >= alMessages.count {
@@ -1820,8 +1871,10 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if KMCoreSettings.isAgentAppConfigurationEnabled() {
                 self.getConversationEndUserID()
             }
-            let models = messages.map { ($0 as! KMCoreMessage).messageModel }
-            self.messageModels.insert(contentsOf: models, at: 0)
+            let models = self.removingDuplicateMessageModels(
+                messages.map { ($0 as! KMCoreMessage).messageModel }
+            )
+            self.messageModels = self.removingDuplicateMessageModels(models + self.messageModels)
             self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: models)
             if isFirstTime {
