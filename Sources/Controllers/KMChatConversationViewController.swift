@@ -1242,33 +1242,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
                 weakSelf.autocompleteManager.cancelAndHide()
                 weakSelf.autoSuggestionManager.cancelAndHide()
 
-                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message.string) {
-                    let profanityTitle = weakSelf.localizedString(
-                        forKey: "profaneWordsTitle",
-                        withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
-                        fileName: weakSelf.localizedStringFileName
-                    )
-                    let profanityMessage = weakSelf.localizedString(
-                        forKey: "profaneWordsMessage",
-                        withDefaultValue: SystemMessage.Warning.profaneWordsMessage,
-                        fileName: weakSelf.localizedStringFileName
-                    )
-                    let okButtonTitle = weakSelf.localizedString(
-                        forKey: "OkMessage",
-                        withDefaultValue: SystemMessage.ButtonName.ok,
-                        fileName: weakSelf.localizedStringFileName
-                    )
-                    let alert = UIAlertController(
-                        title: profanityTitle,
-                        message: profanityMessage,
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(
-                        title: okButtonTitle,
-                        style: .cancel,
-                        handler: nil
-                    ))
-                    weakSelf.present(alert, animated: true, completion: nil)
+                guard weakSelf.isMessageAllowedByProfanityFilter(message.string) else {
                     button.isUserInteractionEnabled = true
                     return
                 }
@@ -1434,6 +1408,37 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         } catch {
             print("Error while setting up profanity filter: \(error.localizedDescription)")
         }
+    }
+
+    private func isMessageAllowedByProfanityFilter(_ message: String) -> Bool {
+        guard let profanityFilter = profanityFilter,
+              profanityFilter.containsRestrictedWords(text: message) else {
+            return true
+        }
+
+        let alert = UIAlertController(
+            title: localizedString(
+                forKey: "profaneWordsTitle",
+                withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
+                fileName: localizedStringFileName
+            ),
+            message: localizedString(
+                forKey: "profaneWordsMessage",
+                withDefaultValue: SystemMessage.Warning.profaneWordsMessage,
+                fileName: localizedStringFileName
+            ),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: localizedString(
+                forKey: "OkMessage",
+                withDefaultValue: SystemMessage.ButtonName.ok,
+                fileName: localizedStringFileName
+            ),
+            style: .cancel
+        ))
+        present(alert, animated: true)
+        return false
     }
 
     private func setupMemberMention() {
@@ -2534,13 +2539,17 @@ extension KMChatConversationViewController: KMVoiceModeControllerDelegate {
 
     func voiceModeController(_ controller: KMVoiceModeController, didProduceTranscript transcript: String) -> Bool {
         let text = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty else { return false }
-        isJustSent = true
-        return viewModel.trySend(
+        guard !text.isEmpty, isMessageAllowedByProfanityFilter(text) else { return false }
+
+        let didSend = viewModel.trySend(
             message: text,
             isOpenGroup: viewModel.isOpenGroup,
             metadata: configuration.messageMetadata
         )
+        if didSend {
+            isJustSent = true
+        }
+        return didSend
     }
 
     func voiceModeController(_ controller: KMVoiceModeController, didFail error: Error) {

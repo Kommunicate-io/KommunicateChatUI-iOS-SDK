@@ -1660,8 +1660,8 @@ open class KMChatConversationViewModel: NSObject, Localizable {
     }
 
     private func areEquivalent(_ lhs: KMChatMessageModel, _ rhs: KMChatMessageModel) -> Bool {
-        if !rhs.identifier.isEmpty, lhs.identifier == rhs.identifier {
-            return true
+        if !lhs.identifier.isEmpty, !rhs.identifier.isEmpty {
+            return lhs.identifier == rhs.identifier
         }
         return lhs.messageType == rhs.messageType
             && lhs.contactId == rhs.contactId
@@ -1670,13 +1670,19 @@ open class KMChatConversationViewModel: NSObject, Localizable {
     }
 
     func showTypingIndicatorForWelcomeMessage() {
-        if welcomeMessagePosition >= alMessages.count {
+        guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else {
+            removeTypingIndicatorMessage()
+            timer.invalidate()
+            welcomeMessagePosition = 0
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
         let delay = TimeInterval(botDelayTime)
         self.timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) {[self] _ in
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else {
+                self.removeTypingIndicatorMessage()
+                self.timer.invalidate()
+                self.welcomeMessagePosition = 0
                 return
             }
             self.removeTypingIndicatorMessage()
@@ -1686,11 +1692,11 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             }
             self.delegate?.messageUpdated()
             self.timer.invalidate()
-            if welcomeMessagePosition >= alMessages.count {
-                welcomeMessagePosition = 0
+            self.welcomeMessagePosition += 1
+            if self.welcomeMessagePosition < self.modelsToBeAddedAfterDelay.count {
+                self.showTypingIndicatorForWelcomeMessage()
             } else {
-                welcomeMessagePosition += 1
-                showTypingIndicatorForWelcomeMessage()
+                self.welcomeMessagePosition = 0
             }
         }
     }
