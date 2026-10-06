@@ -263,7 +263,9 @@ final class KMVoiceAudioRecorder {
         isRecording = false
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.stopEngine()
+            if self.shouldStopEngine(for: generation) {
+                self.stopEngine()
+            }
             switch result {
             case let .success(audioData):
                 self.delegate?.voiceAudioRecorder(self, didCapture: audioData, generation: generation)
@@ -278,8 +280,16 @@ final class KMVoiceAudioRecorder {
         isRecording = false
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.stopEngine()
+            if self.shouldStopEngine(for: generation) {
+                self.stopEngine()
+            }
             self.delegate?.voiceAudioRecorderDidDetectNoSpeech(self, generation: generation)
+        }
+    }
+
+    private func shouldStopEngine(for generation: Int) -> Bool {
+        return processingQueue.sync {
+            !isRecording && self.generation == generation
         }
     }
 

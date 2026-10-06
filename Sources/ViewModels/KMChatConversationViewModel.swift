@@ -1586,6 +1586,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
+            self.alMessages = self.removingDuplicateMessages(self.alMessages)
             
             if KMChatConversationViewModel.lastSentMessage == nil {
                 KMChatConversationViewModel.lastSentMessage = self.getLastSentMessage()
@@ -1595,9 +1596,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             }
             self.alMessageWrapper.addObject(toMessageArray: messages)
             
-            self.modelsToBeAddedAfterDelay = self.removingDuplicateMessageModels(
-                self.alMessages.map { $0.messageModel }
-            )
+            self.modelsToBeAddedAfterDelay = self.alMessages.map { $0.messageModel }
             // Check for Conversation Assignee and conversation first message created time to show Typing Indicator.
             if self.isConversationAssignedToBot() && (self.botDelayTime > 0) && !self.isOldConversation() {
                 self.showTypingIndicatorForWelcomeMessage()
@@ -1652,10 +1651,12 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         return messageModels.contains { areEquivalent($0, candidate) }
     }
 
-    private func removingDuplicateMessageModels(_ models: [KMChatMessageModel]) -> [KMChatMessageModel] {
-        return models.reduce(into: []) { uniqueModels, candidate in
-            guard !uniqueModels.contains(where: { areEquivalent($0, candidate) }) else { return }
-            uniqueModels.append(candidate)
+    private func removingDuplicateMessages(_ messages: [KMCoreMessage]) -> [KMCoreMessage] {
+        return messages.reduce(into: []) { uniqueMessages, candidate in
+            guard !uniqueMessages.contains(where: {
+                areEquivalent($0.messageModel, candidate.messageModel)
+            }) else { return }
+            uniqueMessages.append(candidate)
         }
     }
 
@@ -1868,7 +1869,9 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 messages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
-            self.alMessages.insert(contentsOf: messages as! [KMCoreMessage], at: 0)
+            let loadedMessages = messages as! [KMCoreMessage]
+            self.alMessages.insert(contentsOf: loadedMessages, at: 0)
+            self.alMessages = self.removingDuplicateMessages(self.alMessages)
 
             self.alMessageWrapper.addObject(toMessageArray: messages)
             if KMChatConversationViewModel.lastSentMessage == nil {
@@ -1877,10 +1880,8 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if KMCoreSettings.isAgentAppConfigurationEnabled() {
                 self.getConversationEndUserID()
             }
-            let models = self.removingDuplicateMessageModels(
-                messages.map { ($0 as! KMCoreMessage).messageModel }
-            )
-            self.messageModels = self.removingDuplicateMessageModels(models + self.messageModels)
+            let models = loadedMessages.map { $0.messageModel }
+            self.messageModels = self.alMessages.map { $0.messageModel }
             self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: models)
             if isFirstTime {

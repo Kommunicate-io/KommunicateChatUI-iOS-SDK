@@ -209,6 +209,7 @@ final class KMVoiceModeController: NSObject {
         isSpeechInProgress = true
         audioRecorder.stop()
         update(state: .processingResponse)
+        apiClient.cancelActiveRequest()
         apiClient.synthesizeText(text) { [weak self] response, error in
             DispatchQueue.main.async {
                 guard let self = self, self.isCurrent(generation: generation) else { return }
@@ -254,7 +255,9 @@ final class KMVoiceModeController: NSObject {
         update(state: .transcribing)
         apiClient.transcribePCMAudio(audioData, conversationID: conversationID) { [weak self] transcript, error in
             DispatchQueue.main.async {
-                guard let self = self, self.isCurrent(generation: generation) else { return }
+                guard let self = self,
+                      self.isCurrent(generation: generation),
+                      self.state == .transcribing else { return }
                 if let error = error {
                     self.recover(from: error, generation: generation)
                     return
