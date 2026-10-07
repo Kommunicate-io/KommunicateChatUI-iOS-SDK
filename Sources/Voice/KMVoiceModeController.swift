@@ -187,18 +187,6 @@ final class KMVoiceModeController: NSObject {
         return true
     }
 
-    func resumeListeningIfWaitingForResponse() {
-        dispatchPrecondition(condition: .onQueue(.main))
-        guard isActive,
-              state == .waitingForResponse,
-              !isSpeechInProgress,
-              pendingSpeechTexts.isEmpty
-        else {
-            return
-        }
-        beginListening(generation: sessionGeneration)
-    }
-
     private func speakNextQueuedMessageIfNeeded() {
         guard isActive, !isSpeechInProgress, !pendingSpeechTexts.isEmpty else {
             return

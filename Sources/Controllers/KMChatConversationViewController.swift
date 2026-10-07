@@ -2922,14 +2922,10 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
 
         if isVoiceModeActive {
             let newMessageCount = viewModel.messageModels.count
-            var queuedBotMessage = false
             if oldSectionCount < newMessageCount {
                 for message in viewModel.messageModels[oldSectionCount..<newMessageCount] {
-                    queuedBotMessage = handleVoiceBotMessage(message) || queuedBotMessage
+                    handleVoiceBotMessage(message)
                 }
-            }
-            if !queuedBotMessage {
-                voiceModeController.resumeListeningIfWaitingForResponse()
             }
         }
 
