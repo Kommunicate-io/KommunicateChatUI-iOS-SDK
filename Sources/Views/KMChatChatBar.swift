@@ -142,25 +142,12 @@ open class KMChatChatBar: UIView, Localizable {
         return button
     }()
 
-    #if SPEECH_REC
-        open lazy var micButton: SpeechToTextButton = {
-            let button = SpeechToTextButton(
-                textView: textView,
-                localizedStringFileName: configuration.localizedStringFileName,
-                configuration: configuration
-            )
-            button.layer.masksToBounds = true
-            button.accessibilityIdentifier = "MicButton"
-            return button
-        }()
-    #else
-        open var micButton: KMAudioRecordButton = {
-            let button = KMAudioRecordButton(frame: CGRect())
-            button.layer.masksToBounds = true
-            button.accessibilityIdentifier = "MicButton"
-            return button
-        }()
-    #endif
+    open var micButton: KMAudioRecordButton = {
+        let button = KMAudioRecordButton(frame: CGRect())
+        button.layer.masksToBounds = true
+        button.accessibilityIdentifier = "MicButton"
+        return button
+    }()
 
     open var photoButton: UIButton = {
         let bt = KMExtendedTouchAreaButton(type: .custom)
@@ -344,12 +331,59 @@ open class KMChatChatBar: UIView, Localizable {
         }
     }
 
+    private func configureSpeechToText() {
+        let isEnabledFromDashboard = KMChatAppSettingsUserDefaults().getAppSettings()?.speechToTextEnabled ?? false
+        let isEnabled = configuration.enableSpeechToTextInConversation || isEnabledFromDashboard
+        let languageCode = configuration.isSpeechToTextLanguageCodeOverridden
+            ? configuration.speechToTextLanguageCode
+            : KMCoreSettings.getSelectedLanguageForSpeechToText() ?? configuration.speechToTextLanguageCode
+        micButton.configureSpeechToText(
+            enabled: isEnabled,
+            languageCode: languageCode
+        )
+
+        micButton.speechStateHandler = { [weak self] isListening in
+            guard let self = self else { return }
+            self.micButton.backgroundColor = isListening ? UIColor(white: 0.82, alpha: 1) : UIColor.clear
+            self.micButton.layer.cornerRadius = 20
+            self.micButton.isHidden = self.isMicButtonHidden
+
+            if isListening {
+                self.sendButton.isHidden = true
+                self.voiceModeButton.isHidden = true
+            } else {
+                self.toggleButtonInChatBar(hide: self.textView.text.isEmpty)
+            }
+        }
+
+        micButton.speechResultHandler = { [weak self] transcription, isFinal in
+            guard let self = self else { return }
+            self.textView.text = transcription
+            self.textViewDidChange(self.textView)
+
+            if isFinal, self.configuration.sendMessageOnSpeechEnd {
+                self.tapped(button: self.sendButton)
+            }
+        }
+    }
+
+    @objc private func speechToTextSettingDidChange(_: Notification) {
+        configureSpeechToText()
+    }
+
     private func initializeView() {
         if UIApplication.sharedUIApplication()?.userInterfaceLayoutDirection == .rightToLeft {
             textView.textAlignment = .right
         }
 
         micButton.setAudioRecDelegate(recorderDelegate: self)
+        configureSpeechToText()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(speechToTextSettingDidChange(_:)),
+            name: Notification.Name("KMSpeechToTextSettingDidChange"),
+            object: nil
+        )
         soundRec.setAudioRecViewDelegate(recorderDelegate: self)
         textView.typingAttributes = defaultTextAttributes
         textView.add(delegate: self)
@@ -425,6 +459,8 @@ open class KMChatChatBar: UIView, Localizable {
     }
 
     deinit {
+        NotificationCenter.default.removeObserver(self)
+        micButton.stopSpeechRecognition()
         plusButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         photoButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         sendButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
@@ -574,9 +610,9 @@ open class KMChatChatBar: UIView, Localizable {
         sendButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -7).isActive = true
 
         micButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        micButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        micButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        micButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
+        micButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        micButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        micButton.bottomAnchor.constraint(equalTo: textView.bottomAnchor).isActive = true
 
         if isMicButtonHidden {
             micButton.isHidden = true
@@ -684,15 +720,13 @@ open class KMChatChatBar: UIView, Localizable {
         }
     }
 
-    func stopRecording(hide: Bool = false) {
-        #if SPEECH_REC
-            toggleButtonInChatBar(hide: hide)
-        #else
-            soundRec.userDidStopRecording()
-            micButton.isSelected = false
-            soundRec.isHidden = true
-            resetToDefaultPlaceholderText()
-        #endif
+    func stopRecording(hide _: Bool = false) {
+        micButton.stopSpeechRecognition()
+        soundRec.userDidStopRecording()
+        micButton.isSelected = false
+        soundRec.isHidden = true
+        resetToDefaultPlaceholderText()
+        toggleButtonInChatBar(hide: textView.text.isEmpty)
     }
 
     func hideAudioOptionInChatBar() {
@@ -822,7 +856,8 @@ extension KMChatChatBar: UITextViewDelegate {
         } else {
             placeHolder.isHidden = true
             placeHolder.alpha = 0
-            if micButton.states != .recording {
+            if micButton.states != .recording,
+               !micButton.isListeningForSpeech {
                 toggleButtonInChatBar(hide: false)
             }
             updateTextViewHeight(textView: textView, text: textView.text)
@@ -929,9 +964,7 @@ extension KMChatChatBar: KMChatAudioRecorderProtocol {
 extension KMChatChatBar: KMChatAudioRecorderViewProtocol {
     public func cancelAudioRecording() {
         KMChatCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.voiceButtonClicked, data: ["currentState": KMVoiceRecordingState.cancelled])
-        #if !SPEECH_REC
-            micButton.cancelAudioRecord()
-        #endif
+        micButton.cancelAudioRecord()
         stopRecording()
     }
 }
