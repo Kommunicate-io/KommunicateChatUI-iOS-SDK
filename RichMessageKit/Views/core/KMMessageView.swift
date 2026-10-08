@@ -213,13 +213,22 @@ public class KMMessageView: UIView {
         addViewsForAutolayout(views: [messageTextView, bubbleView])
         bringSubviewToFront(messageTextView)
 
+        let messageTextBottomConstraint = messageTextView.bottomAnchor.constraint(
+            equalTo: bottomAnchor,
+            constant: -1 * padding.bottom
+        )
+        messageTextBottomConstraint.priority = UILayoutPriority(999)
+
+        let bubbleBottomConstraint = bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        bubbleBottomConstraint.priority = UILayoutPriority(999)
+
         NSLayoutConstraint.activate([
             bubbleView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bubbleView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            bubbleView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            bubbleBottomConstraint,
             bubbleView.topAnchor.constraint(equalTo: topAnchor, constant: ViewPadding.BubbleView.top),
             messageTextView.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
-            messageTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1 * padding.bottom),
+            messageTextBottomConstraint,
             messageTextView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
             messageTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -1 * padding.right),
             messageTextView.heightAnchor.constraintEqualToAnchor(constant: 0, identifier: ConstraintIdentifier.MessageLabel.height),
