@@ -539,12 +539,11 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
         
-        if !isChatBarHidden {
-            bottomConstraint = chatBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            bottomConstraint?.isActive = true
-        } else {
-            backgroundViewBottomConstraint?.isActive = isChatBarHidden
-            replyViewBottomConstraint?.isActive = isChatBarHidden
+        bottomConstraint?.constant = 0
+        bottomConstraint?.isActive = true
+        if isChatBarHidden {
+            backgroundViewBottomConstraint?.isActive = true
+            replyViewBottomConstraint?.isActive = true
         }
         collectEmailOnAwayMode = false
         edgesForExtendedLayout = []
@@ -1145,24 +1144,22 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
     }
     
     private func showLanguageSelection() {
-        #if SPEECH_REC
-            let controller = KMChatMultipleLanguageSelectionViewController(config: configuration)
-            controller.closeButtonTapped = {[weak self] in
-                controller.dismiss(animated: true)
+        let controller = KMChatMultipleLanguageSelectionViewController(config: configuration)
+        controller.closeButtonTapped = {
+            controller.dismiss(animated: true)
+        }
+        controller.languageSelected = { [weak self] language in
+            guard let self = self else { return }
+            self.chatBar.micButton.updateLanguage(code: language.code)
+            self.addLanguageToMetadata(language: language.code)
+            if language.sendMessageOnClick,
+               let message = language.messageToSend,
+               !message.isEmpty {
+                self.viewModel.send(message: message, metadata: self.configuration.messageMetadata)
             }
-            controller.languageSelected = { [weak self] language in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.chatBar.micButton.updateLanguage(code: language.code)
-                weakSelf.addLanguageToMetadata(language: language.code)
-                if language.sendMessageOnClick, let message = language.messageToSend, !message.isEmpty {
-                    weakSelf.viewModel.send(message: message, metadata: weakSelf.configuration.messageMetadata)
-                }
-                controller.dismiss(animated: true)
-            }
-            present(controller, animated: true, completion: nil)
-        #endif
+            controller.dismiss(animated: true)
+        }
+        present(controller, animated: true, completion: nil)
     }
     
     open func addLanguageToMetadata(language: String) {}
@@ -1345,7 +1342,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         typingNoticeViewHeighConstaint?.constant = 0
     }
     
-    @objc func delayedSecondTimer (timer: Timer) {
+    @objc func delayedSecondTimer(timer: Timer) {
         let timeInterval = TimeInterval(botDelayTime)
         timer.invalidate()
         self.typingNoticeViewHeighConstaint?.constant = 0
