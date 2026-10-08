@@ -347,6 +347,7 @@ open class KMChatChatBar: UIView, Localizable {
 
             if isListening {
                 self.sendButton.isHidden = true
+                self.voiceModeButton.isHidden = true
             } else {
                 self.toggleButtonInChatBar(hide: self.textView.text.isEmpty)
             }
