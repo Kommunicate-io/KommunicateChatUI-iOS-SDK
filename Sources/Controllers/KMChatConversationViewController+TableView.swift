@@ -637,7 +637,6 @@ extension KMChatConversationViewController: UITableViewDelegate, UITableViewData
         guard let message1 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
             return 0.0
         }
-
         // If it is the first section then no need to check the difference,
         // just show the start date. (message list is not empty)
         if section == 0 {

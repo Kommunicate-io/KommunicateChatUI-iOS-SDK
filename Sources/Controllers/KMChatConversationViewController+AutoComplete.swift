@@ -12,6 +12,11 @@ extension KMChatConversationViewController: KMAutoCompletionDelegate {
     public func sendMessage(content: String) {}
     
     public func didMatch(prefix: String, message: String, updated: Bool) {
+        guard !isVoiceModeUIVisible else {
+            autoSuggestionManager.hide(true)
+            autocompleteManager.hide(true)
+            return
+        }
         if isAutoSuggestionRichMessage, message.count >= 2 {
             var arrayOfAutocomplete: [KMAutoCompleteItem] = []
             if suggestionArray.isEmpty {

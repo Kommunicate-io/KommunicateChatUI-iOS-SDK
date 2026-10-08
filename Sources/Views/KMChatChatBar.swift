@@ -41,6 +41,7 @@ open class KMChatChatBar: UIView, Localizable {
         case cameraButtonClicked(UIButton)
         case showDocumentPicker
         case languageSelection
+        case voiceMode(UIButton)
     }
 
     public var action: ((ActionType) -> Void)?
@@ -212,6 +213,18 @@ open class KMChatChatBar: UIView, Localizable {
         return bt
     }()
 
+    public let voiceModeButton: UIButton = {
+        let button = KMExtendedTouchAreaButton(type: .custom)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        button.setImage(UIImage(systemName: "waveform", withConfiguration: configuration), for: .normal)
+        button.accessibilityIdentifier = "voiceModeButton"
+        button.accessibilityLabel = "Voice mode"
+        button.isHidden = true
+        return button
+    }()
+
+    private var isVoiceModeAvailable = false
+
     open var lineView: UIView = {
         let view = UIView()
         let layer = view.layer
@@ -275,6 +288,8 @@ open class KMChatChatBar: UIView, Localizable {
 
     fileprivate var textViewTrailingWithSend: NSLayoutConstraint?
     fileprivate var textViewTrailingWithMic: NSLayoutConstraint?
+    private var lineImageTrailingToSend: NSLayoutConstraint?
+    private var lineImageTrailingToVoiceMode: NSLayoutConstraint?
 
     private enum ConstraintIdentifier: String {
         case mediaBackgroudViewHeight
@@ -305,6 +320,8 @@ open class KMChatChatBar: UIView, Localizable {
             
         case languageSelectionButton:
             action?(.languageSelection)
+        case voiceModeButton:
+            action?(.voiceMode(button))
         default: break
         }
     }
@@ -349,6 +366,7 @@ open class KMChatChatBar: UIView, Localizable {
         contactButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         documentButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         languageSelectionButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        voiceModeButton.addTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         let appSettingsUserDefaults = KMChatAppSettingsUserDefaults()
         let buttonTintColor = appSettingsUserDefaults.getAttachmentIconsTintColor()
         setupAttachment(buttonIcons: chatBarConfiguration.attachmentIcons, tintColor: buttonTintColor)
@@ -356,8 +374,10 @@ open class KMChatChatBar: UIView, Localizable {
         // To override Primary color being set as the tint color
         if let tintColor = chatBarConfiguration.sendButtonTintColor {
             micButton.setButtonTintColor(color: tintColor)
+            voiceModeButton.tintColor = tintColor
         } else {
             micButton.setButtonTintColor(color: buttonTintColor)
+            voiceModeButton.tintColor = buttonTintColor
         }
         
         var image = configuration.sendMessageIcon
@@ -413,6 +433,7 @@ open class KMChatChatBar: UIView, Localizable {
         locationButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         contactButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
         documentButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
+        voiceModeButton.removeTarget(self, action: #selector(tapped(button:)), for: .touchUpInside)
     }
 
     private var isNeedInitText = true
@@ -502,7 +523,8 @@ open class KMChatChatBar: UIView, Localizable {
             placeHolder,
             soundRec,
             poweredByMessageTextView,
-            languageSelectionButton
+            languageSelectionButton,
+            voiceModeButton
         ])
 
         lineView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
@@ -534,10 +556,17 @@ open class KMChatChatBar: UIView, Localizable {
         plusButton.widthAnchor.constraint(equalToConstant: 38).isActive = true
         plusButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
 
-        lineImageView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -15).isActive = true
+        lineImageTrailingToSend = lineImageView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -15)
+        lineImageTrailingToSend?.isActive = true
+        lineImageTrailingToVoiceMode = lineImageView.trailingAnchor.constraint(equalTo: voiceModeButton.leadingAnchor, constant: -8)
         lineImageView.widthAnchor.constraint(equalToConstant: 2).isActive = true
         lineImageView.topAnchor.constraint(equalTo: textView.topAnchor, constant: 10).isActive = true
         lineImageView.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: -10).isActive = true
+
+        voiceModeButton.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8).isActive = true
+        voiceModeButton.centerYAnchor.constraint(equalTo: sendButton.centerYAnchor).isActive = true
+        voiceModeButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        voiceModeButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
 
         sendButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
@@ -679,11 +708,25 @@ open class KMChatChatBar: UIView, Localizable {
             sendButton.isHidden = hide
             micButton.isHidden = !hide
         }
+        voiceModeButton.isHidden = !isVoiceModeAvailable || !hide
+    }
+
+    public func setVoiceModeAvailable(_ available: Bool) {
+        isVoiceModeAvailable = available
+        voiceModeButton.isHidden = !available || !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        if available {
+            lineImageTrailingToSend?.isActive = false
+            lineImageTrailingToVoiceMode?.isActive = true
+        } else {
+            lineImageTrailingToVoiceMode?.isActive = false
+            lineImageTrailingToSend?.isActive = true
+        }
     }
 
     func toggleUserInteractionForViews(enabled: Bool) {
         micButton.isUserInteractionEnabled = enabled
         sendButton.isUserInteractionEnabled = enabled
+        voiceModeButton.isUserInteractionEnabled = enabled
         soundRec.isUserInteractionEnabled = enabled
         photoButton.isUserInteractionEnabled = enabled
         videoButton.isUserInteractionEnabled = enabled

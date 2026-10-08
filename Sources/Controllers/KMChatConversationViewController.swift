@@ -34,6 +34,38 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
     public var individualLaunch = true
 
     public var isAgentApp = false
+
+    private var startVoiceModeOnOpen = false
+    private var voiceModeLaunchTime: TimeInterval = 0
+    private var chatBarHiddenBeforeVoiceMode = false
+    private var tableBottomInsetBeforeVoiceMode: CGFloat = 0
+    private var templateHeightBeforeVoiceMode: CGFloat?
+    private var templateWasHiddenBeforeVoiceMode = true
+    private var autoSuggestionWasHiddenBeforeVoiceMode = true
+    private var autocompletionWasHiddenBeforeVoiceMode = true
+    private var tableFooterViewBeforeVoiceMode: UIView?
+    private lazy var voiceModeController = KMVoiceModeController(delegate: self)
+    private lazy var voiceStatusView = KMVoiceStatusView()
+    private lazy var voiceModeView: KMVoiceModeView = {
+        let view = KMVoiceModeView()
+        view.alpha = 0
+        view.isHidden = true
+        view.microphoneTapped = { [weak self] in
+            guard let self = self else { return }
+            if self.isVoiceModeActive {
+                self.stopVoiceMode()
+            } else {
+                _ = self.startVoiceMode()
+            }
+        }
+        view.closeTapped = { [weak self] in
+            self?.closeVoiceMode()
+        }
+        view.statusChanged = { [weak self] text, state in
+            self?.updateVoiceStatus(text, state: state)
+        }
+        return view
+    }()
     
     public lazy var chatBar = KMChatChatBar(frame: CGRect.zero, configuration: self.configuration)
     public lazy var autocompleteManager: KMAutoCompleteManager = {
@@ -216,6 +248,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
                 backgroundViewBottomConstraint?.isActive = isChatBarHidden
                 replyViewBottomConstraint?.isActive = isChatBarHidden
             }
+            guard viewModel != nil, !viewModel.messageModels.isEmpty else { return }
             let indexPath = IndexPath(row: 0, section: viewModel.messageModels.count - 1)
             moveTableViewToBottom(indexPath: indexPath)
         }
@@ -517,6 +550,202 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         viewModel.addMessagesToList(messageList)
     }
 
+    public func setStartVoiceModeOnOpen(_ start: Bool, launchTime: TimeInterval = Date().timeIntervalSince1970 * 1000) {
+        startVoiceModeOnOpen = start
+        voiceModeLaunchTime = start ? launchTime : 0
+    }
+
+    @discardableResult
+    public func startVoiceMode() -> Bool {
+        guard KMVoiceModeController.isVoiceModeAvailable,
+              let conversationID = viewModel?.channelKey?.int64Value
+        else {
+            return false
+        }
+
+        showVoiceModeUI()
+        guard AVAudioSession.sharedInstance().recordPermission == .granted else {
+            KMVoiceModeController.requestMicrophonePermission { [weak self] granted in
+                guard let self = self else { return }
+                if granted {
+                    _ = self.startVoiceMode()
+                } else {
+                    self.closeVoiceMode()
+                    let title = self.localizedString(
+                        forKey: "Settings",
+                        withDefaultValue: SystemMessage.LabelName.Settings,
+                        fileName: self.localizedStringFileName
+                    )
+                    let message = self.localizedString(
+                        forKey: "VoiceModePermission",
+                        withDefaultValue: "Microphone access is required to use voice mode.",
+                        fileName: self.localizedStringFileName
+                    )
+                    self.showAlertForApplicationSettings(title: title, message: message)
+                }
+            }
+            return false
+        }
+
+        let shouldHandleWelcome = startVoiceModeOnOpen
+        startVoiceModeOnOpen = false
+        let started = voiceModeController.start(conversationID: conversationID)
+        if started, shouldHandleWelcome {
+            speakLaunchWelcomeMessageIfAvailable()
+        }
+        return started
+    }
+
+    public func stopVoiceMode() {
+        voiceModeController.stop()
+    }
+
+    public func closeVoiceMode() {
+        voiceModeController.stop()
+        startVoiceModeOnOpen = false
+        voiceModeLaunchTime = 0
+        hideVoiceModeUI()
+    }
+
+    public var isVoiceModeActive: Bool {
+        return voiceModeController.isActive
+    }
+
+    var isVoiceModeUIVisible: Bool {
+        return !voiceModeView.isHidden
+    }
+
+    private func showVoiceModeUI(animated: Bool = true) {
+        view.endEditing(true)
+        guard voiceModeView.isHidden else { return }
+
+        chatBarHiddenBeforeVoiceMode = isChatBarHidden
+        tableBottomInsetBeforeVoiceMode = tableView.contentInset.bottom
+        tableFooterViewBeforeVoiceMode = tableView.tableFooterView
+        templateWasHiddenBeforeVoiceMode = templateView?.isHidden ?? true
+        autoSuggestionWasHiddenBeforeVoiceMode = autoSuggestionView.isHidden
+        autocompletionWasHiddenBeforeVoiceMode = autocompletionView.isHidden
+        if let heightConstraint = templateView?.constraints.first(where: { $0.firstAttribute == .height }) {
+            templateHeightBeforeVoiceMode = heightConstraint.constant
+            heightConstraint.constant = 0
+        }
+        templateView?.isHidden = true
+        autoSuggestionView.isHidden = true
+        autocompletionView.isHidden = true
+        isChatBarHidden = true
+        tableView.contentInset.bottom = max(tableBottomInsetBeforeVoiceMode, 140)
+        var indicatorInsets = tableView.verticalScrollIndicatorInsets
+        indicatorInsets.bottom = tableView.contentInset.bottom
+        tableView.verticalScrollIndicatorInsets = indicatorInsets
+
+        if voiceModeView.superview == nil {
+            voiceModeView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(voiceModeView)
+            NSLayoutConstraint.activate([
+                voiceModeView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                voiceModeView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                voiceModeView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            ])
+        }
+
+        voiceModeView.isHidden = false
+        view.bringSubviewToFront(voiceModeView)
+        if animated {
+            UIView.animate(withDuration: 0.2) {
+                self.voiceModeView.alpha = 1
+            }
+        } else {
+            voiceModeView.alpha = 1
+        }
+        positionVoiceStatusAfterLatestMessage()
+    }
+
+    private func updateVoiceStatus(
+        _ text: String?,
+        state: KMVoiceModeController.State
+    ) {
+        guard !voiceModeView.isHidden else { return }
+        guard let text = text else {
+            tableView.tableFooterView = tableFooterViewBeforeVoiceMode
+            return
+        }
+
+        voiceStatusView.setText(text, state: state)
+        voiceStatusView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: tableView.bounds.width,
+            height: KMVoiceStatusView.height
+        )
+        tableView.tableFooterView = voiceStatusView
+        positionVoiceStatusAfterLatestMessage()
+    }
+
+    private func positionVoiceStatusAfterLatestMessage() {
+        guard !voiceModeView.isHidden else { return }
+        view.layoutIfNeeded()
+        tableView.scrollToBottom(animated: false)
+    }
+
+    private func hideVoiceModeUI() {
+        guard !voiceModeView.isHidden else { return }
+        UIView.animate(withDuration: 0.16, animations: {
+            self.voiceModeView.alpha = 0
+        }, completion: { _ in
+            self.voiceModeView.isHidden = true
+        })
+        tableView.contentInset.bottom = tableBottomInsetBeforeVoiceMode
+        tableView.tableFooterView = tableFooterViewBeforeVoiceMode
+        tableFooterViewBeforeVoiceMode = nil
+        if let height = templateHeightBeforeVoiceMode,
+           let heightConstraint = templateView?.constraints.first(where: { $0.firstAttribute == .height }) {
+            heightConstraint.constant = height
+        }
+        templateView?.isHidden = templateWasHiddenBeforeVoiceMode
+        autoSuggestionView.isHidden = autoSuggestionWasHiddenBeforeVoiceMode
+        autocompletionView.isHidden = autocompletionWasHiddenBeforeVoiceMode
+        templateHeightBeforeVoiceMode = nil
+        var indicatorInsets = tableView.verticalScrollIndicatorInsets
+        indicatorInsets.bottom = tableBottomInsetBeforeVoiceMode
+        tableView.verticalScrollIndicatorInsets = indicatorInsets
+        isChatBarHidden = chatBarHiddenBeforeVoiceMode
+    }
+
+    @discardableResult
+    private func handleVoiceBotMessage(_ message: KMChatMessageModel) -> Bool {
+        guard !message.isMyMessage,
+              message.messageType == .text,
+              let sender = ALContactService().loadContact(byKey: "userId", value: message.contactId),
+              sender.roleType == NSNumber(value: AL_BOT.rawValue)
+        else {
+            return false
+        }
+        let fallbackIdentifier = [
+            message.createdAtTime?.stringValue ?? "0",
+            message.contactId ?? "",
+            message.message ?? ""
+        ].joined(separator: ":")
+        let identifier = message.identifier.isEmpty ? fallbackIdentifier : message.identifier
+        let handled = voiceModeController.handleBotMessage(identifier: identifier, text: message.message)
+        if handled {
+            voiceModeLaunchTime = 0
+        }
+        return handled
+    }
+
+    private func speakLaunchWelcomeMessageIfAvailable() {
+        guard voiceModeLaunchTime > 0 else { return }
+        for message in viewModel.messageModels.reversed() {
+            let createdAt = message.createdAtTime?.doubleValue ?? 0
+            if createdAt >= voiceModeLaunchTime {
+                handleVoiceBotMessage(message)
+                if voiceModeLaunchTime == 0 {
+                    return
+                }
+            }
+        }
+    }
+
     override open func removeObserver() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -560,6 +789,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
 
         viewModel.delegate = self
         isAgentApp = KMCoreSettings.isAgentAppConfigurationEnabled()
+        chatBar.setVoiceModeAvailable(KMVoiceModeController.isVoiceModeAvailable)
         refreshViewController()
 //        setupConstraints()
         
@@ -568,11 +798,19 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         } else {
             tableView.reloadData()
         }
+        if startVoiceModeOnOpen {
+            showVoiceModeUI(animated: false)
+        }
         contentOffsetDictionary = [NSObject: AnyObject]()
         print("id: ", viewModel.messageModels.first?.contactId as Any)
     }
 
-    override open func viewDidAppear(_: Bool) {}
+    override open func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if startVoiceModeOnOpen {
+            _ = startVoiceMode()
+        }
+    }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -581,7 +819,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         if let templates = viewModel.getMessageTemplates() {
             templateView = KMChatTemplateMessagesView(frame: CGRect.zero, viewModel: KMChatTemplateMessagesViewModel(messageTemplates: templates))
         }
-        
+
         templateView?.messageSelected = { [weak self] template in
             self?.viewModel.selected(template: template, metadata: self?.configuration.messageMetadata)
         }
@@ -603,6 +841,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         super.viewWillDisappear(animated)
         stopAudioPlayer()
         chatBar.stopRecording(hide: true)
+        closeVoiceMode()
         isChatBarHidden = false
         if individualLaunch {
             if alMqttConversationService != nil {
@@ -1003,33 +1242,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
                 weakSelf.autocompleteManager.cancelAndHide()
                 weakSelf.autoSuggestionManager.cancelAndHide()
 
-                if let profanityFilter = weakSelf.profanityFilter, profanityFilter.containsRestrictedWords(text: message.string) {
-                    let profanityTitle = weakSelf.localizedString(
-                        forKey: "profaneWordsTitle",
-                        withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
-                        fileName: weakSelf.localizedStringFileName
-                    )
-                    let profanityMessage = weakSelf.localizedString(
-                        forKey: "profaneWordsMessage",
-                        withDefaultValue: SystemMessage.Warning.profaneWordsMessage,
-                        fileName: weakSelf.localizedStringFileName
-                    )
-                    let okButtonTitle = weakSelf.localizedString(
-                        forKey: "OkMessage",
-                        withDefaultValue: SystemMessage.ButtonName.ok,
-                        fileName: weakSelf.localizedStringFileName
-                    )
-                    let alert = UIAlertController(
-                        title: profanityTitle,
-                        message: profanityMessage,
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(
-                        title: okButtonTitle,
-                        style: .cancel,
-                        handler: nil
-                    ))
-                    weakSelf.present(alert, animated: true, completion: nil)
+                guard weakSelf.isMessageAllowedByProfanityFilter(message.string) else {
                     button.isUserInteractionEnabled = true
                     return
                 }
@@ -1066,6 +1279,9 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
                 })
             case let .sendVoice(voice):
                 weakSelf.viewModel.send(voiceMessage: voice as Data, metadata: self?.configuration.messageMetadata)
+
+            case .voiceMode:
+                _ = weakSelf.startVoiceMode()
 
             case .startVideoRecord:
                 KMChatCustomEventHandler.shared.publish(triggeredEvent: KMCustomEvent.videoButtonClicked, data: nil)
@@ -1192,6 +1408,37 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         } catch {
             print("Error while setting up profanity filter: \(error.localizedDescription)")
         }
+    }
+
+    private func isMessageAllowedByProfanityFilter(_ message: String) -> Bool {
+        guard let profanityFilter = profanityFilter,
+              profanityFilter.containsRestrictedWords(text: message) else {
+            return true
+        }
+
+        let alert = UIAlertController(
+            title: localizedString(
+                forKey: "profaneWordsTitle",
+                withDefaultValue: SystemMessage.Warning.profaneWordsTitle,
+                fileName: localizedStringFileName
+            ),
+            message: localizedString(
+                forKey: "profaneWordsMessage",
+                withDefaultValue: SystemMessage.Warning.profaneWordsMessage,
+                fileName: localizedStringFileName
+            ),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: localizedString(
+                forKey: "OkMessage",
+                withDefaultValue: SystemMessage.ButtonName.ok,
+                fileName: localizedStringFileName
+            ),
+            style: .cancel
+        ))
+        present(alert, animated: true)
+        return false
     }
 
     private func setupMemberMention() {
@@ -1345,7 +1592,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         typingNoticeViewHeighConstaint?.constant = 0
     }
     
-    @objc func delayedSecondTimer (timer: Timer) {
+    @objc func delayedSecondTimer(timer: Timer) {
         let timeInterval = TimeInterval(botDelayTime)
         timer.invalidate()
         self.typingNoticeViewHeighConstaint?.constant = 0
@@ -2285,7 +2532,37 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
     }
 }
 
+extension KMChatConversationViewController: KMVoiceModeControllerDelegate {
+    func voiceModeController(_ controller: KMVoiceModeController, didChange state: KMVoiceModeController.State) {
+        voiceModeView.setState(state)
+    }
+
+    func voiceModeController(_ controller: KMVoiceModeController, didProduceTranscript transcript: String) -> Bool {
+        let text = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return false }
+
+        let didSend = viewModel.trySend(
+            message: text,
+            isOpenGroup: viewModel.isOpenGroup,
+            metadata: configuration.messageMetadata
+        )
+        if didSend {
+            isJustSent = true
+        }
+        return didSend
+    }
+
+    func voiceModeController(_ controller: KMVoiceModeController, didFail error: Error) {
+        NSLog("Voice mode error: %@", error.localizedDescription)
+        voiceModeView.setState(.error)
+    }
+}
+
 extension KMChatConversationViewController: KMChatConversationViewModelDelegate {
+
+    public func shouldSendMessage(_ message: String) -> Bool {
+        return isMessageAllowedByProfanityFilter(message)
+    }
     
     public func isEmailSentForUpdatingUser(status: Bool) {
         if status {
@@ -2401,6 +2678,9 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
         activityIndicator.stopAnimating()
         let oldSectionCount = tableView.numberOfSections
         tableView.reloadData()
+        if isVoiceModeActive, voiceModeLaunchTime > 0 {
+            speakLaunchWelcomeMessageIfAvailable()
+        }
         let newSectionCount = tableView.numberOfSections
         if newSectionCount > oldSectionCount {
             let offset = newSectionCount - oldSectionCount - 1
@@ -2431,6 +2711,9 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
             activityIndicator.stopAnimating()
         }
         tableView.reloadData()
+        if isVoiceModeActive, voiceModeLaunchTime > 0 {
+            speakLaunchWelcomeMessageIfAvailable()
+        }
     }
 
     public func updateMessageAt(indexPath: IndexPath) {
@@ -2633,8 +2916,18 @@ extension KMChatConversationViewController: KMChatConversationViewModelDelegate 
     }
 
     @objc open func newMessagesAdded() {
-        let lastSectionBeforeUpdate = tableView.numberOfSections - 1
+        let oldSectionCount = tableView.numberOfSections
+        let lastSectionBeforeUpdate = oldSectionCount - 1
         updateTableView()
+
+        if isVoiceModeActive {
+            let newMessageCount = viewModel.messageModels.count
+            if oldSectionCount < newMessageCount {
+                for message in viewModel.messageModels[oldSectionCount..<newMessageCount] {
+                    handleVoiceBotMessage(message)
+                }
+            }
+        }
 
         // Check if current user is removed from the group
         isChannelLeft()
