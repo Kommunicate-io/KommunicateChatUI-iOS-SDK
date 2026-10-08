@@ -334,9 +334,12 @@ open class KMChatChatBar: UIView, Localizable {
     private func configureSpeechToText() {
         let isEnabledFromDashboard = KMChatAppSettingsUserDefaults().getAppSettings()?.speechToTextEnabled ?? false
         let isEnabled = configuration.enableSpeechToTextInConversation || isEnabledFromDashboard
+        let languageCode = configuration.isSpeechToTextLanguageCodeOverridden
+            ? configuration.speechToTextLanguageCode
+            : KMCoreSettings.getSelectedLanguageForSpeechToText() ?? configuration.speechToTextLanguageCode
         micButton.configureSpeechToText(
             enabled: isEnabled,
-            languageCode: configuration.speechToTextLanguageCode
+            languageCode: languageCode
         )
 
         micButton.speechStateHandler = { [weak self] isListening in
@@ -353,10 +356,14 @@ open class KMChatChatBar: UIView, Localizable {
             }
         }
 
-        micButton.speechResultHandler = { [weak self] transcription, _ in
+        micButton.speechResultHandler = { [weak self] transcription, isFinal in
             guard let self = self else { return }
             self.textView.text = transcription
             self.textViewDidChange(self.textView)
+
+            if isFinal, self.configuration.sendMessageOnSpeechEnd {
+                self.tapped(button: self.sendButton)
+            }
         }
     }
 

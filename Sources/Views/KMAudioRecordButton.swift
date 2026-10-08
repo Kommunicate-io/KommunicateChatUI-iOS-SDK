@@ -116,23 +116,21 @@ open class KMAudioRecordButton: UIButton {
         }
     }
 
-    private func checkMicrophonePermission() -> Bool {
+    private func checkMicrophonePermission() -> Bool? {
         let soundSession = AVAudioSession.sharedInstance()
-        let permissionStatus = soundSession.recordPermission
-        var isAllow = false
 
-        switch permissionStatus {
+        switch soundSession.recordPermission {
         case .undetermined:
             soundSession.requestRecordPermission { _ in }
+            return nil
         case .denied:
-            isAllow = false
+            return false
         case .granted:
-            isAllow = true
+            return true
         @unknown default:
             print("Unknown Microphone Permission state")
+            return false
         }
-
-        return isAllow
     }
 
     @objc fileprivate func startAudioRecord() {
@@ -209,11 +207,12 @@ open class KMAudioRecordButton: UIButton {
         switch gesture.state {
         case .began:
             stopSpeechRecognition()
-            if checkMicrophonePermission() == false {
-                delegate?.permissionNotGrant()
-            } else {
+            guard let isMicrophoneAllowed = checkMicrophonePermission() else { return }
+            if isMicrophoneAllowed {
                 startAudioRecord()
                 delegate?.startRecordingAudio()
+            } else {
+                delegate?.permissionNotGrant()
             }
 
         case .changed:
@@ -355,7 +354,7 @@ open class KMAudioRecordButton: UIButton {
                     let transcription = result.bestTranscription.formattedString
                     let hasTranscription = !transcription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                     if hasTranscription {
-                        if transcription.count >= self.latestSpeechTranscription.count {
+                        if result.isFinal || transcription.count >= self.latestSpeechTranscription.count {
                             self.latestSpeechTranscription = transcription
                             self.speechResultHandler?(transcription, result.isFinal)
                         }
@@ -386,10 +385,12 @@ open class KMAudioRecordButton: UIButton {
 
     private func finishSpeechInput(for sessionID: UUID) {
         guard activeSpeechSessionID == sessionID else { return }
+        speechSilenceTimer?.invalidate()
+        speechSilenceTimer = nil
         speechAudioEngine.stop()
         removeSpeechInputTapIfNeeded()
         recognitionRequest?.endAudio()
-        completeSpeechRecognition(for: sessionID)
+        setSpeechListening(false)
     }
 
     private func completeSpeechRecognition(for sessionID: UUID) {

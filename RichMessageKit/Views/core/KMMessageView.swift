@@ -196,9 +196,11 @@ public class KMMessageView: UIView {
                                   maxWidth: maxWidth,
                                   font: messageStyle.font,
                                   padding: bubbleStyle.padding)
+        let textViewHeight = hideView ? 0 :
+            max(0, messageHeight - padding.top - padding.bottom)
 
         messageTextView
-            .constraint(withIdentifier: ConstraintIdentifier.MessageLabel.height)?.constant = messageHeight
+            .constraint(withIdentifier: ConstraintIdentifier.MessageLabel.height)?.constant = textViewHeight
     }
 
     // MARK: Private methods

@@ -200,7 +200,13 @@ public struct KMChatConfiguration {
     public var sendMessageOnSpeechEnd: Bool = false
 
     /// Locale identifier used by speech recognition.
-    public var speechToTextLanguageCode: String = "en-US"
+    public var speechToTextLanguageCode: String = "en-US" {
+        didSet {
+            isSpeechToTextLanguageCodeOverridden = true
+        }
+    }
+
+    private(set) var isSpeechToTextLanguageCodeOverridden = false
         
     // If true then Navigation bar will be hidden. By default it is false
     public var hideNavigationBarOnChat: Bool = false
