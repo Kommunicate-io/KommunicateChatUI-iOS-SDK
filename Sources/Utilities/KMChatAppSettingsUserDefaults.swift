@@ -220,6 +220,7 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
         static let sasT = "sasT"
         static let csatRatingBase = "csatRatingBase"
         static let botTypingIndicatorInterval = "botTypingIndicatorInterval"
+        static let speechToTextEnabled = "speechToTextEnabled"
     }
 
     var primaryColor: String
@@ -238,6 +239,7 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
     public var sasT: String?
     public var csatRatingBase: Int = 3
     public var botTypingIndicatorInterval: Int = 0
+    public var speechToTextEnabled: Bool = false
 
     // MARK: - Public Initialization
 
@@ -268,6 +270,7 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
 
         csatRatingBase = coder.decodeInteger(forKey: CoderKey.csatRatingBase)
         botTypingIndicatorInterval = coder.decodeInteger(forKey: CoderKey.botTypingIndicatorInterval)
+        speechToTextEnabled = coder.decodeBool(forKey: CoderKey.speechToTextEnabled)
     }
 
     // MARK: - Public methods
@@ -286,5 +289,6 @@ public class KMChatAppSettings: NSObject, NSSecureCoding {
         coder.encode(sasT, forKey: CoderKey.sasT)
         coder.encode(csatRatingBase, forKey: CoderKey.csatRatingBase)
         coder.encode(botTypingIndicatorInterval, forKey: CoderKey.botTypingIndicatorInterval)
+        coder.encode(speechToTextEnabled, forKey: CoderKey.speechToTextEnabled)
     }
 }
