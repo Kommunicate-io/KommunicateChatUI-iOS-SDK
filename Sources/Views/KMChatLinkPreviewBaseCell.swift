@@ -67,6 +67,10 @@ class KMChatLinkPreviewBaseCell: KMChatMessageCell {
             menus.append(reportMessageMenu)
         }
 
+        if let deleteMenu = getDeleteMenuItem(deleteItem: self) {
+            menus.append(deleteMenu)
+        }
+
         menuController.menuItems = menus
         menuController.showMenu(from: gestureView, rect: gestureView.bounds)
     }
