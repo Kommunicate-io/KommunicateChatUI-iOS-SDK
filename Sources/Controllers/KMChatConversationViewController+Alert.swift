@@ -102,7 +102,12 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
         let removedMessage = removeMessageFromUI(identifier: message.identifier)
 
         guard message.isMyMessage else {
-            messageService.deleteMessage(message.identifier, andContactId: nil) { _, _ in }
+            messageService.deleteMessage(message.identifier, andContactId: nil) { [weak self] _, error in
+                guard error != nil else { return }
+                DispatchQueue.main.async {
+                    self?.showDeleteMessageError()
+                }
+            }
             return
         }
 
@@ -113,13 +118,17 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
                     if let removedMessage = removedMessage {
                         self.restoreMessageInUI(removedMessage)
                     }
-                    let errorMessage = self.localizedString(forKey: "DeleteMessageError", withDefaultValue: SystemMessage.Information.DeleteMessageError, fileName: self.configuration.localizedStringFileName)
-                    self.showAlert(alertTitle: "", alertMessage: errorMessage)
+                    self.showDeleteMessageError()
                     return
                 }
                 KMCoreMessageDBService().deleteMessage(byKey: message.identifier)
             }
         }
+    }
+
+    private func showDeleteMessageError() {
+        let errorMessage = localizedString(forKey: "DeleteMessageError", withDefaultValue: SystemMessage.Information.DeleteMessageError, fileName: configuration.localizedStringFileName)
+        showAlert(alertTitle: "", alertMessage: errorMessage)
     }
 
     private func removeMessageFromUI(identifier: String) -> RemovedMessage? {
