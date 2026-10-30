@@ -50,6 +50,10 @@ struct SystemMessage: Localizable {
         static let ReportAlertTitle = localizedString(forKey: "ReportAlertTitle")
         static let ReportAlertMessage = localizedString(forKey: "ReportAlertMessage")
         static let ReportInfoMessage = localizedString(forKey: "ReplyInfoMessage")
+        static let DeleteMessageAlertTitle = localizedString(forKey: "DeleteMessageAlertTitle")
+        static let DeleteMessageAlertMessage = localizedString(forKey: "DeleteMessageAlertMessage")
+        static let DeleteMessageForMeAlertMessage = localizedString(forKey: "DeleteMessageForMeAlertMessage")
+        static let DeleteMessageError = localizedString(forKey: "DeleteMessageError")
         static let FailedToLoadLink = localizedString(forKey: "FailedToLoadLink")
         static let ExportLoadingIndicatorText = localizedString(forKey: "ExportLoadingIndicatorText")
     }

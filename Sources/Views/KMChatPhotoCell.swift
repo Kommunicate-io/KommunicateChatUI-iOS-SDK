@@ -13,7 +13,7 @@ import UIKit
 // MARK: - KMChatPhotoCell
 
 class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
-    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol {
+    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol, KMChatDeleteMenuItemProtocol {
     var photoView: UIImageView = {
         let mv = UIImageView()
         mv.backgroundColor = .clear
@@ -420,6 +420,10 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
 
     func menuReport(_: Any) {
         menuAction?(.report)
+    }
+
+    func menuDelete(_: Any) {
+        menuAction?(.delete)
     }
 }
 

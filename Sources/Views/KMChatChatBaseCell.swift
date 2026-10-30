@@ -5,6 +5,7 @@
 //  Created by Mukesh Thawani on 04/05/17.
 //
 
+import KommunicateCore_iOS_SDK
 import UIKit
 
 open class KMChatChatBaseCell<T>: KMChatBaseCell<T>, Localizable {
@@ -12,6 +13,7 @@ open class KMChatChatBaseCell<T>: KMChatBaseCell<T>, Localizable {
         case copy
         case reply
         case report
+        case delete
     }
 
     var localizedStringFileName: String!
@@ -85,6 +87,10 @@ open class KMChatChatBaseCell<T>: KMChatBaseCell<T>, Localizable {
                 menus.append(reportMessageMenu)
             }
 
+            if let deleteMenu = getDeleteMenuItem(deleteItem: self) {
+                menus.append(deleteMenu)
+            }
+
             menuController.menuItems = menus
             menuController.showMenu(from: gestureView, rect: gestureView.bounds)
         }
@@ -101,6 +107,8 @@ open class KMChatChatBaseCell<T>: KMChatBaseCell<T>, Localizable {
         case let menuItem as KMChatReplyMenuItemProtocol where action == menuItem.selector:
             return true
         case let menuItem as KMChatReportMessageMenuItemProtocol where action == menuItem.selector:
+            return true
+        case let menuItem as KMChatDeleteMenuItemProtocol where action == menuItem.selector:
             return true
         default:
             return false
@@ -134,6 +142,18 @@ open class KMChatChatBaseCell<T>: KMChatBaseCell<T>, Localizable {
         let title = localizedString(forKey: "Report", withDefaultValue: SystemMessage.LabelName.Report, fileName: localizedStringFileName)
         let reportMessageMenu = UIMenuItem(title: title, action: reportMessageMenuItem.selector)
         return reportMessageMenu
+    }
+
+    func getDeleteMenuItem(deleteItem: Any) -> UIMenuItem? {
+        guard KMCoreSettings.isAgentAppConfigurationEnabled(),
+              let message = viewModel as? KMChatMessageViewModel,
+              !message.identifier.isEmpty,
+              let deleteMenuItem = deleteItem as? KMChatDeleteMenuItemProtocol
+        else {
+            return nil
+        }
+        let title = localizedString(forKey: "DeleteButtonName", withDefaultValue: SystemMessage.ButtonName.Delete, fileName: localizedStringFileName)
+        return UIMenuItem(title: title, action: deleteMenuItem.selector)
     }
 }
 
@@ -196,5 +216,17 @@ extension KMChatReplyMenuItemProtocol {
 extension KMChatReportMessageMenuItemProtocol {
     var selector: Selector {
         return #selector(menuReport(_:))
+    }
+}
+
+// MARK: - KMChatDeleteMenuItemProtocol
+
+@objc protocol KMChatDeleteMenuItemProtocol {
+    func menuDelete(_ sender: Any)
+}
+
+extension KMChatDeleteMenuItemProtocol {
+    var selector: Selector {
+        return #selector(menuDelete(_:))
     }
 }

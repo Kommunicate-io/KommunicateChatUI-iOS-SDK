@@ -25,7 +25,7 @@ public enum KMChatVoiceCellState {
 }
 
 class KMChatVoiceCell: KMChatChatBaseCell<KMChatMessageViewModel>,
-    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol {
+    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol, KMChatDeleteMenuItemProtocol {
     var soundPlayerView: UIView = {
         let mv = UIView()
         mv.contentMode = .scaleAspectFill
@@ -274,6 +274,10 @@ class KMChatVoiceCell: KMChatChatBaseCell<KMChatMessageViewModel>,
 
     func menuReport(_: Any) {
         menuAction?(.report)
+    }
+
+    func menuDelete(_: Any) {
+        menuAction?(.delete)
     }
 }
 

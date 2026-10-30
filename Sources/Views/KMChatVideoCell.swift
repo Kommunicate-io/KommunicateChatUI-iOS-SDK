@@ -13,7 +13,7 @@ import UIKit
     import RichMessageKit
 #endif
 class KMChatVideoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
-    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol {
+    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol, KMChatDeleteMenuItemProtocol {
     enum State {
         case download
         case downloading(progress: Double, totalCount: Int64)
@@ -276,6 +276,10 @@ class KMChatVideoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
 
     func menuReport(_: Any) {
         menuAction?(.report)
+    }
+
+    func menuDelete(_: Any) {
+        menuAction?(.delete)
     }
 
     @objc private func downloadButtonAction(_: UIButton) {

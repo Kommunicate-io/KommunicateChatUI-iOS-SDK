@@ -14,7 +14,7 @@ protocol KMChatLocationCellDelegate: AnyObject {
 }
 
 class KMChatLocationCell: KMChatChatBaseCell<KMChatMessageViewModel>,
-    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol {
+    KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol, KMChatDeleteMenuItemProtocol {
     weak var delegate: KMChatLocationCellDelegate?
 
     // MARK: - Declare Variables or Types
@@ -196,6 +196,10 @@ class KMChatLocationCell: KMChatChatBaseCell<KMChatMessageViewModel>,
 
     func menuReport(_: Any) {
         menuAction?(.report)
+    }
+
+    func menuDelete(_: Any) {
+        menuAction?(.delete)
     }
 }
 
