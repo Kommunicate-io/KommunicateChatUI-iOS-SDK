@@ -57,6 +57,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
     }
 
     open var isSearch: Bool = false
+    open var includeHiddenMessages: Bool = false
     open var lastMessage: KMCoreMessage?
     internal static var lastSentMessage: KMCoreMessage?
 
@@ -413,6 +414,9 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             }
             return height.cached(with: cacheIdentifier)
         case .information:
+            if includeHiddenMessages, messageModel.internalNoteContent != nil {
+                return KMChatInternalNoteCell.rowHeight(viewModel: messageModel, width: maxWidth).cached(with: cacheIdentifier)
+            }
             let height = KMChatInformationCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             return height.cached(with: cacheIdentifier)
         case .location:
@@ -1579,6 +1583,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
+        messageListRequest.includeHiddenMessages = includeHiddenMessages
         KMCoreMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, _ in
             guard error == nil, let messages = messages else {
@@ -1866,7 +1871,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         
         let startTime = alMessages.first?.createdAtTime ?? nil
         
-        KMCoreMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
+        KMCoreMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, includeHiddenMessages: includeHiddenMessages, withCompletion: {
             messages in
             guard let messages = messages, messages.count != 0 else {
                 if KMCoreUserDefaultsHandler.isShowLoadEarlierOption(self.chatId) {
@@ -2027,6 +2032,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
+        messageListRequest.includeHiddenMessages = includeHiddenMessages
         KMCoreMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, _ in
             guard error == nil, let newMessages = messages as? [KMCoreMessage] else {

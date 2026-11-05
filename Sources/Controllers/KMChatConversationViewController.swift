@@ -1129,6 +1129,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         tableView.register(KMChatMyVoiceCell.self)
         tableView.register(KMChatFriendVoiceCell.self)
         tableView.register(KMChatInformationCell.self)
+        tableView.register(KMChatInternalNoteCell.self)
         tableView.register(KMChatMyLocationCell.self)
         tableView.register(KMChatFriendLocationCell.self)
         tableView.register(KMChatMyVideoCell.self)

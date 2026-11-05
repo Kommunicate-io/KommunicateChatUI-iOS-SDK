@@ -256,6 +256,11 @@ extension KMChatConversationViewController: UITableViewDelegate, UITableViewData
                 return cell
             }
         case .information:
+            if viewModel.includeHiddenMessages, message.internalNoteContent != nil {
+                let cell: KMChatInternalNoteCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.update(viewModel: message)
+                return cell
+            }
             let cell: KMChatInformationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.setConfiguration(configuration: configuration)
             cell.update(viewModel: message)
