@@ -42,6 +42,7 @@ final class KMVoiceModeController: NSObject {
     private enum Constants {
         static let maximumProcessedMessageIDs = 100
         static let recorderRetryDelay = 0.05
+        static let responseTimeout: TimeInterval = 30
     }
 
     weak var delegate: KMVoiceModeControllerDelegate?
@@ -58,6 +59,7 @@ final class KMVoiceModeController: NSObject {
     private var processedMessageIDOrder = [String]()
     private var pendingSpeechTexts = [String]()
     private var isSpeechInProgress = false
+    private var responseTimeoutToken = 0
 
     init(
         delegate: KMVoiceModeControllerDelegate,
@@ -263,10 +265,23 @@ final class KMVoiceModeController: NSObject {
                     didProduceTranscript: normalizedTranscript
                 ) == true {
                     self.update(state: .waitingForResponse)
+                    self.scheduleResponseTimeout(generation: generation)
                 } else {
                     self.beginListening(generation: generation)
                 }
             }
+        }
+    }
+
+    /// Resumes listening if a sent message gets no bot reply, so the session doesn't stall.
+    private func scheduleResponseTimeout(generation: Int) {
+        let token = responseTimeoutToken
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.responseTimeout) { [weak self] in
+            guard let self = self,
+                  self.responseTimeoutToken == token,
+                  self.isCurrent(generation: generation),
+                  self.state == .waitingForResponse else { return }
+            self.beginListening(generation: generation)
         }
     }
 
@@ -311,6 +326,8 @@ final class KMVoiceModeController: NSObject {
     }
 
     private func update(state: State) {
+        // Any state change invalidates a pending response timeout.
+        responseTimeoutToken += 1
         self.state = state
         delegate?.voiceModeController(self, didChange: state)
     }
@@ -335,13 +352,18 @@ final class KMVoiceModeController: NSObject {
     }
 
     @objc private func audioRouteDidChange(_ notification: Notification) {
-        guard isActive,
-              let rawReason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
+        guard let rawReason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
               AVAudioSession.RouteChangeReason(rawValue: rawReason) == .oldDeviceUnavailable
         else {
             return
         }
-        stop()
+        // Bind the deferred stop to the session that received the notification.
+        let generation = sessionGeneration
+        // Route change notifications can arrive on a background queue; stop() requires main.
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, self.isActive, self.sessionGeneration == generation else { return }
+            self.stop()
+        }
     }
 }
 

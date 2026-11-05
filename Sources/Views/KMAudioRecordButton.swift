@@ -190,6 +190,9 @@ open class KMAudioRecordButton: UIButton {
                 return
             }
 
+            // Speech-to-text may have been disabled while the permission prompt was open.
+            guard self.isSpeechToTextEnabled else { return }
+
             do {
                 try self.startSpeechRecognition()
             } catch {
