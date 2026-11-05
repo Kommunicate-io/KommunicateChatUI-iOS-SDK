@@ -39,6 +39,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
     private var voiceModeLaunchTime: TimeInterval = 0
     private var microphonePermissionRequestID = 0
     private var isAwaitingMicrophonePermission = false
+    private var isHidingVoiceModeUI = false
     private var chatBarHiddenBeforeVoiceMode = false
     private var tableBottomInsetBeforeVoiceMode: CGFloat = 0
     private var templateHeightBeforeVoiceMode: CGFloat?
@@ -575,7 +576,9 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
                 guard let self = self, self.microphonePermissionRequestID == requestID else { return }
                 self.isAwaitingMicrophonePermission = false
                 if granted {
-                    _ = self.startVoiceMode()
+                    if !self.startVoiceMode() {
+                        self.closeVoiceMode()
+                    }
                 } else {
                     self.closeVoiceMode()
                     let title = self.localizedString(
@@ -632,6 +635,12 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
 
     private func showVoiceModeUI(animated: Bool = true) {
         view.endEditing(true)
+        if isHidingVoiceModeUI {
+            // Voice mode reopened mid fade-out: finish the hide now so the overlay and layout are set up again below.
+            voiceModeView.layer.removeAllAnimations()
+            voiceModeView.isHidden = true
+            isHidingVoiceModeUI = false
+        }
         guard voiceModeView.isHidden else { return }
 
         chatBarHiddenBeforeVoiceMode = isChatBarHidden
@@ -704,11 +713,13 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
 
     private func hideVoiceModeUI() {
         guard !voiceModeView.isHidden else { return }
+        isHidingVoiceModeUI = true
         UIView.animate(withDuration: 0.16, animations: {
             self.voiceModeView.alpha = 0
         }, completion: { finished in
             // An interrupted fade means voice mode was shown again; keep the overlay visible.
             guard finished else { return }
+            self.isHidingVoiceModeUI = false
             self.voiceModeView.isHidden = true
         })
         tableView.contentInset.bottom = tableBottomInsetBeforeVoiceMode

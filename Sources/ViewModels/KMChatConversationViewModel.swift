@@ -353,7 +353,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         }
         // Internal notes render with a different cell than regular information rows.
         if messageModel.messageType == .information, includeHiddenMessages, messageModel.internalNoteContent != nil {
-            cacheIdentifier += "-note"
+            cacheIdentifier += "-note-w\(Int(cellFrame.width))"
         }
         if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
             return height

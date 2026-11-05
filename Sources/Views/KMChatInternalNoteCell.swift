@@ -49,6 +49,8 @@ final class KMChatInternalNoteCell: UITableViewCell, Localizable {
     private let badgeLabel: UILabel = {
         let label = KMChatInternalNoteBadgeLabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.7
         label.textColor = UIColor(netHex: 0x5553B7)
         label.backgroundColor = UIColor(netHex: 0xB0ADF5)
         label.layer.cornerRadius = 5

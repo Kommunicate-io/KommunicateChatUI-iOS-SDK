@@ -357,9 +357,11 @@ final class KMVoiceModeController: NSObject {
         else {
             return
         }
+        // Bind the deferred stop to the session that received the notification.
+        let generation = sessionGeneration
         // Route change notifications can arrive on a background queue; stop() requires main.
         DispatchQueue.main.async { [weak self] in
-            guard let self = self, self.isActive else { return }
+            guard let self = self, self.isActive, self.sessionGeneration == generation else { return }
             self.stop()
         }
     }

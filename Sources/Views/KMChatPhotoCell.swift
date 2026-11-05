@@ -274,6 +274,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
     private func updateView(state: State) {
         switch state {
         case let .upload(filePath):
+            frontView.isUserInteractionEnabled = false
             isMediaTapEnabled = false
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
@@ -285,12 +286,14 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
             if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
+            frontView.isUserInteractionEnabled = true
             isMediaTapEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
         case .uploading:
             uploadButton.isHidden = true
+            frontView.isUserInteractionEnabled = false
             isMediaTapEnabled = false
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating {
@@ -299,6 +302,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
             downloadButton.isHidden = true
         case .download:
             downloadButton.isHidden = false
+            frontView.isUserInteractionEnabled = true
             isMediaTapEnabled = false
             activityIndicator.isHidden = true
             uploadButton.isHidden = true
@@ -310,6 +314,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
+            frontView.isUserInteractionEnabled = true
             isMediaTapEnabled = false
         case let .downloaded(filePath):
             activityIndicator.isHidden = false
@@ -322,6 +327,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
             setPhotoViewImageFromFileURL(path)
+            frontView.isUserInteractionEnabled = true
             isMediaTapEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true

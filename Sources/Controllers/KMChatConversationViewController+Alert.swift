@@ -102,12 +102,13 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
         let removedMessage = removeMessageFromUI(identifier: message.identifier)
         let contactId = viewModel.contactId
         let channelKey = viewModel.channelKey
+        let conversationId = viewModel.conversationProxy?.id
 
         guard message.isMyMessage else {
             messageService.deleteMessage(message.identifier, andContactId: nil) { [weak self] _, error in
                 guard error != nil else { return }
                 DispatchQueue.main.async {
-                    self?.rollbackDelete(removedMessage, contactId: contactId, channelKey: channelKey)
+                    self?.rollbackDelete(removedMessage, contactId: contactId, channelKey: channelKey, conversationId: conversationId)
                 }
             }
             return
@@ -117,7 +118,7 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 guard error == nil else {
-                    self.rollbackDelete(removedMessage, contactId: contactId, channelKey: channelKey)
+                    self.rollbackDelete(removedMessage, contactId: contactId, channelKey: channelKey, conversationId: conversationId)
                     return
                 }
                 KMCoreMessageDBService().deleteMessage(byKey: message.identifier)
@@ -126,10 +127,11 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
     }
 
     /// Restores the optimistically removed message and shows the error, unless the conversation changed meanwhile.
-    private func rollbackDelete(_ removedMessage: RemovedMessage?, contactId: String?, channelKey: NSNumber?) {
+    private func rollbackDelete(_ removedMessage: RemovedMessage?, contactId: String?, channelKey: NSNumber?, conversationId: NSNumber?) {
         if let removedMessage = removedMessage,
            viewModel.contactId == contactId,
-           viewModel.channelKey == channelKey {
+           viewModel.channelKey == channelKey,
+           viewModel.conversationProxy?.id == conversationId {
             restoreMessageInUI(removedMessage)
         }
         showDeleteMessageError()
