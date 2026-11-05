@@ -344,12 +344,16 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         return messageModels.firstIndex { $0.identifier == identifier }
     }
 
-    open func heightForRow(indexPath: IndexPath, cellFrame _: CGRect, configuration: KMChatConfiguration) -> CGFloat {
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect, configuration: KMChatConfiguration) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         var cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
         let isActionButtonHidden = messageModel.isActionButtonHidden()
         if isActionButtonHidden {
             cacheIdentifier += "-h"
+        }
+        // Internal notes render with a different cell than regular information rows.
+        if messageModel.messageType == .information, includeHiddenMessages, messageModel.internalNoteContent != nil {
+            cacheIdentifier += "-note"
         }
         if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
             return height
@@ -415,7 +419,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             return height.cached(with: cacheIdentifier)
         case .information:
             if includeHiddenMessages, messageModel.internalNoteContent != nil {
-                return KMChatInternalNoteCell.rowHeight(viewModel: messageModel, width: maxWidth).cached(with: cacheIdentifier)
+                return KMChatInternalNoteCell.rowHeight(viewModel: messageModel, width: cellFrame.width).cached(with: cacheIdentifier)
             }
             let height = KMChatInformationCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             return height.cached(with: cacheIdentifier)
@@ -849,6 +853,8 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             return false
         }
 
+        // getMessageToPost clears the selected reply, so keep it for the actual send below.
+        let selectedReply = getSelectedMessageToReply()
         let candidate = getMessageToPost(isTextMessage: true)
         candidate.message = normalizedMessage
         candidate.metadata = modfiedMessageMetadata(alMessage: candidate, metadata: metadata)
@@ -864,6 +870,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             return false
         }
 
+        selectedMessageForReply = selectedReply
         send(message: normalizedMessage, isOpenGroup: isOpenGroup, metadata: metadata)
         return true
     }

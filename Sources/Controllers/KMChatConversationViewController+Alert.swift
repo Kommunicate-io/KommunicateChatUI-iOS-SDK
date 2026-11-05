@@ -100,12 +100,14 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
     private func deleteMessage(message: KMChatMessageViewModel) {
         let messageService = KMCoreMessageService()
         let removedMessage = removeMessageFromUI(identifier: message.identifier)
+        let contactId = viewModel.contactId
+        let channelKey = viewModel.channelKey
 
         guard message.isMyMessage else {
             messageService.deleteMessage(message.identifier, andContactId: nil) { [weak self] _, error in
                 guard error != nil else { return }
                 DispatchQueue.main.async {
-                    self?.showDeleteMessageError()
+                    self?.rollbackDelete(removedMessage, contactId: contactId, channelKey: channelKey)
                 }
             }
             return
@@ -115,15 +117,22 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 guard error == nil else {
-                    if let removedMessage = removedMessage {
-                        self.restoreMessageInUI(removedMessage)
-                    }
-                    self.showDeleteMessageError()
+                    self.rollbackDelete(removedMessage, contactId: contactId, channelKey: channelKey)
                     return
                 }
                 KMCoreMessageDBService().deleteMessage(byKey: message.identifier)
             }
         }
+    }
+
+    /// Restores the optimistically removed message and shows the error, unless the conversation changed meanwhile.
+    private func rollbackDelete(_ removedMessage: RemovedMessage?, contactId: String?, channelKey: NSNumber?) {
+        if let removedMessage = removedMessage,
+           viewModel.contactId == contactId,
+           viewModel.channelKey == channelKey {
+            restoreMessageInUI(removedMessage)
+        }
+        showDeleteMessageError()
     }
 
     private func showDeleteMessageError() {
@@ -151,8 +160,12 @@ extension KMChatConversationViewController: ALAlertButtonClickProtocol {
 
     private func restoreMessageInUI(_ removed: RemovedMessage) {
         guard !viewModel.alMessages.contains(where: { $0.identifier == removed.message.identifier }) else { return }
-        viewModel.alMessages.insert(removed.message, at: min(removed.messageIndex, viewModel.alMessages.count))
-        viewModel.messageModels.insert(removed.message.messageModel, at: min(removed.modelIndex, viewModel.messageModels.count))
+        // Insert by timestamp so out-of-order restores stay chronological and both collections stay aligned.
+        let createdAt = removed.message.createdAtTime?.doubleValue ?? 0
+        let messageIndex = viewModel.alMessages.firstIndex { ($0.createdAtTime?.doubleValue ?? 0) > createdAt } ?? viewModel.alMessages.count
+        let modelIndex = viewModel.messageModels.firstIndex { ($0.createdAtTime?.doubleValue ?? 0) > createdAt } ?? viewModel.messageModels.count
+        viewModel.alMessages.insert(removed.message, at: messageIndex)
+        viewModel.messageModels.insert(removed.message.messageModel, at: modelIndex)
         tableView.reloadData()
     }
 }

@@ -37,6 +37,8 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
 
     private var startVoiceModeOnOpen = false
     private var voiceModeLaunchTime: TimeInterval = 0
+    private var microphonePermissionRequestID = 0
+    private var isAwaitingMicrophonePermission = false
     private var chatBarHiddenBeforeVoiceMode = false
     private var tableBottomInsetBeforeVoiceMode: CGFloat = 0
     private var templateHeightBeforeVoiceMode: CGFloat?
@@ -558,6 +560,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
     @discardableResult
     public func startVoiceMode() -> Bool {
         guard KMVoiceModeController.isVoiceModeAvailable,
+              !isMessagingRestrictedForVoiceMode,
               let conversationID = viewModel?.channelKey?.int64Value
         else {
             return false
@@ -565,8 +568,12 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
 
         showVoiceModeUI()
         guard AVAudioSession.sharedInstance().recordPermission == .granted else {
+            microphonePermissionRequestID += 1
+            let requestID = microphonePermissionRequestID
+            isAwaitingMicrophonePermission = true
             KMVoiceModeController.requestMicrophonePermission { [weak self] granted in
-                guard let self = self else { return }
+                guard let self = self, self.microphonePermissionRequestID == requestID else { return }
+                self.isAwaitingMicrophonePermission = false
                 if granted {
                     _ = self.startVoiceMode()
                 } else {
@@ -600,7 +607,15 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         voiceModeController.stop()
     }
 
+    /// Voice mode must not send messages when the chat bar is disabled (blocked user, left group, restricted conversation).
+    private var isMessagingRestrictedForVoiceMode: Bool {
+        return !chatBar.voiceModeButton.isUserInteractionEnabled
+    }
+
     public func closeVoiceMode() {
+        // Invalidate any pending microphone permission callback.
+        microphonePermissionRequestID += 1
+        isAwaitingMicrophonePermission = false
         voiceModeController.stop()
         startVoiceModeOnOpen = false
         voiceModeLaunchTime = 0
@@ -691,7 +706,9 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         guard !voiceModeView.isHidden else { return }
         UIView.animate(withDuration: 0.16, animations: {
             self.voiceModeView.alpha = 0
-        }, completion: { _ in
+        }, completion: { finished in
+            // An interrupted fade means voice mode was shown again; keep the overlay visible.
+            guard finished else { return }
             self.voiceModeView.isHidden = true
         })
         tableView.contentInset.bottom = tableBottomInsetBeforeVoiceMode
@@ -806,8 +823,9 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
 
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if startVoiceModeOnOpen {
-            _ = startVoiceMode()
+        if startVoiceModeOnOpen, !startVoiceMode(), !isAwaitingMicrophonePermission {
+            // Startup was refused; don't leave the overlay open.
+            closeVoiceMode()
         }
     }
 
@@ -2538,6 +2556,10 @@ extension KMChatConversationViewController: KMVoiceModeControllerDelegate {
     func voiceModeController(_ controller: KMVoiceModeController, didProduceTranscript transcript: String) -> Bool {
         let text = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return false }
+        guard !isMessagingRestrictedForVoiceMode else {
+            closeVoiceMode()
+            return false
+        }
 
         let didSend = viewModel.trySend(
             message: text,

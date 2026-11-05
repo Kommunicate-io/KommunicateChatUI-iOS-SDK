@@ -237,3 +237,4 @@ VoiceModeMicrophone = "Voice mode microphone";
 VoiceModeClose = "Close voice mode";
 VoiceModePoweredBy = "AI Agent powered by Kommunicate";
 VoiceModePermission = "Microphone access is required to use voice mode.";
+InternalNoteBadge = "Note";

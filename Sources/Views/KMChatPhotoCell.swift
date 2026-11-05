@@ -157,6 +157,8 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
     }
 
     @objc func actionTapped(button: UIButton) {
+        // Keep frontView interactive so long press works, but only open the viewer once media is available.
+        guard isMediaTapEnabled else { return }
         let storyboard = UIStoryboard.name(storyboard: UIStoryboard.Storyboard.mediaViewer, bundle: Bundle.km)
 
         let nav = storyboard.instantiateInitialViewController() as? UINavigationController
@@ -185,6 +187,8 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
         timeLabel.setStyle(KMChatMessageStyle.time)
         fileSizeLabel.setStyle(KMChatMessageStyle.time)
     }
+
+    private var isMediaTapEnabled = true
 
     override func setupViews() {
         super.setupViews()
@@ -270,7 +274,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
     private func updateView(state: State) {
         switch state {
         case let .upload(filePath):
-            frontView.isUserInteractionEnabled = false
+            isMediaTapEnabled = false
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -281,13 +285,13 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
             if activityIndicator.isAnimating {
                 activityIndicator.stopAnimating()
             }
-            frontView.isUserInteractionEnabled = true
+            isMediaTapEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true
         case .uploading:
             uploadButton.isHidden = true
-            frontView.isUserInteractionEnabled = false
+            isMediaTapEnabled = false
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating {
                 activityIndicator.startAnimating()
@@ -295,7 +299,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
             downloadButton.isHidden = true
         case .download:
             downloadButton.isHidden = false
-            frontView.isUserInteractionEnabled = false
+            isMediaTapEnabled = false
             activityIndicator.isHidden = true
             uploadButton.isHidden = true
             loadThumbnail()
@@ -306,7 +310,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
                 activityIndicator.startAnimating()
             }
             downloadButton.isHidden = true
-            frontView.isUserInteractionEnabled = false
+            isMediaTapEnabled = false
         case let .downloaded(filePath):
             activityIndicator.isHidden = false
             if !activityIndicator.isAnimating {
@@ -318,7 +322,7 @@ class KMChatPhotoCell: KMChatChatBaseCell<KMChatMessageViewModel>,
             let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let path = docDirPath.appendingPathComponent(filePath)
             setPhotoViewImageFromFileURL(path)
-            frontView.isUserInteractionEnabled = true
+            isMediaTapEnabled = true
             uploadButton.isHidden = true
             activityIndicator.isHidden = true
             downloadButton.isHidden = true

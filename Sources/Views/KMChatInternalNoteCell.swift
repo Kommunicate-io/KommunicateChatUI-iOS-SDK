@@ -20,7 +20,7 @@ extension KMChatMessageViewModel {
     }
 }
 
-final class KMChatInternalNoteCell: UITableViewCell {
+final class KMChatInternalNoteCell: UITableViewCell, Localizable {
     enum Padding {
         static let horizontal: CGFloat = 16
         static let top: CGFloat = 6
@@ -35,6 +35,8 @@ final class KMChatInternalNoteCell: UITableViewCell {
 
     private static let noteFont = UIFont.systemFont(ofSize: 15)
 
+    private var localizedStringFileName = "Localizable"
+
     private let cardView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(netHex: 0xC8C6FF)
@@ -46,7 +48,6 @@ final class KMChatInternalNoteCell: UITableViewCell {
 
     private let badgeLabel: UILabel = {
         let label = KMChatInternalNoteBadgeLabel()
-        label.text = "Note"
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = UIColor(netHex: 0x5553B7)
         label.backgroundColor = UIColor(netHex: 0xB0ADF5)
@@ -84,7 +85,12 @@ final class KMChatInternalNoteCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func setLocalizedStringFileName(_ fileName: String) {
+        localizedStringFileName = fileName
+    }
+
     func update(viewModel: KMChatMessageViewModel) {
+        badgeLabel.text = localizedString(forKey: "InternalNoteBadge", withDefaultValue: "Note", fileName: localizedStringFileName)
         noteLabel.text = viewModel.internalNoteContent
         timeLabel.text = viewModel.time
     }
