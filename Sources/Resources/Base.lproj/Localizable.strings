@@ -143,6 +143,10 @@ ReportAlertMessage = "If you report the message, it will be sent to admin of thi
 ReportMessage = "REPORT MESSAGE";
 ReportMessageSuccess = "Message has been reported";
 ReportMessageError = "Failed to report the message";
+DeleteMessageAlertTitle = "Delete message?";
+DeleteMessageAlertMessage = "This message will be deleted for everyone in this conversation.";
+DeleteMessageForMeAlertMessage = "This message will be deleted only for you.";
+DeleteMessageError = "Failed to delete the message";
 NetworkAccessFailedMessage = "No internet access";
 CapitalLetterCancelText = "CANCEL";
 EmailWebViewTitle =  "Email";
@@ -223,3 +227,14 @@ File = "File";
 TrialUserDisconnectionMessage = "Trial users cannot access this feature in release mode. Please upgrade your plan to continue. \nFor further assistance, contact support at support@kommunicate.io.";
 MobileNotSupportedMessage = "Your current plan does not support mobile access. \nPlease update your subscription to gain full access.";
 ChurnedUserDisconnectionMessage = "Your app provider needs to renew their subscription to enable access to messaging features.";
+
+/* Voice Mode */
+VoiceModeListening = "Listening…";
+VoiceModeTranscribing = "Transcribing…";
+VoiceModeSpeaking = "Speaking";
+VoiceModeError = "Please try again";
+VoiceModeMicrophone = "Voice mode microphone";
+VoiceModeClose = "Close voice mode";
+VoiceModePoweredBy = "AI Agent powered by Kommunicate";
+VoiceModePermission = "Microphone access is required to use voice mode.";
+InternalNoteBadge = "Note";

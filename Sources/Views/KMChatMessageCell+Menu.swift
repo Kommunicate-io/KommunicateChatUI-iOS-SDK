@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension KMChatMessageCell: KMChatCopyMenuItemProtocol, KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol {
+extension KMChatMessageCell: KMChatCopyMenuItemProtocol, KMChatReplyMenuItemProtocol, KMChatReportMessageMenuItemProtocol, KMChatDeleteMenuItemProtocol {
     func menuCopy(_: Any) {
         menuAction?(.copy)
     }
@@ -18,5 +18,9 @@ extension KMChatMessageCell: KMChatCopyMenuItemProtocol, KMChatReplyMenuItemProt
 
     func menuReport(_: Any) {
         menuAction?(.report)
+    }
+
+    func menuDelete(_: Any) {
+        menuAction?(.delete)
     }
 }

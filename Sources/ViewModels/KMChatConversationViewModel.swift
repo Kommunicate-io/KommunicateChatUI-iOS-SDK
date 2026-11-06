@@ -23,8 +23,15 @@ public protocol KMChatConversationViewModelDelegate: AnyObject {
     func willSendMessage()
     func updateTyingStatus(status: Bool, userId: String)
     func showInvalidReplyAlert(kmField: KMField)
+    func shouldSendMessage(_ message: String) -> Bool
     func isEmailSentForUpdatingUser(status: Bool)
     func emailUpdatedForUser()
+}
+
+public extension KMChatConversationViewModelDelegate {
+    func shouldSendMessage(_ message: String) -> Bool {
+        return true
+    }
 }
 
 // swiftlint:disable:next type_body_length
@@ -50,6 +57,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
     }
 
     open var isSearch: Bool = false
+    open var includeHiddenMessages: Bool = false
     open var lastMessage: KMCoreMessage?
     internal static var lastSentMessage: KMCoreMessage?
 
@@ -336,12 +344,16 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         return messageModels.firstIndex { $0.identifier == identifier }
     }
 
-    open func heightForRow(indexPath: IndexPath, cellFrame _: CGRect, configuration: KMChatConfiguration) -> CGFloat {
+    open func heightForRow(indexPath: IndexPath, cellFrame: CGRect, configuration: KMChatConfiguration) -> CGFloat {
         let messageModel = messageModels[indexPath.section]
         var cacheIdentifier = (messageModel.isMyMessage ? "s-" : "r-") + messageModel.identifier
         let isActionButtonHidden = messageModel.isActionButtonHidden()
         if isActionButtonHidden {
             cacheIdentifier += "-h"
+        }
+        // Internal notes render with a different cell than regular information rows.
+        if messageModel.messageType == .information, includeHiddenMessages, messageModel.internalNoteContent != nil {
+            cacheIdentifier += "-note-w\(Int(cellFrame.width))"
         }
         if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
             return height
@@ -406,6 +418,9 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             }
             return height.cached(with: cacheIdentifier)
         case .information:
+            if includeHiddenMessages, messageModel.internalNoteContent != nil {
+                return KMChatInternalNoteCell.rowHeight(viewModel: messageModel, width: cellFrame.width).cached(with: cacheIdentifier)
+            }
             let height = KMChatInformationCell.rowHeigh(viewModel: messageModel, width: maxWidth)
             return height.cached(with: cacheIdentifier)
         case .location:
@@ -672,6 +687,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
 
         var sortedArray = filteredArray.filter {
             !alMessageWrapper.contains(message: $0)
+                && !containsEquivalentMessageModel($0.messageModel)
         }
         if sortedArray.count > 1 {
             sortedArray.sort { Int(truncating: $0.createdAtTime) < Int(truncating: $1.createdAtTime) }
@@ -682,12 +698,12 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         if alMessages.isEmpty, !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
             sortedArray.insert(getInitialStaticFirstMessage(), at: 0)
         }
+        self.removeTypingIndicatorMessage()
         _ = sortedArray.map { self.alMessageWrapper.addKMCoreMessage(toMessageArray: $0) }
         alMessages.append(contentsOf: sortedArray)
         let models = sortedArray.map { $0.messageModel }
         messageModels.append(contentsOf: models)
         print("new messages: ", models.map { $0.message })
-        self.removeTypingIndicatorMessage()
         delegate?.newMessagesAdded()
         newFormMessageAdded()
     }
@@ -827,6 +843,36 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         } else {
             loadMessagesFromDB()
         }
+    }
+
+    @discardableResult
+    open func trySend(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) -> Bool {
+        let normalizedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedMessage.isEmpty,
+              delegate?.shouldSendMessage(normalizedMessage) ?? true else {
+            return false
+        }
+
+        // getMessageToPost clears the selected reply, so keep it for the actual send below.
+        let selectedReply = getSelectedMessageToReply()
+        let candidate = getMessageToPost(isTextMessage: true)
+        candidate.message = normalizedMessage
+        candidate.metadata = modfiedMessageMetadata(alMessage: candidate, metadata: metadata)
+        updateMetaDataForCustomField(message: candidate)
+
+        if let kmField = alMessages.last?.messageModel.getKmField(),
+           !isValidReply(message: candidate) {
+            delegate?.showInvalidReplyAlert(kmField: kmField)
+            return false
+        }
+        if emailCollectionAwayModeEnabled, !normalizedMessage.isValidEmail() {
+            delegate?.isEmailSentForUpdatingUser(status: false)
+            return false
+        }
+
+        selectedMessageForReply = selectedReply
+        send(message: normalizedMessage, isOpenGroup: isOpenGroup, metadata: metadata)
+        return true
     }
 
     open func send(message: String, isOpenGroup: Bool = false, metadata: [AnyHashable: Any]?) {
@@ -1544,6 +1590,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
+        messageListRequest.includeHiddenMessages = includeHiddenMessages
         KMCoreMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, _ in
             guard error == nil, let messages = messages else {
@@ -1561,6 +1608,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 self.alMessages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
+            self.alMessages = self.removingDuplicateMessages(self.alMessages)
             
             if KMChatConversationViewModel.lastSentMessage == nil {
                 KMChatConversationViewModel.lastSentMessage = self.getLastSentMessage()
@@ -1621,25 +1669,57 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         return nil
     }
     
+    private func containsEquivalentMessageModel(_ candidate: KMChatMessageModel) -> Bool {
+        return messageModels.contains { areEquivalent($0, candidate) }
+    }
+
+    private func removingDuplicateMessages(_ messages: [KMCoreMessage]) -> [KMCoreMessage] {
+        return messages.reduce(into: []) { uniqueMessages, candidate in
+            guard !uniqueMessages.contains(where: {
+                areEquivalent($0.messageModel, candidate.messageModel)
+            }) else { return }
+            uniqueMessages.append(candidate)
+        }
+    }
+
+    private func areEquivalent(_ lhs: KMChatMessageModel, _ rhs: KMChatMessageModel) -> Bool {
+        if !lhs.identifier.isEmpty, !rhs.identifier.isEmpty {
+            return lhs.identifier == rhs.identifier
+        }
+        return lhs.messageType == rhs.messageType
+            && lhs.contactId == rhs.contactId
+            && lhs.message == rhs.message
+            && lhs.createdAtTime?.int64Value == rhs.createdAtTime?.int64Value
+    }
+
     func showTypingIndicatorForWelcomeMessage() {
-        if welcomeMessagePosition >= alMessages.count {
+        guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else {
+            removeTypingIndicatorMessage()
+            timer.invalidate()
+            welcomeMessagePosition = 0
             return
         }
         self.delegate?.updateTyingStatus(status: true, userId: self.alMessages[0].to)
         let delay = TimeInterval(botDelayTime)
         self.timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) {[self] _ in
             guard welcomeMessagePosition < modelsToBeAddedAfterDelay.count else {
+                self.removeTypingIndicatorMessage()
+                self.timer.invalidate()
+                self.welcomeMessagePosition = 0
                 return
             }
             self.removeTypingIndicatorMessage()
-            self.messageModels.append(modelsToBeAddedAfterDelay[welcomeMessagePosition])
+            let welcomeMessage = modelsToBeAddedAfterDelay[welcomeMessagePosition]
+            if !self.containsEquivalentMessageModel(welcomeMessage) {
+                self.messageModels.append(welcomeMessage)
+            }
             self.delegate?.messageUpdated()
             self.timer.invalidate()
-            if welcomeMessagePosition >= alMessages.count {
-                welcomeMessagePosition = 0
+            self.welcomeMessagePosition += 1
+            if self.welcomeMessagePosition < self.modelsToBeAddedAfterDelay.count {
+                self.showTypingIndicatorForWelcomeMessage()
             } else {
-                welcomeMessagePosition += 1
-                showTypingIndicatorForWelcomeMessage()
+                self.welcomeMessagePosition = 0
             }
         }
     }
@@ -1798,7 +1878,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         
         let startTime = alMessages.first?.createdAtTime ?? nil
         
-        KMCoreMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, withCompletion: {
+        KMCoreMessageService.getMessageList(forContactId: contactId, isGroup: isGroup, channelKey: channelKey, conversationId: conversationId, start: 0, startTime: startTime, includeHiddenMessages: includeHiddenMessages, withCompletion: {
             messages in
             guard let messages = messages, messages.count != 0 else {
                 if KMCoreUserDefaultsHandler.isShowLoadEarlierOption(self.chatId) {
@@ -1811,7 +1891,9 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if !KMConversationScreenConfiguration.staticTopMessage.isEmpty {
                 messages.insert(self.getInitialStaticFirstMessage(), at: 0)
             }
-            self.alMessages.insert(contentsOf: messages as! [KMCoreMessage], at: 0)
+            let loadedMessages = messages as! [KMCoreMessage]
+            self.alMessages.insert(contentsOf: loadedMessages, at: 0)
+            self.alMessages = self.removingDuplicateMessages(self.alMessages)
 
             self.alMessageWrapper.addObject(toMessageArray: messages)
             if KMChatConversationViewModel.lastSentMessage == nil {
@@ -1820,8 +1902,8 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if KMCoreSettings.isAgentAppConfigurationEnabled() {
                 self.getConversationEndUserID()
             }
-            let models = messages.map { ($0 as! KMCoreMessage).messageModel }
-            self.messageModels.insert(contentsOf: models, at: 0)
+            let models = loadedMessages.map { $0.messageModel }
+            self.messageModels = self.alMessages.map { $0.messageModel }
             self.removeAlreadyDeletedMessageFromConversation()
             self.removeMessageForHidePostCTA(messages: models)
             if isFirstTime {
@@ -1957,6 +2039,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         messageListRequest.channelKey = channelKey
         messageListRequest.conversationId = conversationId
         messageListRequest.endTimeStamp = time
+        messageListRequest.includeHiddenMessages = includeHiddenMessages
         KMCoreMessageService.sharedInstance().getMessageList(forUser: messageListRequest, withCompletion: {
             messages, error, _ in
             guard error == nil, let newMessages = messages as? [KMCoreMessage] else {

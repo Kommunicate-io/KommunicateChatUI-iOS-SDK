@@ -30,9 +30,6 @@ public class KMChatBaseNavigationViewController: UINavigationController {
         navigationBarProxy.titleTextAttributes =
         navigationBarProxy.titleTextAttributes ?? [NSAttributedString.Key.foregroundColor: UIColor.kmDynamicColor(light: .black, dark: .white)]
 
-        if navigationBarProxy.backgroundImage(for: .default) == nil {
-            navigationBarProxy.barTintColor = appSettingsUserDefaults.getAppBarTintColor()
-        }
         if #available(iOS 13.0, *) {
             let navBarAppearance = UINavigationBarAppearance()
             navBarAppearance.configureWithOpaqueBackground()

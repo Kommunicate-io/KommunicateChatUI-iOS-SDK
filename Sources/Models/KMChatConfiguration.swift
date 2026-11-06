@@ -192,6 +192,21 @@ public struct KMChatConfiguration {
     
     // If true then TTS(Text To Speech) is enabled. It is false by default.
     public var enableTextToSpeechInConversation: Bool = false
+
+    /// Enables tap-to-transcribe on the microphone button. Long-press audio recording remains available.
+    public var enableSpeechToTextInConversation: Bool = false
+
+    /// If true, a final speech transcription is sent immediately. It is false by default.
+    public var sendMessageOnSpeechEnd: Bool = false
+
+    /// Locale identifier used by speech recognition.
+    public var speechToTextLanguageCode: String = "en-US" {
+        didSet {
+            isSpeechToTextLanguageCodeOverridden = true
+        }
+    }
+
+    private(set) var isSpeechToTextLanguageCodeOverridden = false
         
     // If true then Navigation bar will be hidden. By default it is false
     public var hideNavigationBarOnChat: Bool = false

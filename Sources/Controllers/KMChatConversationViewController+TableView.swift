@@ -256,6 +256,12 @@ extension KMChatConversationViewController: UITableViewDelegate, UITableViewData
                 return cell
             }
         case .information:
+            if viewModel.includeHiddenMessages, message.internalNoteContent != nil {
+                let cell: KMChatInternalNoteCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.setLocalizedStringFileName(configuration.localizedStringFileName)
+                cell.update(viewModel: message)
+                return cell
+            }
             let cell: KMChatInformationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.setConfiguration(configuration: configuration)
             cell.update(viewModel: message)
@@ -637,7 +643,6 @@ extension KMChatConversationViewController: UITableViewDelegate, UITableViewData
         guard let message1 = viewModel.messageForRow(indexPath: IndexPath(row: 0, section: section)) else {
             return 0.0
         }
-
         // If it is the first section then no need to check the difference,
         // just show the start date. (message list is not empty)
         if section == 0 {
