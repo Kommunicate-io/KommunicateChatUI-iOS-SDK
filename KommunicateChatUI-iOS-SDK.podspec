@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Complete' do |complete|
     complete.source_files = 'Sources/**/*.swift'
+    complete.frameworks = 'Speech'
     complete.resources = 'Sources/**/*{lproj,storyboard,xib,xcassets,json}'
     complete.dependency 'Kingfisher', '~> 7.10.0'
     complete.dependency 'SwipeCellKit', '~> 2.7.1'
