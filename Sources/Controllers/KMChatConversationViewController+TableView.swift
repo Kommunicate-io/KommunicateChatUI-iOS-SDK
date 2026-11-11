@@ -317,7 +317,7 @@ extension KMChatConversationViewController: UITableViewDelegate, UITableViewData
                 cell.showReport = false
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: KMChatGenericCardCell.self)
-                cell.update(viewModel: message, width: UIScreen.main.bounds.width)
+                cell.update(viewModel: message, width: view.frame.width)
                 cell.menuAction = { [weak self] action in
                     self?.menuItemSelected(action: action, message: message)
                 }
@@ -328,7 +328,7 @@ extension KMChatConversationViewController: UITableViewDelegate, UITableViewData
                 cell.showReport = true
                 cell.setLocalizedStringFileName(configuration.localizedStringFileName)
                 cell.register(cell: KMChatGenericCardCell.self)
-                cell.update(viewModel: message, width: UIScreen.main.bounds.width)
+                cell.update(viewModel: message, width: view.frame.width)
                 cell.menuAction = { [weak self] action in
                     self?.menuItemSelected(action: action, message: message)
                 }

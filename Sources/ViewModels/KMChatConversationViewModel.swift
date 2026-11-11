@@ -355,6 +355,9 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         if messageModel.messageType == .information, includeHiddenMessages, messageModel.internalNoteContent != nil {
             cacheIdentifier += "-note-w\(Int(cellFrame.width))"
         }
+        if messageModel.messageType == .cardTemplate {
+            cacheIdentifier += "-card-w\(Int(cellFrame.width))"
+        }
         if let height = HeightCache.shared.getHeight(for: cacheIdentifier) {
             return height
         }
@@ -437,12 +440,12 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             if messageModel.isMyMessage {
                 return
                     KMChatMyGenericCardMessageCell
-                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .rowHeigh(viewModel: messageModel, width: cellFrame.width)
                         .cached(with: cacheIdentifier)
             } else {
                 return
                     KMChatFriendGenericCardMessageCell
-                        .rowHeigh(viewModel: messageModel, width: maxWidth)
+                        .rowHeigh(viewModel: messageModel, width: cellFrame.width)
                         .cached(with: cacheIdentifier)
             }
         case .faqTemplate:

@@ -24,10 +24,11 @@ open class KMChatGenericCardCollectionView: KMChatIndexedCollectionView {
         else {
             return 0
         }
+        let cardWidth = max(width - KMChatGenericCardCell.Config.cardMargin, 0)
         let maxHeight = template
-            .map { KMChatGenericCardCell.rowHeight(card: $0, maxWidth: width) }
+            .map { KMChatGenericCardCell.rowHeight(card: $0, maxWidth: cardWidth) }
             .max { $0 < $1 }
-        let defaultHeight = KMChatGenericCardCell.rowHeight(card: card, maxWidth: width)
+        let defaultHeight = KMChatGenericCardCell.rowHeight(card: card, maxWidth: cardWidth)
         return maxHeight ?? defaultHeight
     }
 
@@ -113,6 +114,10 @@ open class KMChatGenericCardCell: UICollectionViewCell {
 
         public static let imageHeight: CGFloat = 100
 
+        public static var coverImageAspectRatio: CGFloat = 720.0 / 280.0
+
+        public static let cardMargin: CGFloat = 150
+
         public static let spacing: CGFloat = 3
 
         public static let buttonStackViewSpacing: CGFloat = 1
@@ -143,6 +148,17 @@ open class KMChatGenericCardCell: UICollectionViewCell {
     }
 
     lazy var coverImageHeight = self.coverImageView.heightAnchor.constraint(equalToConstant: Config.imageHeight)
+
+    private var coverHeader: KMCardTemplate.Header?
+
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        guard let header = coverHeader else { return }
+        let height = KMChatGenericCardCell.headerHeight(header, cardWidth: bounds.width)
+        if coverImageHeight.constant != height {
+            coverImageHeight.constant = height
+        }
+    }
 
     open var coverImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
@@ -235,7 +251,7 @@ open class KMChatGenericCardCell: UICollectionViewCell {
         super.init(coder: aDecoder)
     }
 
-    private class func headerHeight(_ header: KMCardTemplate.Header) -> CGFloat {
+    private class func headerHeight(_ header: KMCardTemplate.Header, cardWidth: CGFloat) -> CGFloat {
         let tokenizedURL = header.imgSrc.map { KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0) }
         guard let urlString = tokenizedURL,
               URL(string: urlString) != nil
@@ -246,7 +262,9 @@ open class KMChatGenericCardCell: UICollectionViewCell {
                 return CGFloat(0)
             }
         }
-        return Config.imageHeight
+        let ratio = Config.coverImageAspectRatio
+        guard ratio > 0 else { return Config.imageHeight }
+        return max(Config.imageHeight, (cardWidth / ratio).rounded(.up))
     }
 
     private class func textHeight(_ text: String?, size: CGSize, font: UIFont) -> CGFloat {
@@ -257,7 +275,7 @@ open class KMChatGenericCardCell: UICollectionViewCell {
     open class func rowHeight(card: KMCardTemplate, maxWidth: CGFloat) -> CGFloat {
         var headerHt: CGFloat = 0
         if let header = card.header {
-            headerHt = headerHeight(header)
+            headerHt = headerHeight(header, cardWidth: maxWidth)
         }
         let titleConstraint = CGSize(width: maxWidth, height: Font.title.lineHeight)
         let titleHeight = textHeight(card.title, size: titleConstraint, font: Font.title) * CGFloat(KMChatGenericCardCell.Config.titleMaxLines)
@@ -342,11 +360,13 @@ open class KMChatGenericCardCell: UICollectionViewCell {
 
     private func setCoverImage(_ header: KMCardTemplate.Header?) {
         guard let header = header else {
+            coverHeader = nil
             coverImageView.isHidden = true
             coverImageHeight.constant = 0
             return
         }
-        coverImageHeight.constant = KMChatGenericCardCell.headerHeight(header)
+        coverHeader = header
+        coverImageHeight.constant = KMChatGenericCardCell.headerHeight(header, cardWidth: bounds.width)
 
         let tokenizedURL = header.imgSrc.map { KMRichMessageSASTokenHelper.appendSASTokenIfNeeded(to: $0) }
         guard let urlString = tokenizedURL, let url = URL(string: urlString) else {
