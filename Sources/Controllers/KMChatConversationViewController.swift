@@ -865,8 +865,9 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
     }
 
     private func reloadCardTemplateSections() {
+        let sectionCount = tableView.numberOfSections
         let sections = viewModel.messageModels.enumerated()
-            .filter { $0.element.messageType == .cardTemplate }
+            .filter { $0.element.messageType == .cardTemplate && $0.offset < sectionCount }
             .map { $0.offset }
         guard !sections.isEmpty else { return }
         tableView.reloadSections(IndexSet(sections), with: .none)
