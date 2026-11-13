@@ -190,7 +190,7 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         }
     }
 
-    let cardTemplateMargin: CGFloat = 150
+    let cardTemplateMargin: CGFloat = KMChatGenericCardCell.Config.cardMargin
 
     var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
@@ -855,6 +855,22 @@ open class KMChatConversationViewController: KMChatBaseViewController, Localizab
         setupConstraints()
         setRichMessageKitTheme()
         setupProfanityFilter()
+    }
+
+    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+            self?.reloadCardTemplateSections()
+        }
+    }
+
+    private func reloadCardTemplateSections() {
+        let sectionCount = tableView.numberOfSections
+        let sections = viewModel.messageModels.enumerated()
+            .filter { $0.element.messageType == .cardTemplate && $0.offset < sectionCount }
+            .map { $0.offset }
+        guard !sections.isEmpty else { return }
+        tableView.reloadSections(IndexSet(sections), with: .none)
     }
 
     override open func viewDidLayoutSubviews() {

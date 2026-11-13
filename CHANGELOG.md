@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [1.5.7] 2026-11-13
+- Fixed card image layout
+
 ## [1.5.6] 2026-11-05
 - Voice mode with speech recognition
 - Delete message options (delete for me / delete for everyone)
