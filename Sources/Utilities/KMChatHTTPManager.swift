@@ -172,12 +172,13 @@ class KMChatHTTPManager: NSObject {
             }
         }
         let responseHandler = ALResponseHandler()
-        responseHandler.authenticateRequest(postURLRequest) { [weak self] urlRequest, error in
+        // Captured strongly: when the auth token is refreshed this runs later, and nothing else keeps this manager alive until the session starts.
+        responseHandler.authenticateRequest(postURLRequest) { urlRequest, error in
             guard error == nil,
                   var request = urlRequest as URLRequest?
             else {
                 print("Failed to upload the attachment")
-                self?.uploadFailed(task, error: error)
+                self.uploadFailed(task, error: error)
                 return
             }
 
@@ -211,11 +212,11 @@ class KMChatHTTPManager: NSObject {
                 request.httpBody = body
                 request.url = task.url
                 let configuration = URLSessionConfiguration.default
-                self?.session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-                let dataTask = self?.session?.dataTask(with: request)
+                self.session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+                let dataTask = self.session?.dataTask(with: request)
                 dataTask?.resume()
             } else {
-                self?.uploadFailed(task, error: nil)
+                self.uploadFailed(task, error: nil)
             }
         }
     }
