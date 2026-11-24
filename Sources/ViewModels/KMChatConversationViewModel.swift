@@ -1361,21 +1361,34 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         }
         NSLog("content type: ", alMessage.fileMeta.contentType)
         NSLog("file path: ", alMessage.imageFilePath)
+        // Without this the message stays in progress when the upload fails.
+        let markUploadFailed = {
+            DispatchQueue.main.async {
+                dbMessage.inProgress = 0
+                dbMessage.isUploadFailed = 1
+                _ = alHandler?.saveContext()
+            }
+        }
         clientService.sendPhoto(forUserInfo: alMessage.dictionary(), withCompletion: {
             urlStr, error in
-            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else { return }
+            guard error == nil, let urlStr = urlStr, let url = URL(string: urlStr) else {
+                markUploadFailed()
+                return
+            }
             let task = KMChatUploadTask(url: url, fileName: alMessage.fileMeta.name)
             task.identifier = alMessage.key
             task.contentType = alMessage.fileMeta.contentType
             task.filePath = alMessage.imageFilePath
             task.groupdId = alMessage.groupId.stringValue
             let downloadManager = KMChatHTTPManager()
-            downloadManager.uploadAttachment(task: task)
             downloadManager.uploadCompleted = { [weak self] responseDict, task in
                 if task.uploadError == nil, task.completed {
                     self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
+                } else {
+                    markUploadFailed()
                 }
             }
+            downloadManager.uploadAttachment(task: task)
         })
     }
 

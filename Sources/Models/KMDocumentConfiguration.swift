@@ -16,13 +16,14 @@ public enum DocumentType: CaseIterable, Equatable {
     case presentation
     case doc
     case spreadsheet
+    case audio
 }
 
 public struct KMDocumentConfiguration {
     
     public static var shared =  KMDocumentConfiguration()
     
-    public var documentOptions: DocumentOptions = .some([.text, .xls, .pdf, .presentation, .spreadsheet, .doc])
+    public var documentOptions: DocumentOptions = .some([.text, .xls, .pdf, .presentation, .spreadsheet, .doc, .audio])
     
     public enum DocumentOptions {
         case all
@@ -53,6 +54,7 @@ public struct KMDocumentConfiguration {
         case .presentation: return kUTTypePresentation as String
         case .doc: return "com.microsoft.word.doc"
         case .spreadsheet: return kUTTypeSpreadsheet as String
+        case .audio: return kUTTypeAudio as String
         }
     }
 }
