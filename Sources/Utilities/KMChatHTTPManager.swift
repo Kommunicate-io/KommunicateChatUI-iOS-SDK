@@ -159,7 +159,10 @@ class KMChatHTTPManager: NSObject {
         if KMCoreSettings.isS3StorageServiceEnabled(), let uploadUrl = KMCoreSettings.getDefaultOverrideuploadUrl(), uploadUrl.isEmpty {
             task.fileName = Constants.AWSEncryptedPrefix + task.fileName!
         }
-        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else { return }
+        guard let postURLRequest = ALRequestHandler.createPOSTRequest(withUrlString: task.url?.description, paramString: nil) as NSMutableURLRequest? else {
+            uploadFailed(task, error: nil)
+            return
+        }
         
         if let customHeaders = KMCoreSettings.getDefaultOverrideuploadHeaders() as? [String: String] {
             for (key, value) in customHeaders {
@@ -172,6 +175,7 @@ class KMChatHTTPManager: NSObject {
                   var request = urlRequest as URLRequest?
             else {
                 print("Failed to upload the attachment")
+                self?.uploadFailed(task, error: error)
                 return
             }
 
@@ -208,7 +212,19 @@ class KMChatHTTPManager: NSObject {
                 self?.session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
                 let dataTask = self?.session?.dataTask(with: request)
                 dataTask?.resume()
+            } else {
+                self?.uploadFailed(task, error: nil)
             }
+        }
+    }
+
+    /// Reports a failed upload to `uploadCompleted` and the upload delegate.
+    private func uploadFailed(_ task: KMChatUploadTask, error: Error?) {
+        DispatchQueue.main.async {
+            task.uploadError = error ?? NSError(domain: "KMChatHTTPManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Upload failed"])
+            task.completed = true
+            self.uploadCompleted?(nil, task)
+            self.uploadDelegate?.dataUploadingFinished(task: task)
         }
     }
 
@@ -272,7 +288,15 @@ extension KMChatHTTPManager: URLSessionDataDelegate {
         }
     }
 
-    func urlSession(_: URLSession, task _: URLSessionTask, didCompleteWithError error: Error?) {
+    func urlSession(_: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        // A successful upload is reported when its response arrives; report errors and non-200 responses here.
+        if downloadTask == nil, let uploadTask = uploadTask {
+            let statusCode = (task.response as? HTTPURLResponse)?.statusCode
+            if error != nil || statusCode != 200 {
+                uploadFailed(uploadTask, error: error)
+            }
+            return
+        }
         guard let downloadTask = downloadTask, let fileName = downloadTask.fileName, let identifier = downloadTask.identifier else { return }
         guard error == nil else {
             DispatchQueue.main.async {
