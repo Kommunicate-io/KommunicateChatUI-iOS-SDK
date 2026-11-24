@@ -46,6 +46,8 @@ class KMChatHTTPManager: NSObject {
     var buffer = NSMutableData()
     var session: URLSession?
     var uploadTask: KMChatUploadTask?
+    /// Set when the upload response body arrives, so a 200 response without a body can be reported as a failure.
+    private var uploadResponseReceived = false
     var downloadTask: KMChatDownloadTask?
 
     enum Constants {
@@ -265,6 +267,7 @@ extension KMChatHTTPManager: URLSessionDataDelegate {
                 return
             }
             guard let uploadTask = uploadTask else { return }
+            uploadResponseReceived = true
             do {
                 let responseDictionary = try JSONSerialization.jsonObject(with: data)
                 print("success == \(responseDictionary)")
@@ -289,10 +292,10 @@ extension KMChatHTTPManager: URLSessionDataDelegate {
     }
 
     func urlSession(_: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        // A successful upload is reported when its response arrives; report errors and non-200 responses here.
+        // A successful upload is reported when its response arrives; report errors, non-200 responses and missing bodies here.
         if downloadTask == nil, let uploadTask = uploadTask {
             let statusCode = (task.response as? HTTPURLResponse)?.statusCode
-            if error != nil || statusCode != 200 {
+            if error != nil || statusCode != 200 || !uploadResponseReceived {
                 uploadFailed(uploadTask, error: error)
             }
             return

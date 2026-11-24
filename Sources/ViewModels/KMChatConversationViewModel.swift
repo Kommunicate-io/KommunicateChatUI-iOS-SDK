@@ -1381,7 +1381,6 @@ open class KMChatConversationViewModel: NSObject, Localizable {
             task.filePath = alMessage.imageFilePath
             task.groupdId = alMessage.groupId.stringValue
             let downloadManager = KMChatHTTPManager()
-            downloadManager.uploadAttachment(task: task)
             downloadManager.uploadCompleted = { [weak self] responseDict, task in
                 if task.uploadError == nil, task.completed {
                     self?.uploadAttachmentCompleted(responseDict: responseDict, indexPath: indexPath)
@@ -1389,6 +1388,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
                     markUploadFailed()
                 }
             }
+            downloadManager.uploadAttachment(task: task)
         })
     }
 
