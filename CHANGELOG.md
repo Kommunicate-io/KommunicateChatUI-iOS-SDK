@@ -2,6 +2,9 @@
 
 The changelog for [KommunicateChatUI-iOS-SDK](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK). Also see the [releases](https://github.com/Kommunicate-io/KommunicateChatUI-iOS-SDK/releases) on Github.
 
+## [Unreleased]
+- Audio files can be sent from the document picker (`DocumentType.audio`)
+
 ## [1.5.7] 2026-11-13
 - Fixed card image layout
 

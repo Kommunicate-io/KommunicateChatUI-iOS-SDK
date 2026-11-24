@@ -21,17 +21,24 @@ extension KMChatConversationViewController: KMChatDocumentManagerDelegate {
             fileName: fileName,
             metadata: configuration.messageMetadata
         )
-        guard message != nil, let newIndexPath = indexPath else { return }
+        guard let message = message, let newIndexPath = indexPath else { return }
         tableView.beginUpdates()
         tableView.insertSections(IndexSet(integer: newIndexPath.section), with: .automatic)
         tableView.endUpdates()
         tableView.scrollToBottom(animated: false)
-        guard let cell = tableView.cellForRow(at: newIndexPath) as? KMChatMyDocumentCell else { return }
+        // Audio files are shown in the voice cell, not the document cell.
+        let isAudio = message.fileMeta?.contentType?.hasPrefix("audio") == true
+        let documentCell = tableView.cellForRow(at: newIndexPath) as? KMChatMyDocumentCell
+        guard isAudio || documentCell != nil else { return }
         guard ALDataNetworkConnection.checkDataNetworkAvailable() else {
             let notificationView = ALNotificationView()
             notificationView.noDataConnectionNotificationView()
             return
         }
-        viewModel.uploadImage(view: cell, indexPath: newIndexPath)
+        if let documentCell = documentCell {
+            viewModel.uploadImage(view: documentCell, indexPath: newIndexPath)
+        } else {
+            viewModel.uploadAudio(alMessage: message, indexPath: newIndexPath)
+        }
     }
 }
