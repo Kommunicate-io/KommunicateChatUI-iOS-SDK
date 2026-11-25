@@ -288,9 +288,16 @@ extension KMCoreMessage {
         case ALMESSAGE_CONTENT_TYPING_INDICATOR:
             return .typingIndicator
         default:
+            if isRichMessageMetadata, Int32(contentType) != ALMESSAGE_CONTENT_CUSTOM {
+                return richMessageType()
+            }
             guard let attachmentType = getAttachmentType() else { return .text }
             return attachmentType
         }
+    }
+
+    private var isRichMessageMetadata: Bool {
+        (metadata?["contentType"] as? String) == "300"
     }
 
     var date: Date {
