@@ -22,8 +22,17 @@ extension KMChatMessageViewModel {
             displayName: fetchDisplayName(),
             status: messageStatus(),
             imageURL: avatarURL,
-            contentType: contentType
+            contentType: captionContentType
         )
+    }
+
+    private var captionContentType: Message.ContentType {
+        switch contentType {
+        case .text, .html, .attachment:
+            return contentType
+        default:
+            return .text
+        }
     }
 
     func imageMessage() -> ImageMessage? {
