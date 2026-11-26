@@ -2177,10 +2177,7 @@ open class KMChatConversationViewModel: NSObject, Localizable {
         alMessage.fileMeta = getFileMetaInfo()
         alMessage.message = text
         alMessage.imageFilePath = filePath.lastPathComponent
-        alMessage.fileMeta.name = fileName ?? String(format: "AUD-5-%@", filePath.lastPathComponent)
-        if fileName == nil, let contactId = contactId {
-            alMessage.fileMeta.name = String(format: "%@-5-%@", contactId, filePath.lastPathComponent)
-        }
+        alMessage.fileMeta.name = fileName ?? filePath.lastPathComponent
         let pathExtension = filePath.pathExtension
         let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue()
         let mimetype = (UTTypeCopyPreferredTagWithClass(uti!, kUTTagClassMIMEType)?.takeRetainedValue()) as String?
